@@ -63,7 +63,8 @@ class account_voucher(osv.osv):
                 'journal_id': journal.id,
                 'type' : inv.type,
                 'narration' : inv.narration and inv.narration or inv.name,
-                'date':inv.date
+                'date':inv.date,
+                'ref':inv.reference
             }
             
             if inv.period_id:
@@ -101,6 +102,7 @@ class account_voucher(osv.osv):
             
             line_ids = []
             line_ids += [move_line_pool.create(cr, uid, move_line)]
+            rec_ids = []
             for line in inv.payment_ids:
                 amount=0.0
                 move_line = {
@@ -146,16 +148,23 @@ class account_voucher(osv.osv):
                 line_ids += [move_line_id]
                 
                 if line.invoice_id:
-                    rec_ids = [move_line_id]
+                    rec_ids += [move_line_id]
                     for move_line in line.invoice_id.move_id.line_id:
                         if line.account_id.id == move_line.account_id.id:
                             rec_ids += [move_line.id]
-                    move_line_pool.reconcile_partial(cr, uid, rec_ids)
+                    #move_line_pool.reconcile_partial(cr, uid, rec_ids)
+            
+            if rec_ids:
+                move_line_pool.reconcile_partial(cr, uid, rec_ids)
             
             rec = {
                 'move_id': move_id,
                 'move_ids':[(6, 0,line_ids)]
             }
+            
+            message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirm")
+            self.log(cr, uid, inv.id, message)
+            
             self.write(cr, uid, [inv.id], rec)
             
         return True        

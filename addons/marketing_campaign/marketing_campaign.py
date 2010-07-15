@@ -152,29 +152,44 @@ you required for the campaign"),
 
 
     def signal(self, cr, uid, model, res_id, signal, context=None):
+        record = self.pool.get(model).browse(cr, uid, res_id, context)
+        return self._signal(cr, uid, record, signal, context)
+
+    def _signal(self, cr, uid, record, signal, context=None):
         if not signal:
             raise ValueError('signal cannot be False')
 
         Workitems = self.pool.get('marketing.campaign.workitem')
-        domain = [('object_id.model', '=', model),
+        domain = [('object_id.model', '=', record._table._name),
                   ('state', '=', 'running')]
         campaign_ids = self.search(cr, uid, domain, context=context)
         for campaign in self.browse(cr, uid, campaign_ids, context):
             for activity in campaign.activity_ids:
                 if activity.signal != signal:
                     continue
-                wi_domain = [('activity_id', '=', activity.id),
-                             ('res_id', '=', res_id),
-                             ('state', '=', 'todo'),
-                             ('date', '=', False),
-                            ]
+
+                data = dict(activity_id=activity.id,
+                            res_id=record.id,
+                            state='todo')
+                wi_domain = [(k, '=', v) for k, v in data.items()]
+
                 wi_ids = Workitems.search(cr, uid, wi_domain, context=context)
+                if not wi_ids:
+                    partner = self._get_partner_for(campaign, record)
+                    if partner:
+                        data['partner_id'] = partner.id
+                    wi_id = Workitems.create(cr, uid, data, context=context)
+                    wi_ids = [wi_id]
                 Workitems.process(cr, uid, wi_ids, context=context)
         return True
 
-    def _signal(self, cr, uid, record, signal, context=None):
-        return self.signal(cr, uid, record._table._name,
-                           record.id, signal, context)
+    def _get_partner_for(self, campaign, record):
+        partner_field = campaign.partner_field_id.name
+        if partner_field:
+            return getattr(record, partner_field)
+        elif campaign.model_id.model == 'res.partner':
+            return record
+        return None
 
 marketing_campaign()
 
@@ -247,7 +262,6 @@ class marketing_campaign_segment(osv.osv):
                   uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)], context=context)
 
             model_obj = self.pool.get(segment.object_id.model)
-            partner_field = segment.campaign_id.partner_field_id.name
             criteria = []
             if segment.sync_last_date:
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
@@ -269,11 +283,7 @@ class marketing_campaign_segment(osv.osv):
                     'res_id': o_ids.id
                 }
 
-                partner = None
-                if partner_field:
-                    partner = getattr(o_ids, partner_field)
-                elif model_obj._name == 'res.partner':
-                    partner = o_ids
+                partner = self.pool.get('marketing.campaign')._get_partner_for(segment.campaign_id, o_ids)
                 if partner:
                     wi_vals['partner_id'] = partner.id
 
@@ -295,9 +305,7 @@ class marketing_campaign_activity(osv.osv):
         ('email', 'E-mail'),
         ('paper', 'Paper'),
         ('action', 'Action'),
-        # TODO implement the subcampaigns. The segment_id on woritems must be
-        # optional (thus campaign_id must be a real many2one, and a constraint
-        # must be set). 
+        # TODO implement the subcampaigns.
         # TODO implement the subcampaign out. disallow out transitions from
         # subcampaign activities ?
         #('subcampaign', 'Sub-Campaign'),
@@ -333,28 +341,15 @@ class marketing_campaign_activity(osv.osv):
         'variable_cost': fields.float('Variable Cost'),
         'revenue': fields.float('Revenue'),
         'signal': fields.char('Signal', size=128,
-                              help='An activity with a signal can be called \
-                                      programmatically'),
+                              help='An activity with a signal can be called programmatically. Attention, the workitem is always created when the signal is send'),
+        'keep_if_condition_not_met': fields.boolean('Keep if condition not met',
+                                                    help="By activating this option, the workitems that aren't processed because the condition is not met are marked as cancelled instead of being deleted.")
     }
 
     _defaults = {
         'type': lambda *a: 'email',
         'condition': lambda *a: 'True',
     }
-
-    def _check_signal(self, cr, uid, ids, context=None):
-        return all(activity.signal
-                   for activity in self.browse(cr, uid, ids, context)
-                   for transition in activity.from_ids
-                   if transition.trigger == 'signal')
-
-    _constraints = [
-        (_check_signal,
-         "An incoming transition is triggered by a signal but this transition \
-                doesn't have one",
-         ['signal', 'from_ids']
-        ),
-    ]
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                                         context=None, count=False):
@@ -431,7 +426,7 @@ class marketing_campaign_transition(osv.osv):
         formatters = {
             'auto': _('Automatic transition'),
             'time': _('After %(interval_nbr)d %(interval_type)s'),
-            'signal': _('On signal'),
+            'cosmetic': _('Cosmetic'),
         }
         for tr in self.browse(cr, uid, ids, context=context,
                               fields_process=translate_selections):
@@ -462,9 +457,10 @@ class marketing_campaign_transition(osv.osv):
 
         'trigger': fields.selection([('auto', 'Automatic'),
                                      ('time', 'Time'),
-                                     ('signal','Signal')],
+                                     ('cosmetic', 'Cosmetic'),  # fake plastic transition
+                                    ],
                                     'Trigger', required=True,
-                                    help="How is trigger the destination workitem"),
+                                    help="How is triggered the destination workitem"),
     }
 
     _defaults = {
@@ -476,20 +472,6 @@ class marketing_campaign_transition(osv.osv):
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
-
-    def _check_signal(self, cr, uid, ids, context=None):
-        return all(tr.activity_to_id.signal
-                   for tr in self.browse(cr, uid, ids, context)
-                   if tr.trigger == 'signal')
-
-    _constraints = [
-        (_check_signal,
-         "The transition is triggered by a signal but destination activity \
-                doesn't have one",
-         ['trigger', 'activity_to_ids']
-        ),
-    ]
-
 
 marketing_campaign_transition()
 
@@ -510,13 +492,12 @@ class marketing_campaign_workitem(osv.osv):
         return res
 
     _columns = {
-        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment',
-             required=True),
+        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment'),
         'activity_id': fields.many2one('marketing.campaign.activity','Activity',
              required=True),
-        'campaign_id': fields.related('segment_id', 'campaign_id',
+        'campaign_id': fields.related('activity_id', 'campaign_id',
              type='many2one', relation='marketing.campaign', string='Campaign', readonly=True),
-        'object_id': fields.related('segment_id', 'campaign_id', 'object_id',
+        'object_id': fields.related('activity_id', 'campaign_id', 'object_id',
              type='many2one', relation='ir.model', string='Object', select=1),
         'res_id': fields.integer('Resource ID', select=1, readonly=1),
         'res_name': fields.function(_res_name_get, method=True, string='Resource Name', type="char", size=64),
@@ -564,7 +545,10 @@ class marketing_campaign_workitem(osv.osv):
             campaign_mode = workitem.campaign_id.mode
             if condition:
                 if not eval(condition, eval_context):
-                    workitem.write({'state': 'cancelled'}, context=context)
+                    if activity.keep_if_condition_not_met:
+                        workitem.write({'state': 'cancelled'}, context=context)
+                    else:
+                        workitem.unlink(context=context)
                     return
             result = True
             if campaign_mode in ('manual', 'active'):
@@ -580,6 +564,8 @@ class marketing_campaign_workitem(osv.osv):
             if result:
                 # process _chain
                 for transition in activity.to_ids:
+                    if transition.trigger == 'cosmetic':
+                        continue
                     launch_date = False
                     if transition.trigger == 'auto':
                         launch_date = datetime.now()
@@ -605,7 +591,7 @@ class marketing_campaign_workitem(osv.osv):
                     #
                     #           test    test_realtime     manual      normal (active)
                     # time       Y            N             N           N
-                    # signal     N            N             N           N
+                    # cosmetic   N            N             N           N
                     # auto       Y            Y             Y           Y
                     # 
 
