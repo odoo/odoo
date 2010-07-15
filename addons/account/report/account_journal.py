@@ -45,7 +45,8 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_account': self._get_account,
             'get_filter': self._get_filter,
             'get_start_date': self._get_start_date,
-            'get_end_date': self._get_end_date
+            'get_end_date': self._get_end_date,
+            'sum_currency_amount_account': self._sum_currency_amount_account,            
         })
 
     def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
@@ -71,6 +72,28 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         self.cr.execute('SELECT id FROM account_move_line l WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + ' ORDER BY '+ self.sort_selection + '' ,(period_id, self.journal_ids ))
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)
+
+    def _set_get_account_currency_code(self, account_id):
+        self.cr.execute("SELECT c.code as code "\
+                "FROM res_currency c,account_account as ac "\
+                "WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
+        result = self.cr.fetchone()
+        if result:
+            self.account_currency = result[0]
+        else:
+            self.account_currency = False
+
+    def _sum_currency_amount_account(self, account, form):
+        self._set_get_account_currency_code(account.id)
+        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
+        total = self.cr.fetchone()
+
+        if self.account_currency:
+            return_field = str(total[0]) + self.account_currency
+            return return_field
+        else:
+            currency_total = self.tot_currency = 0.0
+            return currency_total   
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header=False)
 
