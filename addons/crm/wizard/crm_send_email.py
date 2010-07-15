@@ -26,6 +26,7 @@ from tools.translate import _
 import base64
 import itertools
 import tools
+import re
 
 class crm_send_new_email_attachment(osv.osv_memory):
     _name = 'crm.send.mail.attachment'
@@ -105,7 +106,7 @@ class crm_send_new_email(osv.osv_memory):
                 ref_id = hist.ref_id
                 case = case_pool.browse(cr, uid, res_id, context=context)
             emails = [obj.email_to]
-            email_cc = obj.email_cc and  obj.email_cc.split(',') or ''
+            email_cc = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_cc)
             emails = filter(None, emails)
             body = obj.body
 
