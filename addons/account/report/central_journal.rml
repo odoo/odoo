@@ -121,6 +121,15 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table_Account_detail_Title_Currency">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+	  <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>      
+    </blockTableStyle>    
     <blockTableStyle id="Table_Final_Total">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -128,6 +137,15 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+    </blockTableStyle>
+     <blockTableStyle id="Table_Final_Total_currency">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Journal_Line_Content">
       <blockAlignment value="LEFT"/>
@@ -137,6 +155,15 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table_Journal_Line_Content_currency">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+    </blockTableStyle>    
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
@@ -225,18 +252,27 @@
     <para style="P9">
       <font color="white"> </font>
     </para>    
-    <blockTable colWidths="83.0,269.0,95.0,92.0" style="Table_Account_detail_Title">
+    <blockTable colWidths="83.0,269.0,95.0,92.0" style="Table_Account_detail_Title">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
       <tr>
-        <td><para style="terp_tblheader_Details">Account Num.</para></td>
+        <td><para style="terp_tblheader_Details">A/C No.</para></td>
         <td><para style="terp_tblheader_Details">Account Name</para></td>
         <td><para style="terp_tblheader_Details_Right">Debit</para></td>
         <td><para style="terp_tblheader_Details_Right">Credit</para></td>
       </tr>
     </blockTable>
+   <blockTable colWidths="83.0,200.0,95.0,92.0,69.0" style="Table_Account_detail_Title_Currency">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+      <tr>
+        <td><para style="terp_tblheader_Details">A/C No.</para></td>
+        <td><para style="terp_tblheader_Details">Account Name</para></td>
+        <td><para style="terp_tblheader_Details_Right">Debit</para></td>
+        <td><para style="terp_tblheader_Details_Right">Credit</para></td>
+		<td><para style="terp_tblheader_Details_Right">Currency</para></td>                
+      </tr>
+    </blockTable>    
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="83.0,269.0,94.0,92.0" style="Table_Final_Total">
+    <blockTable colWidths="83.0,269.0,94.0,92.0" style="Table_Final_Total">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="terp_default_Bold_9">Total:</para></td>
         <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>
@@ -244,12 +280,21 @@
         <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit(o.period_id.id, o.journal_id.id)) ]]</para></td>
       </tr>
     </blockTable>
+    <blockTable colWidths="83.0,200.0,95.0,92.0,69.0" style="Table_Final_Total_currency">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+      <tr>
+        <td><para style="terp_default_Bold_9">Total:</para></td>
+        <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit(o.period_id.id, o.journal_id.id)) ]]</para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit(o.period_id.id, o.journal_id.id)) ]]</para></td>
+		<td><para style="terp_default_Bold_9_Right"><u>[[formatLang(sum_currency_amount_account(o, data['form'])) ]]</u></para></td>                        
+      </tr>
+    </blockTable>    
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
     <section>
       <para style="terp_default_8">[[ repeatIn(lines(o.period_id.id,o.journal_id.id),'line') ]]</para>
-      <blockTable colWidths="83.0,269.0,94.0,92.0" style="Table_Journal_Line_Content">
+      <blockTable colWidths="83.0,269.0,94.0,92.0" style="Table_Journal_Line_Content">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         <tr>
           <td><para style="terp_default_9">[[ line['code'] ]]</para></td>
           <td><para style="terp_default_9">[[ line['name'] ]]</para></td>
@@ -257,6 +302,15 @@
           <td><para style="terp_default_Right_9">[[ formatLang(line['credit'])]]</para></td>
         </tr>
       </blockTable>
+      <blockTable colWidths="83.0,200.0,95.0,92.0,69.0" style="Table_Journal_Line_Content_currency">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+        <tr>
+          <td><para style="terp_default_9">[[ line['code'] ]]</para></td>
+          <td><para style="terp_default_9">[[ line['name'] ]]</para></td>
+          <td><para style="terp_default_Right_9">[[ formatLang(line['debit']) ]]</para></td>
+          <td><para style="terp_default_Right_9">[[ formatLang(line['credit'])]]</para></td>
+		  <td><para style="terp_default_Right_9">[[ formatLang(line['amount_currency']) ]] [[ line['currency_code'] or '']]</para></td>        
+        </tr>
+      </blockTable>      
       <para style="terp_default_2">
         <font color="white"> </font>
       </para>
