@@ -359,7 +359,7 @@ class task(osv.osv):
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
-        'type': fields.many2one('project.task.type', 'Stage',),
+        'type_id': fields.many2one('project.task.type', 'Stage',),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
@@ -549,25 +549,25 @@ class task(osv.osv):
         return True
 
     def next_type(self, cr, uid, ids, *args):
-        for typ in self.browse(cr, uid, ids):
-            typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.type_ids or [])
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id.type_ids or [])
             if types:
                 if not typeid:
-                    self.write(cr, uid, typ.id, {'type': types[0]})
+                    self.write(cr, uid, task.id, {'type_id': types[0]})
                 elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
                     index = types.index(typeid)
-                    self.write(cr, uid, typ.id, {'type': types[index+1]})
+                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
         return True
 
     def prev_type(self, cr, uid, ids, *args):
-        for typ in self.browse(cr, uid, ids):
-            typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.type_ids)
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id.type_ids)
             if types:
                 if typeid and typeid in types:
                     index = types.index(typeid)
-                    self.write(cr, uid, typ.id, {'type': index and types[index-1] or False})
+                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
         return True
 
 task()

@@ -68,7 +68,7 @@ class account_pl_report(osv.osv_memory):
         'fiscalyear' : False,
         'display_account': 'bal_all',
         'display_type': True,
-        }
+    }
 
     def next_view(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')

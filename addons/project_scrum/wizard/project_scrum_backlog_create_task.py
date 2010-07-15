@@ -21,7 +21,7 @@
 from osv import osv, fields
 
 class backlog_create_task(osv.osv_memory):
-    _name = 'backlog.create.task'
+    _name = 'project.scrum.backlog.create.task'
     _description = 'Create Tasks from Product Backlogs'
     _columns = {
         'user_id': fields.many2one('res.users', 'Assign To')
@@ -30,7 +30,7 @@ class backlog_create_task(osv.osv_memory):
     def do_create(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         task = self.pool.get('project.task')
-        backlog_id = self.pool.get('scrum.product.backlog')
+        backlog_id = self.pool.get('project.scrum.product.backlog')
         ids_task = []
 
         if context is None:
