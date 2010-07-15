@@ -30,7 +30,7 @@ from common_report_header import common_report_header
 class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         super(report_balancesheet_horizontal, self).__init__(cr, uid, name, context=context)
-        self.obj_pl=report_pl.report_pl_account_horizontal(cr, uid, name, context=context)
+        self.obj_pl = report_pl.report_pl_account_horizontal(cr, uid, name, context=context)
         self.result_sum_dr = 0.0
         self.result_sum_cr = 0.0
         self.result = {}
