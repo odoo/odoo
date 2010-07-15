@@ -195,7 +195,7 @@
                 <search string="Search Timesheet">
                     <group col="10" colspan="4">
                         <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                        <filter icon="terp-gtk-go-back-rtl" string="To Validate" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                        <filter icon="terp-gtk-go-back-rtl" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
                         <field name="user_id" select="1"/>
                         <field name="date_from"/>

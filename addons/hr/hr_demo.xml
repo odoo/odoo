@@ -2,6 +2,43 @@
 <openerp>
     <data>
 
+        <!-- Employee Category -->
+
+        <record id="category1" model="hr.employee.category">
+            <field name="name">CEO</field>
+        </record>
+
+        <record id="category2" model="hr.employee.category">
+            <field name="name">CTO</field>
+            <field name="parent_id" ref="category1"/>
+        </record>
+
+        <record id="category3" model="hr.employee.category">
+            <field name="name">Managers(Tech. Heads)</field>
+            <field name="parent_id" ref="category2"/>
+        </record>
+
+        <record id="category4" model="hr.employee.category">
+            <field name="name">Project Managers</field>
+            <field name="parent_id" ref="category3"/>
+        </record>
+
+        <record id="category5" model="hr.employee.category">
+            <field name="name">Sr. Executives(Team Leads)</field>
+            <field name="parent_id" ref="category4"/>
+        </record>
+
+        <record id="category6" model="hr.employee.category">
+            <field name="name">Jr. Executives(Developers)</field>
+            <field name="parent_id" ref="category5"/>
+        </record>
+
+        <record id="category7" model="hr.employee.category">
+            <field name="name">Trainee(Intership)</field>
+            <field name="parent_id" ref="category6"/>
+        </record>
+
+
         <!-- Example employee -->
 
         <record id="employee1" model="hr.employee">
@@ -9,6 +46,7 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <!--<field name="regime">45</field>-->
             <field name="user_id" ref="base.user_root"/>
+            <field name="category_id" ref="hr.category1"/>
             <!--<field name="holiday_max">25</field>-->
         </record>
 

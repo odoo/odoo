@@ -17,6 +17,13 @@
         <menuitem id="base.next_id_64" name="Reporting"
             parent="base.menu_base_partner" sequence="11" />
 
+        <menuitem action="crm_custom_create_menu_action"
+            id="crm_case_create_custom_menu"
+            parent="base.menu_crm_config_sales"
+            groups="base.group_extended"
+            name="Create Menu for Custom Cases" />
+
+
         <!-- Case Sections Form View -->
 
         <record id="crm_case_section_view_form" model="ir.ui.view">
@@ -367,7 +374,8 @@
                 <page string="Current Activity" position="inside">
                     <field name="context_section_id" completion="1"
                         widget="selection"
-                        context="{'user_prefence':True}" />
+                        context="{'user_prefence':True}" 
+                        readonly="0"/>
                 </page>
             </field>
         </record>

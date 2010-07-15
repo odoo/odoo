@@ -139,9 +139,7 @@ and users"),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.lead')]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage'),
         'user_id': fields.many2one('res.users', 'Salesman',help='By Default Salesman is Administrator when create New User'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -154,8 +152,10 @@ and users"),
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)], readonly=True),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)], readonly=True),
+        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
+        'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
 
     _defaults = {
@@ -169,6 +169,20 @@ and users"),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
     
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case IDs
+        @param add: Id of Partner's address
+        @email: Partner's email ID
+        """
+        if not add:
+            return {'value': {'email_from': False, 'country_id': False}}
+        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+        return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
+    
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer
@@ -177,10 +191,18 @@ and users"),
         @param ids: List of case's Ids
         @param *args: Give Tuple Value
         """
+        old_state = self.read(cr, uid, ids, ['state'])[0]['state']
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        if old_state == 'draft':
+            stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
+            if not stage_id:
+                raise osv.except_osv(_('Warning !'), _('There is no stage defined for this Sale Team.'))
+            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+            self.write(cr, uid, ids, value)
+
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Lead ') + " '" + name + "' "+ _("is Open.")
+            message = _('The Lead') + " '" + name + "' "+ _("has been written as Open.")
             self.log(cr, uid, id, message)
         return res
 
@@ -195,7 +217,7 @@ and users"),
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Lead ') + " '" + name + "' "+ _("is Closed.")
+            message = _('The Lead') + " '" + name + "' "+ _("has been written as Closed.")
             self.log(cr, uid, id, message)
         return res
 

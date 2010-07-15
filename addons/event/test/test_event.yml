@@ -51,7 +51,7 @@
     property_account_receivable: account.a_recv
     
 - |
-  we create it with a "Conference on OpenERP Offshore Business" event and provide "Beginning date", "Ending Date", "Product" as Concert Ticket.
+  we create it with a "Conference on OpenERP Offshore Business" event and provide "Beginning date", "Ending Date" and  "Product" as Concert Ticket.
 -
   !record {model: event.event, id: event_event_conference0}:
     code: C/004
@@ -64,9 +64,9 @@
     state: draft
     type: 'event_type_conference0'
     reply_to: 'info@customer.com'
-    
+
 - |
-  we  set the limit of registrations to this event using "Minimum Registrations"  2 and "Maximum Registrations" 10
+  we  set the limit of registrations to this event using "Minimum Registrations"  2 and "Maximum Registrations" 10. 
 -   
   !python {model: event.event}: |
     self.write(cr, uid, [ref('event_event_conference0')], {'register_max': 10, 'register_min': 2})
@@ -96,7 +96,6 @@
   !record {model: event.registration, id: event_registration_registrationjacot0}:
     badge_name: Jacot
     badge_partner: Mark Johnson
-    badge_title: M.
     contact_id: base_contact.res_partner_contact_jacot0
     date_deadline: '2010-06-07 13:39:00'
     event_id: event.event_event_conference0
@@ -110,11 +109,13 @@
   if not then  confirmation will fail because its greater  then the Maximum registration.   
 - 
   !python {model: event.event}: |
+     from tools.translate import _
      obj_register = self.pool.get('event.registration')
-     event_id1 = self.browse(cr, uid, [ref('event_event_conference0')])[0]
+     event_id1 = self.browse(cr, uid, ref('event_event_conference0'))
      register_ids = obj_register.search(cr, uid, [('event_id', '=', event_id1.id)])
      register_id = obj_register.browse(cr, uid, register_ids)[0]
-     assert register_id.nb_register <= event_id1.register_max 
+     assert register_id.nb_register <= event_id1.register_max, _('NO. of Registration for this event is More than Maximum Registration Defined !')
+      
           
 - |
   And Confirm that Registration by click on "Confirm Registration" button of Registraion form.     
@@ -150,7 +151,6 @@
   !record {model: event.registration, id: event_registration_registrationpassot0}:
     badge_name: Passot
     badge_partner: Mediapole SPRL
-    badge_title: M.
     contact_id: base_contact.res_partner_contact_passot0
     date_deadline: '2010-06-07 13:39:00'
     email_from: info@mediapole.net
@@ -170,10 +170,10 @@
   I Check that  the total number of confirmed is 2 and  unconfirmed registrations 1.    
 -
   !python {model: event.event}: |
-     obj_event = self.browse(cr, uid, [ref('event_event_conference0')])[0]
-     assert  obj_event.register_current == '2'
-     assert obj_event.register_prospect == '1'
-
+     from tools.translate import _
+     obj_event = self.browse(cr, uid, ref('event_event_conference0'))
+     assert  obj_event.register_current == 2, "Number of Confirmed Registration for this event is %s"%(obj_event.register_current)
+     assert obj_event.register_prospect == 1, "Number of Unconfirmed  Registration for this event is %s" %(obj_event.register_prospect)
 - |
   This event is finished by click on "Event Done" button of this event form.
 - 
@@ -186,8 +186,7 @@
   !assert {model: event.registration, id: event_registration_registrationjacot0}: 
      - state == 'open'  
 - |
-  Now, I will invoice the participant who have address using "Make Invoices". This wizard will also give the number of invoices are created and rejected.
-  Create invoice will be linked to Invoice Field available on Payments tab of registrations
+  Now, I will invoice the participant who have address using "Make Invoices".Create invoice will be linked to Invoice Field available on Payments tab of registrations.
 
 - 
   !record {model: event.make.invoice, id: event_make_invoice_0}:
@@ -198,19 +197,9 @@
   !python {model: event.make.invoice}: |
     self.make_invoice(cr, uid, [ref("event_make_invoice_0")], {"active_ids": [ref("event_registration_registrationzen0")]})  
 - |
-  I check  that Invoice for this partner is create or not.
+  I check  that Invoice for this partner is created or not.
 -
   !python {model: event.registration}: |
-     obj_event_reg = self.pool.get('event.registration')
-     obj_lines = self.pool.get('account.invoice.line')
-     inv_obj = self.pool.get('account.invoice')
-     data_event_reg = obj_event_reg.browse(cr, uid, [ref('event_registration_registrationzen0')], context=context)[0]
-     invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', data_event_reg.partner_invoice_id.id)])
-     
-     if invoice_ids:
-        invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
-        line_ids = obj_lines.search(cr, uid, [('product_id', '=', data_event_reg.event_id.product_id.id), ('invoice_id', '=', invoice_id.id), ('price_unit', '=', data_event_reg.unit_price)])
-        line_id = obj_lines.browse(cr, uid, line_ids)[0]
-        assert line_id.product_id == data_event_reg.event_id.product_id
-        assert data_event_reg.partner_id == invoice_id.partner_id
-        assert invoice_id.address_invoice_id == data_event_reg.partner_address_id
+     from tools.translate import _
+     data_event_reg = self.browse(cr, uid, ref('event_registration_registrationzen0'), context=context)
+     assert data_event_reg.invoice_id, _("Invoices has not been generated for this partner") 

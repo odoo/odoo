@@ -124,7 +124,7 @@ class crm_case(object):
         stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
-                st = case.stage_id.id  or False
+                st =  not context.get('force_domain', False) and case.stage_id.id  or False
                 if st in s[section]:
                     data = {'stage_id': s[section][st]}
                     stage = s[section][st]
@@ -141,8 +141,12 @@ class crm_case(object):
         if not context:
             context = {}
         stage_obj = self.pool.get('crm.case.stage')
-        sid = stage_obj.search(cr, uid, \
-                            [('object_id.model', '=', self._name)], context=context)
+        tmp = self.read(cr, uid, ids, ['section_id'], context)[0]['section_id']
+        section_id = tmp and tmp[0] or False
+        domain = [('object_id.model', '=', self._name), ('section_id', '=', section_id)]
+        if 'force_domain' in context and context['force_domain']:
+            domain += context['force_domain']
+        sid = stage_obj.search(cr, uid, domain, context=context)
         s = {}
         previous = {}
         section = self._name
@@ -168,7 +172,7 @@ class crm_case(object):
         stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
-                st = case.stage_id.id or False
+                st = not context.get('force_domain', False) and case.stage_id.id or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
                     data = {'stage_id': s[section][st]}
@@ -440,7 +444,7 @@ class crm_case_section(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to \
                         true, it will allow you to hide the sales team without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
-        'change_responsible': fields.boolean('Change Responsible', help="Set responsible of this Sales team on escalation to this team"),
+        'change_responsible': fields.boolean('Change Responsible', help="Thick this box if you want that on escalation, the responsible of this sale team automatically becomes responsible of the lead/opportunity escaladed"),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put \
@@ -652,7 +656,7 @@ class crm_case_section_custom(osv.osv):
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
-        'parent_id': fields.many2one('crm.case.section', 'Parent Section'), 
+        'parent_id': fields.many2one('crm.case.section.custom', 'Parent Section'), 
         'note': fields.text('Notes'),
     }
 
@@ -668,7 +672,7 @@ class crm_case_section_custom(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('SELECT DISTINCT parent_id FROM crm_case_section '\
+            cr.execute('SELECT DISTINCT parent_id FROM crm_case_section_custom '\
                        'WHERE id IN %s',
                        (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))

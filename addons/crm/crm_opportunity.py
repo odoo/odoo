@@ -46,7 +46,7 @@ class crm_opportunity(osv.osv):
                                  domain="[('partner_id','=',partner_id)]"), 
 
         # Opportunity fields
-        'probability': fields.float('Probability (%)'),
+        'probability': fields.float('Probability (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
@@ -64,9 +64,36 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        self.write(cr, uid, ids, {'probability' : 100.0, 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 100)]})
+        if not stage_id:
+            raise osv.except_osv(_('Warning !'), _('There is no stage for won oppportunities defined for this Sale Team.'))
+        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+
+        self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Opportunity ') + " '" + name + "' "+ _("is Won.")
+            message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Won.")
+            self.log(cr, uid, id, message)
+        return res
+
+    def case_mark_lost(self, cr, uid, ids, *args):
+        """Mark the case as lost: state = done and probability = 0%
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
+        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
+        if not stage_id:
+            raise osv.except_osv(_('Warning !'), _('There is no stage for lost oppportunities defined for this Sale Team.'))
+        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+
+        res = self.write(cr, uid, ids, value)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Lost.")
             self.log(cr, uid, id, message)
         return res
 
@@ -80,13 +107,23 @@ class crm_opportunity(osv.osv):
         """
         res = super(crm_opportunity, self).case_cancel(cr, uid, ids, args)
         self.write(cr, uid, ids, {'probability' : 0.0})
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Opportunity ') + " '" + name + "' "+ _("is Lost.")
-            self.log(cr, uid, id, message)
         return res
-    
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Overrides reset as draft in order to set the stage field as empty
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'stage_id': False})
+        return True
+   
+ 
     def case_open(self, cr, uid, ids, *args):
-        """Overrides cancel for crm_case for setting Open Date
+        """Overrides open for crm_case for setting Open Date
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,

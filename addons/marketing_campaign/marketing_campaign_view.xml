@@ -228,7 +228,12 @@
                 
                 <separator string="Action" colspan="4"/>
                 <group colspan='4' col='4'>
-                    <field name="condition" colspan='4'/>
+                    <group colspan="4" col="6">
+                        <field name="condition" colspan='5'/>
+                        <group col='2'>
+                            <field name="keep_if_condition_not_met" />
+                        </group>
+                    </group>
                     <field name="type" width='100'/>
                     <group colspan='2' col='1'>
                         <group attrs="{'invisible':[('type','!=','email')]}" >

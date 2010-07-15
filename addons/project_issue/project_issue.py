@@ -183,7 +183,7 @@ class project_issue(osv.osv, crm.crm_case):
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'assigned_to': fields.many2one('res.users', 'Assigned to'),
+        'assigned_to': fields.related('task_id', 'user_id', type='many2one', relation='res.users', string='Assigned to', help='This is the current user to whom the related task have been assigned', readonly=True),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
@@ -301,6 +301,8 @@ class project_issue(osv.osv, crm.crm_case):
                 data['project_id'] = case.project_id.project_escalation_id.id
                 if case.project_id.project_escalation_id.user_id:
                     data['user_id'] = case.project_id.project_escalation_id.user_id.id
+                if case.task_id:
+                    self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)

@@ -88,7 +88,7 @@ class base_setup_company(osv.osv_memory):
         'city':fields.char('City', size=128),
         'state_id':fields.selection(_get_all_states, 'State'),
         'country_id':fields.selection(_get_all_countries, 'Country'),
-        'email':fields.char('E-mail', size=64),
+        'email':fields.char('E-mail', size=64, required=True),
         'phone':fields.char('Phone', size=64),
         'currency':fields.many2one('res.currency', 'Currency', required=True),
         'rml_header1':fields.char('Report Header', size=200,
@@ -154,7 +154,7 @@ base_setup_company()
 
 class res_currency(osv.osv):
     _inherit = 'res.currency'
-    
+
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -168,7 +168,7 @@ class res_currency(osv.osv):
             ids = [ids]
         reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
         return [(x['id'], tools.ustr(x['name']) + ' (' + tools.ustr(x['code']) + ')')   for x in reads]
-        
+
 res_currency()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

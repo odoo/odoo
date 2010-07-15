@@ -23,7 +23,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_view_task_tree" model="ir.actions.act_window">
             <field name="name">My Open Tasks</field>
             <field name="res_model">project.task</field>
@@ -32,16 +32,16 @@
             <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
             <field name="view_id" ref="view_task_tree"/>
         </record>
-        
-        <record id="action_view_pending_task_tree" model="ir.actions.act_window">
-            <field name="name">My Pending Tasks</field>
+
+        <record id="action_view_delegate_task_tree" model="ir.actions.act_window">
+            <field name="name">My Delegated Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('state','=','pending')]</field>
-            <field name="view_id" ref="view_task_tree"/>
+            <field name="domain">['|',('parent_ids.user_id','=',uid),('user_id','=',uid)]</field>
+            <field name="view_id" ref="project.view_task_tree2"/>
         </record>
-        
+
         <record id="action_view_task_tree_deadline" model="ir.actions.act_window">
             <field name="name">My Task's Deadlines</field>
             <field name="res_model">project.task</field>
@@ -87,7 +87,7 @@
                     <hpaned>
                         <child1>
                             <action colspan="4"  name="%(action_view_task_tree)d" string="My Open Tasks" width="510"/>
-                            <action colspan="4"  name="%(action_view_pending_task_tree)d" string="My Pending Tasks" width="510"/>
+                            <action colspan="4"  name="%(action_view_delegate_task_tree)d" string="My Delegated Tasks" width="510"/>
                    		</child1>
                         <child2>
                         <vpaned>
@@ -95,7 +95,7 @@
                         		<action colspan="4"  name="%(project.action_project_vs_remaining_hours_graph)d" string="Remaining Hours Per Project" />
                         	</child1>
                         	<child2>
-                        		<action colspan="4"  name="%(project.action_task_by_days_vs_planned_hours_graph)d" string="Planned Hours Per Day" />
+                        		<action colspan="4"  name="%(project.action_project_vs_planned_total_hours_graph)d" string="My Projects: Planned Vs Total Hours" />
                         	</child2>
                         </vpaned>
                         </child2>
@@ -112,20 +112,20 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_project_form"/>
         </record>
-        
+
         <menuitem
             id="next_id_86"
             name="Dashboard"
             icon="terp-graph"
             sequence="0"
             parent="base.menu_project_report"/>
-            
+
         <menuitem
             action="open_board_project"
             icon="terp-graph"
             id="menu_board_project"
             parent="next_id_86"
             sequence="1"/>
-            
+
     </data>
 </openerp>

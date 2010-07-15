@@ -50,7 +50,7 @@ class thunderbird_installer(osv.osv_memory):
         'thunderbird' : True,
         'name' : 'tiny_plugin-2.0.xpi',
         'pdf_name' : 'Installation Guide to OpenERP Thunderbid Plug-in.pdf',
-        'description' : """ * Save the Thunderbird plug­in. \n * Follows the following step to install Thunderbird plug­in. \n -> 1.From Menu Bar of Thunderbird, open Tools ­> Add ons. \n -> 2. Click on install button and a browser window appears. \n -> 3. Select the plug-in(.xpi file) and click Ok. \n -> 4. Software installation window appears and within a short time “Install Now” button will be enabled  -> 5. Click "Install Now". \n -> 6. Restart Thunderbird."""
+        'description' : """ * Save the Thunderbird plug­in. \n * Follows the step to install Thunderbird plug­in. \n -> 1.From Menu Bar of Thunderbird, open Tools ­> Add ons. \n -> 2. Click on install button and a browser window appears. \n -> 3. Select the plug-in(.xpi file) and click Ok. \n -> 4. Software installation window appears and within a short time “Install Now” button will be enabled \n -> 5. Click "Install Now". \n -> 6. Restart Thunderbird."""
         }
 
 thunderbird_installer()
