@@ -13,9 +13,9 @@
             <field model="res.users" name="product_owner_id" search="[('login','=','demo')]"/>
         </record>
 
-        <!-- Resource: scrum.sprint -->
+        <!-- Resource: project_scrum.sprint -->
 
-        <record id="scrum_sprint_0" model="scrum.sprint">
+        <record id="scrum_sprint_0" model="project.scrum.sprint">
             <field name="date_stop">2005-12-20</field>
             <field name="name">Sprint for V3.2.0</field>
             <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
@@ -26,7 +26,7 @@
 
         <!-- Resource: project.product.backlog -->
 
-        <record id="scrum_product_backlog_0" model="scrum.product.backlog">
+        <record id="scrum_product_backlog_0" model="project.scrum.product.backlog">
             <field name="priority">3</field>
             <field name="name">Automatic migration system</field>
             <field name="expected_hours">6.0</field>
@@ -35,54 +35,54 @@
             <field name="state">done</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
-        <record id="scrum_product_backlog_1" model="scrum.product.backlog">
+        <record id="scrum_product_backlog_1" model="project.scrum.product.backlog">
             <field name="priority">3</field>
             <field name="name">New accounting module</field>
             <field name="expected_hours">111.0</field>
             <field name="note">The accounting module of Open ERP (financial accounting and management accounting) is being reshaped. New functionnalities will be added: intangible assets, a new way of presenting ledgers and bookings, new stock valuation calculation, and lots of predefined reports. </field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
-			<field name="state">open</field>            
+			<field name="state">open</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
-        <record id="scrum_product_backlog_2" model="scrum.product.backlog">
+        <record id="scrum_product_backlog_2" model="project.scrum.product.backlog">
             <field name="priority">3</field>
             <field name="name">Automated Plugin System to install/uninstall modules</field>
             <field name="expected_hours">4.0</field>
             <field name="note">We have to develop a plug-in system which will enable to install/remove modules. The basic version of Open ERP will include only the required minimum, and you will select the modules thanks to the plug-in manager. This allows you to limit your system to your real needs: quality management, localisations, project and service management, marketing campaigns, and so on... </field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
-            <field name="state">open</field>     
+            <field name="state">open</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
-        <record id="scrum_product_backlog_3" model="scrum.product.backlog">
+        <record id="scrum_product_backlog_3" model="project.scrum.product.backlog">
             <field name="name">Review all terms</field>
             <field name="expected_hours">8.0</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
-            <field name="state">done</field>     
+            <field name="state">done</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
-        <record id="scrum_product_backlog_4" model="scrum.product.backlog">
+        <record id="scrum_product_backlog_4" model="project.scrum.product.backlog">
             <field name="name">Bugfixes</field>
             <field name="expected_hours">6.0</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
-            <field name="state">open</field>  
+            <field name="state">open</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
-        <record id="scrum_product_backlog_5" model="scrum.product.backlog">
+        <record id="scrum_product_backlog_5" model="project.scrum.product.backlog">
             <field name="name">Test for 3.2.0 Publishing</field>
             <field name="expected_hours">5.0</field>
             <field name="note">Test Open ERP to release stable 3.2.0 version. (may be 3.2.0-pre1 ?)</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
-        <record id="scrum_product_backlog_6" model="scrum.product.backlog">
+        <record id="scrum_product_backlog_6" model="project.scrum.product.backlog">
             <field name="name">Reshape the complete menu</field>
             <field name="expected_hours">4.0</field>
             <field name="note">Restructure  the Open ERP menu to be more like others ERP.</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
-          	<field name="state">open</field>  
+          	<field name="state">open</field>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
-        <record id="scrum_product_backlog_7" model="scrum.product.backlog">
+        <record id="scrum_product_backlog_7" model="project.scrum.product.backlog">
             <field name="name">Editable Trees</field>
             <field name="expected_hours">12.0</field>
             <field name="note">Editable trees in list and one2many_list widgets.</field>
@@ -98,7 +98,7 @@
             <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Review all English Terms</field>
             <field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>            
+            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_3"/>
         </record>
         <record id="scrum_task_4" model="project.task">
@@ -107,7 +107,7 @@
             <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Review all french terms</field>
           	<field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>               
+            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_3"/>
         </record>
         <record id="scrum_task_5" model="project.task">
@@ -116,7 +116,7 @@
             <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Analytic Accounting features</field>
           	<field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>             
+            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
         <record id="scrum_task_6" model="project.task">
@@ -149,7 +149,7 @@
             <field name="description">Cash book, general ledger, accounts list, aged trial balance</field>
              <field name="name">Accounting Report General</field>
              <field name="state">open</field>
-			<field eval="[(6,0,[ref('scrum.scrum_task_8')])]" name="child_ids"/>             
+			<field eval="[(6,0,[ref('scrum_task_8')])]" name="child_ids"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
         <record id="scrum_task_10" model="project.task">
@@ -164,7 +164,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Accounting Report Analytic</field>
- 			<field name="state">open</field>            
+ 			<field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
         <record id="scrum_task_12" model="project.task">
@@ -173,7 +173,7 @@
             <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Bugfix - memory leak</field>
           	<field name="state">done</field>
-            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>               
+            <field eval="time.strftime('%Y-%m-%d')" name="date_close"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_4"/>
         </record>
         <record id="scrum_task_13" model="project.task">
@@ -181,8 +181,8 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Bugfix - Translations</field>
-			<field name="state">open</field>          
-			 <field eval="[(6,0,[ref('scrum.scrum_task_12')])]" name="child_ids"/>
+			<field name="state">open</field>
+			 <field eval="[(6,0,[ref('scrum_task_12')])]" name="child_ids"/>
             <field name="product_backlog_id" ref="scrum_product_backlog_4"/>
         </record>
         <record id="scrum_task_14" model="project.task">
@@ -205,7 +205,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Test 3.2.0 before releasing</field>
- 			<field name="state">open</field>    
+ 			<field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_5"/>
         </record>
         <record id="scrum_task_17" model="project.task">
@@ -214,10 +214,10 @@
             <field name="project_id" ref="scrum_project_1"/>
             <field name="description">default values, onchange, required, add on top or bottom and shortcuts (Ctrl S, Ctrl X, ...)</field>
             <field name="name">Editable trees</field>
-			<field name="state">open</field>  
+			<field name="state">open</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_7"/>
         </record>
-		<record id="scrum_meeting_0" model="scrum.meeting">
+		<record id="scrum_meeting_0" model="project.scrum.meeting">
 			<field name="question_yesterday">
 Admin: Worked on the Automatic migration system
 Demo: Worked on the Test 3.2.0 before releasing
@@ -228,7 +228,7 @@ Demo: Work on Editable trees</field>
 			<field name="question_blocks">
 Demo :Bugfix - memory leak
 			</field>
-			<field name="sprint_id" ref="scrum.scrum_sprint_0"/>
+			<field name="sprint_id" ref="scrum_sprint_0"/>
 			<field eval="time.strftime('%Y-%m-%d')" name="date"/>
 		</record>
 		<record id="project_task_work_scrum_task1" model="project.task.work">
@@ -247,7 +247,7 @@ Demo :Bugfix - memory leak
 			<field eval="5.0" name="hours"/>
 			<field eval="time.strftime('%Y-%m-%d')" name="date"/>
 		</record>
-				
+
 		<record id="project_task_work_scrum_task2" model="project.task.work">
 			<field name="user_id" ref="base.user_root"/>
 			<field name="name">Create a script for migration and testing</field>
@@ -264,6 +264,6 @@ Demo :Bugfix - memory leak
 			<field eval="10.0" name="hours"/>
 			<field eval="time.strftime('%Y-%m-%d')" name="date"/>
 		</record>
-		
+
     </data>
 </openerp>
