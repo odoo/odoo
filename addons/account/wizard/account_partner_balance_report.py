@@ -35,24 +35,11 @@ class account_partner_balance(osv.osv_memory):
         'soldeinit' : True,
                 }
 
-    def _check_date(self, cr, uid, data, context=None):
-        sql = """ SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql, (data['form']['date_from'],))
-        res = cr.dictfetchall()
-        if res:
-            if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                raise  osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
-        else:
-            raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
-        return True
-
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
         data['form'].update(self.read(cr, uid, ids, ['soldeinit'])[0])
-        if data['form']['filter'] == 'filter_date':
-            self._check_date(cr, uid, data, context=context)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',

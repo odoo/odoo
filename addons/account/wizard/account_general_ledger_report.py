@@ -91,34 +91,6 @@ class account_general_ledger_report(osv.osv_memory):
             'context': context
         }
 
-    def _check_date(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
-        sql = """
-            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql, (data['form']['date_from'],))
-        res = cr.dictfetchall()
-        if res:
-            if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                    raise  osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
-            else:
-                if data['form']['landscape'] == True:
-                    return {
-                        'type': 'ir.actions.report.xml',
-                        'report_name': 'account.general.ledger_landscape',
-                        'datas': data,
-                        'nodestroy':True,
-                    }
-                else:
-                    return {
-                        'type': 'ir.actions.report.xml',
-                        'report_name': 'account.general.ledger',
-                        'datas': data,
-                        'nodestroy':True,
-                    }
-        else:
-            raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
-
     def check_report(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -131,11 +103,6 @@ class account_general_ledger_report(osv.osv_memory):
         else:
             data['model'] = 'account.account'
         data['form']['context'] = context
-        if data['form']['state'] == 'bydate':
-            return self._check_date(cr, uid, data, context)
-        elif  data['form']['state'] == 'byperiod':
-            if not data['form']['periods']:
-                raise osv.except_osv(_('Data Insufficient !'),_('Please select periods.'))
         if data['form']['landscape'] == True:
             return {
                 'type': 'ir.actions.report.xml',
