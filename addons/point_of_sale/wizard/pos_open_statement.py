@@ -37,9 +37,11 @@ class pos_open_statement(osv.osv_memory):
              @param context: A standard dictionary
              @return : Blank Directory
         """
+        list_statement = []
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         statement_obj = self.pool.get('account.bank.statement')
         singer_obj = self.pool.get('singer.statement')
+        sequence_obj = self.pool.get('ir.sequence')
         journal_obj = self.pool.get('account.journal')
         journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True)])
         journal_ids = journal_obj.browse(cr, uid, journal_lst)
@@ -54,7 +56,6 @@ class pos_open_statement(osv.osv_memory):
             cr.execute(sql)
             st_id = cr.fetchone()
             number = ''
-            sequence_obj = self.pool.get('ir.sequence')
             if journal.statement_sequence_id:
                 number = sequence_obj.get_id(cr, uid, journal.id)
             else:
@@ -69,11 +70,11 @@ class pos_open_statement(osv.osv_memory):
     #                                                  })
             period = statement_obj._get_period(cr, uid, context) or None
             cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
-            cr.commit()
             cr.execute("select id from account_bank_statement where journal_id=%d and company_id=%d and user_id=%d and state='open' and name='%s'"%(journal.id, company_id, uid, number))
             statement_id = cr.fetchone()[0]
             if st_id:
                 statemt_id = statement_obj.browse(cr, uid, st_id[0])
+                list_statement.append(statemt_id.id)
                 if statemt_id and statemt_id.ending_details_ids:
                     statement_obj.write(cr, uid, [statement_id], {
                         'balance_start': statemt_id.balance_end,
@@ -86,7 +87,15 @@ class pos_open_statement(osv.osv_memory):
                                 'number': i.number,
                                 'starting_id': statement_id,
                             })
-            cr.commit()
+            return {
+                'domain': "[('id','in', ["+','.join(map(str,list_statement))+"])]",
+                'name': 'Open Statement',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'account.bank.statement',
+                'view_id': False, # TODO: REFERENCE RIGHT VIEWS
+                'type': 'ir.actions.act_window'
+}   
         return {}
 
 pos_open_statement()

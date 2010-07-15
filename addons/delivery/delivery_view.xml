@@ -61,14 +61,16 @@
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
                     <field name="carrier_id" select="1"/>
-                    <field name="sequence" select="1"/>
+                    <field name="sequence" groups="base.group_extended" select="1"/>
                     <notebook colspan="4">
                         <page string="Grid definition">
                             <field colspan="4" name="line_ids" nolabel="1" select="1"/>
                         </page>
                         <page string="Destination">
-                            <field colspan="4" name="country_ids"/>
-                            <field colspan="4" name="state_ids"/>
+                            <separator colspan="4" string="Countries"/>
+                            <field colspan="4" name="country_ids" nolabel="1"/>
+                            <separator colspan="4" string="States"/>
+                            <field colspan="4" name="state_ids" nolabel="1"/>
                             <field name="zip_from"/>
                             <field name="zip_to"/>
                         </page>
@@ -126,7 +128,7 @@
             <field name="arch" type="xml">
                 <group name="logistic" position="inside">
                     <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':id}"/>
+                    <field name="carrier_id" context="{'order_id':active_id}"/>
                 </group>
             </field>
         </record>
@@ -241,35 +243,11 @@
             </field>
         </record>
 
-        <record id="view_move_withweight_tree" model="ir.ui.view">
-            <field name="name">stock.move.tree.weight</field>
-            <field name="type">tree</field>
-            <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_move_tree"/>
-            <field name="arch" type="xml">
-                <field name="product_uom" position="after">
-                    <field name="weight"/>
-                </field>
-            </field>
-        </record>
-
         <record id="view_move_withweight_form" model="ir.ui.view">
             <field name="name">stock.move.form.weight</field>
             <field name="type">form</field>
             <field name="model">stock.move</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
-            <field name="arch" type="xml">
-                <field name="product_uom" position="after">
-                    <field name="weight"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_move_reception_picking_withweight_tree" model="ir.ui.view">
-            <field name="name">stock.move.reception.packing.tree.weight</field>
-            <field name="type">tree</field>
-            <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_move_tree_reception_picking"/>
             <field name="arch" type="xml">
                 <field name="product_uom" position="after">
                     <field name="weight"/>
@@ -295,8 +273,8 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                     <xpath expr="/form/notebook/page[@string='Sale Order']/group[1]/button[@name='button_dummy']" position="after">
- 			        	<button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-execute" context="{'order_id':id}"/>                    
- 			        </xpath>
+                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':id}"/>                    
+                    </xpath>
             </field>
         </record>
 

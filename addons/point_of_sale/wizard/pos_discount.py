@@ -37,6 +37,14 @@ class pos_discount(osv.osv_memory):
 
         
     def view_init(self, cr, uid, fields_list, context=None):
+        """ 
+         Creates view dynamically and adding fields at runtime.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary 
+         @return: New arch of view with new columns.
+        """        
         res = super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) or False        
         order = self.pool.get('pos.order').browse(cr, uid, record_id)

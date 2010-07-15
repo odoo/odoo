@@ -50,7 +50,7 @@ class auction_lots_invoice(osv.osv_memory):
         res = super(auction_lots_invoice, self).default_get(cr, uid, fields, context=context)
         service = netsvc.LocalService("object_proxy")
         lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context.get('active_ids', []))
-        auction = service.execute(cr.dbname,uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
+        auction = service.execute(cr.dbname, uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
     
         price = 0.0
         price_topay = 0.0

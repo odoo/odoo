@@ -26,7 +26,6 @@
     'category': 'Generic Modules/Human Resources',
     'description': """
     This module aims to manage employee's attendances.
-
     Keeps account of the attendances of the employees on the basis of the
     actions(Sign in/Sign out) performed by them.
        """,
@@ -34,6 +33,7 @@
     'depends': ['base', 'hr'],
     'update_xml': [
         'security/hr_security.xml',
+        'security/ir.model.access.csv', 
         'hr_attendance_view.xml',
         'hr_attendance_wizard.xml',
         'hr_attendance_report.xml',
@@ -42,8 +42,9 @@
         'wizard/hr_attendance_byweek_view.xml',
         'wizard/hr_attendance_error_view.xml',
         'wizard/hr_attendance_sign_in_out_view.xml',
-    ],
+        ],
     'demo_xml': ['hr_attendance_demo.xml'],
+    'test': ['test/test_hr_attendance.yml'],
     'installable': True,
     'active': False,
     'certificate': '0063495605613',

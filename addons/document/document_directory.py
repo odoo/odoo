@@ -31,7 +31,7 @@ from tools.translate import _
 
 class document_directory(osv.osv):
     _name = 'document.directory'
-    _description = 'Document directory'
+    _description = 'Directory'
     _order = 'name desc'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
@@ -60,6 +60,7 @@ class document_directory(osv.osv):
         'ressource_tree': fields.boolean('Tree Structure',
             help="Check this if you want to use the same tree structure as the object selected in the system."),
         'dctx_ids': fields.one2many('document.directory.dctx', 'dir_id', 'Context fields'),
+        'company_id': fields.many2one('res.company', 'Company'),        
     }
 
 
@@ -78,10 +79,10 @@ class document_directory(osv.osv):
             return False
         return objid.browse(cr, uid, mid, context=context).res_id
 
-    def _get_def_storage(self,cr,uid,context=None):
+    def _get_def_storage(self, cr, uid, context=None):
         if context and context.has_key('default_parent_id'):
                 # Use the same storage as the parent..
-                diro = self.browse(cr,uid,context['default_parent_id'])
+                diro = self.browse(cr, uid, context['default_parent_id'])
                 if diro.storage_id:
                         return diro.storage_id.id
         objid=self.pool.get('ir.model.data')
@@ -92,11 +93,11 @@ class document_directory(osv.osv):
                 return None
         
     _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'document.directory', context=c),
         'user_id': lambda self,cr,uid,ctx: uid,
         'domain': lambda self,cr,uid,ctx: '[]',
         'type': lambda *args: 'directory',
-        'ressource_id': lambda *a: 0,
-        'parent_id': _get_root_directory,
+        'ressource_id': lambda *a: 0,        
         'storage_id': _get_def_storage,
     }
     _sql_constraints = [
@@ -105,20 +106,22 @@ class document_directory(osv.osv):
     ]
     def name_get(self, cr, uid, ids, context={}):
         res = []
+        if not self.search(cr,uid,[('id','in',ids)]):
+            ids = []
         for d in self.browse(cr, uid, ids, context=context):
             s = ''
             d2 = d
             while d2 and d2.parent_id:
                 s = d2.name + (s and ('/' + s) or '')
                 d2 = d2.parent_id
-            res.append((d.id, s))
+            res.append((d.id, s or d.name))
         return res
 
     def get_full_path(self, cr, uid, dir_id, context=None):
         """ Return the full path to this directory, in a list, root first
         """
         def _parent(dir_id, path):
-            parent=self.browse(cr,uid,dir_id)
+            parent=self.browse(cr, uid, dir_id)
             if parent.parent_id and not parent.ressource_parent_type_id:
                 _parent(parent.parent_id.id,path)
                 path.append(parent.name)
@@ -129,12 +132,12 @@ class document_directory(osv.osv):
         _parent(dir_id, path)
         return path
 
-    def ol_get_resource_path(self,cr,uid,dir_id,res_model,res_id):
+    def ol_get_resource_path(self, cr, uid, dir_id, res_model, res_id):
         # this method will be used in process module
         # to be need test and Improvement if resource dir has parent resource (link resource)
         path=[]
         def _parent(dir_id,path):
-            parent=self.browse(cr,uid,dir_id)
+            parent=self.browse(cr, uid, dir_id)
             if parent.parent_id and not parent.ressource_parent_type_id:
                 _parent(parent.parent_id.id,path)
                 path.append(parent.name)
@@ -143,10 +146,10 @@ class document_directory(osv.osv):
                 return path
 
         directory=self.browse(cr,uid,dir_id)
-        model_ids=self.pool.get('ir.model').search(cr,uid,[('model','=',res_model)])
+        model_ids=self.pool.get('ir.model').search(cr, uid, [('model','=',res_model)])
         if directory:
             _parent(dir_id,path)
-            path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
+            path.append(self.pool.get(directory.ressource_type_id.model).browse(cr, uid, res_id).name)
             #user=self.pool.get('res.users').browse(cr,uid,uid)
             #return "ftp://%s:%s@localhost:%s/%s/%s"%(user.login,user.password,config.get('ftp_server_port',8021),cr.dbname,'/'.join(path))
             # No way we will return the password!
@@ -194,58 +197,17 @@ class document_directory(osv.osv):
             context['lang'] = lang
             
         try: #just instrumentation
-                return nodes.get_node_context(cr, uid, context).get_uri(cr,uri)
+                return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
         except Exception,e:
                 print "exception: ",e
                 raise
 
 
-    def _locate_child(self, cr,uid, root_id, uri,nparent, ncontext):
+    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
         """ try to locate the node in uri,
             Return a tuple (node_dir, remaining_path)
         """
-        did = root_id
-        duri = uri
-        path = []
-        context = ncontext.context        
-        while len(duri):            
-            nid = self.search(cr,uid,[('parent_id','=',did),('name','=',duri[0]),('type','=','directory')], context=context)            
-            if not nid:
-                break
-            if len(nid)>1:
-                print "Duplicate dir? p= %d, n=\"%s\"" %(did,duri[0])
-            path.append(duri[0])
-            duri = duri[1:]
-            did = nid[0]
-        root_node = did and self.browse(cr,uid,did, context) or False
-        return (nodes.node_dir(path, nparent,ncontext, root_node), duri)
-
-        
-        nid = self.search(cr,uid,[('parent_id','=',did),('name','=',duri[0]),('type','=','ressource')], context=context)
-        if nid:
-            if len(nid)>1:
-                print "Duplicate dir? p= %d, n=\"%s\"" %(did,duri[0])
-            path.append(duri[0])
-            duri = duri[1:]
-            did = nid[0]
-            return nodes.node_res_dir(path, nparent,ncontext,self.browse(cr,uid,did, context))
-
-        # Here, we must find the appropriate non-dir child..
-        # Chech for files:
-        fil_obj = self.pool.get('ir.attachment')
-        nid = fil_obj.search(cr,uid,[('parent_id','=',did),('name','=',duri[0])],context=context)
-        if nid:
-                if len(duri)>1:
-                        # cannot treat child as a dir
-                        return None
-                if len(nid)>1:
-                        print "Duplicate file?",did,duri[0]
-                path.append(duri[0])
-                return nodes.node_file(path,nparent,ncontext,fil_obj.browse(cr,uid,nid[0],context))
-        
-        print "nothing found:",did, duri
-        #still, nothing found
-        return None
+        return (nodes.node_database(context=ncontext), uri)         
         
     def old_code():
         if not uri:
@@ -275,15 +237,15 @@ class document_directory(osv.osv):
             default ={}
         name = self.read(cr, uid, [id])[0]['name']
         default.update({'name': name+ " (copy)"})
-        return super(document_directory,self).copy(cr,uid,id,default,context)
+        return super(document_directory,self).copy(cr, uid, id, default, context)
 
-    def _check_duplication(self, cr, uid,vals,ids=[],op='create'):
+    def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name=vals.get('name',False)
         parent_id=vals.get('parent_id',False)
         ressource_parent_type_id=vals.get('ressource_parent_type_id',False)
         ressource_id=vals.get('ressource_id',0)
         if op=='write':
-            for directory in self.browse(cr,uid,ids):
+            for directory in self.browse(cr, uid, ids):
                 if not name:
                     name=directory.name
                 if not parent_id:
@@ -301,12 +263,12 @@ class document_directory(osv.osv):
                 return False
         return True
     def write(self, cr, uid, ids, vals, context=None):
-        if not self._check_duplication(cr,uid,vals,ids,op='write'):
+        if not self._check_duplication(cr, uid, vals, ids, op='write'):
             raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
-        return super(document_directory,self).write(cr,uid,ids,vals,context=context)
+        return super(document_directory,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        if not self._check_duplication(cr,uid,vals):
+        if not self._check_duplication(cr, uid, vals):
             raise osv.except_osv(_('ValidateError'), _('Directory name must be unique!'))
         if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
             raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
@@ -324,7 +286,7 @@ class document_directory_dctx(osv.osv):
         appended to all children down the tree.
     """
     _name = 'document.directory.dctx'
-    _description = 'Directory dynamic context'
+    _description = 'Directory Dynamic Context'
     _columns = {
         'dir_id': fields.many2one('document.directory', 'Directory', required=True),
         'field': fields.char('Field', size=20, required=True, select=1, help="The name of the field. Note that the prefix \"dctx_\" will be prepended to what is typed here."),

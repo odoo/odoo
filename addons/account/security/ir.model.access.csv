@@ -1,4 +1,5 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_product_product_account_user","product.product.account.user","product.model_product_product","group_account_user",1,0,0,0
 "access_account_payment_term","account.payment.term","model_account_payment_term","account.group_account_user",1,0,0,0
 "access_account_payment_term_line","account.payment.term.line","model_account_payment_term_line","account.group_account_user",1,0,0,0
 "access_account_account_type","account.account.type","model_account_account_type","account.group_account_user",1,0,0,0
@@ -15,8 +16,8 @@
 "access_account_move","account.move","model_account_move","account.group_account_user",1,1,1,1
 "access_account_move_line","account.move.line","model_account_move_line","account.group_account_user",1,1,1,1
 "access_account_move_reconcile","account.move.reconcile","model_account_move_reconcile","account.group_account_user",1,1,1,1
-"access_account_tax_code","account.tax.code","model_account_tax_code",,1,0,0,0
-"access_account_tax","account.tax","model_account_tax",,1,0,0,0
+"access_account_tax_code","account.tax.code","model_account_tax_code","account.group_account_invoice",1,0,0,0
+"access_account_tax","account.tax","model_account_tax","account.group_account_invoice",1,0,0,0
 "access_account_model","account.model","model_account_model","account.group_account_user",1,1,1,1
 "access_account_model_line","account.model.line","model_account_model_line","account.group_account_user",1,1,1,1
 "access_account_subscription","account.subscription","model_account_subscription","account.group_account_user",1,1,1,1
@@ -26,8 +27,6 @@
 "access_account_tax_code_template","account.tax.code.template","model_account_tax_code_template","account.group_account_manager",1,1,1,1
 "access_account_chart_template","account.chart.template","model_account_chart_template","account.group_account_manager",1,1,1,1
 "access_account_tax_template","account.tax.template","model_account_tax_template","account.group_account_manager",1,1,1,1
-"access_wizard_multi_charts_accounts","wizard.multi.charts.accounts","model_wizard_multi_charts_accounts","account.group_account_manager",1,1,1,1
-"access_account_bank_accounts_wizard","account.bank.accounts.wizard","model_account_bank_accounts_wizard","account.group_account_manager",1,1,1,1
 "access_account_bank_statement","account.bank.statement","model_account_bank_statement","account.group_account_user",1,1,1,1
 "access_account_bank_statement_reconcile","account.bank.statement.reconcile","model_account_bank_statement_reconcile","account.group_account_user",1,1,1,1
 "access_account_bank_statement_reconcile_line","account.bank.statement.reconcile.line","model_account_bank_statement_reconcile_line","account.group_account_user",1,1,1,1
@@ -65,13 +64,8 @@
 "access_account_fiscalyear_invoice","account.fiscalyear.invoice","model_account_fiscalyear","account.group_account_invoice",1,0,0,0
 "access_res_currency_account_manager","res.currency account manager","base.model_res_currency","group_account_manager",1,1,1,1
 "access_res_currency_rate_account_manager","res.currency.rate account manager","base.model_res_currency_rate","group_account_manager",1,1,1,1
-"access_account_config_wizard_account_manager","account.config.wizard account manager","model_account_config_wizard","group_account_manager",1,1,1,1
-"access_account_config_wizard_system_manager","account.config.wizard system manager","model_account_config_wizard","base.group_system",1,1,1,1
-"access_account_add_tmpl_wizard_account_manager","account.addtmpl.wizard account manager","model_account_addtmpl_wizard","group_account_manager",1,1,1,1
-"access_account_add_tmpl_wizard_system_manager","account.addtmpl.wizard system manager","model_account_addtmpl_wizard","base.group_system",1,1,1,1
 "access_account_invoice_user","account.invoice user","model_account_invoice","base.group_user",1,0,0,0
 "access_account_invoice_user","account.invoice.line user","model_account_invoice_line","base.group_user",1,0,0,0
-"access_account_invoice_user","account.invoice.tax user","model_account_invoice_tax","base.group_user",1,0,0,0
 "access_account_payment_term_partner_manager","account.payment.term partner manager","model_account_payment_term","base.group_user",1,0,0,0
 "access_account_payment_term_line_partner_manager","account.payment.term.line partner manager","model_account_payment_term_line","base.group_user",1,0,0,0
 "access_account_account_product_manager","account.account product manager","model_account_account","product.group_product_manager",1,0,0,0
@@ -87,7 +81,6 @@
 "access_account_fiscal_position_account_template","account.fiscal.position.account.template","model_account_fiscal_position_account_template","account.group_account_manager",1,1,1,1
 "access_account_sequence_fiscal_year","account.sequence.fiscalyear","model_account_sequence_fiscalyear","account.group_account_user",1,1,1,1
 "access_account_sequence_fiscal_year_user","account.sequence.fiscalyear user","model_account_sequence_fiscalyear","base.group_user",1,0,0,0
-"access_account_installer","account.installer","model_account_installer","base.group_user",1,0,0,0
 "access_report_account_receivable","report.account.receivable","model_report_account_receivable","account.group_account_manager",1,0,0,0
 "access_temp_range","temp.range","model_temp_range","account.group_account_manager",1,0,0,0
 "access_report_aged_receivable","report.aged.receivable","model_report_aged_receivable","account.group_account_manager",1,0,0,0
@@ -95,3 +88,6 @@
 "access_report_account_type_sales","report.account_type.sales","model_report_account_type_sales","account.group_account_manager",1,0,0,0
 "access_report_account_sales","report.account.sales","model_report_account_sales","account.group_account_manager",1,0,0,0
 "access_account_invoice_report","account.invoice.report","model_account_invoice_report","account.group_account_manager",1,0,0,0
+"access_account_account_report_manager","account.account.report","model_account_account_report","account.group_account_manager",1,0,0,0
+"access_account_entries_report_manager","account.entries.report","model_account_entries_report","account.group_account_manager",1,0,0,0
+"access_analytic_entries_report_manager","analytic.entries.report","model_analytic_entries_report","account.group_account_manager",1,0,0,0

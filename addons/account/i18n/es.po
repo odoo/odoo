@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-04-11 21:46+0000\n"
-"Last-Translator: Juan Eduardo Riva <juaneduardoriva@gmail.com>\n"
+"PO-Revision-Date: 2010-06-29 22:11+0000\n"
+"Last-Translator: Borja López Soilán (Pexego) <borjals@pexego.es>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:07+0000\n"
+"X-Launchpad-Export-Date: 2010-07-01 03:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -60,7 +60,7 @@ msgstr "Nombre de modelo inválido en la definición de acción."
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr "La moneda utilizada para introducir asientos"
+msgstr "La divisa utilizada para introducir asientos."
 
 #. module: account
 #: wizard_view:account_use_models,init_form:0
@@ -456,7 +456,7 @@ msgstr "Estado"
 #: model:ir.actions.act_window,name:account.action_invoice_tree13
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree13
 msgid "Unpaid Supplier Refunds"
-msgstr "Facturas de abono de proveedor sin pagar"
+msgstr "Facturas rectificativas (abono) de proveedor sin pagar"
 
 #. module: account
 #: view:account.tax:0
@@ -805,7 +805,7 @@ msgstr "Cuenta de la empresa"
 #. module: account
 #: wizard_view:account.subscription.generate,init:0
 msgid "Generate entries before:"
-msgstr "Generar asientos antes:"
+msgstr "Generar asientos hasta:"
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -827,11 +827,6 @@ msgstr "(dejarlo vacío para todos los ejercicios fiscales abiertos)"
 #: field:account.invoice,move_lines:0
 msgid "Move Lines"
 msgstr "Líneas movimiento"
-
-#. module: account
-#: model:ir.model,name:account.model_account_config_wizard
-msgid "account.config.wizard"
-msgstr "account.config.asistente"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.report_account_analytic_journal_tree
@@ -1237,10 +1232,10 @@ msgid ""
 "software system you may have to use the rate at date. Incoming transactions "
 "always use the rate at date."
 msgstr ""
-"Permite seleccionar la forma en que la tasa de la moneda actual de las "
-"transacciones de salida se calcula. En la mayoría de los países el método "
-"legal es \"Promedio\", pero sólo unos pocos sistemas de software son capaces "
-"de gestionarlo. Por lo tanto, si la importación procede de otro sistema de "
+"Permite seleccionar la forma en que se calcula la tasa de la divisa actual "
+"en las transacciones de salida. En la mayoría de los países el método legal "
+"es \"Promedio\", pero sólo unos pocos sistemas de software son capaces de "
+"gestionarlo. Por lo tanto, si la importación procede de otro sistema de "
 "software, es posible que tenga que utilizar la tasa \"En fecha\". Las "
 "transacciones de entrada siempre utilizan la tasa \"En fecha\"."
 
@@ -1892,7 +1887,7 @@ msgstr "Fecha inicial"
 #. module: account
 #: model:account.journal,name:account.refund_expenses_journal
 msgid "x Expenses Credit Notes Journal"
-msgstr "x Diario facturas de abono de gastos"
+msgstr "x Diario facturas rectificativas (abono) de gastos"
 
 #. module: account
 #: field:account.analytic.journal,type:0
@@ -1919,7 +1914,7 @@ msgstr "Base imponible"
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr "Cuenta impuestos de factura"
+msgstr "Cuenta impuestos de facturas"
 
 #. module: account
 #: view:account.move.line:0
@@ -2031,7 +2026,7 @@ msgstr "Informe analítico de diario"
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr "Facturas de abono de cliente"
+msgstr "Facturas rectificativas (abono) de cliente"
 
 #. module: account
 #: rml:account.vat.declaration:0
@@ -2052,7 +2047,7 @@ msgstr "Nombre diario-período"
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
-msgstr "Nombre impuesto del caso"
+msgstr "Nombre código de impuesto"
 
 #. module: account
 #: help:account.journal,entry_posted:0
@@ -2119,7 +2114,7 @@ msgstr "Comentario situacion fiscal"
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
 msgid "Opening Entries Period"
-msgstr "Periodo asientos de apertura"
+msgstr "Período asientos de apertura"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_validate_account_moves
@@ -2150,7 +2145,7 @@ msgstr "Anterior"
 #: field:account.model.line,currency_id:0
 #: field:account.move.line,currency_id:0
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Divisa"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -2185,7 +2180,8 @@ msgid "Analytic Entry"
 msgstr "Asiento analítico"
 
 #. module: account
-#: view:res.company:0 field:res.company,overdue_msg:0
+#: view:res.company:0
+#: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
 msgstr "Mensaje pagos vencidos"
 
@@ -2229,7 +2225,7 @@ msgstr "Facturas de proveedor en borrador"
 #. module: account
 #: wizard_field:account.invoice.refund,init,period:0
 msgid "Force period"
-msgstr "Forzar periodo"
+msgstr "Forzar período"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -2310,7 +2306,7 @@ msgstr "Fecha factura"
 #: help:account.third_party_ledger.report,init,periods:0
 #: help:account.vat.declaration,init,periods:0
 msgid "All periods if empty"
-msgstr "Todos los periodos si está vacío"
+msgstr "Todos los períodos si está vacío."
 
 #. module: account
 #: model:account.account.type,name:account.account_type_liability
@@ -2534,7 +2530,7 @@ msgstr "Asientos conciliados"
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_amount:0
 msgid "The amount in the currency of the journal"
-msgstr "La cantidad en la moneda del diario"
+msgstr "El importe en la divisa del diario."
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
@@ -2932,7 +2928,7 @@ msgstr "Estado abierto"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Created Entries"
-msgstr "Omitir el estado 'Borrador ' para los asientos creados"
+msgstr "Omitir estado 'Borrador ' al crear asientos"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -2968,7 +2964,7 @@ msgstr "1cm 27.7cm 20cm 27.7cm"
 #: model:ir.actions.act_window,name:account.action_invoice_tree12
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree12
 msgid "Draft Supplier Refunds"
-msgstr "Facturas de abono de proveedor en borrador"
+msgstr "Facturas rectificativas (abono) de proveedor en borrador"
 
 #. module: account
 #: model:process.node,name:account.process_node_accountingstatemententries0
@@ -3055,7 +3051,7 @@ msgstr "Tasa de divisas de salida"
 #: model:ir.actions.act_window,name:account.action_invoice_tree10
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree10
 msgid "Draft Customer Refunds"
-msgstr "Facturas de abono de cliente en borrador"
+msgstr "Facturas rectificativas (abono) de cliente en borrador"
 
 #. module: account
 #: field:account.journal.column,readonly:0
@@ -3088,7 +3084,7 @@ msgstr "Documento"
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "El movimiento de esta línea del asiento."
+msgstr "El asiento de este apunte."
 
 #. module: account
 #: field:account.invoice.line,uos_id:0
@@ -3238,7 +3234,7 @@ msgstr "Diario de banco"
 #: selection:account.partner.balance.report,init,state:0
 #: selection:account.third_party_ledger.report,init,state:0
 msgid "By Date and Period"
-msgstr "Por fecha y periodo"
+msgstr "Por fecha y período"
 
 #. module: account
 #: view:account.account:0
@@ -3347,7 +3343,7 @@ msgstr "Nombre impuesto"
 #. module: account
 #: wizard_view:account.fiscalyear.close.state,init:0
 msgid " Close states of Fiscal year and periods"
-msgstr " Cerrar estados de ejercicio fiscal y periodos"
+msgstr " Cerrar estados de ejercicio fiscal y períodos"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
@@ -3544,7 +3540,7 @@ msgstr "Titular de la cuenta bancaria"
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
 msgid "Filter on Periods"
-msgstr "Filtrar por periodos"
+msgstr "Filtrar por períodos"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
@@ -3612,7 +3608,7 @@ msgstr "Impreso"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4_new
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4_new
 msgid "New Supplier Refund"
-msgstr "Nueva factura de abono de proveedor"
+msgstr "Nueva factura rectificativa (abono) de proveedor"
 
 #. module: account
 #: view:account.model:0
@@ -3622,7 +3618,7 @@ msgstr "Modelo de asiento"
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,amount_currency:0
 msgid "With Currency"
-msgstr "Con moneda"
+msgstr "Con divisa"
 
 #. module: account
 #: view:account.account:0
@@ -3683,7 +3679,7 @@ msgstr ""
 #: wizard_field:account.invoice.pay,addendum,comment:0
 #: wizard_field:account.invoice.pay,init,name:0
 msgid "Entry Name"
-msgstr "Núm. asiento"
+msgstr "Descripción"
 
 #. module: account
 #: help:account.invoice,account_id:0
@@ -3727,7 +3723,7 @@ msgstr "Codificación asiento"
 #: wizard_view:account.invoice.refund,init:0
 #: model:ir.actions.wizard,name:account.wizard_invoice_refund
 msgid "Credit Note"
-msgstr "Factura de abono"
+msgstr "Factura rectificativa (abono)"
 
 #. module: account
 #: model:ir.actions.todo,note:account.config_fiscalyear
@@ -3742,7 +3738,7 @@ msgstr "Período de desajuste"
 #. module: account
 #: selection:account.config.wizard,period:0
 msgid "3 Months"
-msgstr "3 meses"
+msgstr "Trimestral"
 
 #. module: account
 #: wizard_view:account.move.journal,init:0
@@ -3873,7 +3869,7 @@ msgstr "Secuencia del asiento"
 #: selection:account.account,type:0
 #: selection:account.account.template,type:0
 msgid "Closed"
-msgstr "Cerrado"
+msgstr "Cierre"
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -3929,7 +3925,7 @@ msgstr "Movimiento"
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr "Estos periodos se pueden solapar."
+msgstr "Estos períodos se pueden solapar."
 
 #. module: account
 #: help:product.template,property_account_expense:0
@@ -3957,7 +3953,7 @@ msgstr "Diarios financieros"
 #: selection:account.partner.balance.report,init,state:0
 #: selection:account.third_party_ledger.report,init,state:0
 msgid "By Period"
-msgstr "Por periodo"
+msgstr "Por período"
 
 #. module: account
 #: help:account.invoice,date_invoice:0
@@ -4055,7 +4051,7 @@ msgstr "Cuenta a pagar"
 #: field:account.account,currency_id:0
 #: field:account.account.template,currency_id:0
 msgid "Secondary Currency"
-msgstr "Moneda secundaria"
+msgstr "Divisa secundaria"
 
 #. module: account
 #: field:account.account,credit:0
@@ -4090,7 +4086,7 @@ msgstr ""
 #: field:account.tax,account_paid_id:0
 #: field:account.tax.template,account_paid_id:0
 msgid "Refund Tax Account"
-msgstr "Cuenta impuestos de devoluciones"
+msgstr "Cuenta impuestos de reintegros"
 
 #. module: account
 #: field:account.tax.code,child_ids:0
@@ -4170,7 +4166,7 @@ msgstr "Límite a pagar"
 #: wizard_field:account.partner.balance.report,init,state:0
 #: wizard_field:account.third_party_ledger.report,init,state:0
 msgid "Date/Period Filter"
-msgstr "Filtrar fecha/periodo"
+msgstr "Filtrar por fecha/período"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -4193,7 +4189,7 @@ msgstr "Secuencias de diarios separadas"
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_currency:0
 msgid "The currency of the journal"
-msgstr "La moneda del diario"
+msgstr "La divisa del diario"
 
 #. module: account
 #: view:account.journal.column:0
@@ -4436,7 +4432,7 @@ msgstr "Fijado"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Credit Notes"
-msgstr "Facturas de abono"
+msgstr "Facturas rectificativas (abono)"
 
 #. module: account
 #: field:account.config.wizard,date2:0
@@ -4506,7 +4502,7 @@ msgstr "Línea del modelo de asiento"
 #. module: account
 #: view:account.tax.template:0
 msgid "Account Tax Template"
-msgstr "Plantilla de impuesto"
+msgstr "Plantilla de impuestos"
 
 #. module: account
 #: help:account.model,name:0
@@ -4628,7 +4624,7 @@ msgstr "Por fecha"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Facturas de abono de proveedor"
+msgstr "Facturas rectificativas (abono) de proveedor"
 
 #. module: account
 #: help:account.model.line,date:0
@@ -5133,7 +5129,7 @@ msgstr "Cuenta de ingresos en plantilla producto"
 #: help:account.account.template,currency_id:0
 msgid "Force all moves for this account to have this secondary currency."
 msgstr ""
-"Fuerza a todos los movimientos de esta cuenta que tengan esta moneda "
+"Fuerza a todos los movimientos de esta cuenta que tengan esta divisa "
 "secundaria."
 
 #. module: account
@@ -5147,7 +5143,7 @@ msgstr "_Cancelar"
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
 msgid "Select Date-Period"
-msgstr "Seleccionar fecha-periodo"
+msgstr "Seleccionar fecha-período"
 
 #. module: account
 #: rml:account.analytic.account.inverted.balance:0
@@ -5176,7 +5172,7 @@ msgstr "Grupo de Impuestos"
 #: model:ir.actions.act_window,name:account.action_invoice_tree3_new
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3_new
 msgid "New Customer Refund"
-msgstr "Nueva factura de abono de cliente"
+msgstr "Nueva factura rectificativa (abono) de cliente"
 
 #. module: account
 #: help:wizard.multi.charts.accounts,seq_journal:0
@@ -5374,7 +5370,7 @@ msgstr "Pagado"
 #: model:ir.actions.act_window,name:account.action_invoice_tree11
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree11
 msgid "Unpaid Customer Refunds"
-msgstr "Facturas de abono de cliente sin pagar"
+msgstr "Facturas rectificativas (abono) de cliente sin pagar"
 
 #. module: account
 #: help:account.invoice,residual:0
@@ -5562,7 +5558,7 @@ msgstr "Saldo pendiente"
 #. module: account
 #: rml:account.invoice:0
 msgid "Refund"
-msgstr "Factura de abono"
+msgstr "Factura rectificativa (abono)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -5799,7 +5795,7 @@ msgstr ""
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
-msgstr "Código caso"
+msgstr "Código"
 
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0
@@ -5815,7 +5811,7 @@ msgstr "Cuenta de ingresos"
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr "Periodo de apertura/cierre"
+msgstr "Período de apertura/cierre"
 
 #. module: account
 #: rml:account.analytic.account.balance:0
@@ -5923,7 +5919,7 @@ msgstr "Dejarlo vacío para todos los ejercicios fiscales abiertos"
 #: rml:account.invoice:0
 #: selection:account.invoice,type:0
 msgid "Supplier Refund"
-msgstr "Factura de abono de proveedor"
+msgstr "Factura rectificativa (abono) de proveedor"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
@@ -6079,3 +6075,365 @@ msgstr ""
 #: wizard_button:account.subscription.generate,init,generate:0
 msgid "Compute Entry Dates"
 msgstr "Calcular fechas asiento"
+
+#. module: account
+#: view:board.board:0
+msgid "Analytic accounts to close"
+msgstr "Cuentas analíticas a cerrar"
+
+#. module: account
+#: view:board.board:0
+msgid "Draft invoices"
+msgstr "Facturas borrador"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_board_account
+msgid "Accounting Dashboard"
+msgstr "Tablero de contabilidad"
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.act_my_account
+msgid "Accounts to invoice"
+msgstr "Cuentas a facturar"
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.action_account_analytic_line_to_invoice
+msgid "Costs to invoice"
+msgstr "Costos a facturar"
+
+#. module: account
+#: view:board.board:0
+msgid "Aged receivables"
+msgstr "Efectos vencidos a cobrar"
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Board for accountant"
+msgstr "Tablero para contables"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_income
+msgid "Income Accounts"
+msgstr "Cuentas de ingresos"
+
+#. module: account
+#: view:board.board:0
+msgid "My indicators"
+msgstr "Mis indicadores"
+
+#. module: account
+#: view:board.board:0
+msgid "Account Board"
+msgstr "Tablero de contabilidad"
+
+#. module: account
+#: view:board.board:0
+msgid "Aged income"
+msgstr "Ingresos vencidos"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,show_columns:0
+msgid "Show Debit/Credit Information"
+msgstr "Mostrar información débito/crédito"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "All accounts"
+msgstr "Todas las cuentas"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,period_manner:0
+msgid "Entries Selection Based on"
+msgstr "Selección de entradas basada en"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr "Notificación"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Financial Period"
+msgstr "Periodo financiero"
+
+#. module: account
+#: model:ir.actions.report.xml,name:account.account_account_balance
+#: model:ir.actions.report.xml,name:account.account_account_balance_landscape
+msgid "Account balance"
+msgstr "Balance contable"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period(s)"
+msgstr "Seleccione período(s)"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Percentage"
+msgstr "Porcentaje"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Compare Selected Years In Terms Of"
+msgstr "Comparar ejercicios seleccionados en términos de"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Fiscal Year(s)(Maximum Three Years)"
+msgstr "Seleccionar ejercicio(s) fiscal(es) (máximo 3 años)"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr "Seleccione cuenta de referencia (para comparación %)"
+
+#. module: account
+#: model:ir.actions.wizard,name:account.wizard_account_balance_report
+msgid "Account balance-Compare Years"
+msgstr "Balance contable-Compara ejercicios"
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid ""
+"Account Balance Module is an added functionality to the Financial Management "
+"module.\n"
+"\n"
+"    This module gives you the various options for printing balance sheet.\n"
+"\n"
+"    1. You can compare the balance sheet for different years.\n"
+"\n"
+"    2. You can set the cash or percentage comparison between two years.\n"
+"\n"
+"    3. You can set the referential account for the percentage comparison for "
+"particular years.\n"
+"\n"
+"    4. You can select periods as an actual date or periods as creation "
+"date.\n"
+"\n"
+"    5. You have an option to print the desired report in Landscape format.\n"
+"    "
+msgstr ""
+"El módulo de balance de cuentas es una funcionalidad añadida al módulo de "
+"gestión financiera.\n"
+"\n"
+"    Este módulo ofrece diversas opciones de impresión de balances.\n"
+"\n"
+"    1. Se puede comparar el balance de distintos años.\n"
+"\n"
+"    2. Puede establecer la comparación en importe o porcentual entre dos "
+"años.\n"
+"\n"
+"    3. Puede establecer la cuenta de referencia para la comparación "
+"porcentual para años en particular.\n"
+"\n"
+"    4. Puede seleccionar períodos como una fecha real o períodos como fecha "
+"de creación.\n"
+"\n"
+"    5. Puede imprimir el informe que desee en formato apaisado.\n"
+"    "
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You have to select 'Landscape' option. Please Check it."
+msgstr "Debe seleccionar la opción 'Horizontal'. Por favor, márquela."
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,landscape:0
+msgid "Show Report in Landscape Form"
+msgstr "Mostrar informe en formato horizontal"
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr "Total :"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,format_perc:0
+msgid "Show Comparision in %"
+msgstr "Mostrar comparación en %"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr "Seleccionar periodo"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Report Options"
+msgstr "Opciones del informe"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Don't Compare"
+msgstr "No comparar"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,account_choice:0
+msgid "Show Accounts"
+msgstr "Mostrar cuentas"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "1. You have selected more than 3 years in any case."
+msgstr "1. Ha seleccionado más de 3 ejercicios en cualquier caso."
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Accounting and financial management-Compare Accounts"
+msgstr "Gestión contable y financiera - Comparación de cuentas"
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr "Ejercicio :"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You can select maximum 3 years. Please check again."
+msgstr ""
+"Puede seleccionar un máximo de 3 ejercicios. Por favor, seleccione otra vez."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"3. You have selected 'Percentage' option with more than 2 years, but you "
+"have not selected landscape format."
+msgstr ""
+"﻿3. Ha seleccionado la opción 'Porcentaje' con más de 2 ejercicios, pero no "
+"ha seleccionado formato horizontal."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"You might have done following mistakes. Please correct them and try again."
+msgstr ""
+"﻿Podría haber cometido los siguientes errores. Por favor, corríjalos e "
+"inténtelo de nuevo."
+
+#. module: account
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr "Dejarlo vacío para comparar con sus padres"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Creation Date"
+msgstr "Fecha creación"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"2. You have not selected 'Percentage' option, but you have selected more "
+"than 2 years."
+msgstr ""
+"﻿2. No ha seleccionado la opción 'Porcentaje', pero ha seleccionado más de 2 "
+"ejercicios."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid ""
+"You may have selected the compare options with more than 1 year with "
+"credit/debit columns and % option.This can lead contents to be printed out "
+"of the paper.Please try again."
+msgstr ""
+"Puede haber seleccionado las opciones comparar con más de 1 ejercicio con "
+"columnas crédito/débito y opción %. Esto pueden ocasionar que hayan "
+"contenidos que se impriman fuera del papel. Por favor, inténtelo de nuevo."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You have to select at least 1 Fiscal Year. Try again."
+msgstr ""
+"Debe seleccionar al menos un ejercicio fiscal. Por favor, inténtelo de nuevo."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Customize Report"
+msgstr "Informe personalizado"
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr "Rango mensual"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr "Facturas creadas en los últimos 15 días"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr "Informe de facturas creadas en los últimos 15 días"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr "Importe total"
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "Cuentas por tipo"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr "Efectos a cobrar vencidos hasta hoy"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr "Cuentas a cobrar"
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr "Intervalo"
+
+#. module: account
+#: model:ir.module.module,description:report_account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr ""
+"Módulo que añade nuevos informes basado en el módulo contable-financiero."
+
+#. module: account
+#: model:ir.module.module,shortdesc:report_account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr "Informe contable - Informe"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "Saldo por tipo de cuenta"
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr "Semana del año"
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr "A cobrar anteriores"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr "Base imponible"
+
+#~ msgid "account.config.wizard"
+#~ msgstr "account.config.asistente"

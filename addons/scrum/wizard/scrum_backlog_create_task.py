@@ -47,14 +47,14 @@ class backlog_create_task(osv.osv_memory):
                 'description': backlog.note,
                 'project_id': backlog.project_id.id,
                 'user_id': data['user_id'] or False,
-                'planned_hours': backlog.planned_hours,
+                'planned_hours': backlog.expected_hours,
                 'remaining_hours':backlog.expected_hours,
                 'sequence':backlog.sequence,
             }))
 
         return {
             'domain': "[('product_backlog_id','in',["+','.join(map(str, context['active_ids']))+"])]",
-            'name': 'Open Backlog Tasks',
+            'name': 'Tasks',
             'res_id': ids_task,
             'view_type': 'form',
             'view_mode': 'tree,form',

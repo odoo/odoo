@@ -71,7 +71,7 @@ Call Could not convert into Opportunity"))
         """
         record_id = context and context.get('active_id', False) or False
         if record_id:
-            opp_obj = self.pool.get('crm.opportunity')
+            opp_obj = self.pool.get('crm.lead')
             phonecall_obj = self.pool.get('crm.phonecall')
             case = phonecall_obj.browse(cr, uid, record_id, context=context)
             data_obj = self.pool.get('ir.model.data')
@@ -85,18 +85,26 @@ Call Could not convert into Opportunity"))
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             for this in self.browse(cr, uid, ids, context=context):
+                address = None
+                if this.partner_id:
+                    address_id = self.pool.get('res.partner').address_get(cr, uid, [this.partner_id.id])
+                    if address_id:
+                        address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'], context=context)
                 new_opportunity_id = opp_obj.create(cr, uid, {
                                 'name': this.name,
                                 'planned_revenue': this.planned_revenue,
                                 'probability': this.probability,
                                 'partner_id': this.partner_id and this.partner_id.id or False,
+                                'partner_address_id': address and address.id, 
+                                'phone': address and address.phone,
+                                'mobile': address and address.mobile,
                                 'section_id': case.section_id and case.section_id.id or False,
                                 'description': case.description or False,
                                 'phonecall_id': case.id,
                                 'priority': case.priority,
+                                'type': 'opportunity', 
                                 'phone': case.partner_phone or False,
                             })
-                new_opportunity = opp_obj.browse(cr, uid, new_opportunity_id)
                 vals = {
                             'partner_id': this.partner_id.id,
                             'opportunity_id' : new_opportunity_id,
@@ -109,7 +117,7 @@ Call Could not convert into Opportunity"))
             'name': _('Opportunity'),
             'view_type': 'form',
             'view_mode': 'form,tree',
-            'res_model': 'crm.opportunity',
+            'res_model': 'crm.lead',
             'res_id': int(new_opportunity_id),
             'view_id': False,
             'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],

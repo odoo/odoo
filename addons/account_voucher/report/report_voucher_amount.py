@@ -23,7 +23,6 @@ import time
 from report import report_sxw
 from tools import amount_to_text_en
 
-
 class report_voucher_amount(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(report_voucher_amount, self).__init__(cr, uid, name, context)
@@ -32,8 +31,8 @@ class report_voucher_amount(report_sxw.rml_parse):
             'convert':self.convert
         })
 
-    def convert(self,amount, cur):
-        amt_en = amount_to_text_en.amount_to_text(amount,'en',cur);
+    def convert(self, amount, cur):
+        amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur);
         return amt_en
     
     

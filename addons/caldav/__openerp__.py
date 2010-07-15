@@ -25,6 +25,7 @@
     "version" : "1.0", 
     "depends" : [
                     "base", 
+                    "document_webdav",
                 ], 
      'description': """
     This module Contains basic functionality for caldav system like:  
@@ -34,7 +35,7 @@
   - Provides iCal Import/Export functionality
 
     To access OpenERP Calendar using caldav to remote site use the URL like:
-        http://HOSTNAME:PORT/calendar/DATABASE_NAME/CALENDAR_NAME.ics
+        http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics
 
       Where,
         HOSTNAME: Host on which OpenERP server(With webdav) is running

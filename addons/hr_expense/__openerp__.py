@@ -34,13 +34,13 @@
     * Validation by the accountant and invoice creation
     * Payment of the invoice to the employee
 
-    This module also use the analytic accounting and is compatible with
+    This module also uses the analytic accounting and is compatible with
     the invoice on timesheet module so that you will be able to automatically
     re-invoice your customer's expenses if your work by project.
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['hr', 'account', 'account_tax_include'],
+    'depends': ['hr', 'account'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
@@ -49,11 +49,14 @@
         'hr_expense_view.xml',
         'hr_expense_report.xml',
         'process/hr_expense_process.xml',
-        'report/hr_expense_report_view.xml'
-    ],
-    'demo_xml': ['hr_expense_demo.xml',
-#                'hr.expense.expense.csv'
-                ],
+        'report/hr_expense_report_view.xml',
+        'board_hr_expense_view.xml',
+        ],
+    'demo_xml': [
+        'hr_expense_demo.xml',
+#       'hr.expense.expense.csv'
+        ],
+    'test': ['test/test_hr_expense.yml'],            
     'installable': True,
     'active': False,
     'certificate': '0062479841789',

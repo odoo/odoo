@@ -13,37 +13,38 @@
 					<field name="type" />
 					<field name="send_mail" />
 					<newline />
-					<group col="1" colspan="4"
+					<group col="2" colspan="6"
 						attrs="{'invisible': [('type', '!=', 'external')]}">
 						<field name="email" colspan="4"
 							attrs="{'required': [('type', '=', 'external')]}" />
 					</group>
-					<group col="1" colspan="4"
+					<group col="2" colspan="6"
 						attrs="{'invisible': [('type', '!=', 'internal')]}">
 						<separator string="Users" colspan="4" />
 						<field name="user_ids" select="1" colspan="4"
 							nolabel="1" />
 						<newline />
 					</group>
-					<group col="2" colspan="4"
+					<group col="2" colspan="6"
 						attrs="{'invisible': [('type', '!=', 'partner')]}">
 						<field name="partner_id" colspan="2"
 							on_change="onchange_partner_id(partner_id)"
 							attrs="{'required': [('type', '=', 'partner')]}" />
 						<newline />
 						<separator string="Partner Contacts"
-							colspan="4" />
+							colspan="6" />
 						<field name="contact_ids" select="1" colspan="4"
 							nolabel="1" domain="[('partner_id', '=', partner_id)]"
 							attrs="{'readonly': [('type', '!=', 'partner')]}" />
 					</group>
 					<newline />
 					<separator string="" colspan="6" />
-					<label string="" colspan="2" />
+					<group col="4" colspan="4">
 					<button icon='gtk-cancel' special="cancel"
 						string="Cancel" />
 					<button name="do_invite" string="Invite"
 						type="object" icon="gtk-ok" />
+					</group>
 				</form>
 			</field>
 		</record>

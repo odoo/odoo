@@ -19,43 +19,135 @@
 #
 ##############################################################################
 
+from crm import crm_case
 from osv import fields, osv
 from tools.translate import _
 import crm
 import time
+from datetime import datetime, timedelta
 
-class crm_phonecall(osv.osv):
+class crm_phonecall(osv.osv, crm_case):
     """ Phonecall Cases """
 
     _name = "crm.phonecall"
-    _description = "Phonecall Cases"
+    _description = "Phonecall"
     _order = "id desc"
-    _inherit = 'crm.case'
-
+    _inherit = ['mailgate.thread']
     _columns = {
-        'duration': fields.float('Duration'),
+        # From crm.case
+        'name': fields.char('Name', size=64),
+        'active': fields.boolean('Active', required=False), 
+        'date_action_last': fields.datetime('Last Action', readonly=1),
+        'date_action_next': fields.datetime('Next Action', readonly=1), 
+        'create_date': fields.datetime('Creation Date' , readonly=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                        select=True, help='Sales team to which Case belongs to.\
+                             Define Responsible user and Email account for mail gateway.'), 
+        'user_id': fields.many2one('res.users', 'Responsible'), 
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"), 
+        'company_id': fields.many2one('res.company', 'Company'), 
+        'description': fields.text('Description'), 
+        'state': fields.selection([
+                                    ('draft', 'Draft'), 
+                                    ('open', 'Todo'), 
+                                    ('cancel', 'Cancelled'), 
+                                    ('done', 'Done'), 
+                                    ('pending', 'Pending'),
+                                ], 'State', size=16, readonly=True, 
+                                  help='The state is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nWhen the case is over, the state is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+        'email_from': fields.char('Email', size=128, help="These people will receive email."), 
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
+                            domain="[('section_id','=',section_id),\
+                            ('object_id.model', '=', 'crm.phonecall')]"), 
+        'date_open': fields.datetime('Opened', readonly=True),
+        # phonecall fields
+        'duration': fields.float('Duration', help="Duration in Minutes"), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.phonecall')]"),
-        'partner_phone': fields.char('Phone', size=32),
-        'partner_contact': fields.related('partner_address_id', 'name',\
-                                 type="char", string="Contact", size=128),
-        'partner_mobile': fields.char('Mobile', size=32),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel',\
+                        ('object_id.model', '=', 'crm.phonecall')]"), 
+        'partner_phone': fields.char('Phone', size=32), 
+        'partner_contact': fields.related('partner_address_id', 'name', \
+                                 type="char", string="Contact", size=128), 
+        'partner_mobile': fields.char('Mobile', size=32), 
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
+        'canal_id': fields.many2one('res.partner.canal', 'Channel', \
                         help="The channels represent the different communication\
                          modes available with the customer." \
                         " With each commercial opportunity, you can indicate\
-                         the canall which is this opportunity source."),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'date': fields.datetime('Date'),
-        'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
+                         the canall which is this opportunity source."), 
+        'date_closed': fields.datetime('Closed', readonly=True), 
+        'date': fields.datetime('Date'), 
+        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
     }
 
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+        'state': lambda *a: 'open', 
+        'user_id': lambda self,cr,uid,ctx: uid,
+        'active': lambda *a: 1, 
     }
+    
+    # From crm.case
+
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        res = super(crm_phonecall, self).onchange_partner_address_id(cr, uid, ids, add, email)
+        res.setdefault('value', {})
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            res['value']['partner_phone'] = address.phone
+            res['value']['partner_mobile'] = address.mobile
+        return res
+
+    def case_close(self, cr, uid, ids, *args):
+        """Overrides close for crm_case for setting close date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        for phone in self.browse(cr, uid, ids):
+            phone_id= phone.id
+            data = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
+            if phone.duration <=0:
+                duration = datetime.now() - datetime.strptime(phone.date, '%Y-%m-%d %H:%M:%S')
+                data.update({'duration': duration.seconds/float(60)})
+            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], args)
+            self.write(cr, uid, ids, data)
+        return res
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Resets case as draft
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'duration': 0.0})
+        return res
+
+
+    def case_open(self, cr, uid, ids, *args):
+        """Overrides cancel for crm_case for setting Open Date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+        res = super(crm_phonecall, self).case_open(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
 
     def action_make_meeting(self, cr, uid, ids, context=None):
         """
@@ -86,36 +178,29 @@ class crm_phonecall(osv.osv):
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             context = {
-                        'default_phonecall_id': phonecall.id,
-                        'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
-                        'default_email': phonecall.email_from ,
+                        'default_phonecall_id': phonecall.id, 
+                        'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False, 
+                        'default_email': phonecall.email_from , 
                         'default_name': phonecall.name
                     }
 
             value = {
-                'name': _('Meetings'),
-                'domain' : "[('user_id','=',%s)]" % (uid),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id'],
+                'name': _('Meetings'), 
+                'domain' : "[('user_id','=',%s)]" % (uid), 
+                'context': context, 
+                'view_type': 'form', 
+                'view_mode': 'calendar,form,tree', 
+                'res_model': 'crm.meeting', 
+                'view_id': False, 
+                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')], 
+                'type': 'ir.actions.act_window', 
+                'search_view_id': res['res_id'], 
                 'nodestroy': True
                 }
 
         return value
 
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        res = super(crm_phonecall, self).onchange_partner_address_id(cr, uid, ids, add, email)
-        res.setdefault('value', {})
-        if add:
-            address = self.pool.get('res.partner.address').browse(cr, uid, add)
-            res['value']['partner_phone'] = address.mobile
-            res['value']['partner_mobile'] = address.phone
-        return res
 crm_phonecall()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

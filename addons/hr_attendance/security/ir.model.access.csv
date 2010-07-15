@@ -1,3 +1,6 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_hr_action_reason_employee","hr action reason employee","model_hr_action_reason","hr.group_hr_user",1,1,1,1
-"access_hr_attendance_employee","hr attendance employee","model_hr_attendance","hr.group_hr_user",1,1,1,1
+"access_hr_action_reason_employee","hr action reason employee","model_hr_action_reason","hr_attendance.group_hr_attendance",1,0,0,0
+"access_hr_action_reason_employee","hr action reason employee","model_hr_action_reason","hr.group_hr_manager",1,1,1,1
+"access_hr_attendance_employee","hr attendance employee","model_hr_attendance","hr_attendance.group_hr_attendance",1,1,1,1
+"access_hr_employee_attendance","hr employee attendance sign in out","hr.model_hr_employee","hr_attendance.group_hr_attendance",1,0,0,0
+"access_hr_attendance_resource","hr resource attendance sign in out","resource.model_resource_resource","hr_attendance.group_hr_attendance",1,0,0,0

@@ -38,7 +38,7 @@ Because we have another module sale_forecast which uses terms "Sales Forecast" a
 
 Activity with this module is divided to three steps:
 - Creating Periods. Mandatory step.
-- Creating Sale Forecasts and entering quantities to them. Optional step but useful for farther planning.
+- Creating Sale Forecasts and entering quantities to them. Optional step but useful for further planning.
 - Creating Planning lines, entering quantities to them and making Procurement. Making procurement is the final step for the Period.
 
 Periods
@@ -52,7 +52,7 @@ Creating periods is the first step you have to do to use modules features. You c
 Remarks:
 - These periods (officially Stock and Sales Periods) are separated of Financial or other periods in the system.
 - Periods are not assigned to companies (when you use multicompany feature at all). Module suppose that you use the same periods across companies. If you wish to use different periods for different companies define them as you wish (they can overlap). Later on in this text will be indications how to use such periods.
-- When periods are created automatically their start and finish dates are with with start hour 00:00:00 and end hour 23:59:00. Fe. when you create daily periods they will have start date 31.01.2010 00:00:00 and end date 31.01.2010 23:59:00. It works only in automatic creation of periods. When you create periods manually you have to take care about hours because you can have incorrect values form sales or stock. 
+- When periods are created automatically their start and finish dates are with start hour 00:00:00 and end hour 23:59:00. Fe. when you create daily periods they will have start date 31.01.2010 00:00:00 and end date 31.01.2010 23:59:00. It works only in automatic creation of periods. When you create periods manually you have to take care about hours because you can have incorrect values form sales or stock. 
 - If you use overlapping periods for the same product, warehouse and company results can be unpredictable.
 - If current date doesn't belong to any period or you have holes between periods results can be unpredictable.
 
@@ -65,13 +65,13 @@ You have few menus for Sales forecast in "Sales Management - Sales Forecasts".
 Menu "Create Sales Forecasts for Sales Periods" creates Forecasts for products from selected Category, for selected Period and for selected Warehouse. It is an option "Copy Last Forecast" to copy forecast and other settings of period before this one to created one.
 
 Remarks:
-- This tool doesn't create lines if relevant lines (for the same Product, Period, Warehouse and validated or created by you) already exists. If you wish to create another forecast if relevant lines exists you have to do it manually using menus described bellow.
+- This tool doesn't create lines, if relevant lines (for the same Product, Period, Warehouse and validated or created by you) already exists. If you wish to create another forecast, if relevant lines exists you have to do it manually using menus described bellow.
 - When created lines are validated by someone else you can use this tool to create another lines for the same Period, Product and Warehouse. 
 - When you choose "Copy Last Forecast" created line takes quantity and some settings from your (validated by you or created by you if not validated yet) forecast which is for last period before period of created forecast. If there are few your forecasts for period before this one (it is possible) system takes one of them (no rule which of them).
 
 
 Menus "Sales Forecasts"
-On "Sales Forecast" form mainly you have to enter a forecast quantity in "Product Quantity". Farther calculation can work for draft forecasts. But validation can save your data against any accidental changes. You can click "Validate" button but it is not mandatory.
+On "Sales Forecast" form mainly you have to enter a forecast quantity in "Product Quantity". Further calculation can work for draft forecasts. But validation can save your data against any accidental changes. You can click "Validate" button but it is not mandatory.
 
 Instead of forecast quantity you can enter amount of forecast sales in field "Product Amount". System will count quantity from amount according to Sale price of the Product.
 
@@ -94,7 +94,7 @@ Menu "Create Stock Planning Lines" allows you to create quickly Planning lines f
 
 Under menu "Master Procurement Scheduler" you can generally change the values "Planned Out" and "Planned In" to observe the field "Stock Simulation" and decide if this value would be accurate for end of the Period. 
 "Planned Out" can be based on "Warehouse Forecast" which is the sum of all forecasts for Period and Warehouse. But your planning can be based on any other information you have. It is not necessary to have any forecast. 
-"Planned In" quantity is used to calculate field "Incoming Left" which is the quantity to be procured to make stock as indicated in "Stock Simulation" at the and of Period. You can compare "Stock Simulation" quantity to minimum stock rules visible on the form. But you can plan different quantity than in Minimum Stock Rules. Calculation is made for whole Warehouse by default. But if you want to see values for Stock location of calculated warehouse you can use check box "Stock Location Only".
+"Planned In" quantity is used to calculate field "Incoming Left" which is the quantity to be procured to make stock as indicated in "Stock Simulation" at the end of Period. You can compare "Stock Simulation" quantity to minimum stock rules visible on the form. But you can plan different quantity than in Minimum Stock Rules. Calculation is made for whole Warehouse by default. But if you want to see values for Stock location of calculated warehouse you can use check box "Stock Location Only".
 
 If after few tries you decide that you found correct quantities for "Planned Out" and "Planned In" and you are satisfied with end of period stock calculated in "Stock Simulation" you can click "Procure Incoming Left" button to procure quantity of field "Incoming Left" into the Warehouse. System creates appropriate Procurement Order. You can decide if procurement will be made to Stock or Input location of calculated Warehouse. 
 

@@ -33,6 +33,7 @@
     'depends': [
         'crm',
         'project',
+        'hr_timesheet_sheet',
     ],
     'init_xml': [
         'project_issue_data.xml'
@@ -43,8 +44,13 @@
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
+        "board_project_issue_view.xml",
      ],
     'demo_xml': ['project_issue_demo.xml'],
+    'test': [
+      'test/convert_issue_to_task.yml',
+      'test/test_project_issue_states.yml'
+            ],
     'installable': True,
     'active': False,
 }

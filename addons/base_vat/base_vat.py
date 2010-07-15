@@ -19,16 +19,28 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import osv
-from osv import fields
 import string
+
+from osv import osv, fields
 from tools.func import partial
 from tools.translate import _
 
 _ref_vat = {
-    'be': 'BE0477472701',
-}
+    'be': 'BE0477472701', 'at': 'ATU12345675',
+    'bg': 'BG1234567892', 'cy': 'CY12345678F',
+    'cz': 'CZ12345679', 'de': 'DE123456788',
+    'dk': 'DK12345674', 'ee': 'EE123456780',
+    'es': 'ESA12345674', 'fi': 'FI12345671',
+    'fr': 'FR32123456789', 'gb': 'GB123456782',
+    'gr': 'GR12345670', 'hu': 'HU12345676',
+    'ie': 'IE1234567T', 'it': 'IT12345670017',
+    'lt': 'LT123456715', 'lu': 'LU12345613',
+    'lv': 'LV41234567891', 'mt': 'MT12345634',
+    'nl': 'NL123456782B90', 'pl': 'PL1234567883',
+    'pt': 'PT123456789', 'ro': 'RO1234567897',
+    'se': 'SE123456789701', 'si': 'SI12345679',
+    'sk': 'SK0012345675', 'el': 'EL12345670'
+            }
 
 def mult_add(i, j):
     """Sum each digits of the multiplication of i and j."""
@@ -55,10 +67,9 @@ class res_partner(osv.osv):
             check = getattr(self, 'check_vat_' + vat_country)
             if not check(vat_number):
                 return False
-
         return True
 
-    def vat_change(self, cr, uid, ids, value, context={}):
+    def vat_change(self, cr, uid, ids, value, context=None):
         return {'value': {'vat_subjected': bool(value)}}
 
     _columns = {
@@ -74,8 +85,9 @@ class res_partner(osv.osv):
 
         vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
         if default_vat_check(vat_country, vat_number):
-            return _('The Vat does not seems to be correct. You should have entered something like this %s'), (_ref_vat[vat_country])
-        return _('The VAT is invalid, it should begin with the country code'), ()
+            vat_no = vat_country in _ref_vat and _ref_vat[vat_country] or 'Country Code + Vat Number'
+            return _('The Vat does not seems to be correct. You should have entered something like this %s'), (vat_no)
+        return _('The VAT is invalid, It should begin with the country code'), ()
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
 
@@ -1066,4 +1078,3 @@ class res_partner(osv.osv):
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

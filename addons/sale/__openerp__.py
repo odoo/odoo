@@ -39,14 +39,21 @@
     * Delivery methods:
         - all at once, multi-parcel
         - delivery costs
+    * Dashboard for salesman that includes:
+    * Your open quotations
+    * Top 10 sales of the month
+    * Cases statistics
+    * Graph of sales by product
+    * Graph of cases of the month
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['product', 'stock', 'mrp_procurement', 'process'],
+    'depends': ['product', 'stock', 'procurement', 'process','board'],
     'init_xml': [],
     'update_xml': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
+        'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
         'company_view.xml',
@@ -57,9 +64,18 @@
         'report/sale_report_view.xml',
         'sale_report.xml',
         'stock_view.xml',
+        'board_sale_view.xml',
 #        'process/sale_process.xml',
     ],
-    'demo_xml': ['sale_demo.xml'],
+    'demo_xml': ['sale_demo.xml','board_sale_demo.xml'],
+    'test': [
+             'test/shipping_manual_sale_order.yml',
+             'test/prepaid_sale_order.yml',
+             'test/advance_invoice.yml',
+             'test/so_make_line_invoice.yml',
+             'test/so_make_invoice.yml',
+             'test/sale_procurement.yml',
+            ],
     'installable': True,
     'active': False,
     'certificate': '0058103601429',

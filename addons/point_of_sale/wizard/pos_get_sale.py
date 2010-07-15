@@ -55,7 +55,7 @@ class pos_get_sale(osv.osv_memory):
 
             for pick in proxy_pick.browse(cr, uid, [this.picking_id.id], context):
                 proxy_pos.write(cr, uid, record_id, {
-                    'last_out_picking': this.picking_id.id,
+                    'picking_id': this.picking_id.id,
                     'partner_id': pick.address_id and pick.address_id.partner_id.id
                 })
 

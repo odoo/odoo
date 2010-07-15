@@ -86,6 +86,7 @@ class crm_lead2partner(osv.osv_memory):
                 res.update({'partner_id': partner_id})
             if 'action' in fields:
                 res.update({'action': partner_id and 'exist' or 'create'})
+
         return res
     
     def open_create_partner(self, cr, uid, ids, context=None):
@@ -146,7 +147,6 @@ class crm_lead2partner(osv.osv_memory):
                         'user_id': lead.user_id.id,
                         'comment': lead.description,
                     })
-                    function_id = self.pool.get('res.partner.function').search(cr,uid,[('name','=',lead.function_name)])
                     contact_id = contact_obj.create(cr, uid, {
                         'partner_id': partner_id,
                         'name': lead.name,
@@ -155,7 +155,7 @@ class crm_lead2partner(osv.osv_memory):
                         'email': lead.email_from,
                         'fax': lead.fax,
                         'title': lead.title,
-                        'function': function_id and function_id[0] or False,
+                        'function': lead.function,
                         'street': lead.street,
                         'street2': lead.street2,
                         'zip': lead.zip,

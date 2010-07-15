@@ -46,8 +46,8 @@
         "data/olap_security.xml",
         'security/ir.model.access.csv'
     ],
-    "demo_xml" : ["data/olap_demo.xml",
-                  "test/olap_test00.yml"],
+    "demo_xml" : ["data/olap_demo.xml"
+                 ],
     "active": False,
     "installable": True
 }

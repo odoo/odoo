@@ -10,7 +10,9 @@
           <field name="arch" type="xml">
               <form string="Convert To Opportunity">
                 <field name="name"/>
-                <field name="partner_id"/>
+                <group attrs="{'invisible':[('partner_id','=',False)]}" col="2" colspan="2">
+                	<field name="partner_id"/>
+                </group>
                 <newline/>
                 <field name="planned_revenue"/>
                 <field name="probability"/>

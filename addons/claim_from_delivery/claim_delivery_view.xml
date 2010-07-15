@@ -1,0 +1,24 @@
+<openerp>
+	<data>
+
+        <record id="view_picking_delivery" model="ir.ui.view">
+            <field name="name">stock.picking.delivery.form20</field>
+            <field name="model">stock.picking</field>
+            <field name="type">form</field>
+            <field name="priority" eval="2"/>
+            <field name="inherit_id" ref="stock.view_picking_delivery_form"/>
+            <field name="arch" type="xml">
+              <xpath expr="//form/group/field[@name='date']"  position="after">
+                <field name="partner_id" invisible="1"/>
+              </xpath>
+            </field>
+        </record>
+
+        <act_window id="action_claim_from_delivery" name="Claim"
+            domain="[]" target="current"
+            context="{'default_partner_address_id': address_id, 'default_partner_id': partner_id}"
+            view_mode="form" res_model="crm.claim"
+            src_model="stock.picking" />
+
+	</data>
+</openerp>

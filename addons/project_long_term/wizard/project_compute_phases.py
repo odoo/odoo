@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import datetime
 from resource.faces import *
 from new import classobj
@@ -48,7 +49,8 @@ class project_compute_phases(osv.osv_memory):
         return self.compute_date(cr, uid, ids, context=context)
 
     def _phase_schedule(self, cr, uid, phase, start_date, calendar_id=False, context=None):
-
+       if context is None:
+            context = {}
        """Schedule phase with the start date till all the next phases are completed.
 
        Arguements: start_dsate -- start date for the phase
@@ -59,7 +61,6 @@ class project_compute_phases(osv.osv_memory):
        resource_obj = self.pool.get('resource.resource')
        uom_obj = self.pool.get('product.uom')
        phase_resource_obj = False
-
        if context is None:
            context = {}
        if phase:
@@ -79,7 +80,7 @@ class project_compute_phases(osv.osv_memory):
                                                 'vacation': tuple(leaves),
                                                 'efficiency': time_efficiency
                                                 })
-            default_uom_id = uom_obj.search(cr, uid, [('name','=','Hour')])[0]
+            default_uom_id = phase_obj._get_default_uom_id(cr, uid)
             avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
             duration = str(avg_hours) + 'H'
             # Create a new project for each phase
@@ -119,7 +120,7 @@ class project_compute_phases(osv.osv_memory):
                                                    context=ctx)
             # Recursive call till all the next phases scheduled
             for phase in phase.next_phase_ids:
-               if phase.state in ['draft','open','pending']:
+               if phase.state in ['draft', 'open', 'pending']:
                    id_cal = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
                    self._phase_schedule(cr, uid, phase, date_start, id_cal, context=context)
                else:
@@ -132,14 +133,13 @@ class project_compute_phases(osv.osv_memory):
 
         if context is None:
             context = {}
-        project_obj = self.pool.get('project.project')
         phase_obj = self.pool.get('project.phase')
         data = self.read(cr, uid, ids, [], context=context)[0]
         if not data['project_id'] and data['target_project'] == 'one':
             raise osv.except_osv(_('Error!'), _('Please Specify Project to be schedule'))
         if data['project_id']:        # If project mentioned find its phases
-            project_id = project_obj.browse(cr, uid, data['project_id'], context=context)
-            phase_ids = phase_obj.search(cr, uid, [('project_id', '=', project_id.id),
+            project_id = data['project_id']
+            phase_ids = phase_obj.search(cr, uid, [('project_id', '=', project_id),
                                                   ('state', 'in', ['draft', 'open', 'pending']),
                                                   ('previous_phase_ids', '=', False)
                                                   ])
@@ -166,7 +166,7 @@ class project_compute_phases(osv.osv_memory):
             context = {}
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_project_phase')
+        result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_project_phase_list')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['domain'] = [('state', 'not in', ['cancelled','done'])]

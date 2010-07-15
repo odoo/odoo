@@ -46,7 +46,6 @@ class journal_print(report_sxw.rml_parse):
                     ids_journal_period = obj_jperiod.search(self.cr, self.uid, [('journal_id','=',journal), ('period_id','=',period)])
                     if ids_journal_period:
                         self.cr.execute('update account_journal_period set state=%s where journal_id=%s and period_id=%s and state=%s', ('printed',journal,period,'draft'))
-                        self.cr.commit()
                         self.cr.execute('select id from account_move_line where period_id=%s and journal_id=%s and state<>\'draft\' order by ('+ sort_selection +'),id', (period, journal))
                         ids = map(lambda x: x[0], self.cr.fetchall())
                         ids_final.append(ids)
@@ -56,7 +55,6 @@ class journal_print(report_sxw.rml_parse):
                 line_ids.append(a)
             return line_ids
         self.cr.execute('update account_journal_period set state=%s where journal_id=%s and period_id=%s and state=%s', ('printed',journal_id,period_id,'draft'))
-        self.cr.commit()
         self.cr.execute('select id from account_move_line where period_id=%s and journal_id=%s and state<>\'draft\' order by date,id', (period_id, journal_id))
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)

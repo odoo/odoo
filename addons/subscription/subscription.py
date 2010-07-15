@@ -29,7 +29,7 @@ from tools.translate import _
 
 class subscription_document(osv.osv):
     _name = "subscription.document"
-    _description = "Subscription document"
+    _description = "Subscription Document"
     _columns = {
         'name': fields.char('Name', size=60, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the subscription document without removing it."),
@@ -49,7 +49,7 @@ subscription_document()
 
 class subscription_document_fields(osv.osv):
     _name = "subscription.document.fields"
-    _description = "Subscription document fields"
+    _description = "Subscription Document Fields"
     _rec_name = 'field'
     _columns = {
         'field': fields.many2one('ir.model.fields', 'Field', domain="[('model_id', '=', parent.model)]", required=True),
@@ -79,7 +79,8 @@ class subscription_subscription(osv.osv):
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
         'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
         'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created', readonly=True),
-        'cron_id': fields.many2one('ir.cron', 'Cron Job')
+        'cron_id': fields.many2one('ir.cron', 'Cron Job'),
+        'note': fields.text('Notes', help="Description or Summary of Subscription"),
     }
     _defaults = {
         'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),

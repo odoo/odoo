@@ -23,7 +23,7 @@
     "name": "Lunch Module",
     "author": "Tiny",
     "Description": """
-    The lunch module is for keeping record of the order placing and payment of the orders.
+    The lunch module is for keeping record of the order placed and payment of the orders.
     The products are defined under categories and the payment records are maintained user wise
     Every user has a cashbox which keeps track of the amount paid for a particular order.
 
@@ -45,9 +45,13 @@
         'wizard/lunch_cashbox_clean_view.xml',
         'lunch_view.xml',
         'lunch_report.xml',
+        'report/report_lunch_order_view.xml',
         #'process/lunch_process.xml'
     ],
-    "demo_xml": ['lunch_demo.xml'],
+    "demo_xml": ['lunch_demo.xml',
+                 ],
+    "test": ['test/test_lunch.yml'
+             ],
     "installable": True,
 }
 

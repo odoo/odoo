@@ -41,7 +41,6 @@ class rml_parse(report_sxw.rml_parse):
         })
 
     def comma_me(self,amount):
-        #print "#" + str(amount) + "#"
         if not amount:
             amount = 0.0
         if  type(amount) is float :
@@ -98,7 +97,6 @@ class rml_parse(report_sxw.rml_parse):
             try:
                 Stringer = str.encode("utf-16")
             except UnicodeDecodeError:
-                print "UTF_16 Error"
                 Stringer = str
             else:
                 return Stringer
@@ -120,14 +118,12 @@ class rml_parse(report_sxw.rml_parse):
         UnicodeAst = []
         _previouslyfound = False
         i = 0
-        #print str(ast)
         while i < len(ast):
             elem = ast[i]
             try:
                 Stringer = elem.encode("utf-8")
             except UnicodeDecodeError:
                 to_reencode = elem + ast[i+1]
-                print str(to_reencode)
                 Good_char = to_reencode.decode('utf-8')
                 UnicodeAst.append(Good_char)
                 i += i +2
@@ -139,28 +135,22 @@ class rml_parse(report_sxw.rml_parse):
         return "".join(UnicodeAst)
 
     def ReencodeAscii(self,str):
-        print sys.stdin.encoding
         try:
             Stringer = str.decode("ascii")
         except UnicodeEncodeError:
-            print "REENCODING ERROR"
             return str.encode("ascii")
         except UnicodeDecodeError:
-            print "DECODING ERROR"
             return str.encode("ascii")
 
         else:
             return Stringer
 
     def _add_header(self, node, header=1):
-        if self.name == 'account.account.balance.landscape':
-            if header==2:
-                rml_head =  self.rml_header2
-            else:
-                rml_head =  self.rml_header
-            rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
+        if header==2:
+            rml_head =  self.rml_header2
         else:
-            return super(rml_parse, self)._add_header(node, header)
+            rml_head =  self.rml_header
+        rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
         return True
 
     # def _add_header(self, node):

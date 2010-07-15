@@ -69,7 +69,7 @@ class project_compute_tasks(osv.osv_memory):
                 resource_id = resource_obj.search(cr, uid, [('user_id', '=', user.id)], context=context)
                 if resource_id:
 #                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
-                    resource = resource_obj.read(cr, uid, resource_id, ['calendar_id','time_efficiency'], context=context)[0]
+                    resource = resource_obj.read(cr, uid, resource_id, ['calendar_id', 'time_efficiency'], context=context)[0]
                     if resource.get('calendar_id', False):
                        leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id[0], resource['calendar_id'] and resource['calendar_id'][0] or False)
                     time_efficiency = resource.get('time_efficiency')
@@ -108,13 +108,13 @@ class project_compute_tasks(osv.osv_memory):
                 # Dynamic Creation of tasks
                 i = 0
                 for each_task in tasks:
-                    hours = str(each_task.planned_hours / each_task.occupation_rate)+ 'H'
+                    hours = str(each_task.planned_hours )+ 'H'
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
                     if each_task.user_id:
-                       for resource in resources:
-                            if resource.__name__ == each_task.user_id.name: # check me!!
-                               task = create_tasks(i, hours, priorty, resource)
+                       for resrce in resources:
+                            if resrce.__name__ == each_task.user_id.name: # check me!!
+                               task = create_tasks(i, hours, priorty, resrce)
                     else:
                         task = create_tasks(i, hours, priorty)
                     i += 1
@@ -126,17 +126,17 @@ class project_compute_tasks(osv.osv_memory):
                 s_date = t.start.to_datetime()
                 e_date = t.end.to_datetime()
                 if loop_no == 0:
-                    project_obj.write(cr, uid, [project_id], {'date' : e_date}, context=context)
+                    project_obj.write(cr, uid, [project_id], {'date': e_date}, context=context)
                 else:
                     ctx = context.copy()
                     ctx.update({'scheduler': True})
                     user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
                     task_pool.write(cr, uid, [tasks[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                                                         'date_deadline': e_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                                         'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                          'user_id': user_id[0]},
                                                                          context=ctx)
                 loop_no +=1
-        return {} #improve me => Task Scheduling completed successfully => give this msg at end of wizard
+        return {}
 
 project_compute_tasks()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

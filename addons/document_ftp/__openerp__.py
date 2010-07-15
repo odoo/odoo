@@ -26,17 +26,21 @@
     'category': 'Generic Modules/Others',
     'description': """This is a support FTP Interface with document management system.
     With this module you would not only be able to access documents through open erp
-    also you would be able to connect with them through the file system using the FTP protocol.
+    but you would also be able to connect with them through the file system using the FTP protocol.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'document'],
     'init_xml': [],
     'update_xml': [
-        'document_ftp_view.xml',
+        'wizard/ftp_configuration_view.xml',  
+        'wizard/ftp_browse_view.xml',        
         'security/ir.model.access.csv'
     ],
     'demo_xml': [],
+    'test': [
+        'test/document_ftp_test.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': None,

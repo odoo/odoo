@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Managing sales and deliveries by journal',
     'version': '1.0',
@@ -49,13 +48,12 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['stock', 'sale'],
+    'depends': ['sale'],
     'init_xml': ['sale_journal_data.xml'],
     'update_xml': [
         'security/ir.model.access.csv',
         'sale_journal_view.xml',
-        'picking_journal_view.xml',
-        'picking_journal_view_report.xml'
+        'report/sale_journal_report_view.xml',
     ],
     'demo_xml': ['sale_journal_demo.xml'],
     'installable': True,

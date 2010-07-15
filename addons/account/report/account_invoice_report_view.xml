@@ -6,7 +6,7 @@
         <field name="model">account.invoice.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Invoices Statistics">
+            <tree string="Invoices Analysis">
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -16,17 +16,24 @@
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
-                <field name="product_qty" invisible="1"/>
-                <!--field name="delay" avg="Days to Close"/-->
-                <field name="nbr" sum="# of Lines"/>
-                <field name="price_average" avg="Average Price"/>
-                <field name="price_total" sum="Total Price"/>
+                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
+                <field name="categ_id" invisible="1"/>
                 <field name="state" invisible="1"/>
-                <field name="payment_term" invisible="1"/>
                 <field name="period_id" invisible="1"/>
-                <field name="fiscal_position" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
+                <field name="date_due" invisible="1"/>
+                <field name="address_contact_id" invisible="1"/>
+                <field name="address_invoice_id" invisible="1"/>
+                <field name="partner_bank" invisible="1"/>
+                <field name="account_id" invisible="1"/>
+                <field name="nbr" sum="# of Lines"/>
+                <field name="product_qty" sum="Qty"/>
+                <field name="reconciled"  sum="# Reconciled"/>
+                <field name="price_average" sum="Average Price"/>
+                <field name="price_total" sum="Total Price"/>
+                <field name="residual"  sum="Total Residual" invisible="context.get('residual_invisible',False)"/>
+                <field name="delay_to_pay"  sum="Avg. Delay To Pay" invisible="context.get('residual_invisible',False)"/>
             </tree>
         </field>
     </record>
@@ -36,7 +43,7 @@
          <field name="model">account.invoice.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Invoices Statistics" type="bar">
+             <graph string="Invoices Analysis" type="bar">
                  <field name="product_id"/>
                  <field name="price_total"/>
              </graph>
@@ -48,104 +55,100 @@
         <field name="model">account.invoice.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Invoices">
-            	<group>
-	            	<filter icon="terp-account" string="This Year"
-		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-		                    help="Invoices of the year"/>
-	                <filter icon="terp-account" string="This Month"
-	                		name="month"
-	                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                		help="Invoices of this month"/>
-	                <filter icon="gtk-media-rewind"
-	                        string="    7 Days    "
-	                        separator="1"
-	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                        help="Invoices during last 7 days"/>
-	                <separator orientation="vertical"/>
-                    <filter string="Draft"
-                    		icon="terp-account"
-                    		domain="[('state','=','draft')]"
-                    		help = "Draft tasks"/>
-                   	<filter string="Pro-forma"
-                   			icon="terp-account"
-                   			domain="[('state','=','proforma'),('state','=','proforma2')]"
-                   			help = "Pro-forma tasks"/>
-                   	<filter string="Current"
-	                		icon="terp-account"
-	                		domain="[('state', '=' ,'open')]"
-	                		help = "In progress tasks"/>
-  					<separator orientation="vertical"/>
-                <field name="product_id"/>
-                <field name="user_id" widget="selection">
-
-                    <filter icon="terp-account"
-                    		string="My Invoices"
-                    		help = "My Invoices"
-                    		domain="[('user_id','=',uid)]" />
-                    <filter icon="terp-account"
-                    		string="Invoices Non Users"
-                    		help="Invoices Non Users"
-                    		domain="[('user_id','=',False)]"/>
-                </field>
-                <field name="partner_id"/>
-				<field name="company_id" groups="base.group_multi_company" widget="selection"/>
-				</group>
-                <newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
-                	<filter string="Done"
-                   			icon="terp-account"
-                   			domain="[('state','=','paid')]"
-                   			help = "Done tasks"/>
-                   	<filter string="Cancelled"
-                		icon="terp-account"
-                		domain="[('state', '=' ,'cancel')]"
-                		help = "Cancelled tasks"/>
-                	<separator orientation="vertical"/>
-                	<field name="payment_term" widget="selection"/>
-                	<field name="currency_id" widget="selection"/>
-                	<field name="journal_id" widget="selection"/>
-                	<newline/>
-            		<field name="type"/>
-                	<field name="period_id" widget="selection"/>
-                	<field name="fiscal_position" widget="selection"/>
-					<field name="date"/>
+            <search string="Invoices Analysis">
+              <group col="10" colspan="12">
+                    <filter icon="terp-go-year" string="  365 Days  "
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                            help="Invoices of last 365 days"/>
+                    <filter icon="terp-go-month" string="   30 Days   "
+                            name="month"
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                            help="Invoices of last 30 days"/>
+                    <filter icon="terp-go-week"
+                            string="    7 Days    "
+                            separator="1"
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Invoices during last 7 days"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Current"
+                            icon="terp-check"
+                            domain="[('state','in',('draft','open'))]"
+                            help = "Draft and Open Invoices"/>
+                    <filter string="Pro-forma"
+                           icon="terp-check"
+                           domain="[('state','=','proforma'),('state','=','proforma2')]"
+                           help = "Pro-forma Invoices"/>
+                    <filter string="Done"
+                            icon="terp-dialog-close"
+                            domain="[('state','=','paid')]"
+                            help = "Done Invoices"/>
+                  <separator orientation="vertical"/>
+                  <field name="partner_id"/>
+                    <field name="user_id" >
+                    <filter icon="terp-dolar"
+                            string="My Invoices"
+                            help="My Invoices"
+                            domain="[('user_id','=',uid)]"/>
+                    </field>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Salesman" name='User' icon="terp-account" context="{'group_by':'user_id'}"/>
-                    <filter string="Payment Term" icon="terp-account" context="{'group_by':'payment_term'}"/>
+                <group expand="1" string="Group By...">
+                    <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id','residual_visible':True}"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True,'residual_invisible':True}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
-                    <filter string="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
-                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
-                    <filter string="Type" icon="terp-account" context="{'group_by':'type'}"/>
-                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
+                    <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
+                    <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Force Period" icon="terp-account" context="{'group_by':'period_id'}"/>
-                    <filter string="Fiscal Position" icon="terp-account" context="{'group_by':'fiscal_position'}"/>
+                    <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id','residual_invisible':True}"/>
+                    <filter string="Force Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-account" context="{'group_by':'date'}"/>
-                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" name="day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                    <filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" name="year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Extended options..." groups="base.group_extended">
+                    <field name="product_id"/>
+                    <field name="account_id"/>
+                    <separator orientation="vertical"/>
+                    <field name="type"/>
+                    <field name="journal_id" widget="selection"/>
+                    <separator orientation="vertical"/>
+                    <field name="state"/>
+                    <separator orientation="vertical"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <newline/>
+                    <field name="date" string="Date Invoiced"/>
+                    <field name="date_due"/>
                 </group>
             </search>
         </field>
     </record>
 
     <record id="action_account_invoice_report_all" model="ir.actions.act_window">
-        <field name="name">Invoices</field>
+        <field name="name">Invoices Analysis</field>
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_product':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
     </record>
 
-    <menuitem action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.menu_finance_reporting" sequence="0"/>
+    <menuitem action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.menu_finance_statistic_report_statement" sequence="0"/>
+
+    <act_window
+        domain="[('partner_id', '=', active_id)]"
+        id="act_account_invoice_partner_relation"
+        name="Monthly Turnover"
+        context="{'search_default_month':1,'search_default_user':1,'group_by_no_leaf':1,'group_by':[]}"
+        res_model="account.invoice.report"
+        src_model="res.partner"/>
 
 </data>
 </openerp>

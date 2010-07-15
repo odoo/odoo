@@ -8,14 +8,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Select Period">
-				    <field name="company_id"/>
+				<group width="650" height="230">
+				    <field name="company_id" groups="base.group_multi_company"/>
 					<newline/>
 				    <field name="based_on"/>
 				    <newline/>
-				    <field name="periods"/>
-			    <group col="2" colspan="4">
+				    <separator string="Periods" colspan="4"/>
+				    <field name="periods" nolabel="1"/>
+			    	<group>
+			    		<separator colspan="4"/>
+			    		<newline/>
 	            		<button icon='gtk-cancel' special="cancel"  string="Cancel" />
 						<button name="create_vat" string="Print VAT Decl." colspan="1" type="object" icon="gtk-ok"/>
+					</group>
 				</group>
 			</form>
             </field>
@@ -31,7 +36,7 @@
         </record>
 
 		<menuitem
-	        name="Print Taxes Report"
+	        name="Taxes Report"
 	        parent="menu_tax_report"
 	        action="action_account_vat_declaration"
 	        id="menu_account_vat_declaration"

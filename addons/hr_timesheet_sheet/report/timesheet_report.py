@@ -33,8 +33,15 @@ class timesheet_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'name': fields.char('Description', size=64,readonly=True),
+        'product_id' : fields.many2one('product.product', 'Product'),
+        'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing',readonly=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
         'nbr': fields.integer('#Nbr',readonly=True),
+        'total_diff': fields.float('#Total Diff',readonly=True),
+        'total_timesheet': fields.float('#Total Timesheet',readonly=True),
+        'total_attendance': fields.float('#Total Attendance',readonly=True),
         'company_id': fields.many2one('res.company', 'Company',readonly=True),
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'date_from': fields.date('Date from',readonly=True,),
@@ -45,9 +52,8 @@ class timesheet_report(osv.osv):
             ('draft','Draft'),
             ('confirm','Confirmed'),
             ('done','Done')], 'State', readonly=True),
-        'total_att': fields.float('Total Timesheet',readonly=True),
-        'total_ts': fields.float('Total Attendance',readonly=True),
-        'total_diff': fields.float('Difference', readonly=True),
+        'quantity': fields.float('#Quantity',readonly=True),
+        'cost': fields.float('#Cost',readonly=True),
         }
 
     def init(self, cr):
@@ -64,10 +70,27 @@ class timesheet_report(osv.osv):
                         to_char(htss.date_current,'MM') as month,
                         to_char(htss.date_current, 'YYYY-MM-DD') as day,
                         count(*) as nbr,
-                        sum(day.total_attendance) as total_att,
-                        sum(day.total_timesheet) as total_ts,
-                        sum(day.total_difference) as total_diff,
+                        aal.unit_amount as quantity,
+                        aal.amount as cost,
                         aal.account_id,
+                        aal.product_id,
+                        (SELECT   sum(day.total_difference)
+                            FROM hr_timesheet_sheet_sheet AS sheet 
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            ON (sheet.id = day.sheet_id 
+                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_diff,
+                        (SELECT sum(day.total_timesheet)
+                            FROM hr_timesheet_sheet_sheet AS sheet 
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            ON (sheet.id = day.sheet_id 
+                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_timesheet,
+                        (SELECT sum(day.total_attendance)
+                            FROM hr_timesheet_sheet_sheet AS sheet 
+                            LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
+                            ON (sheet.id = day.sheet_id 
+                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_attendance,
+                        aal.to_invoice,
+                        aal.general_account_id,
                         htss.user_id,
                         htss.company_id,
                         htss.department_id,
@@ -75,7 +98,6 @@ class timesheet_report(osv.osv):
                     from account_analytic_line as aal
                     left join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
                     left join hr_timesheet_sheet_sheet as htss ON (hat.line_id=htss.id)
-                    left join hr_timesheet_sheet_sheet_day AS day ON (htss.id = day.sheet_id)
                     group by
                         to_char(htss.date_current,'YYYY'),
                         to_char(htss.date_current,'MM'),
@@ -83,10 +105,16 @@ class timesheet_report(osv.osv):
                         aal.account_id,
                         htss.date_from,
                         htss.date_to,
+                        aal.unit_amount,
+                        aal.amount,
                         htss.date_current,
+                        aal.to_invoice,
+                        aal.product_id,
+                        aal.general_account_id,
                         htss.name,
                         htss.company_id,
                         htss.state,
+                        htss.id,
                         htss.department_id,
                         htss.user_id
             )

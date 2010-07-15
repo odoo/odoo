@@ -37,7 +37,7 @@
         <record id="stock_location_14" model="stock.location">
             <field name="name">Shelf 2</field>
             <field name="location_id" ref="stock_location_13"/>
-            <field model="account.account" name="account_id" search="[('name','=','Merchandise Type B')]"/>
+           <!-- <field model="account.account" name="account_id" search="[('name','=','Merchandise Type B')]"/>-->
         </record>
         <record id="stock_location_15" model="stock.location">
             <field name="name">Sub Products</field>
@@ -186,7 +186,7 @@
 
         <!--  Multi Company -->
 
-         <record id="res_partner_tinyshop0" model="res.partner">
+        <record id="res_partner_tinyshop0" model="res.partner">
             <field eval="0" name="customer"/>
             <field eval="0" name="supplier"/>
             <field eval="1" name="active"/>
@@ -288,7 +288,13 @@
             <field name="company_id" ref="res_company_tinyshop0"/>
             <field name="lot_input_id" ref="stock_location_shop1"/>
         </record>
-
+ 		
+ 		<record forcecreate="True" id="property_stock_variation" model="ir.property">
+            <field name="name">property_stock_variation</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_variation')]"/>
+			<field eval="'account.account,'+str(ref('account.a_recv'))" model="account.account" name="value"/>
+ 			<field name="company_id" ref="base.main_company"/>            
+        </record>
 
     </data>
 </openerp>

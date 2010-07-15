@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+<!---->
+<!--		<record id="view_account_print_journal" model="ir.ui.view">-->
+<!--            <field name="name">Account Print Journal</field>-->
+<!--            <field name="model">account.print.journal</field>-->
+<!--            <field name="type">form</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--			<form string="Print Journal">-->
+<!--			    <group col="4" colspan="6">-->
+<!--				    <field name="journal_id"/>-->
+<!--				    <field name="period_id"/>-->
+<!--				    <newline/>-->
+<!--				    <field name="sort_selection"/>-->
+<!--				</group>-->
+<!--				<separator colspan="4"/>-->
+<!--			    <group col="2" colspan="4">-->
+<!--	            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>-->
+<!--						<button name="check_data" string="Print" colspan="1" type="object" icon="gtk-ok"/>-->
+<!--				</group>-->
+<!--			</form>-->
+<!--            </field>-->
+<!--        </record>-->
+
 
 		<record id="view_account_print_journal" model="ir.ui.view">
             <field name="name">Account Print Journal</field>
@@ -8,21 +30,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Print Journal">
-			    <group col="4" colspan="6">
-				    <field name="journal_id"/>
-				    <field name="period_id"/>
-				    <newline/>
-				    <field name="sort_selection"/>
+				<group height="400" width="400">
+			    <group>
+			    	<separator string="Journals"/><newline/>
+				    <field name="journal_id" nolabel="1"/><newline/>
+				    <separator string="Periods"/><newline/>
+				    <field name="period_id" nolabel="1"/><newline/>
 				</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-	            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-						<button name="check_data" string="Print" colspan="1" type="object" icon="gtk-ok"/>
+				<newline/>
+				<group>
+				    <field name="sort_selection"/>
+				    <newline/>
+					<separator colspan="4"/>
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="check_data" string="Print" colspan="1" type="object" icon="gtk-ok"/>
+				</group>
 				</group>
 			</form>
             </field>
         </record>
-
+        
         <record id="action_account_print_journal" model="ir.actions.act_window">
             <field name="name">Account Print Journal</field>
             <field name="type">ir.actions.act_window</field>
@@ -33,7 +60,7 @@
         </record>
 
 		<menuitem
-	        name="Print Journal"
+	        name="Journals"
 	        parent="account.menu_generic_report"
 	        action="action_account_print_journal"
 	        id="menu_account_print_journal"

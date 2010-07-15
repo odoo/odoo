@@ -26,8 +26,8 @@ class notify_message(osv.osv):
     _name = 'notify.message'
     _description = 'Notify By Messages'
     _columns = {
-        'name' :  fields.char('Title',size=64,required=True),
-        'msg' : fields.text('Special Message',size=125,required=True,help='This notification will appear at the bottom of the Invoices when printed.',translate=True)
+        'name' :  fields.char('Title', size=64, required=True),
+        'msg' : fields.text('Special Message', size=125, required=True, help='This notification will appear at the bottom of the Invoices when printed.', translate=True)
     }
 
 notify_message()
@@ -170,6 +170,7 @@ class account_invoice_line(osv.osv):
 
     _defaults = {
         'state': lambda *a: 'article',
+        'sequence': lambda *a : 0,
 #       'account_id': _default_account
     }
 account_invoice_line()

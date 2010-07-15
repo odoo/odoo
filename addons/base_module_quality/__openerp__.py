@@ -27,7 +27,7 @@
     'description': """
 This module's aim is to check the quality of other modules.
 
-It defines a wizard on the list of modules in OpenERP, which allow you to
+It defines a wizard on the list of modules in OpenERP, which allows you to
 evaluate them on different criteria such as: the respect of OpenERP coding
 standards, the speed efficiency...
 

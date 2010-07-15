@@ -37,14 +37,26 @@ class pos_close_statement(osv.osv_memory):
              @return : Blank Dictionary
         """
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        list_statement = []
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')
         journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True), ('check_dtls', '=', False)])
         journal_ids = journal_obj.browse(cr, uid, journal_lst)
         for journal in journal_ids:
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
-            statement_obj.button_confirm(cr, uid, ids)
-        return {}
+            list_statement = ids
+            statement_obj.button_confirm(cr, uid, ids, context)
+        if not list_statement:
+            return {}
+        return {
+                'domain': "[('id','in', list_statement)]",
+                'name': 'Close Statements',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'account.bank.statement',
+                'view_id': False,
+                'type': 'ir.actions.act_window'
+}   
 
 pos_close_statement()
 

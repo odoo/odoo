@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import netsvc
 
 class mrp_product_produce(osv.osv_memory):
     _name = "mrp.product.produce"
@@ -45,6 +43,7 @@ class mrp_product_produce(osv.osv_memory):
                                 context['active_id'], context=context)
         done = 0.0
         for move in prod.move_created_ids2:
+            if not move.scraped:
                 done += move.product_qty
         return (prod.product_qty - done) or prod.product_qty
     

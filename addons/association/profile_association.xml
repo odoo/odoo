@@ -11,9 +11,15 @@
                 <form position="attributes">
                   <attribute name="string">Install Extra Modules</attribute>
                 </form>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='string'></attribute>
+	      		</xpath>
                 <xpath expr="//label[@string='description']"
                        position="attributes">
                   <attribute name="string">Install more modules. A few modules are proposed according to the Association Profile you selected. You will be able to install them based on our requirements.</attribute>
+                </xpath>
+                <xpath expr="//button[@string='Install Modules']" position="attributes">
+                    <attribute name="string">Configure</attribute>
                 </xpath>
                 <separator string="title" position="replace"/>
                 <group colspan="8">
@@ -21,10 +27,10 @@
                   <field name="project"/>
                   <field name="project_gtd"/>
                   <field name="wiki"/>
+                  <separator string="Event Management" colspan="4"/>
+                  <field name="event_project"/>
                   <separator string="Resources Management" colspan="4"/>
                   <field name="hr_expense"/>
-                  <separator string="Relationship Management" colspan="4"/>
-                  <field name="crm_configuration"/>
                 </group>
               </data>
             </field>
@@ -45,5 +51,16 @@
         <field name="action_id" ref="action_config_install_module"/>
         <field name="sequence">3</field>
       </record>
+       <record id="association_ir_actions_todo_tree" model="ir.ui.view">
+        <field name="model">ir.actions.todo</field>
+        <field name="name">association_installer_action_replace</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+  		<field name="arch" type="xml">
+  		 <xpath expr="//button[@string='Launch']" position="replace">
+        	<button name="%(action_config_install_module)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      		</xpath>
+      	</field>
+		</record>
     </data>
 </openerp>

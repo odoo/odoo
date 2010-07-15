@@ -66,7 +66,7 @@ class report_intrastat(osv.osv):
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'supply_units':fields.float('Supply Units', readonly=True),
         'ref':fields.char('Source document',size=64, readonly=True),
-        'code': fields.char('Country code', size="2", readonly=True),
+        'code': fields.char('Country code', size=2, readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),
         'value': fields.float('Value', readonly=True),
@@ -88,26 +88,12 @@ class report_intrastat(osv.osv):
                             else 0
                         end) as value,
                     sum(
-                        case when uom.category_id != puom.category_id then pt.weight_net * inv_line.quantity
-                        else
-                            case when uom.factor_inv_data > 0
-                                then
-                                    pt.weight_net * inv_line.quantity * uom.factor_inv_data
-                                else
-                                    pt.weight_net * inv_line.quantity / uom.factor
-                            end
-                        end
+                        case when uom.category_id != puom.category_id then (pt.weight_net * inv_line.quantity)
+                        else (pt.weight_net * inv_line.quantity * uom.factor) end
                     ) as weight,
                     sum(
                         case when uom.category_id != puom.category_id then inv_line.quantity
-                        else
-                            case when uom.factor_inv_data > 0
-                                then
-                                    inv_line.quantity * uom.factor_inv_data
-                                else
-                                    inv_line.quantity / uom.factor
-                            end
-                        end
+                        else (inv_line.quantity * uom.factor) end
                     ) as supply_units,
 
                     inv.currency_id as currency_id,

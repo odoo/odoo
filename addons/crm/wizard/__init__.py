@@ -21,7 +21,6 @@
 
 import crm_send_email
 import crm_forward_to_partner
-import crm_email_add_cc
 
 import crm_lead_to_partner
 import crm_lead_to_opportunity
@@ -30,6 +29,8 @@ import crm_phonecall_to_phonecall
 import crm_phonecall_to_partner
 import crm_phonecall_to_opportunity
 import crm_partner_to_opportunity
+
+import crm_custom_create_menu
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

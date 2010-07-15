@@ -39,7 +39,7 @@ class pos_details(report_sxw.rml_parse):
         data={}
         self.cr.execute ("select po.name as pos_name,po.date_order,pt.name ,pol.qty,pol.price_unit,pol.discount,po.invoice_id,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,res_users as ru,res_company as rc " \
-                         "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  in ('done','paid','invoiced') " \
+                         "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
                          "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \
                          "and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
                          "group by po.name,pol.qty,po.date_order,pt.name,pol.price_unit,pol.discount,po.invoice_id " \
@@ -57,7 +57,7 @@ class pos_details(report_sxw.rml_parse):
         qty=[]
         self.cr.execute("select sum(pol.qty) as qty " \
                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,res_users as ru,res_company as rc " \
-                        "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  in ('done','paid','invoiced') " \
+                        "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
                         " and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \
                         "and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
                          ,(form['date_start'],form['date_end'],str(user.company_id.id),str(self.uid)))
@@ -65,7 +65,11 @@ class pos_details(report_sxw.rml_parse):
         return qty[0] or 0.00
 
     def _get_sales_total_2(self, form,user):
-        self.cr.execute("sELECT sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total from  pos_order_line as pol , pos_order po, product_product as pp,product_template as pt  where po.company_id='%s' and po.id=pol.order_id and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= '%s' and  to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= '%s' and po.state in ('paid','invoiced','done') and pt.id=pp.product_tmpl_id and pol.product_id=pp.id"% (str(user.company_id.id),form['date_start'],form['date_end']))
+        self.cr.execute("select sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
+                        "from  pos_order_line as pol , pos_order po, product_product as pp,product_template as pt " \
+                        " where po.company_id='%s' and po.id=pol.order_id and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= '%s' " \
+                        " and  to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= '%s' and po.state IN ('paid','invoiced','done') " \
+                        " and pt.id=pp.product_tmpl_id and pol.product_id=pp.id"% (str(user.company_id.id),form['date_start'],form['date_end']))
         res2=self.cr.fetchone()
         return res2 and res2[0] or 0.0
 
@@ -144,11 +148,9 @@ class pos_details(report_sxw.rml_parse):
                 a_l=[]
                 for r in st_id :
                     a_l.append(r['id'])
-                    a = ','.join(map(str,a_l))
                 self.cr.execute("select aj.name,sum(amount) from account_bank_statement_line as absl,account_bank_statement as abs,account_journal as aj " \
-                                "where absl.statement_id = abs.id and abs.journal_id = aj.id  and absl.id in (%s) " \
-                                "group by aj.name " \
-                                %(a))
+                                "where absl.statement_id = abs.id and abs.journal_id = aj.id  and absl.id IN %s " \
+                                "group by aj.name ",(tuple(a_l),))
 
                 data=self.cr.dictfetchall()
                 return data

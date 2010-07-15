@@ -27,14 +27,16 @@
     'description': """
     Purchase module is for generating a purchase order for purchase of goods from a supplier.
     A supplier invoice is created for the particular order placed
+    Dashboard for purchase management that includes:
+    * Current Purchase Orders
+    * Draft Purchase Orders
+    * Graph for quantity and amount per month    
 
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'account', 'stock', 'process', 'mrp_procurement'],
-    'init_xml': [],
-    'update_xml': [
-                   
+    'depends': ['base', 'account', 'stock', 'process', 'procurement'],
+    'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
         'purchase_workflow.xml',
@@ -50,8 +52,16 @@
         'partner_view.xml',
         'process/purchase_process.xml',
         'report/purchase_report_view.xml',
+        'board_purchase_view.xml',
     ],
-    'demo_xml': ['purchase_demo.xml'],
+    'test': [
+             'test/purchase_from_order.yml',
+             'test/purchase_from_manual.yml',
+#             'test/purchase_from_picking.yml',
+             'purchase_unit_test.xml',
+             'test/procurement_buy.yml',
+    ],
+    'demo': ['purchase_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '0057234283549',

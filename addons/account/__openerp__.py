@@ -18,12 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "analytic", "process"],
     "author" : "Tiny",
     "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
@@ -34,11 +31,17 @@
     Budgets
     Customer and Supplier Invoices
     Bank statements
+    Reconciliation process by partner
+    Creates a dashboards for accountants that includes:
+    * List of uninvoiced quotations
+    * Graph of aged receivables
+    * Graph of aged incomes
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
-module named account_voucherss
+module named account_vouchers
     """,
+    "depends" : ["product", "analytic", "process","board"],
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
@@ -81,6 +84,7 @@ module named account_voucherss
         'wizard/account_compare_account_balance_report_view.xml',
         'wizard/account_third_party_ledger.xml',
         'wizard/account_reconcile_view.xml',
+        'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',
@@ -107,16 +111,32 @@ module named account_voucherss
         'company_view.xml',
         'account_installer.xml',
         'report/account_invoice_report_view.xml',
+        'report/account_entries_report_view.xml',
         'report/account_report_view.xml',
-        'report/account_analytic_report_view.xml',
+        'report/account_analytic_entries_report_view.xml',
+        'board_account_view.xml',
+        "wizard/account_pl_report_view.xml",
+        "wizard/account_bs_report_view.xml"
     ],
     'demo_xml': [
-        #'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'account_unit_test.xml',
+        'board_account_demo.xml',
+    ],
+    'test': [
+        'test/account_customer_invoice.yml',
+        'test/account_supplier_invoice.yml',
+        'test/account_change_currency.yml',
+        'test/chart_of_account.yml',
+        'test/account_period_close.yml',
+        'test/account_fiscalyear_close_state.yml',
+        'test/account_invoice_state.yml',
+        'test/account_use_model.yml',
+        'test/account_validate_account_move.yml',
+#        'test/account_fiscalyear_close.yml',
     ],
     'installable': True,
     'active': False,

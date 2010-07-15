@@ -47,25 +47,21 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group col="10" colspan="4">
-                    	<filter icon="terp-hr" string="This Year"
+                    	<filter icon="terp-go-year" string="This Year"
 	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Timesheet lines in this year"/>
-	                    <filter icon="terp-hr" string="This Month"
+	                    <filter icon="terp-go-month" string="This Month"
 	                    		name="month"
 	                    		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Timesheet lines in this month"/>
-		                <filter icon="gtk-media-rewind"
+		                <filter icon="terp-go-week"
 	                            string="    7 Days    "
 	                            separator="1"
 	                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Timesheet lines during last 7 days"/>
 	                    <separator orientation="vertical"/>
 	  					<field name="user_id" widget="selection">
-	                        <filter icon="terp-hr"
-	                        		string="My timesheet lines"
-	                        		help = "My timesheet lines"
-	                        		domain="[('user_id','=',uid)]" />
-	                        <filter icon="terp-hr"
+	                        <filter icon="terp-personal"
 	                        		string="Non Assigned timesheets to users"
 	                        		help="Non Assigned timesheets to users"
 	                        		domain="[('user_id','=',False)]"/>
@@ -73,23 +69,22 @@
 	                    <field name="account_id"/>
                         <field name="product_id"/>
                     </group>
-                    <newline/>
-	                <group expand="0" string="Extended options..." colspan="10" col="12">
-	                    <field name="date"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="invoice_id" widget="selection"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                        <filter string="Invoice" icon="terp-dolar" context="{'group_by':'invoice_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                        <filter string="Year" icon="terp-go-year" context="{'group_by':'name'}"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="12">
-	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
-	                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
-	                    <filter string="Invoice" icon="terp-hr" context="{'group_by':'invoice_id'}"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
-	                    <filter string="Month" icon="terp-hr" context="{'group_by':'month'}"/>
-	                    <filter string="Year" icon="terp-hr" context="{'group_by':'name'}"/>
+                    <group expand="0" string="Extended options..." colspan="10" col="12">
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
+                        <field name="invoice_id" widget="selection"/>
                     </group>
                 </search>
             </field>
@@ -100,10 +95,10 @@
             <field name="res_model">report.timesheet.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_line_search"/>
         </record>
-        <menuitem action="action_timesheet_line_stat_all" id="menu_report_timesheet_line_all" parent="hr.menu_hr_reporting"/>
+        <!--menuitem action="action_timesheet_line_stat_all" id="menu_report_timesheet_line_all" parent="hr.menu_hr_reporting"/-->
 
 
         <!-- Statistics report on timesheet by user -->
@@ -169,10 +164,9 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group col="10" colspan="4">
-                        <filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Timesheet by user in this year"/>
-                        <filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Timesheet by user in this month"/>
+                        <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Timesheet by user in this year"/>
+                        <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Timesheet by user in this month"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="month" select="1"/>
@@ -187,6 +181,7 @@
             <field name="res_model">report_timesheet.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_timesheet_user_search"/>
         </record>
         <!-- <menuitem action="action_timesheet_user_stat_all" id="menu_report_timesheet_user_all" parent="hr.menu_hr_reporting"/> -->
@@ -224,7 +219,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by invoice">
-                    <filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets to invoice"/>
                     <separator orientation="vertical"/>
                     <field name="account_id" select="1"/>
                     <field name="manager_id" select="1"/>
@@ -253,6 +247,7 @@
             <field name="res_model">report_timesheet.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_timesheet_invoice_search"/>
         </record>
        <!--  <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="hr.menu_hr_reporting"/> -->
@@ -308,10 +303,9 @@
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
                     <group col="10" colspan="4">
-                        <filter icon="terp-hr" string="My Daily Timesheets" domain="[('user_id','=',uid)]" help="My Daily Timesheets by account"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Daily Timesheets for this year"/>
-                        <filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Daily Timesheets of this month"/>
+                        <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Daily Timesheets for this year"/>
+                        <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Daily Timesheets of this month"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="month" select="1"/>
@@ -327,6 +321,7 @@
             <field name="res_model">report_timesheet.account.date</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_timesheet_account_date_search"/>
         </record>
         <!--  <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="hr.menu_hr_reporting"/>-->
@@ -382,10 +377,9 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by account">
                     <group col="10" colspan="4">
-                        <filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets by account"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]"/>
-                        <filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]"/>
+                        <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]"/>
+                        <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="month" select="1"/>
@@ -441,6 +435,30 @@
 
         <!-- Random Timesheet Lines of random activities -->
 
+		<record id="view_random_timesheet_lines_search" model="ir.ui.view">
+            <field name="name">random.timesheet.lines.search</field>
+            <field name="model">random.timesheet.lines</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Timesheet Lines">
+                   <group col='15' colspan='4'>
+                        <filter icon="terp-check" string="Current" default="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                        <separator orientation="vertical"/>
+                    	<field name="user_id" widget="selection"/>
+                    	<field name="product_id" widget="selection"/>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Group By...">
+                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Analytic Account" icon="terp-folder-green" domain="[]" context="{'group_by':'analytic_account_id'}"/>
+                   		<filter string="General Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'general_account_id'}"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_random_timesheet_lines_tree">
             <field name="name">random.timesheet.lines.tree</field>
             <field name="model">random.timesheet.lines</field>
@@ -448,7 +466,7 @@
             <field name="arch" type="xml">
                 <tree string="Random Timesheets Lines">
                     <field name="date" select="1"/>
-                    <field name="user_id" />
+                    <field name="user_id"/>
                     <field name="name" select="1"/>
                     <field name="quantity" />
                     <field name="product_id" select="1"/>
@@ -463,22 +481,37 @@
 
         <record model="ir.actions.act_window" id="action_random_timesheet_lines_board">
             <field name="type">ir.actions.act_window</field>
-            <field name="name">Timesheet Lines</field>
+            <field name="name">Working Hours</field>
             <field name="res_model">random.timesheet.lines</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_user_id':uid }</field>
             <field name="view_id" ref="view_random_timesheet_lines_tree"/>
+            <field name="search_view_id" ref="view_random_timesheet_lines_search"/>
         </record>
          <!--Time Tracking menu in project Management-->
-         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+<!--         <menuitem
+                icon="terp-project"
+                id="base.menu_main_pm"
+                name="Project"
+                sequence="10"/>
          <menuitem
-             id="base.menu_project_management_time_tracking"
-             name="Time Tracking"
-             parent="base.menu_main_pm" sequence="3"/>
-        <menuitem action="action_random_timesheet_lines_board" id="menu_project_management_timesheet_lines_board" parent="base.menu_project_management_time_tracking" sequence="7"/>
+                id="base.menu_project_management_time_tracking"
+                name="Time Tracking"
+                parent="base.menu_main_pm"
+                sequence="3"/>
+        <menuitem
+                action="action_random_timesheet_lines_board"
+                id="menu_project_management_timesheet_lines_board"
+                parent="base.menu_project_management_time_tracking"
+                sequence="7"/-->
       <!--<menuitem action="action_random_timesheet_lines_board" id="menu_hr_action_random_timesheet_lines_board"
-            parent="hr_attendance.menu_hr_time_tracking" groups="hr.group_hr_manager"/>-->
-       <menuitem action="action_random_timesheet_lines_board" id="menu_hr_action_random_timesheet_lines_board" name="Timesheets Lines"
             parent="hr_attendance.menu_hr_time_tracking" groups="hr.group_hr_manager"/>
+           <menuitem
+                action="action_random_timesheet_lines_board"
+                id="menu_hr_action_random_timesheet_lines_board"
+                name="Working Hours"
+                parent="hr_attendance.menu_hr_time_tracking"
+                groups="hr.group_hr_manager" sequence="2"/>-->
     </data>
 </openerp>

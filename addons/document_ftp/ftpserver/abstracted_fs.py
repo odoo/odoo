@@ -97,7 +97,7 @@ class content_wrapper(StringIO.StringIO):
         cr = db.cursor()
         cr.commit()
         try:
-            getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
+            getattr(self.pool.get('document.directory.content'), 'process_write')(cr, self.uid, self.node, self.getvalue())
         finally:
             cr.commit()
             cr.close()
@@ -123,7 +123,7 @@ class abstracted_fs:
     def db_list(self):
         #return pooler.pool_dic.keys()
         s = netsvc.ExportService.getService('db')
-        result = s.exp_list()
+        result = s.exp_list(document=True)
         self.db_name_list = []
         for db_name in result:
             db, cr = None, None
@@ -265,7 +265,7 @@ class abstracted_fs:
 
             if object2:
                 where += [('res_id','=',object2.id),('res_model','=',object2._name)]
-            cids = fobj.search(cr, uid,where)
+            cids = fobj.search(cr, uid, where)
             if len(cids):
                 cid = cids[0]
 
@@ -309,31 +309,18 @@ class abstracted_fs:
     def open(self, node, mode):
         if not node:
             raise OSError(1, 'Operation not permited.')
-        # Reading operation        
-        if node.type == 'file':
-            cr = pooler.get_db(node.context.dbname).cursor()
-            uid = node.context.uid
-            if not self.isfile(node):
-                raise OSError(1, 'Operation not permited.')
-            fobj = node.context._dirobj.pool.get('ir.attachment').browse(cr, uid, node.file_id, context=node.context.context)
-            if fobj.store_method and fobj.store_method== 'fs' :
-                s = StringIO.StringIO(node.get_data(cr, fobj))
-            else:
-                s = StringIO.StringIO(base64.decodestring(fobj.db_datas or ''))
-            s.name = node
-            cr.close()
-            return s
-        elif node.type == 'content':
-            uid = node.context.uid
-            cr = pooler.get_db(node.context.dbname).cursor()
-            pool = pooler.get_pool(node.context.dbname)
-            res = getattr(pool.get('document.directory.content'), 'process_read')(cr, uid, node)
-            res = StringIO.StringIO(res)
-            res.name = node
-            cr.close()
-            return res
-        else:
+        # Reading operation
+        cr = pooler.get_db(node.context.dbname).cursor()
+        res = False
+        #try:
+        if node.type not in ('collection','database'):            
+            res = node.open(cr, mode)   
+        #except:
+        #    pass
+        cr.close()     
+        if not res:
             raise OSError(1, 'Operation not permited.')
+        return res
 
     # ok, but need test more
 
@@ -571,8 +558,7 @@ class abstracted_fs:
                 
                 if dst_obj2:                    
                     ressource_type_id = pool.get('ir.model').search(cr, uid, [('model','=',dst_obj2._name)])[0]
-                    ressource_id = dst_obj2.id
-                    title = dst_obj2.name
+                    ressource_id = dst_obj2.id                    
                     ressource_model = dst_obj2._name                    
                     if dst_obj2._name == 'res.partner':
                         partner_id = dst_obj2.id
@@ -582,8 +568,7 @@ class abstracted_fs:
                     ressource_type_id = False
                     ressource_id = False
                     ressource_model = False
-                    partner_id = False
-                    title = False                
+                    partner_id = False                               
                 pool.get('document.directory').write(cr, uid, result['directory'], {
                     'name' : dst_basename,
                     'ressource_id': ressource_id,
@@ -592,8 +577,7 @@ class abstracted_fs:
                 })
                 val = {
                     'res_id': ressource_id,
-                    'res_model': ressource_model,
-                    'title': title,
+                    'res_model': ressource_model,                    
                     'partner_id': partner_id
                 }
                 pool.get('ir.attachment').write(cr, uid, result['attachment'], val)
@@ -616,7 +600,6 @@ class abstracted_fs:
                     'res_model': False,
                     'name': dst_basename,
                     'datas_fname': dst_basename,
-                    'title': dst_basename,
                 }
 
                 if (dst_obj and (dst_obj.type in ('directory','ressource'))) or not dst_obj2:
@@ -626,8 +609,7 @@ class abstracted_fs:
 
                 if dst_obj2:
                     val['res_model'] = dst_obj2._name
-                    val['res_id'] = dst_obj2.id
-                    val['title'] = dst_obj2.name
+                    val['res_id'] = dst_obj2.id                    
                     if dst_obj2._name == 'res.partner':
                         val['partner_id'] = dst_obj2.id
                     else:                        

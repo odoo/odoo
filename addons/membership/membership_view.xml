@@ -39,7 +39,8 @@
                     <field name="membership" colspan="1"/>
                     <field name="active" colspan="1"/>
                     <newline/>
-                    <field name="taxes_id" colspan="4"/>
+                    <separator colspan="4" string="Customer Taxes:"/>
+                    <field name="taxes_id" colspan="4" nolabel="1"/> 
                 </form>
             </field>
         </record>
@@ -53,8 +54,8 @@
                     <page string="Membership">
                         <field name="membership" readonly="0"/>
                         <newline/>
-                        <field name="membership_date_from" readonly="0"/>
-                        <field name="membership_date_to" readonly="0"/>
+                        <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
+                        <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
                     </page>
                 </page>
             </field>
@@ -81,7 +82,7 @@
             <field name="act_window_id" ref="action_membership_products"/>
         </record>
 
-        <menuitem name="Membership" id="menu_membership" icon="terp-crm"/>
+        <menuitem name="Membership" id="menu_membership" icon="terp-crm" sequence="25"/>
         <menuitem name="Members" parent="menu_membership"
             id="menu_member"
             sequence="1"/>
@@ -103,28 +104,48 @@
             <field name="arch" type="xml">
                 <tree string="Members">
                     <field name="name"/>
+                    <field name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
                     <field name="membership_start"/>
                     <field name="membership_stop"/>
                     <field name="membership_state"/>
-                    <field name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
                 </tree>
             </field>
         </record>
+
         <record id="view_res_partner_member_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <field name="category_id" position="after">
-                    <field name="membership_state" select="1">
-                        <filter icon="terp-partner" domain="[('membership_state', '=', 'paid')]" help="Paid Members"/>
-                        <filter icon="terp-partner" domain="[('membership_state', '=', 'free')]" help="Free Members"/>
-                        <filter icon="terp-partner" domain="[('associate_member', '!=', False), ('membership_state', '!=', 'none')]" help="Associated Members"/>
-                        <filter icon="terp-partner" domain="[('membership_state', '=', 'invoiced')]" help="Invoiced Members"/>
-                        <filter icon="terp-partner" domain="[('membership_state', '=', 'waiting')]" help="Future Members"/>
-                        <filter icon="terp-partner" domain="[('membership_state', '=', 'old')]" help="Old Members"/>
-                    </field>
+                       <filter icon="terp-personal" name="old" domain="[('membership_state', '=', 'old')]" string="Old Members" />
+                       <filter icon="terp-personal" name = "invoiced" domain="[('membership_state', '=', 'invoiced')]" string="Invoiced Members"/>
+                       <filter icon="terp-personal" domain="[('membership_state', '=', 'paid')]" string="Paid Members" />
+                       <filter icon="terp-personal" domain="[('membership_state', '=', 'waiting')]" string="Future Members" />
+                       <separator orientation="vertical"/>
+                       <field name="membership_state"/>
+                       <field name="membership_start"/>
+                       <newline/>
                </field>
+            </field>
+        </record>
+        
+        <record id="view_res_partner_member_filter2" model="ir.ui.view">
+            <field name="name">res.partner.select2</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="view_res_partner_member_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="membership_start" position="after">
+                <newline/>
+	            <group expand="0" string="Group By" colspan="10" col="8">
+	                <filter string="Associate Member" name = "associate" icon="terp-personal" domain="[]" context="{'group_by':'associate_member'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
+                    <separator orientation="vertical"/>
+	                <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
+	                <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
+                </group>
+                </field>
             </field>
         </record>
 
@@ -133,6 +154,7 @@
             <field name="res_model">res.partner</field>
             <field name="domain">[('membership_state','&lt;&gt;','none'),('membership_state','&lt;&gt;','canceled'),('membership_state','&lt;&gt;','old'),('membership_state','&lt;&gt;','waiting')]</field>
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
+            <field name="context">{"search_default_old": 1}</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
@@ -147,7 +169,7 @@
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
-
+        
         <menuitem name="Members" parent="menu_member" id="menu_members" sequence="2" action="action_membership_members"/>
 
         <!-- PARTNERS -->
@@ -160,6 +182,17 @@
             />
  -->
 
+        <record id="view_res_partner_member_form2" model="ir.ui.view">
+            <field name="name">res.partner.form2</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="supplier" position="after">
+                        <field name="member"/>
+               </field>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="view_partner_tree">
             <field name="name">res.partner.tree.form.inherit</field>
@@ -202,7 +235,6 @@
                         </field>
                     </page>
                 </notebook>
-
             </field>
         </record>
 
@@ -211,211 +243,6 @@
             sequence="2"
             id="menu_reporting"/>
 
-        <!-- REPORTING/MEMBERSHIP BY YEAR  -->
-
-
-        <record model="ir.ui.view" id="view_report_partner_member_year_tree1">
-            <field name="name">report.partner_member.year.tree</field>
-            <field name="model">report.partner_member.year</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Membership by Years">
-                    <field name="canceled_number"/>
-                    <field name="waiting_number"/>
-                    <field name="invoiced_number"/>
-                    <field name="paid_number"/>
-                    <field name="year"/>
-                </tree>
-            </field>
-        </record>
-
-
-        <record model="ir.ui.view" id="view_report_partner_member_year_tree2">
-            <field name="name">report.partner_member.year.tree</field>
-            <field name="model">report.partner_member.year</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Membership by Years">
-                    <field name="canceled_amount"/>
-                    <field name="waiting_amount"/>
-                    <field name="invoiced_amount"/>
-                    <field name="paid_amount"/>
-                    <field name="currency"/>
-                    <field name="year"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_report_partner_member_year_graph1">
-            <field name="name">report.partner_member.year.graph1</field>
-            <field name="model">report.partner_member.year</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Membership by Years" type="bar">
-                    <field name="year"/>
-                    <field name="canceled_number"/>
-                    <field name="waiting_number"/>
-                    <field name="invoiced_number"/>
-                    <field name="paid_number"/>
-                </graph>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_report_partner_member_year_graph2">
-            <field name="name">report.partner_member.year.graph2</field>
-            <field name="model">report.partner_member.year</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Membership by Years" type="bar">
-                    <field name="year"/>
-                    <field name="canceled_amount"/>
-                    <field name="waiting_amount"/>
-                    <field name="invoiced_amount"/>
-                    <field name="paid_amount"/>
-                </graph>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_report_partner_member_year_tree">
-            <field name="res_model">report.partner_member.year</field>
-            <field name="view_type">form</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_report_partner_member_year_tree_view1">
-            <field name="sequence" eval="3"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_report_partner_member_year_tree1"/>
-            <field name="act_window_id" ref="action_report_partner_member_year_tree"/>
-        </record>
-
-
-        <record model="ir.actions.act_window.view" id="action_report_partner_member_year_tree_view4">
-            <field name="sequence" eval="4"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_report_partner_member_year_tree2"/>
-            <field name="act_window_id" ref="action_report_partner_member_year_tree"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_report_partner_member_year_tree_view2">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_report_partner_member_year_graph1"/>
-            <field name="act_window_id" ref="action_report_partner_member_year_tree"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_report_partner_member_year_tree_view3">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_report_partner_member_year_graph2"/>
-            <field name="act_window_id" ref="action_report_partner_member_year_tree"/>
-        </record>
-
-        <menuitem name="Membership by Years" parent="menu_reporting"
-            action="action_report_partner_member_year_tree"
-            id="menu_report_partner_member_year"/>
-
-
-        <!-- REPORTING/NEW MEMBERSHIP BY YEAR  -->
-
-
-
-        <record model="ir.ui.view" id="view_report_partner_member_year_new_tree1">
-            <field name="name">report.partner_member.year_new.tree</field>
-            <field name="model">report.partner_member.year_new</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="New Membership by Years">
-                    <field name="canceled_number"/>
-                    <field name="waiting_number"/>
-                    <field name="invoiced_number"/>
-                    <field name="paid_number"/>
-                    <field name="year"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_report_partner_member_year_new_tree2">
-            <field name="name">report.partner_member.year_new.tree</field>
-            <field name="model">report.partner_member.year_new</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="New Membership by Years">
-                    <field name="canceled_amount"/>
-                    <field name="waiting_amount"/>
-                    <field name="invoiced_amount"/>
-                    <field name="paid_amount"/>
-                    <field name="currency"/>
-                    <field name="year"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_report_partner_member_year_new_graph1">
-            <field name="name">report.partner_member.year_new.graph1</field>
-            <field name="model">report.partner_member.year_new</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="New Membership by Years" type="bar">
-                    <field name="year"/>
-                    <field name="canceled_number"/>
-                    <field name="waiting_number"/>
-                    <field name="invoiced_number"/>
-                    <field name="paid_number"/>
-                </graph>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_report_partner_member_year_new_graph2">
-            <field name="name">report.partner_member.year_new.graph2</field>
-            <field name="model">report.partner_member.year_new</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="New Membership by Years" type="bar">
-                    <field name="year"/>
-                    <field name="canceled_amount"/>
-                    <field name="waiting_amount"/>
-                    <field name="invoiced_amount"/>
-                    <field name="paid_amount"/>
-                </graph>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_report_partner_member_year_new_tree">
-            <field name="res_model">report.partner_member.year_new</field>
-            <field name="view_type">form</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_report_partner_member_year_new_tree_view4">
-            <field name="sequence" eval="4"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_report_partner_member_year_new_tree2"/>
-            <field name="act_window_id" ref="action_report_partner_member_year_new_tree"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_report_partner_member_year_new_tree_view1">
-            <field name="sequence" eval="3"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_report_partner_member_year_new_tree1"/>
-            <field name="act_window_id" ref="action_report_partner_member_year_new_tree"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_report_partner_member_year_new_tree_view2">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_report_partner_member_year_new_graph1"/>
-            <field name="act_window_id" ref="action_report_partner_member_year_new_tree"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_report_partner_member_year_new_tree_view3">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_report_partner_member_year_new_graph2"/>
-            <field name="act_window_id" ref="action_report_partner_member_year_new_tree"/>
-        </record>
-
-        <menuitem name="New Membership by Years" parent="menu_reporting"
-            action="action_report_partner_member_year_new_tree"
-            id="menu_report_partner_member_year_new"/>
 
 <!-- View for product.product object inherited from product module................ -->
         <record model="ir.ui.view" id="view_product_form_inherit1">

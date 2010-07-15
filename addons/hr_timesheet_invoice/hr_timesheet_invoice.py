@@ -25,7 +25,7 @@ from tools.translate import _
 
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
-    _description = "Invoice rate"
+    _description = "Invoice Rate"
     _columns = {
         'name': fields.char('Internal name', size=128, required=True),
         'customer_name': fields.char('Name', size=128),
@@ -59,13 +59,13 @@ class account_analytic_account(osv.osv):
         'amount_max': fields.float('Max. Invoice Price'),
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
             help="Total invoiced"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Reinvoice Costs',
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Reinvoice Costs',
             help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),
     }
     _defaults = {
-        'pricelist_id': lambda self,cr, uid, ctx: ctx.get('pricelist_id', False),
+        'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
 account_analytic_account()
 

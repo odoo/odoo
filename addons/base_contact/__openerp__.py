@@ -25,14 +25,14 @@
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """
-        This module allows you to manage entirely your contacts.
+        This module allows you to manage your contacts entirely.
 
     It lets you define
         *contacts unrelated to a partner,
         *contacts working at several addresses (possibly for different partners),
         *contacts with possibly different functions for each of its job's addresses
 
-    It also add new menu items located in
+    It also adds new menu items located in
         Partners \ Contacts
         Partners \ Functions
 
@@ -45,6 +45,7 @@
     'update_xml': [
         'security/ir.model.access.csv',
         'base_contact_view.xml',
+#        'base_contact_installer_view.xml', 
         'process/base_contact_process.xml'
     ],
     'demo_xml': ['base_contact_demo.xml'], 

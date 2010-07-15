@@ -32,7 +32,7 @@ class account_bank_statement(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-        model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
+        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'statement_id': ids[0]})
         return {
@@ -45,7 +45,7 @@ class account_bank_statement(osv.osv):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'nodestroy': True
-                }
+        }
 
     def _default_journal_id(self, cr, uid, context={}):
         if context.get('journal_id', False):
@@ -159,7 +159,7 @@ class account_bank_statement(osv.osv):
         'period_id': _get_period,
     }
 
-    def button_confirm(self, cr, uid, ids, context={}):
+    def button_confirm_bank(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -303,6 +303,13 @@ class account_bank_statement(osv.osv):
                                 _('Ledger Posting line "%s" is not valid') % line.name)
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
+                    ## Search if move has already a partial reconciliation
+                    previous_partial = False
+                    for line_reconcile_move in move.reconcile_id.line_ids:
+                        if line_reconcile_move.reconcile_partial_id:
+                            previous_partial = True
+                            break
+                    ##
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
@@ -312,8 +319,14 @@ class account_bank_statement(osv.osv):
                         for entry in move.reconcile_id.line_new_ids:
                             writeoff_acc_id = entry.account_id.id
                             break
-
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
+                        ## If we have already a partial reconciliation
+                        ## We need to make a partial reconciliation
+                        ## To add this amount to previous paid amount
+                        if previous_partial:
+                            account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
+                        ## If it's the first reconciliation, we do a full reconciliation as regular
+                        else:
+                            account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
@@ -387,7 +400,7 @@ account_bank_statement()
 
 class account_bank_statement_reconcile(osv.osv):
     _name = "account.bank.statement.reconcile"
-    _description = "Statement reconcile"
+    _description = "Statement Reconcile"
 
     def _total_entry(self, cursor, user, ids, name, attr, context=None):
         result = {}
@@ -556,37 +569,46 @@ account_bank_statement_reconcile_line()
 
 class account_bank_statement_line(osv.osv):
 
-    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id,
-            context={}):
+    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context={}):
+        res = {'value': {}}
+        
         if not partner_id:
-            return {}
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
-
-        company_currency_id = res_users_obj.browse(cursor, user, user,
-                context=context).company_id.currency_id.id
-
-        if not currency_id:
-            currency_id = company_currency_id
-
-        part = self.pool.get('res.partner').browse(cursor, user, partner_id,
+            return res
+        line = self.browse(cursor, user, line_id)
+  
+        if not line or (line and not line[0].account_id):
+            part = self.pool.get('res.partner').browse(cursor, user, partner_id,
                 context=context)
-        if type == 'supplier':
-            account_id = part.property_account_payable.id
-        else:
-            account_id =  part.property_account_receivable.id
+            if type == 'supplier':
+                account_id = part.property_account_payable.id
+            else:
+                account_id = part.property_account_receivable.id
+            res['value']['account_id'] = account_id
 
-        cursor.execute('SELECT sum(debit-credit) \
+        if not line or (line and not line[0].amount):
+            res_users_obj = self.pool.get('res.users')
+            res_currency_obj = self.pool.get('res.currency')
+            company_currency_id = res_users_obj.browse(cursor, user, user,
+                    context=context).company_id.currency_id.id
+            if not currency_id:
+                currency_id = company_currency_id
+
+            cursor.execute('SELECT sum(debit-credit) \
                 FROM account_move_line \
                 WHERE (reconcile_id is null) \
                     AND partner_id = %s \
                     AND account_id=%s', (partner_id, account_id))
-        res = cursor.fetchone()
-        balance = res and res[0] or 0.0
+            pgres = cursor.fetchone()
+            balance = pgres and pgres[0] or 0.0
 
-        balance = res_currency_obj.compute(cursor, user, company_currency_id,
+            balance = res_currency_obj.compute(cursor, user, company_currency_id,
                 currency_id, balance, context=context)
-        return {'value': {'amount': balance, 'account_id': account_id}}
+            res['value']['amount'] = balance
+        
+        if context.get('amount', 0) > 0:
+            res['value']['amount'] = context.get('amount')
+            
+        return res
 
     def _reconcile_amount(self, cursor, user, ids, name, args, context=None):
         if not ids:
@@ -625,7 +647,7 @@ class account_bank_statement_line(osv.osv):
         'statement_id': fields.many2one('account.bank.statement', 'Statement',
             select=True, required=True, ondelete='cascade'),
         'reconcile_id': fields.many2one('account.bank.statement.reconcile',
-            'Reconcile', states={'confirm':[('readonly',True)]}),
+            'Reconcile'),
         'move_ids': fields.many2many('account.move',
             'account_bank_statement_line_move_rel', 'move_id','statement_id',
             'Moves'),
@@ -633,7 +655,7 @@ class account_bank_statement_line(osv.osv):
         'note': fields.text('Notes'),
         'reconcile_amount': fields.function(_reconcile_amount,
             string='Amount reconciled', method=True, type='float'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement line."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement lines."),
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),

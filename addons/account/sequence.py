@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,10 +15,9 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 
 from osv import fields,osv
 
@@ -42,7 +41,7 @@ class ir_sequence(osv.osv):
     _columns = {
         'fiscal_ids' : fields.one2many('account.sequence.fiscalyear', 'sequence_main_id', 'Sequences')
     }
-    def get_id(self, cr, uid, sequence_id, test='id', context={}):        
+    def get_id(self, cr, uid, sequence_id, test='id', context={}):
         cr.execute('select id from ir_sequence where '+test+'=%s and active=%s', (sequence_id, True,))
         res = cr.dictfetchone()
         if res:

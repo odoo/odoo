@@ -75,11 +75,6 @@
                         <page string="Accounts">
                             <field name="account_ids" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Dotations">
-                            <button string="Spread" name="%(action_account_budget_spread)d" type="action" icon="gtk-fullscreen"/>
-                            <field name="dotation_ids" colspan="4" nolabel="1"/>
-                        </page>
-
                         <page string="Budget Lines">
                             <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
                                 <graph type="bar" string="Lines">
@@ -153,7 +148,7 @@
                             <field name="state" select="1"/>
                             <group col="4" colspan="2">
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-apply" />
-                                <button string="Validate" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
+                                <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
                                 <button string="Done" name="done" states="validate" type="workflow"   icon="gtk-jump-to" />
                                 <button string="Cancel" name="cancel" states="confirm,validate" type="workflow" icon="gtk-cancel"/>
                                 <!--<button string="Set to Draft" name="action_set_to_draft" states="cancel" type="object"/>-->
@@ -178,12 +173,33 @@
             </field>
         </record>
 
+        <record id="view_crossovered_budget_search" model="ir.ui.view">
+           <field name="name">crossovered.budget.search</field>
+           <field name="model">crossovered.budget</field>
+           <field name="type">search</field>
+           <field name="arch" type="xml">
+               <search string="Budget">
+                   <group col="20" colspan="4">
+                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"  default="1"/>
+                       <filter string="To Approve" icon="terp-gtk-go-back-rtl" domain="[('state','=','validate')]" help="To Approve Budgets" />
+                       <separator orientation="vertical"/>
+                       <field name="name" select="1"/>
+                       <field name="code" select="1" />
+                       <field name="state"/>
+                       <field name="date_from"/>
+                       <field name="date_to"/>
+                   </group>
+               </search>
+           </field>
+        </record>
+
         <record model="ir.actions.act_window" id="act_crossovered_budget_view">
             <field name="name">Budget</field>
             <field name="res_model">crossovered.budget</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="crossovered_budget_view_tree"/>
+            <field name="search_view_id" ref="view_crossovered_budget_search"/>
         </record>
         <menuitem parent="next_id_31"
             id="menu_act_crossovered_budget_view"
@@ -294,14 +310,6 @@
             auto="False"
             menu="False"/>-->
 
-        <!--Menu for project management-->
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
-        <menuitem id="base.menu_pm_invoicing" name="Billing" parent="base.menu_main_pm" sequence="7"/>
-        <menuitem id="menu_pm_budget" name="Budgets" parent="base.menu_pm_invoicing"/>
-        <menuitem action="open_budget_post_form" id="menu_pm_budget_post_form" parent="menu_pm_budget"/>
-        <menuitem parent="menu_pm_budget"
-             id="menu_act_pm_crossovered_budget_view"
-             action="act_crossovered_budget_view" />
     </data>
 </openerp>
 

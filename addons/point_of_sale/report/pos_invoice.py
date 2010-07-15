@@ -35,20 +35,19 @@ class pos_invoice(report_sxw.rml_parse):
         })
         
 
-    def set_context(self, objects, data, ids, report_type=None):
-        super(pos_invoice, self).set_context(objects, data, ids, report_type)
+    def set_context(self, order, data, ids, report_type=None):
+        super(pos_invoice, self).set_context(order, data, ids, report_type)
         iids = []
         nids = []
 
-        for order in objects:
-            order.write({'nb_print': order.nb_print + 1})
 
-            if order.invoice_id and order.invoice_id not in iids:
-                if not order.invoice_id:
-                    raise osv.except_osv(_('Error !'), _('Please create an invoice for this sale.'))
-                iids.append(order.invoice_id)
-                nids.append(order.invoice_id.id)
-        self.cr.commit()
+        order.write({'nb_print': order.nb_print + 1})
+
+        if order.invoice_id and order.invoice_id not in iids:
+            if not order.invoice_id:
+                raise osv.except_osv(_('Error !'), _('Please create an invoice for this sale.'))
+            iids.append(order.invoice_id)
+            nids.append(order.invoice_id.id)
         data['ids'] = nids
         self.datas = data
         self.ids = nids

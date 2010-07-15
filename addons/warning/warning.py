@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -49,7 +49,7 @@ class res_partner(osv.osv):
          'picking_warn' : lambda *a: 'no-message',
          'invoice_warn' : lambda *a: 'no-message',
     }
-    
+
 res_partner()
 
 
@@ -73,11 +73,11 @@ class sale_order(osv.osv):
             }
 
         result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part)
-        
+
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
-            
+
         return {'value': result.get('value',{}), 'warning':warning}
 sale_order()
 
@@ -101,21 +101,20 @@ class purchase_order(osv.osv):
                 'message': message
                 }
         result =  super(purchase_order, self).onchange_partner_id(cr, uid, ids, part)
-        
+
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
-            
+
         return {'value': result.get('value',{}), 'warning':warning}
-    
+
 purchase_order()
 
 
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False):
-        
+            date_invoice=False, payment_term=False, partner_bank=False, company_id=False):
         if not partner_id:
             return {'value': {
             'address_contact_id': False ,
@@ -131,7 +130,7 @@ class account_invoice(osv.osv):
         if partner.invoice_warn != 'no-message':
             if partner.invoice_warn == 'block':
                 raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.invoice_warn_msg)
-            
+
             title = _("Warning for %s") % partner.name
             message = partner.invoice_warn_msg
             warning = {
@@ -139,19 +138,19 @@ class account_invoice(osv.osv):
                 'message': message
                 }
         result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False)
-        
+            date_invoice=False, payment_term=False, partner_bank=False)
+
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
-        
+
         return {'value': result.get('value',{}), 'warning':warning}
-    
+
 account_invoice()
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
-    
+
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
         if not partner_id:
             return {}
@@ -172,9 +171,9 @@ class stock_picking(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
-        
+
         return {'value': result.get('value',{}), 'warning':warning}
-    
+
 stock_picking()
 
 class product_product(osv.osv):
@@ -185,12 +184,12 @@ class product_product(osv.osv):
          'purchase_line_warn' : fields.selection(WARNING_MESSAGE,'Purchase Order Line', help=WARNING_HELP),
          'purchase_line_warn_msg' : fields.text('Message for Purchase Order Line'),
      }
-    
+
     _defaults = {
          'sale_line_warn' : lambda *a: 'no-message',
          'purchase_line_warn' : lambda *a: 'no-message',
     }
-    
+
 product_product()
 
 class sale_order_line(osv.osv):
@@ -204,11 +203,11 @@ class sale_order_line(osv.osv):
             return {'value': {'th_weight' : 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
                    'product_uos': []}}
-        product_obj = self.pool.get('product.product') 
+        product_obj = self.pool.get('product.product')
         product_info = product_obj.browse(cr, uid, product)
         title = False
         message = False
-        
+
         if product_info.sale_line_warn != 'no-message':
             if product_info.sale_line_warn == 'block':
                 raise osv.except_osv(_('Alert for %s !') % (product_info.name), product_info.sale_line_warn_msg)
@@ -216,7 +215,7 @@ class sale_order_line(osv.osv):
             message = product_info.sale_line_warn_msg
             warning['title'] = title
             warning['message'] = message
-            
+
         result =  super(sale_order_line, self).product_id_change( cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
             lang, update_tax, date_order, packaging, fiscal_position, flag)
@@ -227,9 +226,9 @@ class sale_order_line(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
-        
+
         return {'value': result.get('value',{}), 'warning':warning}
-    
+
 sale_order_line()
 
 class purchase_order_line(osv.osv):
@@ -239,11 +238,11 @@ class purchase_order_line(osv.osv):
         warning = {}
         if not product:
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
-        product_obj = self.pool.get('product.product') 
+        product_obj = self.pool.get('product.product')
         product_info = product_obj.browse(cr, uid, product)
         title = False
         message = False
-        
+
         if product_info.purchase_line_warn != 'no-message':
             if product_info.purchase_line_warn == 'block':
                 raise osv.except_osv(_('Alert for %s !') % (product_info.name), product_info.purchase_line_warn_msg)
@@ -251,16 +250,16 @@ class purchase_order_line(osv.osv):
             message = product_info.purchase_line_warn_msg
             warning['title'] = title
             warning['message'] = message
-            
+
         result =  super(purchase_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order, fiscal_position)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
-        
+
         return {'value': result.get('value',{}), 'warning':warning}
-    
+
 purchase_order_line()
 
 

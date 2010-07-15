@@ -30,7 +30,7 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 class color_rml(osv.osv):
     _name = "color.rml"
-    _description = "Rml Colors"
+    _description = "Rml Color"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('code',size=64,required=True),
@@ -76,7 +76,7 @@ class account_report_bs(osv.osv):
     def onchange_parent_id(self, cr, uid, ids, parent_id):
         v={}
         if parent_id:
-            acc=self.pool.get('account.report.report').browse(cr,uid,parent_id)
+            acc=self.pool.get('account.report.report').browse(cr, uid, parent_id)
             v['type']=acc.type
             if int(acc.style) < 6:
                 v['style'] = str(int(acc.style)+1)

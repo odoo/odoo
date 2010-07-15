@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+import time
 
+from osv import fields, osv
 from tools.translate import _
 from tools import email_send as email
 
@@ -31,38 +32,51 @@ class project_close_task(osv.osv_memory):
     _name = "close.task"
     _description = "Project Close Task"
     _columns = {
-        'email': fields.char('E-Mails', size=64,),
-        'description': fields.text('Description',),
-               }
+        'email': fields.char('E-Mail', size=64, help="Email Address"),
+        'description': fields.text('Description'),
+        }
 
-    def _get_email(self, cr, uid, context={}):
+    def _get_email(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         email = ''
         if 'task_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['task_id'])
             partner_id = task.partner_id or task.project_id.partner_id
-            if partner_id and partner_id.address[0].email:
+            if partner_id and len(partner_id.address) and partner_id.address[0].email:
                 email = partner_id.address[0].email
         return email
 
-    def _get_desc(self, cr, uid, context={}):
+    def _get_desc(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'task_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['task_id'])
             return task.description or task.name
         return ''
 
-    _defaults={
+    _defaults = {
        'email': _get_email,
        'description': _get_desc,
                }
+    
+    def close(self, cr, uid, ids, context=None):
+        if 'task_id' in context:
+            self.pool.get('project.task').write(cr, uid, [context['task_id']], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+        return {}
 
-    def confirm(self, cr, uid, ids, context={}):
+    def confirm(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         if not 'task_id' in context:
             return {}
         close_task = self.read(cr, uid, ids[0], [])
         to_adr = close_task['email']
         description = close_task['description']
+        
         if 'task_id' in context:
-            for task in self.pool.get('project.task').browse(cr, uid, [context['task_id']], context=context):
+            task_obj = self.pool.get('project.task')
+            for task in task_obj.browse(cr, uid, [context['task_id']], context=context):
                 project = task.project_id
                 subject = "Task '%s' closed" % task.name
                 if task.user_id and task.user_id.address_id and task.user_id.address_id.email:
@@ -83,9 +97,13 @@ class project_close_task(osv.osv_memory):
                     footer = (project.warn_footer or '') % val
                     body = u'%s\n%s\n%s\n\n-- \n%s' % (header, description, footer, signature)
                     email(from_adr, [to_adr], subject, body.encode('utf-8'), email_bcc=[from_adr])
+                    task_obj.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+                    message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
+                    self.log(cr, uid, task.id, message)
                 else:
-                    raise osv.except_osv(_('Error'), _("Couldn't send mail because the contact for this task (%s) has no email address!") % contact.name)
+                    raise osv.except_osv(_('Error'), _("Please specify the email address of partner."))
         return {}
 
 project_close_task()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

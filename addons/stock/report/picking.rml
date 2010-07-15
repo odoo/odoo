@@ -170,7 +170,7 @@
     <blockTable colWidths="538.0" style="Table_Title_String">
       <tr>
         <td>
-          <para style="terp_header">Packing List: [[ picking.name ]]</para>
+          <para style="terp_header">Picking List: [[ picking.name ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -208,7 +208,7 @@
           <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ picking.weight or '']] </para>
+          <para style="terp_default_Centre_8">[[ 'weight' in picking._columns.keys() and picking.weight or '']] </para>
         </td>
       </tr>
     </blockTable>
@@ -268,9 +268,9 @@
         <font color="white"> </font>
       </para>
     </section>
-    <para style="terp_default_5cm_Above_Space">[[ (line.state == 'done' or line.state == 'confirmed') and removeParentNode('para') ]]</para>
-    <para style="terp_default_Bold_9">Non Assigned Products: [[ ( line.state == 'assigned' or line.state == 'done' or line.state == 'confirmed' ) and removeParentNode('para') ]]</para>
-    <para style="terp_default_1cm_above_space">[[ (line.state == 'done' or line.state == 'confirmed') and removeParentNode('para') ]]</para>
+    <para style="terp_default_5cm_Above_Space">[[ (move_lines.state == 'done' or move_lines.state == 'confirmed') and removeParentNode('para') ]]</para>
+    <para style="terp_default_Bold_9">Non Assigned Products: [[ ( move_lines.state == 'assigned' or move_lines.state == 'done' or move_lines.state == 'confirmed' ) and removeParentNode('para') ]]</para>
+    <para style="terp_default_1cm_above_space">[[ (move_lines.state == 'done' or move_lines.state == 'confirmed') and removeParentNode('para') ]]</para>
     <section>
       <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state != 'assigned' )],'move_lines') ]]</para>
       <blockTable colWidths="257.0,57.0,62.0,46.0,26.0,74.0" style="Move_Line_Content_Other_State">

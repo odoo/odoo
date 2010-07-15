@@ -36,112 +36,103 @@ AVAILABLE_STATES = [
 
 class crm_opportunity(osv.osv):
     """ Opportunity Cases """
-
-    _name = "crm.opportunity"
-    _description = "Opportunity Cases"
+    _name = "crm.lead"
+    _description = "Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = 'crm.case'
+    _inherit = 'crm.lead'
+    _columns = {
+        # From crm.case
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"), 
 
-    def case_open(self, cr, uid, ids, *args):
+        # Opportunity fields
+        'probability': fields.float('Probability (%)',group_operator="avg"),
+        'planned_revenue': fields.float('Expected Revenue'),
+        'ref': fields.reference('Reference', selection=crm._links_get, size=128),
+        'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
+        'phone': fields.char("Phone", size=64),
+        'date_deadline': fields.date('Expected Closing'),
+        'date_action': fields.date('Next Action Date'),
+        'title_action': fields.char('Next Action', size=64),
+     }
+    def case_close(self, cr, uid, ids, *args):
+        """Overrides close for crm_case for setting probability and close date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
         """
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
+        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 100)]})
+        if not stage_id:
+            raise osv.except_osv(_('Warning !'), _('There is no stage for won oppportunities defined for this Sale Team.'))
+        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+
+        self.write(cr, uid, ids, value)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Won.")
+            self.log(cr, uid, id, message)
+        return res
+
+    def case_mark_lost(self, cr, uid, ids, *args):
+        """Mark the case as lost: state = done and probability = 0%
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
+        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
+        if not stage_id:
+            raise osv.except_osv(_('Warning !'), _('There is no stage for lost oppportunities defined for this Sale Team.'))
+        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+
+        res = self.write(cr, uid, ids, value)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Lost.")
+            self.log(cr, uid, id, message)
+        return res
+
+    def case_cancel(self, cr, uid, ids, *args):
+        """Overrides cancel for crm_case for setting probability
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_cancel(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        return res
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Overrides reset as draft in order to set the stage field as empty
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'stage_id': False})
+        return True
+   
+ 
+    def case_open(self, cr, uid, ids, *args):
+        """Overrides open for crm_case for setting Open Date
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of case's Ids
         @param *args: Give Tuple Value
         """
-
         res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
-
-    def _compute_day(self, cr, uid, ids, fields, args, context={}):
-        """
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Openday’s IDs
-        @return: difference between current date and log date
-        @param context: A standard dictionary for contextual values
-        """
-        cal_obj = self.pool.get('resource.calendar')
-        res_obj = self.pool.get('resource.resource')
-
-        res = {}
-        for opportunity in self.browse(cr, uid, ids , context):
-            for field in fields:
-                res[opportunity.id] = {}
-                duration = 0
-                ans = False
-                if field == 'day_open':
-                    if opportunity.date_open:
-                        date_create = datetime.strptime(opportunity.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_open = datetime.strptime(opportunity.date_open, "%Y-%m-%d %H:%M:%S")
-                        ans = date_open - date_create
-                        date_until = opportunity.date_open
-                elif field == 'day_close':
-                    if opportunity.date_closed:
-                        date_create = datetime.strptime(opportunity.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_close = datetime.strptime(opportunity.date_closed, "%Y-%m-%d %H:%M:%S")
-                        date_until = opportunity.date_closed
-                        ans = date_close - date_create
-                if ans:
-                    resource_id = False
-                    if opportunity.user_id:
-                        resource_ids = res_obj.search(cr, uid, [('user_id','=',opportunity.user_id.id)])
-                        if resource_ids and len(resource_ids):
-                            resource_id = resource_ids[0]
-
-                    duration = float(ans.days)
-                    if opportunity.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24
-                        new_dates = cal_obj.interval_get(cr,
-                            uid,
-                            opportunity.section_id.resource_calendar_id and opportunity.section_id.resource_calendar_id.id or False,
-                            mx.DateTime.strptime(opportunity.create_date, '%Y-%m-%d %H:%M:%S'),
-                            duration,
-                            resource=resource_id
-                        )
-                        no_days = []
-                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
-                        for in_time, out_time in new_dates:
-                            if in_time.date not in no_days:
-                                no_days.append(in_time.date)
-                            if out_time > date_until:
-                                break
-                        duration =  len(no_days)
-                res[opportunity.id][field] = abs(int(duration))
-        return res
-
-    _columns = {
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                     domain="[('section_id','=',section_id),\
-                    ('object_id.model', '=', 'crm.opportunity')]"),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                     domain="[('section_id','=',section_id), \
-                    ('object_id.model', '=', 'crm.opportunity')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'referred': fields.char('Referred By', size=64),
-        'probability': fields.float('Probability (%)'),
-        'planned_revenue': fields.float('Expected Revenue'),
-        'ref': fields.reference('Reference', selection=crm._links_get, size=128),
-        'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesman'),
-        'phone': fields.char("Phone", size=64),
-        'date_deadline': fields.date('Expected Closing'),
-        'date_action': fields.date('Next Action'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-
-        'date_open': fields.datetime('Opened', readonly=True),
-        'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
-        'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
-         }
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
 
@@ -157,40 +148,11 @@ class crm_opportunity(osv.osv):
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
-        return {'value':{'probability':stage.probability}}
-
-    def stage_next(self, cr, uid, ids, context={}):
-
-        """ @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of stage next’s IDs
-            @param context: A standard dictionary for contextual values """
-
-        res = super(crm_opportunity, self).stage_next(cr, uid, ids, context=context)
-        for case in self.browse(cr, uid, ids, context):
-            if case.stage_id and case.stage_id.on_change:
-                self.write(cr, uid, [case.id], {'probability': case.stage_id.probability})
-        return res
-
-    def stage_previous(self, cr, uid, ids, context={}):
-
-        """ @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of stage previous’s IDs
-            @param context: A standard dictionary for contextual values """
-
-        res = super(crm_opportunity, self).stage_previous(cr, uid, ids, context=context)
-        for case in self.browse(cr, uid, ids, context):
-            if case.stage_id and case.stage_id.on_change:
-                self.write(cr, uid, [case.id], {'probability': case.stage_id.probability})
-        return res
+        return {'value':{'probability': stage.probability}}
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.opportunity', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
-        'state' : 'draft',
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
+        'priority': crm.AVAILABLE_PRIORITIES[2][0],
     }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
@@ -224,14 +186,14 @@ class crm_opportunity(osv.osv):
             context = {
                 'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
+                'default_user_id': uid, 
                 'default_section_id': opp.section_id and opp.section_id.id or False,
                 'default_email_from': opp.email_from,
-                'default_state': 'open',
+                'default_state': 'open',  
                 'default_name': opp.name
             }
             value = {
                 'name': _('Meetings'),
-                'domain': "[('user_id','=',%s)]" % (uid),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'calendar,form,tree',
@@ -242,8 +204,8 @@ class crm_opportunity(osv.osv):
                 'search_view_id': res['res_id'],
                 'nodestroy': True
             }
-
         return value
 
 crm_opportunity()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -296,7 +296,7 @@ process_process()
 
 class process_node(osv.osv):
     _name = 'process.node'
-    _description ='Process Nodes'
+    _description ='Process Node'
     _columns = {
         'name': fields.char('Name', size=30,required=True, translate=True),
         'process_id': fields.many2one('process.process', 'Process', required=True, ondelete='cascade'),
@@ -342,7 +342,7 @@ process_node_condition()
 
 class process_transition(osv.osv):
     _name = 'process.transition'
-    _description ='Process Transitions'
+    _description ='Process Transition'
     _columns = {
         'name': fields.char('Name', size=32, required=True, translate=True),
         'source_node_id': fields.many2one('process.node', 'Source Node', required=True, ondelete='cascade'),

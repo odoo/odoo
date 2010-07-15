@@ -7,13 +7,20 @@
             <field name="model">close.task</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              	<form string="Project Close Task">
-		              <field name="email" />
+              	<form string="Project Close Task" >
+              		  <label string="Send mail to the specified email address"/>
+              		  <separator string="" colspan="4"/>
+              		  <group colspan="4" col="6">
+              		  <newline/>
+		              <field name="email"/>
 		              <newline/>
 		              <field name="description" />
-		              <group colspan="4" col="6">
+		              </group>
+		              <separator string="" colspan="6"/>
+		              <group colspan="6" col="6">
+		            		<button icon="gtk-ok" name="confirm" string="Send and Close" type="object"/>
+		            		<button  icon="gtk-ok" string="Close" name="close" type="object"/>
 		            		<button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
-		            		<button icon="gtk-ok" name="confirm" string="Send Mail" type="object"/>
 		              </group>
 			  	</form>
             </field>

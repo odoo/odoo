@@ -32,7 +32,7 @@ This module is based on the analytic accounting and is totally integrated with
 * the holidays management
 * the project management
 
-So that, each department manager can know if someone in his team has still unaloccated time for a given planning (taking in consideration the validated leaves) or if he still needs to encode tasks.
+So that, each department manager can know if someone in his team has still unallocated time for a given planning (taking in consideration the validated leaves) or if he still needs to encode tasks.
 
 At the end of the month, the planning manager can also check if the encoded timesheets are respecting the planned time on each analytic account.
 """,
@@ -47,12 +47,16 @@ At the end of the month, the planning manager can also check if the encoded time
     'update_xml': [
         'security/ir.model.access.csv',
         'project_planning_view.xml',
-        'project_planning_report.xml'
+        'project_planning_report.xml',
+        'board_project_planning_view.xml',
     ],
     'demo_xml': [
         #'report_account_analytic.planning.csv',
         'project_planning_demo.xml',
     ],
+    'test': [
+             'test/planning_states.yml'
+             ],
     'installable': True,
     'active': False,
     'certificate': '0034901836973',

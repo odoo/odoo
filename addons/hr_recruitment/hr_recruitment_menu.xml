@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
+<data>
     <menuitem icon="terp-hr" id="base.menu_hr" name="Human Resources"/>
 
     ######################## JOB OPPORTUNITIES (menu) ###########################
@@ -9,6 +9,7 @@
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">tree,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view_job"/>
+        <field name="context">{"search_default_user_id":uid}</field>
         <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
 
     </record>
@@ -37,7 +38,8 @@
      <menuitem
         name="Recruitment"
         id="base.menu_crm_case_job_req_main"
-        parent="base.menu_hr"/>
+        parent="base.menu_hr"
+        sequence="1"/>
 
  <!--
         ALL JOBS REQUESTS

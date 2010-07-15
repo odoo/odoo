@@ -48,67 +48,57 @@ class product_uom(osv.osv):
     _name = 'product.uom'
     _description = 'Product Unit of Measure'
 
-    def _factor(self, cursor, user, ids, name, arg, context):
+    def _factor_inv(self, cursor, user, ids, name, arg, context):
         res = {}
         for uom in self.browse(cursor, user, ids, context=context):
             if uom.factor:
-                if uom.factor_inv_data:
-                    res[uom.id] = uom.factor_inv_data
-                else:
-                    res[uom.id] = round(1 / uom.factor, 6)
+                res[uom.id] = round(1 / uom.factor, 6)
             else:
                 res[uom.id] = 0.0
         return res
 
-    def _factor_inv(self, cursor, user, id, name, value, arg, context):
-        ctx = context.copy()
-        if 'read_delta' in ctx:
-            del ctx['read_delta']
+    def _factor_inv_write(self, cursor, user, id, name, value, arg, context):
         if value:
-            data = 0.0
-            if round(1 / round(1/value, 6), 6) != value:
-                data = value
             self.write(cursor, user, id, {
                 'factor': round(1/value, 6),
-                'factor_inv_data': data,
-                }, context=ctx)
+            }, context=context)
         else:
             self.write(cursor, user, id, {
                 'factor': 0.0,
-                'factor_inv_data': 0.0,
-                }, context=ctx)
+            }, context=context)
+        return True
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
-            help="Unit of Measure of a category can be converted between each others in the same category."),
+            help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
         'factor': fields.float('Ratio', digits=(12, 6), required=True,
-            help='The coefficient for the formula:\n' \
-                    '1 (base unit) = coeff (this unit). Ratio = 1 / Factor.'),
-        'factor_inv': fields.function(_factor, digits=(12, 6),
-            method=True, string='Factor',
-            help='The coefficient for the formula:\n' \
-                    'coeff (base unit) = 1 (this unit). Factor = 1 / Rate.'),
-        'factor_inv_data': fields.float('Factor', digits=(12, 6)),
+            help='How many times this UoM is smaller than the reference UoM in this category:\n'\
+                    '1 * (reference unit) = ratio * (this unit)'),
+        'factor_inv': fields.function(_factor_inv, digits=(12, 6),
+            fnct_inv=_factor_inv_write,
+            method=True, string='Ratio',
+            help='How many times this UoM is bigger than the reference UoM in this category:\n'\
+                    '1 * (this unit) = ratio * (reference unit)', required=True),
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
-            help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the unit of measure without removing it."),
-        'uom_factor': fields.selection([('bigger','Bigger than the Default'),
-                                        ('smaller','Smaller than the Default'),
-                                        ('','')],'UoM Factor'),
+            help="The computed quantity will be a multiple of this value. "\
+                 "Use 1.0 for a UoM that cannot be further split, such as a piece."),
+        'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
+        'uom_type': fields.selection([('bigger','Bigger than the reference UoM'),
+                                      ('reference','Reference UoM for this category (ratio=1)'),
+                                      ('smaller','Smaller than the reference UoM')],'UoM Type', required=1),
     }
 
     _defaults = {
-        'factor': lambda *a: 1.0,
-        'factor_inv': lambda *a: 1.0,
-        'active': lambda *a: 1,
-        'rounding': lambda *a: 0.01,
-        'uom_factor': lambda *a: 'smaller',
+        'factor': 1.0,
+        'factor_inv': 1.0,
+        'active': 1,
+        'rounding': 0.01,
+        'uom_type': 'reference',
     }
 
     _sql_constraints = [
-        ('factor_gt_zero', 'CHECK (factor!=0)', 'Value of the factor can never be 0 !'),
-        ('factor_inv_data_gt_zero', 'CHECK (factor_inv_data!=0)', 'Value of the factor_inv_data can never be 0 !'),
+        ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
     ]
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
@@ -124,15 +114,9 @@ class product_uom(osv.osv):
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context={}):
         if from_unit.category_id.id <> to_unit.category_id.id:
             return qty
-        if from_unit.factor_inv_data:
-            amount = qty * from_unit.factor_inv_data
-        else:
-            amount = qty / from_unit.factor
+        amount = qty / from_unit.factor
         if to_unit:
-            if to_unit.factor_inv_data:
-                amount = rounding(amount / to_unit.factor_inv_data, to_unit.rounding)
-            else:
-                amount = rounding(amount * to_unit.factor, to_unit.rounding)
+            amount = rounding(amount * to_unit.factor, to_unit.rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
@@ -145,26 +129,15 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[-1], uoms[0]
         if from_unit.category_id.id <> to_unit.category_id.id:
             return price
-        if from_unit.factor_inv_data:
-            amount = price / from_unit.factor_inv_data
-        else:
-            amount = price * from_unit.factor
+        amount = price * from_unit.factor
         if to_uom_id:
-            if to_unit.factor_inv_data:
-                amount = amount * to_unit.factor_inv_data
-            else:
-                amount = amount / to_unit.factor
+            amount = amount / to_unit.factor
         return amount
 
-    def onchange_factor_inv(self, cursor, user, ids, value):
-        if value == 0.0:
-            return {'value': {'factor': 0}}
-        return {'value': {'factor': round(1/value, 6)}}
-
-    def onchange_factor(self, cursor, user, ids, value):
-        if value == 0.0:
-            return {'value': {'factor_inv': 0}}
-        return {'value': {'factor_inv': round(1/value, 6)}}
+    def onchange_type(self, cursor, user, ids, value):
+        if value == 'reference':
+            return {'value': {'factor': 1, 'factor_inv': 1}}
+        return {}
 
 product_uom()
 
@@ -211,15 +184,16 @@ class product_category(osv.osv):
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
     }
     
+
     _defaults = {
         'type' : lambda *a : 'normal',
     }
-    
+
     _order = "sequence"
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from product_category where id =ANY(%s)',(ids,))
+            cr.execute('select distinct parent_id from product_category where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -245,14 +219,15 @@ class product_template(osv.osv):
         result = {}
         for product in self.browse(cr, uid, ids, context):
             if product.seller_ids:
-                result[product.id] = product.seller_ids[0].delay
+                partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  product.seller_ids if partner_id and partner_id.sequence])
+                result[product.id] = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].delay or False
             else:
                 result[product.id] = 1
         return result
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
-        'product_manager': fields.many2one('res.users','Product Manager'),
+        'product_manager': fields.many2one('res.users','Product Manager',help="This is use as task responsible"),
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
@@ -262,7 +237,7 @@ class product_template(osv.osv):
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'rental': fields.boolean('Can be Rent'),
-        'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]"),
+        'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Sale Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
         'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Account'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
         'volume': fields.float('Volume', help="The volume in m3."),
@@ -274,13 +249,13 @@ class product_template(osv.osv):
         'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
         'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State', help="Tells the user if he can use the product or not."),
-        'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="Default Unit of Measure used for all stock operation."),
+        'uom_id': fields.many2one('product.uom', 'Default Unit Of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
         'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
             help='Coefficient to convert UOM to UOS\n'
-            ' uom = uos * coeff'),
+            ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
         'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier Lead Time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
@@ -446,9 +421,9 @@ class product_product(osv.osv):
         'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
         'price': fields.function(_product_price, method=True, type='float', string='Pricelist', digits_compute=dp.get_precision('Sale Price')),
         'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List Price', digits_compute=dp.get_precision('Sale Price')),
-        'code': fields.function(_product_code, method=True, type='char', string='Code'),
+        'code': fields.function(_product_code, method=True, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
-        'default_code' : fields.char('Code', size=64),
+        'default_code' : fields.char('Reference', size=64),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=False),
@@ -456,7 +431,7 @@ class product_product(osv.osv):
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
-        'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
+        'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
@@ -551,7 +526,7 @@ class product_product(osv.osv):
                 price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
                 res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
                     context['currency_id'], res[product.id],context=context)
-                
+
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -584,9 +559,10 @@ class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
     _rec_name = 'ean'
+    _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
-        'name' : fields.char('Description', size=64),
+        'name' : fields.text('Description', size=64),
         'qty' : fields.float('Quantity by Package',
             help="The total number of products you can put by pallet or box."),
         'ul' : fields.many2one('product.ul', 'Type of Package', required=True),
@@ -607,7 +583,6 @@ class product_packaging(osv.osv):
         'length': fields.float('Length', help='The length of the package'),
     }
 
-    _order = 'sequence'
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
@@ -645,9 +620,9 @@ class product_supplierinfo(osv.osv):
     _name = "product.supplierinfo"
     _description = "Information about a product supplier"
     _columns = {
-        'name' : fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', help="Supplier of this product"),
-        'product_name': fields.char('Partner Product Name', size=128, help="This partner's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
-        'product_code': fields.char('Partner Product Code', size=64, help="This partner's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
+        'name' : fields.many2one('res.partner', 'Supplier', required=True, ondelete='cascade', help="Supplier of this product"),
+        'product_name': fields.char('Supplier Product Name', size=128, help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
+        'product_code': fields.char('Supplier Product Code', size=64, help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),
         'qty' : fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the default unit of measure."),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
@@ -676,7 +651,20 @@ class pricelist_partnerinfo(osv.osv):
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
 
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
 
+    def create(self, cr, uid, data, context={}):
+        user_id = super(res_users, self).create(cr, uid, data, context)
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'product', 'ir_ui_view_sc_product0')
+        view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+        copy_id = self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                    'user_id': user_id}, context=context)
+        return user_id
+
+res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -35,38 +35,37 @@ class account_change_currency(osv.osv_memory):
             context = {}
         state = obj_inv.browse(cr, uid, context['active_id']).state
         if obj_inv.browse(cr, uid, context['active_id']).state != 'draft':
-            raise osv.except_osv(_('Error'), _('You can not change currency for Open Invoice !'))
+            raise osv.except_osv(_('Error'), _('You can only change currency for Draft Invoice !'))
         pass
 
     def change_currency(self, cr, uid, ids, context=None):
         obj_inv = self.pool.get('account.invoice')
         obj_inv_line = self.pool.get('account.invoice.line')
         obj_currency = self.pool.get('res.currency')
+        invoice_ids = []
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
         new_currency = data['currency_id']
 
-        for invoice in obj_inv.browse(cr, uid, context['active_ids'], context=context):
-            if invoice.currency_id.id == new_currency:
-                continue
+        invoice = obj_inv.browse(cr, uid, context['active_id'], context=context)
+        if invoice.currency_id.id == new_currency:
+            return {}
+        rate = obj_currency.browse(cr, uid, new_currency).rate
+        for line in invoice.invoice_line:
+            new_price = 0
+            if invoice.company_id.currency_id.id == invoice.currency_id.id:
+                new_price = line.price_unit * rate
 
-            for line in invoice.invoice_line:
-                rate = obj_currency.browse(cr, uid, new_currency).rate
-                new_price = 0
-                if invoice.company_id.currency_id.id == invoice.currency_id.id:
-                    new_price = line.price_unit * rate
+            if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id == new_currency:
+                old_rate = invoice.currency_id.rate
+                new_price = line.price_unit / old_rate
 
-                if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id == new_currency:
-                    old_rate = invoice.currency_id.rate
-                    new_price = line.price_unit / old_rate
-
-                if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id != new_currency:
-                    old_rate = invoice.currency_id.rate
-                    new_price = (line.price_unit / old_rate ) * rate
-
-                obj_inv_line.write(cr, uid, [line.id], {'price_unit' : new_price})
-            obj_inv.write(cr, uid, [invoice.id], {'currency_id' : new_currency})
+            if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id != new_currency:
+                old_rate = invoice.currency_id.rate
+                new_price = (line.price_unit / old_rate ) * rate
+            obj_inv_line.write(cr, uid, [line.id], {'price_unit' : new_price})
+        obj_inv.write(cr, uid, [invoice.id], {'currency_id' : new_currency}, context=context)
         return {}
 
 account_change_currency()

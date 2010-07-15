@@ -34,7 +34,7 @@
            * Notes for the technician and for the final customer           
 """,
     'author': 'Tiny',
-    'depends': ['base', 'sale', 'account'],
+    'depends': ['mrp', 'sale', 'account'],
     'update_xml': [
         'security/ir.model.access.csv',
         'mrp_repair_sequence.xml',        
@@ -45,6 +45,7 @@
         'mrp_repair_report.xml',
     ],
     'demo_xml': [],
+    'test': ['test/test_mrp_repair.yml'],
     'installable': True,
     'active': False,
     'certificate': '0060814381277',

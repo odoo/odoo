@@ -58,7 +58,7 @@ class account_invoice_pay(osv.osv_memory):
         'amount': fields.float('Amount paid', required=True, digits_compute = dp.get_precision('Account')),
         'name': fields.char('Entry Name', size=64, required=True),
         'date': fields.date('Date payment', required=True),
-        'journal_id': fields.many2one('account.journal', 'Journal/Payment Mode', required=True),
+        'journal_id': fields.many2one('account.journal', 'Journal/Payment Mode', required=True, domain=[('type','=','cash')]),
         'period_id': fields.many2one('account.period', 'Period', required=True),
         }
 
@@ -142,7 +142,7 @@ class account_invoice_pay(osv.osv_memory):
         cur_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
-        data =  self.read(cr, uid, ids,context=context)[0]
+        data =  self.read(cr, uid, ids, context=context)[0]
         writeoff_account_id = False
         writeoff_journal_id = False
         comment = False

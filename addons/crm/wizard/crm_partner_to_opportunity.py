@@ -94,7 +94,7 @@ class crm_partner2opportunity(osv.osv_memory):
             categ_obj = self.pool.get('crm.case.categ')
             categ_ids = categ_obj.search(cr, uid, [('name','ilike','Part%')])
 
-            case_obj = self.pool.get('crm.opportunity')
+            case_obj = self.pool.get('crm.lead')
             opp_id = case_obj.create(cr, uid, {
                 'name' : make_opportunity_obj.name,
                 'planned_revenue' : make_opportunity_obj.planned_revenue,
@@ -103,12 +103,13 @@ class crm_partner2opportunity(osv.osv_memory):
                 'partner_address_id' : address['default'],
                 'categ_id' : categ_ids[0],
                 'state' :'draft',
+                'type': 'opportunity'
             })
             value = {
                 'name' : _('Opportunity'),
                 'view_type' : 'form',
                 'view_mode' : 'form,tree',
-                'res_model' : 'crm.opportunity',
+                'res_model' : 'crm.lead',
                 'res_id' : opp_id,
                 'view_id' : False,
                 'views' : [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],

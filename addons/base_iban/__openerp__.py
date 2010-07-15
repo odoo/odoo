@@ -18,18 +18,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 {
     'name': 'Create IBAN bank accounts',
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """
-This module install the base for IBAN (International Bank Account Number) bank accounts and checks for its validity
+This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for its validity
 
     """,
     'author': 'Tiny',
-    'depends': ['base', 'account'],
+    'website': 'http://www.openerp.com',
+    'depends': ['account'],
     'init_xml': ['base_iban_data.xml'],
     'update_xml': ['base_iban_view.xml'],
     'installable': True,

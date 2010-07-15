@@ -26,45 +26,53 @@
     'category': 'Generic Modules/CRM & SRM',
     'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
-leads, opportunities, claims, meeting, phonecall etc.
+leads, opportunities, meeting, phonecall etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
 Open ERP ensures that all cases are successfully tracked by users, customers and
 suppliers. It can automatically send reminders, escalate the request, trigger
-specific methods and lots of others actions based on your enterprise own rules.
+specific methods and lots of other actions based on your own enterprise rules.
 
 The greatest thing about this system is that users don't need to do anything
 special. They can just send email to the request tracker. Open ERP will take
 care of thanking them for their message, automatically routing it to the
-appropriate staff, and making sure all future correspondence gets to the right
+appropriate staff, and make sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
-between mails and Open ERP.""",
+between mails and Open ERP. 
+Create dashboard for CRM that includes:
+    * My Leads (list)
+    * Leads by Stage (graph)
+    * My Meetings (list)
+    * Sales Pipeline by Stage (graph)
+    * My Cases (list)
+    * Jobs Tracking (graph)
+""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [
-        'base', 
+        'base',
         'base_action_rule',
         'process',
         'mail_gateway',
         'base_calendar',
         'resource',
+        'board'
     ],
     'init_xml': [
         'crm_data.xml',
         'crm_meeting_data.xml',
-         'crm_claims_data.xml',
-         'crm_fund_data.xml',
-         'crm_helpdesk_data.xml',
-         'crm_lead_data.xml',
-         'crm_meeting_data.xml',
-         'crm_opportunity_data.xml',
-         'crm_phonecall_data.xml',
+        'crm_lead_data.xml',
+        'crm_meeting_data.xml',
+        'crm_opportunity_data.xml',
+        'crm_phonecall_data.xml',
     ],
-
     'update_xml': [
+        'security/crm_security.xml',
+        'security/ir.model.access.csv',
+
         'wizard/crm_lead_to_partner_view.xml',
         'wizard/crm_lead_to_opportunity_view.xml',
 
@@ -77,48 +85,48 @@ between mails and Open ERP.""",
 
         'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_send_email_view.xml',
-        'wizard/crm_email_add_cc_view.xml',
+        'wizard/crm_custom_create_menu_view.xml',
+
         'crm_view.xml',
 
         'crm_action_rule_view.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
+
         'crm_meeting_view.xml',
         'crm_meeting_menu.xml',
+
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
+
         'crm_opportunity_view.xml',
         'crm_opportunity_menu.xml',
-        'crm_fund_view.xml',
-        'crm_fund_menu.xml',
-        'crm_claims_view.xml',
-        'crm_claims_menu.xml',
 
-        'crm_helpdesk_view.xml',
-        'crm_helpdesk_menu.xml',
-
-        'security/crm_security.xml',
-        'security/ir.model.access.csv',
-
-        'report/crm_report_view.xml',
-        'report/crm_claim_report_view.xml',
         'report/crm_lead_report_view.xml',
-        'report/crm_fundraising_report_view.xml',
-        'report/crm_opportunity_report_view.xml' ,
         'report/crm_phonecall_report_view.xml',
 
         'process/crm_configuration_process.xml',
+        'crm_installer_view.xml', 
+        
+        'res_partner_view.xml',
+        'board_crm_view.xml',
+        'board_crm_statistical_view.xml',
+       
     ],
     'demo_xml': [
         'crm_demo.xml',
-        'crm_claims_demo.xml',
-        'crm_fund_demo.xml',
-        'crm_helpdesk_demo.xml',
         'crm_lead_demo.xml',
         'crm_meeting_demo.xml',
         'crm_opportunity_demo.xml',
-        'crm_phonecall_demo.xml'
+        'crm_phonecall_demo.xml',
+        'board_crm_demo.xml',
     ],
+    'test': [
+            'test/test_crm_lead.yml',
+            #'test/test_crm_meeting.yml',
+            'test/test_crm_opportunity.yml',
+            'test/test_crm_phonecall.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0079056041421',

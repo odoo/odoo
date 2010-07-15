@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="analytic_root" model="account.analytic.account">
+            <field name="name">Analytic Chart</field>
+            <field name="code">0</field>
+        </record>
         <record id="analytic_absences" model="account.analytic.account">
             <field name="name">Leaves</field>
             <field name="code">1</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_internal" model="account.analytic.account">
             <field name="name">Internal</field>
             <field name="code">2</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_our_super_product" model="account.analytic.account">
             <field name="name">Our Super Product</field>
             <field name="code">100</field>
             <field name="state">open</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_project_1" model="account.analytic.account">
             <field name="name">Project 1</field>
             <field name="code">101</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_project_2" model="account.analytic.account">
             <field name="name">Project 2</field>
             <field name="code">102</field>
+            <field name="parent_id" ref="analytic_root"/>
         </record>
         <record id="analytic_journal_trainings" model="account.analytic.account">
             <field name="name">Training</field>

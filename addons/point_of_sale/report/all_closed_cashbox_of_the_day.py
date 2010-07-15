@@ -52,7 +52,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
                        LEFT JOIN account_period as ap ON ap.id = abs.period_id
                        LEFT JOIN res_users as ru ON ru.id = abs.user_id
                        LEFT JOIN res_company as rc ON rc.id = abs.company_id
-                       WHERE to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date and abs.state in ('confirm','open') and abs.user_id = %d"""%(user.id)
+                       WHERE to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date and abs.state IN ('confirm','open') and abs.user_id = %d"""%(user.id)
         self.cr.execute(sql)
         data = self.cr.dictfetchall()
         return data
@@ -80,7 +80,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         self.cr.execute(""" select sum(absl.amount) from account_bank_statement as abs
                             LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                             WHERE abs.journal_id = %d
-                            and abs.state in ('confirm','open')
+                            and abs.state IN ('confirm','open')
                             and abs.date = '%s'
                             and abs.user_id = %d
                             """%(data,date,user.id))
@@ -109,7 +109,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         total_starting_bal = 0.0
         sql = """ SELECT abs.id,abs.balance_end_real as net_total FROM account_bank_statement as abs
                     WHERE to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date
-                    and abs.state in ('confirm','open') 
+                    and abs.state IN ('confirm','open') 
                     and abs.user_id = %d"""%(user.id)
         self.cr.execute(sql)
         res = self.cr.dictfetchall()
@@ -131,7 +131,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         total_starting_bal = 0.0
         sql = """select sum(absl.amount) as net_total from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
-                    where abs.state in ('confirm','open') and abs.user_id = %d
+                    where abs.state IN ('confirm','open') and abs.user_id = %d
                     and to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date """%(user.id)
 
         self.cr.execute(sql)

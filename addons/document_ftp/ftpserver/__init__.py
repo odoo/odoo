@@ -25,13 +25,8 @@ import authorizer
 import abstracted_fs
 import netsvc
 from tools import config
-from tools.misc import detect_ip_addr
 
-if detect_ip_addr:
-    HOST = config.get('ftp_server_host', detect_ip_addr())
-else:
-    HOST = config.get('ftp_server_host', '127.0.0.1')
-
+HOST = config.get('ftp_server_host', '127.0.0.1')
 PORT = int(config.get('ftp_server_port', '8021'))
 PASSIVE_PORTS = None
 pps = config.get('ftp_server_passive_ports', '').split(':')

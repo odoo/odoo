@@ -26,12 +26,15 @@
     'category': 'Custom',
     'description': """
 Adds a reporting menu in products that computes sales, purchases, margins
-and others interesting indicators based on invoices. The wizard to launch
+and other interesting indicators based on invoices. The wizard to launch
 the report has several options to help you get the data you need.
 """,
     'author': 'Tiny',
     'depends': ['base', 'product', 'account'],
-    'update_xml': ['wizard/product_margin_view.xml','product_margin_view.xml'],
+    'update_xml': [
+                   'security/ir.model.access.csv',
+                   'wizard/product_margin_view.xml',
+                   'product_margin_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,

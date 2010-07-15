@@ -40,7 +40,7 @@ class vat_listing_clients(osv.osv_memory):
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
-        return [(r['id'], r['name'] + ' - ' + r['vat']) \
+        return [(r['id'], r['name'] or '' + ' - ' + r['vat'] or '') \
                 for r in self.read(cr, uid, ids, ['name', 'vat'],
                     context, load='_classic_write')]
 
@@ -81,7 +81,7 @@ class partner_vat(osv.osv_memory):
                     break
             if not go_ahead:
                 continue
-            cursor.execute('select b.code, sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in %s and l.partner_id=%s and l.period_id=ANY(%s) group by b.code',(('produit','tax'),obj_partner.id,period,))
+            cursor.execute('select b.code, sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code IN %s and l.partner_id=%s and l.period_id IN %s group by b.code',(('produit','tax'),obj_partner.id,tuple(period),))
             line_info = cursor.fetchall()
             if not line_info:
                 continue
@@ -216,8 +216,7 @@ class partner_vat_list(osv.osv_memory):
         sum_tax = 0.00
         sum_turnover = 0.00
         if len(error_message):
-            msg ='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
-            return msg
+            return 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
         for line in datas:
             if not line:
                 continue

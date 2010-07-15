@@ -5,7 +5,7 @@
         <!--  Make the invoice-->
         
 		<record id="view_purchase_line_invoice" model="ir.ui.view">
-            <field name="name">Control invoices</field>
+            <field name="name">Create invoices</field>
             <field name="model">purchase.order.line_invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -21,7 +21,7 @@
             </field>
         </record>
 
-	<act_window name="Control invoices"		    
+	<act_window name="Create invoices"		    
 		    res_model="purchase.order.line_invoice"
 		    src_model="purchase.order.line"
 		    view_mode="form"

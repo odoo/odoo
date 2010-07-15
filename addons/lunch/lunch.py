@@ -42,21 +42,9 @@ class lunch_product(osv.osv):
     _name = 'lunch.product'
     _description = "Lunch Product"
 
-    def _category_name_get(self, cr, uid, context={}):
-
-        """ Get category name
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values"""
-
-        obj = self.pool.get('lunch.category')
-        cat_ids = obj.search(cr, uid, [])
-        res = obj.read(cr, uid, cat_ids, ['name', 'category'])
-        return [(str(r['id']), r['name']) for r in res]+ [('0','')]
-
     _columns = {
         'name': fields.char('Name', size=50, required=True),
-        'category_id': fields.selection(_category_name_get, 'Category', size=32),
+        'category_id': fields.many2one('lunch.category', 'Category'),
         'description': fields.char('Description', size=128, required=False),
         'price': fields.float('Price', digits=(16,2)),
         'active': fields.boolean('Active'),
@@ -103,7 +91,7 @@ class lunch_cashmove(osv.osv):
     """ Move cash """
 
     _name = 'lunch.cashmove'
-    _description = "Move cash"
+    _description = "Cash Move"
 
     _columns = {
         'name': fields.char('Name', size=128),
@@ -156,9 +144,9 @@ class lunch_order(osv.osv):
     }
 
     _defaults = {
-        'user_id': lambda self,cr,uid,context: uid,
-        'date': lambda self,cr,uid,context: time.strftime('%Y-%m-%d'),
-        'state': lambda self,cr,uid,context: 'draft',
+        'user_id': lambda self, cr, uid, context: uid,
+        'date': lambda self, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'state': lambda self, cr, uid, context: 'draft',
     }
 
     def confirm(self, cr, uid, ids, box, context):
