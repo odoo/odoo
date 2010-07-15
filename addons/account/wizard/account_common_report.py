@@ -72,27 +72,15 @@ class account_common_report(osv.osv_memory):
     def onchange_filter(self, cr, uid, ids, filter='filter_no', context=None):
         res = {}
         if filter == 'filter_no':
-            res['value'] = {'period_from': False, 'period_to': False}
+            res['value'] = {'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False}
+            return res
+        if filter == 'filter_date':
+            res['value'] = {'period_from': False, 'period_to': False, 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
+            return res
+        if filter == 'filter_period':
+            res['value'] = {'period_from': False, 'period_to': False, 'date_from': False, 'date_to': False}
             return res
         return {}
-
-    def onchange_period_from(self, cr, uid, ids, filter='filter_no', period_from=False, context=None):
-        period_obj = self.pool.get('account.period')
-        res = {}
-        if filter == 'filter_period':
-            period_date_start = period_obj.read(cr, uid, period_from, ['date_start'])['date_start']
-            res['value'] = {'date_from': period_date_start}
-            return res
-        return res
-
-    def onchange_period_to(self, cr, uid, ids, filter='filter_no', period_to=False, context=None):
-        period_obj = self.pool.get('account.period')
-        res = {}
-        if filter == 'filter_period':
-            period_date_to = period_obj.read(cr, uid, period_to, ['date_stop'])['date_stop']
-            res['value'] = {'date_to': period_date_to}
-            return res
-        return res
 
     def _get_account(self, cr, uid, context=None):
         accounts = self.pool.get('account.account').search(cr, uid, [], limit=1 )
@@ -111,8 +99,6 @@ class account_common_report(osv.osv_memory):
         return self.pool.get('account.journal').search(cr, uid ,[])
 
     _defaults = {
-            'date_from' : time.strftime('%Y-01-01'),
-            'date_to' : time.strftime('%Y-%m-%d'),
 #            'company_id' : _get_company,
 #            'display_account' : 'bal_all',
             'fiscalyear_id' : _get_fiscalyear,
@@ -154,11 +140,6 @@ class account_common_report(osv.osv_memory):
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
-        if data['form']['filter'] == 'filter_period': # FIX Me => on_change on period from and to is not working so did this ..but correct it!
-            start_date = self.onchange_period_from(cr, uid, ids, data['form']['filter'], data['form']['period_from'])
-            end_date = self.onchange_period_to(cr, uid, ids, data['form']['filter'], data['form']['period_to'])
-            data['form']['date_from'] = start_date['value']['date_from']
-            data['form']['date_to'] = end_date['value']['date_to']
         used_context = self._build_context(cr, uid, ids, data, context)
         query_line = self.pool.get('account.move.line')._query_get(cr, uid, obj='l', context=used_context)
         if used_context.get('periods', False):
