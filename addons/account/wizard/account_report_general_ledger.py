@@ -28,25 +28,26 @@ class account_report_general_ledger(osv.osv_memory):
     _description = "General Ledger Report"
 
     _columns = {
-        'display_account': fields.selection([('bal_all','All'), ('bal_mouvement','With movements'),
-                         ('bal_solde','With balance is not equal to 0'),
+        'display_account': fields.selection([('all','All'), ('mouvement','With movements'),
+                         ('balance','With balance is not equal to 0'),
                          ],'Display accounts', required=True),
         'landscape': fields.boolean("Landscape Mode"),
-        'soldeinit': fields.boolean("Include initial balances"),
+        'initial_balance': fields.boolean("Include initial balances"),
         'amount_currency': fields.boolean("With Currency"),
         'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By', required=True),
-                }
+    }
     _defaults = {
-            'display_account': 'bal_all',
-            'landscape': True,
-            'amount_currency': True,
-            'sortby': 'sort_date',
-                }
+        'display_account': 'all',
+        'landscape': True,
+        'amount_currency': True,
+        'sortby': 'sort_date',
+        'initial_balance' : True,
+    }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
             context = {}
-        data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'soldeinit', 'amount_currency', 'sortby'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
         if data['form']['landscape']:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True }
         return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data, 'nodestroy':True}

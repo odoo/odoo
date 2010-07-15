@@ -232,7 +232,7 @@
 	<tr>
 	   <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or removeParentNode('para') ]]</para></td>
-		<td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_mouvement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
+		<td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='all' and 'All') or  (data['form']['display_account']=='mouvement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
         <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
         	<blockTable colWidths="50.0,50.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
 				<tr>
@@ -290,7 +290,7 @@
 			  <td><para style="Standard"></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
-			  <td><para style="P9b"><u>[[formatLang(sum_solde_account(o, data['form'])) ]]</u></para></td>
+			  <td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]]</u></para></td>
 			</tr>
 			</blockTable>
 			</td>
@@ -303,11 +303,11 @@
 	    	<td><para style="Standard"></para></td>
 	    </tr>
 		<tr>
-			  <td><para style="P3">[[ repeatIn(lines(o, data['form']), 'line') ]] <font>[[ formatLang(line['date'],date=True) ]]</font></para></td>
+			  <td><para style="P3">[[ repeatIn(lines(o, data['form']), 'line') ]] <font>[[ formatLang(line['ldate'],date=True) ]]</font></para></td>
 			  <td><para style="P3">[[ line['partner'] or '']]</para></td>
-			  <td><para style="P3">[[ line['ref'] or '']]</para></td>
+			  <td><para style="P3">[[ line['lref'] or '']]</para></td>
 			  <td><para style="P3">[[ line['move'] or '']]</para></td>
-			  <td><para style="P3">[[ line['name'] or '' ]]</para></td>
+			  <td><para style="P3">[[ line['lname'] or '' ]]</para></td>
 			  <td><para style="P4">[[ formatLang(line['debit']) ]]</para></td>
 			  <td><para style="P4">[[ formatLang(line['credit']) ]]</para></td>
 			  <td><para style="P4">[[ formatLang(line['progress']) ]]</para></td>
@@ -341,8 +341,8 @@
 			  <td><para style="Standard"></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
-			  <td><para style="P9b"><u>[[formatLang(sum_solde_account(o, data['form'])) ]]</u></para></td>
-			  <td><para style="P9b"><u>[[formatLang(sum_currency_amount_account(a, data['form'])) ]]</u></para></td>
+			  <td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]]</u></para></td>
+			  <td><para style="P9b"><u>[[o.currency_id and formatLang(sum_currency_amount_account(a, data['form'])) or '' ]]</u></para></td>
 			</tr>
 			</blockTable>
 		  </td>
@@ -356,11 +356,11 @@
 	      <td><para style="Standard"></para></td>
 	    </tr>
 		<tr>
-		   <td><para style="P3">[[ repeatIn(lines(o, data['form']), 'line') ]] <font>[[ formatLang(line['date'],date=True) ]]</font></para></td>
+		   <td><para style="P3">[[ repeatIn(lines(o, data['form']), 'line') ]] <font>[[ formatLang(line['ldate'],date=True) ]]</font></para></td>
 		   <td><para style="P3">[[ line['partner'] or '' ]]</para></td>
-		   <td><para style="P3">[[ line['ref'] or '']]</para></td>
+		   <td><para style="P3">[[ line['lref'] or '']]</para></td>
 		   <td><para style="P3">[[ line['move'] or '' ]]</para></td>
-		   <td><para style="P3">[[ line['name'] or '' ]]</para></td>
+		   <td><para style="P3">[[ line['lname'] or '' ]]</para></td>
 		   <td><para style="P4">[[ formatLang(line['debit']) ]]</para></td>
 		   <td><para style="P4">[[ formatLang(line['credit']) ]]</para></td>
 		   <td><para style="P4">[[ formatLang(line['progress']) ]]</para></td>

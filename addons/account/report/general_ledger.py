@@ -1,7 +1,8 @@
- # -*- coding: utf-8 -*-
- ##############################################################################
+# -*- coding: utf-8 -*-
+##############################################################################
 #
 # Copyright (c) 2005-2006 CamptoCamp
+# Copyright (c) 2006-2010 OpenERP S.A 
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -37,7 +38,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
     _name = 'report.account.general.ledger'
 
     def set_context(self, objects, data, ids, report_type=None):
-        self.borne_date = self.get_min_date(data['form'])
         new_ids = ids
         self.query = data['form']['query_line']
         if (data['model'] == 'ir.ui.menu'):
@@ -50,9 +50,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         if context is None:
             context = {}
         super(general_ledger, self).__init__(cr, uid, name, context=context)
-        self.date_borne = {}
         self.query = ""
-        self.child_ids = ""
         self.tot_currency = 0.0
         self.period_sql = ""
         self.sold_accounts = {}
@@ -62,125 +60,42 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'lines': self.lines,
             'sum_debit_account': self._sum_debit_account,
             'sum_credit_account': self._sum_credit_account,
-            'sum_solde_account': self._sum_solde_account,
-            'sum_debit': self._sum_debit,
-            'sum_credit': self._sum_credit,
-            'sum_solde': self._sum_solde,
+            'sum_balance_account': self._sum_balance_account,
             'get_children_accounts': self.get_children_accounts,
             'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_fiscalyear': self._get_fiscalyear,
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
-            'get_sortby': self._get_sortby,
             'get_filter': self._get_filter,
+            'get_sortby': self._get_sortby
         })
         self.context = context
 
-    def get_min_date(self, form):
-
-        ## Get max born from account_fiscal year
-        #
-        sql = """ select min(fy.date_start) as start_date,max(fy.date_stop) as stop_date from account_fiscalyear
-              As fy where fy.state <> 'close'
-            """
-        self.cr.execute(sql)
-        res = self.cr.dictfetchall()
-        borne_min = res[0]['start_date']
-        borne_max = res[0]['stop_date']
-        if form['filter'] == 'filter_period':
-            ## This function will return the most aged date
-            periods = form['periods']
-            #periods = form['periods'][0][2]
-            if not periods:
-                sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s
-                    """
-                sqlargs = (form['fiscalyear'],)
-            else:
-                sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in %s
-                    """
-            sqlargs = (tuple(periods),)
-            self.cr.execute(sql, sqlargs)
-            res = self.cr.dictfetchall()
-            borne_min = res[0]['start_date']
-            borne_max = res[0]['stop_date']
-        elif form['filter'] == 'filter_date':
-            borne_min = form['date_from']
-            borne_max = form['date_to']
-        elif form['filter'] == 'filter_no':
-            sql = """
-                    SELECT min(date) as start_date,max(date) as stop_date FROM account_move_line """
-            self.cr.execute(sql)
-            res = self.cr.dictfetchall()
-            borne_min = res[0]['start_date']
-            borne_max = res[0]['stop_date']
-        self.date_borne = {
-            'min_date': borne_min,
-            'max_date': borne_max,
-            }
-        return self.date_borne
-
     def get_children_accounts(self, account, form):
-        self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
-            [('parent_id', 'child_of', self.ids)])
-
         res = []
-        ctx = self.context.copy()
-        if account and account.child_consol_ids: # add ids of consolidated childs also of selected account
-            ctx['consolidate_childs'] = True
-            ctx['account_id'] = account.id
-        ids_acc = self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])], context=ctx)
+        ids_acc = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account.id)
         for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc):
-            sold_account = self._sum_solde_account(child_account,form)
+            sql = """
+                SELECT count(id)
+                FROM account_move_line l
+                WHERE %s AND l.account_id = %%s
+            """ % (self.query)
+            self.cr.execute(sql, (child_account.id,))
+            num_entry = self.cr.fetchone()[0] or 0
+            sold_account = self._sum_balance_account(child_account,form)
             self.sold_accounts[child_account.id] = sold_account
-            if form['display_account'] == 'bal_mouvement':
-                if child_account.type != 'view' \
-                and len(self.pool.get('account.move.line').search(self.cr, self.uid, [('account_id','=',child_account.id)], context=ctx)) <> 0 :
+            if form['display_account'] == 'mouvement':
+                if child_account.type != 'view' and num_entry <> 0 :
                     res.append(child_account)
-            elif form['display_account'] == 'bal_solde':
-                if child_account.type != 'view' \
-                and len(self.pool.get('account.move.line').search(self.cr, self.uid, [('account_id','=',child_account.id)], context=ctx)) <> 0 :
+            elif form['display_account'] == 'balance':
+                if child_account.type != 'view' and num_entry <> 0 :
                     if ( sold_account <> 0.0):
                         res.append(child_account)
             else:
-                if child_account.type != 'view' \
-                and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-                    [('account_id','>=',child_account.id)],
-                    context=ctx)) <> 0 :
-                    res.append(child_account)
-        ##
+                res.append(child_account)
         if not len(res):
             return [account]
-        else:
-            ## We will now compute solde initiaux
-            if not form['soldeinit']:
-                return res
-            for move in res:
-                SOLDEINIT = "SELECT SUM(l.debit) AS sum_debit,"\
-                            "       SUM(l.credit) AS sum_credit "\
-                            "FROM account_move_line l "\
-                            "WHERE l.account_id = %s "\
-                            "AND l.date < %s AND l.date > %s"
-                self.cr.execute(SOLDEINIT, (move.id, self.borne_date['max_date'], self.borne_date['min_date']))
-                resultat = self.cr.dictfetchall()
-                if resultat[0] :
-                    if resultat[0]['sum_debit'] == None:
-                        sum_debit = 0
-                    else:
-                        sum_debit = resultat[0]['sum_debit']
-                    if resultat[0]['sum_credit'] == None:
-                        sum_credit = 0
-                    else:
-                        sum_credit = resultat[0]['sum_credit']
-
-                    move.init_credit = sum_credit
-                    move.init_debit = sum_debit
-
-                else:
-                    move.init_credit = 0
-                    move.init_debit = 0
         return res
 
     def lines(self, account, form):
@@ -205,8 +120,8 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         else:
             sql_sort='l.date'
         sql = """
-            SELECT l.id, l.date, j.code, l.amount_currency,l.ref, l.name, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id, l.partner_id,
-            m.name AS move_name, m.id AS move_id,
+            SELECT l.id as lid, l.date as ldate, j.code as lcode, l.amount_currency,l.ref as lref, l.name as lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id as lperiod_id, l.partner_id as lpartner_id,
+            m.name AS move_name, m.id AS mmove_id,
             c.code AS currency_code,
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,
             p.name AS partner_name
@@ -219,7 +134,29 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             WHERE %s AND l.account_id = %%s ORDER by %s
         """ % (self.query, sql_sort)
         self.cr.execute(sql, (account.id,))
-        res = self.cr.dictfetchall()
+        res_lines = self.cr.dictfetchall()
+        res_init = []
+        if res_lines and form['initial_balance']:
+            #FIXME: replace the hardcoded date with the day before data[form][date_from]
+            #FIXME: replace the label of lname with a string translatable
+            sql = """
+                SELECT 0 AS lid, '2010-07-15' AS ldate, '' as lcode, COALESCE(SUM(l.amount_currency),0.0) as amount_currency, '' as lref, 'Initial Balance' as lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
+                '' AS move_name, '' AS mmove_id,
+                '' AS currency_code,
+                '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,
+                '' AS partner_name
+                FROM account_move_line l
+                LEFT JOIN account_move m on (l.move_id=m.id)
+                LEFT JOIN res_currency c on (l.currency_id=c.id)
+                LEFT JOIN res_partner p on (l.partner_id=p.id)
+                LEFT JOIN account_invoice i on (m.id =i.move_id)
+                JOIN account_journal j on (l.journal_id=j.id)
+                WHERE %s AND l.account_id = %%s 
+            """ %(form['initial_bal_query'])
+    
+            self.cr.execute(sql, (account.id,))
+            res_init = self.cr.dictfetchall()
+        res = res_init + res_lines
         account_sum = 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         inv_types = { 'out_invoice': 'CI', 'in_invoice': 'SI', 'out_refund': 'OR', 'in_refund': 'SR', }
@@ -227,12 +164,12 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         for l in res:
             l['move']=l['move_name']
             if l['invoice_id']:
-                l['ref'] = '%s: %s'%(inv_types[l['invoice_type']], l['invoice_number'])
+                l['lref'] = '%s: %s'%(inv_types[l['invoice_type']], l['invoice_number'])
             l['partner'] = l['partner_name'] or ''
-            account_sum = l['debit'] - l ['credit']
+            account_sum = l['debit'] - l['credit']
             l['progress'] = account_sum
-            l['line_corresp'] = counterpart_accounts[l['move_id']]
-            # Modification du amount Currency
+            l['line_corresp'] = l['mmove_id'] == '' and ' ' or counterpart_accounts[l['mmove_id']]
+            # Modification of amount Currency
             if l['credit'] > 0:
                 if l['amount_currency'] != None:
                     l['amount_currency'] = abs(l['amount_currency']) * -1
@@ -241,72 +178,43 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         return res
 
     def _sum_debit_account(self, account, form):
-
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s "%(account.id, self.query))
-        ## Add solde init to the result
-        #
         sum_debit = self.cr.fetchone()[0] or 0.0
-        if form.get('soldeinit', False):
-            sum_debit += account.init_debit
-        #
-        ##
+        if form.get('initial_balance', False):
+            self.cr.execute("SELECT sum(debit) "\
+                    "FROM account_move_line l "\
+                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+            # Add initial balance to the result
+            sum_debit += self.cr.fetchone()[0] or 0.0
         return sum_debit
 
     def _sum_credit_account(self, account, form):
-
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s "%(account.id, self.query))
-        ## Add solde init to the result
-        #
         sum_credit = self.cr.fetchone()[0] or 0.0
-        if form.get('soldeinit', False):
-            sum_credit += account.init_credit
+        if form.get('initial_balance', False):
+            self.cr.execute("SELECT sum(credit) "\
+                    "FROM account_move_line l "\
+                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+            # Add initial balance to the result
+            sum_credit += self.cr.fetchone()[0] or 0.0
         return sum_credit
 
-    def _sum_solde_account(self, account, form):
-        self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_solde "\
+    def _sum_balance_account(self, account, form):
+        self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_balance "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s"%(account.id, self.query))
-        sum_solde = self.cr.fetchone()[0] or 0.0
-        if form.get('soldeinit', False):
-            sum_solde += account.init_debit - account.init_credit
-
-        return sum_solde
-
-    def _sum_debit(self, form):
-        if not self.ids:
-            return 0.0
-        self.cr.execute("SELECT sum(debit) "\
-                "FROM account_move_line l "\
-                "WHERE l.account_id IN %s AND "+self.query,
-                        (tuple(self.child_ids),))
-        sum_debit = self.cr.fetchone()[0] or 0.0
-        return sum_debit
-
-    def _sum_credit(self, form):
-        if not self.ids:
-            return 0.0
-        self.cr.execute("SELECT sum(credit) "\
-                "FROM account_move_line l "\
-                "WHERE l.account_id IN %s AND "+self.query,
-                        (tuple(self.child_ids),))
-        ## Add solde init to the result
-        #
-        sum_credit = self.cr.fetchone()[0] or 0.0
-        return sum_credit
-
-    def _sum_solde(self, form):
-        if not self.ids:
-            return 0.0
-        self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_solde "\
-                "FROM account_move_line l "\
-                "WHERE l.account_id IN %s AND "+self.query,
-                        (tuple(self.child_ids),))
-        sum_solde = self.cr.fetchone()[0] or 0.0
-        return sum_solde
+        sum_balance = self.cr.fetchone()[0] or 0.0
+        if form.get('initial_balance', False):
+            self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_balance "\
+                    "FROM account_move_line l "\
+                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+            # Add initial balance to the result
+            sum_balance += self.cr.fetchone()[0] or 0.0
+        return sum_balance
 
     def _set_get_account_currency_code(self, account_id):
         self.cr.execute("SELECT c.code as code "\
@@ -319,6 +227,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             self.account_currency = False
 
     def _sum_currency_amount_account(self, account, form):
+        #FIXME: not good not good at all. use the query_get. return the amount + curr code 
         self._set_get_account_currency_code(account.id)
         self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
         total = self.cr.fetchone()
@@ -330,7 +239,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             currency_total = self.tot_currency = 0.0
             return currency_total
 
-report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header=False)
+report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header='internal')
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

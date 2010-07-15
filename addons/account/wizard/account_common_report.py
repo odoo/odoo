@@ -108,7 +108,15 @@ class account_common_report(osv.osv_memory):
             'chart_account_id': _get_account,
     }
 
-    def _build_context(self, cr, uid, ids, data, context=None):
+    def _build_periods(self, cr, uid, period_from, period_to):
+        period_obj = self.pool.get('account.period')
+        period_date_start = period_obj.read(cr, uid, period_from, ['date_start'])['date_start']
+        period_date_stop = period_obj.read(cr, uid, period_to, ['date_stop'])['date_stop']
+        if period_date_start > period_date_stop:
+            raise osv.except_osv(_('Error'),_('Start period should be smaller then End period'))
+        return period_obj.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop)])
+
+    def _build_contexts(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
         result = {}
@@ -116,19 +124,19 @@ class account_common_report(osv.osv_memory):
         result['fiscalyear'] = 'fiscalyear_id' in data['form'] and data['form']['fiscalyear_id'] or False
         result['journal_ids'] = 'journal_ids' in data['form'] and data['form']['journal_ids'] or False
         result['chart_account_id'] = 'chart_account_id' in data['form'] and data['form']['chart_account_id'] or False
+        result_initial_bal = result.copy()
         if data['form']['filter'] == 'filter_date':
             result['date_from'] = data['form']['date_from']
             result['date_to'] = data['form']['date_to']
+            result_initial_bal['date_from'] = '0001-01-01'
+            result_initial_bal['date_to'] = data['form']['date_from'] # FIXME: have to do -1 day!
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
-                raise osv.except_osv(_('Error'),_('Select Start period and End period'))
-            elif (data['form']['period_from'] > data['form']['period_to']):
-                raise osv.except_osv(_('Error'),_('Start period should be smaller then End period'))
-            period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])['date_start']
-            period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])['date_stop']
-            cr.execute('SELECT id FROM account_period WHERE date_start >= %s AND date_stop <= %s', (period_date_start, period_date_stop))
-            result['periods'] = map(lambda x: x[0], cr.fetchall())
-        return result
+                raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
+            result['periods'] = self._build_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
+            first_period = self.pool.get('account.period').search(cr, uid, [], order='date_start', limit=1)[0]
+            result_initial_bal['periods'] = self._build_periods(cr, uid, first_period, data['form']['period_from'])
+        return result, result_initial_bal
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         raise (_('Error'), _('not implemented'))
@@ -140,13 +148,12 @@ class account_common_report(osv.osv_memory):
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
-        used_context = self._build_context(cr, uid, ids, data, context)
+        used_context, used_context_initial_bal = self._build_contexts(cr, uid, ids, data, context)
         query_line = self.pool.get('account.move.line')._query_get(cr, uid, obj='l', context=used_context)
-        if used_context.get('periods', False):
-            data['form']['periods'] = used_context['periods']
-        else:
-            data['form']['periods'] = []
+        data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
         data['form']['query_line'] = query_line
+        data['form']['used_context'] = used_context
+        data['form']['initial_bal_query'] = self.pool.get('account.move.line')._query_get(cr, uid, obj='l', context=used_context_initial_bal)
         return self._print_report(cr, uid, ids, data, query_line, context=context)
 
 account_common_report()
