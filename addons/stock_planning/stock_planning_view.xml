@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+    <data>
         <menuitem id="menu_stock_period_main"
                   name="Stock and Sales Periods"
                   parent="base.menu_base_config" sequence="20"/>
 
-    <!-- Creating periods section -->
+        <!-- Creating periods section -->
 
-    <record id="view_stock_period_createlines_form" model="ir.ui.view">
+        <record id="view_stock_period_createlines_form" model="ir.ui.view">
             <field name="name">stock.period.createlines.form</field>
             <field name="model">stock.period.createlines</field>
             <field name="type">form</field>
@@ -41,7 +41,7 @@
                   action="action_stock_period_createlines_form"
                   sequence = "5"/>
 
-<!-- Periods tree and form section -->
+        <!-- Periods tree and form section -->
 
         <record id="view_stock_period_form" model="ir.ui.view">
             <field name="name">stock.period.form</field>
@@ -85,7 +85,7 @@
             action="action_stock_period_form"
             sequence = "10"/>
 
-<!--   Create Forecast section   -->
+        <!--   Create Forecast section   -->
 
         <record id="view_stock_sale_forecast_createlines_form" model="ir.ui.view">
             <field name="name">stock.sale.forecast.createlines</field>
@@ -132,7 +132,7 @@
             <field name="arch" type="xml">
                 <form string="Stock and Sales Forecast">
                     <group colspan = "4" col = "4">
-                <group colspan = "2" col="2" >
+                        <group colspan = "2" col="2" >
                             <field name="company_id" select="1"
                                         groups="base.group_multi_company"
                                         widget="selection"
@@ -140,14 +140,14 @@
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                             <field name="period_id" />
                             <field name="product_id" on_change="product_id_change(product_id)" />
-                <field name="product_uom_categ"  invisible = "True"/>
-                <field name="product_uos_categ"  invisible = "True"/>
+                            <field name="product_uom_categ"  invisible = "True"/>
+                            <field name="product_uos_categ"  invisible = "True"/>
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom, product_qty, active_uom)"/>
                             <field name="active_uom" invisible = "True" />
-                 </group>
-                 <group colspan = "2" col="2" >
+                        </group>
+                        <group colspan = "2" col="2" >
                             <field name="user_id"/>
                             <field name="product_amt" on_change="product_amt_change( product_amt, product_uom)" />
                             <field name="product_qty"  />
@@ -155,7 +155,7 @@
                             <label string = ""/>
                             <button name="action_validate" icon="gtk-apply" string="Approve" states="draft" type="object" colspan = "1"/>
 
-                </group>
+                        </group>
                     </group>
                     <separator colspan ="4" string="Sales history"/>
                     <group colspan = "4" col = "5">
@@ -199,7 +199,6 @@
                         <button name="calculate_sales_history" icon="gtk-execute"
                                 string="Calculate Sales History" type="object" colspan = "1" states="draft" />
                     </group>
-
                 </form>
             </field>
         </record>
@@ -210,14 +209,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales Forecasts" editable="bottom">
-                    <field name="warehouse_id"/>
-                    <field name ="company_id"/>
-                    <field name="user_id"/>
                     <field name="period_id"/>
                     <field name="product_id" on_change="product_id_change(product_id)" />
                     <field name="product_qty"/>
                     <field name="product_uom" />
-                    
+                    <field name="warehouse_id"/>
+                    <field name ="company_id"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -275,17 +273,17 @@
                   parent="menu_stock_sale_forecast"
                   action="action_view_stock_sale_forecast_form"/>
 
-<!-- Create Planning section -->
+        <!-- Create Planning section -->
 
         <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
 
-       <record id="view_stock_planning_createlines_form" model="ir.ui.view">
+        <record id="view_stock_planning_createlines_form" model="ir.ui.view">
             <field name="name">stock.planning.createlines.form</field>
             <field name="model">stock.planning.createlines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Planning">
-            <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
+                    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="period_id2" widget="selection"/>
                     <newline/>
@@ -318,7 +316,7 @@
             parent="menu_stock_planning_main"
             action="action_stock_planning_createlines_form" sequence = "5"/>
 
-<!-- Planning section -->
+        <!-- Planning section -->
 
         <record id="view_stock_planning_form" model="ir.ui.view">
             <field name="name">stock.planning.form</field>
@@ -330,14 +328,13 @@
                     <group colspan="4" col="7">
                         <group colspan ="3" col="2">
                             <separator colspan ="2" string = "General Info"/>
-
                             <field name="company_id" select = "1" widget= "selection"
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" />
                             <field name="product_id" on_change="product_id_change(product_id)"  />
-                <field name="product_uom_categ"  invisible = "True"/>
-                <field name="product_uos_categ"  invisible = "True"/>
+                            <field name="product_uom_categ"  invisible = "True"/>
+                            <field name="product_uos_categ"  invisible = "True"/>
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom)"/>
@@ -346,8 +343,6 @@
                             <field name="warehouse_forecast"/>
                             <field name="company_forecast"/>
                             <field name="confirmed_forecasts_only"/>
-
-
                         </group>
                         <group colspan ="2" col="2">
                             <separator colspan ="2" string = "Current Period Situation"/>
@@ -415,7 +410,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Master Procurement Schedule" colors ="blue:line_time=='Past';black:line_time=='Future'">
-                    <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                     <field name="period_id"/>
                     <field name="product_id" on_change="product_id_change(product_id)" />
                     <field name="product_uom"/>
@@ -423,6 +417,7 @@
                     <field name="planned_outgoing"/>
                     <field name="to_procure"/>
                     <field name="stock_simulation" string="Stock"/>   <!-- previously stock_start -->
+                    <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                 </tree>
             </field>
         </record>
