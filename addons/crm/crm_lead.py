@@ -117,7 +117,7 @@ class crm_lead(osv.osv, crm_case):
                              Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Watchers Emails', size=252 , help="These \
-addresses will receive a copy of the future e-mail communication between partner \
+addresses(Comma-separated) will receive a copy of the future e-mail communication between partner \
 and users"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
