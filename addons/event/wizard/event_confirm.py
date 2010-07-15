@@ -19,9 +19,29 @@
 #
 ##############################################################################
 
-import scrum_backlog_create_task
-import scrum_backlog_sprint
-import scrum_backlog_merger
+from osv import fields, osv
+from tools.translate import _
+ 
+class event_confirm(osv.osv_memory):
+    """
+    Confirm Event
+    """
+    _name = "event.confirm"
+    _description = "Event Confirmation"
+
+    _columns = {
+        'msg': fields.text('Message', readonly=True), 
+    }
+    _defaults = {
+        'msg': _('Total Registrations of this Event could not reached Minimum Registration Limit. What do you want to do?')
+    }   
+
+    def confirm(self, cr, uid, ids, context):
+        event_pool = self.pool.get('event.event')
+        event_ids = context.get('event_ids', [])
+        event_pool.do_confirm(cr, uid, event_ids, context=context)
+        return {}
+
+event_confirm()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

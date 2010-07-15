@@ -21,15 +21,15 @@
 from osv import osv, fields
 from tools.translate import _
 
-class scrum_backlog_merge(osv.osv_memory):
-    _name = 'scrum.backlog.merge'
+class project_scrum_backlog_merge(osv.osv_memory):
+    _name = 'project.scrum.backlog.merge'
     _description = 'Merge Product Backlogs'
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', help="Select project for the new product backlog"),
                }
 
     def check_backlogs(self, cr, uid, ids, context=None):
-        backlog_obj = self.pool.get('scrum.product.backlog')
+        backlog_obj = self.pool.get('project.scrum.product.backlog')
         mod_obj = self.pool.get('ir.model.data')
         p_list = []
         if context is None:
@@ -50,7 +50,7 @@ class scrum_backlog_merge(osv.osv_memory):
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'form',
-                'res_model': 'scrum.backlog.merge',
+                'res_model': 'project.scrum.backlog.merge',
                 'views': [(resource_id,'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
@@ -58,7 +58,7 @@ class scrum_backlog_merge(osv.osv_memory):
         return self.do_merge(cr, uid, ids, context=context)
 
     def do_merge(self, cr, uid, ids, context=None):
-        backlog_obj = self.pool.get('scrum.product.backlog')
+        backlog_obj = self.pool.get('project.scrum.product.backlog')
         task_obj = self.pool.get('project.task')
         task_lines = []
         new_exp_hour = []
@@ -99,5 +99,5 @@ class scrum_backlog_merge(osv.osv_memory):
         backlog_obj.unlink(cr, uid, context['active_ids'], context=context)
         return {}
 
-scrum_backlog_merge()
+project_scrum_backlog_merge()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -41,8 +41,7 @@ class crm_phonecall(osv.osv, crm_case):
         'date_action_next': fields.datetime('Next Action', readonly=1), 
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'), 
+                        select=True, help='Sales team to which Case belongs to.'), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \

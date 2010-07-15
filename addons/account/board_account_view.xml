@@ -27,15 +27,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Board">
-                    <hpaned>
+                    <vpaned>
                         <child1>
                             <action colspan="4" height="160" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
                         </child1>
                         <child2>
-                            <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged receivables"/>
-                            <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/>
+                            <group col="2" colspan="2" expand="1">
+                                <action colspan="4" name="%(action_aged_receivable)d" string="Aged receivables"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/>
+                            </group>
                         </child2>
-                    </hpaned>
+                    </vpaned>
                 </form>
             </field>
         </record>
