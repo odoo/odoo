@@ -36,28 +36,26 @@ class partner_event_registration(osv.osv_memory):
     _columns = {
         'event_id': fields.many2one('event.event', 'Event'),
         'event_type': fields.many2one('event.type', 'Type', readonly=True),
-        'unit_price': fields.float('Cost', readonly=True),
-        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'start_date': fields.datetime('Start date', required=True, help="Beginning Date of Event", readonly=True), 
-        'end_date': fields.datetime('Closing date', required=True, help="Closing Date of Event", readonly=True), 
+        'unit_price': fields.float('Registration Cost'),
+        'start_date': fields.datetime('Start date', required=True, help="Beginning Date of Event", readonly=True),
+        'end_date': fields.datetime('Closing date', required=True, help="Closing Date of Event", readonly=True),
         'nb_register': fields.integer('Number of Registration'),
     }
     _defaults = {
-        'nb_register': 1, 
+        'nb_register': 1,
     }
 
     def open_registration(self, cr, uid, ids, context=None):
         """This Function Open Registration For Given Event id and Partner.
-        
+
         """
-        
         value = {}
         res_obj = self.pool.get('res.partner')
         job_obj = self.pool.get('res.partner.job')
         event_obj = self.pool.get('event.event')
         reg_obj = self.pool.get('event.registration')
         mod_obj = self.pool.get('ir.model.data')
-        
+
         record_ids = context and context.get('active_ids', []) or []
         addr = res_obj.address_get(cr, uid, record_ids)
         contact_id = False
@@ -83,22 +81,21 @@ class partner_event_registration(osv.osv_memory):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         for current in self.browse(cr, uid, ids, context=context):
-            for reg in reg_obj.browse(cr, uid, record_ids, context=context):
+            for partner in res_obj.browse(cr, uid, record_ids, context=context):
                 new_case = reg_obj.create(cr, uid, {
                         'name' : 'Registration',
                         'event_id' : current.event_id and current.event_id.id or False,
-                        'unit_price' : current.event_id.unit_price,
-                        'currency_id' : current.event_id.currency_id and current.event_id.currency_id.id or False,
-                        'partner_id' : record_ids[0],
-                        'partner_invoice_id' :  record_ids[0] or False,
+                        'unit_price' : current.unit_price,
+                        'partner_id' : partner.id,
+                        'partner_invoice_id' :  partner.id,
                         'event_product': current.event_id.product_id.name,
                         'contact_id': contact_id,
                         'email_from': email,
                         'nb_register': current.nb_register,
- 
+
                 }, context=context)
 
-            value = {
+        value = {
                 'name': _('Event Registration'),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
@@ -109,14 +106,14 @@ class partner_event_registration(osv.osv_memory):
                 'search_view_id': res['res_id']
             }
         return value
-    
+
     def name_get(self, cr, uid, ids, context=None):
         """Overrides orm name_get method
         @param ids: List of partner_event_register ids
         """
         if not context:
             context = {}
-        
+
         res = []
         if not ids:
             return res
@@ -127,22 +124,31 @@ class partner_event_registration(osv.osv_memory):
                 event_id = record['event_type'][1] + ' on ' + event_id
             res.append((record['id'], event_id))
         return res
-    
-    def onchange_event_id(self, cr, uid, ids, event_id, context={}):
+
+    def onchange_event_id(self, cr, uid, ids, event_id, context=None):
         res = {}
         event_obj = self.pool.get('event.event')
-            
-        if event_id:   
+        product_obj = self.pool.get('product.product')
+        partner_obj = self.pool.get('res.partner')
+        if not context:
+            context = {}
+        partner_id = context.get('active_id', False)
+        if event_id:
             event = event_obj.browse(cr, uid, event_id)
+            pricelist_id = event.pricelist_id and event.pricelist_id.id or False
+            if partner_id:
+                partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                pricelist_id = pricelist_id or partner.property_product_pricelist.id
+            unit_price = product_obj._product_price(cr, uid, [event.product_id.id], False, False, {'pricelist': pricelist_id})[event.product_id.id]
+                
             res['value'] = {
                           'event_type': event.type and event.type.id or False,
                           'start_date': event.date_begin,
                           'end_date': event.date_end,
-                          'unit_price': event.unit_price,
-                          'currency_id': event.currency_id and event.currency_id.id or False
-                           }
+                          'unit_price': unit_price,
+            }
         return res
-    
+
 partner_event_registration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

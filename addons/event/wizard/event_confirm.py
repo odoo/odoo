@@ -21,7 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
- 
+
 class event_confirm(osv.osv_memory):
     """
     Confirm Event
@@ -30,11 +30,11 @@ class event_confirm(osv.osv_memory):
     _description = "Event Confirmation"
 
     _columns = {
-        'msg': fields.text('Message', readonly=True), 
+        'msg': fields.text('Message', readonly=True),
     }
     _defaults = {
         'msg': _('Total Registrations of this Event could not reached Minimum Registration Limit. What do you want to do?')
-    }   
+    }
 
     def confirm(self, cr, uid, ids, context):
         event_pool = self.pool.get('event.event')
