@@ -98,7 +98,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         if not len(res):
             return [account]
         return res
-    
+
     def lines(self, account, form):
         """ Return all the account_move_line of account with their account code counterparts """
         # First compute all counterpart strings for every move_id where this account appear.
@@ -138,7 +138,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         res_lines = self.cr.dictfetchall()
         res_init = []
         if res_lines and form['initial_balance']:
-            #FIXME: replace the hardcoded date with the day before data[form][date_from]
             #FIXME: replace the label of lname with a string translatable
             sql = """
                 SELECT 0 AS lid, '' AS ldate, '' as lcode, COALESCE(SUM(l.amount_currency),0.0) as amount_currency, '' as lref, 'Initial Balance' as lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
@@ -159,15 +158,14 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             res_init = self.cr.dictfetchall()
         res = res_init + res_lines
         account_sum = 0.0
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         inv_types = { 'out_invoice': 'CI', 'in_invoice': 'SI', 'out_refund': 'OR', 'in_refund': 'SR', }
 
         for l in res:
-            l['move']=l['move_name']
+            l['move'] = l['move_name']
             if l['invoice_id']:
                 l['lref'] = '%s: %s'%(inv_types[l['invoice_type']], l['invoice_number'])
             l['partner'] = l['partner_name'] or ''
-            account_sum = l['debit'] - l['credit']
+            account_sum += l['debit'] - l['credit']
             l['progress'] = account_sum
             l['line_corresp'] = l['mmove_id'] == '' and ' ' or counterpart_accounts[l['mmove_id']]
             # Modification of amount Currency
@@ -231,7 +229,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
     def _get_journal(self, journal_ids):
-        self.cr.execute('select code from account_journal where id IN %s',(tuple(journal_ids),))   
+        self.cr.execute('select code from account_journal where id IN %s',(tuple(journal_ids),))
         codes = [x for x, in self.cr.fetchall()]
         return codes or ''
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header='internal')
