@@ -228,9 +228,9 @@
         <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
 
-	<!--		Filters form view-->
+        <!--Filters form view-->
 
-		<record id="ir_filters_view_form" model="ir.ui.view">
+        <record id="ir_filters_view_form" model="ir.ui.view">
             <field name="name">ir.filters.form</field>
             <field name="model">ir.filters</field>
             <field name="type">form</field>
@@ -246,7 +246,7 @@
             </field>
         </record>
 
-        <!--		Filters tree view-->
+        <!--        Filters tree view-->
 
         <record id="ir_filters_view_tree" model="ir.ui.view">
              <field name="name">ir.filters.tree</field>
@@ -263,7 +263,7 @@
             </field>
         </record>
 
-		<!--		Filters action-->
+        <!--        Filters action-->
 
         <record id="actions_ir_filters_view" model="ir.actions.act_window">
             <field name="name">Filters</field>
@@ -273,13 +273,13 @@
             <field name="view_id" ref="ir_filters_view_tree"/>
         </record>
 
-		<!--		Filters view menu-->
+        <!--        Filters view menu-->
 
-		<menuitem parent="base.next_id_6" name="Filters"
-			id="menu_ir_filters" action="actions_ir_filters_view" />
+        <menuitem parent="base.next_id_6" name="Filters"
+            id="menu_ir_filters" action="actions_ir_filters_view" />
 
 
-		<record id="act_report_custom_view" model="ir.ui.view">
+        <record id="act_report_custom_view" model="ir.ui.view">
             <field name="name">ir.actions.report.custom</field>
             <field name="model">ir.actions.report.custom</field>
             <field name="type">form</field>
@@ -382,40 +382,55 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Open a Window">
-                    <field name="name" select="1"/>
-                    <field name="type" readonly="1"/>
-                    <field name="res_model" select="1"/>
-                    <field name="src_model" select="2"/>
-                    <field name="usage"/>
-                    <field name="view_type"/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="res_model" select="1"/>
+                        <field name="type" readonly="1"/>
+                        
+                        <field name="src_model" select="2"/>
+                        <field name="usage"/>
+                        <field name="menus"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="General Settings">
-                            <field colspan="4" name="view_ids">
-                                <form string="Views">
-                                    <field colspan="4" name="sequence"/>
-                                    <field name="view_mode"/>
-                                    <field domain="[('type', '=', view_mode)]" name="view_id"/>
-                                </form>
-                                <tree string="Views">
-                                    <field name="sequence"/>
-                                    <field name="view_mode"/>
-                                    <field name="view_id"/>
-                                </tree>
-                            </field>
-                            <field colspan="4" name="default_user_ids"/>
-                            <field colspan="4" name="menus"/>
-                            <field colspan="4" name="domain"/>
-                            <field colspan="4" name="context"/>
-                            <field name="limit"/>
-                            <field name="auto_refresh"/>
-                            <newline/>
-                            <field name="view_mode"/>
-                            <field name="filter"/>
-                            <field name="auto_search"/>
-                            <field name="view_id"/>
-                            <field name="search_view_id"/>
+                            <group col="2" colspan="2">
+                                <separator string="Views" colspan="4"/>
+                                <field name="view_type"/>
+                                <field name="view_mode"/>
+                                <field name="view_id"/>
+                                <field name="search_view_id"/>
+                            </group>
+                            
+                            <group col="2" colspan="2">
+                                <separator string="Filters" colspan="4"/>
+                                <field name="domain"/>
+                                <field name="context"/>
+                                <field name="limit"/>
+                                <field name="auto_refresh"/>
+                                <group col="4" colspan="2">
+                                    <field name="auto_search"/>
+                                    <field name="filter"/>
+                                </group>
+                            </group>
+                            <group col="4" colspan="4">
+                                <separator string="View Ordering" colspan="4"/>
+                                <field colspan="4" name="view_ids" nolabel="1">
+                                    <form string="Views">
+                                        <field colspan="4" name="sequence"/>
+                                        <field name="view_mode"/>
+                                        <field domain="[('type', '=', view_mode)]" name="view_id"/>
+                                    </form>
+                                    <tree string="Views">
+                                        <field name="sequence"/>
+                                        <field name="view_mode"/>
+                                        <field name="view_id"/>
+                                    </tree>
+                                </field>
+                            </group>
                         </page>
                         <page string="Security">
+                            <separator colspan="4" string="Select Users" />
+                            <field colspan="4" name="default_user_ids" nolabel="1"/>
                             <separator colspan="4" string="Select Groups" />
                             <field name="groups_id" nolabel="1" colspan="4" />
                         </page>
@@ -810,9 +825,10 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_report_custom_form"/>
         </record>
+        
         <!--
-    <menuitem name="Administration/Report/Report Custom" action="action_report_custom"/>
-    -->
+        <menuitem name="Administration/Report/Report Custom" action="action_report_custom"/>
+        -->
 
         <!-- model -->
         <record id="view_model_form" model="ir.ui.view">
@@ -1475,8 +1491,8 @@
                     <field name="state"/>
                     <notebook colspan="4">
                         <page string="Groups">
-                    		<field name="groups_id" nolabel="1" colspan="4"/>
-                    	</page>
+                            <field name="groups_id" nolabel="1" colspan="4"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -1491,7 +1507,7 @@
 
         <wizard id="wizard_configuration" model="ir.module.module" name="module.configuration" string="Start Configuration"/>
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" 
-        		parent="next_id_11" groups="base.group_extended" sequence="20"/>
+                parent="next_id_11" groups="base.group_extended" sequence="20"/>
        
         <menuitem
             action="wizard_configuration" name="Start Configuration"
