@@ -76,6 +76,8 @@ class event_event(osv.osv):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def button_done(self, cr, uid, ids, context=None):
+        if type(ids) in (int, long,):
+            ids = [ids]
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def do_confirm(self, cr, uid, ids, context=None):
@@ -98,6 +100,8 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
+        if type(ids) in (int, long,):
+            ids = [ids]
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
         for event in self.browse(cr, uid, ids, context=context):
