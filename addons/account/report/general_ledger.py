@@ -227,10 +227,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             # Add initial balance to the result
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
-    def _get_journal(self, journal_ids):
-        self.cr.execute('select code from account_journal where id IN %s',(tuple(journal_ids),))
-        codes = [x for x, in self.cr.fetchall()]
-        return codes or ''
+
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header='internal')
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger, header='internal')
 

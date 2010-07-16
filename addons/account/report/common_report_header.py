@@ -127,5 +127,10 @@ class common_report_header(object):
         if data.get('form', False) and data['form'].get('company_id', False):
             comp_obj = pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, data['form']['company_id'])
         return comp_obj.name
+    
+    def _get_journal(self, journal_ids):
+        self.cr.execute('select code from account_journal where id IN %s',(tuple(journal_ids),))
+        codes = [x for x, in self.cr.fetchall()]
+        return codes or ''    
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
