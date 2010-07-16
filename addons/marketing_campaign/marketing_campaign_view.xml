@@ -236,20 +236,15 @@
                     </group>
                     <field name="type" width='100'/>
                     <group colspan='2' col='1'>
-                        <group attrs="{'invisible':[('type','!=','email')]}" >
-                            <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
-                        </group>
+                        <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
+                               context="{'default_object_name':object_id}" />
                         <group attrs="{'invisible':[('type','!=','paper')]}" >
                             <field name="report_id" attrs="{'required':[('type','=','paper')]}" context="{'object_id':object_id}"/>
                             <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
                         </group>
-                        <group attrs="{'invisible':[('type','!=','action')]}" >
-                            <field name="server_action_id" attrs="{'required':[('type','=','action')]}" domain="[('model_id','=',object_id)]" />
-                        </group>
+                        <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]" />
                         <!--
-                        <group attrs="{'invisible':[('type','!=','subcampaign')]}" >
-                            <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
-                        </group>
+                         <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')], 'invisible':[('type','!=','subcampaign')]}" />
                         -->
                     </group>
                 </group>
@@ -350,7 +345,7 @@
                 <separator string="Status" colspan="4"/>
                 <group colspan="4" col="11">
                     <field name="state" nolabel="1" readonly="True" select="1"/>
-                    <button string="Retry" states="exception" name="button_draft" type="object" icon="gtk-ok"/>
+                    <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-ok"/>
                     <button string="Process" states="todo" name="process" type="object" icon="gtk-ok"/>
                     <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="gtk-cancel"/>
                 </group>

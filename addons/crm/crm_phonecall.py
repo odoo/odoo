@@ -82,8 +82,7 @@ class crm_phonecall(osv.osv, crm_case):
         'date_closed': fields.datetime('Closed', readonly=True), 
         'date': fields.datetime('Date'), 
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {

@@ -133,11 +133,13 @@ class email_template(osv.osv):
                    string="Enforce From Account",
                    help="Emails will be sent only from this account(which are approved)."),
         'from_email' : fields.related('enforce_from_account', 'email_id',
-                                                type='char', string='From',),        
+                                                type='char', string='From',
+                                                help='From Email (select mail account)',
+                                                readonly=True),        
         'def_to':fields.char(
-                 'Recepient (To)',
+                 'Recipient (To)',
                  size=250,
-                 help="The default recepient of email." 
+                 help="The default recipient of email." 
                  "Placeholders can be used here."),
         'def_cc':fields.char(
                  'Default CC',
@@ -172,7 +174,7 @@ class email_template(osv.osv):
         'use_sign':fields.boolean(
                   'Signature',
                   help="the signature from the User details" 
-                  "will be appened to the mail"),
+                  " will be appended to the mail"),
         'file_name':fields.char(
                 'File Name Pattern',
                 size=200,
