@@ -64,6 +64,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'get_children_accounts': self.get_children_accounts,
             'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_fiscalyear': self._get_fiscalyear,
+            'get_journal': self._get_journal,
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
@@ -97,7 +98,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         if not len(res):
             return [account]
         return res
-
+    
     def lines(self, account, form):
         """ Return all the account_move_line of account with their account code counterparts """
         # First compute all counterpart strings for every move_id where this account appear.
@@ -229,7 +230,10 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             # Add initial balance to the result
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
-
+    def _get_journal(self, journal_ids):
+        self.cr.execute('select code from account_journal where id IN %s',(tuple(journal_ids),))   
+        codes = [x for x, in self.cr.fetchall()]
+        return codes or ''
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header='internal')
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger, header='internal')
 

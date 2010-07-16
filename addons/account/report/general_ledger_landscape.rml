@@ -182,6 +182,7 @@
     <paraStyle name="P9b" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P10" fontName="Helvetica" alignment="CENTER"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_8a" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="11.0" leading="14"/>
     <paraStyle name="P12" fontName="Helvetica" fontSize="14.0" leading="17"/>
@@ -228,7 +229,7 @@
       <font color="white"> </font>
     </para>
 
-      <blockTable colWidths="100.0,80.0,80.0,80.0,150.0,80.0,100.0" style="Table2">
+      <blockTable colWidths="100.0,80.0,100.0,60.0,150.0,80.0,100.0" style="Table2">
       <tr>
       	<td><para style="terp_tblheader_General_Centre">Chat Account</para></td>        
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
@@ -241,8 +242,9 @@
 	<tr>
 	   <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or removeParentNode('para') ]]</para></td>
-       <td><para style="terp_default_Centre_8">[[ ]]</para></td>
+       <td> <para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data['form']['journal_ids']) ]) ]] </para></td>
 		<td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_mouvement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
+		
         <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
 				<tr>
