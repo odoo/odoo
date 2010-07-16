@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+            
+        <!-- Create Planning section -->
+        
+        <record id="view_stock_planning_createlines_form" model="ir.ui.view">
+            <field name="name">stock.planning.createlines.form</field>
+            <field name="model">stock.planning.createlines</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock Planning">
+                    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
+                    <newline/>
+                    <field name="period_id2" widget="selection"/>
+                    <newline/>
+                    <field name="warehouse_id2" domain = "[('company_id','=',company_id)] "/>
+                    <newline/>
+                    <field name="forecasted_products"/>
+                    <newline/>
+                    <field name="product_categ_id2" attrs="{'required':[('forecasted_products','=',0)]}" widget="selection"/>
+                    <separator colspan ="4" string="Stock planning lines creation"/>
+                    <label  colspan ="4" string="Creates planning lines for selected period and warehouse. Doesn't duplicate existing lines created by you."/>
+                    <group colspan="4">
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="create_planning" string="Create Stock Planning" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_planning_createlines_form" model="ir.actions.act_window">
+            <field name="name">Create Stock Planning Lines</field>
+            <field name="res_model">stock.planning.createlines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_planning_createlines_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="menu_stock_planning_createlines"
+            parent="menu_stock_planning_main"
+            action="action_stock_planning_createlines_form" sequence = "5"/>
+    </data>
+</openerp>

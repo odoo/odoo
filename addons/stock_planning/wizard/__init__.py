@@ -18,8 +18,6 @@
 #
 ##############################################################################
 
-import stock_planning
-import wizard
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+import stock_planning_create_periods
+import stock_planning_forecast
+import stock_planning_createlines

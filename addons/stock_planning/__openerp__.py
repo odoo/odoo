@@ -138,7 +138,13 @@ Remarks:
 - When you wish to work with different periods for some part of products define two kinds of periods (fe. Weekly and Monthly) and use them for different products. Example: If you use always Weekly periods for Products A, and Monthly periods for Products B your all calculations will work correctly. You can also use different kind of periods for the same products from different warehouse or companies. But you cannot use overlapping periods for the same product, warehouse and company because results can be unpredictable. The same apply to Forecasts lines.
 """,
     "demo_xml":[],
-    "update_xml":["security/ir.model.access.csv","stock_planning_view.xml"],
+    "update_xml": [
+        "security/ir.model.access.csv",
+        "stock_planning_view.xml",
+        "wizard/stock_planning_create_periods_view.xml",
+        "wizard/stock_planning_forecast_view.xml",
+        "wizard/stock_planning_createlines_view.xml",
+    ],
     "active": False,
     "installable": True,
 }

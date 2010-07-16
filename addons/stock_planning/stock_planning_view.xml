@@ -5,42 +5,6 @@
                   name="Stock and Sales Periods"
                   parent="base.menu_base_config" sequence="20"/>
 
-        <!-- Creating periods section -->
-
-        <record id="view_stock_period_createlines_form" model="ir.ui.view">
-            <field name="name">stock.period.createlines.form</field>
-            <field name="model">stock.period.createlines</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Stock and Sales Periods">
-                    <separator colspan="4" string="Create periods for Stock and Sales Planning"/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
-                    <separator colspan="4" string=""/>
-                    <group col="3" colspan="4">
-                        <button name="create_period"  icon="gtk-execute" string="Create Daily Periods" type="object"/>
-                        <button name="create_period_weekly" icon="gtk-execute"  string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}"/>
-                        <button name="create_period_monthly" icon="gtk-execute" string="Create Monthly Periods" type="object" context="{'interval': 1}"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_stock_period_createlines_form" model="ir.actions.act_window">
-            <field name="name">Stock and Sales Planning Periods</field>
-            <field name="res_model">stock.period.createlines</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_stock_period_createlines_form"/>
-            <field name="target">new</field>
-        </record>
-
-        <menuitem id="menu_stock_period_creatlines"
-                  name="Create Stock and Sales Periods"
-                  parent="menu_stock_period_main"
-                  action="action_stock_period_createlines_form"
-                  sequence = "5"/>
-
         <!-- Periods tree and form section -->
 
         <record id="view_stock_period_form" model="ir.ui.view">
@@ -84,46 +48,6 @@
             parent="menu_stock_period_main"
             action="action_stock_period_form"
             sequence = "10"/>
-
-        <!--   Create Forecast section   -->
-
-        <record id="view_stock_sale_forecast_createlines_form" model="ir.ui.view">
-            <field name="name">stock.sale.forecast.createlines</field>
-            <field name="model">stock.sale.forecast.createlines</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Stock and Sales Forecasts">
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <field name="period_id1"/>
-                    <newline/>
-                    <field name="warehouse_id1" domain = "[('company_id','=',company_id)] "/>
-                    <newline/>
-                    <field name="product_categ_id1" widget="selection"/>
-                    <newline/>
-                    <field name="copy_forecast"/>
-                    <separator colspan ="4" string="Forecast lines creation"/>
-                    <label  colspan ="4" string="Creates forecast lines for selected warehouse and period. Doesn't duplicate existing lines created by you."/>
-                    <group colspan="4">
-                        <button icon="gtk-cancel"  special="cancel" string="Cancel"/>
-                        <button icon="gtk-execute" name="create_forecast" string="Create Forecasts" type="object" />
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_stock_sale_forecast_createlines_form" model="ir.actions.act_window">
-            <field name="name">Create Sales Forecasts</field>
-            <field name="res_model">stock.sale.forecast.createlines</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_stock_sale_forecast_createlines_form"/>
-            <field name="target">new</field>
-        </record>
-
-        <menuitem id="menu_stock_sale_forecast" name="Sales Forecasts" 
-                parent="base.menu_base_partner" sequence="6"/>
-        <menuitem id="menu_stock_sale_forecast_createlines" name="Create Sales Forecasts" parent="menu_stock_sale_forecast" action="action_stock_sale_forecast_createlines_form" sequence = "5"/>
 
         <record id="view_stock_sale_forecast_form" model="ir.ui.view">
             <field name="name">stock.sale.forecast.form</field>
@@ -232,9 +156,13 @@
                 </graph>
             </field>
         </record>
+        
+        <!-- Forecast section -->
+        
+        <menuitem id="menu_stock_sale_forecast" name="Sales Forecasts" 
+                parent="base.menu_base_partner" sequence="6"/>
 
-
-       <record id="view_stock_sale_forecast_filter" model="ir.ui.view">
+        <record id="view_stock_sale_forecast_filter" model="ir.ui.view">
             <field name="name">stock.sale.forecast.list.select</field>
             <field name="model">stock.sale.forecast</field>
             <field name="type">search</field>
@@ -273,50 +201,9 @@
                   parent="menu_stock_sale_forecast"
                   action="action_view_stock_sale_forecast_form"/>
 
-        <!-- Create Planning section -->
-
-        <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
-
-        <record id="view_stock_planning_createlines_form" model="ir.ui.view">
-            <field name="name">stock.planning.createlines.form</field>
-            <field name="model">stock.planning.createlines</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Stock Planning">
-                    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="period_id2" widget="selection"/>
-                    <newline/>
-                    <field name="warehouse_id2" domain = "[('company_id','=',company_id)] "/>
-                    <newline/>
-                    <field name="forecasted_products"/>
-                    <newline/>
-                    <field name="product_categ_id2" attrs="{'required':[('forecasted_products','=',0)]}" widget="selection"/>
-                    <separator colspan ="4" string="Stock planning lines creation"/>
-                    <label  colspan ="4" string="Creates planning lines for selected period and warehouse. Doesn't duplicate existing lines created by you."/>
-                    <group colspan="4">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-ok" name="create_planning" string="Create Stock Planning" type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_stock_planning_createlines_form" model="ir.actions.act_window">
-            <field name="name">Create Stock Planning Lines</field>
-            <field name="res_model">stock.planning.createlines</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_stock_planning_createlines_form"/>
-            <field name="target">new</field>
-        </record>
-
-        <menuitem
-            id="menu_stock_planning_createlines"
-            parent="menu_stock_planning_main"
-            action="action_stock_planning_createlines_form" sequence = "5"/>
-
         <!-- Planning section -->
+        
+        <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
 
         <record id="view_stock_planning_form" model="ir.ui.view">
             <field name="name">stock.planning.form</field>
