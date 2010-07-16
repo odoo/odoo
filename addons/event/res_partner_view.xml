@@ -30,9 +30,16 @@
                     </field>
                     <field name="event_registration_ids" colspan="4" nolabel="1">
                         <tree string="Events Registration">
+                            <field name="date" string="Date"/>
                             <field name="event_id" />
-                            <field name="partner_id"/>
+                            <field name="partner_invoice_id"/>
+                            <field name="nb_register"/>
                             <field name="unit_price"/>
+                            <field name="price_subtotal"/>
+                            <field name="state"/>
+                            <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                            <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                            <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                         </tree>
                     </field>
                 </page>
