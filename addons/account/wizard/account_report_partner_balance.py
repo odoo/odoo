@@ -32,7 +32,7 @@ class account_partner_balance(osv.osv_memory):
         'soldeinit': fields.boolean('Include Initial Balances'),
                 }
     _defaults = {
-        'soldeinit' : True,
+        'soldeinit': True,
                 }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):

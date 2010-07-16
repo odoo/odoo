@@ -55,7 +55,7 @@ module named account_vouchers
         'wizard/account_use_model_view.xml',
         'account_view.xml',
         'account_report.xml',
-        'wizard/account_common_report.xml',
+        'wizard/account_report_common_view.xml',
         'wizard/account_invoice_refund_view.xml',
         'wizard/account_period_close_view.xml',
         'wizard/account_fiscalyear_close_state.xml',

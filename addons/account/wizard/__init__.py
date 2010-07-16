@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-import account_common_report
-import account_common_partner_report
+import account_report_common
+import account_report_common_partner
+import account_report_common_journal
 
 import account_automatic_reconcile
 import account_move_line_reconcile_select
@@ -55,7 +56,6 @@ import account_state_open
 
 import account_statement_from_invoice
 
-import account_common_journal_report
 import account_report_print_journal
 import account_report_central_journal
 import account_report_general_journal
