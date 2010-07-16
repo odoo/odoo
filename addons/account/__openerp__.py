@@ -83,7 +83,7 @@ module named account_vouchers
         'wizard/account_move_line_select_view.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
         'wizard/account_compare_account_balance_report_view.xml',
-        'wizard/account_third_party_ledger.xml',
+        'wizard/account_report_partner_ledger_view.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
