@@ -319,7 +319,7 @@
         <td><para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit()) ]]</para></td>
         <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()) ]]</para></td>
 		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit()- sum_credit()) ]]</para></td>         
-		<td><para style="terp_default_Bold_9_Right"><u>[[formatLang(sum_currency_amount_account(o, data['form'])) ]]</u></para></td>                        
+		<td><para style="terp_default_Bold_9_Right"><u>[[ o.currency_id and  formatLang(sum_currency_amount_account(o, data['form']))  +o.currency_id.code or '' ]]</u></para></td>                        
       </tr>
     </blockTable>    
     
@@ -354,7 +354,7 @@
           <td><para style="terp_default_Right_9">[[ formatLang(line['debit'] )]]</para></td>
           <td><para style="terp_default_Right_9">[[ formatLang(line['credit']) ]]</para></td>
 		  <td><para style="terp_default_Right_9">[[ formatLang(line['debit']-line['debit'] ) ]]</para></td>            
-          <td><para style="terp_default_Right_9"><u>[[ formatLang(line['amount_currency'] ) ]] [[ line['currency_code'] ]]</u></para></td>        
+          <td><para style="terp_default_Right_9"><u>[[ formatLang(line['amount_currency']) or '' ]] [[ line['currency_code'] or '' ]]</u></para></td>        
         </tr>
       </blockTable>
       <para style="terp_default_2">
