@@ -294,9 +294,9 @@ class rml_parse(object):
 
     def _add_header(self, rml_dom, header='internal'):
         if header=='internal':
-            rml_head =  self.rml_header2
-        else:
             rml_head =  self.rml_header
+        else:
+            rml_head =  self.rml_header2
 
         head_dom = etree.XML(rml_head)
         for tag in head_dom:
