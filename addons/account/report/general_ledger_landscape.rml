@@ -279,17 +279,17 @@
 
    	<blockTable colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_header" repeatRows="1">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
        <tr>
-          <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P2">JNRL</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P2">Partner</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P2">Ref</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P2">Mvt</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P3">Entry Label</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P3">Counterpart</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P4">Debit</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P4">Credit</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P4">Balance</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P4">Currency</para></td>
+          <td><para style="date">Date</para></td>
+          <td><para style="P12"></para><para style="P2">JNRL</para></td>
+          <td><para style="P12"></para><para style="P2">Partner</para></td>
+          <td><para style="P12"></para><para style="P2">Ref</para></td>
+          <td><para style="P12"></para><para style="P2">Mvt</para></td>
+          <td><para style="P12"></para><para style="P3">Entry Label</para></td>
+          <td><para style="P12"></para><para style="P3">Counterpart</para></td>
+          <td><para style="P12"></para><para style="P4">Debit</para></td>
+          <td><para style="P12"></para><para style="P4">Credit</para></td>
+          <td><para style="P12"></para><para style="P4">Balance</para></td>
+          <td><para style="P12"></para><para style="P4">Currency</para></td>
        </tr>
     </blockTable>
 
@@ -324,8 +324,8 @@
 	    	<td><para style="Standard"></para></td>
 	    	<td><para style="Standard"></para></td>
 	   	</tr>
-	   	<tr>
-			<td><para style="P2_content">[[ repeatIn(lines(o, data['form']), 'line') ]]<font> [[ formatLang(line['ldate'],date=True) ]]</font></para></td>
+	   	<tr><para style="P2_content">[[ repeatIn(lines(o, data['form']), 'line') ]]</para>
+			<td><para style="P2_content"> [[ formatLang(line['ldate'],date=True) ]]</para></td>
 			<td><para style="P2_content">[[ line['lcode'] ]]</para></td>
 			<td><para style="P2_content">[[ line['partner_name'] ]]</para></td>
 			<td><para style="P2_content">[[ line['lref'] ]]</para></td>
@@ -343,8 +343,8 @@
 
     <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
        <tr>
-          <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
           <td><para style="P12"><font color="white"> </font></para><para style="P2">JNRL</para></td>
+          <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
           <td><para style="P12"><font color="white"> </font></para><para style="P2">Partner</para></td>
           <td><para style="P12"><font color="white"> </font></para><para style="P2">Ref</para></td>
           <td><para style="P12"><font color="white"> </font></para><para style="P2">Mvt</para></td>
