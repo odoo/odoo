@@ -342,7 +342,7 @@
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
 			  <td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]]</u></para></td>
-			  <td><para style="P9b"><u>[[o.currency_id and formatLang(sum_currency_amount_account(a, data['form'])) or '' ]]</u></para></td>
+			  <td><para style="P9b"><u>[[o.currency_id and formatLang(sum_currency_amount_account(a, data['form']))+o.currency_id.code or '' ]]</u></para></td>
 			</tr>
 			</blockTable>
 		  </td>

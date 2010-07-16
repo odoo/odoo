@@ -216,28 +216,19 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             sum_balance += self.cr.fetchone()[0] or 0.0
         return sum_balance
 
-    def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.code as code "\
-                "FROM res_currency c,account_account as ac "\
-                "WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
-        result = self.cr.fetchone()
-        if result:
-            self.account_currency = result[0]
-        else:
-            self.account_currency = False
-
     def _sum_currency_amount_account(self, account, form):
-        #FIXME: not good not good at all. use the query_get. return the amount + curr code 
-        self._set_get_account_currency_code(account.id)
-        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
-        total = self.cr.fetchone()
-
-        if self.account_currency:
-            return_field = str(total[0]) + self.account_currency
-            return return_field
-        else:
-            currency_total = self.tot_currency = 0.0
-            return currency_total
+        #FIXME: not working
+        self.cr.execute("SELECT sum(l.amount_currency) as tot_currency "\
+                "FROM account_move_line l "\
+                "WHERE l.account_id = %s AND %s"%(account.id, self.query))
+        sum_currency = self.cr.fetchone()[0] or 0.0
+        if form.get('initial_balance', False):
+            self.cr.execute("SELECT sum(l.amount_currency) as tot_currency "\
+                    "FROM account_move_line l "\
+                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+            # Add initial balance to the result
+            sum_currency += self.cr.fetchone()[0] or 0.0
+        return str(sum_currency)
 
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header='internal')
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger, header='internal')
