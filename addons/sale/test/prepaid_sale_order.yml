@@ -239,13 +239,30 @@
     property_account_expense: sale.account_account_payable1
     property_account_income: sale.account_account_receivable0
     seller_delay: '1'
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_agrolait
+        qty: 5.0
     standard_price: 160.0
     supply_method: produce
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
 -
-  I create a Sale Order for LG Viewty Smart for qty 500 having order_policy prepaid.
+  I create a Bill of Material record for LG Viewty Smart
+-
+  !record {model: mrp.bom, id: mrp_bom_lgviewtysmart0}:
+    company_id: base.main_company
+    name: LG Viewty Smart
+    product_efficiency: 1.0
+    product_id: sale.product_product_lgviewtysmart0
+    product_qty: 1.0
+    product_uom: product.product_uom_unit
+    product_uos_qty: 0.0
+    sequence: 0.0
+    type: normal
+-
+  I create a Sale Order for LG Viewty Smart for qty 500 having Shipping Policy is 'Payment Before Delivery'
 -
   !record {model: sale.order, id: sale_order_so1}:
     date_order: '2010-05-03'
@@ -270,14 +287,12 @@
     picking_policy: direct
     pricelist_id: product.list0
     shop_id: sale.shop
-
-
 -
   I confirm the sale order.
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so1}
 -
-  I will verify whether the invoice has been generated for SO since Shipping policy is 'Payment Before Delivery'
+  I verify whether the invoice has been generated for SO since Shipping policy is 'Payment Before Delivery'
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so1"))
@@ -311,8 +326,6 @@
     self.wo_check(cr, uid, [ref("account_invoice_pay_tst1")], {"lang": "en_US", "tz":
       False, "active_model": 'account.invoice', "active_ids": [so.invoice_ids[0].id], "type":
       "out_invoice", "active_id": so.invoice_ids[0].id, })
-
-
 -
   Creating an account invoice pay writeoff entry.
 -
@@ -321,8 +334,6 @@
     comment: Write-Off
     writeoff_acc_id: account.a_sale
     writeoff_journal_id: sale.account_journal_bankjournal0
-
-
 -
   Pay and Reconcile the Invoice.
 -
@@ -332,10 +343,14 @@
     self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
       {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
       [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id })
-
-
 -
-  I will verify the picking associated with the sale order sale_order_so1
+  I check that Paid has been set to true.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so1"))
+    assert(sale_id.invoiced == True), "Paid has not been set to true"
+-
+  I verify the picking associated with the sale order sale_order_so1
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so1"))
@@ -374,3 +389,90 @@
    if picking_id:
      pick = self.browse(cr,uid,picking_id[0])
      assert (pick.state) =='done', "Picking for SO is not in done state."
+-
+  I verify that a procurement has been generated for so
+-
+  !python {model: procurement.order}: |
+    from tools.translate import _
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    assert proc_ids, _('No Procurements!')
+-
+  Then I click on the "Run Procurement" button
+- 
+  !python {model: procurement.order}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    for proc in proc_ids:
+      wf_service.trg_validate(uid, 'procurement.order',proc,'button_check', cr)
+-
+  I verify that a procurement state is "running"
+-
+  !python {model: procurement.order}: |
+    from tools.translate import _
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
+    assert proc_ids, _('Procurement is not in the running state!')
+-
+  I verify that a manufacturing order has been generated
+-
+  !python {model: mrp.production}: |
+    from tools.translate import _
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+    mnf_ids = self.search(cr, uid, [('origin','=',so.name)])
+    assert mnf_ids, _('Manufacturing order has not been generated')
+-
+  Manufacturing order has been generated
+-
+  !python {model: mrp.production}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    mnf_ids = self.search(cr, uid, [('origin','=',so.name)])
+    for mnf in mnf_ids:
+      wf_service.trg_validate(uid, 'mrp.production',mnf,'button_produce', cr)
+- 
+  Creating a mrp.product.produce record
+- 
+  !record {model: mrp.product.produce, id: mrp_product_produce_0}:
+    mode: consume_produce
+    product_qty: 500.0
+- 
+  Then I click on the "Confirm" button
+-
+  !python {model: mrp.production}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    mnf_ids = self.search(cr, uid, [('origin','=',so.name)])
+    for mnf in mnf_ids:
+      wf_service.trg_validate(uid, 'mrp.production',mnf,'button_produce_done', cr) 
+-
+  I verify that the manufacturing state is "done".
+-
+  !python {model: mrp.production}: |
+    from tools.translate import _
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+    mnf_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','done')])
+    assert mnf_ids, _('manufacturing is not done!')
+-
+  I verify that a "Picked" has been set to true 
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so1"))
+    assert (so.shipped == True), "Picking is not done."
+-
+  I verify that a sale order is in done state
+-
+   !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so1"))
+    assert (so.state == 'done'), "Sale order is not in the done state."

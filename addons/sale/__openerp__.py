@@ -70,7 +70,9 @@
     'demo_xml': ['sale_demo.xml','board_sale_demo.xml'],
     'test': [
              'test/shipping_manual_sale_order.yml',
+             'test/postpaid_sale_order.yml',
              'test/prepaid_sale_order.yml',
+             'test/invoice_from_picking.yml',
              'test/advance_invoice.yml',
              'test/so_make_line_invoice.yml',
              'test/so_make_invoice.yml',

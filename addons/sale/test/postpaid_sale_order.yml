@@ -49,8 +49,8 @@
 - 
   I create Payable Account.
 - 
-  !record {model: account.account, id: account_account_payable1}:
-    code: AP
+  !record {model: account.account, id: account_account_payable2}:
+    code: AP2
     company_id: base.main_company
     currency_mode: current
     name: Payable
@@ -63,8 +63,8 @@
 - 
   I create Receivable Account.
 - 
-  !record {model: account.account, id: account_account_receivable0}:
-    code: AR
+  !record {model: account.account, id: account_account_receivable2}:
+    code: AR2
     company_id: base.main_company
     currency_mode: current
     name: Receivable
@@ -77,8 +77,8 @@
 - 
   I create Cash Account.
 - 
-  !record {model: account.account, id: account_account_cash0}:
-    code: C
+  !record {model: account.account, id: account_account_cash1}:
+    code: CASH
     company_id: base.main_company
     currency_mode: current
     name: Cash
@@ -140,11 +140,11 @@
 - 
   I create Bank Journal.
 - 
-  !record {model: account.journal, id: account_journal_bankjournal0}:
+  !record {model: account.journal, id: account_journal_bankjournal1}:
     code: BNK
     company_id: base.main_company
-    default_credit_account_id: account_account_cash0
-    default_debit_account_id: account_account_cash0
+    default_credit_account_id: account_account_cash1
+    default_debit_account_id: account_account_cash1
     name: Bank Journal
     sequence_id: account.sequence_journal
     type: cash
@@ -211,34 +211,34 @@
   !record {model: product.category, id: product_category_services0}:
     name: Mobile Services
 - 
-  I define New Chocolate Slider Mobile template.
+  I define New Slider Mobile template.
 - 
-  !record {model: product.template, id: product_template_newchocolateslidermobile0}:
+  !record {model: product.template, id: product_template_newslidermobile0}:
     categ_id: product_category_allproductssellable0
     cost_method: standard
     list_price: 200.0
     mes_type: fixed
-    name: New Chocolate Slider Mobile
+    name: New Slider Mobile
     procure_method: make_to_order
     standard_price: 189.0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
+-
+  I define New Slider Mobile.
 - 
-  I define New Chocolate Slider Mobile.
-- 
-  !record {model: product.product, id: product_product_newchocolateslidermobile0}:
+  !record {model: product.product, id: product_product_newslidermobile0}:
     categ_id: product_category_allproductssellable0
     cost_method: standard
     list_price: 200.0
     mes_type: fixed
-    name: New Chocolate Slider Mobile
+    name: New Slider Mobile
     pricelist_purchase: 'Default Purchase Pricelist (0.00) : 189.00\n'
     pricelist_sale: 'Public Pricelist (0.00) : 200.00\n'
     procure_method: make_to_order
-    property_account_expense: sale.account_account_payable1
-    property_account_income: sale.account_account_receivable0
+    property_account_expense: sale.account_account_payable2
+    property_account_income: sale.account_account_receivable2
     seller_delay: '1'
     seller_ids:
       - delay: 1
@@ -250,23 +250,23 @@
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
 - 
-  I create a Sale Order for New Chocolate Slider Mobile for qty 500 having Shipping Policy is 'Shipping & Manual Invoice'
+  I create a Sale Order for New Slider Mobile for qty 500 having Shipping Policy is 'Invoice on order after Delivery'
 -
-  !record {model: sale.order, id: sale_order_so0}:
-    date_order: '2010-05-12'
+  !record {model: sale.order, id: sale_order_so8}:
+    date_order: '2010-07-15'
     invoice_quantity: order
-    name: Test_SO002
+    name: Test_SO008
     order_line:
-      - name: New Chocolate Slider Mobile
+      - name: New Slider Mobile
         price_unit: 200.0
         product_uom: product.product_uom_unit
         product_uom_qty: 500.0
         state: draft
         delay: 7.0
-        product_id: sale.product_product_newchocolateslidermobile0
+        product_id: sale.product_product_newslidermobile0
         product_uos_qty: 500.0
         type: make_to_order
-    order_policy: manual
+    order_policy: postpaid
     partner_id: sale.res_partner_cleartrail0
     partner_invoice_id: sale.res_partner_address_2
     partner_order_id: sale.res_partner_address_1
@@ -277,91 +277,20 @@
 - 
   I confirm the Sale Order.
 - 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so8} 
 -
-  I click on Create Invoice button to create the invoice.
-- 
-  !workflow {model: sale.order, action: manual_invoice, ref: sale_order_so0}
--
-  I verify whether the invoice has been generated for SO
--
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    assert so.invoice_ids, "Invoices has not been generated for sale_order_so0"
-- 
-  I open the Invoice for the SO.
-- 
-  !python {model: account.invoice}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")  
-    invoice_ids = so.invoice_ids
-    for invoice in invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr) 
--
-  Creating a account invoice pay entry.
-- 
-  !record {model: account.invoice.pay, id: account_invoice_pay_tst0}:
-    amount: 100000.0
-    date: '2010-05-10'
-    journal_id: sale.account_journal_bankjournal0
-    name: test
-    period_id: account.period_5
-- 
-  I pay the invoice.
-- 
-  !python {model: account.invoice.pay}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))  
-    self.wo_check(cr, uid, [ref("account_invoice_pay_tst0")], {"lang": "en_US", "tz":
-      False, "active_model": 'account.invoice', "active_ids": [so.invoice_ids[0].id], "type":
-      "out_invoice", "active_id": so.invoice_ids[0].id})
-- 
-  Creating an account invoice pay writeoff entry.
-- 
-  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
-    analytic_id: account.analytic_customers
-    comment: Write-Off
-    writeoff_acc_id: account.a_sale
-    writeoff_journal_id: sale.account_journal_bankjournal0
-- 
-  Pay and Reconcile the Invoice.
-- 
-  !python {model: account.invoice.pay.writeoff}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))   
-    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
-      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
-      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id, })
--
-  I verify the invoice are in paid state or not. 
--
-  !python {model: account.invoice}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    invoice_ids = so.invoice_ids
-    for invoice in invoice_ids:
-        assert (invoice.state) =='paid', "Invoice for SO is not in done state."
--
-  I verify that Paid has been set to true.
--
-  !python {model: sale.order}: |
-    sale_id=self.browse(cr, uid, ref("sale_order_so0"))
-    assert(sale_id.invoiced == True), "Paid has not been set to true"
--   
   I verify that the picking has been generated for the sale order
 - 
   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    assert so.picking_ids,"Picking has not been generated for sale_order_so0"
+    so = self.browse(cr, uid, ref("sale_order_so8"))
+    assert so.picking_ids,"Picking has not been generated for sale_order_so8"
 -
   Products are delivered to the Cleartrail Customer.
 - 
   !python {model: stock.picking }: |
    import time
    sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
@@ -379,22 +308,33 @@
       } 
       self.do_partial(cr, uid, [pick.id],partial_datas)
 -
+  I click on the "Validate" button
+-
+  !python {model: stock.picking}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    picking_id = self.search(cr, uid, [('origin','=',so.name)])
+    for pick in picking_id:
+      wf_service.trg_validate(uid, 'stock.picking',pick,'button_done', cr)
+-
   I verify that picking order is in done state.
 -
   !python {model: stock.picking }: |
    sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
      pick = self.browse(cr,uid,picking_id[0])
-     assert (pick.state) =='done', "Picking for SO is not in done state." 
+     assert (pick.state == 'done'), "Picking for SO is not in done state." 
 -
   I verify that a procurement has been generated for so
 -
   !python {model: procurement.order}: |
     from tools.translate import _
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name)])
     assert proc_ids, _('No Procurements!')
 -
@@ -402,7 +342,7 @@
 -
   !python {model: procurement.order}: |
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     proc_ids = self.search(cr, uid, [('origin','=',so.name)])
@@ -414,7 +354,7 @@
   !python {model: procurement.order}: |
     from tools.translate import _
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
     assert proc_ids, _('Procurement is not in the running state!')
 -
@@ -423,7 +363,7 @@
   !python {model: purchase.order}: |
     from tools.translate import _
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name)])
     assert proc_ids, _('Purchase order has not been generated')
 -
@@ -431,7 +371,7 @@
 -
   !python {model: purchase.order}: |
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     pur_ids = self.search(cr, uid, [('origin','=',so.name)])
@@ -442,7 +382,7 @@
 -
   !python {model: purchase.order}: |
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     pur_ids = self.search(cr, uid, [('origin','=',so.name)])
@@ -453,7 +393,7 @@
 -
   !python {model: purchase.order}: |
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     ids = self.search(cr, uid, [('origin','=',so.name)])
     po = self.browse(cr, uid, ids)[0]
     assert(po.picking_ids)
@@ -461,14 +401,14 @@
   Then I click on the "Products Received" button of Incoming Shipments
 -
   !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: '2010-07-13 17:52:09'
+    date: '2010-07-15 17:52:09'
 -
   I click on the "Validate" button
 -
   !python {model: stock.picking}: |
     sale_order_obj = self.pool.get('sale.order')
     pur_obj = self.pool.get('purchase.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
     po = pur_obj.browse(cr, uid, pur_id)[0]
     pick_ser_id = self.search(cr, uid, [('purchase_id', '=', po.id )])
@@ -482,7 +422,7 @@
   !python {model: purchase.order}: |
     from tools.translate import _
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     pur_id = self.search(cr, uid, [('origin','=',so.name)])
     po = self.browse(cr, uid, pur_id)[0]
     picking_obj = self.pool.get('stock.picking')
@@ -492,12 +432,78 @@
   I verify that a "Picked" has been set to true 
 -
   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
+    so = self.browse(cr, uid, ref("sale_order_so8"))
     assert (so.shipped == True), "Picking is not done."
+-
+  I verify that an invoice has been generated for SO
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so8"))
+    assert so.invoice_ids, "Invoices has not been generated for sale_order_so8"
+- 
+  I open the Invoice for the SO.
+- 
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")  
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr) 
+-
+  Creating a account invoice pay entry.
+- 
+  !record {model: account.invoice.pay, id: account_invoice_pay_tst0}:
+    amount: 100000.0
+    date: '2010-07-15'
+    journal_id: sale.account_journal_bankjournal1
+    name: test
+    period_id: account.period_5
+- 
+  I pay the invoice.
+- 
+  !python {model: account.invoice.pay}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))  
+    self.wo_check(cr, uid, [ref("account_invoice_pay_tst0")], {"lang": "en_US", "tz":
+      False, "active_model": 'account.invoice', "active_ids": [so.invoice_ids[0].id], "type":
+      "out_invoice", "active_id": so.invoice_ids[0].id})
+- 
+  Creating an account invoice pay writeoff entry.
+- 
+  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
+    analytic_id: account.analytic_customers
+    comment: Write-Off
+    writeoff_acc_id: account.a_sale
+    writeoff_journal_id: sale.account_journal_bankjournal1
+- 
+  Pay and Reconcile the Invoice.
+- 
+  !python {model: account.invoice.pay.writeoff}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))   
+    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
+      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
+      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id, })
+-
+  I verify the invoice are in paid state or not. 
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+        assert (invoice.state) =='paid', "Invoice for SO is not in done state."
+-    
+  I verify that Paid has been set to true.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so8"))
+    assert(sale_id.invoiced == True), "Paid has not been set to true"
 -  
-  I verify that a sale order is in done state
+  I verify that sale order is in done state
 -
    !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
+    so = self.browse(cr, uid, ref("sale_order_so8"))
     assert (so.state == 'done'), "Sale order is not in the done state."
-
