@@ -146,15 +146,16 @@ class account_common_report(osv.osv_memory):
     def check_report(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        obj_move = self.pool.get('account.move.line')
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
-        used_context, used_context_initial_bal = self._build_contexts(cr, uid, ids, data, context)
-        query_line = self.pool.get('account.move.line')._query_get(cr, uid, obj='l', context=used_context)
+        used_context, used_context_initial_bal = self._build_contexts(cr, uid, ids, data, context=context)
+        query_line = obj_move._query_get(cr, uid, obj='l', context=used_context)
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
         data['form']['query_line'] = query_line
-        data['form']['initial_bal_query'] = self.pool.get('account.move.line')._query_get(cr, uid, obj='l', context=used_context_initial_bal)
+        data['form']['initial_bal_query'] = obj_move._query_get(cr, uid, obj='l', context=used_context_initial_bal)
         return self._print_report(cr, uid, ids, data, query_line, context=context)
 
 account_common_report()
