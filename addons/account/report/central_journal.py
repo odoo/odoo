@@ -64,7 +64,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return super(journal_print, self).set_context(objects, data, ids, report_type)
 
     def lines(self, period_id, journal_id):
-        self.cr.execute('SELECT a.code, a.name, c.code AS currency_code, l.amount_currency ,SUM(debit) AS debit, SUM(credit) AS credit from account_move_line l LEFT JOIN account_account a ON (l.account_id=a.id)  LEFT JOIN res_currency c on (l.currency_id=c.id)WHERE l.period_id=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.code ', (period_id, journal_id))
+        self.cr.execute('SELECT a.currency_id ,a.code, a.name, c.code AS currency_code, l.amount_currency ,SUM(debit) AS debit, SUM(credit) AS credit from account_move_line l LEFT JOIN account_account a ON (l.account_id=a.id)  LEFT JOIN res_currency c on (l.currency_id=c.id)WHERE l.period_id=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.code , a.currency_id', (period_id, journal_id))
         res = self.cr.dictfetchall()
         return res
     def _set_get_account_currency_code(self, account_id):
