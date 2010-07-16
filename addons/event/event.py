@@ -311,7 +311,7 @@ class event_registration(osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
         'date_deadline': fields.related('event_id','date_end', type='datetime', string="End Date", readonly=True, store=True),
         'date': fields.related('event_id', 'date_begin', type='datetime', string="Start Date", readonly=True, store=True),
