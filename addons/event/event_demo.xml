@@ -62,7 +62,6 @@
 		<field name="user_id" ref="base.user_root"/>
 		<field name="register_max">500</field>
 		<field name="type" ref="event_type_1"/>
-		<field name="state">draft</field>
 	</record>
 
 	<record id="event_1" model="event.event">
@@ -74,9 +73,8 @@
 		<field name="type" ref="event_type_1"/>
 		<field name="user_id" ref="base.user_root"/>
 		<field name="register_max">350</field>
-		<field name="state">confirm</field>
 	</record>
-
+    <function model="event.event" name="button_confirm" eval="[ref('event_1')]"/>
 	<record id="event_2" model="event.event">
 		<field name="name">Conference on ERP Buisness</field>
         <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
@@ -88,10 +86,10 @@
 		<field name="user_id" ref="base.user_root"/>
 		<field name="mail_auto_registr">True</field>
 		<field name="mail_auto_confirm">True</field>
-		<field name="state">done</field>
 		<field name="mail_registr">Thanks for registrering. We will keep you informed of the modalities.</field>
 		<field name="mail_confirm">Thanks for registrering. The conference will begin at 2 PM and will be given by Mister Pinckaers.</field>
 	</record>
-
+    <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
+    <function model="event.event" name="button_done" eval="[ref('event_2')]"/>
 	</data>
 </openerp>

@@ -892,7 +892,7 @@ class account_invoice(osv.osv):
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
         self._log_event(cr, uid, ids)
-        
+
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -925,11 +925,11 @@ class account_invoice(osv.osv):
             reference = obj_inv.reference
             if not number:
                 tmp_context = {
-                    'fiscalyear_id': inv.period_id.fiscalyear_id.id
+                    'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id
                 }
-                if inv.journal_id.invoice_sequence_id:
-                    sequence_id = inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, 
+                if obj_inv.journal_id.invoice_sequence_id:
+                    sequence_id = obj_inv.journal_id.invoice_sequence_id.id
+                    number = self.pool.get('ir.sequence').get_id(cr, uid,
                                                                  sequence_id,
                                                                  'id',
                                                                  context=tmp_context)
