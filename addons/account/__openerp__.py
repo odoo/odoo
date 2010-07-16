@@ -118,8 +118,8 @@ module named account_vouchers
         'report/account_account_report_view.xml',
         'report/account_analytic_entries_report_view.xml',
         'board_account_view.xml',
-        "wizard/account_pl_report_view.xml",
-        "wizard/account_bs_report_view.xml"
+        "wizard/account_report_profit_loss_view.xml",
+        "wizard/account_report_balance_sheet_view.xml"
     ],
     'demo_xml': [
         #'demo/price_accuracy00.yml',
