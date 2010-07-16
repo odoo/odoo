@@ -2684,6 +2684,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 'position_id' : new_fp,
                                 }
                     obj_ac_fp.create(cr, uid, vals_acc)
+        
+        #fially inactive the demo chart of accounts
+        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
+        if data_id:
+            data = data_pool.browse(cr, uid, data_id[0])
+            account_id = data.res_id
+            if account_id:
+                cr.execute("update account_account set active='f' where id=%s" % (account_id))
+        
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):

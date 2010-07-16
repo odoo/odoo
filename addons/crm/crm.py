@@ -441,14 +441,13 @@ class crm_case_section(osv.osv):
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'code': fields.char('Code', size=8),
-        'active': fields.boolean('Active', help="If the active field is set to \
-                        true, it will allow you to hide the sales team without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to "\
+                        "true, it will allow you to hide the sales team without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'change_responsible': fields.boolean('Change Responsible', help="Thick this box if you want that on escalation, the responsible of this sale team automatically becomes responsible of the lead/opportunity escaladed"),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address put \
-                        in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
@@ -586,8 +585,7 @@ class crm_case_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order \
-                        when displaying a list of case stages."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model', 'Object Name'),
         'probability': fields.float('Probability (%)', required=True),
         'on_change': fields.boolean('Change Probability Automatically', \

@@ -50,8 +50,8 @@ class event_confirm_registration(osv.osv_memory):
             register_max = registration.event_id.register_max
             if registration.event_id.id not in overlimit_event_ids:
                 overlimit_event_ids.append(registration.event_id.id)
-                msg += _("The Event '%s' is reached Maximum Limit(%s). It has %s Confirmed registration\n") \
-                            %(registration.event_id.name, register_max, total_confirmed)
+                msg += _("The Event '%s' is reached Maximum Limit(%s).") \
+                            %(registration.event_id.name, register_max)
         if 'msg' in fields:
             res.update({'msg': msg})
             
@@ -60,10 +60,7 @@ class event_confirm_registration(osv.osv_memory):
     def confirm(self, cr, uid, ids, context):
         registration_pool = self.pool.get('event.registration')
         registration_ids = context.get('registration_ids', [])
-        for reg_id in registration_ids:
-            registration_pool.write(cr, uid, [reg_id], {'state':'open', })
-            registration_pool._history(cr, uid, [reg_id], _('Open'))
-            registration_pool.mail_user(cr, uid, [reg_id])
+        registration_pool.do_open(cr, uid, registration_ids, context=context)
         return {}
 
 event_confirm_registration()

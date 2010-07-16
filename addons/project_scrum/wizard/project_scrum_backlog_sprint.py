@@ -22,10 +22,10 @@ from osv import osv, fields
 from tools.translate import _
 
 class backlog_sprint_assign(osv.osv_memory):
-    _name = 'backlog.assign.sprint'
+    _name = 'project.scrum.backlog.assign.sprint'
     _description = 'Assign sprint to backlogs'
     _columns = {
-        'sprint_id': fields.many2one('scrum.sprint', 'Sprint Name', required=True),
+        'sprint_id': fields.many2one('project.scrum.sprint', 'Sprint Name', required=True),
         'state_open': fields.boolean('Set Open', help="Change the state of product backlogs to open if its in draft state"),
         'convert_to_task': fields.boolean('Convert To Task', help="Create Task for Product Backlog")
                }
@@ -35,8 +35,8 @@ class backlog_sprint_assign(osv.osv_memory):
                  }
 
     def assign_sprint(self, cr, uid, ids, context=None):
-        backlog_obj = self.pool.get('scrum.product.backlog')
-        sprint_obj = self.pool.get('scrum.sprint')
+        backlog_obj = self.pool.get('project.scrum.product.backlog')
+        sprint_obj = self.pool.get('project.scrum.sprint')
         task = self.pool.get('project.task')
         backlog_ids = []
         if context is None:
