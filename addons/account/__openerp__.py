@@ -127,6 +127,7 @@ module named account_vouchers
         'board_account_demo.xml',
     ],
     'test': [
+        'test/account_sequence_test.yml',
         'test/account_customer_invoice.yml',
         'test/account_supplier_invoice.yml',
         'test/account_change_currency.yml',
