@@ -292,8 +292,8 @@ class rml_parse(object):
             text = ''.join(piece_list)
         return text
 
-    def _add_header(self, rml_dom, header='internal'):
-        if header=='internal':
+    def _add_header(self, rml_dom, header='external'):
+        if header=='external':
             rml_head =  self.rml_header
         else:
             rml_head =  self.rml_header2
