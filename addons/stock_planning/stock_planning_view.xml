@@ -42,7 +42,6 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-
         <menuitem
             id="menu_stock_period"
             parent="menu_stock_period_main"
@@ -132,14 +131,14 @@
             <field name="model">stock.sale.forecast</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sales Forecasts" editable="bottom">
+                <tree string="Sales Forecasts" colors="gray:state=='validated';black:state=='draft'">
                     <field name="period_id"/>
                     <field name="product_id" on_change="product_id_change(product_id)" />
                     <field name="product_qty"/>
                     <field name="product_uom" />
                     <field name="warehouse_id"/>
-                    <field name ="company_id"/>
-                    <field name="user_id"/>
+                    <field name="company_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>

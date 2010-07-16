@@ -113,7 +113,7 @@ class stock_sale_forecast_createlines(osv.osv_memory):
         return {
                 'domain': "[('id','in', ["+','.join(map(str, forecast_lines))+"])]",
                 'view_type': 'form',
-                "view_mode": 'tree',
+                "view_mode": 'tree, form',
                 'res_model': 'stock.sale.forecast',
                 'type': 'ir.actions.act_window',
                 'search_view_id': id['res_id'],
