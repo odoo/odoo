@@ -45,6 +45,7 @@
     'init_xml': ['event_data.xml'],
     'update_xml': [
         'wizard/event_confirm_registration_view.xml',
+        'wizard/event_confirm_view.xml',
         'event_view.xml',
         'report/report_event_registration_view.xml',
         'event_sequence.xml',

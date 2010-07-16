@@ -126,9 +126,9 @@ class crm_lead2opportunity(osv.osv_memory):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
-            if lead.state != 'open':
+            if lead.state not in ('open', 'pending'):
                 raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' state before converting to Opportunity.'))
+\'Open\' or \'Pending\' state before converting to Opportunity.'))
         return False
 
     def default_get(self, cr, uid, fields, context=None):
@@ -289,9 +289,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
-            if lead.state != 'open':
+            if lead.state not in ('open', 'pending'):
                 raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' state before converting to Opportunity.'))
+\'Open\' or \'Pending\' state before converting to Opportunity.'))
         return False
 
 crm_lead2opportunity_partner()

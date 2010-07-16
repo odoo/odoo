@@ -196,7 +196,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_account_list" model="ir.ui.view">
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
@@ -206,6 +206,7 @@
                 <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
                     <field name="user_type" invisible="1"/>
                     <field name="debit"/>
                     <field name="credit"/>
@@ -365,7 +366,7 @@
                                     <field name="view_id" widget="selection"/>
                                 </group>
                             </group>
-                            
+
                             <group colspan="2" col="2">
                                 <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -1213,13 +1214,13 @@
             <field name="search_view_id" ref="view_account_move_filter"/>
             <field name="domain">[('to_check','=',True), ('state','=','draft')]</field>
         </record>
-        
-        <menuitem 
-            action="action_move_to_review" 
-            id="menu_action_move_to_review" 
+
+        <menuitem
+            action="action_move_to_review"
+            id="menu_action_move_to_review"
             parent="periodical_processing_journal_entries_validation"
         />
-        
+
 <!--        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_entries" sequence="40"/>-->
 <!--        <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>-->
 
