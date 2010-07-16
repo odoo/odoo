@@ -164,9 +164,9 @@
                                     type="object" icon="gtk-convert" />
                                 </group>
                             </page>
-                            <page string="Emails" groups="base.group_extended">
+                            <page string="History" groups="base.group_extended">
                                 <group colspan="4">
-                                    <field colspan="4" name="email_cc" string="CC"/>
+                                    <field colspan="4" name="email_cc" string="CC" widget="char"/>
                                 </group>
                                 <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
                                     <tree string="Communication history">
@@ -205,7 +205,7 @@
                                 context="{'mail':'new', 'model': 'crm.claim'}"
                                 icon="terp-mail-message-new" type="action" />
                             </page>
-                            <page string="History" groups="base.group_extended">
+                            <page string="Extra Info" groups="base.group_extended">
                                 <field name="id" select="1"/>
                                 <field name="active"/>
                                 <field name="canal_id"/>
