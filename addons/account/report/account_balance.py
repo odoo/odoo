@@ -49,7 +49,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
             'get_fiscalyear':self._get_fiscalyear,
-            'get_periods':self.get_periods,
             'get_filter': self._get_filter,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period                               
@@ -60,28 +59,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if header==0:
             self.rml_header = ""
         return True
-
-    def get_periods(self, form):
-        result=''
-        if form.has_key('periods') and form['periods']:
-            period_ids = form['periods']
-            per_ids = self.pool.get('account.period').browse(self.cr, self.uid, form['periods'])
-            for r in per_ids:
-                if r == per_ids[len(per_ids)-1]:
-                    result+=r.name+". "
-                else:
-                    result+=r.name+", "
-        else:
-            fy_obj = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear'])
-            res = fy_obj.period_ids
-            len_res = len(res)
-            for r in res:
-                if r == res[len_res-1]:
-                    result+=r.name+". "
-                else:
-                    result+=r.name+", "
-
-        return str(result and result[:-1]) or _('ALL')
 
     def lines(self, form, ids=[], done=None, level=1):
         if not ids:
@@ -163,13 +140,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
 #
 #                result_acc += self.lines(form, ids2, done, level+1)
         return result_acc
-
-    def _sum_credit(self):
-        return self.sum_credit
-
-    def _sum_debit(self):
-        return self.sum_debit
-
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=0)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
