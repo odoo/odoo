@@ -233,7 +233,8 @@ class crm_send_new_email(osv.osv_memory):
             if 'subject' in fields:
                 res.update({u'subject': u'Re: %s' %(tools.ustr(hist.name or ''))})
             if 'email_cc' in fields:
-                 res.update({'email_cc': case.email_cc and tools.ustr(case.email_cc) or False})
+                 email_cc = (case.email_cc and tools.ustr(case.email_cc) + ', ' or '') + (hist.email_cc or '')
+                 res.update({'email_cc': email_cc})
             if 'reply_to' in fields:
                 res.update({'reply_to': case.section_id.reply_to})
             if 'state' in fields:
