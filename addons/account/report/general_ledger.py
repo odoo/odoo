@@ -159,7 +159,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         res = res_init + res_lines
         account_sum = 0.0
         inv_types = { 'out_invoice': 'CI', 'in_invoice': 'SI', 'out_refund': 'OR', 'in_refund': 'SR', }
-
         for l in res:
             l['move'] = l['move_name']
             if l['invoice_id']:

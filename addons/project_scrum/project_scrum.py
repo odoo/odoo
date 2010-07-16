@@ -168,7 +168,7 @@ class project_scrum_product_backlog(osv.osv):
         if match:
             ids = self.search(cr, uid, [('sprint_id','=', int(match.group(1)))], limit=limit, context=context)
             return self.name_get(cr, uid, ids, context=context)
-        return super(scrum_product_backlog, self).name_search(cr, uid, name, args, operator,context, limit=limit)
+        return super(project_scrum_product_backlog, self).name_search(cr, uid, name, args, operator,context, limit=limit)
 
     def _calc_progress(self, cr, uid, ids, name, args, context):
         res = {}

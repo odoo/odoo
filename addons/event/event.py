@@ -192,7 +192,7 @@ class event_event(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
+        'name': fields.char('Summary', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
         'parent_id': fields.many2one('event.event', 'Parent Event', readonly=False, states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sale Team', readonly=False, states={'done': [('readonly', True)]}),
@@ -313,13 +313,14 @@ class event_registration(osv.osv):
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
         'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'date_deadline': fields.related('event_id','date_end', type='datetime', string="End Date", readonly=True, store=True),
+        'date': fields.related('event_id', 'date_begin', type='datetime', string="Start Date", readonly=True, store=True),
         'section_id': fields.related('event_id', 'section_id', type='many2one', relation='crm.case.section', string='Sale Team', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
         'nb_register': 1,
         'tobe_invoiced':  True,
-        'date': time.strftime('%Y-%m-%d %H:%M:%S')
     }
 
     def _make_invoice(self, cr, uid, reg, lines, context=None):
@@ -505,29 +506,7 @@ class event_registration(osv.osv):
         registrations = self.browse(cr, uid, ids)
         self._history(cr, uid, registrations, _('Cancel'))
         self.write(cr, uid, ids, {'state': 'cancel'})
-        return True
-
-    def create(self, cr, uid, values, context=None):
-        """ Overrides orm create method.
-        """
-        event_obj = self.pool.get('event.event')
-        event = event_obj.browse(cr, uid, values['event_id'], context=context)
-        values['date_deadline']= event.date_begin
-        values['description']= event.mail_confirm
-        res = super(event_registration, self).create(cr, uid, values, context=context)
-        registrations = self.browse(cr, uid, [res], context=context)
-        self._history(cr, uid, registrations, _('Created'))
-        return res
-
-    def write(self, cr, uid, ids, values, context=None):
-        """ Overrides orm write method.
-        """
-        event_obj = self.pool.get('event.event')
-        if 'event_id' in values:
-            event = event_obj.browse(cr, uid, values['event_id'], context=context)
-            values['date_deadline']= event.date_begin
-            values['description']= event.mail_confirm
-        return super(event_registration, self).write(cr, uid, ids, values, context=context)
+        return True    
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
@@ -618,10 +597,11 @@ class event_registration(osv.osv):
 
         event_obj = self.pool.get('event.event')
         prod_obj = self.pool.get('product.product')
-        res_obj = self.pool.get('res.partner')
+        res_obj = self.pool.get('res.partner') 
 
         data_event =  event_obj.browse(cr, uid, event_id)
-        res = {'value': {'unit_price': False, 'event_product': False, 'user_id': False}}
+        res = {'value': {'unit_price': False, 'event_product': False, 'user_id': False, 
+                        'date': data_event.date_begin, 'date_deadline': data_event.date_end, 'description': data_event.note, 'name': data_event.name}}
         if data_event.user_id.id:
             res['value'].update({'user_id':data_event.user_id.id})
         if data_event.product_id:
