@@ -100,6 +100,9 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
+        if not context:
+            context = {}
+        res = False
         if type(ids) in (int, long,):
             ids = [ids]
         data_pool = self.pool.get('ir.model.data')
@@ -107,7 +110,7 @@ class event_event(osv.osv):
         for event in self.browse(cr, uid, ids, context=context):
             total_confirmed = event.register_current
             if total_confirmed >= event.register_min or event.register_max == 0:
-                self.do_confirm(cr, uid, [event.id], context=context)
+                res = self.do_confirm(cr, uid, [event.id], context=context)
             else:
                 unconfirmed_ids.append(event.id)
         if unconfirmed_ids:
@@ -126,8 +129,8 @@ class event_event(osv.osv):
                 'target': 'new',
                 'context': context,
                 'nodestroy': True
-            }
-        return True
+            }        
+        return res
 
 
     def _get_register(self, cr, uid, ids, fields, args, context=None):
@@ -442,6 +445,8 @@ class event_registration(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
+        if not context:
+            context = {}
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
         for registration in self.browse(cr, uid, ids, context=context):
