@@ -45,7 +45,7 @@
             <field name="arch" type="xml">
                 <form string="Events">
                     <group col="6" colspan="4">
-                        <field name="name" string="Event"/>
+                        <field name="name"/>
                         <field name="date_begin"/>
                         <field name="date_end"/>
                         <field name="type" widget="selection"/>
@@ -54,7 +54,7 @@
                     </group>
                     <notebook colspan="4">
                     <page string="Event">
-                        <group colspan="4" col="4">
+                        <group colspan="4" col="4">                            
                             <separator string="Invoice Information" colspan="4"/>
                             <field name="product_id" on_change="onchange_product(product_id)" colspan="4"/>
                             <field name="unit_price"/>
@@ -72,6 +72,8 @@
                             <field name="address_id" domain="[('country_id','=',country_id)]"/>
 
                         </group>
+                        <separator string="Description" colspan="4"/>
+                        <field name="note" colspan="4" nolabel="1"/>
                         <field name="state" select="1"/>
                         <group col="4" colspan="2">
                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
@@ -91,7 +93,7 @@
                         <field name="register_max"/>
                         <field name="register_current"/>
                         <field name="register_prospect"/>
-                        <field name="registration_ids" colspan="4" nolabel="1">
+                        <field name="registration_ids" colspan="4" nolabel="1" readonly="1">
                             <form string="Registration">
                                 <field name="name"/>
                                 <field name="date" string="Date"/>
@@ -112,8 +114,8 @@
                                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                 </group>
                             </form>
-                            <tree string="Registration" editable="bottom">
-                                    <field name="date" string="Date"/>
+                            <tree string="Registration">
+                                    <field name="create_date" string="Registration Date"/>
                                     <field name="partner_id" required="1" string="Partner" on_change="onchange_partner_id(partner_id,event_id)"/>
                                     <field name="event_product"/>
                                     <field name="nb_register"/>
@@ -145,11 +147,7 @@
                             <separator string="Confirmation Email Body" colspan="2"/>
                             <field name="mail_confirm" colspan="2" nolabel="1" attrs="{'readonly':[('mail_auto_confirm','=',False)]}"/>
                         </group>
-                    </page>
-                    <page string="Notes">
-                        <separator string="Notes" colspan="4"/>
-                        <field name="note" colspan="4" nolabel="1"/>
-                    </page>
+                    </page>                   
                     </notebook>
             </form>
             </field>
@@ -308,7 +306,7 @@
                 <form string="Registration">
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
-                        <field name="date" string="Registration Date"/>
+                        <field name="create_date" string="Registration Date"/>
                         <field name="name"/>
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
                         <field name="user_id"/>
@@ -316,6 +314,8 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Registration">
+                            <field name="date" />
+                            <field name="date_deadline" />
                             <group colspan="2" col="2">
                                 <separator string="Registration Cost" colspan="4"/>
                                 <field name="nb_register"/>
@@ -328,7 +328,8 @@
                                 <field name="partner_invoice_id" attrs="{'required':[('tobe_invoiced','=',True)]}" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
                                 <field name="invoice_id"/>                                
                            </group>
-                            
+                            <separator string="Description" colspan="4"/>
+                            <field name="description" colspan="4" nolabel="1"/>
                             <group col="8" colspan="4">
                                 <separator string="" colspan="4"/>
                                 <newline/>
@@ -354,12 +355,11 @@
                                     <field name="address_id"/>
                                 </form>
                             </field>
-                            <group col="2" colspan="2">
-                               <separator string="Dates" colspan="2"/>
-                               <field name="create_date"/>
+                            <group col="2" colspan="2" groups="base.group_extended">
+                               <separator string="Dates" colspan="2"/>                               
                                <field name="date_closed"/>
                             </group>
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" groups="base.group_extended">
                                <separator string="Misc" colspan="2"/>
                                <field name="id"/>
                                <field name="active"/>
@@ -417,7 +417,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="event_id" date_start="create_date" string="Event Registration">
+                <calendar color="event_id" date_start="date" date_delay="duration" string="Event Registration">
                     <field name="event_id"/>
                     <field name="partner_invoice_id"/>
                 </calendar>
