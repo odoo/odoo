@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2005-2006 CamptoCamp
-# Copyright (c) 2006-2010 OpenERP S.A 
+# Copyright (c) 2006-2010 OpenERP S.A
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -140,7 +140,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             #FIXME: replace the hardcoded date with the day before data[form][date_from]
             #FIXME: replace the label of lname with a string translatable
             sql = """
-                SELECT 0 AS lid, '2010-07-15' AS ldate, '' as lcode, COALESCE(SUM(l.amount_currency),0.0) as amount_currency, '' as lref, 'Initial Balance' as lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
+                SELECT 0 AS lid, '' AS ldate, '' as lcode, COALESCE(SUM(l.amount_currency),0.0) as amount_currency, '' as lref, 'Initial Balance' as lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
                 '' AS move_name, '' AS mmove_id,
                 '' AS currency_code,
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,
@@ -151,9 +151,9 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
                 LEFT JOIN res_partner p on (l.partner_id=p.id)
                 LEFT JOIN account_invoice i on (m.id =i.move_id)
                 JOIN account_journal j on (l.journal_id=j.id)
-                WHERE %s AND l.account_id = %%s 
+                WHERE %s AND l.account_id = %%s
             """ %(form['initial_bal_query'])
-    
+
             self.cr.execute(sql, (account.id,))
             res_init = self.cr.dictfetchall()
         res = res_init + res_lines
