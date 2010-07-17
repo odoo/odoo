@@ -106,7 +106,7 @@ class openerp_dav_handler(dav_interface):
         except EnvironmentError, err:
             if cr: cr.close()
             import traceback
-            self.parent.log_error("Cannot %s: %s", opname, e.strerror)
+            self.parent.log_error("Cannot %s: %s", opname, err.strerror)
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc(err.strerror)
         except Exception,e:

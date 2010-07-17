@@ -403,7 +403,9 @@ class abstracted_fs(object):
             # API shouldn't wait for us to write the object
             assert (ret is True) or (ret is False)
             cr.commit()
-        except Exception,err:
+        except EnvironmentError:
+            raise
+        except Exception, err:
             self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, datacr[2], datacr[1])
             raise OSError(1,'Operation not permited.')
 

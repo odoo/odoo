@@ -615,8 +615,6 @@ class node_dir(node_database):
                 raise IOError(errno.EPERM, "Cannot move the root directory!")
             self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
             assert self.parent
-        
-        # TODO: test if parent is writable.
 
         if self.parent != ndir_node:
             logger.debug('Cannot move dir %r from %r to %r', self, self.parent, ndir_node)
@@ -624,6 +622,8 @@ class node_dir(node_database):
 
         ret = {}
         if new_name and (new_name != dbro.name):
+            if ndir_node.child(cr, new_name):
+                raise IOError(errno.EEXIST, "Destination path already exists")
             ret['name'] = new_name
 
         del dbro
