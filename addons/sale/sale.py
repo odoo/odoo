@@ -221,7 +221,7 @@ class sale_order(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
+            ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
         'date_order': fields.date('Ordered Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'create_date': fields.date('Creation Date', readonly=True, help="Date on which sale order is created"),
         'date_confirm': fields.date('Confirmation Date', readonly=True, help="Date on which sale order is confirmed"),
@@ -830,7 +830,7 @@ class sale_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight', readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
-                help=' * The \'Draft\' state is set automatically when sale order in draft state. \
+                help='* The \'Draft\' state is set automatically when sale order in draft state. \
                     \n* The \'Confirmed\' state is set automatically when sale order in confirm state. \
                     \n* The \'Exception\' state is set automatically when sale order is set as exception. \
                     \n* The \'Done\' state is set automatically when sale order is set as done. \
