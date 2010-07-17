@@ -287,7 +287,7 @@ class abstracted_fs(object):
 
         if os.path.isabs(path):
             # we have to start from root, again
-            while p_parts[0] == '':
+            while p_parts and p_parts[0] == '':
                 p_parts = p_parts[1:]
             # self._log.debug("Path parts: %r ", p_parts)
             if not p_parts:

@@ -405,6 +405,9 @@ class document_storage(osv.osv):
         if not context:
             context = {}
         boo = self.browse(cr, uid, id, context)
+        if not boo.online:
+            raise IOError(errno.EREMOTE, 'medium offline')
+        
         if fil_obj:
             ira = fil_obj
         else:
@@ -418,7 +421,10 @@ class document_storage(osv.osv):
             context = {}
         boo = self.browse(cr, uid, id, context)
         if not boo.online:
-            raise RuntimeError('media offline')
+            raise IOError(errno.EREMOTE, 'medium offline')
+        
+        if boo.readonly and mode not in ('r', 'rb'):
+            raise IOError(errno.EPERM, "Readonly medium")
         
         ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
         if boo.type == 'filestore':
@@ -464,8 +470,6 @@ class document_storage(osv.osv):
             raise TypeError("No %s storage" % boo.type)
 
     def __get_data_3(self, cr, uid, boo, ira, context):
-        if not boo.online:
-            raise RuntimeError('media offline')
         if boo.type == 'filestore':
             if not ira.store_fname:
                 # On a migrated db, some files may have the wrong storage type
@@ -503,7 +507,7 @@ class document_storage(osv.osv):
             elif not ira.store_fname:
                 return None
             else:
-                raise IOError("File not found: %s" % fpath)
+                raise IOError(errno.ENOENT, "File not found: %s" % fpath)
 
         elif boo.type == 'virtual':
             raise ValueError('Virtual storage does not support static files')
@@ -525,7 +529,11 @@ class document_storage(osv.osv):
             ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
 
         if not boo.online:
-            raise RuntimeError('media offline')
+            raise IOError(errno.EREMOTE, 'medium offline')
+        
+        if boo.readonly:
+            raise IOError(errno.EPERM, "Readonly medium")
+
         self._doclog.debug( "Store data for ir.attachment #%d" % ira.id)
         store_fname = None
         fname = None
@@ -615,7 +623,10 @@ class document_storage(osv.osv):
         files that have to be removed, too. """
 
         if not storage_bo.online:
-            raise RuntimeError('media offline')
+            raise IOError(errno.EREMOTE, 'medium offline')
+        
+        if storage_bo.readonly:
+            raise IOError(errno.EPERM, "Readonly medium")
 
         if storage_bo.type == 'filestore':
             fname = fil_bo.store_fname
@@ -655,7 +666,13 @@ class document_storage(osv.osv):
         """
         sbro = self.browse(cr, uid, file_node.storage_id, context=context)
         assert sbro, "The file #%d didn't provide storage" % file_node.file_id
+
+        if not sbro.online:
+            raise IOError(errno.EREMOTE, 'medium offline')
         
+        if sbro.readonly:
+            raise IOError(errno.EPERM, "Readonly medium")
+
         if sbro.type in ('filestore', 'db', 'db64'):
             # nothing to do for a rename, allow to change the db field
             return { 'name': new_name, 'datas_fname': new_name }
@@ -691,6 +708,12 @@ class document_storage(osv.osv):
         """
         sbro = self.browse(cr, uid, file_node.storage_id, context=context)
         assert sbro, "The file #%d didn't provide storage" % file_node.file_id
+
+        if not sbro.online:
+            raise IOError(errno.EREMOTE, 'medium offline')
+        
+        if sbro.readonly:
+            raise IOError(errno.EPERM, "Readonly medium")
 
         par = ndir_bro
         psto = None
