@@ -404,7 +404,7 @@
                                   string="Create Invoice"
                                   type="object"
                                   icon="terp-document-new"
-                                  attrs="{'invisible': ['|',('state', '!=', 'confirmed'),('invoiced', '=', 1)]}"/>
+                                  attrs="{'invisible': ['|',('state', 'in', ('draft','cancel')),('invoiced', '=', 1)]}"/>
                                 <button name="button_cancel"
                                     string="Cancel" type="object"
                                     icon="gtk-cancel"

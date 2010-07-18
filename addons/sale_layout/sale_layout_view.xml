@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-
+        <data>
+             <record id="sale.action_order_line_tree2" model="ir.actions.act_window">
+               <field name="domain">[('layout_type','=', 'article')]</field>
+             </record>
 		<record model="ir.ui.view" id="view_order_line_form2_inherit_1">
 			<field name="name">sale.order.line.form2.inherit_1</field>
 			<field name="model">sale.order.line</field>
@@ -14,20 +16,6 @@
 				</xpath>
 			</field>
 		</record>
-
-		<record model="ir.ui.view" id="view_order_line_tree_inherit_1">
-			<field name="name">sale.order.line.tree.inherit_1</field>
-			<field name="model">sale.order.line</field>
-			<field name="inherit_id" ref="sale.view_order_line_tree"/>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<xpath expr="/tree/field[@name='name']" position="before">
-					<field name="sequence" string="Seq."/>
-					<field name="layout_type"/>
-				</xpath>
-			</field>
-		</record>
-
 
 		<record model="ir.ui.view" id="view_order_form_inherit_1">
 			<field name="name">sale.order.form.inherit_1</field>
