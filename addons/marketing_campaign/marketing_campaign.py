@@ -678,6 +678,8 @@ class marketing_campaign_workitem(osv.osv):
                 'datas' : datas,
                 'nodestroy': True,
             }
+        else:
+            raise osv.except_osv(_('No preview'),_('The current step for this item has no email or report to preview.'))
         return res
 
 marketing_campaign_workitem()

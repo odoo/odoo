@@ -93,14 +93,13 @@
             </field>
         </record>
 
-        <act_window name="Partial Invoice"
+        <act_window name="Deposit"
            res_model="sale.advance.payment.inv"
            src_model="sale.order"
            view_mode="form"
            target="new"
            key2="client_action_multi"
            id="action_view_sale_advance_payment_inv"/>
-
 
         <record id="view_order_form" model="ir.ui.view">
             <field name="name">sale.order.form</field>
@@ -264,14 +263,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]" help="Sale Orders that haven't yet be confirmed"/>
                     <filter icon="terp-check" string="Sales" domain="[('state','in',('manual','progress'))]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('state','=','manual')]"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sale Orders ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="user_id" select="1">
+                          <filter domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>
+                    </field>
+
                     <field name="date_order" select="1" string="Order date" />
                     <newline/>
                     <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
@@ -397,23 +399,20 @@
                             <separator colspan="4" string="States"/>
                             <field name="state"/>
                             <group col="3" colspan="2">
-                            	<button colspan="1"
-	                              name="create_sale_order_line_invoice"
-	                              states="confirmed"
-	                              string="Create Invoice"
-	                              type="object"
-	                              icon="terp-document-new"
-	                              attrs="{'invisible': [('invoiced', '=', 1)]}"/>
-	                            <button name="button_cancel"
-                                    states="confirmed,exception"
+                                <button colspan="1"
+                                  name="create_sale_order_line_invoice"
+                                  string="Create Invoice"
+                                  type="object"
+                                  icon="terp-document-new"
+                                  attrs="{'invisible': ['|',('state', 'in', ('draft','cancel')),('invoiced', '=', 1)]}"/>
+                                <button name="button_cancel"
                                     string="Cancel" type="object"
                                     icon="gtk-cancel"
-                                    attrs="{'invisible': [('invoiced', '=', 1)]}" />
+                                    attrs="{'invisible': ['|',('state', 'not in', ('confirmed', 'exception')),('invoiced', '=', 1)]}"/>
                                 <button name="button_done"
-                                    states="confirmed,exception"
                                     string="Done" type="object"
-									icon="gtk-jump-to"
-									attrs="{'invisible': [('invoiced', '=', 0)]}"/>
+                                    icon="gtk-jump-to"
+                                    attrs="{'invisible': ['|',('state', 'not in', ('confirmed','exception')),('invoiced', '=', 0)]}"/>
                             </group>
                         </page>
 <!--                        <page string="Properties" groups="base.group_extended">-->
@@ -436,13 +435,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1" help="Sale Order Lines ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
+                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sale Order Lines related to a Sale Order of mine"/>
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
@@ -464,20 +463,23 @@
                     <filter icon="terp-accessories-archiver" string="Shipped"
                         domain="[('state','=','done')]"
                         name="unshipped"
+                        help="Sale Order Lines that are in 'done' state"
                         />
                     <filter icon="terp-dolar_ok!" string="Uninvoiced" name="uninvoiced"
                         domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"
+                        help="Sale Order Lines that are confirmed, done or in exception state and haven't yet been invoiced"
                         />
-                    <filter icon="terp-dolar" string="Sale Order"
+                    <filter icon="terp-check" string="Confirmed"
                         domain="[('state','=','confirmed')]"
                         name="sale order"
+                        help="Confirmed Sale Order Lines"
                         />
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
+                        <filter icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
                     </field>
                     <newline />
                     <group expand="0" string="Group By..." colspan="9" col="8">
