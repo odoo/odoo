@@ -47,6 +47,9 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             'comma_me' : self.comma_me,
             'get_fiscalyear': self._get_fiscalyear,
             'get_periods':self.get_periods,
+            'get_journal': self._get_journal,
+            'get_filter': self._get_filter,   
+            'get_account': self._get_account,
         })
         ## Compute account list one time
     #
@@ -427,6 +430,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
     def _get_currency(self, form):
         return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
 
-report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'account/report/partner_balance.rml',parser=partner_balance, header=False)
+report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'account/report/partner_balance.rml',parser=partner_balance, header="internal")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
