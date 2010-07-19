@@ -234,7 +234,7 @@
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -284,8 +284,8 @@
 	        		<td><para style="terp_tblheader_Details_Centre">End Date</para></td>        	
 	        	</tr>        	
 	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ data['form']['date_from'] ]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[ data['form']['date_to'] ]]</para></td>        	
+	        		<td><para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ get_end_date(data) ]]</para></td>        	
 	        	</tr>
         	</blockTable>
         	<blockTable colWidths="65.0,65.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
@@ -305,7 +305,7 @@
     <para style="P9">
       <font color="white"> </font>
     </para>    
-    <blockTable colWidths="83.0,200.0,95.0,92.0,69.0" style="Table_Account_detail_Title">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="83.0,200.0,95.0,92.0,69.0" style="Table_Account_detail_Title">[[  data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="terp_tblheader_Details">A/C No.</para></td>
         <td><para style="terp_tblheader_Details">Account Name</para></td>

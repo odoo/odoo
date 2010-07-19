@@ -252,8 +252,8 @@
 	        		<td><para style="terp_tblheader_General_Centre">End Date</para></td>        	
 	        	</tr>        	
 	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ data['form']['date_from'] ]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[ data['form']['date_to'] ]]</para></td>        	
+	        		<td><para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[get_end_date(data) ]]</para></td>        	
 	        	</tr>
         	</blockTable>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
