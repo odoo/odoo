@@ -9,12 +9,12 @@
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
                     <field name="partner_id"
-                        on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)"
+                        on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id)"
                         select="1"/>
                 </field>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="invoice_supplier_form8">
             <field name="name">account.invoice.supplier.form.inherit</field>
             <field name="model">account.invoice</field>

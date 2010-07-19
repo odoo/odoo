@@ -39,7 +39,7 @@ def _check(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     invoice_obj = pool.get('account.invoice')
     for invoice in invoice_obj.browse(cr, uid, data['ids'], context):
-        if not invoice.partner_bank_is:
+        if not invoice.partner_bank_id:
             raise wizard.except_wizard(_('UserError'),
                     _('No bank specified on invoice:\n%s') % \
                             invoice_obj.name_get(cr, uid, [invoice.id], context=context)[0][1])
@@ -65,7 +65,7 @@ def _check(self, cr, uid, data, context):
 class wizard_report(wizard.interface):
     states = {
         'init': {
-            'actions': [_check], 
+            'actions': [_check],
             'result': {'type':'print', 'report':'l10n_ch.bvr', 'state':'end'}
         }
     }

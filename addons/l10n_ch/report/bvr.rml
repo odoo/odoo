@@ -13,7 +13,7 @@
             <stroke color="black"/>
             <lines>1.3cm 27.7cm 20cm 27.7cm</lines>
 
-            <drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]] </drawRightString>            
+            <drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]] </drawRightString>
             <drawString x="1.3cm" y="27.2cm">[[ company.partner_id.name ]]</drawString>
             <drawString x="1.3cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].street or  '' ]]</drawString>
             <drawString x="1.3cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawString>
@@ -112,11 +112,11 @@
 	-->
 	<illustration width="210mm" height="106mm">
 		<setFont name="Helvetica" size="11"/>
-        <drawString x="2mm" y="93mm">[[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.name or '' ]]</drawString>
-		<drawString x="2mm" y="88mm">[[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.zip or '']] [[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.city or '']]</drawString>
+        <drawString x="2mm" y="93mm">[[ o.partner_bank_id and o.partner_bank_id.printBank and o.partner_bank_id.bank and o.partner_bank_id.bank.name or '' ]]</drawString>
+		<drawString x="2mm" y="88mm">[[ o.partner_bank_id and o.partner_bank_id.printBank and o.partner_bank_id.bank and o.partner_bank_id.bank.zip or '']] [[ o.partner_bank_id and o.partner_bank_id.printBank and o.partner_bank_id.bank and o.partner_bank_id.bank.city or '']]</drawString>
 
-		<drawString x="62mm" y="93mm">[[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.name or '' ]]</drawString>
-		<drawString x="62mm" y="88mm">[[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.zip or '']] [[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.city or '']]</drawString>
+		<drawString x="62mm" y="93mm">[[ o.partner_bank_id and o.partner_bank_id.printBank and o.partner_bank_id.bank and o.partner_bank_id.bank.name or '' ]]</drawString>
+		<drawString x="62mm" y="88mm">[[ o.partner_bank_id and o.partner_bank_id.printBank and o.partner_bank_id.bank and o.partner_bank_id.bank.zip or '']] [[ o.partner_bank_id and o.partner_bank_id.printBank and o.partner_bank_id.bank and o.partner_bank_id.bank.city or '']]</drawString>
 
 		<drawString x="2mm" y="78mm">  [[ user.company_id.partner_id.name ]]</drawString>
 		<drawString x="2mm" y="73mm">  [[ user.company_id.partner_id.address[0].street ]]</drawString>
@@ -147,11 +147,11 @@
 		<drawString x="124mm" y="67mm">[[ _space(_get_ref(o)) ]]</drawString>
 
 		<setFont name="ocrb" size="12"/>
-        <drawRightString x="52 mm" y="59.3mm">[[ o.partner_bank and o.partner_bank.printAccount and o.partner_bank.bvr_number or '' ]]</drawRightString>
-        <drawRightString x="112mm" y="59.3mm">[[ o.partner_bank and o.partner_bank.printAccount and o.partner_bank.bvr_number or '' ]]</drawRightString>
+        <drawRightString x="52 mm" y="59.3mm">[[ o.partner_bank_id and o.partner_bank_id.printAccount and o.partner_bank_id.bvr_number or '' ]]</drawRightString>
+        <drawRightString x="112mm" y="59.3mm">[[ o.partner_bank_id and o.partner_bank_id.printAccount and o.partner_bank_id.bvr_number or '' ]]</drawRightString>
 		<drawRightString x="42mm" y="50mm">[[ _space(('%.2f' % o.amount_total)[:-3], 1) + ' ' ]]</drawRightString>
 		<drawRightString x="104mm" y="50mm">[[ _space(('%.2f' % o.amount_total)[:-3], 1) + ' ' ]]</drawRightString>
-        <drawRightString x="114 mm" y="59.3mm">[[ o.partner_bank and o.partner_bank.printAccount and o.partner_bank.bvr_number or '' ]]</drawRightString>
+        <drawRightString x="114 mm" y="59.3mm">[[ o.partner_bank_id and o.partner_bank_id.printAccount and o.partner_bank_id.bvr_number or '' ]]</drawRightString>
 		<drawRightString x="58mm" y="50mm">[[ _space(('%.2f' % o.amount_total)[-2:], 1) + ' ' ]]</drawRightString>
 		<drawRightString x="119mm" y="50mm">[[ _space(('%.2f' % o.amount_total)[-2:], 1) + ' ' ]]</drawRightString>
 
@@ -161,7 +161,7 @@
 		-->
 
 		<setFont name="ocrb" size="11.5"/>
-	<drawRightString x="195mm" y="15mm">[[mod10r('01'+str('%.2f' % o.amount_total).replace('.','').rjust(10,'0'))]]&gt;[[ _get_ref(o) ]]+ [[o.partner_bank.bvr_number.split('-')[0]+(str(o.partner_bank.bvr_number.split('-')[1])).rjust(6,'0')+o.partner_bank.bvr_number.split('-')[2] ]]&gt;</drawRightString>
+	<drawRightString x="195mm" y="15mm">[[mod10r('01'+str('%.2f' % o.amount_total).replace('.','').rjust(10,'0'))]]&gt;[[ _get_ref(o) ]]+ [[o.partner_bank_id.bvr_number.split('-')[0]+(str(o.partner_bank_id.bvr_number.split('-')[1])).rjust(6,'0')+o.partner_bank_id.bvr_number.split('-')[2] ]]&gt;</drawRightString>
 	</illustration>
   </story>
 </document>
