@@ -300,7 +300,7 @@ class account_invoice(osv.osv):
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
-            help='The bank account to pay to or to be paid from', readonly=True, states={'draft':[('readonly',False)]}),
+            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Parner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={

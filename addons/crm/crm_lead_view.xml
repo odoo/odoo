@@ -154,12 +154,19 @@
                         <field name="day_close"/>
                     </group>
                  </page>
-                 <page string="Emails" groups="base.group_extended">
+                 <page string="History" groups="base.group_extended">
                    <group colspan="4">
-                       <field colspan="4" name="email_cc" string="CC" widget="char" size="512"/>
+                       <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
                    </group>
-                    <!-- TODO-->
-                    <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
+                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                        <tree string="Communication history">
+                            <field name="display_text" string="History Information"/>
+                            <button
+                                string="Reply"
+                                name="%(crm.action_crm_send_mail)d"
+                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                icon="gtk-undo" type="action" />
+                        </tree>
                         <form string="Communication history">
                             <group col="4" colspan="4">
                                 <field name="email_from"/>
@@ -177,17 +184,11 @@
                                 </page>
                             </notebook>
                             <button colspan="4"
-                            string="Reply"
-                            name="%(crm.action_crm_send_mail)d"
-                            context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                            icon="gtk-undo" type="action" />
+                                string="Reply"
+                                name="%(crm.action_crm_send_mail)d"
+                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                icon="gtk-undo" type="action" />
                         </form>
-                        <tree string="Communication history">
-                            <field name="date"/>
-                            <field name="email_from" />
-                            <field name="email_to"/>
-                            <field name="description"/>
-                        </tree>
                     </field>
                     <button colspan="2" string="Send New Email"
                         name="%(crm.action_crm_send_mail)d"

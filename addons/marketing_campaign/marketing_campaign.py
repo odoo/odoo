@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from traceback import format_exception
 from sys import exc_info
+from tools.safe_eval import safe_eval as eval
 
 from osv import fields, osv
 import netsvc
@@ -82,6 +83,13 @@ class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
     _description = "Marketing Campaign"
 
+
+    def _check_has_start(self, cr, uid, ids, context=None):
+        for campaign in self.browse(cr, uid, ids, context=context):
+            if not any(a.start for a in campaign.activity_ids):
+                return False
+        return True
+
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'object_id': fields.many2one('ir.model', 'Model', required=True,
@@ -90,15 +98,15 @@ this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
                                             help="The generated workitems will be linked to the partner related to the record. If the record is the partner itself left this field empty."),
-        'mode':fields.selection([('test', 'Test Directly'),
+        'mode': fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
                                 ('manual', 'With Manual Confirmation'),
                                 ('active', 'Normal')],
                                  'Mode', required=True, help= \
-"""Test - It creates and process all the activities directly (without waiting for the delay on transitions) but do not send emails or produce reports.
-Test in Realtime - It creates and process all the activities directly but do not send emails or produce reports.
+"""Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.
+Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
-Normal - the campaign runs normally and automatically sends all emails and reports"""),
+Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"""),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
@@ -106,32 +114,34 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    'State',),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
-        'fixed_cost': fields.float('Fixed Cost', help="The fixed cost is cost\
-you required for the campaign"),
+        'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for the campaign (used for campaign analysis), see also variable cost on activities"),
     }
+    
     _defaults = {
         'state': lambda *a: 'draft',
         'mode': lambda *a: 'test',
     }
+           
+    _constraints = [(_check_has_start, 'Please mark at least one activity as a start activity', ['Activities'])]
 
     def state_running_set(self, cr, uid, ids, *args):
         # TODO check that all subcampaigns are running
         campaign = self.browse(cr, uid, ids[0])
         if not campaign.activity_ids :
             raise osv.except_osv("Error", "There is no activitity in the campaign")
-        actvity_ids = [ act_id.id for act_id in campaign.activity_ids]
+        activity_ids = [ act_id.id for act_id in campaign.activity_ids]
+        
+        if not activity_ids:
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started : there are no activities in it"))
+        
         act_obj = self.pool.get('marketing.campaign.activity')
-        act_ids  = act_obj.search(cr, uid, [('id', 'in', actvity_ids),
-                                                    ('start', '=', True)])
-        if not act_ids :
-            raise osv.except_osv("Error", "There is no starting activitity in the campaign")
-        act_ids = act_obj.search(cr, uid, [('id', 'in', actvity_ids),
+        act_ids = act_obj.search(cr, uid, [('id', 'in', activity_ids),
                                             ('type', '=', 'email')])
         for activity in act_obj.browse(cr, uid, act_ids):
             if not activity.email_template_id.enforce_from_account :
-                raise osv.except_osv("Error", "Campaign cannot be start : Email Account is missing in email activity")
+                raise osv.except_osv(_("Error"), _("The campaign cannot be started: an email account is missing in the email activity '%s'")%activity.name)
             if activity.email_template_id.enforce_from_account.state != 'approved' :
-                raise osv.except_osv("Error", "Campaign cannot be start : Email Account is not approved for email activity")
+                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is not approved in the email activity '%s'")%activity.name)
         self.write(cr, uid, ids, {'state': 'running'})
         return True
 
@@ -141,7 +151,7 @@ you required for the campaign"),
                                             [('campaign_id', 'in', ids),
                                             ('state', '=', 'running')])
         if segment_ids :
-            raise osv.except_osv("Error", "Campaign cannot be marked as done before all segments are done")
+            raise osv.except_osv(_("Error"), _("The campaign cannot be marked as done before all segments are done"))
         self.write(cr, uid, ids, {'state': 'done'})
         return True
 
@@ -187,7 +197,7 @@ you required for the campaign"),
         partner_field = campaign.partner_field_id.name
         if partner_field:
             return getattr(record, partner_field)
-        elif campaign.model_id.model == 'res.partner':
+        elif campaign.object_id.model == 'res.partner':
             return record
         return None
 
@@ -206,9 +216,10 @@ class marketing_campaign_segment(osv.osv):
                                       string='Object'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter', help=""),
         'sync_last_date': fields.datetime('Latest Synchronization'),
-        'sync_mode': fields.selection([('create_date', 'Sync only on creation'),
-                                      ('write_date', 'Sync at each modification')],
-                                      'Synchronization Mode'),
+        'sync_mode': fields.selection([('create_date', 'If record created after last sync'),
+                                      ('write_date', 'If record modified after last sync (no duplicates)')],
+                                      'Workitem creation mode',
+                                      help="Determines when new workitems should be created for records matching a segment."),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
@@ -269,6 +280,7 @@ class marketing_campaign_segment(osv.osv):
                 criteria += eval(segment.ir_filter_id.domain)
             object_ids = model_obj.search(cr, uid, criteria, context=context)
 
+            # XXX TODO: rewrite this loop more efficiently without doing 1 search per record!
             for o_ids in model_obj.browse(cr, uid, object_ids, context=context):
                 # avoid duplicated workitem for the same resource
                 if segment.sync_mode == 'write_date':
@@ -318,9 +330,9 @@ class marketing_campaign_activity(osv.osv):
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object', readonly=True),
-        'start': fields.boolean('Start',help= "This activity is launched when the campaign starts."),
+        'start': fields.boolean('Start', help= "This activity is launched when the campaign starts.", select=True),
         'condition': fields.char('Condition', size=256, required=True,
-                                 help="Python condition to know if the activity can be launched"),
+                                 help="Python condition to know if the activity can be executed, otherwise it will be deleted or cancelled."),
         'type': fields.selection(_action_types, 'Type', required=True,
                                   help="Describe type of action to be performed on the Activity.Eg : Send email,Send paper.."),
         'email_template_id': fields.many2one('email.template','Email Template'),
@@ -341,9 +353,9 @@ class marketing_campaign_activity(osv.osv):
         'variable_cost': fields.float('Variable Cost'),
         'revenue': fields.float('Revenue'),
         'signal': fields.char('Signal', size=128,
-                              help='An activity with a signal can be called programmatically. Attention, the workitem is always created when the signal is send'),
-        'keep_if_condition_not_met': fields.boolean('Keep if condition not met',
-                                                    help="By activating this option, the workitems that aren't processed because the condition is not met are marked as cancelled instead of being deleted.")
+                              help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
+        'keep_if_condition_not_met': fields.boolean('Keep as cancelled when condition not met',
+                                                    help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")
     }
 
     _defaults = {
@@ -460,7 +472,7 @@ class marketing_campaign_transition(osv.osv):
                                      ('cosmetic', 'Cosmetic'),  # fake plastic transition
                                     ],
                                     'Trigger', required=True,
-                                    help="How is triggered the destination workitem"),
+                                    help="How is the destination workitem triggered"),
     }
 
     _defaults = {
@@ -516,7 +528,7 @@ class marketing_campaign_workitem(osv.osv):
 
     def button_draft(self, cr, uid, workitem_ids, context={}):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
-            if wi.state=='exception':
+            if wi.state in ('exception', 'cancelled'):
                 self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
         return True
 
@@ -531,13 +543,13 @@ class marketing_campaign_workitem(osv.osv):
             return
 
         activity = workitem.activity_id
+        proxy = self.pool.get(workitem.object_id.model)
+        object_id = proxy.browse(cr, uid, workitem.res_id, context=context)
 
         eval_context = {
-            'pool': self.pool,
-            'cr': cr,
-            'uid': uid,
-            'wi': workitem,
-            'object': activity,
+            'activity': activity,
+            'workitem': workitem,
+            'object': object_id,
             'transition': activity.to_ids
         }
         try:
@@ -585,7 +597,7 @@ class marketing_campaign_workitem(osv.osv):
                     wi_id = self.create(cr, uid, values, context=context)
 
                     # Now, depending of the trigger and the campaign mode 
-                    # we now if must run the newly created workitem.
+                    # we know if must run the newly created workitem.
                     #
                     # rows = transition trigger \ colums = campaign mode
                     #
@@ -666,6 +678,8 @@ class marketing_campaign_workitem(osv.osv):
                 'datas' : datas,
                 'nodestroy': True,
             }
+        else:
+            raise osv.except_osv(_('No preview'),_('The current step for this item has no email or report to preview.'))
         return res
 
 marketing_campaign_workitem()
@@ -675,6 +689,9 @@ class email_template(osv.osv):
     _defaults = {
         'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
+    
+    # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
+     
 email_template()
 
 class report_xml(osv.osv):
