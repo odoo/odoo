@@ -300,7 +300,7 @@ class account_invoice(osv.osv):
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
-            help='The bank account to pay to or to be paid from', readonly=True, states={'draft':[('readonly',False)]}),
+            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Parner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={
@@ -892,7 +892,7 @@ class account_invoice(osv.osv):
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
         self._log_event(cr, uid, ids)
-        
+
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -925,11 +925,11 @@ class account_invoice(osv.osv):
             reference = obj_inv.reference
             if not number:
                 tmp_context = {
-                    'fiscalyear_id': inv.period_id.fiscalyear_id.id
+                    'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id
                 }
-                if inv.journal_id.invoice_sequence_id:
-                    sequence_id = inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, 
+                if obj_inv.journal_id.invoice_sequence_id:
+                    sequence_id = obj_inv.journal_id.invoice_sequence_id.id
+                    number = self.pool.get('ir.sequence').get_id(cr, uid,
                                                                  sequence_id,
                                                                  'id',
                                                                  context=tmp_context)

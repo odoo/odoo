@@ -695,7 +695,7 @@ class auction_lots(osv.osv):
             #   wf_service = netsvc.LocalService('workflow')
             #   wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
             inv_ref.button_compute(cr, uid, invoice.values())
-            wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_proforma', cr)
+            wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_proforma2', cr)
         return invoices.values()
 
 

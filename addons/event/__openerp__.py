@@ -32,8 +32,6 @@
         * ...
     A dashboard for associations that includes:
     * Registration by Events (graph)
-    * Next Events (list)
-    * Unpaid Invoices (list)
     Note that:
     - You can define new types of events in
                 Events / Configuration / Types of Events
@@ -42,15 +40,14 @@
 """,
     'author': 'Tiny',
     'depends': ['crm', 'base_contact', 'account'],
-    'init_xml': ['event_data.xml'],
+    'init_xml': [],
     'update_xml': [
+        'security/event_security.xml',
+        'security/ir.model.access.csv',
         'wizard/event_confirm_registration_view.xml',
         'wizard/event_confirm_view.xml',
         'event_view.xml',
         'report/report_event_registration_view.xml',
-        'event_sequence.xml',
-        'security/event_security.xml',
-        'security/ir.model.access.csv',
         'wizard/event_make_invoice_view.xml',
         'wizard/partner_event_registration_view.xml',
         'board_association_view.xml',

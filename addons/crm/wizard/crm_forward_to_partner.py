@@ -126,11 +126,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         elif history_type == 'whole':
             log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
-            log_ids = [x.id for x in log_ids]
+            log_ids = map(lambda x: x.id, filter(lambda x: x.history, log_ids))
             msg_val = case_info + '\n\n' + self.get_whole_history(cr, uid, log_ids, context=context)
 
         elif history_type == 'latest':
             log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
+            log_ids = filter(lambda x: x.history and x.id, log_ids)
             if not log_ids:
                 msg_val = case_info
             else:
@@ -227,7 +228,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         elif lead.type == 'opportunity':
             pa = lead.partner_address_id
             body = [
-            "Partner: %s" % (lead.partner_id.name_get()[0][1]), 
+            "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]), 
             "Contact: %s" % (pa.name or ''), 
             "Title: %s" % (pa.title or ''), 
             "Function: %s" % (pa.function and pa.function.name_get()[0][1] or ''), 

@@ -236,20 +236,15 @@
                     </group>
                     <field name="type" width='100'/>
                     <group colspan='2' col='1'>
-                        <group attrs="{'invisible':[('type','!=','email')]}" >
-                            <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
-                        </group>
+                        <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
+                               context="{'default_object_name':object_id}" />
                         <group attrs="{'invisible':[('type','!=','paper')]}" >
                             <field name="report_id" attrs="{'required':[('type','=','paper')]}" context="{'object_id':object_id}"/>
                             <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
                         </group>
-                        <group attrs="{'invisible':[('type','!=','action')]}" >
-                            <field name="server_action_id" attrs="{'required':[('type','=','action')]}" domain="[('model_id','=',object_id)]" />
-                        </group>
+                        <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]" />
                         <!--
-                        <group attrs="{'invisible':[('type','!=','subcampaign')]}" >
-                            <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
-                        </group>
+                         <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')], 'invisible':[('type','!=','subcampaign')]}" />
                         -->
                     </group>
                 </group>
@@ -311,8 +306,8 @@
                 <field name="partner_id"/>
                 <field name="date"/>
                 <field name="state"/>
-                <button string="Preview" states="todo" name="preview" icon="gtk-apply" type="object"/>
-                <button string="Process" states="todo" name="process" type="object" icon="gtk-ok"/>
+                <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
+                <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
                 <button string="Cancel" states="todo" name="button_cancel" type="object" icon="gtk-cancel"/>
             </tree>
         </field>
@@ -340,7 +335,7 @@
                         <separator string="Date" colspan="2"/>
                         <field name="date"/>
                         <label string="" colspan="1"/>
-                        <button string="Preview" states="todo" name="preview" icon="gtk-apply" type="object"/>
+                        <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
                     </group>
                 </group>
                 <group colspan="4" col="4" attrs="{'invisible':[('state','!=','exception')]}">
@@ -350,8 +345,8 @@
                 <separator string="Status" colspan="4"/>
                 <group colspan="4" col="11">
                     <field name="state" nolabel="1" readonly="True" select="1"/>
-                    <button string="Retry" states="exception" name="button_draft" type="object" icon="gtk-ok"/>
-                    <button string="Process" states="todo" name="process" type="object" icon="gtk-ok"/>
+                    <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
+                    <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
                     <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="gtk-cancel"/>
                 </group>
             </form>
@@ -384,7 +379,7 @@
    </record>
 
     <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
-        <field name="name">Campaign Activities (Workitems)</field>
+        <field name="name">Campaign Followup</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">marketing.campaign.workitem</field>
         <field name="view_type">form</field>
