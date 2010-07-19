@@ -25,6 +25,7 @@ from osv import fields, osv
 
 from tools.misc import currency
 from tools.translate import _
+import decimal_precision as dp
 
 class account_bank_statement(osv.osv):
 
@@ -130,9 +131,9 @@ class account_bank_statement(osv.osv):
             states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'cash')]),
         'period_id': fields.many2one('account.period', 'Period', required=True,
             states={'confirm':[('readonly', True)]}),
-        'balance_start': fields.float('Starting Balance', digits=(16,2),
+        'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly',True)]}),
-        'balance_end_real': fields.float('Ending Balance', digits=(16,2),
+        'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly', True)]}),
         'balance_end': fields.function(_end_balance, method=True, string='Balance'),
         'line_ids': fields.one2many('account.bank.statement.line',

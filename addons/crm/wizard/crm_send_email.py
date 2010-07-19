@@ -26,6 +26,7 @@ from tools.translate import _
 import base64
 import itertools
 import tools
+import re
 
 class crm_send_new_email_attachment(osv.osv_memory):
     _name = 'crm.send.mail.attachment'
@@ -47,8 +48,7 @@ class crm_send_new_email(osv.osv_memory):
         'email_to' : fields.char('To', size=512, required=True),
         'email_from' : fields.char('From', size=128, required=True),
         'reply_to' : fields.char('Reply To', size=128, required=True, help="Reply-to of the Sales team defined on this case"),
-        'email_cc' : fields.char('CC', size=512, help="Carbon Copy: list of recipients that will receive"\
-                                    " a copy of this mail, and future communication related to this case"),
+        'email_cc' : fields.char('CC', size=512, help="Carbon Copy: list of recipients that will receive a copy of this mail"),
         'subject': fields.char('Subject', size=512, required=True),
         'body': fields.text('Message Body', required=True),
         'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
@@ -105,7 +105,7 @@ class crm_send_new_email(osv.osv_memory):
                 ref_id = hist.ref_id
                 case = case_pool.browse(cr, uid, res_id, context=context)
             emails = [obj.email_to]
-            email_cc = obj.email_cc and  obj.email_cc.split(',') or ''
+            email_cc = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_cc)
             emails = filter(None, emails)
             body = obj.body
 

@@ -124,8 +124,8 @@ write({'state':'cancel'})</field>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">invoice_cancel</field>
         </record>
-		
-		<record id="open_test_to_paid" model="workflow.transition">
+        
+        <record id="open_test_to_paid" model="workflow.transition">
             <field name="act_from" ref="act_open_test"/>
             <field name="act_to" ref="act_paid"/>
             <field name="trigger_model">account.move.line</field>

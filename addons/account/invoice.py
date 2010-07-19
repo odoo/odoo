@@ -892,7 +892,7 @@ class account_invoice(osv.osv):
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
         self._log_event(cr, uid, ids)
-        
+
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -924,12 +924,20 @@ class account_invoice(osv.osv):
             move_id = obj_inv.move_id and obj_inv.move_id.id or False
             reference = obj_inv.reference
             if not number:
+                tmp_context = {
+                    'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id
+                }
                 if obj_inv.journal_id.invoice_sequence_id:
-                    sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
+                    sequence_id = obj_inv.journal_id.invoice_sequence_id.id
+                    number = self.pool.get('ir.sequence').get_id(cr, uid,
+                                                                 sequence_id,
+                                                                 'id',
+                                                                 context=tmp_context)
                 else:
-                    number = self.pool.get('ir.sequence').get(cr, uid,
-                            'account.invoice.' + invtype)
+                    number = self.pool.get('ir.sequence').get_id(cr, uid,
+                                                                 'account.invoice.%s' % invtype,
+                                                                 'code',
+                                                                 context=tmp_context)
                 if invtype in ('in_invoice', 'in_refund'):
                     ref = reference
                 else:
