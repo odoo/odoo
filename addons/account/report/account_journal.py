@@ -48,6 +48,9 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_end_date': self._get_end_date,
             'sum_currency_amount_account': self._sum_currency_amount_account,  
             'get_fiscalyear': self._get_fiscalyear,
+            'get_start_date':self._get_start_date,
+            'get_end_date':self._get_end_date,
+            
         })
 
     def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
