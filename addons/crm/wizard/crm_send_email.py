@@ -48,7 +48,7 @@ class crm_send_new_email(osv.osv_memory):
         'email_to' : fields.char('To', size=512, required=True),
         'email_from' : fields.char('From', size=128, required=True),
         'reply_to' : fields.char('Reply To', size=128, required=True, help="Reply-to of the Sales team defined on this case"),
-        'email_cc' : fields.char('CC', size=512, help="Carbon Copy: list of recipients that will receive a copy of this mail"),
+        'email_cc' : fields.char('CC', size=512, help="These addresses will receive a copy of this email. To modify the permanent CC list, edit the global CC field of this case"),
         'subject': fields.char('Subject', size=512, required=True),
         'body': fields.text('Message Body', required=True),
         'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),

@@ -59,7 +59,7 @@
                 </graph>
             </field>
         </record>
-        
+
 <!-- Leads by user and section Search View -->
 
         <record id="view_report_crm_lead_filter" model="ir.ui.view">
@@ -188,6 +188,7 @@
             <field name="context">{'search_default_lead':1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree,graph</field>
             <field name="domain">[('type', '=', 'lead')]</field>
+            <field name="help">Leads Analysis allows you to consult different informations relative to CRM. Check for treatments delays, number of responses given and emails send. You can sort out your leads analysis on different groups to get fine grained analysis.</field>
         </record>
 
        <record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
@@ -211,6 +212,7 @@
             <field name="context">{"search_default_opportunity": 1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree,graph</field>
             <field name="domain">[('type', '=', 'opportunity')]</field>
+            <field name="help">Opportunities Analysis menu gives you an instant access to your opportunities like expected revenue, planned cost, overpassed deadline or the number of exchanges by opportunity.</field>
         </record>
 
        <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_tree">
