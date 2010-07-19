@@ -18,8 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import osv, fields
-from tools.translate import _
+from osv import osv
 
 class account_general_journal(osv.osv_memory):
     _inherit = "account.common.journal.report"
