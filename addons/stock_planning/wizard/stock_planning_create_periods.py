@@ -65,20 +65,31 @@ class stock_period_createlines(osv.osv_memory):
                 if name =='Daily':
                     de = ds + RelativeDateTime(days=interval, minutes =-1)
                     new_name = de.strftime('%Y-%m-%d')
-                    ds = ds + RelativeDateTime(days=interval) + 1
-                if name =="Weekly":
-                    de = ds + RelativeDateTime(days=interval, minutes =-1)
-                    new_name = de.strftime('%Y, week %W')
-                    ds = ds + RelativeDateTime(days=interval) + 1
-                if name == "Monthly":
-                    de = ds + RelativeDateTime(months=interval, minutes=-1)
-                    new_name = ds.strftime('%Y/%m')
-                    ds = ds + RelativeDateTime(months=interval)
-                lines.append(period_obj.create(cr, uid, {
+                    new_id = period_obj.create(cr, uid, {
                     'name': new_name,
                     'date_start': ds.strftime('%Y-%m-%d'),
                     'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
-                }))
+                    })
+                    ds = ds + RelativeDateTime(days=interval)
+                if name =="Weekly":
+                    de = ds + RelativeDateTime(days=interval, minutes =-1)
+                    new_name = de.strftime('%Y, week %W')
+                    new_id = period_obj.create(cr, uid, {
+                    'name': new_name,
+                    'date_start': ds.strftime('%Y-%m-%d'),
+                    'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
+                    })
+                    ds = ds + RelativeDateTime(days=interval)
+                if name == "Monthly":
+                    de = ds + RelativeDateTime(months=interval, minutes=-1)
+                    new_name = ds.strftime('%Y/%m')
+                    new_id =period_obj.create(cr, uid, {
+                    'name': new_name,
+                    'date_start': ds.strftime('%Y-%m-%d'),
+                    'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
+                    })
+                    ds = ds + RelativeDateTime(months=interval)
+                lines.append(new_id)
         return {
                 'domain': "[('id','in', ["+','.join(map(str, lines))+"])]",
                 'view_type': 'form',
