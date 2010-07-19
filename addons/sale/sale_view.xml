@@ -294,6 +294,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help">The sale order manages the invoicing, the product fullfilment and the delivery processes. OpenERP can handle products, services and consumables so that a sale order can trigger tasks, manufacturing orders, purchases, etc. It support several invoicing methods according to your configuration: from the sale order, from the pickings, etc.</field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
 
@@ -500,6 +501,7 @@
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
+            <field name="help">Lines to invoice opens a search view with sales order and their status.</field>
         </record>
 
         <record id="action_order_line_tree3" model="ir.actions.act_window">
