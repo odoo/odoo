@@ -386,7 +386,6 @@
                         <field name="name" select="1"/>
                         <field name="res_model" select="1"/>
                         <field name="type" readonly="1"/>
-                        
                         <field name="src_model" select="2"/>
                         <field name="usage"/>
                         <field name="menus"/>
@@ -400,7 +399,6 @@
                                 <field name="view_id"/>
                                 <field name="search_view_id"/>
                             </group>
-                            
                             <group col="2" colspan="2">
                                 <separator string="Filters" colspan="4"/>
                                 <field name="domain"/>
@@ -825,7 +823,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_report_custom_form"/>
         </record>
-        
+
         <!--
         <menuitem name="Administration/Report/Report Custom" action="action_report_custom"/>
         -->
@@ -1143,14 +1141,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Menu">
-                    <field name="complete_name" string="Menu"/>
-                    <field name="name" select="1" string="Root Menu"/>
-                    <field name="sequence"/>
-                    <field colspan="4" name="parent_id" select="1"/>
-                    <field name="action"/>
-                    <field colspan="4" name="groups_id"/>
-                    <field name="icon" on_change="onchange_icon(icon)"/>
-                    <field name="icon_pict" widget="picture" nolabel="1"/>
+                    <group col="8">
+                        <field name="name" select="1" string="Menu" />
+                        <field  name="parent_id" select="1" colspan="4"/>
+                        <field name="sequence" colspan="2"/>
+                        <field name="complete_name" string="Full Path" colspan="8"/>
+                        <field name="action" colspan="4" />
+                        <field name="icon" on_change="onchange_icon(icon)" colspan="2"/>
+                        <field name="icon_pict" widget="picture" nolabel="1" colspan="2"/>
+                        <field name="groups_id"  colspan="8"  height="400"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -1506,9 +1506,9 @@
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
         <wizard id="wizard_configuration" model="ir.module.module" name="module.configuration" string="Start Configuration"/>
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" 
+        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
                 parent="next_id_11" groups="base.group_extended" sequence="20"/>
-       
+
         <menuitem
             action="wizard_configuration" name="Start Configuration"
             id="menu_configurator_module" parent="next_id_11"
