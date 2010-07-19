@@ -128,8 +128,9 @@ class common_report_header(object):
             return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.name
         return ''
 
-    def _get_journal(self, journal_ids):
-        self.cr.execute('select code from account_journal where id IN %s',(tuple(journal_ids),))
+    def _get_journal(self, data):
+        if data.get('form', False) and data['form'].get('journal_ids', False):        
+            self.cr.execute('select code from account_journal where id IN %s',(tuple(data['form']['journal_ids']),))
         codes = [x for x, in self.cr.fetchall()]
         return codes or ''
 
