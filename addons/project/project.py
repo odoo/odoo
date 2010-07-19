@@ -22,6 +22,7 @@
 from lxml import etree
 import time
 from datetime import date, datetime
+
 from tools.translate import _
 from osv import fields, osv
 
@@ -77,37 +78,65 @@ class project(osv.osv):
         pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
         pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
-
+    
+    def get_all_child_projects(self, cr, uid, ids, context=None):
+        cr.execute('''select prpc.id as id from account_analytic_account as p
+join account_analytic_account as c  on p.id = c.parent_id 
+join project_project as prp on prp.analytic_account_id = p.id
+join project_project as prpc on prpc.analytic_account_id = c.id
+where prp.id in %s''',(tuple(ids),))
+        
+        child_ids = cr.fetchall()
+        if child_ids:
+          child_ids = [x[0] for x in child_ids]
+          child_ids = self.get_all_child_projects(cr, uid, child_ids)
+          
+        return ids+child_ids
+        
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}
         if not ids:
             return res
-        ids2 = self.search(cr, uid, [('parent_id','child_of',ids)], context=context)
-        if ids2:
-            cr.execute('''SELECT
-                    project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
-                FROM
-                    project_task
-                WHERE
-                    project_id IN %s AND
-                    state<>'cancelled'
-                GROUP BY
-                    project_id''',(tuple(ids2),))
-            progress = dict(map(lambda x: (x[0], (x[1], x[2], x[3])), cr.fetchall()))
-        for project in self.browse(cr, uid, ids, context=context):
+        
+        par_child_projects={}
+        all_projects = list(ids)
+        
+        for id in ids:
+            child_projects = self.get_all_child_projects(cr, uid, [id], context)
+            child_projects = [x for x in child_projects]
+            par_child_projects[id] = child_projects
+            all_projects.extend(child_projects)
+            
+        all_projects = dict.fromkeys(all_projects).keys()     
+        cr.execute('''SELECT
+                project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
+            FROM
+                project_task
+            WHERE
+                project_id IN %s AND
+                state<>'cancelled'
+            GROUP BY
+                project_id''',(tuple(all_projects),))
+        progress = dict(map(lambda x: (x[0], (x[1], x[2], x[3])), cr.fetchall()))
+        
+        for project in self.browse(cr, uid, par_child_projects.keys(), context=context):
             s = [0.0, 0.0, 0.0]
-            tocompute = [project]
+            tocompute = par_child_projects[project.id]
             while tocompute:
                 p = tocompute.pop()
-                tocompute += p.child_ids
                 for i in range(3):
-                    s[i] += progress.get(p.id, (0.0, 0.0, 0.0))[i]
+                    s[i] += progress.get(p, (0.0, 0.0, 0.0))[i]
+            if project.state == 'close':
+                progress_rate = 100.0
+            else:
+                progress_rate = s[1] and round(min(100.0 * s[2] / s[1], 99.99), 2)
+                
             res[project.id] = {
                 'planned_hours': s[0],
                 'effective_hours': s[2],
                 'total_hours': s[1],
-                'progress_rate': s[1] and (100.0 * s[2] / s[1]) or 0.0
+                'progress_rate': progress_rate
             }
         return res
 
@@ -116,7 +145,7 @@ class project(osv.osv):
             if proj.tasks:
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
-
+    
     _columns = {
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
@@ -126,9 +155,9 @@ class project(osv.osv):
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
-        'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project."),
-        'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project."),
-        'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project."),
+        'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects."),
+        'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
+        'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects."),
         'progress_rate': fields.function(_progress_rate, multi="progress", method=True, string='Progress', type='float', help="Percent of tasks closed according to the total of tasks todo."),
         'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."),
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed."),
@@ -352,7 +381,7 @@ class task(osv.osv):
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
-        'type': fields.many2one('project.task.type', 'Stage',),
+        'type_id': fields.many2one('project.task.type', 'Stage',),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
@@ -542,25 +571,25 @@ class task(osv.osv):
         return True
 
     def next_type(self, cr, uid, ids, *args):
-        for typ in self.browse(cr, uid, ids):
-            typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.type_ids or [])
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id.type_ids or [])
             if types:
                 if not typeid:
-                    self.write(cr, uid, typ.id, {'type': types[0]})
+                    self.write(cr, uid, task.id, {'type_id': types[0]})
                 elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
                     index = types.index(typeid)
-                    self.write(cr, uid, typ.id, {'type': types[index+1]})
+                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
         return True
 
     def prev_type(self, cr, uid, ids, *args):
-        for typ in self.browse(cr, uid, ids):
-            typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.type_ids)
+        for task in self.browse(cr, uid, ids):
+            typeid = task.type_id.id
+            types = map(lambda x:x.id, task.project_id.type_ids)
             if types:
                 if typeid and typeid in types:
                     index = types.index(typeid)
-                    self.write(cr, uid, typ.id, {'type': index and types[index-1] or False})
+                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
         return True
 
 task()

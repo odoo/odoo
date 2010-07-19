@@ -114,7 +114,7 @@ class project_issue_report(osv.osv):
                     c.project_id as project_id,
                     c.type_id as type_id,
                     1 as nbr,
-                    c.assigned_to,
+                    
                     c.partner_id,
                     c.canal_id,
                     c.task_id,

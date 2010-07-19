@@ -83,7 +83,7 @@ class report_project_task_user(osv.osv):
                     t.name as name,
                     t.company_id,
                     t.partner_id,
-                    t.type,
+                    t.type_id,
                     remaining_hours as remaining_hours,
                     total_hours as total_hours,
                     t.delay_hours as hours_delay,
@@ -115,7 +115,7 @@ class report_project_task_user(osv.osv):
                     name,
                     t.company_id,
                     t.partner_id,
-                    t.type
+                    t.type_id
 
         """)
 
