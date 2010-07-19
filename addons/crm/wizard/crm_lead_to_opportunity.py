@@ -79,6 +79,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 'probability': this.probability,
                 'name': this.name, 
                 'partner_id': this.partner_id.id, 
+                'user_id': this.partner_id.user_id.id or lead.user_id.id, 
                 'type': 'opportunity'
             }
             lead_obj.write(cr, uid, lead.id, vals, context=context)
