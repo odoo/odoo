@@ -300,7 +300,7 @@ class event_registration(osv.osv):
 
     _columns = {
         'name': fields.char('Summary', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
-        'email_cc': fields.text('CC', size=252 , readonly=False, states={'done': [('readonly', True)]}, help="Every email sent or received  for the related record will be forwarded to these addresses(Comma-separated)"),
+        'email_cc': fields.text('CC', size=252 , readonly=False, states={'done': [('readonly', True)]}, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'nb_register': fields.integer('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of Registrations or Tickets"),
         'event_id': fields.many2one('event.event', 'Event Related', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         "partner_invoice_id": fields.many2one('res.partner', 'Partner Invoiced', readonly=True, states={'draft': [('readonly', False)]}),
