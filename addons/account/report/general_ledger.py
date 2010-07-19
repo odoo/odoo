@@ -159,18 +159,23 @@ class general_ledger(rml_parse.rml_parse):
             [('parent_id', 'child_of', self.ids)])
 
         res = []
-        ctx = self.context.copy()
         ## We will make the test for period or date
         ## We will now make the test
         #
+        ctx = self.context.copy()
         ctx['state'] = form['context'].get('state','all')
-        if form.get('fiscalyear',False):
-            ctx['fiscalyear'] = form['fiscalyear']
+        ctx['fiscalyear'] = form['fiscalyear']
+        if form['state']=='byperiod' :
             ctx['periods'] = form['periods'][0][2]
-        else:
+        elif form['state']== 'bydate':
+            ctx['date_from'] = form['date_from']
+            ctx['date_to'] =  form['date_to'] 
+        elif form['state'] == 'all':
+            ctx['periods'] = form['periods'][0][2]
             ctx['date_from'] = form['date_from']
             ctx['date_to'] = form['date_to']
         ##
+        
 
         self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
         
