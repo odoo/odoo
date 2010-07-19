@@ -72,9 +72,7 @@ class hr_applicant(osv.osv, crm.crm_case):
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
-        'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
-                             will receive a copy of the future" \
-                            " communication between partner and users by email"),
+        'email_cc': fields.text('Watchers Emails', size=252 , help="Every email sent or received  for the related record will be forwarded to these addresses(Comma-separated)"),
         'probability': fields.float('Probability'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
