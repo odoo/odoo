@@ -3,37 +3,7 @@
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
-		<header>
-			<pageGraphics>
-				<!--logo-->
-				<!--<fill color="darkblue"/>-->
-				<!--<stroke color="darkblue"/>-->
-
-				<!--TITLE COMPANY-->
-				<!-- <drawString x="4.6cm" y="28.7cm">[[ company.partner_id.name ]]</drawString> -->
-
-				<setFont name="Helvetica-Bold" size="9"/>
-
-
-				<!--COL 1-->
-				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
-				<drawRightString x="20cm" y="28.1cm">Partner Balance [[ data['form']['result_selection'] == 'customer' and '/ Débiteur' ]] [[ data['form']['result_selection'] == 'supplier' and '/ Créancier' ]] [[ data['form']['result_selection'] == 'all' and '/ Créancier et Débiteur' ]] [[ company.currency_id.name ]]</drawRightString>
-
-
-				<!-- Header -->
-
-
-				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.0cm" y="1cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
-				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
-				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-
-
-			    <lineMode width="0.7"/>
-				<lines>1cm 27.7cm 20cm 27.7cm</lines>
-				<setFont name="Helvetica" size="8"/>
-			</pageGraphics>
-		</header>
+		
     </pageTemplate>
   </template>
   <stylesheet>
@@ -71,6 +41,8 @@
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+	  <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>     
     </blockTableStyle>
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
@@ -197,6 +169,7 @@
     <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
 	<paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
 	<paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+	<paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>	
   </stylesheet>
   
   <story>
@@ -214,7 +187,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-        <blockTable colWidths="80.0,80.0,100.0,100.0,120.0,80.0" style="Table2_header">
+        <blockTable colWidths="80.0,80.0,100.0,140.0,80.0,80.0" style="Table2_header">
       <tr>
       	 <td><para style="terp_tblheader_General_Centre">Chat Account</para></td>   
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
