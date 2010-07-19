@@ -152,7 +152,7 @@
                                     string="Reply"
                                     name="%(crm.action_crm_send_mail)d"
                                     context="{'mail':'reply', 'model': 'hr.applicant', 'include_original' : True}"
-                                    icon="gtk-undo" type="action" />
+                                    icon="terp-mail-replied" type="action" />
                             </tree>
                             <form string="Communication history">
                                 <group col="4" colspan="4">
@@ -174,13 +174,13 @@
                                     string="Reply"
                                     name="%(crm.action_crm_send_mail)d"
                                     context="{'mail':'reply', 'model': 'hr.applicant', 'include_original' : True}"
-                                    icon="gtk-undo" type="action" />
+                                    icon="terp-mail-replied" type="action" />
                             </form>
                         </field>
                        <button colspan="4" string="Send New Email"
                            name="%(crm.action_crm_send_mail)d"
                            context="{'mail':'new', 'model': 'hr.applicant'}"
-                           icon="gtk-go-forward" type="action" />
+                           icon="terp-mail-message-new" type="action" />
                  </page>
                 </notebook>
             </form>
