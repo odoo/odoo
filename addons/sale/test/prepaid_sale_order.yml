@@ -248,20 +248,8 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
--
-  I create a Bill of Material record for LG Viewty Smart
--
-  !record {model: mrp.bom, id: mrp_bom_lgviewtysmart0}:
-    company_id: base.main_company
-    name: LG Viewty Smart
-    product_efficiency: 1.0
-    product_id: sale.product_product_lgviewtysmart0
-    product_qty: 1.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
-    sequence: 0.0
-    type: normal
--
+
+-    
   I create a Sale Order for LG Viewty Smart for qty 500 having Shipping Policy is 'Payment Before Delivery'
 -
   !record {model: sale.order, id: sale_order_so1}:
@@ -354,7 +342,7 @@
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so1"))
-    assert so.picking_ids,"Picking has not been generated for sale_order_so1"
+    assert so.picking_ids,"Picking has not been generated"
 -
   Products are delivered to the Cleartrail Customer.
 -
@@ -414,6 +402,10 @@
 -
   !python {model: procurement.order}: |
     from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_mrp = modules.search(cr, uid, [('name','=','mrp')])
+    mod_brw = modules.browse(cr,uid,mod_mrp)[0]
+    assert (mod_brw.state == 'installed'),"mrp module is not installed"
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
@@ -421,45 +413,57 @@
 -
   I verify that a manufacturing order has been generated
 -
-  !python {model: mrp.production}: |
+  !python {model: sale.order}: |
     from tools.translate import _
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
-    mnf_ids = self.search(cr, uid, [('origin','=',so.name)])
+    modules = self.pool.get('ir.module.module')
+    mod_mrp = modules.search(cr, uid, [('name','=','mrp')])
+    mod_brw = modules.browse(cr,uid,mod_mrp)[0]
+    assert (mod_brw.state == 'installed'),"mrp module is not installed"
+    mrp_obj = self.pool.get('mrp.production')
+    so = self.browse(cr, uid, ref("sale_order_so1"))
+    mnf_ids = mrp_obj.search(cr, uid, [('origin','=',so.name)])
     assert mnf_ids, _('Manufacturing order has not been generated')
--
+- 
   Manufacturing order has been generated
 -
-  !python {model: mrp.production}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+  !python {model: sale.order}: |
+    from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_mrp = modules.search(cr, uid, [('name','=','mrp')])
+    mod_brw = modules.browse(cr,uid,mod_mrp)[0]
+    assert (mod_brw.state == 'installed'),"mrp module is not installed"
+    mrp_obj = self.pool.get('mrp.production')
+    so = self.browse(cr, uid, ref("sale_order_so1"))
     import netsvc
     wf_service = netsvc.LocalService("workflow")
-    mnf_ids = self.search(cr, uid, [('origin','=',so.name)])
+    mnf_ids = mrp_obj.search(cr, uid, [('origin','=',so.name)])
     for mnf in mnf_ids:
       wf_service.trg_validate(uid, 'mrp.production',mnf,'button_produce', cr)
 - 
-  Creating a mrp.product.produce record
-- 
-  !record {model: mrp.product.produce, id: mrp_product_produce_0}:
-    mode: consume_produce
-    product_qty: 500.0
-- 
   Then I click on the "Confirm" button
 -
-  !python {model: mrp.production}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
+  !python {model: sale.order}: |
+    from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_mrp = modules.search(cr, uid, [('name','=','mrp')])
+    mod_brw = modules.browse(cr,uid,mod_mrp)[0]
+    assert (mod_brw.state == 'installed'),"mrp module is not installed"
+    mrp_obj = self.pool.get('mrp.production')
+    so = self.browse(cr, uid, ref("sale_order_so1"))
     import netsvc
     wf_service = netsvc.LocalService("workflow")
-    mnf_ids = self.search(cr, uid, [('origin','=',so.name)])
+    mnf_ids = mrp_obj.search(cr, uid, [('origin','=',so.name)])
     for mnf in mnf_ids:
       wf_service.trg_validate(uid, 'mrp.production',mnf,'button_produce_done', cr) 
 -
-  I verify that the manufacturing state is "done".
+  I verify that the manufacturing state is "done"
 -
-  !python {model: mrp.production}: |
+  !python {model: sale.order}: |
     from tools.translate import _
+    modules = self.pool.get('ir.module.module')
+    mod_mrp = modules.search(cr, uid, [('name','=','mrp')])
+    mod_brw = modules.browse(cr,uid,mod_mrp)[0]
+    assert (mod_brw.state == 'installed'),"mrp module is not installed"
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
     mnf_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','done')])
