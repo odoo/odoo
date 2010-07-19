@@ -62,7 +62,8 @@ def _createInvoices(self, cr, uid, data, context={}):
             raise osv.except_osv(
                 _('Error'),
                 _("You cannot make an advance on a sale order that is defined as 'Automatic Invoice after delivery'."))
-        val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'],uom = False, partner_id = sale.partner_id.id, fiscal_position = sale.fiscal_position.id)
+        fpos = sale.fiscal_position and sale.fiscal_position.id or False
+        val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'],uom = False, partner_id = sale.partner_id.id, fposition_id = fpos)
         line_id =obj_lines.create(cr, uid, {
             'name': val['value']['name'],
             'account_id':val['value']['account_id'],
@@ -89,7 +90,7 @@ def _createInvoices(self, cr, uid, data, context={}):
             'currency_id' :sale.pricelist_id.currency_id.id,
             'comment': '',
             'payment_term':sale.payment_term.id,
-            'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
+            'fiscal_position': fpos or sale.partner_id.property_account_position.id
             }
         inv_obj = pool_obj.get('account.invoice')
         inv_id = inv_obj.create(cr, uid, inv)
