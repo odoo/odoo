@@ -33,7 +33,7 @@ class event_confirm(osv.osv_memory):
         'msg': fields.text('Message', readonly=True),
     }
     _defaults = {
-        'msg': _('Total Registrations of this Event could not reached Minimum Registration Limit. What do you want to do?')
+        'msg': _('Warning: This Event has not reached its Minimum Registration Limit. Are you sure you want to confirm it?')
     }
 
     def confirm(self, cr, uid, ids, context):

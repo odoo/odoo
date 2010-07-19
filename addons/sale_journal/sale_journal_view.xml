@@ -1,6 +1,9 @@
 <openerp>
    <data>
 
+        <menuitem id="menu_sale_journal_config" name="Sale Journals"
+            parent="base.menu_base_config" sequence="5"/>
+
    <!--  sale journal invoice Type's Form  view -->
 
         <record model="ir.ui.view" id="view_sale_journal_invoice_type_form">
@@ -40,7 +43,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-    <!-- <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="sale.menu_shop_configuration" action="action_definition_journal_invoice_type"/> -->
+     <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="menu_sale_journal_config" action="action_definition_journal_invoice_type"/> 
 
     <!-- sale journal Form view  -->
 
@@ -138,7 +141,8 @@
             <field name="search_view_id" ref="view_sale_journal_search"/>
         </record>
 
-        <menuitem id="menu_definition_journal" name="Sales Journals" parent="product.prod_config_main"  action="action_definition_journal" sequence="70" />
+
+        <menuitem id="menu_definition_journal" name="Sales Journals" parent="menu_sale_journal_config"  action="action_definition_journal" sequence="70" />
 
     <!-- Inherit sales order form view -->
 
@@ -151,7 +155,7 @@
                 <field name="origin" position="after">
                 	<group colspan="2" col="2">
 	                    <separator string="Journal" colspan="4"/>
-	                    <field name="journal_id" select="1" widget="selection"/>
+	                    <field name="journal_id" select="1"/>
 	                    <field name="invoice_type_id" select="1" widget="selection"/>
                     </group>
                 </field>

@@ -100,6 +100,9 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
+        if not context:
+            context = {}
+        res = False
         if type(ids) in (int, long,):
             ids = [ids]
         data_pool = self.pool.get('ir.model.data')
@@ -107,7 +110,7 @@ class event_event(osv.osv):
         for event in self.browse(cr, uid, ids, context=context):
             total_confirmed = event.register_current
             if total_confirmed >= event.register_min or event.register_max == 0:
-                self.do_confirm(cr, uid, [event.id], context=context)
+                res = self.do_confirm(cr, uid, [event.id], context=context)
             else:
                 unconfirmed_ids.append(event.id)
         if unconfirmed_ids:
@@ -126,8 +129,8 @@ class event_event(osv.osv):
                 'target': 'new',
                 'context': context,
                 'nodestroy': True
-            }
-        return True
+            }        
+        return res
 
 
     def _get_register(self, cr, uid, ids, fields, args, context=None):
@@ -219,10 +222,10 @@ class event_event(osv.osv):
         'mail_auto_confirm': fields.boolean('Mail Auto Confirm', readonly=False, states={'done': [('readonly', True)]}, help='Check this box if you want ot use the automatic confirmation emailing or the reminder'),
         'mail_registr': fields.text('Registration Email', readonly=False, states={'done': [('readonly', True)]}, help='This email will be sent when someone subscribes to the event.'),
         'mail_confirm': fields.text('Confirmation Email', readonly=False, states={'done': [('readonly', True)]}, help="This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."),
-        'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Product which is provided cost of event. Invoice of event will be created with this Product."),
+        'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="The invoices of this event registration will be created with this Product. Thus it allows you to set the default label and the accounting info you want by default on these invoices."),
         'note': fields.text('Notes', help="Description or Summary of Event", readonly=False, states={'done': [('readonly', True)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist version for current event."),
-        'unit_price': fields.related('product_id', 'list_price', type='float', string='Registration Cost', readonly=True, states={'draft':[('readonly',False)]}),
+        'unit_price': fields.related('product_id', 'list_price', type='float', string='Registration Cost', readonly=True, states={'draft':[('readonly',False)]}, help="This will be the default price used as registration cost when invoicing this event. Note that you can specify for each registration a specific amount if you want to"),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}),
         'speaker_ids':fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
         'address_id': fields.many2one('res.partner.address','Location Address', readonly=False, states={'done': [('readonly', True)]}),
@@ -442,6 +445,8 @@ class event_registration(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
+        if not context:
+            context = {}
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
         for registration in self.browse(cr, uid, ids, context=context):
