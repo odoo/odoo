@@ -110,7 +110,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
                         'categ_id' : categ_id,
                         'description' : opp.description or False,
                         'date' : this.date,
-                        'section_id' : opp.section_id and opp.section_id.id or False,
+                        'section_id' : this.section_id.id or opp.section_id.id or False,
                         'partner_id': opp.partner_id and opp.partner_id.id or False,
                         'partner_address_id': opp.partner_address_id and opp.partner_address_id.id or False,
                         'partner_phone' : opp.phone or (opp.partner_address_id and opp.partner_address_id.phone or False),
