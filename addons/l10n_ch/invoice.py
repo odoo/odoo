@@ -82,7 +82,7 @@ class account_invoice(osv.osv):
         'reference_type': fields.selection(_get_reference_type,
             'Reference Type', required=True),
         ### Partner bank link between bank and partner id   
-        'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
+        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='The partner bank account to pay\nKeep empty to use the default'
             ),
         ### Amount to pay
@@ -129,8 +129,8 @@ class account_invoice(osv.osv):
         on the BVR reference type and the invoice partner bank type"""
         for invoice in self.browse(cursor, user, ids):
             if invoice.type in 'in_invoice':
-                if invoice.partner_bank and \
-                        invoice.partner_bank.state in \
+                if invoice.partner_bank_id and \
+                        invoice.partner_bank_id.state in \
                         ('bvrbank', 'bvrpost') and \
                         invoice.reference_type != 'bvr':
                             return False
@@ -173,7 +173,7 @@ class account_invoice(osv.osv):
                 bank_id = p.bank_ids[0].id
 
         if type in ('in_invoice', 'in_refund'):
-            res['value']['partner_bank'] = bank_id
+            res['value']['partner_bank_id'] = bank_id
 
         if partner_bank != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
