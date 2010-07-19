@@ -48,25 +48,24 @@ class product_uom(osv.osv):
     _name = 'product.uom'
     _description = 'Product Unit of Measure'
 
+    def _compute_factor_inv(self, factor):
+        return factor and round(1.0 / factor, 6) or 0.0
+
     def _factor_inv(self, cursor, user, ids, name, arg, context):
         res = {}
         for uom in self.browse(cursor, user, ids, context=context):
-            if uom.factor:
-                res[uom.id] = round(1 / uom.factor, 6)
-            else:
-                res[uom.id] = 0.0
+            res[uom.id] = self._compute_factor_inv(uom.factor)
         return res
 
     def _factor_inv_write(self, cursor, user, id, name, value, arg, context):
-        if value:
-            self.write(cursor, user, id, {
-                'factor': round(1/value, 6),
-            }, context=context)
-        else:
-            self.write(cursor, user, id, {
-                'factor': 0.0,
-            }, context=context)
-        return True
+        return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
+  
+    def create(self, cr, uid, data, context={}):
+        if 'factor_inv' in data:
+            if data['factor_inv'] <> 1:
+                data['factor'] = self._compute_factor_inv(data['factor_inv'])
+            del(data['factor_inv'])
+        return super(product_uom, self).create(cr, uid, data, context)
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
@@ -85,13 +84,11 @@ class product_uom(osv.osv):
                  "Use 1.0 for a UoM that cannot be further split, such as a piece."),
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
         'uom_type': fields.selection([('bigger','Bigger than the reference UoM'),
-                                      ('reference','Reference UoM for this category (ratio=1)'),
+                                      ('reference','Reference UoM for this category'),
                                       ('smaller','Smaller than the reference UoM')],'UoM Type', required=1),
     }
 
     _defaults = {
-        'factor': 1.0,
-        'factor_inv': 1.0,
         'active': 1,
         'rounding': 0.01,
         'uom_type': 'reference',
