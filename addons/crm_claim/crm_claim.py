@@ -22,6 +22,7 @@
 from osv import fields, osv
 from crm import crm
 import time
+
 class crm_claim(osv.osv, crm.crm_case):
     """
     Crm claim
@@ -74,7 +75,7 @@ class crm_claim(osv.osv, crm.crm_case):
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                 # domain="[('partner_id','=',partner_id)]"
                                  ), 
-        'email_cc': fields.text('Watchers Emails', size=252, help="These people will receive a copy of the future communication between partner and users by email"), 
+        'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
         'partner_name': fields.char("Employee's Name", size=64), 
         'partner_mobile': fields.char('Mobile', size=32), 
@@ -86,8 +87,7 @@ class crm_claim(osv.osv, crm.crm_case):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {

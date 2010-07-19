@@ -229,26 +229,6 @@
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
 
-        <!-- Cases Tree View  -->
-
-        <record id="crm_case_log_tree-view" model="ir.ui.view">
-            <field name="name">crm.case.log.tree</field>
-            <field name="model">crm.case.log</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Case logs">
-                    <field name="date"/>
-                    <field name="name"/>
-                    <field name="user_id"/>
-                    <field name="section_id"/>
-                    <!--
-                    <field name="som"/>
-                    <field name="canal_id"/>
-                    -->
-                </tree>
-            </field>
-        </record>
-
         <!-- Segmentation line Tree View  -->
 
         <record id="crm_segmentation_line_tree-view" model="ir.ui.view">
@@ -564,61 +544,50 @@
                             <field name="active" select="2"/>
                             <separator colspan="4" string="References"/>
                             <field colspan="4" name="ref"/>
-                            <field colspan="4" name="log_ids" nolabel="1">
-                                <tree string="Logs">
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </tree>
-                                <form string="Logs">
-                                    <separator string="Action Information" colspan="4"/>
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </form>
-                            </field>
                         </page>
                         <page string="Emails" groups="base.group_extended">
                            <group colspan="4">
-                               <field colspan="4" name="email_cc" string="CC" widget="char" size="512"/>
+                               <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
                            </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
-                                <form string="Communication history">
-                                    <group col="4" colspan="4">
-                                        <field name="email_from"/>
-                                        <field name="date"/>
-                                        <field name="email_to" widget="char" size="512"/>
-                                        <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Details">
-                                            <field name="description" colspan="4" nolabel="1"/>
-                                        </page>
-                                        <page string="Attachments">
-                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                        </page>
-                                    </notebook>
-                                    <button colspan="4"
-                                    string="Reply"
-                                    name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
-                                    icon="gtk-undo" type="action" />
-                                </form>
-                                <tree string="Communication history">
-                                    <field name="date"/>
-                                    <field name="email_from" />
-                                    <field name="email_to"/>
-                                    <field name="description"/>
-                                </tree>
-                            </field>
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+		                        <tree string="Communication history">
+		                            <field name="display_text" string="History Information"/>
+		                            <button
+		                                string="Reply"
+		                                name="%(crm.action_crm_send_mail)d"
+		                                context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
+		                                icon="terp-mail-replied" type="action" />
+		                        </tree>
+		                        <form string="Communication history">
+		                            <group col="4" colspan="4">
+		                                <field name="email_from"/>
+		                                <field name="date"/>
+		                                <field name="email_to" widget="char" size="512"/>
+		                                <field name="email_cc" widget="char" size="512"/>
+		                                <field name="name" colspan="4" widget="char" size="512"/>
+		                            </group>
+		                            <notebook colspan="4">
+		                                <page string="Details">
+		                                    <field name="description" colspan="4" nolabel="1"/>
+		                                </page>
+		                                <page string="Attachments">
+		                                    <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+		                                </page>
+		                            </notebook>
+		                            <button colspan="4"
+		                                string="Reply"
+		                                name="%(crm.action_crm_send_mail)d"
+		                                context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
+		                                icon="terp-mail-replied" type="action" />
+		                        </form>
+		                    </field>
                             <button colspan="2" string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.case.custom'}"
-                                icon="gtk-go-forward" type="action" />
+                                icon="terp-mail-message-new" type="action" />
                             <button colspan="2" string="Forward to Partner"
                                 name="%(crm_lead_forward_to_partner_act)d"
-                                icon="gtk-go-forward" type="action" />
+                                icon="terp-mail-forward" type="action" />
                          </page>
                     </notebook>
                 </form>

@@ -300,7 +300,7 @@ class account_invoice(osv.osv):
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
-            help='The bank account to pay to or to be paid from', readonly=True, states={'draft':[('readonly',False)]}),
+            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Parner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={
@@ -892,7 +892,7 @@ class account_invoice(osv.osv):
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
         self._log_event(cr, uid, ids)
-        
+
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -924,12 +924,20 @@ class account_invoice(osv.osv):
             move_id = obj_inv.move_id and obj_inv.move_id.id or False
             reference = obj_inv.reference
             if not number:
+                tmp_context = {
+                    'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id
+                }
                 if obj_inv.journal_id.invoice_sequence_id:
-                    sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
+                    sequence_id = obj_inv.journal_id.invoice_sequence_id.id
+                    number = self.pool.get('ir.sequence').get_id(cr, uid,
+                                                                 sequence_id,
+                                                                 'id',
+                                                                 context=tmp_context)
                 else:
-                    number = self.pool.get('ir.sequence').get(cr, uid,
-                            'account.invoice.' + invtype)
+                    number = self.pool.get('ir.sequence').get_id(cr, uid,
+                                                                 'account.invoice.%s' % invtype,
+                                                                 'code',
+                                                                 context=tmp_context)
                 if invtype in ('in_invoice', 'in_refund'):
                     ref = reference
                 else:

@@ -192,6 +192,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help">In OpenERP, a product is something you can buy and sell. It can be a raw material, a stockable product, a consumable or a service. The product form contains a detailed information on the products like procurement logistic, sales price, product category, suppliers, etc.</field>
         </record>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
@@ -250,6 +251,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
+            <field name="help">Products category opens a tree structure view of your products by category.</field>
         </record>
         <menuitem
             action="product_category_action"
@@ -297,6 +299,7 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
+                    <field name="uom_type"/>
                     <field name="factor"/>
                     <field name="rounding"/>
                 </tree>
@@ -487,7 +490,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Variant">
-                     <field name="product_tmpl_id" select="1"/>                
+                     <field name="product_tmpl_id" select="1"/>
                     <field name="active" select="1"/>
                     <field name="variants" select="1"/>
                     <field name="default_code" select="1"/>

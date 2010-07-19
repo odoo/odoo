@@ -51,8 +51,7 @@ class crm_meeting(osv.osv, crm_case):
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]", states={'done': [('readonly', True)]}), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'), 
+                        select=True, help='Sales team to which Case belongs to.'), 
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
         'id': fields.integer('ID'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
@@ -69,8 +68,7 @@ class crm_meeting(osv.osv, crm_case):
                                  'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'state': fields.selection([('open', 'Confirmed'),
                                     ('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),

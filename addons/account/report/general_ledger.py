@@ -266,7 +266,7 @@ class general_ledger(rml_parse.rml_parse):
             JOIN account_journal j on (l.journal_id=j.id)
             WHERE %s AND l.account_id = %%s AND l.date<=%%s AND l.date>=%%s ORDER by %s
         """ % (self.query, sql_sort)
-        self.cr.execute(sql, (account.id,  self.date_borne['max_date'], self.date_borne['min_date']))
+        self.cr.execute(sql, (account.id, self.date_borne['max_date'], self.date_borne['min_date']))
         res = self.cr.dictfetchall()
         account_sum = 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')

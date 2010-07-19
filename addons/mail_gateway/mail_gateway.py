@@ -41,8 +41,7 @@ class mailgate_thread(osv.osv):
     _description = 'Mailgateway Thread'
 
     _columns = {
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True)], readonly=True),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False)], readonly=True),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', readonly=True),
     }
 
     def message_new(self, cr, uid, msg, context):
@@ -145,9 +144,25 @@ class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
+    def _get_display_text(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for message in self.browse(cr, uid, ids, context=context):
+            msg_txt = ''
+            if message.history:
+                msg_txt += (message.email_from or '/') + ' wrote on ' + message.date + ':\n\t'
+                msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
+            else:
+                msg_txt = (message.user_id.name or '/') + '  on ' + message.date + ':\n\t'
+                if message.name == 'Opportunity':
+                    msg_txt += "Converted to Opportunity"
+                else:
+                    msg_txt += "Changed Status to: " + message.name
+            result[message.id] = msg_txt
+        return result
+
     _name = 'mailgate.message'
     _description = 'Mailgateway Message'
-    _order = 'id desc'
+    _order = 'date desc'
     _columns = {
         'name':fields.text('Subject', readonly=True),
         'model': fields.char('Object Name', size=128, select=1, readonly=True),
@@ -166,6 +181,7 @@ class mailgate_message(osv.osv):
         'description': fields.text('Description', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
+        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'), 
     }
 
     def init(self, cr):
@@ -459,7 +475,7 @@ class mailgate_tool(osv.osv_memory):
             'partner_id': False
         }
         from_email = self.to_email(from_email)[0]
-        address_ids = address_pool.search(cr, uid, [('email', '=', from_email)])
+        address_ids = address_pool.search(cr, uid, [('email', 'like', from_email)])
         if address_ids:
             address = address_pool.browse(cr, uid, address_ids[0])
             res['partner_address_id'] = address_ids[0]

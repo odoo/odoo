@@ -2,12 +2,12 @@
 <openerp>
     <data>
 
-        <record id="view_event_confirm_registration" model="ir.ui.view">
-            <field name="name">Registration Confirmation</field>
-            <field name="model">event.confirm.registration</field>
+        <record id="view_event_confirm" model="ir.ui.view">
+            <field name="name">Event Confirmation</field>
+            <field name="model">event.confirm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Registration Confirmation">
+              <form string="Event Confirmation">
                     <field name="msg" nolabel="1" colspan="4"/>
                     <separator string="" colspan="4"/>
                     <group colspan="4" col="6">
@@ -18,13 +18,14 @@
             </field>
         </record>
 
-        <record id="action_event_confirm_registration" model="ir.actions.act_window">
-            <field name="name">Registrations</field>
+        <record id="action_event_confirm" model="ir.actions.act_window">
+            <field name="name">Event Confirmation</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">event.confirm.registration</field>
+            <field name="res_model">event.confirm</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_event_confirm_registration"/>
+            <field name="view_id" ref="view_event_confirm"/>
+            <field name="context">{'record_id' : active_id}</field>
             <field name="target">new</field>
         </record>
 

@@ -25,6 +25,7 @@ import time
 from mx import DateTime
 from decimal import Decimal
 from tools.translate import _
+import decimal_precision as dp
 
 class account_cashbox_line(osv.osv):
     
@@ -55,9 +56,9 @@ class account_cashbox_line(osv.osv):
         return {'value':{'subtotal': sub or 0.0}}
 
     _columns = {
-        'pieces': fields.float('Values', digits=(16,2)),
+        'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
         'number': fields.integer('Number'),
-        'subtotal': fields.function(_sub_total, method=True, string='Sub Total', type='float',digits=(16,2)),
+        'subtotal': fields.function(_sub_total, method=True, string='Sub Total', type='float', digits_compute=dp.get_precision('Account')),
         'starting_id': fields.many2one('account.bank.statement',ondelete='cascade'),
         'ending_id': fields.many2one('account.bank.statement',ondelete='cascade'),
      }
@@ -176,7 +177,7 @@ class account_cash_statement(osv.osv):
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-        'balance_end_real': fields.float('Closing Balance', digits=(16,2), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
+        'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('confirm', 'Confirm'),

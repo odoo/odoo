@@ -366,6 +366,7 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
         default['work_ids'] = []
+        default['active'] = True
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
@@ -375,8 +376,17 @@ class task(osv.osv):
                  return False
         return True
 
+    def _is_template(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for task in self.browse(cr, uid, ids, context=context):
+            res[task.id] = True
+            if task.project_id:
+                if task.project_id.active == False or task.project_id.state == 'template':
+                    res[task.id] = False
+        return res
+
     _columns = {
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it. This is basically used for the management of templates of projects and tasks."),
+        'active': fields.function(_is_template, method=True, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True),
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
