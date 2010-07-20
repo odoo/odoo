@@ -424,7 +424,7 @@
             <field name="model">hr.payslip</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Payslip">
+                <tree colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payslip">
                     <field name="number"/>
                     <field name="employee_id"/>
                     <field name="name"/>
@@ -851,7 +851,7 @@
             <field name="model">hr.payroll.register</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Payroll Register">
+                <tree  colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payroll Register">
                     <field name="number"/>
                     <field name="name"/>
                     <field name="date"/>
@@ -878,7 +878,7 @@
                     <notebook colspan="4">
                         <page string="Payslips">
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Payslip">
+                                <tree colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payslip">
                                     <field name="number"/>
                                     <field name="employee_id"/>
                                     <field name="name"/>

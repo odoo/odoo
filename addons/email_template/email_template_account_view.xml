@@ -54,7 +54,7 @@
             <field name="model">email_template.account</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="SMTP Server">
+                <tree  colors="blue:state in ('draft');black:state in ('suspended','approved')" string="SMTP Server">
                     <field name="name" select="2" />
                     <field name="email_id" select="2" />
                     <field name="smtpuname" select="2" />
