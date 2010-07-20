@@ -305,7 +305,7 @@
  		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit()- sum_credit()) ]]</para></td>        
       </tr>
     </blockTable>
-    <blockTable colWidths="60.0,100.0,70.0,73.0,77.0,60.0,80.0" style="Table_Journal_Title" repeatRows="1">[[ print_data(data)== True or removeParentNode('blockTable') ]]
+    <blockTable colWidths="60.0,100.0,70.0,73.0,77.0,60.0,80.0" style="Table_Journal_Title" repeatRows="1">[[ print_data(data) or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="terp_tblheader_Details">Code</para></td>
         <td><para style="terp_tblheader_Details">Journal Name</para></td>
@@ -322,7 +322,7 @@
         <td><para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit()) ]]</para></td>
         <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()) ]]</para></td>
 		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit()- sum_credit()) ]]</para></td>         
-		<td><para style="terp_default_Bold_9_Right"><u>[[  formatLang(sum_currency_amount_account(o, data['form'])) or '' ]]</u></para></td>                        
+		<td><para style="terp_default_Bold_9_Right"><u>[[  formatLang(sum_currency_amount_account(o, data)) or '' ]]</u></para></td>                        
       </tr>
     </blockTable>    
     
@@ -349,7 +349,7 @@
           </td>          
         </tr>
       </blockTable>
-      <blockTable colWidths="70.0,100.0,70.0,73.0,77.0,60.0,80.0" style="Table_Journal_Detail">[[print_data(data)== True  or removeParentNode('blockTable') ]]
+      <blockTable colWidths="70.0,100.0,70.0,73.0,77.0,60.0,80.0" style="Table_Journal_Detail">[[print_data(data)  or removeParentNode('blockTable') ]]
         <tr>
           <td><para style="terp_default_9"><font>[[ repeatIn(lines(o.id),'line')]]</font> [[ line['code'] ]]</para></td>
           <td><para style="terp_default_9">[[ line['name'] ]]</para></td>
