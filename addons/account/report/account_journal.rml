@@ -205,10 +205,11 @@
     </para>
       <blockTable colWidths="80.0,80.0,80.0,120.0,70.0,100.0" style="Table2">
       <tr>
-      	<td><para style="terp_tblheader_General_Centre"><font> Chat Account</font></para></td>        
+      	<td><para style="terp_tblheader_General_Centre">Company <font color="white"> [[ data['model']=='account.journal.period' or removeParentNode('para') ]]</font></para>        
+      	<para style="terp_tblheader_General_Centre">Chart of Account <font color="white"> [[ data['model']=='ir.ui.menu' or removeParentNode('para') ]]</font></para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
 		<td><para style="terp_tblheader_General_Centre">Journal</para></td>        
-        <td><para style="terp_tblheader_General_Centre">Filters By <font color="white">[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font><font>[[ get_filter(data) or '' ]]</font></para></td>
+        <td><para style="terp_tblheader_General_Centre">Filters By <font color="white">[[ get_filter(data)=='No Filter'  or removeParentNode('font') ]]</font><font>[[ get_filter(data) or '' ]]</font></para></td>
          <td><para style="terp_tblheader_General_Centre">Entries Sorted By</para></td>
         <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
