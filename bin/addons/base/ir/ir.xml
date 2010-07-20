@@ -319,21 +319,42 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report xml">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="model" select="1"/>
-                    <newline/>
-                    <field name="report_name" select="1"/>
-                    <field name="report_xsl"/>
-                    <field name="report_xml"/>
-                    <field name="report_rml"/>
-                    <field name="auto"/>
-                    <field name="usage"/>
-                    <field name="header"/>
-                    <field name="report_type"/>
-                    <field name="attachment"/>
-                    <field name="attachment_use"/>
-                    <field colspan="4" name="groups_id"/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="type" select="1"/>
+                        <field name="report_type"/>
+                    </group>
+                    
+                    <notebook colspan="4">
+                        <page string="Other Configuration">
+                            <group col="2" colspan="2">
+                                <separator string="Internal" colspan="2"/>
+                                <field name="report_name" select="1"/>
+                                <field name="model" select="1"/>
+                                <field name="usage"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="XML Report" colspan="2"/>
+                                <field name="report_xsl"/>
+                                <field name="report_xml"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Attachments" colspan="2"/>
+                                <field name="attachment"/>
+                                <field name="attachment_use"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="RML Report" colspan="2"/>
+                                <field name="report_rml"/>
+                                <field name="header"/>
+                                <field name="auto"/>
+                            </group>
+                        </page>
+                        <page string="Security">
+                            <separator string="Groups" colspan="4"/>
+                            <field colspan="4" name="groups_id" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
