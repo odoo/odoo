@@ -43,6 +43,18 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 			'sum_credit': self._sum_credit,
 			'get_currency': self._get_currency,
 			'comma_me' : self.comma_me,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period,
+            'get_account': self._get_account,
+            'get_filter': self._get_filter,
+            'get_start_date': self._get_start_date,
+            'get_end_date': self._get_end_date,
+            'sum_currency_amount_account': self._sum_currency_amount_account,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_start_date':self._get_start_date,
+            'get_end_date':self._get_end_date,
+            'get_journal': self._get_journal,            
+
 		})
 
 	def date_range(self, start, end):
@@ -398,6 +410,18 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 	def _get_currency(self, form):
 		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
 
+	def _sum_currency_amount_account(self, account, form):
+	    self._set_get_account_currency_code(account.id)
+	    self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
+	    total = self.cr.fetchone()
+	
+	    if self.account_currency:
+	        return_field = str(total[0]) + self.account_currency
+	        return return_field
+	    else:
+	        currency_total = self.tot_currency = 0.0
+	        return currency_total  
+	       
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
 		'addons/account/report/third_party_ledger.rml',parser=third_party_ledger,
 		header=False)
