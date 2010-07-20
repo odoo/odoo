@@ -115,7 +115,7 @@ class crm_lead(osv.osv, crm_case):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which this case belongs to. Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
-        'email_cc': fields.text('Watchers Emails', size=252 , help="Every email sent or received  for the related record will be forwarded to these addresses(Comma-separated)"),
+        'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
 

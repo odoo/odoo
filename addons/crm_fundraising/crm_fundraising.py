@@ -46,7 +46,7 @@ class crm_fundraising(osv.osv, crm.crm_case):
             'partner_id': fields.many2one('res.partner', 'Partner'), 
             'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"), 
-            'email_cc': fields.text('Watchers Emails', size=252 , help="Every email sent or received  for the related record will be forwarded to these addresses(Comma-separated)"), 
+            'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"), 
             'email_from': fields.char('Email', size=128, help="These people will receive email."), 
             'date_closed': fields.datetime('Closed', readonly=True), 
             'date': fields.datetime('Date'), 
