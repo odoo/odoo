@@ -48,12 +48,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_sortby': self._get_sortby,
-            'sum_currency_amount_account': self._sum_currency_amount_account,     
-            'get_filter': self._get_filter,   
+            'sum_currency_amount_account': self._sum_currency_amount_account,
+            'get_filter': self._get_filter,
             'get_journal': self._get_journal,
             'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,    
-            'get_currency ':self.get_currency        
+            'get_end_date':self._get_end_date,
+            'get_currency ':self._get_currency
         })
 
     def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
@@ -115,21 +115,21 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return return_field
         else:
             currency_total = self.tot_currency = 0.0
-            return currency_total  
+            return currency_total
     def _get_account(self, data):
         if data['model']=='account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
-        return super(journal_print ,self)._get_account(data) 
+        return super(journal_print ,self)._get_account(data)
 
     def _get_fiscalyear(self, data):
         if data['model']=='account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).fiscalyear_id.name
-        return super(journal_print ,self)._get_fiscalyear(data) 
-               
+        return super(journal_print ,self)._get_fiscalyear(data)
+
     def _get_currency(self, data):
         if data['model']=='account.journal.period':
            return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).journal_id.currency or False
-        return data['form']['amount_currency']        
+        return data['form']['amount_currency']
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
