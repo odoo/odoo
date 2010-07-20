@@ -70,6 +70,10 @@
       <lineStyle kind="LINEAFTER" colorName="#cccccc" start="7,0" stop="7,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="7,0" stop="7,0"/>   
     </blockTableStyle>
+ 	<blockTableStyle id="Table3_header">
+      <blockAlignment value="LEFT"/>
+        <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+    </blockTableStyle>      
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -107,7 +111,7 @@
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -134,7 +138,7 @@
     <para style="P3">
       <font color="white"> </font>
     </para>
-      <blockTable colWidths="80.0,80.0,80.0,120.0,100.0" style="Table2_header">
+      <blockTable colWidths="80.0,80.0,80.0,140.0,80.0" style="Table2_header">
       <tr>
       	<td><para style="terp_tblheader_General_Centre">Company <font color="white"> [[ data['model']=='account.journal.period' or removeParentNode('para') ]]</font></para>        
       	<para style="terp_tblheader_General_Centre">Chart of Account <font color="white"> [[ data['model']=='ir.ui.menu' or removeParentNode('para') ]]</font></para></td>
@@ -148,7 +152,7 @@
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data) or '' ]]</para></td>
 		<td><para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
-        	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+        	<blockTable colWidths="60.0,60.0" style="Table3_header">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
 				<tr>
 	               <td><para style="terp_tblheader_Details_Centre">Start Date</para></td>
 	        		<td><para style="terp_tblheader_Details_Centre">End Date</para></td>        	
@@ -158,7 +162,7 @@
 	        		<td><para style="terp_default_Centre_8">[[ get_end_date(data) ]]</para></td>        	
 	        	</tr>
         	</blockTable>
-        	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+        	<blockTable colWidths="65.0,65.0" style="Table3_header">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
 				<tr>
 			        <td><para style="terp_tblheader_Details_Centre">Start Period</para></td>
 			        <td><para style="terp_tblheader_Details_Centre">End Period</para></td>      	
