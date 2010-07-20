@@ -131,6 +131,6 @@ class common_report_header(object):
         if data.get('form', False) and data['form'].get('journal_ids', False):
             self.cr.execute('select code from account_journal where id IN %s',(tuple(data['form']['journal_ids']),))
             codes = [x for x, in self.cr.fetchall()]
-        return codes or ''
+        return codes 
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
