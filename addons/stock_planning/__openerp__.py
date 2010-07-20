@@ -145,6 +145,7 @@ Remarks:
         "wizard/stock_planning_forecast_view.xml",
         "wizard/stock_planning_createlines_view.xml",
     ],
+    "test": ["test/stock_planning.yml"],
     "active": False,
     "installable": True,
 }
