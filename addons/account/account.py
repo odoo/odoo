@@ -2573,12 +2573,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
         data = data_pool.browse(cr, uid, data_id[0])
         view_id_cash = data.res_id
-        #view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: why put  fix name
-        
+       
         data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view_multi')])
         data = data_pool.browse(cr, uid, data_id[0])
         ref_acc_bank = data.res_id
-        #ref_acc_bank = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fix name
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
         current_num = 1
@@ -2605,8 +2603,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
             if obj_multi.seq_journal:
                 vals_seq={
-                        'name': _('Bank Journal ') + vals['name'],
-                        'code': 'account.journal',
+                    'name': _('Bank Journal ') + vals['name'],
+                    'code': 'account.journal',
                 }
                 seq_id = obj_sequence.create(cr,uid,vals_seq)
 
@@ -2662,9 +2660,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             for position in obj_fiscal_position_template.browse(cr, uid, fp_ids):
 
                 vals_fp = {
-                           'company_id' : company_id,
-                           'name' : position.name,
-                           }
+                    'company_id' : company_id,
+                    'name' : position.name,
+                }
                 new_fp = obj_fiscal_position.create(cr, uid, vals_fp)
 
                 obj_tax_fp = self.pool.get('account.fiscal.position.tax')
@@ -2672,18 +2670,18 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
                 for tax in position.tax_ids:
                     vals_tax = {
-                                'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
-                                'tax_dest_id' : tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                                'position_id' : new_fp,
-                                }
+                        'tax_src_id' : tax_template_ref[tax.tax_src_id.id],
+                        'tax_dest_id' : tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
+                        'position_id' : new_fp,
+                    }
                     obj_tax_fp.create(cr, uid, vals_tax)
 
                 for acc in position.account_ids:
                     vals_acc = {
-                                'account_src_id' : acc_template_ref[acc.account_src_id.id],
-                                'account_dest_id' : acc_template_ref[acc.account_dest_id.id],
-                                'position_id' : new_fp,
-                                }
+                        'account_src_id' : acc_template_ref[acc.account_src_id.id],
+                        'account_dest_id' : acc_template_ref[acc.account_dest_id.id],
+                        'position_id' : new_fp,
+                    }
                     obj_ac_fp.create(cr, uid, vals_acc)
         
         #fially inactive the demo chart of accounts

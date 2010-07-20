@@ -97,6 +97,7 @@ class crm_lead_report(osv.osv):
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
+        'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]" , readonly=True),
@@ -144,6 +145,7 @@ class crm_lead_report(osv.osv):
                     c.partner_id,
                     c.country_id,
                     c.planned_revenue,
+                    c.planned_revenue*(c.probability/100) as probable_revenue, 
                     1 as nbr,
                     0 as avg_answers,
                     0.0 as perc_done,

@@ -186,13 +186,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             to_write.update({'user_id' : this.user_id.id})
         email_re = r'([^ ,<@]+@[^> ,]+)'
         email_cc = re.findall(email_re, case.email_cc or '')
-        new_cc = ''
+        new_cc = []
         for to in this.email_to.split(','):
             email_to = re.findall(email_re, to)
             email_to = email_to and email_to[0] or ''
             if email_to not in email_cc:
-                new_cc += ', ' + to
-        to_write.update({'email_cc' : case.email_cc and case.email_cc + new_cc})
+                new_cc.append(to)
+        to_write.update({'email_cc' : case.email_cc or '' + ','.join(new_cc)})
         case_pool.write(cr, uid, case.id, to_write, context=context)
 
         return {}
