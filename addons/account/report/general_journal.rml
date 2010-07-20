@@ -287,7 +287,7 @@
        <para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="62.0,118.0,89.0,83.0,77.0,100.0" style="Table_Journal_Title" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="62.0,118.0,89.0,83.0,77.0,100.0" style="Table_Journal_Title" repeatRows="1"><para>[[ print_data(data)==False  or  removeParentNode('blockTable') ]]</para>
       <tr>
         <td><para style="terp_tblheader_Details">Code</para></td>
         <td><para style="terp_tblheader_Details">Journal Name</para></td>
@@ -305,7 +305,7 @@
  		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit()- sum_credit()) ]]</para></td>        
       </tr>
     </blockTable>
-    <blockTable colWidths="60.0,100.0,70.0,73.0,77.0,60.0,80.0" style="Table_Journal_Title" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+    <blockTable colWidths="60.0,100.0,70.0,73.0,77.0,60.0,80.0" style="Table_Journal_Title" repeatRows="1">[[ print_data(data)== True or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="terp_tblheader_Details">Code</para></td>
         <td><para style="terp_tblheader_Details">Journal Name</para></td>
@@ -327,7 +327,7 @@
     </blockTable>    
     
     <section>
-      <blockTable colWidths="61.0,119.0,91.0,83.0,76.0,100.0" style="Table_Journal_Detail">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+      <blockTable colWidths="61.0,119.0,91.0,83.0,76.0,100.0" style="Table_Journal_Detail">[[ print_data(data) == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(lines(o.id),'line')]]</font> [[ line['code'] ]]</para>
@@ -349,7 +349,7 @@
           </td>          
         </tr>
       </blockTable>
-      <blockTable colWidths="70.0,100.0,70.0,73.0,77.0,60.0,80.0" style="Table_Journal_Detail">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+      <blockTable colWidths="70.0,100.0,70.0,73.0,77.0,60.0,80.0" style="Table_Journal_Detail">[[print_data(data)== True  or removeParentNode('blockTable') ]]
         <tr>
           <td><para style="terp_default_9"><font>[[ repeatIn(lines(o.id),'line')]]</font> [[ line['code'] ]]</para></td>
           <td><para style="terp_default_9">[[ line['name'] ]]</para></td>
