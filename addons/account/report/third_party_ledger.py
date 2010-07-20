@@ -54,6 +54,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
             'get_journal': self._get_journal,
+            'get_partners':self._get_partners,
 
         })
 
@@ -409,6 +410,15 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def _get_currency(self, form):
         return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
+
+    def _get_partners(self, data):
+        if data['form']['result_selection']=='customer':
+            return 'Receivable Accounts'
+        elif data['form']['result_selection']=='supplier':
+            return 'Payable Accounts'
+        elif data['form']['result_selection']=='customer_supplier':
+            return 'Receivable and Payable Accounts'
+        return ''
 
     def _sum_currency_amount_account(self, account, form):
         self._set_get_account_currency_code(account.id)

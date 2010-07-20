@@ -138,13 +138,14 @@
     <para style="P3">
       <font color="white"> </font>
     </para>
-      <blockTable colWidths="80.0,80.0,80.0,140.0,80.0" style="Table2_header">
+      <blockTable colWidths="80.0,80.0,80.0,130.0,70.0,80.0" style="Table2_header">
       <tr>
       	<td><para style="terp_tblheader_General_Centre">Company <font color="white"> [[ data['model']=='account.journal.period' or removeParentNode('para') ]]</font></para>        
       	<para style="terp_tblheader_General_Centre">Chart of Account <font color="white"> [[ data['model']=='ir.ui.menu' or removeParentNode('para') ]]</font></para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
 		<td><para style="terp_tblheader_General_Centre">Journal</para></td>        
         <td><para style="terp_tblheader_General_Centre">Filters By </para></td>
+         <td><para style="terp_tblheader_General_Centre">Partner's</para></td>
         <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
 	<tr>
@@ -173,6 +174,7 @@
 	        	</tr>
         	 </blockTable>        	 
         	</td>
+	<td><para style="terp_default_Centre_8">[[ get_partners(data) ]]</para></td>        	
 	<td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
 	</tr>
 	</blockTable>     
