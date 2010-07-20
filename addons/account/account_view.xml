@@ -44,7 +44,7 @@
             <field name="model">account.fiscalyear</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Fiscalyear">
+                <tree colors="blue:state in ('draft');gray:state in ('done') " string="Fiscalyear">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="state"/>
@@ -113,7 +113,7 @@
             <field name="model">account.period</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Period">
+            	<tree colors="blue:state in ('draft');gray:state in ('done') " string="Period">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="date_start"/>
@@ -203,10 +203,9 @@
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
+                <tree colors="blue:type in ('view');black:type in ('other','receivable','payable','consolidation');gray:type in ('closed')" string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="parent_id" invisible="1"/>
                     <field name="user_type" invisible="1"/>
                     <field name="debit"/>
                     <field name="credit"/>
@@ -234,7 +233,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
+                <tree colors="blue:type in ('view');black:type in ('other','receivable','payable','consolidation');gray:type in ('closed')" string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
                     <field name="debit"/>
@@ -657,7 +656,7 @@
             <field name="model">account.move</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Accounting Entries">
+                <tree colors="blue:state in ('draft');black:state in ('posted')" string="Accounting Entries">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="ref"/>
@@ -869,7 +868,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line" editable="top" on_write="on_create_write">
+                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"/>
                     <field name="move_id"/>
@@ -1048,7 +1047,7 @@
             <field name="model">account.move</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Account Entry">
+                <tree colors="blue:state in ('draft');black:state in ('posted')" string="Account Entry">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="ref"/>
@@ -1105,7 +1104,7 @@
                                     <field name="statement_id"/>
                                     <field name="state"/>
                                 </form>
-                                <tree editable="top" string="Account Entry Line">
+                                <tree colors="blue:state in ('draft');black:state in ('posted')" editable="top" string="Account Entry Line">
                                     <field name="ref"/>
                                     <field name="invoice"/>
                                     <field name="name"/>
@@ -1420,7 +1419,7 @@
             <field name="model">account.journal.period</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Journals">
+                <tree colors="blue:state in ('draft');gray:state in ('done');black:state in ('printed')" string="Journals">
                     <field icon="icon" name="fiscalyear_id"/>
                     <field name="period_id"/>
                     <field name="journal_id"/>
@@ -1634,7 +1633,7 @@
             <field name="model">account.subscription</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Entry Subscription">
+                <tree colors="blue:state in ('draft');gray:state in ('done');black:state in ('running')" string="Entry Subscription">
                     <field name="ref"/>
                     <field name="name"/>
                     <field name="date_start"/>
@@ -1736,7 +1735,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line">
+                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="statement_id" string="St."/>
@@ -2290,7 +2289,7 @@
             <field name="model">account.bank.statement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end);black:state in ('open');blue:state in ('draft')" string="Statement">
+                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end);black:state in ('open')" string="Statement">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
@@ -2298,7 +2297,7 @@
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
                     <field name="balance_end"/>
-                        <field name="user_id" select="1"/>
+                    <field name="user_id" select="1"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
                     <button type="object" string="Confirm" name="button_confirm_cash" states="open" icon="terp-gtk-go-back-rtl"/>
