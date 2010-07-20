@@ -94,9 +94,7 @@ class common_report_header(object):
                 return 'Date'
             elif data['form']['filter'] == 'filter_period':
                 return 'Periods'
-            else:
-                return 'No Filter'
-        return ''
+        return 'No Filter'
 
     def _sum_debit_period(self, period_id, journal_id=None):
         journals = journal_id or self.journal_ids
@@ -129,7 +127,7 @@ class common_report_header(object):
         return ''
 
     def _get_journal(self, data):
-        if data.get('form', False) and data['form'].get('journal_ids', False):        
+        if data.get('form', False) and data['form'].get('journal_ids', False):
             self.cr.execute('select code from account_journal where id IN %s',(tuple(data['form']['journal_ids']),))
         codes = [x for x, in self.cr.fetchall()]
         return codes or ''
