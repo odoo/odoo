@@ -5,20 +5,29 @@
 <!-- Demo Data for Membership Product -->
     <record id="member_product_0" model="product.product">
         <field name="membership">True</field>
-        <field name="membership_date_from">2009-01-01</field>
-        <field name="membership_date_to">2010-06-01</field>
-        <field name="name">Membership Product - 1</field>
-        <field name="list_price">80</field>
+        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
+        <field eval="time.strftime('%Y-06-01')" name="membership_date_to"/>
+        <field name="name">Golden Membership</field>
+        <field name="list_price">180</field>
         <field name="categ_id" ref="product.cat1"/>
         <field name="type">service</field>
     </record>
     <record id="member_product_1" model="product.product">
         <field name="membership">True</field>
-        <field name="membership_date_from">2009-01-01</field>
-        <field name="membership_date_to">2010-08-01</field>
-        <field name="name">Membership Product - 2</field>
+        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
+        <field eval="time.strftime('%Y-08-01')" name="membership_date_to"/>
+        <field name="name">Silver Membership</field>
         <field name="categ_id" ref="product.cat1"/>
         <field name="list_price">80</field>
+        <field name="type">service</field>
+    </record>
+    <record id="member_product_2" model="product.product">
+        <field name="membership">True</field>
+        <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
+        <field eval="time.strftime('%Y-08-01')" name="membership_date_to"/>
+        <field name="name">Basic Membership</field>
+        <field name="categ_id" ref="product.cat1"/>
+        <field name="list_price">40</field>
         <field name="type">service</field>
     </record>
 
@@ -53,7 +62,7 @@
         <field name="currency_id" ref="base.EUR"/>
         <field name="address_invoice_id" ref="base.res_partner_address_8"/>
         <field name="partner_id" ref="base.res_partner_agrolait"/>
-        <field name="date_invoice">2008-05-09</field>
+        <field eval="time.strftime('%Y-05-09')" name="date_invoice"/>
         <field name="journal_id" ref="account.sales_journal"/>
         <field name="state">paid</field>
         <field name="type">out_invoice</field>
@@ -64,7 +73,7 @@
         <field name="currency_id" ref="base.EUR"/>
         <field name="address_invoice_id" ref="base.res_partner_address_9"/>
         <field name="partner_id" ref="base.res_partner_2"/>
-        <field name="date_invoice">2008-05-09</field>
+        <field eval="time.strftime('%Y-05-09')" name="date_invoice"/>
         <field name="journal_id" ref="account.sales_journal"/>
         <field name="state">open</field>
         <field name="type">out_invoice</field>
@@ -75,7 +84,7 @@
         <field name="currency_id" ref="base.EUR"/>
         <field name="address_invoice_id" ref="base.res_partner_address_zen"/>
         <field name="partner_id" ref="base.res_partner_3"/>
-        <field name="date_invoice">2008-05-09</field>
+        <field eval="time.strftime('%Y-05-09')" name="date_invoice"/>
         <field name="journal_id" ref="account.sales_journal"/>
         <field name="state">cancel</field>
         <field name="type">out_invoice</field>
@@ -86,7 +95,7 @@
         <field name="currency_id" ref="base.EUR"/>
         <field name="address_invoice_id" ref="base.res_partner_address_14"/>
         <field name="partner_id" ref="base.res_partner_15"/>
-        <field name="date_invoice">2008-05-09</field>
+        <field eval="time.strftime('%Y-05-09')" name="date_invoice"/>
         <field name="journal_id" ref="account.sales_journal"/>
         <field name="state">draft</field>
         <field name="type">out_invoice</field>
@@ -132,34 +141,34 @@
 
 <!-- Demo data for membership line -->
     <record id="member_line_1" model="membership.membership_line">
-        <field name="date_from">2008-01-01</field>
-        <field name="date_to">2009-08-01</field>
+        <field eval="time.strftime('%Y-01-01')" name="date_from"/>
+        <field eval="time.strftime('%Y-08-01')" name="date_to"/>
         <field name="account_invoice_line" ref="account_invoice_line_membershipproduct0" />
         <field name="state">paid</field>
         <field name="partner" ref="base.res_partner_agrolait"/>
     </record>
     <record id="member_line_2" model="membership.membership_line">
-        <field name="date_from">2008-01-01</field>
-        <field name="date_to">2009-08-01</field>
+        <field eval="time.strftime('%Y-01-01')" name="date_from"/>
+        <field eval="time.strftime('%Y-08-01')" name="date_to"/>
         <field name="account_invoice_line" ref="account_invoice_line_membershipproduct1" />
         <field name="state">invoiced</field>
         <field name="partner" ref="base.res_partner_2"/>
     </record>
     <record id="member_line_3" model="membership.membership_line">
-        <field name="date_from">2008-01-01</field>
-        <field name="date_to">2009-08-01</field>
-        <field name="date_cancel">2008-08-05</field>
+        <field eval="time.strftime('%Y-01-01')" name="date_from"/>
+        <field eval="time.strftime('%Y-08-01')" name="date_to"/>
+        <field eval="time.strftime('%Y-08-05')" name="date_cancel"/>
         <field name="account_invoice_line" ref="account_invoice_line_membershipproduct2" />
         <field name="state">canceled</field>
         <field name="partner" ref="base.res_partner_3"/>
     </record>
     <record id="member_line_3" model="membership.membership_line">
-        <field name="date_from">2008-01-01</field>
-        <field name="date_to">2009-08-01</field>
+        <field eval="time.strftime('%Y-01-01')" name="date_from"/>
+        <field eval="time.strftime('%Y-08-01')" name="date_to"/>
         <field name="account_invoice_line" ref="account_invoice_line_membershipproduct3" />
         <field name="state">waiting</field>
         <field name="partner" ref="base.res_partner_15"/>
-    </record>
+    </record>    
 
 <!-- Demo data for cancel member -->
     <record id="base.res_partner_3" model="res.partner">
