@@ -632,6 +632,8 @@ class event_registration(osv.osv):
                 partner = res_obj.browse(cr, uid, partner_invoice_id, context=context)
                 pricelist_id = pricelist_id or partner.property_product_pricelist.id
             unit_price = prod_obj._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': pricelist_id})[data_event.product_id.id]
+            if not unit_price:
+                unit_price = data_event.unit_price
             res['value'].update({'unit_price': unit_price, 'event_product': data_event.product_id.name})
         return res
 
@@ -692,7 +694,10 @@ class event_registration(osv.osv):
             if partner_invoice_id:
                 partner = res_obj.browse(cr, uid, partner_invoice_id, context=context)
                 pricelist_id = pricelist_id or partner.property_product_pricelist.id
-            data['unit_price'] = prod_obj._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': pricelist_id})[data_event.product_id.id]
+            unit_price = prod_obj._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': pricelist_id})[data_event.product_id.id]
+            if not unit_price:
+                unit_price = data_event.unit_price
+            data['unit_price'] = unit_price
         return {'value': data}
 
 event_registration()
