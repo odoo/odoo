@@ -302,9 +302,9 @@ class res_partner_address(osv.osv):
                 res.append((r['id'], r['partner_id'][1]))
             else:
                 addr = r['name'] or ''
-                if r['name'] and (r['zip'] or r['country_id']):
+                if r['name'] and (r['city'] or r['country_id']):
                     addr += ', '
-                addr += (r['zip'] or '') + ' ' + (r['city'] or '') + ' ' + (r['country_id'] and r['country_id'][1] or '') + ' ' + (r['street'] or '')
+                addr += (r['country_id'] and r['country_id'][1] or '') + ' ' + (r['city'] or '') + ' '  + (r['street'] or '')
                 res.append((r['id'], addr.strip() or '/'))
         return res
 

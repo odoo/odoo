@@ -295,7 +295,7 @@ class users(osv.osv):
     def _get_email_from(self, cr, uid, ids, context=None):
         if not isinstance(ids, list):
             ids = [ids]
-        res = dict.fromkeys(ids)
+        res = dict.fromkeys(ids, False)
         for user in self.browse(cr, uid, ids, context=context):
             if user.user_email:
                 res[user.id] = "%s <%s>" % (user.name, user.user_email)
