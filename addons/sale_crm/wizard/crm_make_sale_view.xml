@@ -25,10 +25,8 @@
                                                 name="product_id"
                                                 on_change="product_id_change(product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, product_packaging, False)"
                                                 />
-                                            <group colspan="2">
                                                <field name="product_uom_qty"/>
-                                               <field name="product_uom" nolabel="1"/>
-                                            </group>
+                                               <field name="product_uom"/>
                                             <group colspan="2" groups="product.group_uos">
                                                <field name="product_uos_qty"/>
                                                <field name="product_uos" nolabel="1"/></group>
