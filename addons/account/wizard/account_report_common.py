@@ -75,27 +75,20 @@ class account_common_report(osv.osv_memory):
         res = {}
         if filter == 'filter_no':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False}
-            return res
         if filter == 'filter_date':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
-            return res
         if filter == 'filter_period':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': False, 'date_to': False}
-            return res
-        return {}
+        return res
 
     def _get_account(self, cr, uid, context=None):
-        accounts = self.pool.get('account.account').search(cr, uid, [], limit=1 )
-        if not accounts:
-            return False
-        return accounts[0]
+        accounts = self.pool.get('account.account').search(cr, uid, [], limit=1)
+        return accounts and accounts[0] or False
 
     def _get_fiscalyear(self, cr, uid, context=None):
         now = time.strftime('%Y-%m-%d')
         fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
-        if not fiscalyears:
-            return False
-        return fiscalyears[0]
+        return fiscalyears and fiscalyears[0] or False
 
     def _get_all_journal(self, cr, uid, context=None):
         return self.pool.get('account.journal').search(cr, uid ,[])
