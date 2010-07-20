@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-	    <menuitem
-	        id="menu_hr_recruitment_recruitment"
-	        name="Recruitment"
-	        parent="hr.menu_hr_configuration"
-	        sequence="2"/>
-	    <menuitem
-	        id="menu_hr_config_applicant"
-	        name="Applicant"
-	        parent="menu_hr_recruitment_recruitment"
-	        sequence="2"/>
+        <menuitem
+            id="menu_hr_recruitment_recruitment"
+            name="Recruitment"
+            parent="hr.menu_hr_configuration"
+            sequence="2"/>
+        <menuitem
+            id="menu_hr_config_applicant"
+            name="Applicant"
+            parent="menu_hr_recruitment_recruitment"
+            sequence="2"/>
 
     # ------------------------------------------------------
     # Job Categories
@@ -85,16 +85,15 @@
                         <button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
                         <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
                     <newline/>
+                    <field name="department_id" widget="selection"/>
                     <group colspan="2" col="4">
-                        <field name="stage_id"/>
+                        <field name="stage_id" domain="[('department_id','=',department_id)]"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                        <field name="user_id"/>
-                        <field name="department_id" widget="selection"/>
-                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
-                        <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                    <field name="user_id"/>
+                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
@@ -279,8 +278,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Stages">
-                <field name="sequence"/>
+                <field name="sequence" invisible="1"/>
                 <field name="name"/>
+                <field name="department_id"/>
             </tree>
         </field>
     </record>
@@ -293,9 +293,12 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Stage">
-                <separator string="Stage Definition" colspan="4"/>
-                <field name="name" select="1"/>
-                <field name="sequence"/>
+                <group colspan="4" col="6">
+                    <separator string="Stage Definition" colspan="6"/>
+                    <field name="name" select="1"/>
+                    <field name="department_id"/>
+                    <field name="sequence"/>
+                </group>
                 <separator string="Requirements" colspan="4"/>
                 <field name="requirements" nolabel="1" colspan="4"/>
             </form>

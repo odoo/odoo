@@ -45,12 +45,13 @@ AVAILABLE_PRIORITIES = [
 
 class hr_recruitment_stage(osv.osv):
     """ Stage of HR Recruitment """
-
     _name = "hr.recruitment.stage"
     _description = "Stage of Recruitment"
+    _order = 'sequence'
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
+        'department_id':fields.many2one('hr.department', 'Department'),
         'requirements': fields.text('Requirements')
     }
     _defaults = {
@@ -68,9 +69,6 @@ class hr_applicant(osv.osv, crm.crm_case):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
                              will receive a copy of the future" \
@@ -81,12 +79,7 @@ class hr_applicant(osv.osv, crm.crm_case):
                                  domain="[('partner_id','=',partner_id)]"),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Update Date' , readonly=True),
-#        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-#                         domain="[('section_id','=',section_id),\
-#                        ('object_id.model', '=', 'crm.opportunity')]"),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.opportunity')]"),
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
@@ -105,7 +98,7 @@ class hr_applicant(osv.osv, crm.crm_case):
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('object_id.model', '=', 'hr.applicant')]"),
         'department_id':fields.many2one('hr.department', 'Department'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
@@ -126,7 +119,6 @@ class hr_applicant(osv.osv, crm.crm_case):
 #        'user_id': crm.crm_case._get_default_user,
         'email_from': crm.crm_case. _get_default_email,
         'state': lambda *a: 'draft',
-        'section_id': crm.crm_case. _get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
@@ -150,9 +142,9 @@ class hr_applicant(osv.osv, crm.crm_case):
         if not context:
             context = {}
         for case in self.browse(cr, uid, ids, context):
-            section = (case.section_id.id or False)
+            department = (case.department_id.id or False)
             st = case.stage_id.id  or False
-            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [])
+            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)])
             if st and stage_ids.index(st):
                 self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)-1]})
         return True
@@ -168,9 +160,9 @@ class hr_applicant(osv.osv, crm.crm_case):
         if not context:
             context = {}
         for case in self.browse(cr, uid, ids, context):
-            section = (case.section_id.id or False)
+            department = (case.department_id.id or False)
             st = case.stage_id.id  or False
-            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [])
+            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)])
             if st and len(stage_ids) != stage_ids.index(st)+1:
                 self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)+1]})
         return True
@@ -206,7 +198,6 @@ class hr_applicant(osv.osv, crm.crm_case):
             context = {
                 'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_section_id': opp.section_id and opp.section_id.id or False,
                 'default_email_from': opp.email_from,
                 'default_state': 'open',
                 'default_name': opp.name
@@ -376,7 +367,6 @@ class hr_job(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Survey'),
     }
-
 hr_job()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
