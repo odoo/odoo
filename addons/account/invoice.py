@@ -922,7 +922,7 @@ class account_invoice(osv.osv):
             invtype = obj_inv.type
             number = obj_inv.number
             move_id = obj_inv.move_id and obj_inv.move_id.id or False
-            reference = obj_inv.reference
+            reference = obj_inv.reference or ''
             if not number:
                 tmp_context = {
                     'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id

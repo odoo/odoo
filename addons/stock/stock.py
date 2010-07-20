@@ -1591,8 +1591,9 @@ class stock_move(osv.osv):
                     'stock_journal_id': todo[0][1][3],
                     'company_id': todo[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context),
                     'address_id': picking.address_id.id,
-
-                    'invoice_state': 'none'
+                    'invoice_state': 'none',
+                    'date': picking.date,
+                    'sale_id': picking.sale_id.id
                 })
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
                     new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
