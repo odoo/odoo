@@ -314,7 +314,7 @@ where prp.id in %s''',(tuple(ids),))
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 task_obj.write(cr, uid, tasks_id, {'active': value}, context=context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)])
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context=None)
         return True
