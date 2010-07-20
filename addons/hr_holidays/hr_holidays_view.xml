@@ -130,7 +130,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Leaves" colors="red:state == 'refuse';grey:state == 'cancel'">
+                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1');gray:state in ('cancel') " string="Leaves" >
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
@@ -185,7 +185,7 @@
             <field name="type">tree</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree string="Leaves Summary">
+                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1');gray:state in ('cancel')" string="Leaves Summary">
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
@@ -206,7 +206,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Leaves" colors="red:state == 'refuse';grey:state == 'cancel'">
+                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1');gray:state in ('cancel')">
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>

@@ -9,7 +9,7 @@
             <field name="model">crm.lead.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            <tree string="Leads Analysis">
+            <tree colors="blue:state in ('draft');black:state in ('open','pending','done');gray:state in ('cancel') " string="Leads Analysis">
                 <field name="name" invisible="1"/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
@@ -154,7 +154,7 @@
             <field name="model">crm.lead.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            <tree string="Opportunities Analysis">
+            <tree colors="blue:state in ('draft');black:state in ('open','pending','done');gray:state in ('cancel') " string="Opportunities Analysis">
                 <field name="name" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="section_id" invisible="1" groups="base.group_extended"/>

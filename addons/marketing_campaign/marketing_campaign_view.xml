@@ -40,7 +40,7 @@
         <field name="model">marketing.campaign</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Campaigns">
+            <tree colors="blue:state in ('draft');black:state in ('running');gray:state in ('done','cancelled')" string="Campaigns">
                 <field name="name" select="1"/>
                 <field name="object_id" select="1"/>
                 <field name="mode"/>
@@ -155,7 +155,7 @@
         <field name="model">marketing.campaign.segment</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Segments">
+            <tree colors="blue:state in ('draft');black:state in ('running');gray:state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
                 <field name="campaign_id"/>
                 <field name="date_run"/>
@@ -224,8 +224,8 @@
                 <field name="signal"/>
                 <field name="start"/>
                 <field name="variable_cost" select="1"/>
-                <newline/> 
-                
+                <newline/>
+
                 <separator string="Action" colspan="4"/>
                 <group colspan='4' col='4'>
                     <group colspan="4" col="6">
@@ -272,7 +272,7 @@
             </form>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_marketing_campaign_activity_tree">
         <field name="name">marketing.campaign.activity.tree</field>
         <field name="model">marketing.campaign.activity</field>
@@ -299,7 +299,7 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Marketing Campaign Activities">
+            <tree colors="red:state in ('exception');black:state in ('todo');gray:state in ('cancelled')" string="Marketing Campaign Activities">
                 <field name="segment_id"/>
                 <field name="activity_id" />
                 <field name="res_name" />
