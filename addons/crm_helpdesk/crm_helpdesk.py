@@ -49,7 +49,7 @@ class crm_helpdesk(osv.osv, crm.crm_case):
             'partner_id': fields.many2one('res.partner', 'Partner'), 
             'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"), 
-            'email_cc': fields.text('Watchers Emails', size=252 , help="These addresses(Comma-separated) will receive a copy of the future communication between partner and users"), 
+            'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"), 
             'email_from': fields.char('Email', size=128, help="These people will receive email."), 
             'date': fields.datetime('Date'), 
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128), 

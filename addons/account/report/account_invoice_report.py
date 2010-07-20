@@ -68,7 +68,7 @@ class account_invoice_report(osv.osv):
         'address_contact_id': fields.many2one('res.partner.address', 'Contact Address Name', readonly=True),
         'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
-        'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
+        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual':fields.float('Total Residual', readonly=True),
         'delay_to_pay':fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
     }
@@ -101,7 +101,7 @@ class account_invoice_report(osv.osv):
                     ai.address_contact_id as address_contact_id,
                     ai.address_invoice_id as address_invoice_id,
                     ai.account_id as account_id,
-                    ai.partner_bank as partner_bank,
+                    ai.partner_bank_id as partner_bank_id,
                     sum(case when ai.type in ('out_refund','in_invoice') then
                          ail.quantity * u.factor * -1
                         else
@@ -152,7 +152,7 @@ class account_invoice_report(osv.osv):
                     ai.address_contact_id,
                     ai.address_invoice_id,
                     ai.account_id,
-                    ai.partner_bank,
+                    ai.partner_bank_id,
                     ai.residual
             )
         """)

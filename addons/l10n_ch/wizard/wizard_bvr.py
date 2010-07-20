@@ -39,22 +39,22 @@ def _check(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     invoice_obj = pool.get('account.invoice')
     for invoice in invoice_obj.browse(cr, uid, data['ids'], context):
-        if not invoice.partner_bank:
+        if not invoice.partner_bank_id:
             raise wizard.except_wizard(_('UserError'),
                     _('No bank specified on invoice:\n%s') % \
                             invoice_obj.name_get(cr, uid, [invoice.id], context=context)[0][1])
 
         if not re.compile('[0-9][0-9]-[0-9]{3,6}-[0-9]').match(
-                invoice.partner_bank.bvr_number or ''):
+                invoice.partner_bank_id.bvr_number or ''):
             raise wizard.except_wizard(_('UserError'),
                     _('Your bank BVR number should be of the form 0X-XXX-X!\n' \
                             'Please check your company ' \
                             'information for the invoice:\n%s') % \
                             invoice_obj.name_get(cr, uid, [invoice.id], context=context)[0][1])
 
-        if invoice.partner_bank.bvr_adherent_num \
+        if invoice.partner_bank_id.bvr_adherent_num \
                 and not re.compile('[0-9]*$').match(
-                        invoice.partner_bank.bvr_adherent_num):
+                        invoice.partner_bank_id.bvr_adherent_num):
             raise wizard.except_wizard(_('UserError'),
                     _('Your bank BVR adherent number must contain exactly seven' \
                             'digits!\nPlease check your company ' \
@@ -65,7 +65,7 @@ def _check(self, cr, uid, data, context):
 class wizard_report(wizard.interface):
     states = {
         'init': {
-            'actions': [_check], 
+            'actions': [_check],
             'result': {'type':'print', 'report':'l10n_ch.bvr', 'state':'end'}
         }
     }

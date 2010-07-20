@@ -475,7 +475,7 @@ class mailgate_tool(osv.osv_memory):
             'partner_id': False
         }
         from_email = self.to_email(from_email)[0]
-        address_ids = address_pool.search(cr, uid, [('email', '=', from_email)])
+        address_ids = address_pool.search(cr, uid, [('email', 'like', from_email)])
         if address_ids:
             address = address_pool.browse(cr, uid, address_ids[0])
             res['partner_address_id'] = address_ids[0]
