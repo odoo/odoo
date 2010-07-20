@@ -93,8 +93,10 @@ class crm_opportunity(osv.osv):
 
         res = self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Lost.")
-            self.log(cr, uid, id, message)
+            opp = self.browse(cr, uid, id)
+            if opp.type == 'opportunity':
+                message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Lost.")
+                self.log(cr, uid, id, message)
         return res
 
     def case_cancel(self, cr, uid, ids, *args):
