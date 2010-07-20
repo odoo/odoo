@@ -3,7 +3,7 @@
 	<data noupdate="1">       
 
         <record model="basic.calendar" id="caldav.basic_calendar2">
-			<field name="name">Todo</field>
+			<field name="name">Tasks</field>
             <field name="collection_id" ref="document.dir_calendars"></field>
             <field name="type">vtodo</field>
 		</record>
@@ -74,11 +74,11 @@
 	
 	
 		<record model="basic.calendar.fields" id="map_todo_10">
-	            <field name="name" ref="caldav.field_todo_vtimezone"/>
-	            <field name="type_id" ref="caldav.calendar_lines_todo" />
-		        <field name="field_id" search="[('name','=','vtimezone'),('model_id.model','=','calendar.todo')]" />
-	            <field name="fn">field</field>
-	        </record>
+            <field name="name" ref="caldav.field_todo_vtimezone"/>
+            <field name="type_id" ref="caldav.calendar_lines_todo" />
+	        <field name="field_id" search="[('name','=','vtimezone'),('model_id.model','=','calendar.todo')]" />
+            <field name="fn">field</field>
+	   </record>
 	
         <record model="basic.calendar.fields" id="map_todo_11">
             <field name="name" ref="caldav.field_todo_summary"/>

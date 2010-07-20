@@ -29,14 +29,14 @@ class auction_pay_buy(osv.osv_memory):
     _description = "Pay buy"
     
     _columns= {
-       'amount': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy']))), 
+       'amount': fields.float('Amount paid', digits= (16, 2)), 
        'buyer_id':fields.many2one('res.partner', 'Buyer'), 
        'statement_id1':fields.many2one('account.bank.statement', 'Statement', required=True), 
-       'amount2': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy']))), 
+       'amount2': fields.float('Amount paid', digits= (16, 2)), 
        'statement_id2':fields.many2one('account.bank.statement', 'Statement'), 
-       'amount3': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy']))), 
+       'amount3': fields.float('Amount paid', digits = (16, 2)), 
        'statement_id3':fields.many2one('account.bank.statement', 'Statement'), 
-       'total': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy'])), readonly =True), 
+       'total': fields.float('Amount paid', digits = (16, 2), readonly =True), 
     }
     
     def default_get(self, cr, uid, fields, context):

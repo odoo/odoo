@@ -36,9 +36,7 @@
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'account', 'stock', 'process', 'procurement'],
-    'init_xml': [],
-    'update_xml': [
-
+    'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
         'purchase_workflow.xml',
@@ -60,8 +58,10 @@
              'test/purchase_from_order.yml',
              'test/purchase_from_manual.yml',
 #             'test/purchase_from_picking.yml',
+             'purchase_unit_test.xml',
+             'test/procurement_buy.yml',
     ],
-    'demo_xml': ['purchase_demo.xml','purchase_unit_test.xml'],
+    'demo': ['purchase_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '0057234283549',

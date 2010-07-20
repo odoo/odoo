@@ -40,7 +40,7 @@
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process','board'],
+    'depends': ['process','board', 'knowledge'],
     'init_xml': [],
     'update_xml': [
         'security/document_security.xml',
@@ -53,7 +53,7 @@
     ],
     'demo_xml': [ 'document_demo.xml','board_document_demo.xml'],
     'test': [
-        'test/document_test.yml',
+        'test/document_test2.yml',
     ],
     'installable': True,
     'active': False,

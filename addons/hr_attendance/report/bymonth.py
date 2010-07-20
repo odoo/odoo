@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -30,7 +30,7 @@ from report.interface import report_rml
 from report.interface import toxml
 
 one_day = DateTime.RelativeDateTime(days=1)
-month2name = [0,'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+month2name = [0, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 def hour2str(h):
     hours = int(h)
@@ -38,11 +38,14 @@ def hour2str(h):
     return '%02dh%02d' % (hours, minutes)
 
 class report_custom(report_rml):
-    def create_xml(self, cr, uid, ids, datas, context):
+
+    def create_xml(self, cr, uid, ids, datas, context=None):
+        if context is None:
+            context = {}
         month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
         for employee_id in ids:
-            emp = self.pool.get('hr.employee').read(cr, uid, 'read', [employee_id], ['name'])[0]
+            emp = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, [employee_id], ['name'])[0]
             stop, days_xml = False, []
             user_repr = '''
             <user>
@@ -67,28 +70,27 @@ class report_custom(report_rml):
                 if attendences and attendences[0]['action'] == 'sign_out':
                     attendences.insert(0, {'name': today.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_in'})
                 if attendences and attendences[-1]['action'] == 'sign_in':
-                    attendences.append({'name' : tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
+                    attendences.append({'name': tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
                 # sum up the attendances' durations
                 for att in attendences:
                     dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                     if att['action'] == 'sign_out':
                         wh += (dt - ldt).hours
                     ldt = dt
-                
+
                 # Week xml representation
                 wh = hour2str(wh)
                 today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, wh)
                 days_xml.append(today_xml)
                 today, tomor = tomor, tomor + one_day
-                
+
             user_xml.append(user_repr % '\n'.join(days_xml))
-        
+
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
         </report>
         ''' % '\n'.join(user_xml)
-
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')

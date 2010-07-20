@@ -30,24 +30,26 @@ import tools
 
 
 super_mk_prop_response = PROPFIND.mk_prop_response
-def mk_prop_response(self, uri, good_props, bad_props, doc):        
-    """ make a new <prop> result element 
+def mk_prop_response(self, uri, good_props, bad_props, doc):
+    """ make a new <prop> result element
 
     We differ between the good props and the bad ones for
     each generating an extra <propstat>-Node (for each error
     one, that means).
-    
-    """      
+
+    """
     re=doc.createElement("D:response")
     # append namespaces to response
     nsnum=0
     for nsname in self.namespaces:
         re.setAttribute("xmlns:ns"+str(nsnum),nsname)
         nsnum=nsnum+1
-    
+
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
+    if isinstance(fileloc, unicode):
+        fileloc = fileloc.encode('utf-8')
     href=doc.createElement("D:href")
     davpath = self._dataclass.parent.get_davpath()
     hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
@@ -63,7 +65,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     gp=doc.createElement("D:prop")
     for ns in good_props.keys():
         ns_prefix="ns"+str(self.namespaces.index(ns))+":"
-        for p,v in good_props[ns].items():            
+        for p,v in good_props[ns].items():
             if not v:
                 pass
             pe=doc.createElement(ns_prefix+str(p))
@@ -79,7 +81,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
                     pe.appendChild(ve)
 
             gp.appendChild(pe)
-    
+
     ps.appendChild(gp)
     s=doc.createElement("D:status")
     t=doc.createTextNode("HTTP/1.1 200 OK")
@@ -99,11 +101,11 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
 
             for ns in bad_props[ecode].keys():
                 ns_prefix="ns"+str(self.namespaces.index(ns))+":"
-            
+
             for p in bad_props[ecode][ns]:
                 pe=doc.createElement(ns_prefix+str(p))
                 bp.appendChild(pe)
-            
+
             s=doc.createElement("D:status")
             t=doc.createTextNode(utils.gen_estring(ecode))
             s.appendChild(t)
@@ -112,10 +114,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
 
     # return the new response element
     return re
-    
+
 
 def mk_propname_response(self,uri,propnames,doc):
-    """ make a new <prop> result element for a PROPNAME request 
+    """ make a new <prop> result element for a PROPNAME request
 
     This will simply format the propnames list.
     propnames should have the format {NS1 : [prop1, prop2, ...], NS2: ...}
@@ -126,6 +128,8 @@ def mk_propname_response(self,uri,propnames,doc):
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
+    if isinstance(fileloc, unicode):
+        fileloc = fileloc.encode('utf-8')
     href=doc.createElement("D:href")
     davpath = self._dataclass.parent.get_davpath()
     hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))

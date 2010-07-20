@@ -67,12 +67,16 @@ class survey_name_wiz(osv.osv_memory):
         user_rec = user_obj.read(cr, uid, uid)
         for sur in surv_obj.browse(cr, uid, surv_obj.search(cr, uid, [])):
             if sur.state == 'open':
-#                if group_id[0]  in user_rec['groups_id']:
+                res = False
                 for i in group_id:
                     if i in user_rec['groups_id']:
-                        result.append((sur.id, sur.title))
+                        res = True
+                        break
                     elif sur.id in user_rec['survey_id']:
-                        result.append((sur.id, sur.title))
+                        res = True
+                        break
+                if res:
+                    result.append((sur.id, sur.title))
         return result
 
     _columns = {
@@ -137,14 +141,13 @@ class survey_name_wiz(osv.osv_memory):
     def on_change_survey(self, cr, uid, ids, survey_id, context=None):
         """
             on change event of survey_id field, if note is available in selected survey then display this note in note fields.
-
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
             @param ids: List of Survey IDs
+            @param survey_id: Id of Survey
             @param context: A standard dictionary for contextual values
             @return : Dictionary values of notes fields.
         """
+        if not survey_id:
+            return {}
         notes = self.pool.get('survey').read(cr, uid, survey_id, ['note'])['note']
         return {'value': {'note': notes}}
 

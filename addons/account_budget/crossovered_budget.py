@@ -20,13 +20,8 @@
 ##############################################################################
 
 from osv import osv,fields
-import tools
-import netsvc
-from mx import DateTime
-import time
 import datetime
 from tools.translate import _
-
 
 def strToDate(dt):
         dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
@@ -126,13 +121,6 @@ class crossovered_budget(osv.osv):
         'state': lambda *a: 'draft',
         'creating_user_id': lambda self,cr,uid,context: uid,
     }
-
-#   def action_set_to_draft(self, cr, uid, ids, *args):
-#       self.write(cr, uid, ids, {'state': 'draft'})
-#       wf_service = netsvc.LocalService('workflow')
-#       for id in ids:
-#           wf_service.trg_create(uid, self._name, id, cr)
-#       return True
 
     def budget_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {

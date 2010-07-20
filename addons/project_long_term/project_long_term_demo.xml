@@ -8,151 +8,151 @@
             <field name="address_id" ref="base.main_address"/>
             <field name="context_lang">en_US</field>
             <field name="name">Demo User1</field>
-            <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
             <field name="signature">Mr Demo</field>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Setup')]"/>
             <field name="login">demo1</field>
             <field name="password">demo1</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_manager0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">Manager1</field>
-            <field eval="[(6,0,[ref('base.group_user'),ref('project.group_project_manager')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">manager1</field>
             <field name="password">manager1</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_manager1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">Manager2</field>
-            <field eval="[(6,0,[ref('base.group_user'),ref('project.group_project_manager')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">manager2</field>
             <field name="password">manager2</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_user0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user1</field>
-            <field eval="[(6,0,[ref('base.group_user'),ref('project.group_project_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user1</field>
             <field name="password">USER1</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_user1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user2</field>
-            <field eval="[(6,0,[ref('base.group_user'),ref('project.group_project_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user2</field>
             <field name="password">user2</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_userfinance0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user_finance</field>
-            <field eval="[(6,0,[ref('base.group_user'),ref('project.group_project_finance')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_finance')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user_finance</field>
             <field name="password">user_finance</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_userdesign0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user_design1</field>
-            <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user_design1</field>
             <field name="password">user_design1</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_userdesign1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user_design2</field>
-            <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user_design2</field>
             <field name="password">user_design2</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_userdeveloper0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user_developer1</field>
-            <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user_developer1</field>
             <field name="password">user_developer1</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_userdeveloper1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user_developer2</field>
-            <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user_developer2</field>
             <field name="password">user_developer1</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_usertester0" model="res.users">
@@ -161,43 +161,43 @@
             <field name="name">user_tester1</field>
             <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user_tester1</field>
             <field name="password">user_tester1</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_usertester1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user_tester2</field>
-            <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user_tester2</field>
             <field name="password">user_tester2</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <record id="res_users_useranalyst0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
             <field name="name">user_analyst</field>
-            <field eval="[(6,0,[ref('base.group_user')])]" name="groups_id"/>
+            <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="[(6,0,[])]" name="rules_id"/>
+            <field eval="[(6, 0, [])]" name="roles_id"/>
+            <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
             <field model="ir.actions.actions" name="action_id" search="[('name', '=', u'Menu')]"/>
             <field name="login">user_analyst</field>
             <field name="password">user_analyst</field>
-            <field eval="[(6,0,[])]" name="company_ids"/>
+            <field eval="[(6, 0, [])]" name="company_ids"/>
         </record>
 
         <!-- Resources -->
@@ -255,17 +255,17 @@
             <field name="state">open</field>
             <field name="type">normal</field>
             <field name="description">Develop an OpenERP Website.</field>
-            <field eval="[(6,0,[ref('res_users_manager0'),ref('res_users_user0'),ref('res_users_userfinance0'),ref('res_users_userdesign0'),ref('res_users_userdeveloper0'),ref('res_users_usertester0'),ref('res_users_useranalyst0')])]" name="members"/>
+            <field eval="[(6, 0, [ref('res_users_manager0'), ref('res_users_user0'), ref('res_users_userfinance0'), ref('res_users_userdesign0'), ref('res_users_userdeveloper0'), ref('res_users_usertester0'), ref('res_users_useranalyst0')])]" name="members"/>
             <field name="date">2010-04-30</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="currency_id" ref="base.EUR"/>
-            <field eval="[(6,0,[])]" name="type_ids"/>
+            <field eval="[(6, 0, [])]" name="type_ids"/>
             <field name="name">OpenERP Website Development</field>
         </record>
 
         <!-- Project Phases -->
         <record id="project_phase_informationgatheringandunderstanding0" model="project.phase">
-            <field eval="[(6,0,[])]" name="previous_phase_ids"/>
+            <field eval="[(6, 0, [])]" name="previous_phase_ids"/>
             <field name="name">Information Gathering and Understanding</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
@@ -280,7 +280,7 @@
         </record>
 
         <record id="project_phase_planning0" model="project.phase">
-            <field eval="[(6,0,[ref('project_phase_informationgatheringandunderstanding0')])]" name="previous_phase_ids"/>
+            <field eval="[(6, 0, [ref('project_phase_informationgatheringandunderstanding0')])]" name="previous_phase_ids"/>
             <field name="name">Planning</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
@@ -295,7 +295,7 @@
         </record>
 
         <record id="project_phase_webdesign0" model="project.phase">
-            <field eval="[(6,0,[ref('project_phase_informationgatheringandunderstanding0'),ref('project_phase_planning0')])]" name="previous_phase_ids"/>
+            <field eval="[(6, 0, [ref('project_phase_informationgatheringandunderstanding0'), ref('project_phase_planning0')])]" name="previous_phase_ids"/>
             <field name="name">Web Design </field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
@@ -310,7 +310,7 @@
         </record>
 
         <record id="project_phase_developmentintegrationandtesting0" model="project.phase">
-            <field eval="[(6,0,[ref('project_phase_informationgatheringandunderstanding0'),ref('project_phase_planning0'),ref('project_phase_webdesign0')])]" name="previous_phase_ids"/>
+            <field eval="[(6, 0, [ref('project_phase_informationgatheringandunderstanding0'), ref('project_phase_planning0'), ref('project_phase_webdesign0')])]" name="previous_phase_ids"/>
             <field name="name">Development, Integration and Testing</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
@@ -325,7 +325,7 @@
         </record>
 
         <record id="project_phase_websitedeployment0" model="project.phase">
-            <field eval="[(6,0,[ref('project_phase_informationgatheringandunderstanding0'),ref('project_phase_planning0'),ref('project_phase_webdesign0'),ref('project_phase_developmentintegrationandtesting0')])]" name="previous_phase_ids"/>
+            <field eval="[(6, 0, [ref('project_phase_informationgatheringandunderstanding0'), ref('project_phase_planning0'), ref('project_phase_webdesign0'), ref('project_phase_developmentintegrationandtesting0')])]" name="previous_phase_ids"/>
             <field name="name">Website Deployment</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
@@ -403,10 +403,9 @@
             <field name="date_start">2010-02-24 05:00:00</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Prepare Requirements Document</field>
             <field name="date_deadline">2010-03-08</field>
@@ -422,10 +421,9 @@
             <field name="date_start">2010-02-25 15:38:08</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Define Website Goals, Purposes and Target Audience</field>
             <field name="date_deadline">2010-03-04</field>
@@ -441,10 +439,9 @@
             <field name="date_start">2010-02-25 15:42:42</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Use Cases</field>
             <field name="date_deadline">2010-03-10</field>
@@ -460,10 +457,9 @@
             <field name="date_start">2010-02-25 15:51:00</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Budget Planning</field>
             <field name="date_deadline">2010-03-31</field>
@@ -479,10 +475,9 @@
             <field name="date_start">2010-02-25 15:54:42</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Quality Planning</field>
             <field name="date_deadline">2010-03-31</field>
@@ -498,10 +493,9 @@
             <field name="date_start">2010-02-25 15:55:11</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Risk Management Planning</field>
             <field name="date_deadline">2010-03-31</field>
@@ -517,10 +511,9 @@
             <field name="date_start">2010-02-25 15:57:48</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Create Project Schedules</field>
             <field name="date_deadline">2010-03-31</field>
@@ -536,10 +529,9 @@
             <field name="date_start">2010-02-25 16:04:16</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Dataflow Design</field>
             <field name="date_deadline">2010-04-02</field>
@@ -555,10 +547,9 @@
             <field name="date_start">2010-02-25 16:05:43</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">User Interface Design</field>
             <field name="date_deadline">2010-04-10</field>
@@ -574,10 +565,9 @@
             <field name="date_start">2010-02-25 16:06:52</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Task Level WBS</field>
             <field name="date_deadline">2010-04-07</field>
@@ -593,10 +583,9 @@
             <field name="date_start">2010-02-25 16:11:40</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Modular Programming</field>
             <field name="date_deadline">2010-04-22</field>
@@ -611,10 +600,9 @@
             <field name="date_start">2010-02-25 16:13:10</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Integrate Modules</field>
             <field name="date_deadline">2010-04-24</field>
@@ -629,10 +617,9 @@
             <field name="date_start">2010-02-25 16:14:32</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Unit Testing</field>
             <field name="date_deadline">2010-04-24</field>
@@ -647,10 +634,9 @@
             <field name="date_start">2010-02-25 16:15:38</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Regression Test</field>
             <field name="date_deadline">2010-04-24</field>
@@ -665,10 +651,9 @@
             <field name="date_start">2010-02-25 16:17:04</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Documentation</field>
             <field name="date_deadline">2010-04-24</field>
@@ -683,10 +668,9 @@
             <field name="date_start">2010-02-25 16:17:42</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Performance Tuning</field>
             <field name="date_deadline">2010-04-24</field>
@@ -701,10 +685,9 @@
             <field name="date_start">2010-02-25 16:21:15</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Deploy Website</field>
             <field name="date_deadline">2010-04-26</field>
@@ -719,10 +702,9 @@
             <field name="date_start">2010-02-25 16:22:09</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Presentation</field>
             <field name="date_deadline">2010-04-28</field>
@@ -737,10 +719,9 @@
             <field name="date_start">2010-02-25 16:36:02</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Deployment</field>
             <field name="date_deadline">2010-04-28</field>
@@ -756,10 +737,9 @@
             <field name="date_start">2010-02-25 16:36:43</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Presentation</field>
             <field name="date_deadline">2010-04-29</field>
@@ -775,10 +755,9 @@
             <field name="date_start">2010-02-25 17:22:46</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Modules Integration</field>
             <field name="date_deadline">2010-04-24</field>
@@ -794,10 +773,9 @@
             <field name="date_start">2010-02-25 17:34:32</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Unit Testing</field>
             <field name="date_deadline">2010-04-24</field>
@@ -813,10 +791,9 @@
             <field name="date_start">2010-02-25 17:35:46</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Modular Testing</field>
             <field name="date_deadline">2010-04-24</field>
@@ -832,10 +809,9 @@
             <field name="date_start">2010-02-25 17:36:27</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Documentation</field>
             <field name="date_deadline">2010-04-28</field>
@@ -851,10 +827,9 @@
             <field name="date_start">2010-02-25 17:37:03</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Performance Tuning</field>
             <field name="date_deadline">2010-04-27</field>
@@ -871,10 +846,9 @@
             <field name="date_start">2010-03-01 12:00:00</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
-            <field name="state">draft</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="[(6,0,[])]" name="parent_ids"/>
+            <field eval="[(6, 0, [])]" name="child_ids"/>
+            <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Modular Programming</field>
             <field name="date_deadline">2010-04-22</field>
@@ -882,5 +856,6 @@
             <field eval="100.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
         </record>
+
     </data>
 </openerp>

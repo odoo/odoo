@@ -43,7 +43,7 @@ def OpenDAVConfig(**kw):
     class OpenDAV:
         def __init__(self, **kw):
             self.__dict__.update(**kw)
-            
+
         def getboolean(self, word):
             return self.__dict__.get(word, False)
 
@@ -56,12 +56,12 @@ def OpenDAVConfig(**kw):
 class DAVHandler(FixSendError,DAVRequestHandler):
     verbose = False
     protocol_version = 'HTTP/1.1'
-    
+
     def get_userinfo(self,user,pw):
         return False
     def _log(self, message):
         netsvc.Logger().notifyChannel("webdav",netsvc.LOG_DEBUG,message)
-    
+
     def handle(self):
         self._init_buffer()
 
@@ -77,10 +77,22 @@ class DAVHandler(FixSendError,DAVRequestHandler):
         self.davpath = '/'+config.get_misc('webdav','vdir','webdav')
         self.baseuri = "http://%s:%d/"% (self.server.server_name, self.server.server_port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
-        
+
+    def copymove(self, CLASS):
+        """ Our uri scheme removes the /webdav/ component from there, so we
+        need to mangle the header, too.
+        """
+        dest = self.headers['Destination']
+        up = urlparse.urlparse(urllib.unquote(self.headers['Destination']))
+        if up.path.startswith(self.davpath):
+            self.headers['Destination'] = up.path[len(self.davpath):]
+        else:
+            raise DAV_Forbidden("Not allowed to copy/move outside webdav path")
+        DAVRequestHandler.copymove(self, CLASS)
+
     def get_davpath(self):
         return self.davpath
-    
+
     def log_message(self, format, *args):
         netsvc.Logger().notifyChannel('webdav', netsvc.LOG_DEBUG_RPC, format % args)
 
@@ -99,15 +111,15 @@ class DAVHandler(FixSendError,DAVRequestHandler):
         DAVRequestHandler.send_header(self, key, value)
 
     def do_PUT(self):
-        dc=self.IFACE_CLASS        
+        dc=self.IFACE_CLASS
         uri=urlparse.urljoin(self.get_baseuri(dc), self.path)
         uri=urllib.unquote(uri)
         # Handle If-Match
         if self.headers.has_key('If-Match'):
             test = False
             etag = None
-            
-            for match in self.headers['If-Match'].split(','):                
+
+            for match in self.headers['If-Match'].split(','):
                 if match == '*':
                     if dc.exists(uri):
                         test = True
@@ -123,7 +135,7 @@ class DAVHandler(FixSendError,DAVRequestHandler):
         # Handle If-None-Match
         if self.headers.has_key('If-None-Match'):
             test = True
-            etag = None            
+            etag = None
             for match in self.headers['If-None-Match'].split(','):
                 if match == '*':
                     if dc.exists(uri):
@@ -175,6 +187,22 @@ class DAVHandler(FixSendError,DAVRequestHandler):
 
         self.send_body(None, '201', 'Created', '', headers=headers)
 
+    def do_DELETE(self):
+        try:
+            DAVRequestHandler.do_DELETE(self)
+        except DAV_Error, (ec, dd):
+            return self.send_status(ec)
+
+from service.http_server import reg_http_service,OpenERPAuthProvider
+
+class DAVAuthProvider(OpenERPAuthProvider):
+    def authenticate(self, db, user, passwd, client_address):
+        """ authenticate, but also allow the False db, meaning to skip
+            authentication when no db is specified.
+        """
+        if db is False:
+            return True
+        return OpenERPAuthProvider.authenticate(self, db, user, passwd, client_address)
 
 from service.http_server import reg_http_service,OpenERPAuthProvider
 
@@ -190,14 +218,14 @@ class DAVAuthProvider(OpenERPAuthProvider):
 try:
 
     if (config.get_misc('webdav','enable',True)):
-        directory = '/'+config.get_misc('webdav','vdir','webdav') 
+        directory = '/'+config.get_misc('webdav','vdir','webdav')
         handler = DAVHandler
         verbose = config.get_misc('webdav','verbose',True)
         handler.debug = config.get_misc('webdav','debug',True)
         _dc = { 'verbose' : verbose,
                 'directory' : directory,
                 'lockemulation' : False,
-                    
+
                 }
 
         conf = OpenDAVConfig(**_dc)

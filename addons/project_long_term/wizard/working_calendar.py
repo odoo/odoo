@@ -18,21 +18,27 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import datetime
 
 import pooler
 
-def convert_timeformat(cr, uid, time_string, context={}):
+def convert_timeformat(cr, uid, time_string, context=None):
+        if context is None:
+            context = {}
         """ Convert input time string: 8.5 to output time string 8:30."""
 
         split_list = str(time_string).split('.')
         hour_part = split_list[0]
         mins_part = split_list[1]
-        round_mins  = int(round(float(mins_part) * 60,-2))
+        round_mins = int(round(float(mins_part) * 60,-2))
         converted_string = hour_part + ':' + str(round_mins)[0:2]
         return converted_string
 
-def compute_leaves(cr, uid, calendar_id, resource_id=False, resource_calendar=False, context={}):
+def compute_leaves(cr, uid, calendar_id, resource_id=False, resource_calendar=False, context=None):
+   
+        if context is None:
+            context = {}
 
         """Compute the leaves from the working calendar of the resource.
 
@@ -63,7 +69,10 @@ def compute_leaves(cr, uid, calendar_id, resource_id=False, resource_calendar=Fa
             leave_list.sort()
         return leave_list
 
-def compute_working_calendar(cr, uid, calendar_id, context={}):
+def compute_working_calendar(cr, uid, calendar_id, context=None):
+
+        if context is None:
+            context = {}
 
         """Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
 
@@ -103,7 +112,7 @@ def compute_working_calendar(cr, uid, calendar_id, context={}):
         for k,v in wk_time.items():
             wktime_cal.append(tuple(v))
         # Add for the non-working days like: [('sat, sun', '8:00-8:00')]
-        for k,v in wk_days.items():
+        for k, v in wk_days.items():
             if week_days.has_key(k):
                 week_days.pop(k)
         for v in week_days.itervalues():

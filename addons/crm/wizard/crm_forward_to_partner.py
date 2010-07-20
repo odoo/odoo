@@ -48,7 +48,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
     _defaults = {
         'name' : 'email',
-        'history': 'latest',
+        'history': 'info',
         'add_cc': True,
         'email_from': lambda self, cr, uid, *a: self.pool.get('res.users')._get_email_from(cr, uid, uid)[uid]
     }
@@ -93,7 +93,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Mail’s IDs
         @param user: Changed User id
-        @param partner: Changed Partner id  
+        @param partner: Changed Partner id
         """
         if not user:
             return {'value': {'email_to': False}}
@@ -125,7 +125,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         msg_val = ''
         model_pool = self.pool.get('crm.lead')
-        print history_type
         if history_type == 'info':
             msg_val = self.get_lead_details(cr, uid, res_id, context=context)
 
@@ -151,7 +150,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Mail’s IDs
         @param user: Changed User id
-        @param partner: Changed Partner id  
+        @param partner: Changed Partner id
         """
         if not partner_id:
             return {'value' : {'email_to' : False, 'address_id': False}}
@@ -160,7 +159,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         data = {'address_id': addr['contact']}
         data.update(self.on_change_address(cr, uid, ids, addr['contact'])['value'])
         return {
-            'value' : data, 
+            'value' : data,
             'domain' : {'address_id' : partner_id and "[('partner_id', '=', partner_id)]" or "[]"}
             }
 
@@ -188,7 +187,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         this = self.browse(cr, uid, ids[0], context=context)
 
-        smtp_pool = self.pool.get('email.smtpclient')
         case_pool = self.pool.get(model)
         case = case_pool.browse(cr, uid, res_id, context=context)
 
@@ -206,6 +204,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             if this.history == 'latest':
                 msgs = msgs[:1]
             attachments.extend(itertools.chain(*[m.attachment_ids for m in msgs]))
+        attach = [(a.datas_fname or a.name, base64.decodestring(a.datas)) for a in attachments if a.datas]
 
         result = tools.email_send(
             email_from,
@@ -213,12 +212,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             this.subject,
             body,
             openobject_id=str(case.id),
-            attach=[(a.datas_fname or a.name, base64.decodestring(a.datas)) for a in attachments if a.datas],
+            attach=attach,
             reply_to=case.section_id.reply_to,
         )
 
         if result:
-            case_pool._history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from)
+            case_pool.history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from, attach=attach)
         else:
             raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
 
@@ -233,8 +232,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         lead = lead_proxy.browse(cr, uid, lead_id, context=context)
         if not lead.type or lead.type == 'lead':
                 field_names = [
-                    'partner_name', 'title', 'function', 'street', 'street2', 
-                    'zip', 'city', 'country_id', 'state_id', 'email_from', 
+                    'partner_name', 'title', 'function', 'street', 'street2',
+                    'zip', 'city', 'country_id', 'state_id', 'email_from',
                     'phone', 'fax', 'mobile'
                 ]
 
@@ -258,20 +257,20 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         elif lead.type == 'opportunity':
             pa = lead.partner_address_id
             message = [
-            "Partner: %s" % (lead.partner_id.name_get()[0][1]), 
-            "Contact: %s" % (pa.name or ''), 
-            "Title: %s" % (pa.title or ''), 
-            "Function: %s" % (pa.function and pa.function.name_get()[0][1] or ''), 
-            "Street: %s" % (pa.street or ''), 
-            "Street2: %s" % (pa.street2 or ''), 
-            "Zip: %s" % (pa.zip or ''), 
-            "City: %s" % (pa.city or ''), 
-            "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''), 
-            "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''), 
-            "Email: %s" % (pa.email or ''), 
-            "Phone: %s" % (pa.phone or ''), 
-            "Fax: %s" % (pa.fax or ''), 
-            "Mobile: %s" % (pa.mobile or ''), 
+            "Partner: %s" % (lead.partner_id.name_get()[0][1]),
+            "Contact: %s" % (pa.name or ''),
+            "Title: %s" % (pa.title or ''),
+            "Function: %s" % (pa.function and pa.function.name_get()[0][1] or ''),
+            "Street: %s" % (pa.street or ''),
+            "Street2: %s" % (pa.street2 or ''),
+            "Zip: %s" % (pa.zip or ''),
+            "City: %s" % (pa.city or ''),
+            "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''),
+            "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''),
+            "Email: %s" % (pa.email or ''),
+            "Phone: %s" % (pa.phone or ''),
+            "Fax: %s" % (pa.fax or ''),
+            "Mobile: %s" % (pa.mobile or ''),
             ]
         return "\n".join(message + ['---'])
 

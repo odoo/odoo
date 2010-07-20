@@ -71,33 +71,34 @@ class product_uom(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
-            help="Unit of Measure of a category can be converted between each others in the same category."),
+            help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
         'factor': fields.float('Ratio', digits=(12, 6), required=True,
-            help='The coefficient for the formula:\n' \
-                    '1 (base unit) = coeff (this unit). Ratio = 1 / Factor.'),
+            help='How many times this UoM is smaller than the reference UoM in this category:\n'\
+                    '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=(12, 6),
             fnct_inv=_factor_inv_write,
             method=True, string='Ratio',
-            help='The coefficient for the formula:\n' \
-                    'coeff (base unit) = 1 (this unit). Factor = 1 / Rate.'),
+            help='How many times this UoM is bigger than the reference UoM in this category:\n'\
+                    '1 * (this unit) = ratio * (reference unit)', required=True),
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
-            help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the unit of measure without removing it."),
-        'uom_factor': fields.selection([('bigger','Bigger than the default'),
-                                        ('smaller','Smaller than the default'),
-                                        ('default','Default UoM for the category')],'Type of Unit', required=1),
+            help="The computed quantity will be a multiple of this value. "\
+                 "Use 1.0 for a UoM that cannot be further split, such as a piece."),
+        'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
+        'uom_type': fields.selection([('bigger','Bigger than the reference UoM'),
+                                      ('reference','Reference UoM for this category (ratio=1)'),
+                                      ('smaller','Smaller than the reference UoM')],'UoM Type', required=1),
     }
 
     _defaults = {
-        'factor': lambda *a: 1.0,
-        'factor_inv': lambda *a: 1.0,
-        'active': lambda *a: 1,
-        'rounding': lambda *a: 0.01,
-        'uom_factor': lambda *a: 'default',
+        'factor': 1.0,
+        'factor_inv': 1.0,
+        'active': 1,
+        'rounding': 0.01,
+        'uom_type': 'reference',
     }
 
     _sql_constraints = [
-        ('factor_gt_zero', 'CHECK (factor!=0)', 'Value of the factor can never be 0 !'),
+        ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
     ]
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
@@ -133,8 +134,8 @@ class product_uom(osv.osv):
             amount = amount / to_unit.factor
         return amount
 
-    def onchange_factor(self, cursor, user, ids, value):
-        if value == 'default':
+    def onchange_type(self, cursor, user, ids, value):
+        if value == 'reference':
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}
 
@@ -182,7 +183,7 @@ class product_category(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
     }
-    
+
 
     _defaults = {
         'type' : lambda *a : 'normal',
@@ -226,7 +227,7 @@ class product_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
-        'product_manager': fields.many2one('res.users','Product Manager'),
+        'product_manager': fields.many2one('res.users','Product Manager',help="This is use as task responsible"),
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),

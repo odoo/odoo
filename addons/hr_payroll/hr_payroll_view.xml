@@ -4,6 +4,8 @@
         <!-- Root Menus -->
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll"/>
         <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
+        <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll"/>
+
         
         <!-- Passport Views    -->
         <record id="hr_passport_form" model="ir.ui.view">
@@ -14,7 +16,7 @@
                 <form string="Passport">
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="4"/>
-                        <field name="employee_id" select="1"/>
+                        <field name="employee_id" />
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Country &amp; Address" colspan="4"/>
@@ -38,25 +40,51 @@
                 </form>
             </field>
         </record>
-         <record id="hr_passport_tree" model="ir.ui.view">
+        <record id="hr_passport_tree" model="ir.ui.view">
             <field name="name">hr.passport.tree</field>
             <field name="model">hr.passport</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Passport">
-                    <field name="name" select="1"/>
-                    <field name="employee_id" select="1"/>
-                    <field name="country_id" select="1"/>
-                    <field name="date_expire" select="1"/>
-                    <field name="date_expire" select="1"/>
+                    <field name="name" />
+                    <field name="employee_id" />
+                    <field name="address_id"/>
+                    <field name="country_id" />
+                    <field name="date_expire"/>
+                    <field name="date_issue" />
                 </tree>
             </field>
         </record>
+
+        <record id="view_hr_passport_filter" model="ir.ui.view">
+            <field name="name">hr.passport.select</field>
+            <field name="model">hr.passport</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Passport">
+                    <group col="8" colspan="4">
+                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="country_id"/>
+                        <field name="address_id"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'group_by':'employee_id'}"/>
+                        <filter string="Country" name="country_id" icon="terp-go-home" context="{'group_by':'country_id'}"/>
+                        <filter string="Expire" name="date_expire" icon="terp-go-month" context="{'group_by':'date_expire'}"/>
+                        <filter string="Issue" name="date_issue" icon="terp-go-month" context="{'group_by':'date_issue'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>           
         <record id="action_hr_passport_tree" model="ir.actions.act_window">
             <field name="name">All Passports</field>
             <field name="res_model">hr.passport</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_passport_tree"/>
+            <field name="search_view_id" ref="view_hr_passport_filter"/>
         </record>
         <menuitem id="passport_configure" parent="hr.menu_hr_configuration" name="Passport"/>
         <menuitem
@@ -131,7 +159,8 @@
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
                             <field name="pan_no" select="1"/>
-                            <field name="bank_account"/>
+<!--                            <field name="bank_account"/>-->
+                            <field name="bank_account_id"/>
                             <field name="place_of_birth"/>
                             <field name="children"/>
                         </group>
@@ -458,58 +487,64 @@
                             </group>
                         </page>
                         <page string="Accounting Details">
-                            <group col="2" colspan="3">
-                                <separator colspan="4" string="Accounting Informations"/>
-                                <field name="move_ids" colspan="2" nolabel="1" readonly="1">
-                                    <tree string="Accounting Vouchers">
-                                        <field name="sequence"/>
-                                        <field name="name"/>
-                                        <field name="move_id"/>
-                                    </tree>
-                                    <form string="Accounting Vouchers">
-                                        <field name="sequence"/>
-                                        <field name="name"/>
-                                        <field name="move_id"/>
-                                    </form>
-                                </field>
-                            </group>
                             <group col="2" colspan="1">
-                                <separator colspan="4" string="Other Informations"/>
+                                <separator colspan="2" string="Other Informations"/>
                                 <field name="paid" readonly="1"/>
                                 <field name="company_id"/>
                                 <field name="register_id"/>
                                 <field name="deg_id"/>
                                 <field name="contract_id" domain="[('employee_id','=',employee_id)]"/>
                             </group>
+                            <newline/>
                             <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Account Lines">
-                            <field name="move_line_ids" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Payment Lines">
-                            <field name="move_payment_ids" colspan="4" nolabel="1"/>
-                        </page>
                     </notebook>
-                    <group col="9" colspan="4">
+                    <group col="10" colspan="4">
                         <field name="state"/>
-                        <button string="Compute Sheet" name="compute_sheet" states="new"/>
-                        <button string="Recompute Sheet" name="compute_sheet" type="object" states="draft"/>
-                        <button string="Verify Sheet" name="verify_sheet" states="draft"/>
-                        <button string="Complete HR Checking" name="verify_twice_sheet" states="hr_check"/>
-                        <button string="Complete Accountant Checking" name="final_verify_sheet" states="accont_check"/>
-                        <button string="Pay Salary" name="process_sheet" states="confirm"/>
-                        <button string="Cancel" name="cancel_sheet" states="draft,hr_check,accont_check,confirm"/>
-                        <button string="Set to Draft" name="set_to_draft" states="cancel"/>
+                        <button string="Compute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" states="new"/>
+                        <button string="Recompute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" type="object" states="draft"/>
+                        <button string="Verify Sheet" icon="terp-camera_test" name="verify_sheet" states="draft"/>
+                        <button string="Validate Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
+                        <button string="Pay Salary" icon="terp-dolar_ok!" name="process_sheet" states="confirm"/>
+                        <button string="Cancel" icon="terp-dialog-close" name="cancel_sheet" states="draft,hr_check,confirm"/>
+                        <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="set_to_draft" states="cancel"/>
                     </group>
                 </form>
             </field>
         </record>
+        <record id="view_hr_payslip_filter" model="ir.ui.view">
+            <field name="name">hr.payslip.select</field>
+            <field name="model">hr.payslip</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Payslips">
+                    <group col="8" colspan="4">
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
+                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Slip"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-account" string="Paid" domain="[('state','=','done'),('paid','=',True)]" help="Paid Slip"/>
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="number"/>
+                        <field name="date"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'register_id':self}"/>
+                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'employee_id':self}"/>
+                        <filter string="Periods" name="period_id" icon="terp-go-month" context="{'period_id':self}"/>
+                        <filter string="Staes" name="state" icon="terp-stock_effects-object-colorize" context="{'state':self}"/>
+                    </group>
+                </search>
+            </field>
+        </record>   
         <record id="action_view_hr_payslip_form" model="ir.actions.act_window">
             <field name="name">Employee Payslip</field>
             <field name="res_model">hr.payslip</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_payslip_tree"/>
+            <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
         
@@ -527,8 +562,11 @@
                         <field name="code" select="1"/>
                         <field name="type" select="1"/>
                         <group col="2" colspan="4">
+                            <separator colspan="4" string="Based on"/>
+                            <field name="base" colspan="4" nolabel="1"/>
+                        </group>
+                        <group col="2" colspan="2">
                             <separator colspan="4" string="Dynamic Computation"/>
-                            <field name="base"/>
                             <field name="condition"/>
                             <field name="sequence"/>
                         </group>
@@ -536,6 +574,9 @@
                     <notebook colspan="4">
                         <page string="Description">
                             <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Contribution">
+                            <field name="contribute_ids" colspan="4" nolabel="1" height="300"/>
                         </page>
                     </notebook>
                 </form>
@@ -556,11 +597,34 @@
                 </tree>
             </field>
         </record>
+
+        <record id="view_allounce_deduction_categoty_filter" model="ir.ui.view">
+            <field name="name">hr.allounce.deduction.categoty.select</field>
+            <field name="model">hr.allounce.deduction.categoty</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Salary Heads">
+                    <filter icon="terp-document-new" string="Allowance" domain="[('type','=','allowance')]"/>
+                    <filter icon="terp-check" string="Deduction" domain="[('type','=','deduction')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" select="1"/>
+                   	<field name="code" select="1"/>
+                    <field name="type"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
+                        <filter string="Based" icon="terp-go-month" domain="[]" context="{'group_by':'base'}"/>
+                        <filter string="Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+        
         <record id="hr_allounce_deduction_tree" model="ir.actions.act_window">
             <field name="name">Salary Heads</field>
             <field name="res_model">hr.allounce.deduction.categoty</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_allounce_deduction_categoty_tree"/>
+           <field name="search_view_id" ref="view_allounce_deduction_categoty_filter"/>
         </record>
         <menuitem 
             id="menu_hr_allounce_deduction_tree" 
@@ -580,8 +644,6 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="category_id"/>
-                        <field name="company_id" select="1"/>
-                        <field name="active" select="1"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Contributions"/>
@@ -590,9 +652,11 @@
                         <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator colspan="2" string="Accounts"/>
-                        <field name="include_in_salary" />
-                        <field name="account_id" attrs="{'required': [('include_in_salary','=',True)]}"/>
+                        <separator colspan="2" string="Other Information"/>
+                        <field name="company_id" select="1"/>
+                        <field name="active" select="1"/>
+<!--                        <field name="include_in_salary" />-->
+<!--                        <field name="account_id" attrs="{'required': [('include_in_salary','=',True)]}"/>-->
                     </group>
                     <notebook colspan="4">
                         <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
@@ -625,14 +689,40 @@
                     <field name="contribute_per"/>
                     <field name="amount_type"/>
                     <field name="register_id"/>
+                     <field name="category_id"/>
                 </tree>
             </field>
         </record>
+
+		<record id="view_hr_company_contribution_filter" model="ir.ui.view">
+            <field name="name">company.contribution.select</field>
+             <field name="model">company.contribution</field>
+            <field name="type">search</field>
+          	 <field name="arch" type="xml">
+                <search string="Search Company Contribution">
+                    <group col="8" colspan="4">
+                        <filter icon="terp-document-new" string="Fixed Amount" domain="[('amount_type','=','fix')]" help="Draft Slip"/>
+                        <filter icon="terp-camera_test" string="Function Calculation" domain="[('amount_type','=','func')]" help="Posted Slip"/>
+                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="contribute_per"/>
+                        <field name="register_id"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Type" icon="terp-partner" name="amount_type" context="{'group_by':'amount_type'}"/>
+                        <filter string="Category" name="category_id" icon="terp-go-month"  context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>        
         <record id="action_hr_company_contribution_tree" model="ir.actions.act_window">
             <field name="name">Company Contributions</field>
             <field name="res_model">company.contribution</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_company_contribution_tree"/>
+           	<field name="search_view_id" ref="view_hr_company_contribution_filter"/>
         </record>
         <menuitem 
             id="menu_hr_company_contribution_tree" 
@@ -736,9 +826,9 @@
                     </notebook>
                     <group col="6" colspan="6">
                         <field name="state"/>
-                        <button name="confirm_sheet" string="Confirm Sheet" states="draft" type="object"/>
-                        <button name="set_to_draft" string="Set to Draft" states="cancel,confirm" type="object"/>
-                        <button name="cancel_sheet" string="Cancel Sheet" states="draft" type="object"/>
+                        <button name="confirm_sheet"  icon="gtk-apply" string="Confirm Sheet" states="draft" type="object"/>
+                        <button name="set_to_draft" string="Set to Draft"  icon="gtk-convert"  states="cancel,confirm" type="object"/>
+                        <button name="cancel_sheet" string="Cancel Sheet" states="draft" icon="gtk-cancel"  type="object"/>
                     </group>
                 </form>
             </field>
@@ -815,13 +905,12 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state"/>
-                        <button string="Compute" name="compute_sheet" states="new" type="object"/>
-                        <button string="Verify Sheet" name="verify_sheet" states="draft" type="object"/>
-                        <button string="Complete HR Checking" name="verify_twice_sheet" type="object" states="hr_check"/>
-                        <button string="Complete Accountant Checking" name="final_verify_sheet" states="accont_check" type="object"/>
-                        <button string="Pay Salary" name="process_sheet" states="confirm" type="object"/>
-                        <button string="Cancel" name="cancel_sheet" states="draft,hr_check,accont_check,confirm" type="object"/>
-                        <button string="Set to Draft" name="set_to_draft" states="cancel" type="object"/>
+                        <button string="Compute" name="compute_sheet" states="new" icon="terp-document-new" type="object"/>
+                        <button string="Verify Sheet" icon="gtk-ok" name="verify_sheet" states="draft" type="object"/>
+                        <button string="Complete HR Checking"  icon="gtk-apply" name="final_verify_sheet" type="object" states="hr_check"/>
+                        <button string="Pay Salary" icon="gtk-apply"  name="process_sheet" states="confirm" type="object" />
+                        <button string="Cancel" name="cancel_sheet" icon="gtk-cancel" states="draft,hr_check,accont_check,confirm" type="object"/>
+                        <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" />
                     </group>
                 </form>
             </field>

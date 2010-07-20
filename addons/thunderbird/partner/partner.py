@@ -89,9 +89,9 @@ class tinythunderbird_partner(osv.osv):
         add_obj=self.pool.get('res.partner.address')
         case_pool=self.pool.get(dictcreate.get('object','crm.case'))
         partner_ids=add_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
-        partner=add_obj.read(cr,user,partner_ids,['partner_id','name'])
+        partner=add_obj.read(cr,user,partner_ids,['partner_id'])
         if partner and partner[0] and partner[0]['partner_id']:
-            dictcreate.update({'partner_id':partner[0]['partner_id'][0],'partner_name':partner[0]['name']})
+            dictcreate.update({'partner_id':partner[0]['partner_id'][0]})
         create_id = case_pool.create(cr, user, dictcreate)
         cases=case_pool.browse(cr,user,[create_id])
         case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)
@@ -198,7 +198,7 @@ class tinythunderbird_partner(osv.osv):
         return super(tinythunderbird_partner, self).unlink(cr, uid, ids,context)
 
     def thunderbird_objectsearch(self,cr,user,vals):
-        obj_list= [('crm.lead','Lead'),('project.issue','Project Issue'), ('hr.applicant','HR Recruitment')]
+        obj_list= [('crm.claim', 'Claim'), ('crm.lead','Lead'), ('crm.meeting','Metting'), ('crm.opportunity','Opportunity'), ('crm.phonecall','Phonecall'), ('crm.fundraising','Fund raising'), ('crm.helpdesk','Helpdesk')]
         object=[]
         model_obj = self.pool.get('ir.model')
         for obj in obj_list:

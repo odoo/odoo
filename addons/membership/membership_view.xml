@@ -40,7 +40,7 @@
                     <field name="active" colspan="1"/>
                     <newline/>
                     <separator colspan="4" string="Customer Taxes:"/>
-                    <field name="taxes_id" colspan="4" nolabel="1"/> 
+                    <field name="taxes_id" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -129,7 +129,7 @@
                </field>
             </field>
         </record>
-        
+
         <record id="view_res_partner_member_filter2" model="ir.ui.view">
             <field name="name">res.partner.select2</field>
             <field name="model">res.partner</field>
@@ -138,7 +138,7 @@
             <field name="arch" type="xml">
                 <field name="membership_start" position="after">
                 <newline/>
-	            <group expand="1" string="Group By" colspan="10" col="8">
+	            <group expand="0" string="Group By" colspan="10" col="8">
 	                <filter string="Associate Member" name = "associate" icon="terp-personal" domain="[]" context="{'group_by':'associate_member'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
                     <separator orientation="vertical"/>

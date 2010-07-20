@@ -46,17 +46,19 @@ class crm_meeting(osv.osv, crm_case):
     _inherit = ['mailgate.thread',"calendar.event"]
     _columns = {
         # From crm.case
-        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}), 
-        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}), 
+        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
+        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]", states={'done': [('readonly', True)]}), 
+                                 domain="[('partner_id','=',partner_id)]", states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
                         select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'), 
+                             Define Responsible user and Email account for mail gateway.'),
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
         'id': fields.integer('ID'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Write Date' , readonly=True),
+        'date_action_last': fields.datetime('Last Action', readonly=1),
+        'date_action_next': fields.datetime('Next Action', readonly=1),
         # Meeting fields
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
@@ -77,8 +79,9 @@ class crm_meeting(osv.osv, crm_case):
     }
 
     _defaults = {
-        'state': lambda *a: 'draft', 
-        'active': lambda *a: 1, 
+        'state': lambda *a: 'draft',
+        'active': lambda *a: 1,
+        'user_id': lambda self, cr, uid, ctx: uid,
     }
 
     def open_meeting(self, cr, uid, ids, context=None):
@@ -121,7 +124,7 @@ class crm_meeting(osv.osv, crm_case):
                     }
 
         return value
-    
+
 crm_meeting()
 
 class calendar_attendee(osv.osv):

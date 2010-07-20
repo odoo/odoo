@@ -43,7 +43,7 @@
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-execute"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                     <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
@@ -61,7 +61,7 @@
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
-      					<button name="button_postpone" string="Post Pone" type="object"                  
+      					<button name="button_postpone" string="Post Pone" type="object"
 						help="Post Pone backlog" colspan="2"
                          icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
                         <field name="user_id" select="1"/>
@@ -134,7 +134,7 @@
                             icon="terp-check"
                             string="Current"
                             name="current"
-                            domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open'])]"
+                            domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open','pending'])]"
                             help="Current Backlogs"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Backlogs"/>
@@ -156,7 +156,8 @@
                             <filter icon="terp-project"
                                 string="My Backlogs"
                                 name="my_user_id"
-                                domain="[('user_id','=',uid)]"/>
+                                domain="[('user_id','=',uid)]"
+                                help="My Backlogs"/>
                         </field>
                     </group>
                     <newline/>
@@ -178,7 +179,7 @@
             <field name="name">Product Backlogs</field>
             <field name="res_model">scrum.product.backlog</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_user_id":uid, 'search_default_current': 1}</field>
+            <field name="context">{'search_default_current': 1}</field>
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
         </record>
         <menuitem
@@ -206,7 +207,7 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-execute"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>

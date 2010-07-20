@@ -51,7 +51,7 @@ class crm_lead_report(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
-                cr.execute("select count(*) from crm_lead where \
+                cr.execute("select count(id) from crm_lead where \
                     section_id =%s and state='%s'"%(case.section_id.id, state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr)) * 100
@@ -64,7 +64,7 @@ class crm_lead_report(osv.osv):
                 else:
                     model_name = model_name[1]
 
-                    cr.execute("select count(*) from crm_case_log l, ir_model m \
+                    cr.execute("select count(id) from crm_case_log l, ir_model m \
                          where l.model_id=m.id and m.model = '%s'" , model_name)
                     logs = cr.fetchone()[0]
 
@@ -90,7 +90,7 @@ class crm_lead_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'email': fields.integer('# of Emails', size=128, readonly=True),
+        'email': fields.integer('# Emails', size=128, readonly=True),
         'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
@@ -120,60 +120,43 @@ class crm_lead_report(osv.osv):
             CRM Lead Report
             @param cr: the current row, from the database cursor
         """
-
         tools.drop_view_if_exists(cr, 'crm_lead_report')
         cr.execute("""
-            create or replace view crm_lead_report as (
-                select
-                    min(c.id) as id,
+            CREATE OR REPLACE VIEW crm_lead_report AS (
+                SELECT
+                    id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
-                    c.state as state,
+                    c.state,
                     c.user_id,
                     c.probability,
                     c.stage_id,
-                    c.type as type,
+                    c.type,
                     c.company_id,
                     c.priority,
                     c.section_id,
                     c.categ_id,
                     c.partner_id,
                     c.planned_revenue,
-                    (select 1) as nbr,
+                    1 as nbr,
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+<<<<<<< TREE
                     (select count(id) from mailgate_message where res_id=c.id and model='crm.lead') as email,
+=======
+                    (SELECT count(id) FROM mailgate_message WHERE model='crm.lead' AND res_id=c.id AND history=True) AS email,
+>>>>>>> MERGE-SOURCE
                     date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
-                    avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24) as  delay_expected,
-                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
-                from
+                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected,
+                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
+                FROM
                     crm_lead c
-                group by
-                    to_char(c.create_date, 'YYYY'),
-                    to_char(c.date_open, 'YYYY-MM-DD'),
-                    to_char(c.date_closed, 'YYYY-mm-dd'),
-                    to_char(c.create_date, 'MM'),
-                    c.state,
-                    c.user_id,
-                    c.id,
-                    c.section_id,
-                    c.stage_id,
-                    c.probability,
-                    c.categ_id,
-                    c.partner_id,
-                    c.planned_revenue,
-                    c.company_id,
-                    c.priority,
-                    c.type,
-                    c.create_date,
-                    to_char(c.create_date, 'YYYY-MM-DD')
-
             )""")
 
 crm_lead_report()

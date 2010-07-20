@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="sale.group_sale_user"/> 
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="sale.group_sale_user"/>
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
@@ -165,11 +165,11 @@
                                                 <field name="state"/>
                                                 <field name="invoiced"/>
                                                 <button colspan="1"
-                                                    name="%(action_view_sale_order_line_make_invoice)d"
+                                                    name="create_sale_order_line_invoice"
                                                     states="confirmed"
-                                                    string="Make Invoice"
-                                                    type="action"
-                                                    icon="gtk-print" />
+                                                    string="Create Invoice"
+                                                    type="object"
+                                                    icon="terp-document-new" />
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
@@ -203,7 +203,7 @@
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="button_dummy" states="draft" string="" type="object" icon="gtk-execute"/>
+                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute"/>
                             </group>
                             <group col="13" colspan="4">
@@ -213,7 +213,7 @@
                                 <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-apply"/>
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
-                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-print"/>
+                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="terp-document-new"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
@@ -221,7 +221,7 @@
                                 <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
                             </group>
                         </page>
-                        <page string="Other data">
+                        <page string="Other Information">
                             <group colspan="2" col="2" groups="base.group_extended" name="logistic">
                                 <separator string="Logistic" colspan="2"/>
                                 <field name="incoterm"/>
@@ -249,7 +249,7 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="History" groups="base.group_extended">
-                            <separator colspan="4" string="Related invoices"/>
+                            <separator colspan="4" string="Related Invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
@@ -396,20 +396,24 @@
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                             <separator colspan="4" string="States"/>
                             <field name="state"/>
-                            <button colspan="1"
-                              name="%(action_view_sale_order_line_make_invoice)d"
-                              string="Make Invoice"
-                              type="action"
-                              icon="gtk-print" />
-                            <group col="2" colspan="2">
+                            <group col="3" colspan="2">
+                            	<button colspan="1"
+	                              name="create_sale_order_line_invoice"
+	                              states="confirmed"
+	                              string="Create Invoice"
+	                              type="object"
+	                              icon="terp-document-new"
+	                              attrs="{'invisible': [('invoiced', '=', 1)]}"/>
+	                            <button name="button_cancel"
+                                    states="confirmed,exception"
+                                    string="Cancel" type="object"
+                                    icon="gtk-cancel"
+                                    attrs="{'invisible': [('invoiced', '=', 1)]}" />
                                 <button name="button_done"
                                     states="confirmed,exception"
                                     string="Done" type="object"
-                                    icon="gtk-jump-to" />
-                                <button name="button_cancel"
-                                    states="confirmed,exception"
-                                    string="Cancel" type="object"
-                                    icon="gtk-cancel" />
+									icon="gtk-jump-to"
+									attrs="{'invisible': [('invoiced', '=', 0)]}"/>
                             </group>
                         </page>
 <!--                        <page string="Properties" groups="base.group_extended">-->
@@ -492,6 +496,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
+            <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
         </record>
 

@@ -31,6 +31,13 @@ import collections
 import binascii
 import tools
 
+
+CRM_LEAD_PENDING_STATES = (
+    crm.AVAILABLE_STATES[2][0], # Cancelled
+    crm.AVAILABLE_STATES[3][0], # Done
+    crm.AVAILABLE_STATES[4][0], # Pending
+)
+
 class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
     _name = "crm.lead"
@@ -95,6 +102,10 @@ class crm_lead(osv.osv, crm_case):
         return res
 
     _columns = {
+        # Overridden from res.partner.address:
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
+            select=True, help="Optional linked partner, usually after conversion of the lead"),
+
         # From crm.case
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False),
@@ -142,7 +153,7 @@ and users"),
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
         'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
     }
@@ -157,7 +168,7 @@ and users"),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
-    
+
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer
@@ -166,8 +177,19 @@ and users"),
         @param ids: List of case's Ids
         @param *args: Give Tuple Value
         """
+        old_state = self.read(cr, uid, ids, ['state'])[0]['state']
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        if old_state == 'draft':
+            stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
+            if not stage_id:
+                raise osv.except_osv(_('Warning !'), _('There is no stage defined for this Sale Team.'))
+            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+            self.write(cr, uid, ids, value)
+
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('The Lead') + " '" + name + "' "+ _("has been written as Open.")
+            self.log(cr, uid, id, message)
         return res
 
     def case_close(self, cr, uid, ids, *args):
@@ -180,6 +202,9 @@ and users"),
         """
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('The Lead') + " '" + name + "' "+ _("has been written as Closed.")
+            self.log(cr, uid, id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
@@ -277,6 +302,9 @@ and users"),
 
         res = self.create(cr, uid, vals, context)
 
+        message = _('A Lead created') + " '" + subject + "' " + _("from Mailgate.")
+        self.log(cr, uid, res, message)
+
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -296,7 +324,7 @@ and users"),
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs 
+        @param ids: List of update mail’s IDs
         """
 
         if isinstance(ids, (str, int, long)):
@@ -325,8 +353,8 @@ and users"),
         # previous state, so we have to loop:
         for case in self.browse(cr, uid, ids, context=context):
             values = dict(vals)
-            if case.state == crm.AVAILABLE_STATES[4][0]: #pending
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #open
+            if case.state in CRM_LEAD_PENDING_STATES:
+                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
 
         return res

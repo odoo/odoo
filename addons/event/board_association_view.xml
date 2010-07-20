@@ -13,7 +13,7 @@
                 string="New members"
                 name="%(membership.action_report_partner_member_year_tree)d"
                 view_mode="graph,tree" colspan="4"/>-->
-            
+
         <record model ="ir.ui.view" id="view_report_event_reg_graph">
             <field name="name">Registration Event report</field>
             <field name="model">report.event.registration</field>
@@ -26,15 +26,15 @@
                     <field name="register_max" operator="+"/>
                 </graph>
             </field>
-        </record>     
-                  
+        </record>
+
         <record  model="ir.actions.act_window" id="act_event_reg">
             <field name="name">Events On Registrations</field>
             <field name="res_model">report.event.registration</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_report_event_reg_graph"/>
-        </record>                
+        </record>
 
        <record model="ir.actions.act_window" id="act_event_view">
            <field name="name">Next Events</field>
@@ -42,12 +42,12 @@
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
            <field name="view_mode">tree,form</field>
-       </record>    
-               
+       </record>
+
         <record model="board.note.type" id="note_association_type">
             <field name="name">associations</field>
         </record>
-                              
+
         <record model="ir.ui.view" id="board_associations_manager_form">
             <field name="name">board.associations.manager.form</field>
             <field name="model">board.board</field>
@@ -68,10 +68,10 @@
                         <child2>
                             <action string="Register Events"
                                 name="%(act_event_reg)d"
-                                colspan="4"/>    
-                        
+                                colspan="4"/>
+
                         </child2>
-                        
+
                     </hpaned>
                 </form>
             </field>
@@ -84,8 +84,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_associations_manager_form"/>
         </record>
-        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
-        <menuitem id="board_associations" name="Associations" parent="base.dashboard" />
+        <menuitem id="board_associations" icon="terp-graph" name="Dashboard" parent="menu_report_event" sequence="0"/>
         <menuitem
             name="Associations" parent="board_associations"
             action="open_board_associations_manager"

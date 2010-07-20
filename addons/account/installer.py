@@ -207,8 +207,8 @@ class account_installer(osv.osv_memory):
             new_account = obj_acc.create(cr, uid, vals)
             acc_template_ref[account_template.id] = new_account
             if account_template.name == 'Bank Current Account':
-                view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Cash Journal View')])[0]
-                view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Multi-Currency Cash Journal View')])[0]
+                view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal View')])[0] #why fixed name here?
+                view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #Why Fixed name here?
                 ref_acc_bank = obj_multi.bank_account_view_id
 
                 cash_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_cash')
@@ -328,8 +328,8 @@ class account_installer(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Bank Journals
-        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Cash Journal View')])[0]
-        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Multi-Currency Cash Journal View')])[0]
+        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: Why put fixed name ?
+        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fixed name?
         ref_acc_bank = obj_multi.bank_account_view_id
 
 

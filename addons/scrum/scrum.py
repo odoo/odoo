@@ -92,10 +92,16 @@ class scrum_sprint(osv.osv):
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Sprint ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Sprint ') + " '" + name + "' "+ _("is Closed.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context={}):
@@ -205,12 +211,17 @@ class scrum_product_backlog(osv.osv):
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Product Backlog ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
+            message = _('Product Backlog ') + " '" + backlog.name + "' "+ _("is Closed.")
+            self.log(cr, uid, backlog.id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context={}):
@@ -237,13 +248,13 @@ class scrum_product_backlog(osv.osv):
         'note' : fields.text('Note'),
         'active' : fields.boolean('Active', help="If Active field is set to true, it will allow you to hide the product backlog without removing it."),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.many2one('res.users', 'Author'),
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint'),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done (Time spent on tasks)"),
+        'effective_hours': fields.function(_calc_effective, method=True, string='Spent Hours', help="Computed using the sum of the time spent on every related tasks"),
         'expected_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),
         'create_date': fields.datetime("Creation Date", readonly=True),
         'task_hours': fields.function(_calc_task, method=True, string='Task Hours', help='Estimated time of the total hours of the tasks')
@@ -305,23 +316,34 @@ class scrum_meeting(osv.osv):
     }
 
     def button_send_to_master(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         meeting_id = self.browse(cr, uid, ids)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
-            self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
+            res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
+            if not res:
+                raise osv.except_osv(_('Error !'), _(' Email Not send to the scrum master %s!' % meeting_id.sprint_id.scrum_master_id.name))
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for scrum master defined on sprint.'))
         return True
 
     def button_send_product_owner(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context.update({'button_send_product_owner': True})
         meeting_id = self.browse(cr, uid, ids)[0]
         if meeting_id.sprint_id.product_owner_id.user_email:
-            self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
+            res = self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
+            if not res:
+                raise osv.except_osv(_('Error !'), _(' Email Not send to the product owner %s!' % meeting_id.sprint_id.product_owner_id.name))
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for product owner defined on sprint.'))
         return True
 
     def email_send(self, cr, uid, ids, email, context=None):
+        if context is None:
+            context = {}
         email_from = tools.config.get('email_from', False)
         meeting_id = self.browse(cr,uid,ids)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -332,7 +354,7 @@ class scrum_meeting(osv.osv):
         sub_name = meeting_id.name or 'Scrum Meeting of %s '%meeting_id.date
         flag = tools.email_send(user_email , [email], sub_name, body, reply_to=None, openobject_id=str(meeting_id.id))
         if not flag:
-            raise osv.except_osv(_('Error !'), _(' Email Not send to %s!' % meeting_id.sprint_id.product_owner_id.name))
+            return False
         return True
 
 scrum_meeting()

@@ -39,11 +39,11 @@ This module may be useful for different purposes:
     'author': 'Tiny',
     'depends': ['procurement','stock'],
     'init_xml': [],
-    'update_xml': ['stock_view.xml', 'security/ir.model.access.csv', 'mrp_pull_workflow.xml'],
+    'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'mrp_pull_workflow.xml'],
     'demo_xml': [],
     'installable': True,
     'test':[
-#            'test/stock_location.yml'
+            'test/stock_location.yml'
             ],
     'active': False,
     'certificate': '0046505115101',

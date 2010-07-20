@@ -32,6 +32,7 @@
     'update_xml': [
         'security/ir.model.access.csv',
         'knowledge_installer.xml',
+        'knowledge_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

@@ -18,42 +18,42 @@
             <field name="close_method">balance</field>
         </record>
         <record id="account_type_receivable" model="account.account.type">
-            <field name="name">Receivable</field> 
+            <field name="name">Receivable</field>
             <field name="code">receivable</field>
             <field name="report_type">asset</field>
             <field name="close_method">unreconciled</field>
         </record>
         <record id="account_type_liability" model="account.account.type">
-            <field name="name">Liability</field> 
+            <field name="name">Liability</field>
             <field name="code">liability</field>
             <field name="report_type">liability</field>
             <field name="close_method">balance</field>
         </record>
         <record id="account_type_payable" model="account.account.type">
-            <field name="name">Payable</field> 
+            <field name="name">Payable</field>
             <field name="code">payable</field>
             <field name="report_type">liability</field>
             <field name="close_method">unreconciled</field>
         </record>
         <record id="account_type_income" model="account.account.type">
-            <field name="name">Income</field> 
+            <field name="name">Income</field>
             <field name="code">income</field>
             <field name="report_type">income</field>
             <field name="close_method">none</field>
         </record>
         <record id="account_type_expense" model="account.account.type">
-            <field name="name">Expense</field> 
+            <field name="name">Expense</field>
             <field name="code">expense</field>
             <field name="report_type">expense</field>
             <field name="close_method">none</field>
         </record>
         <record id="account_type_cash_equity" model="account.account.type">
-            <field name="name">Equity</field> 
+            <field name="name">Equity</field>
             <field name="code">equity</field>
             <field name="close_method">balance</field>
         </record>
         <record id="account_type_cash_moves" model="account.account.type">
-            <field name="name">Cash</field> 
+            <field name="name">Cash</field>
             <field name="code">cash</field>
             <field name="report_type">asset</field>
             <field name="close_method">balance</field>
@@ -170,15 +170,16 @@ your own chart of account.
 
 
         <!--
-		Account Journal
-		-->
+        Account Journal
+        -->
 
         <record id="sales_journal" model="account.journal">
             <field name="name">x Sales Journal</field>
             <field name="code">SAJ</field>
             <field name="type">sale</field>
-            <field name="view_id" ref="account_journal_view"/>
+            <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
+            <field name="invoice_sequence_id" ref="seq_type_out_invoice"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
             <field name="user_id" ref="base.user_root"/>
@@ -186,9 +187,8 @@ your own chart of account.
         <record id="refund_sales_journal" model="account.journal">
             <field name="name">x Sales Credit Note Journal</field>
             <field name="code">SCNJ</field>
-            <field name="type">sale</field>
-            <field name="refund_journal">True</field>
-            <field name="view_id" ref="account_journal_view"/>
+            <field name="type">sale_refund</field>
+            <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
@@ -199,8 +199,9 @@ your own chart of account.
             <field name="name">x Expenses Journal</field>
             <field name="code">EXJ</field>
             <field name="type">purchase</field>
-            <field name="view_id" ref="account_journal_view"/>
+            <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
+            <field name="invoice_sequence_id" ref="seq_type_in_invoice"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
             <field name="user_id" ref="base.user_root"/>
@@ -208,9 +209,8 @@ your own chart of account.
         <record id="refund_expenses_journal" model="account.journal">
             <field name="name">x Expenses Credit Notes Journal</field>
             <field name="code">ECNJ</field>
-            <field name="type">purchase</field>
-            <field name="refund_journal">True</field>
-            <field name="view_id" ref="account_journal_view"/>
+            <field name="type">purchase_refund</field>
+            <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
@@ -239,19 +239,19 @@ your own chart of account.
         </record>
 
         <!--
-		Product income and expense accounts, default parameters
-	-->
-        
+        Product income and expense accounts, default parameters
+        -->
+
         <record id="property_account_expense_prd" model="ir.property">
             <field name="name">property_account_expense</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_expense')]"/>
-            <field eval="False" name="value"/>
+            <field eval="'account.account,'+str(ref('account.a_expense'))" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="property_account_income_prd" model="ir.property">
             <field name="name">property_account_income</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_income')]"/>
-            <field eval="False" name="value"/>
+            <field eval="'account.account,'+str(ref('account.a_sale'))" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="property_account_expense_categ" model="ir.property">

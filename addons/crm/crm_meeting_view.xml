@@ -51,9 +51,10 @@
                                name="open_meeting" icon="gtk-edit"
                                type="object" />
                            <button string="ExRule"
-               name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
-               context="{'model' : 'crm.meeting'}"
-               attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
+                                help="Add Exception Rule"
+                                name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
+                                context="{'model' : 'crm.meeting'}"
+                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
                     </group>
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
@@ -106,6 +107,7 @@
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Assignment"/>
                             <field name="user_id" />
+                            <field name="organizer_id" groups="base.group_extended"/>
                             <field name="section_id" widget="selection"
                                 groups="base.group_extended"/>
                         </group><group col="2" colspan="2">
@@ -153,7 +155,9 @@
                         <field name="attendee_ids" colspan="4"
                             nolabel="1" widget="one2many" mode="tree,form">
                             <tree string="Invitation details" editable="top">
-                                <field name="email" />
+                                <field name="sent_by_uid" string="From"/>
+                                <field name="user_id" string="To"/>
+                                <field name="email" string="Mail TO"/>
                                 <field name="role" select="1" />
                                 <field name="state" />
                             </tree>
@@ -293,7 +297,7 @@
                            <field name="partner_id" select="1" />
                            <field name="section_id" select="1" widget="selection">
                                <filter icon="terp-personal+"
-                                   domain="[('section_id','=',context.get('section_id',False))]"
+                                   domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sale Team" />
                            </field>
                            <field name="user_id" select="1"/>
@@ -342,19 +346,6 @@
                 </field>
         </record>
 
-        <!-- Calendar Attendee Tree View -->
-
-        <record id="attendee_tree_view_inherit" model="ir.ui.view">
-                <field name="name">calendar.attendee.tree.inherit</field>
-                <field name="model">calendar.attendee</field>
-                <field name="type">tree</field>
-                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_tree_view"/>
-                <field name="arch" type="xml">
-                    <field name="role" position="after">
-                        <field name="categ_id" string="Event Type"/>
-                    </field>
-                </field>
-        </record>
 
     </data>
 </openerp>
