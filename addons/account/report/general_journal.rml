@@ -256,7 +256,7 @@
 	<tr>
 	   <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or removeParentNode('para') ]]</para></td>
-		<td> <para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data['form']['journal_ids']) ]) ]] </para></td>       
+		<td> <para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]] </para></td>       
         <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
 				<tr>
