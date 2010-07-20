@@ -12,11 +12,11 @@
                 <form string="Stock and Sales Forecasts">
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
-                    <field name="period_id1"/>
+                    <field name="period_id"/>
                     <newline/>
-                    <field name="warehouse_id1" domain = "[('company_id','=',company_id)] "/>
+                    <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                     <newline/>
-                    <field name="product_categ_id1" widget="selection"/>
+                    <field name="product_categ_id" widget="selection"/>
                     <newline/>
                     <field name="copy_forecast"/>
                     <separator colspan ="4" string="Forecast lines creation"/>

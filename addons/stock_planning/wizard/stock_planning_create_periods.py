@@ -70,7 +70,7 @@ class stock_period_createlines(osv.osv_memory):
                     'date_start': ds.strftime('%Y-%m-%d'),
                     'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
                     })
-                    ds = ds + RelativeDateTime(days=interval)
+                    ds = ds + RelativeDateTime(days=interval) + 1
                 if name =="Weekly":
                     de = ds + RelativeDateTime(days=interval, minutes =-1)
                     new_name = de.strftime('%Y, week %W')
@@ -79,7 +79,7 @@ class stock_period_createlines(osv.osv_memory):
                     'date_start': ds.strftime('%Y-%m-%d'),
                     'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
                     })
-                    ds = ds + RelativeDateTime(days=interval)
+                    ds = ds + RelativeDateTime(days=interval) + 1
                 if name == "Monthly":
                     de = ds + RelativeDateTime(months=interval, minutes=-1)
                     new_name = ds.strftime('%Y/%m')

@@ -31,14 +31,14 @@ class stock_planning_createlines(osv.osv_memory):
     def onchange_company(self, cr, uid, ids, company_id=False):
         result = {}
         if company_id:
-            result['warehouse_id2'] = False
+            result['warehouse_id'] = False
         return {'value': result}
 
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'period_id2': fields.many2one('stock.period' , 'Period', required=True, help = 'Period which planning will concern.'),
-        'warehouse_id2': fields.many2one('stock.warehouse' , 'Warehouse', required=True, help = 'Warehouse which planning will concern.'),
-        'product_categ_id2': fields.many2one('product.category' , 'Product Category', \
+        'period_id': fields.many2one('stock.period' , 'Period', required=True, help = 'Period which planning will concern.'),
+        'warehouse_id': fields.many2one('stock.warehouse' , 'Warehouse', required=True, help = 'Warehouse which planning will concern.'),
+        'product_categ_id': fields.many2one('product.category' , 'Product Category', \
                         help = 'Planning will be created for products from Product Category selected by this field. '\
                                'This field is ignored when you check \"All Forecasted Product\" box.' ),
         'forecasted_products': fields.boolean('All Products with Forecast', \
@@ -66,7 +66,7 @@ class stock_planning_createlines(osv.osv_memory):
                                 WHERE (period_id = %s) AND (warehouse_id = %s)", (f.period_id2.id, f.warehouse_id2.id))
                 products_id1 = [x for x, in cr.fetchall()]
             else:
-                categ_ids = f.product_categ_id2.id and [f.product_categ_id2.id] or []
+                categ_ids = f.product_categ_id.id and [f.product_categ_id.id] or []
                 prod_categ_ids = prod_categ_obj.search(cr,uid,[('parent_id','child_of',categ_ids)])
                 templates_ids = template_obj.search(cr,uid,[('categ_id','in',prod_categ_ids)])
                 products_id1 = product_obj.search(cr,uid,[('product_tmpl_id','in',templates_ids)])
@@ -75,8 +75,8 @@ class stock_planning_createlines(osv.osv_memory):
 
             for p in product_obj.browse(cr, uid, products_id1,context=context):
                 if len(planning_obj.search(cr, uid, [('product_id','=',p.id),
-                                                      ('period_id','=',f.period_id2.id),
-                                                      ('warehouse_id','=',f.warehouse_id2.id)]))== 0:
+                                                      ('period_id','=',f.period_id.id),
+                                                      ('warehouse_id','=',f.warehouse_id.id)]))== 0:
                     cr.execute("SELECT period.date_stop, planning.product_uom, planning.planned_outgoing, planning.to_procure, \
                                     planning.stock_only, planning.procure_to_stock, planning.confirmed_forecasts_only, \
                                     planning.supply_warehouse_id, planning.stock_supply_location \
@@ -87,7 +87,7 @@ class stock_planning_createlines(osv.osv_memory):
                                      AND planning.warehouse_id = %s AND planning.product_id = %s \
                                      AND period.date_stop < %s \
                                 ORDER BY period.date_stop DESC",
-                                    (uid, uid, f.warehouse_id2.id, p.id, f.period_id2.date_stop) )
+                                    (uid, uid, f.warehouse_id.id, p.id, f.period_id.date_stop) )
                     ret=cr.fetchone()
 #                        forecast_qty = ret and ret[0] or 0.0
                     if ret:
@@ -113,9 +113,9 @@ class stock_planning_createlines(osv.osv_memory):
                     if p.uos_id:
                         prod_uos_categ = p.uos_id.category_id.id
                     planning_lines.append(planning_obj.create(cr, uid, {
-                        'company_id' : f.warehouse_id2.company_id.id,
-                        'period_id': f.period_id2.id,
-                        'warehouse_id' : f.warehouse_id2.id,
+                        'company_id' : f.warehouse_id.company_id.id,
+                        'period_id': f.period_id.id,
+                        'warehouse_id' : f.warehouse_id.id,
                         'product_id': p.id,
                         'product_uom' : prod_uom,
                         'product_uom_categ' : p.uom_id.category_id.id,

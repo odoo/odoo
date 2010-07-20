@@ -38,11 +38,11 @@ class stock_sale_forecast_createlines(osv.osv_memory):
 
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
-        'warehouse_id1': fields.many2one('stock.warehouse' , 'Warehouse', required=True, \
+        'warehouse_id': fields.many2one('stock.warehouse' , 'Warehouse', required=True, \
                                 help='Warehouse which forecasts will concern. '\
                                    'If during stock planning you will need sales forecast for all warehouses choose any warehouse now.'),
-        'period_id1': fields.many2one('stock.period' , 'Period', required=True, help = 'Period which forecasts will concern.' ),
-        'product_categ_id1': fields.many2one('product.category' , 'Product Category', required=True, \
+        'period_id': fields.many2one('stock.period' , 'Period', required=True, help = 'Period which forecasts will concern.' ),
+        'product_categ_id': fields.many2one('product.category' , 'Product Category', required=True, \
                                 help ='Product Category of products which created forecasts will concern.'),
         'copy_forecast': fields.boolean('Copy Last Forecast', help="Copy quantities from last Stock and Sale Forecast."),
                 }
@@ -59,7 +59,7 @@ class stock_sale_forecast_createlines(osv.osv_memory):
         template_obj = self.pool.get('product.template')
         forecast_lines = []
         for f in self.browse(cr, uid, ids, context=context):
-            categ_ids =  f.product_categ_id1.id and [f.product_categ_id1.id] or []
+            categ_ids =  f.product_categ_id.id and [f.product_categ_id.id] or []
             prod_categ_ids = prod_categ_obj.search(cr, uid, [('parent_id','child_of', categ_ids)])
             templates_ids = template_obj.search(cr, uid, [('categ_id','in',prod_categ_ids)])
             products_ids = product_obj.search(cr, uid, [('product_tmpl_id','in',templates_ids)])
@@ -68,9 +68,9 @@ class stock_sale_forecast_createlines(osv.osv_memory):
             copy = f.copy_forecast
             for p in product_obj.browse(cr, uid, products_ids,{}):
                 if len(forecast_obj.search(cr, uid, [('product_id','=',p.id) , \
-                                                       ('period_id','=',f.period_id1.id), \
+                                                       ('period_id','=',f.period_id.id), \
                                                        ('user_id','=',uid), \
-                                                       ('warehouse_id','=',f.warehouse_id1.id)]))== 0:
+                                                       ('warehouse_id','=',f.warehouse_id.id)]))== 0:
                     forecast_qty = 0.0
 # Not sure if it is expected quantity for this feature (copying forecast from previous period)
 # because it can take incidental forecast of this warehouse, this product and this user (creating, writing or validating forecast).
@@ -86,7 +86,7 @@ class stock_sale_forecast_createlines(osv.osv_memory):
                                         AND forecast.warehouse_id = %s AND forecast.product_id = %s \
                                         AND period.date_stop < %s \
                                     ORDER BY period.date_stop DESC",
-                                    (uid, uid, uid, f.warehouse_id1.id, p.id, f.period_id1.date_stop) )
+                                    (uid, uid, uid, f.warehouse_id.id, p.id, f.period_id.date_stop) )
                         ret = cr.fetchone()
                         if ret:
                             forecast_qty = ret[1]
@@ -96,9 +96,9 @@ class stock_sale_forecast_createlines(osv.osv_memory):
                     if p.uos_id:
                         prod_uos_categ = p.uos_id.category_id.id
                     forecast_lines.append(forecast_obj.create(cr, uid, {
-                        'company_id': f.warehouse_id1.company_id.id,
-                        'period_id': f.period_id1.id,
-                        'warehouse_id': f.warehouse_id1.id,
+                        'company_id': f.warehouse_id.company_id.id,
+                        'period_id': f.period_id.id,
+                        'warehouse_id': f.warehouse_id.id,
                         'product_id': p.id,
                         'product_qty': forecast_qty,
                         'product_amt': 0.0,

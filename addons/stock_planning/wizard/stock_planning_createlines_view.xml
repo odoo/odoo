@@ -12,13 +12,13 @@
                 <form string="Stock Planning">
                     <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                     <newline/>
-                    <field name="period_id2" widget="selection"/>
+                    <field name="period_id" widget="selection"/>
                     <newline/>
-                    <field name="warehouse_id2" domain = "[('company_id','=',company_id)] "/>
+                    <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                     <newline/>
                     <field name="forecasted_products"/>
                     <newline/>
-                    <field name="product_categ_id2" attrs="{'required':[('forecasted_products','=',0)]}" widget="selection"/>
+                    <field name="product_categ_id" attrs="{'required':[('forecasted_products','=',0)]}" widget="selection"/>
                     <separator colspan ="4" string="Stock planning lines creation"/>
                     <label  colspan ="4" string="Creates planning lines for selected period and warehouse. Doesn't duplicate existing lines created by you."/>
                     <group colspan="4">
