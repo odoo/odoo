@@ -220,7 +220,7 @@ class account_invoice(osv.osv):
     _name = "account.invoice"
     _description = 'Invoice'
     _order = "number"
-    _log_create = True
+
     _columns = {
         'name': fields.char('Description', size=64, select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice.", readonly=True, states={'draft':[('readonly',False)]}),
@@ -242,13 +242,13 @@ class account_invoice(osv.osv):
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
             ('open','Open'),
-            ('paid','Done'),
+            ('paid','Paid'),
             ('cancel','Cancelled')
             ],'State', select=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
-            \n* The \'Done\' state is set automatically when invoice is paid.\
+            \n* The \'Paid\' state is set automatically when invoice is paid.\
             \n* The \'Cancelled\' state is used when user cancel invoice.'),
         'date_invoice': fields.date('Date Invoiced', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]},
@@ -344,6 +344,9 @@ class account_invoice(osv.osv):
     def create(self, cr, uid, vals, context=None):
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
+            for inv_id, name in self.name_get(cr, uid, [res], context=context):
+                message = _('Invoice ') + " '" + name + "' "+ _("is waiting for validation.")
+                self.log(cr, uid, inv_id, message)
             return res
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
@@ -354,9 +357,6 @@ class account_invoice(osv.osv):
 
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Document ') + " '" + name + "' "+ _("has been paid.")
-            self.log(cr, uid, id, message)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -374,7 +374,7 @@ class account_invoice(osv.osv):
 #       res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #       return [{}]
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
-            date_invoice=False, payment_term=False, partner_bank=False, company_id=False):
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         invoice_addr_id = False
         contact_addr_id = False
         partner_payment_term = False
@@ -439,7 +439,7 @@ class account_invoice(osv.osv):
             else:
                 result['value']['date_due'] = False
 
-        if partner_bank != bank_id:
+        if partner_bank_id != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             result['value'].update(to_update['value'])
         return result
@@ -474,7 +474,7 @@ class account_invoice(osv.osv):
     def onchange_invoice_line(self, cr, uid, ids, lines):
         return {}
 
-    def onchange_partner_bank(self, cursor, user, ids, partner_bank):
+    def onchange_partner_bank(self, cursor, user, ids, partner_bank_id=False):
         return {'value': {}}
 
     def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
@@ -922,7 +922,7 @@ class account_invoice(osv.osv):
             invtype = obj_inv.type
             number = obj_inv.number
             move_id = obj_inv.move_id and obj_inv.move_id.id or False
-            reference = obj_inv.reference
+            reference = obj_inv.reference or ''
             if not number:
                 tmp_context = {
                     'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id
@@ -955,8 +955,9 @@ class account_invoice(osv.osv):
                         'WHERE account_move_line.move_id = %s ' \
                             'AND account_analytic_line.move_id = account_move_line.id',
                             (ref, move_id))
-            message = _('Invoice ') + " '" + number + "' "+ _("is confirm")
-            self.log(cr, uid, id, message)
+            for inv_id, name in self.name_get(cr, uid, [id]):
+                message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
+                self.log(cr, uid, inv_id, message)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1175,9 +1176,15 @@ class account_invoice(osv.osv):
             if l.account_id.id==src_account_id:
                 line_ids.append(l.id)
                 total += (l.debit or 0.0) - (l.credit or 0.0)
+
+        inv_id, name = self.name_get(cr, uid, [invoice.id], context=context)[0]
         if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
+            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is totally paid."))
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
+            code = invoice.currency_id.code
+            amt = str(pay_amount) + code + ' on ' + str(invoice.amount_total) + code + ' (' + str(total) + code + ' remaining)'
+            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is paid partially: ") + amt)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute
