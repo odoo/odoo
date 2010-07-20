@@ -299,7 +299,7 @@ class account_invoice(osv.osv):
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
-        'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
+        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Parner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
@@ -373,8 +373,8 @@ class account_invoice(osv.osv):
 #   def get_invoice_address(self, cr, uid, ids):
 #       res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #       return [{}]
-    def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank=False, company_id=False):
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         invoice_addr_id = False
         contact_addr_id = False
         partner_payment_term = False
@@ -429,7 +429,7 @@ class account_invoice(osv.osv):
         }
 
         if type in ('in_invoice', 'in_refund'):
-            result['value']['partner_bank'] = bank_id
+            result['value']['partner_bank_id'] = bank_id
 
         if payment_term != partner_payment_term:
             if partner_payment_term:
@@ -439,7 +439,7 @@ class account_invoice(osv.osv):
             else:
                 result['value']['date_due'] = False
 
-        if partner_bank != bank_id:
+        if partner_bank_id != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             result['value'].update(to_update['value'])
         return result
@@ -474,7 +474,7 @@ class account_invoice(osv.osv):
     def onchange_invoice_line(self, cr, uid, ids, lines):
         return {}
 
-    def onchange_partner_bank(self, cursor, user, ids, partner_bank):
+    def onchange_partner_bank(self, cursor, user, ids, partner_bank_id=False):
         return {'value': {}}
 
     def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):

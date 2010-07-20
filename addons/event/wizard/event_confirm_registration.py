@@ -50,11 +50,10 @@ class event_confirm_registration(osv.osv_memory):
             register_max = registration.event_id.register_max
             if registration.event_id.id not in overlimit_event_ids:
                 overlimit_event_ids.append(registration.event_id.id)
-                msg += _("The Event '%s' is reached Maximum Limit(%s).") \
+                msg += _("Warning: The Event '%s' has reached its Maximum Limit (%s).") \
                             %(registration.event_id.name, register_max)
         if 'msg' in fields:
             res.update({'msg': msg})
-
         return res
 
     def confirm(self, cr, uid, ids, context):

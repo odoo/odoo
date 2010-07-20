@@ -12,7 +12,7 @@
         domain="[('partner_id', '=', active_id)]"
         groups="base.group_extended"
         />
-    
+
     <act_window
             id="act_crm_phonecall_crm_meeting_new"
             name="Meetings"
@@ -69,6 +69,8 @@
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
         <field name="context" eval="'{\'set_editable\':True,\'default_state\':\'open\', \'search_default_current\':1,\'search_default_today\':1, \'default_categ_id\': ' + str(ref('categ_phone1')) +'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
+        <field name="help">Trace easily all your Inbound calls. The Inbound menu open a search view in editable mode, so you can easily modify or add a new call record. With the actions buttons convert a lead into an opportunity or plan a meeting.</field>
+
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming0">
@@ -105,6 +107,7 @@
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone2'))+')]'"/>
         <field name="context" eval="'{\'default_state\':\'open\', \'search_default_current\':1, \'default_categ_id\': ' + str(ref('categ_phone2')) +'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
+        <field name="help">The Outbound menu open a search view in editable mode, so you can easily modify or plan a new call. Actions buttons allows you to to make you call status evolved for a better follow up of your planned calls. During calls, convert your lead into an opportunity, plan a meeting or canceled it.</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing0">

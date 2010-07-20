@@ -31,7 +31,7 @@ class resource_calendar(osv.osv):
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
         'company_id' : fields.many2one('res.company', 'Company', required=False),
-        'week_id' : fields.one2many('resource.calendar.week', 'calendar_id', 'Working Time'),
+        'attendance_ids' : fields.one2many('resource.calendar.attendance', 'calendar_id', 'Working Time'),
         'manager' : fields.many2one('res.users', 'Workgroup manager'),
     }
     _defaults = {
@@ -65,7 +65,7 @@ class resource_calendar(osv.osv):
         maxrecur = 100
         current_hour = dt_from.hour
         while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from desc", (dt_from.day_of_week,id))
+            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from desc", (dt_from.day_of_week,id))
             for (hour_from,hour_to) in cr.fetchall():
                 leave_flag  = False
                 if (hour_from<current_hour) and (todo>0):
@@ -101,7 +101,7 @@ class resource_calendar(osv.osv):
         maxrecur = 100
         current_hour = dt_from.hour
         while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
+            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
             for (hour_from,hour_to) in cr.fetchall():
                 leave_flag  = False
                 if (hour_to>current_hour) and (todo>0):
@@ -136,7 +136,7 @@ class resource_calendar(osv.osv):
         current_hour = dt_from.hour
 
         while (dt_from <= dt_to):
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
+            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
             der =  cr.fetchall()
             for (hour_from,hour_to) in der:
                 if hours != 0.0:#For first time of the loop only,hours will be 0
@@ -169,8 +169,8 @@ class resource_calendar(osv.osv):
     
 resource_calendar()
 
-class resource_calendar_week(osv.osv):
-    _name = "resource.calendar.week"
+class resource_calendar_attendance(osv.osv):
+    _name = "resource.calendar.attendance"
     _description = "Work Detail"
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
@@ -181,7 +181,7 @@ class resource_calendar_week(osv.osv):
         'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
     }
     _order = 'dayofweek, hour_from'
-resource_calendar_week()
+resource_calendar_attendance()
 
 class resource_resource(osv.osv):
     _name = "resource.resource"

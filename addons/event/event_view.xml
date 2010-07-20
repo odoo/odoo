@@ -131,21 +131,23 @@
                     <page string="Mailing">
                         <field name="reply_to" />
                         <newline/>
-
-                        <group col="3" colspan="2" expand="1">
-                            <separator string="Auto Registration Email" colspan="2"/>
-                            <newline/>
-                            <field name="mail_auto_registr"/>
-                            <separator string="Registration Email Body" colspan="2"/>
-                            <newline/>
-                            <field name="mail_registr" colspan="2"  nolabel="1" attrs="{'readonly':[('mail_auto_registr','=',False)]}"/>
-                        </group>
-                        <group col="2" colspan="2" >
-                            <separator string="Auto Confirmation Email" colspan="2"/>
-                            <field name="mail_auto_confirm"/>
-                            <newline/>
-                            <separator string="Confirmation Email Body" colspan="2"/>
-                            <field name="mail_confirm" colspan="2" nolabel="1" attrs="{'readonly':[('mail_auto_confirm','=',False)]}"/>
+                        <group col="4" colspan="4">
+                            <group col="2" colspan="2">
+                                <separator string="Auto Registration Email" colspan="4"/>
+                                <field name="mail_auto_registr" colspan="4"/>
+                                <group colspan="4" attrs="{'readonly':[('mail_auto_registr','=',False)]}">
+                                    <separator string="Registration Email Body" colspan="4"/>
+                                    <field name="mail_registr" colspan="4" nolabel="1" />
+                                </group>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Auto Confirmation Email" colspan="4"/>
+                                <field name="mail_auto_confirm" colspan="4"/>
+                                <group colspan="4" attrs="{'readonly':[('mail_auto_confirm','=',False)]}">
+                                    <separator string="Confirmation Email Body" colspan="4"/>
+                                    <field name="mail_confirm" nolabel="1" colspan="4"/>
+                                </group>
+                            </group>
                         </group>
                     </page>                   
                     </notebook>
@@ -330,9 +332,8 @@
                            </group>
                             <separator string="Description" colspan="4"/>
                             <field name="description" colspan="4" nolabel="1"/>
-                            <group col="8" colspan="4">
-                                <separator string="" colspan="4"/>
-                                <newline/>
+                            <separator string="" colspan="4"/>
+                            <group col="8" colspan="4">                                
                                 <field name="state" select="1" colspan="2"/>
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
@@ -376,7 +377,7 @@
                                         string="Reply"
                                         name="%(crm.action_crm_send_mail)d"
                                         context="{'mail':'reply', 'model': 'event.registration', 'include_original' : True}"
-                                        icon="gtk-undo" type="action" />
+                                        icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="Communication history">
                                     <group col="4" colspan="4">
@@ -398,13 +399,13 @@
                                         string="Reply"
                                         name="%(crm.action_crm_send_mail)d"
                                         context="{'mail':'reply', 'model': 'event.registration', 'include_original' : True}"
-                                        icon="gtk-undo" type="action" />
+                                        icon="terp-mail-replied" type="action" />
                                 </form>
                             </field>
                               <button colspan="4" string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'event.registration'}"
-                                icon="gtk-go-forward" type="action" />
+                                icon="terp-mail-message-new" type="action" />
                            </page>
                     </notebook>
                 </form>

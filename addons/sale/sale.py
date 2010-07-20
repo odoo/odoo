@@ -473,7 +473,9 @@ class sale_order(osv.osv):
         for o in self.browse(cr, uid, ids):
             lines = []
             for line in o.order_line:
-                if (line.state in states) and not line.invoiced:
+                if line.invoiced:
+                    raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
+                elif (line.state in states):
                     lines.append(line.id)
             created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
             if created_lines:
@@ -830,11 +832,11 @@ class sale_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight', readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
-                help='* The \'Draft\' state is set automatically when sale order in draft state. \
-                    \n* The \'Confirmed\' state is set automatically when sale order in confirm state. \
-                    \n* The \'Exception\' state is set automatically when sale order is set as exception. \
-                    \n* The \'Done\' state is set automatically when sale order is set as done. \
-                    \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
+                help='* The \'Draft\' state is set when the related sale order in draft state. \
+                    \n* The \'Confirmed\' state is set when the related sale order is confirmed. \
+                    \n* The \'Exception\' state is set when the related sale order is set as exception. \
+                    \n* The \'Done\' state is set when the sale order line has been picked. \
+                    \n* The \'Cancelled\' state is set when a user cancel the sale order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),

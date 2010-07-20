@@ -83,13 +83,6 @@ class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
     _description = "Marketing Campaign"
 
-
-    def _check_has_start(self, cr, uid, ids, context=None):
-        for campaign in self.browse(cr, uid, ids, context=context):
-            if not any(a.start for a in campaign.activity_ids):
-                return False
-        return True
-
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'object_id': fields.many2one('ir.model', 'Model', required=True,
@@ -121,29 +114,34 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         'state': lambda *a: 'draft',
         'mode': lambda *a: 'test',
     }
-           
-    _constraints = [(_check_has_start, 'Please mark at least one activity as a start activity', ['Activities'])]
 
     def state_running_set(self, cr, uid, ids, *args):
         # TODO check that all subcampaigns are running
         campaign = self.browse(cr, uid, ids[0])
-        if not campaign.activity_ids :
-            raise osv.except_osv("Error", "There is no activitity in the campaign")
-        activity_ids = [ act_id.id for act_id in campaign.activity_ids]
-        
-        if not activity_ids:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started : there are no activities in it"))
-        
-        act_obj = self.pool.get('marketing.campaign.activity')
-        act_ids = act_obj.search(cr, uid, [('id', 'in', activity_ids),
-                                            ('type', '=', 'email')])
-        for activity in act_obj.browse(cr, uid, act_ids):
-            if not activity.email_template_id.enforce_from_account :
+
+        if not campaign.activity_ids:
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activities in it"))
+
+        has_start = False
+        has_signal_without_from = False
+
+        for activity in campaign.activity_ids:
+            if activity.start:
+                has_start = True
+            if activity.signal and len(activity.from_ids) == 0:
+                has_signal_without_from = True
+
+            if activity.type != 'email':
+                continue
+            if not activity.email_template_id.enforce_from_account:
                 raise osv.except_osv(_("Error"), _("The campaign cannot be started: an email account is missing in the email activity '%s'")%activity.name)
-            if activity.email_template_id.enforce_from_account.state != 'approved' :
+            if activity.email_template_id.enforce_from_account.state != 'approved':
                 raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is not approved in the email activity '%s'")%activity.name)
-        self.write(cr, uid, ids, {'state': 'running'})
-        return True
+
+        if not has_start and not has_signal_without_from:
+            raise osv.except_osv(_("Error"), _("The campaign hasn't any starting activity nor any activity with a signal and no previous activity."))
+
+        return self.write(cr, uid, ids, {'state': 'running'})
 
     def state_done_set(self, cr, uid, ids, *args):
         # TODO check that this campaign is not a subcampaign in running mode.
