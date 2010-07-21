@@ -46,7 +46,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_filter': self._get_filter,
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
-            'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_fiscalyear': self._get_fiscalyear,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
@@ -87,18 +86,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.account_currency = result[0]
         else:
             self.account_currency = False
-
-    def _sum_currency_amount_account(self, account, form):
-        self._set_get_account_currency_code(account.id)
-        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
-        total = self.cr.fetchone()
-
-        if self.account_currency:
-            return_field = str(total[0]) + self.account_currency
-            return return_field
-        else:
-            currency_total = self.tot_currency = 0.0
-            return currency_total
         
     def _get_fiscalyear(self, data):
         if data['model']=='account.journal.period':
