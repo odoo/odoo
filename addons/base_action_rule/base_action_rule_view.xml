@@ -14,7 +14,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Rule">
-                    <field name="name" select="1"/>
+                    <field name="name" select="1" on_change="onchange_model_id(name)"/>
                     <field name="active"/>
                     <field name="sequence"/>
                     <field name="filter_id"/>
