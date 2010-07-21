@@ -166,6 +166,7 @@
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current':1}</field>
+            <field name="help"> Consult and define yours projects here. A project content a set of related activities that will be performed by your company. Any project can be put into a hierarchy, as a child of a Parent Project. This allows you to design large project structure very useful for work organization.</field>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
@@ -461,7 +462,10 @@
             <field name="view_id" ref="view_task_tree2"/>
             <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, 'search_default_current': 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="help">In OpenERP, a project is made of a set of activities (or tasks) for completion.A list view allows the manager to quickly check for task status and make it evolve, delegate task, etc. A search tool allows a multi-criteria sort of activities.
 
+Issues like bugs in a system, client complain, materials breakdown are collected here.A list view allows the manager to quickly check for them, assign them, make their status evolved.
+</field>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="2"/>
 
@@ -648,6 +652,7 @@
             <field name="view_id" ref="view_project_message_tree"/>
             <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_project_message_search"/>
+            <field name="help">An in-project messagery system permits an efficient and trackable communication between project members. The messages are kept in the system and can then be used for post-analysis.</field>
        </record>
 
         <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_project_management" sequence="11"/>
