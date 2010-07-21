@@ -1542,7 +1542,7 @@ class orm_template(object):
         sql_res = False
         while ok:
             view_ref = context.get(view_type + '_view_ref', False)
-            if view_ref:
+            if view_ref and not view_id:
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
                     cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
