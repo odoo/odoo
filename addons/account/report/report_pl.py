@@ -101,10 +101,10 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         ctx['fiscalyear'] = data['form']['fiscalyear_id']
 
         if data['form']['filter']=='filter_period' :
-            ctx['periods'] = data['periods']
+            ctx['periods'] =  data['form']['periods']
         elif data['form']['filter']== 'filter_date':
-            ctx['date_from'] = data['date_from']
-            ctx['date_to'] =  data['date_to']
+            ctx['date_from'] = data['form']['date_from']
+            ctx['date_to'] =  data['form']['date_to']
 
         cal_list={}
         account_id =data['form']['chart_account_id']
