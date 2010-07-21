@@ -49,7 +49,8 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_fiscalyear': self._get_fiscalyear,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
-            'print_data':self._print_data,         
+            'print_data':self._print_data,    
+            'get_sortby': self._get_sortby,
 
         })
 
@@ -100,7 +101,15 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def _print_data(self, data):
         if data['model']=='account.journal.period':
            return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).journal_id.currency or False
-        return data['form']['amount_currency']          
+        return data['form']['amount_currency']
+            
+    def _get_sortby(self, data):
+        if data.get('form', False) and data['form'].get('sort_selection', False):
+            if data['form']['sort_selection']=='date':
+                return 'Date'
+            elif data['form']['sort_selection'] == 'ref':
+                return 'Reference Number'
+        return super(journal_print ,self)._get_sortby(data)
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
