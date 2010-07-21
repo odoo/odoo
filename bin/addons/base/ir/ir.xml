@@ -321,17 +321,21 @@
                 <form string="Report xml">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
+                        <field name="model" select="1"/>
                         <field name="type" select="1"/>
+
+                        <field name="report_name" select="1"/>
+                        <field name="usage"/>
                         <field name="report_type"/>
                     </group>
                     
                     <notebook colspan="4">
                         <page string="Other Configuration">
                             <group col="2" colspan="2">
-                                <separator string="Internal" colspan="2"/>
-                                <field name="report_name" select="1"/>
-                                <field name="model" select="1"/>
-                                <field name="usage"/>
+                                <separator string="RML Report" colspan="2"/>
+                                <field name="report_rml"/>
+                                <field name="header"/>
+                                <field name="auto"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="XML Report" colspan="2"/>
@@ -344,10 +348,8 @@
                                 <field name="attachment_use"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator string="RML Report" colspan="2"/>
-                                <field name="report_rml"/>
-                                <field name="header"/>
-                                <field name="auto"/>
+                                <separator string="Miscellaneous" colspan="2"/>
+                                <field name="multi"/>
                             </group>
                         </page>
                         <page string="Security">
