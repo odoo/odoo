@@ -339,7 +339,7 @@
 			<td><para style="P4_content">[[ formatLang(line['debit']) ]]</para></td>
 			<td><para style="P4_content">[[ formatLang(line['credit']) ]]</para></td>
 			<td><para style="P4_content">[[ formatLang(line['progress']) ]]</para></td>
-			<td><para style="P4_content">[[ formatLang(line['amount_currency'] or '')]] [[ line['currency_code'] ]]</para></td>
+			<td><para style="P4_content">[[o.currency_id and  formatLang(line['amount_currency'] or '')]] [[ o.currency_id and  line['currency_code'] ]]</para></td>
 		</tr>
 	  </blockTable>
 
