@@ -78,7 +78,7 @@ def _createInvoices(self, cr, uid, data, context={}):
         })
         create_ids.append(line_id)
         inv = {
-            'name': sale.name,
+            'name': sale.client_order_ref or sale.name,
             'origin': sale.name,
             'type': 'out_invoice',
             'reference': False,
