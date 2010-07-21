@@ -80,18 +80,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         else:
             self.account_currency = False
 
-    def _sum_currency_amount_account(self, account, form):
-        self._set_get_account_currency_code(account.id)
-        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
-        total = self.cr.fetchone()
-
-        if self.account_currency:
-            return_field = str(total[0]) + self.account_currency
-            return return_field
-        else:
-            currency_total = self.tot_currency = 0.0
-            return currency_total  
-
     def _get_account(self, data):
         if data['model']=='account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
