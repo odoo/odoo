@@ -6,7 +6,7 @@
         <field name="model">account.invoice.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Invoices Analysis">
+            <tree colors="blue:state in ('draft');gray:state in ('cancel','paid');black:state in ('proforma','proforma2')"  string="Invoices Analysis">
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -138,6 +138,8 @@
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1,'search_default_product':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
+        <field name="help">A tool search lets you know statistics on invoices that match your needs.</field>
+
     </record>
 
     <menuitem action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.menu_finance_statistic_report_statement" sequence="0"/>

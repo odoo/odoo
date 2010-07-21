@@ -659,7 +659,6 @@ class sale_order(osv.osv):
                             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
                             'company_id': order.company_id.id,
                         })
-
                     move_id = self.pool.get('stock.move').create(cr, uid, {
                         'name': line.name[:64],
                         'picking_id': picking_id,
@@ -721,7 +720,6 @@ class sale_order(osv.osv):
                             val['state'] = 'manual'
                             break
             self.write(cr, uid, [order.id], val)
-
         return True
 
     def action_ship_end(self, cr, uid, ids, context=None):
@@ -941,10 +939,11 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
-#            if line.order_id.picking_ids:
-#                raise osv.except_osv(
-#                        _('Could not cancel sale order line!'),
-#                        _('You must first cancel stock move attached to this sale order line.'))
+            for pick in line.order_id.picking_ids:
+                if pick.state != 'cancel':
+                    raise osv.except_osv(
+                            _('Could not cancel sale order line!'),
+                            _('You must first cancel all pickings attached with sale order.'))
         message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
         self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})

@@ -5,8 +5,7 @@
 - 
   !record {model: project.project, id: project_project_openerpdocumentaion0}:
     company_id: base.main_company
-    name: OpenERP Documentaion
-    
+    name: OpenERP Documentaion    
     
 - 
   Creating a task 'Develop book for Technical and Functional reference'
@@ -25,6 +24,45 @@
     self.do_open(cr, uid, [ref("project_task_documentation_book")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
       "tz": False, "active_id": ref("project.menu_action_view_task"), }) 
+
+- 
+  Creating a task 'Publish the References'
+- 
+  !record {model: project.task, id: project_task_publish_book}:
+    name: Publish the References
+    planned_hours: 10.0
+    project_id: project_project_openerpdocumentaion0
+    remaining_hours: 10.0
+    state: draft
+    
+- 
+  Open the task
+- 
+  !python {model: project.task}: |
+    self.do_open(cr, uid, [ref("project_task_publish_book")],
+      {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
+      "tz": False, "active_id": ref("project.menu_action_view_task"), }) 
+
+- 
+  Creating a project.task.delegate record
+- 
+  !record {model: project.task.delegate, id: project_task_publish_book_delegate}:
+    name: Publish the References
+    new_task_description: aaa
+    planned_hours: 15.0
+    planned_hours_me: 1.0
+    prefix: 'CHECK: Publish the References'
+    state: pending
+    user_id: base.user_demo
+    
+- 
+  Performing an osv_memory action validate on module project.task.delegate
+- 
+  !python {model: project.task.delegate}: |
+    self.validate(cr, uid, [ref("project_task_publish_book_delegate")],
+      {"lang": "en_US", "active_model": "project.task", "tz": False, "record_id":
+      4, "active_ids": [ref("project_task_publish_book")], "active_id": ref("project_task_publish_book"),
+      })
       
 - 
   Creating a delegate task 'Prepare a book that gives functional overview of OpenERP' 
