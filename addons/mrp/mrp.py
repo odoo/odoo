@@ -300,21 +300,6 @@ class mrp_bom(osv.osv):
                 result2 = result2 + res[1]
         return result, result2
 
-    def set_indices(self, cr, uid, ids, context = {}):
-        if not ids or (ids and not ids[0]):
-            return True
-        res = self.read(cr, uid, ids, ['revision_ids', 'revision_type'])
-        rev_ids = res[0]['revision_ids']
-        idx = 1
-        new_idx = []
-        for rev_id in rev_ids:
-            if res[0]['revision_type'] == 'numeric':
-                self.pool.get('mrp.bom.revision').write(cr, uid, [rev_id], {'indice' : idx})
-            else:
-                self.pool.get('mrp.bom.revision').write(cr, uid, [rev_id], {'indice' : "%c"%(idx+96,)})
-            idx+=1
-        return True
-
 mrp_bom()
 
 class mrp_bom_revision(osv.osv):
