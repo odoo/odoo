@@ -9,7 +9,7 @@
             <field name="model">crm.fundraising.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Fundraising">
+            	<tree colors="blue:state in ('draft');black:state in ('open','pending');gray:state in ('done','cancel') " string="Fundraising">
 	              	<field name="name" invisible="1"/>
 					<field name="month" invisible="1"/>
 					<field name="section_id" invisible="1"/>

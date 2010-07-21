@@ -84,7 +84,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_associations_manager_form"/>
         </record>
-        <menuitem id="board_associations" icon="terp-graph" name="Dashboard" parent="menu_report_event" sequence="0"/>
+        <menuitem id="board_associations" icon="terp-graph" name="Dashboard" parent="base.menu_report_association" sequence="0"/>
         <menuitem
             name="Associations" parent="board_associations"
             action="open_board_associations_manager"

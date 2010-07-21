@@ -231,7 +231,7 @@
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Catalog">
+            <tree colors="blue:state in ('unsold','draft');black:state in ('sold','taken_away');gray:state in ('paid') " string="Catalog">
                 <field name="obj_num" string="Ref" select="1"/>
                 <field name="name" select="1"/>
                 <field name="ach_login"/>
@@ -1366,7 +1366,7 @@ Auction adjudication
         <field name="model">report.auction.adjudication</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Total adjudication">
+            <tree colors="blue:state in ('draft');black:state in ('close')" string="Total adjudication">
                 <field name="name" select="1"/>
                 <field name="adj_total" select="1"/>
                 <field name="state" select="1"/>
@@ -1540,7 +1540,7 @@ Object encoded
         <field name="model">report.unclassified.objects</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Unclassified objects">
+            <tree colors="blue:state in ('draft','unsold');black:state in ('sold');gray:state in ('paid')"string="Unclassified objects">
                 <field name="obj_num" string="Ref" select="1"/>
                 <field name="name" select="1"/>
                 <field name="ach_login"/>

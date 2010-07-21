@@ -198,7 +198,8 @@ class crm_lead(osv.osv, crm_case):
             self.write(cr, uid, ids, value)
 
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The Lead') + " '" + name + "' "+ _("has been written as Open.")
+            type = self.browse(cr, uid, id).type
+            message = (_('The ') + type.title() or 'Lead') + " '" + name + "' "+ _("has been written as Open.")
             self.log(cr, uid, id, message)
         return res
 
@@ -213,8 +214,10 @@ class crm_lead(osv.osv, crm_case):
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The Lead') + " '" + name + "' "+ _("has been written as Closed.")
-            self.log(cr, uid, id, message)
+            lead = self.browse(cr, uid, id)
+            if lead.type == 'lead':
+                message = _('The Lead') + " '" + name + "' "+ _("has been written as Closed.")
+                self.log(cr, uid, id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):

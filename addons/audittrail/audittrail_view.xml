@@ -37,7 +37,7 @@
             <field name="model">audittrail.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="AuditTrail Rules">
+                <tree colors="blue:state in ('draft');black:state in ('subscribed')" string="AuditTrail Rules">
                     <field name="name" />
                     <field name="object_id"/>
                     <field name="user_id" />
@@ -157,7 +157,7 @@
             <field name="view_type">form</field>
         </record>
         <menuitem name="Logs" id="menu_action_audittrail_log_tree"
-            action="action_audittrail_log_tree" parent="menu_action_audittrail" />       
+            action="action_audittrail_log_tree" parent="menu_action_audittrail" />
 
     </data>
 </openerp>

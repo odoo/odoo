@@ -6,7 +6,7 @@
         <field name="model">account.entries.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Entries Analysis">
+            <tree colors="blue:state in ('draft');black:state in ('posted')" string="Entries Analysis">
                 <field name="date" invisible="1"/>
                 <field name="date_created" invisible="1"/>
                 <field name="date_maturity" invisible="1"/>
