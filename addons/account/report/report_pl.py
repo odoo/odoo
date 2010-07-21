@@ -83,7 +83,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             self.result_sum_cr += self.res_pl['balance']
         return self.result_sum_cr or 0.0
 
-    def get_data(self, form):
+    def get_data(self, data):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
 
@@ -98,16 +98,16 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
 
         ctx = self.context.copy()
 #        ctx['state'] = form['context'].get('state','all')
-        ctx['fiscalyear'] = form['fiscalyear']
+        ctx['fiscalyear'] = data['form']['fiscalyear_id']
 
-        if form['filter']=='filter_period' :
-            ctx['periods'] = form['periods']
-        elif form['filter']== 'filter_date':
-            ctx['date_from'] = form['date_from']
-            ctx['date_to'] =  form['date_to']
+        if data['form']['filter']=='filter_period' :
+            ctx['periods'] = data['periods']
+        elif data['form']['filter']== 'filter_date':
+            ctx['date_from'] = data['date_from']
+            ctx['date_to'] =  data['date_to']
 
         cal_list={}
-        account_id = [form['Account_list']]
+        account_id =data['form']['chart_account_id']
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
@@ -119,10 +119,10 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
                         self.result_sum_dr += abs(account.debit - account.credit)
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += abs(account.debit - account.credit)
-                    if form['display_account'] == 'bal_mouvement':
+                    if data['form']['display_account'] == 'bal_mouvement':
                         if account.credit > 0 or account.debit > 0 or account.balance > 0 :
                             accounts_temp.append(account)
-                    elif form['display_account'] == 'bal_solde':
+                    elif data['form']['display_account'] == 'bal_solde':
                         if  account.balance != 0:
                             accounts_temp.append(account)
                     else:
