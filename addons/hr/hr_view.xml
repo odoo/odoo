@@ -62,11 +62,13 @@
                             <separator string="Position" colspan="2"/>
                             <field name="job_id" widget="selection"/>
                             <field name="department_id" widget="selection"/>
-                            <field name="category_id" widget="selection"/>
                             <!--<separator string="Managers" colspan="2"/>
                             <field name="parent_id" />
                             <field name="coach_id" />-->
                             </group>
+                        </page>
+                        <page string="Categories">
+                            <field name="category_ids" nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" nolabel="1" name="notes"/>
@@ -88,7 +90,6 @@
                     <field name="work_email"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="category_id"/>
                     <field name="parent_id"/>
                     <field name="coach_id" invisible="1" />
                 </tree>
@@ -341,7 +342,12 @@
                             <field name="employee_ids" colspan='4' nolabel="1"  mode="tree,form"/>
                         </page>
                     </notebook>
-                    <field name="state"/>
+                    <group col="6" colspan="4">
+	                    <field name="state"/>
+	                    <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
+		                <button name="job_open" string="Open" states="old" type="object" icon="terp-camera_test"/>
+                        <button name="job_old" string="Old" states="open,recruit" type="object" icon="gtk-cancel"/>
+                    </group>
                 </form>
             </field>
         </record>
