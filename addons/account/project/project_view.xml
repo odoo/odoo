@@ -63,7 +63,7 @@
                     <field name="quantity_max"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="type" invisible="1"/>
-                    <field name="partner_id" invisible="1"/> 
+                    <field name="partner_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                 </tree>
             </field>
@@ -131,8 +131,9 @@
             <field name="res_model">account.analytic.account</field>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
-             <field name="view_mode">form,graph</field>
+            <field name="view_mode">form,graph</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="help">Analytic Charts of Accounts allows you to access to reports by analytic accounts (or cost accounts) . From this menu you can access to analytic balance, a report that relates the analytic accounts to the general accounts. It is useful for analyzing the profitability of projects, giving you the profitability of a project for the different operations that you used to carry out the project.</field>
         </record>
 <!--        <menuitem-->
 <!--            action="action_account_analytic_account_tree2"-->
@@ -376,6 +377,7 @@
             <field name="name">Print Analytic Journals</field>
             <field name="res_model">account.analytic.journal</field>
             <field name="view_type">tree</field>
+            <field name="help">To print an analytics (or costs) journal for a given period. The report give code, move name, account number, general amount and analytic amount.</field>
         </record>
         <menuitem action="action_account_analytic_journal_tree" id="account_analytic_journal_print" parent="account.next_id_40"/>
 
