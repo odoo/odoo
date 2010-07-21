@@ -48,12 +48,11 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_sortby': self._get_sortby,
-            'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_filter': self._get_filter,
             'get_journal': self._get_journal,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
-            'get_currency ':self._get_currency
+            'get_currency':self._get_currency
         })
 
     def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
@@ -105,17 +104,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         else:
             self.account_currency = False
 
-    def _sum_currency_amount_account(self, account, form):
-        self._set_get_account_currency_code(account.id)
-        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
-        total = self.cr.fetchone()
-
-        if self.account_currency:
-            return_field = str(total[0]) + self.account_currency
-            return return_field
-        else:
-            currency_total = self.tot_currency = 0.0
-            return currency_total
     def _get_account(self, data):
         if data['model']=='account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
