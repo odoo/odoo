@@ -102,14 +102,31 @@ class tinythunderbird_partner(osv.osv):
         create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
         return create_id
 
-  #  def thunderbird_createcontact1(self,cr,user,vals):
-   #     dictcreate = dict(vals)
-    #    address_obj = self.pool.get('res.partner.address')
-     #   search_id = address_obj.search(cr, user,[('name','=',dictcreate['name'])])
-      #  if search_id:
-       #     return 0
-        #create_id = address_obj.create(cr, user, dictcreate)
-        #return create_id
+    def thunderbird_tempsearch_address(self, cr, user, vals):
+        address_obj = self.pool.get('res.partner.address')
+        partner = address_obj.search(cr, user,[('email','=',vals)])
+        res = {}
+        if partner:
+            partner=partner[0]
+            test = address_obj.read(cr,user, partner)
+            res = {
+                'partner_name': test['partner_id'][1],
+                'email': test['email'],
+                'phone': test['phone'],
+                'mobile': test['mobile'],
+            }
+        return res.items()
+
+
+    def thunderbird_createcontact1(self,cr,user,vals):
+        dictcreate = dict(vals)
+        add_obj=self.pool.get('res.partner.address')
+        partner_ids=add_obj.search(cr,user,[('name','=',dictcreate['name'])])
+        partner=add_obj.read(cr,user,partner_ids,['name'])
+
+        if partner and partner[0]:
+            create_id = add_obj.create(cr, user, dictcreate)
+            return create_id
 
     def thunderbird_createpartner(self,cr,user,vals):
         dictcreate = dict(vals)
