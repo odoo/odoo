@@ -147,7 +147,6 @@
         <record model="ir.actions.act_window" id="action_membership_members">
             <field name="name">Members</field>
             <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state','&lt;&gt;','none'),('membership_state','&lt;&gt;','canceled'),('membership_state','&lt;&gt;','old'),('membership_state','&lt;&gt;','waiting')]</field>
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
             <field name="context">{"search_default_old": 1}</field>
         </record>

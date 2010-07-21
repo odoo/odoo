@@ -367,7 +367,7 @@ class Partner(osv.osv):
         default['member_lines'] = []
         return super(Partner, self).copy(cr, uid, id, default, context)
     
-    def create_membership_invoice(self, cr, uid, ids, datas=None, context=None):
+    def create_membership_invoice(self, cr, uid, ids, product_id=None, datas=None, context=None):
         """ Create Customer Invoice of Membership for partners.
         @param datas: datas has dictionary value which consist Id of Membership product and Cost Amount of Membership.
                       datas = {'membership_product_id': None, 'amount':None}
@@ -376,11 +376,13 @@ class Partner(osv.osv):
         product_obj = self.pool.get('product.product')
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoice_tax_obj = self.pool.get('account.invoice.tax')
-        product_id = datas.get('membership_product_id',False)
+        product_id = product_id or datas.get('membership_product_id',False)
         amount = datas.get('amount', 0.0)
         if not context:
             context={}
         invoice_list = []
+        if type(ids) in (int,long,):
+            ids = [ids]
         for partner in self.browse(cr, uid, ids, context=context):
             account_id = partner.property_account_receivable and partner.property_account_receivable.id or False
             fpos_id = partner.property_account_position and partner.property_account_position.id or False
