@@ -424,6 +424,7 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="help">Most of customer invoices are automatically generate in draft mode by OpenERP flows, following a purchase order for instance. Review, confirm or cancel, pay or refund yours customers invoices here. A manual invoice can be created here.</field>
         </record>
         
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
@@ -449,6 +450,7 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="help">Proposal for vendor invoices are usually automatically generate by OpenERP, following a procurement order or a production order for instance. To consult and to check for, or to manually create a customer invoice, use this menu. You can review, confirm or cancel, pay or refund an invoice from the view from of the invoices.</field>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
@@ -461,6 +463,7 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="help">A customer refund is a credit note to your customer that cancel  invoice or a part of it.</field>
         </record>
 
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
@@ -486,6 +489,7 @@
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="help">A vendor refund is a credit note from your supplier indicating that he refunds part or totality of the invoice sent to you.</field>
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 

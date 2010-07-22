@@ -201,7 +201,6 @@ class mrp_bom(osv.osv):
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production planning."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
-        'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
         'child_complete_ids': fields.function(_child_compute, relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
@@ -325,25 +324,6 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
-
-    def set_indices(self, cr, uid, ids, context={}):
-        """ Sets Indices.
-        @return: True
-        """
-        if not ids or (ids and not ids[0]):
-            return True
-        res = self.read(cr, uid, ids, ['revision_ids', 'revision_type'])
-        rev_ids = res[0]['revision_ids']
-        idx = 1
-        new_idx = []
-        bom_rev_obj = self.pool.get('mrp.bom.revision')
-        for rev_id in rev_ids:
-            if res[0]['revision_type'] == 'numeric':
-                bom_rev_obj.write(cr, uid, [rev_id], {'indice': idx})
-            else:
-                bom_rev_obj.write(cr, uid, [rev_id], {'indice': "%c" %(idx+96,)})
-            idx += 1
-        return True
 
 mrp_bom()
 

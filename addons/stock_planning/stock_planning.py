@@ -422,9 +422,11 @@ class stock_sale_forecast(osv.osv):
                     dept_id =  obj.analyzed_dept_id.id and [obj.analyzed_dept_id.id] or []
                     dept_ids = dept_obj.search(cr,uid,[('parent_id','child_of',dept_id)])
 #                    dept_ids_set = ','.join(map(str,dept_ids))
-                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN %s)" ,(tuple(dept_ids),))
+#                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN %s)" ,(tuple(dept_ids),))
+                    cr.execute("SELECT id FROM hr_employee WHERE (department_id IN %s)" ,(tuple(dept_ids),))
                     dept_users = [x for x, in cr.fetchall()]
-                    dept_users_set =  ','.join(map(str,dept_users))
+#                    dept_users_set =  ','.join(map(str,dept_users))
+                    dept_users_set =  map(str,dept_users)
                 else:
                     dept_users = False
                 factor, round_value = self._from_default_uom_factor(cr, uid, obj, obj.product_uom.id, context=context)
