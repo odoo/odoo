@@ -52,6 +52,8 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             'get_account': self._get_account,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period,            
         })
         ## Compute account list one time
     #
