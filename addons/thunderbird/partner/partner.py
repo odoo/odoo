@@ -114,6 +114,9 @@ class tinythunderbird_partner(osv.osv):
                 'email': test['email'],
                 'phone': test['phone'],
                 'mobile': test['mobile'],
+                'country': test['country_id'][1],
+                'city': test['city'],
+                'street': test['street'],
             }
         return res.items()
 
@@ -121,12 +124,17 @@ class tinythunderbird_partner(osv.osv):
     def thunderbird_createcontact1(self,cr,user,vals):
         dictcreate = dict(vals)
         add_obj=self.pool.get('res.partner.address')
-        partner_ids=add_obj.search(cr,user,[('name','=',dictcreate['name'])])
-        partner=add_obj.read(cr,user,partner_ids,['name'])
+        partner_ids=add_obj.search(cr,user,[('email','=',vals)])
 
-        if partner and partner[0]:
-            create_id = add_obj.create(cr, user, dictcreate)
-            return create_id
+        if partner_ids:
+            partner_ids = partner_ids[0]
+            partner=add_obj.read(cr,user,partner_ids)
+            dictcreate.update({'partner_id':partner['partner_id'][0],
+                               'email':partner['email'],
+                               'phone':partner['phone'],
+                                'mobile':partner['mobile']})
+        create_id = add_obj.create(cr, user, dictcreate)
+        return create_id
 
     def thunderbird_createpartner(self,cr,user,vals):
         dictcreate = dict(vals)
