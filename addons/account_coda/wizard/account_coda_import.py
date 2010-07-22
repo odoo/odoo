@@ -208,7 +208,8 @@ class account_coda_import(osv.osv_memory):
                     line=lines[value]
                     reconcile_id = False
                     if line['toreconcile']:
-                        rec_id = move_line_obj.search(cr, uid, [('name', '=', line['name']), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
+                        name = line['name'][:3] + '/' + line['name'][3:7] + '/' + line['name'][7:]
+                        rec_id = pool.get('account.move.line').search(cr, uid, [('name','=', name),('reconcile_id','=',False),('account_id.reconcile','=',True)])
                         if rec_id:
                             reconcile_id = statement_reconcile_obj.create(cr, uid, {
                                 'line_ids': [(6, 0, rec_id)]
