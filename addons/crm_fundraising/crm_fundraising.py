@@ -26,7 +26,7 @@ class crm_fundraising(osv.osv, crm.crm_case):
     """ Fund Raising Cases """
 
     _name = "crm.fundraising"
-    _description = "Fund Raising Cases"
+    _description = "Fund Raising"
     _order = "id desc"
     _inherit = ['mailgate.thread']
     _columns = {

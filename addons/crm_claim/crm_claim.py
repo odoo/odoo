@@ -28,7 +28,7 @@ class crm_claim(osv.osv, crm.crm_case):
     Crm claim
     """
     _name = "crm.claim"
-    _description = "Claim Cases"
+    _description = "Claim"
     _order = "id desc"
     _inherit = ['mailgate.thread']
     _columns = {

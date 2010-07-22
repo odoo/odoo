@@ -301,6 +301,13 @@ class crm_case(object):
         self.write(cr, uid, ids, {'state': 'cancel',
                                   'active': True})
         self._action(cr, uid, cases, 'cancel')
+        for case in cases:
+            message = "The " + self._description + " '" + case.name + "' has been Cancelled."
+            #TODO: Need to differentiate lead and opportunity
+#            if hasattr(case, 'type'):
+#                #TO CHECK: hasattr gives warning for other crm objects that don't have field 'type'
+#                message = "The " + (case.type or 'Case').title() + " '" + case.name + "' has been Cancelled."
+            self.log(cr, uid, case.id, message)
         return True
 
     def case_pending(self, cr, uid, ids, *args):
