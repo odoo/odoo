@@ -23,7 +23,7 @@
                <field name="fiscalyear_id" position="after">
                    <field name="display_account"/>
                    <field name="landscape"/>
-                   <field name="initial_balance"/>
+                   <field name="initial_balance" attrs="{'readonly':[('fiscalyear_id','=', False)]}"/>
                    <field name="sortby"/>
                    <field name="amount_currency"/>
                    <newline/>
