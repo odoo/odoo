@@ -16,7 +16,6 @@
         <menuitem id="menu_finance_charts" name="Charts" parent="menu_finance" sequence="5"/>
         <menuitem id="menu_finance_reporting" name="Reporting" parent="account.menu_finance" sequence="12"/>
             <menuitem id="menu_finance_reporting_budgets" name="Budgets" parent="menu_finance_reporting"/>
-            <menuitem id="menu_generic_report" name="Management Reports" parent="menu_finance_reporting"/>
             <menuitem id="menu_finance_legal_statement" name="Legal Reports" parent="menu_finance_reporting"/>
             <menuitem id="menu_finance_management_belgian_reports" name="Belgian Reports" parent="menu_finance_reporting"/>
         <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="13"/>
@@ -34,7 +33,6 @@
 <!--        <menuitem id="menu_finance_reporting11" name="Reporting" parent="account.menu_finance"  sequence="80"/>-->
         <menuitem id="menu_finance_generic_reporting" name="Generic Reporting" parent="menu_finance_reporting" sequence="100"/>
 <!--        <menuitem id="menu_finance_legal_statement1" name="Legal Statements" parent="account.menu_finance_reporting" sequence="200"/>-->
-<!--        <menuitem id="menu_generic_report" name="Generic Reports" parent="account.menu_finance_legal_statement" sequence="8"/>-->
 
         <menuitem id="menu_finance_entries" name="Accounting" parent="menu_finance" sequence="4"
             groups="group_account_user"/>
@@ -46,6 +44,17 @@
         <menuitem id="menu_account_end_year_treatments" name="End of Period" parent="menu_finance_periodical_processing"/>
 
        <menuitem id="menu_finance_statistic_report_statement" name="Statistic Reports" parent="menu_finance_reporting" sequence="300"/>
+
+       <menuitem 
+            parent="account.menu_finance_legal_statement" 
+            id="final_accounting_reports"
+            name="Accounting Reports"/>
+
+       <menuitem 
+            parent="account.menu_finance_legal_statement" 
+            id="menu_journals_report"
+            name="Journals"/>
+
     </data>
 </openerp>
 

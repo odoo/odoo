@@ -234,22 +234,29 @@ def _coda_parsing(self, cr, uid, data, context):
                     if rec_id:
                         reconcile_id = pool.get('account.bank.statement.reconcile').create(cr, uid, {
                             'line_ids': [(6, 0, rec_id)]
-                            }, context=context)
+                        }, context=context)
+                        mv = pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
+                        if mv.partner_id:
+                            line['partner_id'] = mv.partner_id.id
+                            if line['amount'] < 0 :
+                                line['account_id'] = mv.partner_id.property_account_payable.id
+                            else :
+                                line['account_id'] = mv.partner_id.property_account_receivable.id
                 str_not1 = ''
                 if line.has_key('contry_name') and line.has_key('cntry_number'):
                     str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"],line["cntry_number"],line["free_comm"]+line['extra_note'],line["val_date"][0],line["entry_date"][0])
                 id=pool.get('account.bank.statement.line').create(cr,uid,{
-                           'name':line['name'],
-                           'date': line['date'],
-                           'type':line['amount']>0 and 'customer' or 'supplier',
-                           'amount': line['amount'],
-                           'partner_id':line['partner_id'] or 0,
-                           'account_id':line['account_id'],
-                           'statement_id': bk_st_id,
-                           'reconcile_id': reconcile_id,
-                           'note':str_not1,
-                           'ref':line['ref'],
-                           })
+                   'name':line['name'],
+                   'date': line['date'],
+                   'type':line['amount']>0 and 'customer' or 'supplier',
+                   'amount': line['amount'],
+                   'partner_id':line['partner_id'] or 0,
+                   'account_id':line['account_id'],
+                   'statement_id': bk_st_id,
+                   'reconcile_id': reconcile_id,
+                   'note':str_not1,
+                   'ref':line['ref'],
+                })
 
             str_not= "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"],statement["acc_holder"])
             std_log += "\nStatement : %s , Date  : %s, Starting Balance :  %.2f , Ending Balance : %.2f \n"\
