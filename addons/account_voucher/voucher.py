@@ -22,6 +22,7 @@
 import time
 from osv import fields
 from osv import osv
+from tools.translate import _
 
 journal2type = {
     'cash':'rec_voucher',
@@ -367,7 +368,7 @@ class account_voucher(osv.osv):
                 'move_ids':[(6, 0,line_ids)]
             }
             
-            message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirm")
+            message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirmed")
             self.log(cr, uid, inv.id, message)
             
             self.write(cr, uid, [inv.id], rec)

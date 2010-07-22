@@ -194,6 +194,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,gantt,calendar,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="help">Work Orders are manufacturing operations required to produce or assemble products. The different work orders will have different impacts on the costs of manufacture and planning depending on the available workload.</field>
     </record>
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_planning">
@@ -203,6 +204,7 @@
         <field name="view_type">form</field>
         <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
         <field name="view_mode">tree,form,graph,calendar</field>
+        <field name="help">To manufacture or assemble products, as well as using raw materials and finished product you must also handle manufacturing operations. Manufacturing operations are often called work orders. The different operations will have different impacts on the costs of manufacture and planning depending on the available workload.</field>
     </record>
 
 
