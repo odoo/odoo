@@ -37,8 +37,10 @@ class account_move_line(osv.osv):
         fiscalperiod_obj = self.pool.get('account.period')
         fiscalyear_ids = []
         fiscalperiod_ids = []
-        if not context.get('fiscalyear', False):
+        if not context.get('fiscalyear', False) and not context.get('empty_fy_allow', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
+        elif context.get('empty_fy_allow', False):
+            fiscalyear_ids = context['fiscalyear']
         else:
             fiscalyear_ids = [context['fiscalyear']]
 
@@ -55,10 +57,9 @@ class account_move_line(osv.osv):
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
 
-
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
-            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
+            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
             query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
 
@@ -682,7 +683,7 @@ class account_move_line(osv.osv):
             account_id = line['account_id']['id']
             partner_id = (line['partner_id'] and line['partner_id']['id']) or False
         writeoff = debit - credit
-        
+
         # Ifdate_p in context => take this date
         if context.has_key('date_p') and context['date_p']:
             date=context['date_p']

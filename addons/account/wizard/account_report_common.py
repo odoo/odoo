@@ -116,6 +116,7 @@ class account_common_report(osv.osv_memory):
             context = {}
         result = {}
         period_obj = self.pool.get('account.period')
+        fiscal_obj = self.pool.get('account.fiscalyear')
         result['fiscalyear'] = 'fiscalyear_id' in data['form'] and data['form']['fiscalyear_id'] or False
         result['journal_ids'] = 'journal_ids' in data['form'] and data['form']['journal_ids'] or False
         result['chart_account_id'] = 'chart_account_id' in data['form'] and data['form']['chart_account_id'] or False
@@ -131,6 +132,10 @@ class account_common_report(osv.osv_memory):
             result['periods'] = self._build_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
             first_period = self.pool.get('account.period').search(cr, uid, [], order='date_start', limit=1)[0]
             result_initial_bal['periods'] = self._build_periods(cr, uid, first_period, data['form']['period_from'])
+        else:
+            fiscal_date_start = fiscal_obj.browse(cr, uid, [data['form']['fiscalyear_id']], context=context)[0].date_start
+            result_initial_bal['empty_fy_allow'] = True #Improve me => there should be something generic in account.move.line -> query get
+            result_initial_bal['fiscalyear'] = fiscal_obj.search(cr, uid, [('date_stop', '<', fiscal_date_start), ('state', '=', 'draft')], context=context)
         return result, result_initial_bal
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
