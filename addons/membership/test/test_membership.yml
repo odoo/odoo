@@ -1,101 +1,167 @@
 - |  
   In Order to test the Membership in OpenERP, which allows us to manage all operations for managing memberships.
 - |
-  We have to create "Membership Products" to make it available for partner or customer to make membership with it.
-  select product type   to "service" type and membership field is ticked to visible this product while creating membership for the partner.
+  I'm creating "Golden Membership" which has Membership fee 80 EURO and It's started from 1st June to 31st Dec.
 - 
   !record {model: product.product, id: product_product_membershipproduct0}:
     categ_id: product.cat1
     membership: 1
-    membership_date_from: '2009-06-01'
-    membership_date_to: '2010-06-01'
-    name: Membership Products
+    membership_date_from: '2010-06-01'
+    membership_date_to: '2010-12-31'
+    name: Golden Membership
     type: service
     list_price: 80.00
     
 - |
-  I create new member "Mark Johnson" and I provide an address to this
-  new customer, as well as an email "info@mycustomer.com".
+  "Mark Johnson" want to join "Golden Membership".
+- |
+  I'm creating new member "Mark Johnson".
 - 
   !record {model: res.partner, id: res_partner_markjohnson0}:
     address:
       - city: paris
         country_id: base.fr
-        name: Arthur Grosbonnet
+        name: Mark Johnson
         street: 1 rue Rockfeller
-        type: default
+        type: invoice
         zip: '75016'
-    credit_limit: 0.0
-    membership_amount: 0.0
     name: Mark Johnson
-    property_account_payable: account.a_pay
-    property_account_receivable: account.a_recv
-
 - |
-  I check that "Current membership state" is set to "Non Member". 
+  I'm checking  "Current Membership State" of "Mark Johnson". It is an "Non Member" or not. 
 - 
   !assert {model: res.partner, id: res_partner_markjohnson0}:
-      - membership_state == 'none'
-- |  
-  I can make it a Free member by selecting the "Free member" check box.
-- 
-  !record {model: res.partner, id: membership.res_partner_markjohnson0}:
-    free_member: 1
+      - membership_state == 'none', 'Member should be has "Current Membership State" in "Non Member".'
 - |
-  Now, I create Membership Invoices using wizard available on partner and  Select Membership Product.
+  I'm doing to make membership invoice for "Mark Johnson" on joining "Golden Membership".
 - 
-  !record {model: membership.invoice, id: membership_invoice_0}:
-    product_id: membership.product_product_membershipproduct0
-    
+  !python {model: res.partner}: |
+    self.create_membership_invoice(cr, uid, [ref("res_partner_markjohnson0")], product_id=ref("product_product_membershipproduct0"), datas={"amount":80.00})
 - |
-  I click on "Confirm" button of this wizard. and also check that address is defined or not for this partner in this function.  
+  I'm checking  "Current Membership State" of "Mark Johnson". It is an "Waiting Member" or not. 
 - 
-  !python {model: membership.invoice}: |
-    self.membership_invoice(cr, uid, [ref("membership_invoice_0")], {"active_ids": [ref("membership.res_partner_markjohnson0")]})
-
+  !assert {model: res.partner, id: res_partner_markjohnson0}:
+      - membership_state == 'waiting', 'Member should be has "Current Membership State" in "Waiting Member".'
 - |
-  I check that Invoice is created for this members.
+  I'm Opening that Invoice which is created for "Mark Johnson".
 -
   !python {model: res.partner}: |
-  
+        import netsvc  
         from tools.translate import _
-        invoice_obj = self.pool.get('account.invoice')
-        partner_obj = self.pool.get('res.partner')
-        product_obj = self.pool.get('product.product')
-        invoice_line_obj = self.pool.get('account.invoice.line')
+        invoice_pool = self.pool.get('account.invoice')
+        partner_pool = self.pool.get('res.partner')
+        membership_line_pool = self.pool.get('membership.membership_line')
+        membership_pool = self.pool.get('product.product')
         
-        partner_id = self.browse(cr, uid, ref('res_partner_markjohnson0'))
-        inv_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner_id.id), ('account_id', '=', partner_id.property_account_receivable.id)])
-        invoice_id = invoice_obj.browse(cr, uid, inv_ids)[0]
-        product = product_obj.browse(cr, uid, ref('product_product_membershipproduct0'), context=context)        
-        line_ids = invoice_line_obj.search(cr, uid, [('product_id', '=', product.id), ('invoice_id', '=', invoice_id.id)])
-        
-        assert line_ids, _('Invoices has not been generated for this Member!')
-         
+        membership_line_ids = membership_line_pool.search(cr, uid, [('membership_id','=',ref('product_product_membershipproduct0')),('partner','=',ref('res_partner_markjohnson0'))])
+        membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
+        assert membership_lines, _('Membership is not registrated.')
+        membership_line = membership_lines[0]
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'account.invoice', membership_line.account_invoice_id.id, 'invoice_open', cr)
 - |
-  I check that the "Current membership state" will remain same untill opening the invoice.
+  I'm checking "Current membership state" of "Mark Johnson". It is an "Invoiced Member" or not.
 -
   !assert {model: res.partner, id: res_partner_markjohnson0}:
-     - membership_state == 'free'  
+     - membership_state == 'invoiced', 'Member should be has "Current Membership State" in "Invoiced Member".'
   
 - |
-  "Current membership state" of any member depends on the state of invoice.
-  So, I check that  invoice is in draft state then the "membership state" of a member is "Waiting member".
+  I'm doing to paid that invoice which is opened for "Mark Johnson".
 -
-  !python {model: membership.membership_line}: |
-        partner_obj = self.pool.get('res.partner')    
-        inv_obj = self.pool.get('account.invoice')
+  !python {model: account.invoice}: |
+  
+        from tools.translate import _
+        invoice_pool = self.pool.get('account.invoice')
+        partner_pool = self.pool.get('res.partner')
+        membership_line_pool = self.pool.get('membership.membership_line')
+        membership_pool = self.pool.get('product.product')
+        invoice_pay_pool = self.pool.get('account.invoice.pay')
         
-        partner_id = partner_obj.browse(cr, uid, ref('res_partner_markjohnson0'))
-        member_ids = self.search(cr, uid, [('partner', '=', partner_id.id)])
-        current_id = self.browse(cr, uid, member_ids)[0]
-        
-        inv_ids = inv_obj.search(cr, uid, [('partner_id', '=', partner_id.id), ('account_id', '=', partner_id.property_account_receivable.id)])
-        inv_id = inv_obj.browse(cr, uid, inv_ids)[0]
-        if inv_id.state == 'draft':
-            assert current_id.state == 'waiting'
+        membership_line_ids = membership_line_pool.search(cr, uid, [('membership_id','=',ref('product_product_membershipproduct0')),('partner','=',ref('res_partner_markjohnson0'))])
+        membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
+        assert membership_lines, _('Membership is not registrated.')
+        membership_line = membership_lines[0]
+        assert membership_line.account_invoice_id.state == 'open', _('Invoice should be Opened.')
+        pay_id = invoice_pay_pool.create(cr, uid, {'amount': 80, 'name': 'Payment of Membership', 'journal_id': ref('account.bank_journal')}, {'active_id': membership_line.account_invoice_id.id})
+        invoice_pay_pool.pay_and_reconcile(cr, uid, [pay_id], {'active_id': membership_line.account_invoice_id.id}) 
 - |
-  When the invoice is in open state it become Invoiced Member, When the invoice is in paid state the same "Current membership state" changed to Paid Member. 
-  Now, If we cancel the invoice "Current membership state" changed to Cancel Member.           
-            
-            
+  I'm checking "Current membership state" of "Mark Johnson". It is an "Paid Member" or not.
+-
+  !assert {model: res.partner, id: res_partner_markjohnson0}:
+     - membership_state == 'paid', 'Member should be has "Current Membership State" in "Paid Member".'
+
+- |
+  I'm creating free member "Ms. Johnson" of "Golden Membership".
+-
+  !record {model: res.partner, id: res_partner_msjohnson0}:
+    address:
+      - city: paris
+        country_id: base.fr
+        name: Ms. Johnson
+        street: 1 rue Rockfeller
+        type: invoice
+        zip: '75016'
+    name: Ms. Johnson
+    free_member: True
+
+- |
+  I'm checking "Current membership state" of "Ms. Johnson". It is an "Free Member" or not.
+- 
+  !assert {model: res.partner, id: res_partner_msjohnson0}:
+     - membership_state == 'free', 'Member should be has "Current Membership State" in "Free Member".'
+
+- |
+  I'm set "Mark Johnson" as a associated member of "Ms. Johnson" and also set Non free member.
+- 
+  !python {model: res.partner}: |
+    self.write(cr, uid, [ref("res_partner_msjohnson0")], {'free_member': False, 'associate_member': ref("res_partner_markjohnson0")})
+
+- |
+  I'm checking "Current membership state" of "Ms. Johnson". It is an "Paid Member" or not.
+- 
+  !assert {model: res.partner, id: res_partner_msjohnson0}:
+     - membership_state == 'paid', 'Member should be has "Current Membership State" in "Paid Member".'
+
+- |
+  I'm creating new "Silver Membership" which has Membership fee 50 EURO and It's started from 1st June to 31st Dec.
+-
+  !record {model: product.product, id: product_product_membershipproduct1}:
+    categ_id: product.cat1
+    membership: 1
+    membership_date_from: '2010-06-01'
+    membership_date_to: '2010-12-31'
+    name: Silver Membership
+    type: service
+    list_price: 50.00
+- |
+  I'm making invoice of "Mark Johnson" member on joining new membership "Silver Membership".
+-
+  !python {model: res.partner}: |
+    self.create_membership_invoice(cr, uid, [ref("res_partner_markjohnson0")], product_id=ref("product_product_membershipproduct1"), datas={"amount":50.00})
+- |
+  I'm checking "Current membership state" of "Mark Johnson". It is an "Old Member" or not.
+-
+  !assert {model: res.partner, id: res_partner_markjohnson0}:
+      - membership_state == 'old', 'Member should be has "Current Membership State" in "Old Member".'
+- |
+  I'm doing to make credit note of invoice which is paid by "Mark Johnson" to cancel membership.
+-
+  !python {model: account.invoice}: |
+        from tools.translate import _
+        invoice_pool = self.pool.get('account.invoice')
+        partner_pool = self.pool.get('res.partner')
+        membership_line_pool = self.pool.get('membership.membership_line')
+        membership_pool = self.pool.get('product.product')
+        invoice_refund_pool = self.pool.get('account.invoice.refund')
+        
+        membership_line_ids = membership_line_pool.search(cr, uid, [('membership_id','=',ref('product_product_membershipproduct0')),('partner','=',ref('res_partner_markjohnson0'))])
+        membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
+        assert membership_lines, _('Membership is not registrated.')
+        membership_line = membership_lines[0]
+        refund_id = invoice_refund_pool.create(cr, uid, {'description': 'Refund of Membership'}, {'active_id': membership_line.account_invoice_id.id})
+        invoice_refund_pool.invoice_refund(cr, uid, [refund_id], {'active_id': membership_line.account_invoice_id.id, 'active_ids': [membership_line.account_invoice_id.id]}) 
+- |
+  I'm checking "Current membership state" of "Mark Johnson". It is an "Cancelled Member" or not.
+-
+  !assert {model: res.partner, id: res_partner_markjohnson0}:
+      - membership_state == 'canceled', 'Member should be has "Current Membership State" in "Cancelled Member".'
+  
