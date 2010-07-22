@@ -204,6 +204,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
+            <field name="help">Work Centers are units of manufacture consisting of one or several people and/or machines that can be considered as a unit for the purposes of forecasting capacity and planning.</field>
         </record>
 
         <!--
@@ -278,6 +279,7 @@
             <field name="res_model">mrp.routing</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
+            <field name="help">Routings define the assembly operations to be done in work centers for manufacturing a certain product. They are usually attached to bills of materials which will define the assembly of products required for manufacture or for finished products.</field>
         </record>
  <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
                   sequence="100" />-->
@@ -398,6 +400,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
+            <field name="help">Master Bills of Materials are documents that describe the list of raw materials used to make a finished product. You can generate documents for a product manufacturing (defining each manufacturing step) or you could define a single multi-level bill of materials.</field>
         </record>
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
             <field name="name">Bill of Material Components</field>
@@ -405,6 +408,7 @@
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','!=',False)]</field>
+            <field name="help">Bills of materials Components are components and sub-product used to create master bills of materials.</field>
         </record>
 
         <!-- BOM menus -->
@@ -762,6 +766,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_Current':1}</field>
+            <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, Open ERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="1"/>
 
@@ -772,6 +777,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
+            <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials or BoM) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, Open ERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
         </record>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
