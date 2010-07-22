@@ -598,7 +598,7 @@ form: module.record_id""" % (xml_id,)
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
         return ('ir.ui.menu', pid)
 
-    def _assert_equals(self, f1, f2, prec = 4):
+    def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)
 
     def _tag_assert(self, cr, rec, data_node=None):

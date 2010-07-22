@@ -58,7 +58,7 @@ trailer
 %%EOF
 """
 
-def output_field( f ):
+def output_field(f):
     return "\xfe\xff" + "".join( [ "\x00"+c for c in f ] )
 
 def extract_keys(lines):
