@@ -78,6 +78,18 @@ class DAVHandler(FixSendError,DAVRequestHandler):
         self.baseuri = "http://%s:%d/"% (self.server.server_name, self.server.server_port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
         
+    def copymove(self, CLASS):
+        """ Our uri scheme removes the /webdav/ component from there, so we
+        need to mangle the header, too.
+        """
+        dest = self.headers['Destination']
+        up = urlparse.urlparse(urllib.unquote(self.headers['Destination']))
+        if up.path.startswith(self.davpath):
+            self.headers['Destination'] = up.path[len(self.davpath):]
+        else:
+            raise DAV_Forbidden("Not allowed to copy/move outside webdav path")
+        DAVRequestHandler.copymove(self, CLASS)
+
     def get_davpath(self):
         return self.davpath
     
@@ -175,6 +187,11 @@ class DAVHandler(FixSendError,DAVRequestHandler):
 
         self.send_body(None, '201', 'Created', '', headers=headers)
 
+    def do_DELETE(self):
+        try:
+            DAVRequestHandler.do_DELETE(self)
+        except DAV_Error, (ec, dd):
+            return self.send_status(ec)
 
 from service.http_server import reg_http_service,OpenERPAuthProvider
 

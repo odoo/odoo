@@ -27,7 +27,8 @@
 from osv import fields, osv
 from tools.translate import _
 import time
- 
+from datetime import date, datetime
+
 class event_project(osv.osv_memory):
     """
     Event Project
@@ -36,23 +37,46 @@ class event_project(osv.osv_memory):
     _description = "Event Project"
 
     _columns = {
-             'project_id': fields.many2one('project.project', 'Template of Project', domain = [('active', '<>', False), ('state', '=', 'template')], required =True, help="This is Template Project. Project of event is a duplicate of this Template. After click on  'Create Retro-planning', New Project will be duplicated from this template project.")             
+        'project_id': fields.many2one('project.project', 'Template of Project',
+                    domain = [('active', '<>', False), ('state', '=', 'template')],
+                    required =True,
+                    help="This is Template Project. Project of event is a duplicate of this Template. After click on  'Create Retro-planning', New Project will be duplicated from this template project."),
+        'date_start': fields.date('Date Start'),
+        'date': fields.date('Date End'),
      }
-    
+
+    def default_get(self, cr, uid, fields, context=None):
+        """
+        This function gets default values
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+
+        @return : default values of fields.
+        """
+        event_obj=self.pool.get('event.event')
+        project_obj = self.pool.get('project.project')
+        event = event_obj.browse(cr, uid, context.get('active_id', False))
+        res = super(event_project, self).default_get(cr, uid, fields, context=context)
+        if 'date_start' in fields:
+            res.update({'date_start': time.strftime('%Y-%m-%d')})
+        if 'date' in fields:
+            res.update({'date': datetime.strptime(event.date_end, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")})
+
+        return res
+
     def create_duplicate(self, cr, uid, ids, context):
         event_obj=self.pool.get('event.event')
         project_obj = self.pool.get('project.project')
         event = event_obj.browse(cr, uid, context.get('active_id', False))
-        for current in self.browse(cr, uid, ids): 
-            duplicate_project_id = project_obj.copy(cr, uid, current.project_id.id, {'active': True})
-            duplicate_project = project_obj.browse(cr, uid, duplicate_project_id, context)
-            project_obj.write(cr, uid, [duplicate_project_id], {
-                    'name': duplicate_project.name , 
-                    'date_start':time.strftime('%Y-%m-%d'), 
-                    'date': event.date_begin[0:10] })
+        for current in self.browse(cr, uid, ids):
+            duplicate_project_id = project_obj.copy(cr, uid, current.project_id.id, {
+                    'active': True,
+                    'date_start':current.date_start,
+                    'date': current.date,
+                    })
             event_obj.write(cr, uid, [event.id], {'project_id': duplicate_project_id })
-            
+
         return {}
-   
+
 event_project()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

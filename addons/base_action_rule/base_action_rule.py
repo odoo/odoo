@@ -124,6 +124,17 @@ the rule to mark CC(mail to any other person defined in actions)."),
     
     _order = 'sequence'
     
+    def onchange_model_id(self, cr, uid, ids, name):
+        res = {'domain':{'filter_id':[]}}
+        if name:
+            model_name = self.pool.get('ir.model').read(cr, uid, [name], ['model'])
+            if model_name:
+                mod_name = model_name[0]['model']
+                res['domain'] = {'filter_id': [('model_id','=',mod_name)]}
+        else:
+            res['value'] = {'filter_id':False}
+        return res
+
     def pre_action(self, cr, uid, ids, model, context=None):
         # Searching for action rules
         cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
