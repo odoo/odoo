@@ -44,6 +44,12 @@ class account_report_general_ledger(osv.osv_memory):
         'initial_balance' : True,
     }
 
+    def onchange_fiscalyear(self, cr, uid, ids, fiscalyear=False, context=None):
+        res = {}
+        if not fiscalyear:
+            res['value'] = {'initial_balance': False}
+        return res
+
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
             context = {}
