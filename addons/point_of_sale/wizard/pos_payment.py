@@ -158,8 +158,8 @@ class pos_make_payment(osv.osv_memory):
             if order.invoice_id:
                 inv_ids.append(order.invoice_id.id)
 #                continue
-#            if not make_obj.partner_id:
-#                raise osv.except_osv(_('Error'), _('Please provide a partner for the sale.'))
+            if not make_obj.partner_id:
+                raise osv.except_osv(_('Error'), _('Please provide a partner for the sale.'))
             acc= make_obj.partner_id.property_account_receivable.id
             inv = {
                 'name': 'Invoice from POS: '+order_name,
@@ -224,7 +224,11 @@ class pos_make_payment(osv.osv_memory):
         if order_obj.browse(cr, uid, [active_id]):
             if make_obj.partner_id and make_obj.invoice_wanted:
                 order_obj.write(cr, uid, [active_id],{'state':'paid'}) 
-                return {}
+                if context.get('return'):
+                    order_obj.write(cr, uid, [active_id],{'state':'done'})   
+                else:
+                     order_obj.write(cr, uid, [active_id],{'state':'paid'})
+                return self.print_report(cr, uid, ids, context)   
 #                return self.create_invoice(cr, uid, ids, context)
             else:
                 context.update({'flag': True})                
