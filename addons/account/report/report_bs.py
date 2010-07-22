@@ -86,12 +86,12 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
     def get_pl_balance(self):
         return self.res_pl or 0.0
 
-    def get_data(self,form):
+    def get_data(self,data):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
 
         #Getting Profit or Loss Balance from profit and Loss report
-        result_pl=self.obj_pl.get_data(form)
+        result_pl=self.obj_pl.get_data(data)
         self.res_pl=self.obj_pl.final_result()
 
         type_pool = db_pool.get('account.account.type')
@@ -105,19 +105,19 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
 
         ctx = self.context.copy()
 #        ctx['state'] = form['context'].get('state','filter_no')
-        ctx['fiscalyear'] = form['fiscalyear']
+        ctx['fiscalyear'] = data['form']['fiscalyear_id']
 
-        if form['filter']=='filter_period' :
-            ctx['periods'] = form['periods']
-        elif form['filter']== 'filter_date':
-            ctx['date_from'] = form['date_from']
-            ctx['date_to'] =  form['date_to']
+        if data['form']['filter']=='filter_period' :
+            ctx['periods'] = data['form']['periods']
+        elif data['form']['filter']== 'filter_date':
+            ctx['date_from'] = data['form']['date_from']
+            ctx['date_to'] =  data['form']['date_to']
 
 
         cal_list={}
         pl_dict = {}
         account_dict = {}
-        account_id = [form['Account_list']]
+        account_id = data['form']['chart_account_id']
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
@@ -146,15 +146,15 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
                         self.result_sum_dr += abs(account.debit - account.credit)
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += abs(account.debit - account.credit)
-                    if form['display_account'] == 'bal_mouvement':
+                    if data['form']['display_account'] == 'bal_mouvement':
                         if account.credit > 0 or account.debit > 0 or account.balance > 0 :
                             accounts_temp.append(account_dict)
-                    elif form['display_account'] == 'bal_solde':
+                    elif data['form']['display_account'] == 'bal_solde':
                         if  account.balance != 0:
                             accounts_temp.append(account_dict)
                     else:
                         accounts_temp.append(account_dict)
-                    if account.id == form['reserve_account_id']:
+                    if account.id == data['form']['reserve_account_id']:
                         pl_dict['level'] = account['level'] + 1
                         accounts_temp.append(pl_dict)
 
@@ -209,9 +209,11 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
     def get_lines_another(self, group):
         return self.result.get(group, [])
 
-    def _get_currency(self, form):
-        return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.code
-
+    def _get_currency(self, data):
+        if data.get('form', False) and data['form'].get('chart_account_id', False):
+            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.code
+        return ''   
+    
 report_sxw.report_sxw('report.account.balancesheet.horizontal', 'account.account',
     'addons/account/report/report_balance_sheet_horizontal.rml',parser=report_balancesheet_horizontal,
     header=False)
