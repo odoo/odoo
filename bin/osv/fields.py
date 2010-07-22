@@ -63,7 +63,7 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
 
-    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context={}, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
+    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
         self.states = states or {}
         self.string = string
         self.readonly = readonly
@@ -75,7 +75,7 @@ class _column(object):
         self.ondelete = ondelete
         self.translate = translate
         self._domain = domain or []
-        self._context = context
+        self._context = context or {}
         self.write = False
         self.read = False
         self.view_load = 0
@@ -375,7 +375,7 @@ class one2many(_column):
         assert(self.change_default != True)
 
     def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
         if self._context:
             context = context.copy()
@@ -734,7 +734,7 @@ class function(_column):
 
 class related(function):
 
-    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context={}):
+    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         self._field_get2(cr, uid, obj, context)
         i = len(self._arg)-1
         sarg = name
@@ -750,7 +750,7 @@ class related(function):
             i -= 1
         return [(self._arg[0], 'in', sarg)]
 
-    def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
+    def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
         if values and field_name:
             self._field_get2(cr, uid, obj, context)
             relation = obj._name
@@ -835,7 +835,7 @@ class related(function):
             # TODO: improve here to change self.store = {...} according to related objects
             pass
 
-    def _field_get2(self, cr, uid, obj, context={}):
+    def _field_get2(self, cr, uid, obj, context=None):
         if self._relations:
             return
         obj_name = obj._name
@@ -855,10 +855,10 @@ class related(function):
 # ---------------------------------------------------------
 
 class dummy(function):
-    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context={}):
+    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         return []
 
-    def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
+    def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
         return False
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):

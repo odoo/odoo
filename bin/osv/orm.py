@@ -126,13 +126,11 @@ class browse_record_list(list):
 class browse_record(object):
     logger = netsvc.Logger()
 
-    def __init__(self, cr, uid, id, table, cache, context=None, list_class = None, fields_process={}):
+    def __init__(self, cr, uid, id, table, cache, context=None, list_class=None, fields_process=None):
         '''
         table : the object (inherited from orm)
         context : dictionary with an optional context
         '''
-        if not context:
-            context = {}
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
@@ -141,8 +139,8 @@ class browse_record(object):
         self._table_name = self._table._name
         self.__logger = logging.getLogger(
             'osv.browse_record.' + self._table_name)
-        self._context = context
-        self._fields_process = fields_process
+        self._context = context or {}
+        self._fields_process = fields_process or {}
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
@@ -400,14 +398,16 @@ class orm_template(object):
                 context=context
         )
 
-    def view_init(self, cr , uid , fields_list, context=None):
+    def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
         pass
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
-    def _field_create(self, cr, context={}):
+    def _field_create(self, cr, context=None):
+        if context is None:
+            context = {}
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
         if not cr.rowcount:
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
@@ -492,8 +492,8 @@ class orm_template(object):
                         continue
         cr.commit()
 
-    def _auto_init(self, cr, context={}):
-        self._field_create(cr, context)
+    def _auto_init(self, cr, context=None):
+        self._field_create(cr, context=context)
 
     def __init__(self, cr):
         if not self._name and not hasattr(self, '_inherit'):
@@ -509,7 +509,7 @@ class orm_template(object):
         if not self._table:
             self._table = self._name.replace('.', '_')
 
-    def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
+    def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
         """
         Fetch records as objects allowing to use dot notation to browse fields and relations
 
@@ -520,8 +520,6 @@ class orm_template(object):
         :rtype: object or list of objects requested
 
         """
-        if not context:
-            context = {}
         self._list_class = list_class or browse_record_list
         cache = {}
         # need to accepts ints and longs because ids coming from a method
@@ -529,7 +527,7 @@ class orm_template(object):
         if isinstance(select, (int, long)):
             return browse_record(cr, uid, select, self, cache, context=context, list_class=self._list_class, fields_process=fields_process)
         elif isinstance(select, list):
-            return self._list_class([browse_record(cr, uid, id, self, cache, context=context, list_class=self._list_class, fields_process=fields_process) for id in select], context)
+            return self._list_class([browse_record(cr, uid, id, self, cache, context=context, list_class=self._list_class, fields_process=fields_process) for id in select], context=context)
         else:
             return browse_null()
 
@@ -1018,7 +1016,7 @@ class orm_template(object):
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         raise NotImplementedError(_('The read method is not implemented on this object !'))
 
-    def get_invalid_fields(self,cr,uid):
+    def get_invalid_fields(self, cr, uid):
         return list(self._invalids)
 
     def _validate(self, cr, uid, ids, context=None):
@@ -1409,14 +1407,14 @@ class orm_template(object):
 
         return arch
 
-    def __get_default_search_view(self, cr, uid, context={}):
+    def __get_default_search_view(self, cr, uid, context=None):
 
         def encode(s):
             if isinstance(s, unicode):
                 return s.encode('utf8')
             return s
 
-        view = self.fields_view_get(cr, uid, False, 'form', context)
+        view = self.fields_view_get(cr, uid, False, 'form', context=context)
 
         root = etree.fromstring(encode(view['arch']))
         res = etree.XML("<search string='%s'></search>" % root.get("string", ""))
@@ -2228,7 +2226,9 @@ class orm(orm_template):
             if column['attnotnull']:
                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
 
-    def _auto_init(self, cr, context={}):
+    def _auto_init(self, cr, context=None):
+        if context is None:
+            context = {}
         store_compute =  False
         logger = netsvc.Logger()
         create = False
