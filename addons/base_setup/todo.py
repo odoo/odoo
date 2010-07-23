@@ -88,7 +88,7 @@ class base_setup_company(osv.osv_memory):
         'city':fields.char('City', size=128),
         'state_id':fields.selection(_get_all_states, 'State'),
         'country_id':fields.selection(_get_all_countries, 'Country'),
-        'email':fields.char('E-mail', size=64, required=True),
+        'email':fields.char('E-mail', size=64),
         'phone':fields.char('Phone', size=64),
         'currency':fields.many2one('res.currency', 'Currency', required=True),
         'rml_header1':fields.char('Report Header', size=200,

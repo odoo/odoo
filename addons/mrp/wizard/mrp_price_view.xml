@@ -9,9 +9,11 @@
             <field name="model">mrp.product_price</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Paid ?">
+                <form string="Product Cost Structure">
+                    <separator colspan="4" string="Print Cost Structure of Product." />
 				    <field name="number"/>
 				    <newline/>
+                    <separator string="" colspan="4"/>
 				    <group col="2" colspan="4">
                 		<button icon='gtk-close' special="cancel"
                 			string="Close" />
