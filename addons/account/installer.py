@@ -33,8 +33,9 @@ class account_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     def _get_default_accounts(self, cr, uid, context=None):
-        accounts = [{'acc_name':'Current','account_type':'cash'},
-                    {'acc_name':'Deposit','account_type':'cash'}]
+        accounts = [{'acc_name':'Current','account_type':'bank'},
+                    {'acc_name':'Deposit','account_type':'bank'},
+                    {'acc_name':'Cash','account_type':'cash'}]
         return accounts
 
     def _get_charts(self, cr, uid, context=None):
