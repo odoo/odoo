@@ -910,7 +910,7 @@ class mrp_production(osv.osv):
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
             message = ("%s '%s' %s %s %s %s %s %s.") % (
                                     _('Manufacturing Order'), 
-                                    name,
+                                    production.name,
                                     _('for'), 
                                     production.product_qty, 
                                     production.product_id.name, 
