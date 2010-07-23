@@ -269,9 +269,9 @@
                     <field colspan="4" name="name" select="1"/>
                     <field name="field" select="1"/>
                     <field name="sequence"/>
-                    <newline/>
-                    <field name="readonly"/>
-                    <field name="required"/>
+<!--                    <newline/>-->
+<!--                    <field name="readonly"/>-->
+<!--                    <field name="required"/>-->
                 </form>
             </field>
         </record>
@@ -283,8 +283,8 @@
                 <tree string="Journal Column">
                     <field name="sequence"/>
                     <field name="name"/>
-                    <field name="required"/>
-                    <field name="readonly"/>
+<!--                    <field name="required"/>-->
+<!--                    <field name="readonly"/>-->
                 </tree>
             </field>
         </record>
@@ -295,11 +295,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Journal View">
-                    <field colspan="4" name="name" select="1"/>
+                    <field name="name" select="1"/>
                     <field colspan="4" name="columns_id" nolabel="1" widget="one2many_list"/>
                 </form>
             </field>
         </record>
+        <record id="action_account_journal_view" model="ir.actions.act_window">
+            <field name="name">Journal Views</field>
+            <field name="res_model">account.journal.view</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_low_level"/>
 
         <!--
     # Account Journal
@@ -953,7 +960,7 @@
             <field eval="9" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Account Entry Line">
-                    <notebook>
+                    <notebook colspan="4">
                         <page string="Information">
                             <separator colspan="4" string="General Information"/>
                             <field name="name" select="1"/>
@@ -1001,8 +1008,11 @@
                 <search string="Search Entry Lines">
                     <group col='10' colspan='4'>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Entry Lines"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
                         <separator orientation="vertical"/>
+                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
+                        <filter icon="terp-stock_symbol-selection" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Entry Lines"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-stock_symbol-selection" string="Unreconciled" domain="[('reconcile_id','=',False), ('account_id.type','in',['receivable', 'payable'])]" help="Unreconciled Entry Lines"/>
                         <field name="date" select='1'/>
                         <field name="account_id" select='1'/>
                         <field name="partner_id" select='1'>
@@ -1012,8 +1022,8 @@
                     </group>
                     <newline/>
                     <group col="10" colspan="4">
-                        <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self or 0, 'normal_view':False}"/>
-                        <field name="period_id" widget="selection" context="{'period_id':self}"/>
+                        <field name="journal_id" required="1" widget="selection" context="{'journal_id':self, 'visible_id':self or 0, 'normal_view':False}"/>
+                        <field name="period_id" required="1" widget="selection" context="{'period_id':self}"/>
                     </group>
                 </search>
             </field>
@@ -1255,7 +1265,6 @@
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="domain">[('journal_id.type', 'in', ['purchase', 'sale_refund'])]</field>
-            <field name="context">{'journal_id':1}</field>
         </record>
 
         <menuitem action="action_account_moves_purchase" id="menu_eaction_account_moves_purchase" parent="menu_finance_payables"/>

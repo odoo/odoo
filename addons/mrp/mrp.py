@@ -48,10 +48,10 @@ class mrp_workcenter(osv.osv):
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
-        'costs_hour': fields.float('Cost per hour'),
+        'costs_hour': fields.float('Cost per hour', help="Specify Cost of Workcenter per hour."),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
-        'costs_cycle': fields.float('Cost per cycle'),
+        'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Workcenter per cycle."),
         'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
@@ -636,13 +636,11 @@ class mrp_production(osv.osv):
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
 
-            message = ("%s %s %s %s %s %s") % (
-                    _('Manufacturing Order '),
-                    name,
-                    _("scheduled the"),
-                    datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
-                    _("for"),
-                    production.product_id.name)
+            message = ("Manufacturing Order '%s' for %s %s is Ready to produce.") % (
+                                    name,
+                                    production.product_qty, 
+                                    production.product_id.name, 
+                                   )
             self.log(cr, uid, production_id, message)
         return True
 
@@ -741,7 +739,7 @@ class mrp_production(osv.osv):
         
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
-        message = _('Manufacturing order ') + " '" + production.name + "' "+ _("is finished.")
+        message = str(production_qty) + " '[" + production.product_id.code + '] ' + production.product_id.name + _("' have been manufactured for ") + production.name
         self.log(cr, uid, production_id, message)
         return True
 
@@ -911,7 +909,16 @@ class mrp_production(osv.osv):
                 proc_ids.append(proc_id)                
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
-            message = _('Manufacturing order ') + " '" + production.name + "' "+ _("is confirmed.")
+            message = ("%s '%s' %s %s %s %s %s %s.") % (
+                                    _('Manufacturing Order'), 
+                                    production.name,
+                                    _('for'), 
+                                    production.product_qty, 
+                                    production.product_id.name, 
+                                    _('scheduled for date '), 
+                                    datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
+                                    _('is waiting') 
+                                   )
             self.log(cr, uid, production.id, message)
         return picking_id
 

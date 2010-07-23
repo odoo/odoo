@@ -248,59 +248,59 @@ class account_account(osv.osv):
 
     def __compute(self, cr, uid, ids, field_names, arg=None, context=None,
                   query='', query_params=()):
-            """ compute the balance, debit and/or credit for the provided
-            account ids
-            Arguments:
-            `ids`: account ids
-            `field_names`: the fields to compute (a list of any of
-                           'balance', 'debit' and 'credit')
-            `arg`: unused fields.function stuff
-            `query`: additional query filter (as a string)
-            `query_params`: parameters for the provided query string
-                            (__compute will handle their escaping) as a
-                            tuple
-            """
-            mapping = {
-                'balance': "COALESCE(SUM(l.debit),0) " \
-                           "- COALESCE(SUM(l.credit), 0) as balance",
-                'debit': "COALESCE(SUM(l.debit), 0) as debit",
-                'credit': "COALESCE(SUM(l.credit), 0) as credit"
-            }
-            #get all the necessary accounts
-            children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
-            #compute for each account the balance/debit/credit from the move lines
-            accounts = {}
-            if children_and_consolidated:
-                aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        """ compute the balance, debit and/or credit for the provided
+        account ids
+        Arguments:
+        `ids`: account ids
+        `field_names`: the fields to compute (a list of any of
+                       'balance', 'debit' and 'credit')
+        `arg`: unused fields.function stuff
+        `query`: additional query filter (as a string)
+        `query_params`: parameters for the provided query string
+                        (__compute will handle their escaping) as a
+                        tuple
+        """
+        mapping = {
+            'balance': "COALESCE(SUM(l.debit),0) " \
+                       "- COALESCE(SUM(l.credit), 0) as balance",
+            'debit': "COALESCE(SUM(l.debit), 0) as debit",
+            'credit': "COALESCE(SUM(l.credit), 0) as credit"
+        }
+        #get all the necessary accounts
+        children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
+        #compute for each account the balance/debit/credit from the move lines
+        accounts = {}
+        if children_and_consolidated:
+            aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
-                wheres = [""]
-                if query.strip():
-                    wheres.append(query.strip())
-                if aml_query.strip():
-                    wheres.append(aml_query.strip())
-                filters = " AND ".join(wheres)
-                self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                          'Filters: %s'%filters)
-                # IN might not work ideally in case there are too many
-                # children_and_consolidated, in that case join on a
-                # values() e.g.:
-                # SELECT l.account_id as id FROM account_move_line l
-                # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
-                # ON l.account_id = tmp.id
-                # or make _get_children_and_consol return a query and join on that
-                request = ("SELECT l.account_id as id, " +\
-                           ' , '.join(map(mapping.__getitem__, field_names)) +
-                           " FROM account_move_line l" \
-                           " WHERE l.account_id IN %s " \
-                                + filters +
-                           " GROUP BY l.account_id")
-                params = (tuple(children_and_consolidated),) + query_params
-                cr.execute(request, params)
-                self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                          'Status: %s'%cr.statusmessage)
+            wheres = [""]
+            if query.strip():
+                wheres.append(query.strip())
+            if aml_query.strip():
+                wheres.append(aml_query.strip())
+            filters = " AND ".join(wheres)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Filters: %s'%filters)
+            # IN might not work ideally in case there are too many
+            # children_and_consolidated, in that case join on a
+            # values() e.g.:
+            # SELECT l.account_id as id FROM account_move_line l
+            # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
+            # ON l.account_id = tmp.id
+            # or make _get_children_and_consol return a query and join on that
+            request = ("SELECT l.account_id as id, " +\
+                       ' , '.join(map(mapping.__getitem__, field_names)) +
+                       " FROM account_move_line l" \
+                       " WHERE l.account_id IN %s " \
+                            + filters +
+                       " GROUP BY l.account_id")
+            params = (tuple(children_and_consolidated),) + query_params
+            cr.execute(request, params)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Status: %s'%cr.statusmessage)
 
-                for res in cr.dictfetchall():
-                    accounts[res['id']] = res
+            for res in cr.dictfetchall():
+                accounts[res['id']] = res
 
             # consolidate accounts with direct children
             children_and_consolidated.reverse()
@@ -2539,9 +2539,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     'account_paid_id': acc_template_ref[value['account_paid_id']],
                 })
 
-        # Creating Journals
+        # Creating Journals Sales and Purchase
         vals_journal={}
-        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')])
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
         data = data_pool.browse(cr, uid, data_id[0])
         view_id = data.res_id
         
@@ -2573,6 +2573,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['type'] = 'purchase'
         vals_journal['code'] = _('EXJ')
         vals_journal['sequence_id'] = seq_id_purchase
+        vals_journal['view_id'] = view_id
 
         if obj_multi.chart_template_id.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]

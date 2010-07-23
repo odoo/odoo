@@ -2079,9 +2079,10 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.id], update_val)
 
             product_obj = self.pool.get('product.product')
-            for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
-                message = _('Product ') + " '" + name + "' "+ _("is consumed with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
-                self.log(cr, uid, move.id, message)
+            for new_move in self.browse(cr, uid, res, context=context):
+                for (id, name) in product_obj.name_get(cr, uid, [new_move.product_id.id]):
+                    message = _('Product ') + " '" + name + "' "+ _("is consumed with") + " '" + str(new_move.product_qty) + "' "+ _("quantity.")
+                    self.log(cr, uid, new_move.id, message)
         self.action_done(cr, uid, res)
 
         return res
