@@ -305,7 +305,7 @@ class purchase_order(osv.osv):
     def inv_line_create(self, cr, uid, a, ol):
         return (0, False, {
             'name': ol.name,
-            'account_id': a.id,
+            'account_id': a,
             'price_unit': ol.price_unit or 0.0,
             'quantity': ol.product_qty,
             'product_id': ol.product_id.id or False,
@@ -344,7 +344,7 @@ class purchase_order(osv.osv):
                     if not a:
                         raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
                 else:
-                    a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
+                    a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category').id
                 fpos = o.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
                 il.append(self.inv_line_create(cr, uid, a, ol))
