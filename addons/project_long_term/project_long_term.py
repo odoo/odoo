@@ -245,7 +245,7 @@ class project_resource_allocation(osv.osv):
     _description = 'Project Resource Allocation'
     _rec_name = 'resource_id'
     _columns = {
-        'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', required=True),
         'phase_id_date_start': fields.related('phase_id', 'date_start', type='date', string='Starting Date of the phase'),
         'phase_id_date_end': fields.related('phase_id', 'date_end', type='date', string='Ending Date of the phase'),
