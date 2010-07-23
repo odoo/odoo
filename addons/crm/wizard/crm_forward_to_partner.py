@@ -244,6 +244,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             "Phone: %s" % (pa.phone or ''), 
             "Fax: %s" % (pa.fax or ''), 
             "Mobile: %s" % (pa.mobile or ''), 
+            "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''), 
+            "Details: %s" % (lead.description or ''), 
             ]
         return "\n".join(body + ['---'])
 
