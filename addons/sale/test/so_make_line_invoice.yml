@@ -130,7 +130,18 @@
   !python {model: sale.order}: |
     sale_id=self.browse(cr, uid, ref("sale_order_so3"))
     assert(sale_id.invoiced == True), "Paid has not been set to true"
-- 
+-
+ I click on the "Create Invoice" button of sale order and verify that it gives a warning message
+-
+  !python {model: sale.order}: |
+    sale_order_obj = self.pool.get('sale.order')
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    try:
+      wf_service.trg_validate(uid, 'sale.order',ref("sale_order_so3"),'manual_invoice', cr)
+    except:
+       pass
+-
   I create an invoice for another sale order line. 
 -
   I click on the "Create Invoice" button of sale order line
