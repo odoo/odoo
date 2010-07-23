@@ -163,7 +163,7 @@
             <field name="model">crossovered.budget</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Budget">
+            	 <tree colors="blue:state in ('draft');gray:state in ('done','cancel');black:state in ('confirm','validate')" string="Budget">
                     <field name="name" colspan="1" select="1"/>
                     <field name="code" colspan="1" select="1" />
                     <field name="state"/>
