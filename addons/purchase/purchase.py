@@ -746,23 +746,24 @@ class procurement_order(osv.osv):
         po_obj = self.pool.get('purchase.order')
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
-            partner = procurement.product_id.seller_ids[0].name
+            partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
+            seller_qty = procurement.product_id.seller_qty
+            seller_delay = int(procurement.product_id.seller_delay)
             partner_id = partner.id
-            partner_rec = procurement.product_id.seller_ids[0]
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
 
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
-            if procurement.product_id.seller_ids[0].qty:
-                qty = max(qty,partner_rec.qty)
+            if seller_qty:
+                qty = max(qty,seller_qty)
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
-            newdate = newdate - partner_rec.delay
+            newdate = newdate - seller_delay
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})

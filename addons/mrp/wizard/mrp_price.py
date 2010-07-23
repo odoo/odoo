@@ -27,6 +27,9 @@ class mrp_price(osv.osv_memory):
     _columns = {
         'number': fields.integer('Quantity', required=True, help="Specify quantity of products to produce. Report of Cost structure will be displayed base on this qunatity."),
     }
+    _defaults = {
+        'number': 1,
+    }
     
     def print_report(self, cr, uid, ids, context=None):
         """ To print the report of Product cost structure

@@ -59,7 +59,7 @@ class product_uom(osv.osv):
 
     def _factor_inv_write(self, cursor, user, id, name, value, arg, context):
         return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
-  
+
     def create(self, cr, uid, data, context={}):
         if 'factor_inv' in data:
             if data['factor_inv'] <> 1:
@@ -180,7 +180,7 @@ class product_category(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
     }
-    
+
 
     _defaults = {
         'type' : lambda *a : 'normal',
@@ -212,14 +212,18 @@ product_category()
 class product_template(osv.osv):
     _name = "product.template"
     _description = "Product Template"
-    def _calc_seller_delay(self, cr, uid, ids, name, arg, context={}):
+    def _calc_seller(self, cr, uid, ids, fields, arg, context={}):
         result = {}
         for product in self.browse(cr, uid, ids, context):
+            for field in fields:
+                result[product.id] = {field:False}
+            result[product.id]['seller_delay'] = 1
             if product.seller_ids:
                 partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  product.seller_ids if partner_id and partner_id.sequence])
-                result[product.id] = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].delay or False
-            else:
-                result[product.id] = 1
+                main_supplier = partner_list and partner_list[0] and partner_list[0][1] or False
+                result[product.id]['seller_delay'] =  main_supplier and main_supplier.delay or 1
+                result[product.id]['seller_qty'] =  main_supplier and main_supplier.qty or 0.0
+                result[product.id]['seller_id'] = main_supplier and main_supplier.name.id or False
         return result
 
     _columns = {
@@ -254,7 +258,9 @@ class product_template(osv.osv):
             help='Coefficient to convert UOM to UOS\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
-        'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier Lead Time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
+        'seller_delay': fields.function(_calc_seller, method=True, type='integer', string='Supplier Lead Time', multi="seller_delay", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
+        'seller_qty': fields.function(_calc_seller, method=True, type='float', string='Supplier Quantity', multi="seller_qty", help="This is minimum quantity to purchase from Main Supplier."),
+        'seller_id': fields.function(_calc_seller, method=True, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_id"),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
@@ -633,6 +639,46 @@ class product_supplierinfo(osv.osv):
         'delay': lambda *a: 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c)
     }
+    def price_get(self, cr, uid, supplier_ids, product_id, product_qty=1, context=None):
+        """
+        Calculate price from supplier pricelist.
+        @param supplier_ids: Ids of res.partner object.
+        @param product_id: Id of product.
+        @param product_qty: specify quantity to purchase.
+        """
+        if not context:
+            context = {}
+        if type(supplier_ids) in (int,long,):
+            supplier_ids = [supplier_ids]
+        res = {}
+        product_pool = self.pool.get('product.product')
+        partner_pool = self.pool.get('res.partner')
+        pricelist_pool = self.pool.get('product.pricelist')
+        currency_pool = self.pool.get('res.currency')
+        currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+        for supplier in partner_pool.browse(cr, uid, supplier_ids, context=context):
+            # Compute price from standard price of product
+            price = product_pool.price_get(cr, uid, [product_id], 'standard_price')[product_id]
+        
+            # Compute price from Purchase pricelist of supplier
+            pricelist_id = supplier.property_product_pricelist_purchase.id
+            if pricelist_id:
+                price = pricelist_pool.price_get(cr, uid, [pricelist_id], product_id, product_qty).setdefault(pricelist_id, 0)
+                price = currency_pool.compute(cr, uid, pricelist_pool.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
+            
+            # Compute price from supplier pricelist which are in Supplier Information
+            supplier_info_ids = self.search(cr, uid, [('name','=',supplier.id),('product_id','=',product_id)])
+            if supplier_info_ids:
+                cr.execute('SELECT * ' \
+                    'FROM pricelist_partnerinfo ' \
+                    'WHERE suppinfo_id IN %s' \
+                    'AND min_quantity <= %s ' \
+                    'ORDER BY min_quantity DESC LIMIT 1', (tuple(supplier_info_ids),product_qty,))
+                res2 = cr.dictfetchone()
+                if res2:
+                    price = res2['price']
+            res[supplier.id] = price
+        return res
     _order = 'sequence'
 product_supplierinfo()
 
