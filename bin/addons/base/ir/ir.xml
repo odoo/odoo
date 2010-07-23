@@ -236,12 +236,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Filters">
-                    <field name="name" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="model_id"/>
-                    <newline/>
-                    <field name="domain"/>
-                    <field name="context"/>
+                    <group colspan="4" >
+                        <field name="name" select="1"/>
+                        <field name="user_id" select="1"/>
+                        <field name="model_id"/>
+                    </group>
+                    <group col="4" expand="1">
+                        <separator string="Domain" colspan="2" />
+                        <separator string="Context" colspan="2" />
+                        <field name="domain" nolabel="1" colspan="2"/>
+                        <field name="context" nolabel="1" colspan="2"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -328,7 +333,7 @@
                         <field name="usage"/>
                         <field name="report_type"/>
                     </group>
-                    
+
                     <notebook colspan="4">
                         <page string="Other Configuration">
                             <group col="2" colspan="2">
