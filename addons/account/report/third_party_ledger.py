@@ -235,10 +235,11 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #                full_account.append(r)
         if self.date_lst_string:
             self.cr.execute(
-                "SELECT l.id,l.date,j.code, l.ref, l.name, l.debit, l.credit " \
+                "SELECT l.id,l.date,j.code, l.ref, l.name, l.debit, l.credit,l.amount_currency,c.code AS currency_code " \
                 "FROM account_move_line l " \
                 "LEFT JOIN account_journal j " \
                     "ON (l.journal_id = j.id) " \
+                "LEFT JOIN res_currency c on (l.currency_id=c.id)" \
                 "WHERE l.partner_id = %s " \
                     "AND l.account_id IN %s"\
                     "AND l.date IN (" + self.date_lst_string + ")"
@@ -246,6 +247,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "ORDER BY l.id",
                     (partner.id, tuple(self.account_ids),))
             res = self.cr.dictfetchall()
+            print res
             sum = 0.0
             for r in res:
                 sum = r['debit'] - r['credit']
