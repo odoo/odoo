@@ -122,7 +122,21 @@ class crm_meeting(osv.osv, crm_case):
                     }
 
         return value
-    
+
+    def case_open(self, cr, uid, ids, *args):
+        """Confirms meeting
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Meeting Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_meeting, self).case_open(cr, uid, ids, args)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('The Meeting') + " '" + name + "' "+ _("has been Confirmed.")
+            self.log(cr, uid, id, message)
+        return res
+
 crm_meeting()
 
 class calendar_attendee(osv.osv):

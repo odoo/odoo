@@ -656,9 +656,18 @@ class account_journal(osv.osv):
         @param context: context arguments, like lang, time zone
         @return: return a result
         """
+
+        journal_type = ('sale', 'sale_refund', 'purchase', 'purchase_refund')
+        journal_seq = {
+            'sale':'seq_out_invoice',
+            'purchase':'seq_in_invoice',
+            'purchase_refund':'seq_out_refund',
+            'sale_refund':'seq_in_refund'
+        }
         
         seq_pool = self.pool.get('ir.sequence')
         seq_typ_pool = self.pool.get('ir.sequence.type')
+        date_pool = self.pool.get('ir.model.data')
         
         result = True
         
@@ -685,10 +694,13 @@ class account_journal(osv.osv):
             res.update({
                 'sequence_id':seq_id
             })
-        
-        if not journal.invoice_sequence_id:
+
+        if journal.type in journal_type and not journal.invoice_sequence_id:
+            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
+            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
+            inv_seq_id
             res.update({
-                'invoice_sequence_id':seq_id
+                'invoice_sequence_id':inv_seq_id
             })
         
         result = self.write(cr, uid, [journal.id], res)
