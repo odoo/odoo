@@ -45,6 +45,15 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table1_header">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+    </blockTableStyle>s    
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -224,9 +233,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
+
     <blockTable colWidths="280.0,68.0,67.0,66.0" style="Table1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
       <tr>
         <td>
@@ -243,9 +250,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
+
     <section>
       <para style="P4">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
       <blockTable colWidths="280.0,68.0,67.0,66.0" style="Table2">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
@@ -345,12 +350,11 @@
           <para style="P5">[[ formatLang((sum_debit(data) - sum_credit(data))) ]]</para>
         </td>
         <td></td>
-        
       </tr>
     </blockTable>
     <section>
       <para style="P4">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
-      <blockTable colWidths="280.0,68.0,67.0,66.0,60.0" style="Table2">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+      <blockTable colWidths="280.0,68.0,67.0,66.0,60.0" style="Table1_header">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P2">[[ p.ref ]] - [[ p.name ]]</para>
@@ -396,9 +400,6 @@
           </tr>
         </blockTable>
       </section>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
     </section>
   </story>
 </document>

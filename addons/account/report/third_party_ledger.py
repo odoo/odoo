@@ -247,7 +247,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "ORDER BY l.id",
                     (partner.id, tuple(self.account_ids),))
             res = self.cr.dictfetchall()
-            print res
             sum = 0.0
             for r in res:
                 sum = r['debit'] - r['credit']
