@@ -27,7 +27,7 @@ class crm_helpdesk(osv.osv, crm.crm_case):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
-    _description = "Helpdesk Cases"
+    _description = "Helpdesk"
     _order = "id desc"
     _inherit = ['mailgate.thread']
     _columns = {
