@@ -1163,8 +1163,20 @@ class account_move(osv.osv):
     # TODO: Check if period is closed !
     #
     def create(self, cr, uid, vals, context={}):
-        if 'line_id' in vals:
-            if 'journal_id' in vals:
+        if 'line_id' in vals and context.get('copy'):
+            for l in vals['line_id']:
+                if not l[0]:
+                    l[2].update({
+                        'reconcile_id':False,
+                        'reconcil_partial_id':False,
+                        'analytic_lines':False,
+                        'invoice':False,
+                        'ref':False,
+                        'balance':False,
+                        'account_tax_id':False,
+                    })
+            
+            if 'journal_id' in vals and vals.get('journal_id', False):
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['journal_id'] = vals['journal_id']
@@ -1190,11 +1202,14 @@ class account_move(osv.osv):
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update({'state':'draft', 'name':'/',})
+    def copy(self, cr, uid, id, default={}, context={}):
+        default.update({
+            'state':'draft',
+            'name':'/',
+        })
+        context.update({
+            'copy':True
+        })
         return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context={}, check=True):

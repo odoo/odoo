@@ -1105,7 +1105,7 @@
                     <field name="partner_id"/>
                     <field name="line_id"/>
                     <field name="to_check" groups="base.group_extended"/>
-                    <field name="amount"/>
+                    <field name="amount" operator="+"/>
                     <field name="state"/>
                     <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
                 </tree>
@@ -1125,7 +1125,6 @@
                         <field name="period_id"/>
                         <field name="date" select="1"/>
                         <field name="company_id" required="1" groups="base.group_multi_company"/>
-                        
                         <field name="partner_id" invisible="1" select="1"/>
                         <field name="amount" invisible="1" select="1"/>
                     </group>

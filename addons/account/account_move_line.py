@@ -20,7 +20,6 @@
 ##############################################################################
 import time
 from datetime import datetime
-
 import netsvc
 from osv import fields, osv
 from tools.translate import _
@@ -454,6 +453,7 @@ class account_move_line(osv.osv):
                         context=context)
                 dt = period.date_start
         return dt
+        
     def _get_currency(self, cr, uid, context={}):
         if not context.get('journal_id', False):
             return False
@@ -1110,10 +1110,10 @@ class account_move_line(osv.osv):
 
         #if not 'currency_id' in vals:
         #    vals['currency_id'] = account.company_id.currency_id.id
-
+        
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
-        if vals.get('account_tax_id',False):
+        if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
             total = vals['debit'] - vals['credit']
             if journal.refund_journal:
@@ -1186,7 +1186,7 @@ class account_move_line(osv.osv):
         if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
-                self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
+                rs = self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
         return result
 account_move_line()
 
