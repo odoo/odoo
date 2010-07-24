@@ -670,7 +670,7 @@
                     <field name="period_id"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -1091,6 +1091,17 @@
     Account.Entry Edition
     -->
 
+        <record id="account_move_graph" model="ir.ui.view">
+            <field name="name">account.move.graph</field>
+            <field name="model">account.move</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="period_id"/>
+                    <field name="amount" operator="+"/>
+                </graph>
+            </field>
+         </record>
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
@@ -1105,7 +1116,7 @@
                     <field name="partner_id"/>
                     <field name="line_id"/>
                     <field name="to_check" groups="base.group_extended"/>
-                    <field name="amount" operator="+"/>
+                    <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                     <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
                 </tree>
@@ -1221,12 +1232,11 @@
             </field>
         </record>
 
-
-       <record id="action_move_journal_line" model="ir.actions.act_window">
+        <record id="action_move_journal_line" model="ir.actions.act_window">
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
