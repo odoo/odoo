@@ -269,11 +269,11 @@ class mrp_bom(osv.osv):
                 max_prop = prop
         return result
 
-    def _bom_explode(self, cr, uid, bom, factor, properties, addthis=False, level=0):
+    def _bom_explode(self, cr, uid, bom, factor, properties=[], addthis=False, level=0):
         """ Finds Products and Workcenters for related BoM for manufacturing order.
         @param bom: BoM of particular product.
         @param factor: Factor of product UoM.
-        @param properties: A dictionary for contextual values.
+        @param properties: A List of properties Ids.
         @param addthis: If BoM found then True else False.
         @param level: Depth level to find BoM lines starts from 10.
         @return: result: List of dictionaries containing product details.
