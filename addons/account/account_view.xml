@@ -906,43 +906,69 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Account Entry Line">
-                    <notebook>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="ref"/>
+                        <field name="partner_id" select="1" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                        
+                        <field name="journal_id"/>
+                        <field name="period_id"/>
+                        <field name="company_id" required="1" groups="base.group_multi_company"/>
+                    </group>
+                    <notebook colspan="4">
                         <page string="Information">
-                            <separator colspan="4" string="General Information"/>
-                            <field name="name" select="1"/>
-                            <field name="date" select="1"/>
-                            <field name="ref"/>
-                            <field name="invoice"/>
-                            <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="partner_id" select="1" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Amount"/>
+                                <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                <field name="debit"/>
+                                <field name="credit"/>
+                                <field name="quantity"/>
+                            </group>
+                            
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Accounting Documents"/>
+                                <field name="invoice"/>
+                                <field name="move_id" required="False"/>
+                                <field name="statement_id"/>
+                            </group>
 
-                            <field name="debit"/>
-                            <field name="credit"/>
-                            <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Dates"/>
+                                <field name="date" select="1"/>
+                                <field name="date_maturity"/>
+                                <field name="date_created"/>
+                            </group>
+                            
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Taxes"/>
+                                <field name="tax_code_id"/>
+                                <field name="tax_amount"/>
+                                <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+                            </group>
+                            
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Currency"/>
+                                <field name="currency_id"/>
+                                <field name="amount_currency"/>
+                            </group>
 
-                            <separator colspan="4" string="Optional Information"/>
-                            <field name="currency_id"/>
-                            <field name="amount_currency"/>
-                            <field name="quantity"/>
-                            <field name="move_id" required="False"/>
-                            <newline/>
-                            <field name="statement_id"/>
-                            <field name="blocked"/>
-                            <field name="date_maturity"/>
-                            <field name="date_created"/>
-                            <newline/>
-                            <field name="tax_code_id"/>
-                            <field name="tax_amount"/>
-                            <newline/>
-                            <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                            <field name="analytic_account_id"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Reconciliation"/>
+                                <field name="reconcile_id"/>
+                                <field name="reconcile_partial_id"/>
+                            </group>
 
-                            <separator colspan="4" string="State"/>
-                            <field name="journal_id"/>
-                            <field name="period_id"/>
-                            <field name="reconcile_id"/>
-                            <field name="reconcile_partial_id"/>
-                            <field name="state"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="States"/>
+                                <field name="state"/>
+                                <field name="blocked"/>
+                            </group>
+                            
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Analytic"/>
+                                <field name="analytic_account_id"/>
+                            </group>
+
                         </page>
                         <page string="Analytic Lines">
                             <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
@@ -951,7 +977,6 @@
                 </form>
             </field>
         </record>
-
 
         <record id="view_move_line_form2" model="ir.ui.view">
             <field name="name">account.move.line.form2</field>
@@ -1000,6 +1025,19 @@
             </field>
         </record>
 
+        <record id="account_move_line_graph" model="ir.ui.view">
+            <field name="name">account.move.line.graph</field>
+            <field name="model">account.move.line</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="account_id"/>
+                    <field name="debit" operator="+"/>
+                    <field name="credit" operator="+"/>
+                </graph>
+            </field>
+         </record>
+        
         <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">Entry Lines</field>
             <field name="model">account.move.line</field>
@@ -1249,7 +1287,7 @@
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="domain">[('journal_id.type', 'in', ['sale', 'purchase_refund'])]</field>
@@ -1261,7 +1299,7 @@
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="domain">[('journal_id.type', 'in', ['purchase', 'sale_refund'])]</field>
@@ -2281,7 +2319,7 @@
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
         </record>
