@@ -208,7 +208,7 @@ class mrp_bom(osv.osv):
         'active': lambda *a: 1,
         'product_efficiency': lambda *a: 1.0,
         'product_qty': lambda *a: 1.0,
-        'product_rounding': lambda *a: 1.0,
+        'product_rounding': lambda *a: 0.0,
         'type': lambda *a: 'normal',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),
     }

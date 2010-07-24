@@ -171,7 +171,7 @@ class report_custom(report_rml):
                 }
                 xml_tmp = ''
                 for sub_bom in (sub_boms and sub_boms[0]) or [parent_bom]:
-                    txt, sum, sum_strd = process_bom(sub_bom, company_currency, factor=1/bom.product_qty)
+                    txt, sum, sum_strd = process_bom(sub_bom, company_currency)
                     xml_tmp +=  txt
                     total += sum
                     total_strd += sum_strd
