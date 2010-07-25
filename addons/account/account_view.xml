@@ -266,7 +266,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Journal Column">
-                    <field colspan="4" name="name" select="1"/>
+                    <field colspan="4" name="name" select="1"/><field name="name"/>
+                    <field name="date"/>
+                    <field name="period_id"/>
+                    <field name="journal_id"/>
+                    <field name="balance_start"/>
+                    <field name="balance_end_real"/>
+                    <field name="balance_end"/>
+                    <field name="state"/>
                     <field name="field" select="1"/>
                     <field name="sequence"/>
 <!--                    <newline/>-->
@@ -421,18 +428,20 @@
             <field name="model">account.bank.statement</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Statement">
-                   <group col="10" colspan="4">
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Statement"/>
-                        <filter icon="terp-check" string="Posted" domain="[('state','=','confirm')]" help="Confirm confirm"/>
+                <search string="Search Bank Statements">
+                    <group col="8" colspan="4">
+                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
                         <field name="date"/>
+                        <field name="name"/>
                         <field name="journal_id"/>
                     </group>
-                    <group expand="0" string="Group By..." colspan="12" col="10">
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>
@@ -444,10 +453,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:balance_end_real!=balance_end and state=='draft';blue:state=='draft' and (balance_end_real==balance_end);black:state=='confirm'" string="Statement">
-                    <field name="date"/>
                     <field name="name"/>
-                    <field name="journal_id"/>
+                    <field name="date"/>
                     <field name="period_id"/>
+                    <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
                     <field name="balance_end"/>
@@ -464,7 +473,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
-                    <group>
+                    <group col="8" colspan="4">
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
@@ -543,7 +552,7 @@
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
@@ -2344,23 +2353,22 @@
         />
 
         <!-- Cash Statement -->
-        <record id="view_bank_statement_tree" model="ir.ui.view">
+        <record id="view_cash_statement_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end);black:state in ('open')" string="Statement">
-                    <field name="date"/>
                     <field name="name"/>
-                    <field name="journal_id"/>
+                    <field name="date"/>
                     <field name="period_id"/>
+                    <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
                     <field name="balance_end"/>
-                    <field name="user_id" select="1"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
-                    <button type="object" string="Confirm" name="button_confirm_cash" states="open" icon="terp-gtk-go-back-rtl"/>
+                    <button type="object" string="Confirm" name="button_confirm_bank" states="open" icon="terp-gtk-go-back-rtl"/>
                     <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
                 </tree>
             </field>
@@ -2470,26 +2478,44 @@
                 </form>
             </field>
         </record>
+        <record id="account_cash_statement_graph" model="ir.ui.view">
+            <field name="name">account.bank.statement.graph</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="date"/>
+                    <field name="balance_start" operator="+"/>
+                    <field name="balance_end" operator="+"/>
+                </graph>
+            </field>
+         </record>
         <record id="action_view_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Cash Register</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_bank_statement_tree"/>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_cash_statement_tree"/>
             <field name="search_view_id" ref="view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_bank_statement_tree"/>
+            <field name="view_id" ref="view_cash_statement_tree"/>
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement2_all">
             <field name="sequence" eval="1"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_view_bank_statement_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement3_all">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="account_cash_statement_graph"/>
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
         <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"/>

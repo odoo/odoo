@@ -109,6 +109,11 @@
         </record>
 
         <!-- Menus -->
+        <menuitem 
+            parent="account.menu_finance_periodical_processing" 
+            id="menu_finance_periodical_processing_billing" 
+            name="Billing"/>
+        
         <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
             <field name="name">Entries to invoice</field>
             <field name="res_model">account.analytic.line</field>
@@ -121,7 +126,7 @@
         <menuitem
             action="action_hr_analytic_timesheet_open_tree"
             id="menu_hr_analytic_timesheet_tree"
-            parent="account.menu_finance_periodical_processing"/>
+            parent="menu_finance_periodical_processing_billing"/>
 
         <record id="action_hr_analytic_timesheet_tree_invoiced" model="ir.actions.act_window">
             <field name="name">Uninvoiced Entries</field>
