@@ -252,8 +252,6 @@ class project_resource_allocation(osv.osv):
         'phase_id_date_start': fields.related('phase_id', 'date_start', type='date', string='Starting Date of the phase'),
         'phase_id_date_end': fields.related('phase_id', 'date_end', type='date', string='Ending Date of the phase'),
         'useability': fields.float('Usability', help="Usability of this resource for this project phase in percentage (=50%)"),
-        'date_start': fields.related('phase_id', 'date_start', type='datetime', string='Start Date'),
-        'date_end': fields.related('phase_id', 'date_end', type='datetime', string='End Date'),
     }
     _defaults = {
         'useability': 100,

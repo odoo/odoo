@@ -1261,7 +1261,6 @@ class account_invoice_line(osv.osv):
         return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
-        print "2222*", uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context
         if context is None:
             context = {}
         company_id = context.get('company_id',False)
