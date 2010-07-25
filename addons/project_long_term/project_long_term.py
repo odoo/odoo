@@ -190,6 +190,8 @@ class project_phase(osv.osv):
             return super(project_phase, self).write(cr, uid, ids, vals, context=context)
         # Consider calendar and efficiency if the phase is performed by a resource
         # otherwise consider the project's working calendar
+        if type(ids) == int:
+            ids = [ids]
         phase = self.browse(cr, uid, ids[0], context=context)
         calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
         resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)],context=context)
@@ -245,8 +247,8 @@ class project_resource_allocation(osv.osv):
     _description = 'Project Resource Allocation'
     _rec_name = 'resource_id'
     _columns = {
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
-        'phase_id': fields.many2one('project.phase', 'Project Phase', required=True),
+        'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
+        'phase_id': fields.many2one('project.phase', 'Project Phase', ondelete='cascade', required=True),
         'phase_id_date_start': fields.related('phase_id', 'date_start', type='date', string='Starting Date of the phase'),
         'phase_id_date_end': fields.related('phase_id', 'date_end', type='date', string='Ending Date of the phase'),
         'useability': fields.float('Usability', help="Usability of this resource for this project phase in percentage (=50%)"),
