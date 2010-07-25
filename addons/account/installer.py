@@ -298,6 +298,7 @@ class account_installer(osv.osv_memory):
 
         # Creating Journals Sales and Purchase
         vals_journal={}
+        data_pool = self.pool.get('ir.model.data')
         data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
         data = data_pool.browse(cr, uid, data_id[0])
         view_id = data.res_id
