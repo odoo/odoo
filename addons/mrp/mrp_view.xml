@@ -155,10 +155,10 @@
                             <group col="4" colspan="4">
                                 <field name="capacity_per_cycle"/>
                                 <newline/>
-                                <field name="time_cycle"/>
+                                <field name="time_cycle" widget="float_time"/>
                                 <field name="time_efficiency"/>
-                                <field name="time_start"/>
-                                <field name="time_stop"/>
+                                <field name="time_start" widget="float_time"/>
+                                <field name="time_stop" widget="float_time"/>
                             </group>
                         </page>
                         <page string="Analytic Accounting" groups="base.group_extended">
@@ -236,7 +236,7 @@
                     <field name="sequence" select="1"/>
                     <field name="workcenter_id" select="1"/>
                     <field name="cycle_nbr"/>
-                    <field name="hour_nbr"/>
+                    <field name="hour_nbr" widget="float_time"/>
                     <separator colspan="4" string="Description"/>
                     <field colspan="4" name="note" nolabel="1"/>
                 </form>
@@ -301,8 +301,8 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1" string="Reference" groups="base.group_extended"/>
                         <newline/>
-                        <field name="product_uom"/>
                         <field name="product_qty"/>
+                        <field name="product_uom"/>
                         <field name="routing_id" groups="base.group_extended"/>
                         <newline/>
                         <field name="product_uos" groups="product.group_uos"/>
@@ -316,8 +316,8 @@
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
-                                    <field name="product_uom"/>
                                     <field name="product_qty"/>
+                                    <field name="product_uom"/>
                                     <field name="name" invisible="1"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>

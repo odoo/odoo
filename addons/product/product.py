@@ -622,12 +622,32 @@ product_packaging()
 class product_supplierinfo(osv.osv):
     _name = "product.supplierinfo"
     _description = "Information about a product supplier"
+    def _calc_qty(self, cr, uid, ids, fields, arg, context={}):
+        result = {}
+        product_uom_pool = self.pool.get('product.uom')
+        for supplier_info in self.browse(cr, uid, ids, context):
+            for field in fields:
+                result[supplier_info.id] = {field:False}
+            if supplier_info.product_uom.id:
+                qty = product_uom_pool._compute_qty(cr, uid, supplier_info.product_uom.id, supplier_info.min_qty, to_uom_id=supplier_info.product_id.uom_id.id)
+            else:
+                qty = supplier_info.min_qty
+            result[supplier_info.id]['qty'] = qty
+        return result
+
+    def _get_uom_id(self, cr, uid, *args):
+        cr.execute('select id from product_uom order by id limit 1')
+        res = cr.fetchone()
+        return res and res[0] or False
+
     _columns = {
         'name' : fields.many2one('res.partner', 'Supplier', required=True, ondelete='cascade', help="Supplier of this product"),
         'product_name': fields.char('Supplier Product Name', size=128, help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Supplier Product Code', size=64, help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),
-        'qty' : fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the default unit of measure."),
+        'product_uom': fields.many2one('product.uom', string="UOM", help="Supplier Product UoM."),
+        'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the default unit of measure."),
+        'qty': fields.function(_calc_qty, method=True, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Uom."),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
@@ -639,6 +659,15 @@ class product_supplierinfo(osv.osv):
         'delay': lambda *a: 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c)
     }
+    def _check_uom(self, cr, uid, ids):
+        for supplier_info in self.browse(cr, uid, ids):
+            if supplier_info.product_uom and supplier_info.product_uom.category_id.id <> supplier_info.product_id.uom_id.category_id.id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_uom, 'Error: The default UOM and the Supplier Product UOM must be in the same category.', ['product_uom']),
+    ]
     def price_get(self, cr, uid, supplier_ids, product_id, product_qty=1, context=None):
         """
         Calculate price from supplier pricelist.
@@ -659,13 +688,13 @@ class product_supplierinfo(osv.osv):
         for supplier in partner_pool.browse(cr, uid, supplier_ids, context=context):
             # Compute price from standard price of product
             price = product_pool.price_get(cr, uid, [product_id], 'standard_price')[product_id]
-        
+
             # Compute price from Purchase pricelist of supplier
             pricelist_id = supplier.property_product_pricelist_purchase.id
             if pricelist_id:
                 price = pricelist_pool.price_get(cr, uid, [pricelist_id], product_id, product_qty).setdefault(pricelist_id, 0)
                 price = currency_pool.compute(cr, uid, pricelist_pool.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
-            
+
             # Compute price from supplier pricelist which are in Supplier Information
             supplier_info_ids = self.search(cr, uid, [('name','=',supplier.id),('product_id','=',product_id)])
             if supplier_info_ids:
