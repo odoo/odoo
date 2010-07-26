@@ -58,7 +58,7 @@ class res_partner(osv.osv):
             if not partner.address:
                 continue
             part = partner.address[0]
-            addr = ', '.join(filter(None, [part.street, part.street2, (part.zip or '')+' '+(part.city or ''), part.state_id and part.state_id.name, part.country_id and part.country_id.name]))
+            addr = ', '.join(filter(None, [part.street, (part.zip or '')+' '+(part.city or ''), part.state_id and part.state_id.name, part.country_id and part.country_id.name]))
             result = geo_find(addr.encode('utf8'))
             if result:
                 self.write(cr, uid, [partner.id], {
@@ -81,29 +81,73 @@ class crm_lead(osv.osv):
         for part in self.browse(cr, uid, ids, context=context):
             if not part.country_id:
                 continue
-            addr = ', '.join(filter(None, [part.street, part.street2, (part.zip or '')+' '+(part.city or ''), part.state_id and part.state_id.name, part.country_id and part.country_id.name]))
+            addr = ', '.join(filter(None, [part.street, (part.zip or '')+' '+(part.city or ''), part.state_id and part.state_id.name, part.country_id and part.country_id.name]))
             result = geo_find(addr.encode('utf8'))
             if result:
                 self.write(cr, uid, [part.id], {
                     'partner_latitude': result[0],
                     'partner_longitude': result[1]
                 }, context=context)
+
+                # 1. first way: in the same country, small area
                 part_ids = self.pool.get('res.partner').search(cr, uid, [
                     ('partner_weight','>',0),
                     ('partner_latitude','>',result[0]-2), ('partner_latitude','<',result[0]+2),
-                    ('partner_longitude','>',result[1]-1.5), ('partner_longitude','<',result[1]+1.5)
+                    ('partner_longitude','>',result[1]-1.5), ('partner_longitude','<',result[1]+1.5),
+                    ('country', '=', part.country_id.id),
                 ], context=context)
+
+                # 2. second way: in the same country, big area
+                if not part_ids:
+                    part_ids = self.pool.get('res.partner').search(cr, uid, [
+                        ('partner_weight','>',0),
+                        ('partner_latitude','>',result[0]-4), ('partner_latitude','<',result[0]+4),
+                        ('partner_longitude','>',result[1]-3), ('partner_longitude','<',result[1]+3),
+                        ('country', '=', part.country_id.id),
+                    ], context=context)
+
+                # 3. third way: other countries, small area
+                if not part_ids:
+                    part_ids = self.pool.get('res.partner').search(cr, uid, [
+                        ('partner_weight','>',0),
+                        ('partner_latitude','>',result[0]-2), ('partner_latitude','<',result[0]+2),
+                        ('partner_longitude','>',result[1]-1.5), ('partner_longitude','<',result[1]+1.5)
+                    ], context=context)
+
+                # 4. fourth way: other countries, big area
                 if not part_ids:
                     part_ids = self.pool.get('res.partner').search(cr, uid, [
                         ('partner_weight','>',0),
                         ('partner_latitude','>',result[0]-4), ('partner_latitude','<',result[0]+4),
                         ('partner_longitude','>',result[1]-3), ('partner_longitude','<',result[1]+3)
                     ], context=context)
+
+                # 5. fifth way: anywhere in same country
+                if not part_ids:
+                    # still haven't found any, let's take all partners in the country!
+                    part_ids = self.pool.get('res.partner').search(cr, uid, [
+                        ('partner_weight','>',0),
+                        ('country', '=', part.country_id.id),
+                    ], context=context)
+
+                # 6. sixth way: closest partner whatsoever, just to have at least one result    
+                if not part_ids:
+                    # warning: point() type takes (longitude, latitude) as parameters in this order!
+                    cr.execute("""SELECT id, distance
+                                  FROM  (select id, (point(partner_longitude, partner_latitude) <-> point(%s,%s)) AS distance FROM res_partner
+                                  WHERE partner_longitude is not null
+                                        AND partner_latitude is not null
+                                        AND partner_weight > 0) AS d
+                                  ORDER BY distance LIMIT 1""", (result[1],result[0]))
+                    res = cr.dictfetchone()
+                    part_ids.append(res['id'])
+
                 total = 0
                 toassign = []
                 for part2 in self.pool.get('res.partner').browse(cr, uid, part_ids, context=context):
                     total += part2.partner_weight
                     toassign.append( (part2.id, total) )
+                random.shuffle(toassign) # avoid always giving the leads to the first ones in db natural order!
                 mypartner = random.randint(0,total)
                 for t in toassign:
                     if mypartner<=t[1]:
