@@ -35,7 +35,7 @@ class common_report_header(object):
         if not (period_id and journal_id):
             return 0.0
         self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
-                        'WHERE period_id IN %s AND journal_id IN %s '+self.query_get_clause+' ',
+                        'WHERE period_id IN %s AND journal_id IN %s ' + self.query_get_clause + ' ',
                         (tuple(period_id), tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -51,7 +51,7 @@ class common_report_header(object):
         if not (period_id and journal_id):
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
-                        'WHERE period_id IN %s AND journal_id IN %s '+self.query_get_clause+'',
+                        'WHERE period_id IN %s AND journal_id IN %s '+ self.query_get_clause+'',
                         (tuple(period_id), tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -111,9 +111,8 @@ class common_report_header(object):
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
-                        'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +' ',
+                        'WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause +' ',
                         (period_id, tuple(journals)))
-
         return self.cr.fetchone()[0] or 0.0
 
     def _get_fiscalyear(self, data):
