@@ -148,6 +148,29 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
                     raise
         return True
 
+    def append_svc(self, service):
+        if not isinstance(service, HTTPDir):
+            raise Exception("Wrong class for http service")
+        
+        pos = len(self.server.vdirs)
+        lastpos = pos
+        while pos > 0:
+            pos -= 1
+            if self.server.vdirs[pos].matches(service.path):
+                lastpos = pos
+            # we won't break here, but search all way to the top, to
+            # ensure there is no lesser entry that will shadow the one
+            # we are inserting.
+        self.server.vdirs.insert(lastpos, service)
+
+    def list_services(self):
+        ret = []
+        for svc in self.server.vdirs:
+            ret.append( ( svc.path, str(svc.handler)) )
+        
+        return ret
+    
+
 class HttpDaemon(BaseHttpDaemon):
     def __init__(self, interface, port):
         super(HttpDaemon, self).__init__(interface, port,
@@ -190,18 +213,25 @@ def reg_http_service(hts, secure_only = False):
         hts must be an HTTPDir
     """
     global httpd, httpsd
-    if not isinstance(hts, HTTPDir):
-        raise Exception("Wrong class for http service")
 
     if httpd and not secure_only:
-        httpd.server.vdirs.append(hts)
+        httpd.append_svc(hts)
 
     if httpsd:
-        httpsd.server.vdirs.append(hts)
+        httpsd.append_svc(hts)
 
     if (not httpd) and (not httpsd):
         netsvc.Logger().notifyChannel('httpd',netsvc.LOG_WARNING,"No httpd available to register service %s" % hts.path)
     return
+
+def list_http_services(protocol=None):
+    global httpd, httpsd
+    if httpd and (protocol == 'http' or protocol == None):
+        return httpd.list_services()
+    elif httpsd and (protocol == 'https' or protocol == None):
+        return httpsd.list_services()
+    else:
+        raise Exception("Incorrect protocol or no http services")
 
 import SimpleXMLRPCServer
 class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
