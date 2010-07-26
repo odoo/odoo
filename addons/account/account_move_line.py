@@ -20,7 +20,6 @@
 ##############################################################################
 import time
 from datetime import datetime
-from operator import itemgetter
 
 import netsvc
 from osv import fields, osv
@@ -192,7 +191,7 @@ class account_move_line(osv.osv):
         # Compute the current move
         move_id = False
         partner_id = False
-        if context.get('journal_id',False) and context.get('period_id',False):
+        if context.get('journal_id', False) and context.get('period_id', False):
             if 'move_id' in fields:
                 cr.execute('select move_id \
                     from \
@@ -208,6 +207,7 @@ class account_move_line(osv.osv):
                     return data
                 else:
                     data['move_id'] = move_id
+
             if 'date' in fields:
                 cr.execute('select date  \
                     from \
@@ -223,7 +223,6 @@ class account_move_line(osv.osv):
                     period = period_obj.browse(cr, uid, context['period_id'],
                             context=context)
                     data['date'] = period.date_start
-
         if not move_id:
             return data
 
@@ -463,6 +462,7 @@ class account_move_line(osv.osv):
                         context=context)
                 dt = period.date_start
         return dt
+
     def _get_currency(self, cr, uid, context={}):
         if not context.get('journal_id', False):
             return False
@@ -795,6 +795,31 @@ class account_move_line(osv.osv):
             return j+(p and (':'+p) or '')
         return False
 
+#    def onchange_date(self, cr, user, ids, date, context={}):
+#        """
+#        Returns a dict that contains new values and context
+#        @param cr: A database cursor
+#        @param user: ID of the user currently logged in
+#        @param date: latest value from user input for field date
+#        @param args: other arguments
+#        @param context: context arguments, like lang, time zone
+#        @return: Returns a dict which contains new values, and context
+#        """
+#        res = {}
+#        period_pool = self.pool.get('account.period')
+#        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+#        if pids:
+#            res.update({
+#                'period_id':pids[0]
+#            })
+#            context.update({
+#                'period_id':pids[0]
+#            })
+#        return {
+#            'value':res,
+#            'context':context,
+#        }
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
@@ -857,11 +882,14 @@ class account_move_line(osv.osv):
             elif field == 'credit':
                 attrs.append('sum="Total credit"')
             elif field == 'account_tax_id':
-                attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
+                attrs.append('domain="[(\'parent_id\',\'=\',False), (\'type_tax_use\',\'=\',context.get(journal_id.type, \'sale\'))]"')
             elif field == 'account_id' and journal.id:
                 attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
             elif field == 'partner_id':
                 attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
+#            elif field == 'date':
+#                attrs.append('on_change="onchange_date(date)"')
+
 #            if field.readonly:
 #                attrs.append('readonly="1"')
 #            if field.required:
@@ -907,6 +935,7 @@ class account_move_line(osv.osv):
     def _check_date(self, cr, uid, vals, context=None, check=True):
         if context is None:
             context = {}
+        journal_id = False
         if 'date' in vals.keys():
             if 'journal_id' in vals and 'journal_id' not in context:
                 journal_id = vals['journal_id']
@@ -1094,7 +1123,7 @@ class account_move_line(osv.osv):
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
-        if vals.get('account_tax_id',False):
+        if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
             total = vals['debit'] - vals['credit']
             if journal.refund_journal:
@@ -1167,7 +1196,7 @@ class account_move_line(osv.osv):
         if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
-                self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
+                rs = self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
         return result
 account_move_line()
 
