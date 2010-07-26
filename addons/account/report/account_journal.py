@@ -107,7 +107,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return 'Date'
         elif self.sort_selection == 'ref':
             return 'Reference Number'
-        return super(journal_print ,self)._get_sortby(data)
+        return 'Date'
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header='internal')
 

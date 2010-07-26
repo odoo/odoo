@@ -229,6 +229,13 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
 
+    def _get_sortby(self, data):
+        if self.sortby == 'sort_date':
+            return 'Date'
+        elif self.sortby == 'sort_journal_partner':
+            return 'Journal & Partner'
+        return 'Date'
+
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header='internal')
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger, header='internal')
 

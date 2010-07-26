@@ -282,6 +282,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
             ok = ok and (not action.trg_state_from or action.trg_state_from==obj.state)
         if state_to:
             ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
+        elif action.trg_state_to:
+            ok = False
         reg_name = action.regex_name
         result_name = True
         if reg_name:
