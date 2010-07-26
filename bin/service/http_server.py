@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright P. Christeas <p_christ@hol.gr> 2008,2009
+# Copyright P. Christeas <p_christ@hol.gr> 2008-2010
+# Copyright 2010 OpenERP SA. (http://www.openerp.com)
 #
 #
 # WARNING: This program as such is intended to be used by professional
