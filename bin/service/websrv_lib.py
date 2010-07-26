@@ -229,7 +229,7 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
                 return
         mname = 'do_' + fore.command
         if not hasattr(fore, mname):
-            fore.send_error(501, "Unsupported method (%r)" % fore.command)
+            self.send_error(501, "Unsupported method (%r)" % fore.command)
             return
         fore.close_connection = 0
         method = getattr(fore, mname)
