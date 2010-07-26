@@ -175,7 +175,19 @@ class FixSendError:
         if self.command != 'HEAD' and code >= 200 and code not in (204, 304):
             self.wfile.write(content)
 
-class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
+class HttpOptions:
+    _HTTP_OPTIONS = 'OPTIONS'
+
+    def do_OPTIONS(self):
+        """return the list of capabilities """
+
+        self.send_response(200)
+        self.send_header("Content-Length", 0)
+
+        self.send_header('Allow', self._HTTP_OPTIONS)
+        self.end_headers()
+
+class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
     """ this is a multiple handler, that will dispatch each request
         to a nested handler, iff it matches
 
@@ -229,6 +241,9 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
                 return
         mname = 'do_' + fore.command
         if not hasattr(fore, mname):
+            if fore.command == 'OPTIONS':
+                self.do_OPTIONS()
+                return
             self.send_error(501, "Unsupported method (%r)" % fore.command)
             return
         fore.close_connection = 0
@@ -332,6 +347,14 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
             self.log_message("Could not parse rawline.")
             return
         # self.parse_request(): # Do NOT parse here. the first line should be the only
+        
+        if self.path == '*' and self.command == 'OPTIONS':
+            # special handling of path='*', must not use any vdir at all.
+            if not self.parse_request():
+                return
+            self.do_OPTIONS()
+            return
+            
         for vdir in self.server.vdirs:
             p = vdir.matches(self.path)
             if p == False:
