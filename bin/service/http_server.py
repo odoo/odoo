@@ -40,6 +40,7 @@ import os
 import select
 import socket
 import xmlrpclib
+import logging
 
 from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 
@@ -83,21 +84,31 @@ class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer)
     def handle_error(self, request, client_address):
         """ Override the error handler
         """
-        import traceback
-        netsvc.Logger().notifyChannel("init", netsvc.LOG_ERROR,"Server error in request from %s:\n%s" %
-            (client_address,traceback.format_exc()))
+        
+        logging.getLogger("init").exception("Server error in request from %s:" % (client_address,))
 
-class MultiHandler2(MultiHTTPHandler):
+class HttpLogHandler:
+    """ helper class for uniform log handling
+    Please define self._logger at each class that is derived from this
+    """
+    _logger = None
+    
     def log_message(self, format, *args):
-        netsvc.Logger().notifyChannel('http',netsvc.LOG_DEBUG,format % args)
+        self._logger.debug(format % args) # todo: perhaps other level
 
     def log_error(self, format, *args):
-        netsvc.Logger().notifyChannel('http',netsvc.LOG_ERROR,format % args)
+        self._logger.error(format % args)
+
+    def log_request(self, code='-', size='-'):
+        self._logger.debug('"%s" %s %s',
+                        self.requestline, str(code), str(size))
+    
+class MultiHandler2(HttpLogHandler, MultiHTTPHandler):
+    _logger = logging.getLogger('http')
 
 
-class SecureMultiHandler2(SecureMultiHTTPHandler):
-    def log_message(self, format, *args):
-        netsvc.Logger().notifyChannel('https',netsvc.LOG_DEBUG,format % args)
+class SecureMultiHandler2(HttpLogHandler, SecureMultiHTTPHandler):
+    _logger = logging.getLogger('https')
 
     def getcert_fnames(self):
         tc = tools.config
@@ -105,13 +116,9 @@ class SecureMultiHandler2(SecureMultiHTTPHandler):
         fkey = tc.get_misc('httpsd','sslkey', 'ssl/server.key')
         return (fcert,fkey)
 
-    def log_message(self, format, *args):
-        netsvc.Logger().notifyChannel('http',netsvc.LOG_DEBUG,format % args)
-
-    def log_error(self, format, *args):
-        netsvc.Logger().notifyChannel('http',netsvc.LOG_ERROR,format % args)
-
 class BaseHttpDaemon(threading.Thread, netsvc.Server):
+    _RealProto = '??'
+
     def __init__(self, interface, port, handler):
         threading.Thread.__init__(self)
         netsvc.Server.__init__(self)
@@ -123,10 +130,11 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
             self.server.vdirs = []
             self.server.logRequests = True
             self.server.timeout = self._busywait_timeout
+            logging.getLogger("web-services").info(
+                        "starting %s service at %s port %d" %
+                        (self._RealProto, interface or '0.0.0.0', port,))
         except Exception, e:
-            netsvc.Logger().notifyChannel(
-                'httpd', netsvc.LOG_CRITICAL,
-                "Error occur when starting the server daemon: %s" % (e,))
+            logging.getLogger("httpd").exception("Error occured when starting the server daemon.")
             raise
 
     @property
@@ -174,28 +182,21 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
     
 
 class HttpDaemon(BaseHttpDaemon):
+    _RealProto = 'HTTP'
     def __init__(self, interface, port):
         super(HttpDaemon, self).__init__(interface, port,
                                          handler=MultiHandler2)
-        netsvc.Logger().notifyChannel(
-            "web-services", netsvc.LOG_INFO,
-            "starting HTTP service at %s port %d" %
-            (interface or '0.0.0.0', port,))
 
 class HttpSDaemon(BaseHttpDaemon):
+    _RealProto = 'HTTPS'
     def __init__(self, interface, port):
         try:
             super(HttpSDaemon, self).__init__(interface, port,
                                               handler=SecureMultiHandler2)
         except SSLError, e:
-            netsvc.Logger().notifyChannel(
-                'httpd-ssl', netsvc.LOG_CRITICAL,
-                "Can not load the certificate and/or the private key files")
+            logging.getLogger('httpsd').exception( \
+                        "Can not load the certificate and/or the private key files")
             raise
-        netsvc.Logger().notifyChannel(
-            "web-services", netsvc.LOG_INFO,
-            "starting HTTPS service at %s port %d" %
-            (interface or '0.0.0.0', port,))
 
 httpd = None
 httpsd = None
@@ -223,7 +224,7 @@ def reg_http_service(hts, secure_only = False):
         httpsd.append_svc(hts)
 
     if (not httpd) and (not httpsd):
-        netsvc.Logger().notifyChannel('httpd',netsvc.LOG_WARNING,"No httpd available to register service %s" % hts.path)
+        logging.getLogger('httpd').warning("No httpd available to register service %s" % hts.path)
     return
 
 def list_http_services(protocol=None):
@@ -236,18 +237,17 @@ def list_http_services(protocol=None):
         raise Exception("Incorrect protocol or no http services")
 
 import SimpleXMLRPCServer
-class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,HttpLogHandler,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     rpc_paths = []
     protocol_version = 'HTTP/1.1'
+    _logger = logging.getLogger('xmlrpc')
+
     def _dispatch(self, method, params):
         try:
             service_name = self.path.split("/")[-1]
             return self.dispatch(service_name, method, params)
         except netsvc.OpenERPDispatcherException, e:
             raise xmlrpclib.Fault(tools.exception_to_unicode(e.exception), e.traceback)
-
-    def log_message(self, format, *args):
-        netsvc.Logger().notifyChannel('xmlrpc',netsvc.LOG_DEBUG_RPC,format % args)
 
     def handle(self):
         pass
@@ -267,15 +267,15 @@ def init_xmlrpc():
         # Example of http file serving:
         # reg_http_service(HTTPDir('/test/',HTTPHandler))
         reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler))
-        netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO,
-                                      "Registered XML-RPC over HTTP")
+        logging.getLogger("web-services").info("Registered XML-RPC over HTTP")
 
     if tools.config.get('xmlrpcs', False):
         reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler, True))
-        netsvc.Logger().notifyChannel('web-services', netsvc.LOG_INFO,
-                                      "Registered XML-RPC over HTTPS")
+        logging.getLogger("web-services").info("Registered XML-RPC over HTTPS")
 
-class StaticHTTPHandler(HTTPHandler):
+class StaticHTTPHandler(HttpLogHandler, HTTPHandler):
+    _logger = logging.getLogger('httpd')
+
     def __init__(self,request, client_address, server):
         HTTPHandler.__init__(self,request,client_address,server)
         dir_path = tools.config.get_misc('static-http', 'dir_path', False)
@@ -313,8 +313,8 @@ def init_static_http():
     
     reg_http_service(HTTPDir(base_path,StaticHTTPHandler))
     
-    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO,
-            "Registered HTTP dir %s for %s" % (dir_path, base_path))
+    logging.getLogger("web-services").info("Registered HTTP dir %s for %s" % \
+                        (dir_path, base_path))
 
 class OerpAuthProxy(AuthProxy):
     """ Require basic authentication..
@@ -333,7 +333,6 @@ class OerpAuthProxy(AuthProxy):
         try:
             if not db:
                 db = handler.get_db_from_path(path)
-            print "Got db:",db
         except Exception:
             if path.startswith('/'):
                 path = path[1:]
@@ -378,10 +377,10 @@ class OpenERPAuthProvider(AuthProvider):
                 return False
             return (user, passwd, db, uid)
         except Exception,e:
-            netsvc.Logger().notifyChannel("auth",netsvc.LOG_DEBUG,"Fail auth:"+ str(e))
+            logging.getLogger("auth").debug("Fail auth: %s" % e )
             return False
 
-    def log(self, msg):
-        netsvc.Logger().notifyChannel("auth",netsvc.LOG_INFO,msg)
+    def log(self, msg, lvl=logging.INFO):
+        logging.getLogger("auth").log(lvl,msg)
 
 #eof
