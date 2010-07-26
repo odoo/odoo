@@ -133,11 +133,12 @@ class account_common_report(osv.osv_memory):
             first_period = self.pool.get('account.period').search(cr, uid, [], order='date_start', limit=1)[0]
             result_initial_bal['periods'] = self._build_periods(cr, uid, first_period, data['form']['period_from'])
         else:
-            fiscal_date_start = fiscal_obj.browse(cr, uid, [data['form']['fiscalyear_id']], context=context)[0].date_start
-            result_initial_bal['empty_fy_allow'] = True #Improve me => there should be something generic in account.move.line -> query get
-            result_initial_bal['fiscalyear'] = fiscal_obj.search(cr, uid, [('date_stop', '<', fiscal_date_start), ('state', '=', 'draft')], context=context)
-            result_initial_bal['date_from'] = '0001-01-01'
-            result_initial_bal['date_to'] = (datetime.datetime.strptime(fiscal_date_start, "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
+            if data['form']['fiscalyear_id']:
+                fiscal_date_start = fiscal_obj.browse(cr, uid, [data['form']['fiscalyear_id']], context=context)[0].date_start
+                result_initial_bal['empty_fy_allow'] = True #Improve me => there should be something generic in account.move.line -> query get
+                result_initial_bal['fiscalyear'] = fiscal_obj.search(cr, uid, [('date_stop', '<', fiscal_date_start), ('state', '=', 'draft')], context=context)
+                result_initial_bal['date_from'] = '0001-01-01'
+                result_initial_bal['date_to'] = (datetime.datetime.strptime(fiscal_date_start, "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
         return result, result_initial_bal
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
