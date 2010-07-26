@@ -279,7 +279,7 @@ class StaticHTTPHandler(HttpLogHandler, HTTPHandler):
     def __init__(self,request, client_address, server):
         HTTPHandler.__init__(self,request,client_address,server)
         dir_path = tools.config.get_misc('static-http', 'dir_path', False)
-        assert dir_path
+        assert dir_path, "Please specify static-http/dir_path in config, or disable static-httpd!"
         self.__basepath = dir_path
 
     def translate_path(self, path):
@@ -303,7 +303,7 @@ class StaticHTTPHandler(HttpLogHandler, HTTPHandler):
         return path
 
 def init_static_http():
-    if not tools.config.get_misc('static-http','enable', True):
+    if not tools.config.get_misc('static-http','enable', False):
         return
     
     dir_path = tools.config.get_misc('static-http', 'dir_path', False)
