@@ -338,6 +338,7 @@ class Server:
             # timer thread in a list, so that we can abort the start if quitAll
             # is called in the meantime
             t = threading.Timer(1.0, self._late_start)
+            t.name = 'Late start timer for %s' % str(self.__class__)
             Server.__starter_threads.append(t)
             t.start()
 
