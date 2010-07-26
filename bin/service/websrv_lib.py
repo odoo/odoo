@@ -323,6 +323,7 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
             [command, path] = words
             self.close_connection = 1
             if command != 'GET':
+                self.log_error("Junk http request: %s", self.raw_requestline)
                 self.send_error(400,
                                 "Bad HTTP/0.9 request type (%r)" % command)
                 return False
