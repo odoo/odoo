@@ -32,7 +32,6 @@ import time
 from report import report_sxw
 from common_report_header import common_report_header
 import rml_parse
-import pooler
 
 class general_ledger(rml_parse.rml_parse, common_report_header):
     _name = 'report.account.general.ledger'

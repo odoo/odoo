@@ -54,6 +54,8 @@ class account_report_general_ledger(osv.osv_memory):
         if context is None:
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
+        if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
+            data['form'].update({'initial_balance': False})
         if data['form']['landscape']:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True }
         return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data, 'nodestroy':True}
