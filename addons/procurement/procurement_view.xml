@@ -257,7 +257,7 @@
 
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id}"
-            domain="[('product_id', '=', active_id)]"
+            domain="[('procurement_id', '=', active_id)]"
             id="act_procurement_2_stock_warehouse_orderpoint"
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
