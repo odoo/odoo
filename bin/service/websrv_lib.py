@@ -405,6 +405,14 @@ class ConnThreadingMixIn:
         if self.daemon_threads:
             t.setDaemon (1)
         t.start()
+    
+    def _mark_start(self, thread):
+        """ Mark the start of a request thread """
+        pass
+
+    def _mark_end(self, thread):
+        """ Mark the end of a request thread """
+        pass
 
     def _handle_request2(self):
         """Handle one request, without blocking.
@@ -414,8 +422,10 @@ class ConnThreadingMixIn:
         no risk of blocking in get_request().
         """
         try:
+            self._mark_start(threading.currentThread())
             request, client_address = self.get_request()
         except socket.error:
+            self._mark_end(threading.currentThread())
             return
         if self.verify_request(request, client_address):
             try:
@@ -423,5 +433,6 @@ class ConnThreadingMixIn:
             except Exception:
                 self.handle_error(request, client_address)
                 self.close_request(request)
+        self._mark_end(threading.currentThread())
 
 #eof

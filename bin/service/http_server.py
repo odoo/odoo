@@ -72,6 +72,8 @@ class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer)
 
         SimpleXMLRPCDispatcher.__init__(self, allow_none, encoding)
         HTTPServer.__init__(self, addr, requestHandler)
+        
+        self.numThreads = 0
 
         # [Bug #1222790] If possible, set close-on-exec flag; if a
         # method spawns a subprocess, the subprocess shouldn't have
@@ -86,6 +88,12 @@ class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer)
         """
         
         logging.getLogger("init").exception("Server error in request from %s:" % (client_address,))
+
+    def _mark_start(self, thread):
+        self.numThreads += 1
+
+    def _mark_end(self, thread):
+        self.numThreads -= 1
 
 class HttpLogHandler:
     """ helper class for uniform log handling
@@ -157,6 +165,12 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
                 if self.running or e.args[0] != errno.EBADF:
                     raise
         return True
+
+    def stats(self):
+        res = "%sd: " % self._RealProto + ((self.running and "running") or  "stopped")
+        if self.server:
+	    res += ", %d threads" % (self.server.numThreads,)
+        return res
 
     def append_svc(self, service):
         if not isinstance(service, HTTPDir):
