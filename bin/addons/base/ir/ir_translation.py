@@ -132,16 +132,18 @@ class ir_translation(osv.osv):
                         'and type=%s ' \
                         'and name=%s ' \
                         'and src=%s',
-                    (lang, tt, tools.ustr(name), source))
+                    (lang or '', tt, tools.ustr(name), source))
         else:
             cr.execute('select value ' \
                     'from ir_translation ' \
                     'where lang=%s ' \
                         'and type=%s ' \
                         'and name=%s',
-                    (lang, tt, tools.ustr(name)))
+                    (lang or '', tt, tools.ustr(name)))
         res = cr.fetchone()
         trad = res and res[0] or ''
+        if source and not trad:
+            return source
         return trad
 
     def create(self, cursor, user, vals, context=None):
