@@ -19,21 +19,12 @@
         <menuitem id="menu_finance_legal_statement" name="Legal Reports" parent="menu_finance_reporting"/>
         <menuitem id="menu_finance_management_belgian_reports" name="Belgian Reports" parent="menu_finance_reporting"/>
         <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="13"/>
-<<<<<<< TREE
-            <menuitem id="menu_finance_accounting" name="Financial Accounting" parent="menu_finance_configuration" groups="base.group_system"/>
-            <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="base.group_system"/>
-                <menuitem id="menu_analytic" parent="menu_analytic_accounting" name="Accounts"/>
-                <menuitem id="menu_low_level" name="Low Level" parent="menu_finance_accounting"/>
-            <menuitem id="menu_configuration_misc" name="Miscelleanous" parent="menu_finance_configuration" groups="base.group_system"/>
-                <menuitem id="base.menu_action_currency_form" parent="menu_configuration_misc" sequence="20"/>
-=======
         <menuitem id="menu_finance_accounting" name="Financial Accounting" parent="menu_finance_configuration"/>
         <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration"/>
         <menuitem id="menu_analytic" parent="menu_analytic_accounting" name="Accounts"/>
         <menuitem id="menu_low_level" name="Low Level" parent="menu_finance_accounting"/>
         <menuitem id="menu_configuration_misc" name="Miscelleanous" parent="menu_finance_configuration"/>
         <menuitem id="base.menu_action_currency_form" parent="menu_configuration_misc" sequence="20"/>
->>>>>>> MERGE-SOURCE
 <!--        <menuitem id="menu_finance_configuration1" name="Configuration" parent="menu_finance" sequence="80"/>-->
 <!--        <menuitem id="base.menu_action_currency_form" parent="menu_finance_configuration" sequence="20"/>-->
 <!--        <menuitem id="menu_finance_accounting1" name="Financial Accounting" parent="menu_finance_configuration" sequence="80"/>-->
@@ -54,13 +45,13 @@
 
         <menuitem id="menu_finance_statistic_report_statement" name="Statistic Reports" parent="menu_finance_reporting" sequence="300"/>
 
-        <menuitem 
-        parent="account.menu_finance_legal_statement" 
+        <menuitem
+        parent="account.menu_finance_legal_statement"
         id="final_accounting_reports"
         name="Accounting Reports"/>
 
-        <menuitem 
-        parent="account.menu_finance_legal_statement" 
+        <menuitem
+        parent="account.menu_finance_legal_statement"
         id="menu_journals_report"
         name="Journals"/>
 
