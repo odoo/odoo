@@ -297,7 +297,7 @@ def init_xmlrpc():
 
 class StaticHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
     _logger = logging.getLogger('httpd')
-    _HTTP_OPTIONS = 'OPTIONS GET HEAD'
+    _HTTP_OPTIONS = { 'Allow': ['OPTIONS', 'GET', 'HEAD'] }
 
     def __init__(self,request, client_address, server):
         HTTPHandler.__init__(self,request,client_address,server)

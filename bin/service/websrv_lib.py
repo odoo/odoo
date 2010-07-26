@@ -179,16 +179,36 @@ class FixSendError:
             self.wfile.write(content)
 
 class HttpOptions:
-    _HTTP_OPTIONS = 'OPTIONS'
+    _HTTP_OPTIONS = {'Allow': ['OPTIONS' ] }
 
     def do_OPTIONS(self):
         """return the list of capabilities """
 
+        opts = self._HTTP_OPTIONS
+        nopts = self._prep_OPTIONS(opts)
+        if nopts:
+            opts = nopts
+
         self.send_response(200)
         self.send_header("Content-Length", 0)
 
-        self.send_header('Allow', self._HTTP_OPTIONS)
+        for key, value in opts.items():
+            if isinstance(value, basestring):
+                self.send_header(key, value)
+            elif isinstance(value, (tuple, list)):
+                self.send_header(key, ', '.join(value))
         self.end_headers()
+
+    def _prep_OPTIONS(self, opts):
+        """Prepare the OPTIONS response, if needed
+        
+        Sometimes, like in special DAV folders, the OPTIONS may contain
+        extra keywords, perhaps also dependant on the request url. 
+        @param the options already. MUST be copied before being altered
+        @return the updated options.
+        
+        """
+        return opts
 
 class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
     """ this is a multiple handler, that will dispatch each request
