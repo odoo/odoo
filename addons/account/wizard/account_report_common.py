@@ -38,26 +38,10 @@ class account_common_report(osv.osv_memory):
         'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by:", required=True),
         'period_from': fields.many2one('account.period', 'Start period'),
         'period_to': fields.many2one('account.period', 'End period'),
-        #not used. Do we really need it? 'period_ids': fields.many2many('account.period', 'ledger_period_rel', 'ledger_id', 'period_id', 'Periods'),
         'journal_ids': fields.many2many('account.journal', 'account_common_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
         'date_from': fields.date("Start Date"),
         'date_to': fields.date("End Date"),
-
-        #'display_account': fields.selection([('bal_mouvement','With movements'), ('bal_all','All'), ('bal_solde','With balance is not equal to 0')],"Display accounts"),
-        #'amount_currency': fields.boolean("With Currency"),
-        #'company_id': fields.many2one('res.company', 'Company', required=True),
-    }
-
-#    def _get_company(self, cr, uid, context=None):
-#        user_obj = self.pool.get('res.users')
-#        company_obj = self.pool.get('res.company')
-#        if context is None:
-#            context = {}
-#        user = user_obj.browse(cr, uid, uid, context=context)
-#        if user.company_id:
-#           return user.company_id.id
-#        else:
-#           return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
+                }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')
@@ -94,14 +78,11 @@ class account_common_report(osv.osv_memory):
         return self.pool.get('account.journal').search(cr, uid ,[])
 
     _defaults = {
-#            'company_id' : _get_company,
-#            'display_account' : 'bal_all',
             'fiscalyear_id' : _get_fiscalyear,
-#            'amount_currency' : True,
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
-    }
+                }
 
     def _build_periods(self, cr, uid, period_from, period_to):
         period_obj = self.pool.get('account.period')

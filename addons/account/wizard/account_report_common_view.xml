@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <record id="account_common_report_view" model="ir.ui.view">
             <field name="name">Common Report</field>
             <field name="model">account.common.report</field>
@@ -47,41 +48,6 @@
             <field name="view_id" ref="account_common_report_view"/>
             <field name="target">new</field>
         </record>
-
-        <!--<menuitem icon="STOCK_PRINT" name="Common report" parent="account.menu_generic_report" action="action_account_common_menu" id="menu_account_common"/> -->
-
-<!--
-        <record id="action_account_general_ledger_report" model="ir.actions.act_window">
-            <field name="name">General Ledger</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.general.ledger.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="account_general_ledger_report_view"/>
-            <field name="target">new</field>
-        </record>
-
-        <record model="ir.values" id="account_general_ledger_report_values">
-            <field name="model_id" ref="account.model_account_account" />
-            <field name="object" eval="1" />
-            <field name="name">Account General Ledger</field>
-            <field name="key2">client_print_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_general_ledger_report'))" />
-            <field name="key">action</field>
-            <field name="model">account.account</field>
-        </record>
-
-
-        <record id="action_account_general_ledger_menu" model="ir.actions.act_window">
-            <field name="name">Select Chart</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.general.ledger.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="account_general_ledger_report_view1"/>
-            <field name="target">new</field>
-        </record>
--->
 
     </data>
 </openerp>

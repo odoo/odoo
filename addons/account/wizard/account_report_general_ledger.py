@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
 
 class account_report_general_ledger(osv.osv_memory):
     _inherit = "account.common.report"
