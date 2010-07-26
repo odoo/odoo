@@ -19,7 +19,6 @@
 #
 ##############################################################################
 from osv import osv, fields
-from tools.translate import _
 
 class account_central_journal(osv.osv_memory):
     _name = 'account.central.journal'
@@ -33,7 +32,7 @@ class account_central_journal(osv.osv_memory):
                 'report_name': 'account.central.journal',
                 'datas': data,
                 'nodestroy':True,
-        }
+                }
 
 account_central_journal()
 
