@@ -253,7 +253,10 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
         except (AuthRejectedExc, AuthRequiredExc):
             raise
         except Exception, e:
-            self.log_error("Could not run %s: %s", mname, e)
+            if hasattr(self, 'log_exception'):
+                self.log_exception("Could not run %s", mname)
+            else:
+                self.log_error("Could not run %s: %s", mname, e)
             self.send_error(500, "Internal error")
             # may not work if method has already sent data
             fore.close_connection = 1

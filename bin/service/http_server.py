@@ -106,6 +106,9 @@ class HttpLogHandler:
 
     def log_error(self, format, *args):
         self._logger.error(format % args)
+        
+    def log_exception(self, format, *args):
+        self._logger.exception(format, *args)
 
     def log_request(self, code='-', size='-'):
         self._logger.log(netsvc.logging.DEBUG_RPC, '"%s" %s %s',
