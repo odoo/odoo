@@ -48,7 +48,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_sortby': self._get_sortby,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
-            'print_data':self._print_data,             
+            'get_currency':self._get_currency,             
         })
 
     def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
@@ -89,9 +89,9 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).fiscalyear_id.name
         return super(journal_print ,self)._get_fiscalyear(data) 
                        
-    def _print_data(self, data):
+    def _get_currency(self, data):
         if data['model']=='account.journal.period':
-           return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).journal_id.currency or False
+            return True
         return data['form']['amount_currency']             
 report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/central_journal.rml', parser=journal_print, header='internal')
 
