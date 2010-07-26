@@ -230,7 +230,17 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
             return
         fore.close_connection = 0
         method = getattr(fore, mname)
-        method()
+        try:
+            method()
+        except Exception, e:
+            self.log_error("Could not run %s: %s" % (mname, e))
+            fore.send_error(500, "Internal error")
+            # may not work if method has already sent data
+            fore.close_connection = 1
+            if hasattr(fore, '_flush'):
+                fore._flush()
+            return
+        
         if fore.close_connection:
             # print "Closing connection because of handler"
             self.close_connection = fore.close_connection
