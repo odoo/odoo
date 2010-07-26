@@ -71,7 +71,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'get_filter': self._get_filter,
             'get_sortby': self._get_sortby,
             'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,            
+            'get_end_date':self._get_end_date,
         })
         self.context = context
 
@@ -88,7 +88,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             num_entry = self.cr.fetchone()[0] or 0
             sold_account = self._sum_balance_account(child_account,form)
             self.sold_accounts[child_account.id] = sold_account
-            if form['display_account'] == 'mouvement':
+            if form['display_account'] == 'movement':
                 if child_account.type != 'view' and num_entry <> 0 :
                     res.append(child_account)
             elif form['display_account'] == 'balance':

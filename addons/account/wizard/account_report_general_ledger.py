@@ -28,7 +28,7 @@ class account_report_general_ledger(osv.osv_memory):
     _description = "General Ledger Report"
 
     _columns = {
-        'display_account': fields.selection([('all','All'), ('mouvement','With movements'),
+        'display_account': fields.selection([('all','All'), ('movement','With movements'),
                          ('balance','With balance is not equal to 0'),
                          ],'Display accounts', required=True),
         'landscape': fields.boolean("Landscape Mode"),
