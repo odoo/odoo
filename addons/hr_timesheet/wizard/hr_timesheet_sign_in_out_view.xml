@@ -70,11 +70,13 @@
 					    <field name="date_start"/>
 					    <field name="server_date"/>
 					    <separator string="Work done in the last period" colspan="4" />
-					    <field name="account_id" colspan="3"/>
-					    <field name="info" colspan="3"/>
+					    <field name="account_id" colspan="2"/>
+					    <field name="info" colspan="2"/>
 					    <field name="date"/>
 					    <label string="(Keep empty for current_time)" colspan="2"/>
-					    <field name="analytic_amount"/>                	</group>
+					    <field name="analytic_amount"/>
+					</group>
+					<separator string="" colspan="4" />
                     <group colspan="4" col="6">
                     	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
                     	<button icon="gtk-ok" string="Change Work" name="sign_out_result" type="object"/>
