@@ -142,6 +142,9 @@ class noconnection:
     def makefile(self, mode, bufsize):
         return None
 
+    def close(self):
+        pass
+
 class dummyconn:
     def shutdown(self, tru):
         pass
