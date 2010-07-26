@@ -29,7 +29,7 @@ class account_print_journal(osv.osv_memory):
     _columns = {
         'sort_selection': fields.selection([('date', 'Date'),
                                             ('ref', 'Reference Number'),],
-                                              'Entries Sorted By', required=True),
+                                            'Entries Sorted By', required=True),
                 }
     _defaults = {
         'sort_selection': 'date',
@@ -45,7 +45,7 @@ class account_print_journal(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
-        return { 'type': 'ir.actions.report.xml', 'report_name': 'account.journal.period.print', 'datas': data, 'nodestroy':True, }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'account.journal.period.print', 'datas': data, 'nodestroy':True}
 
 account_print_journal()
 

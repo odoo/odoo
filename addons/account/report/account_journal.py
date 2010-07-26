@@ -35,6 +35,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         super(journal_print, self).__init__(cr, uid, name, context=context)
         self.period_ids = []
         self.journal_ids = []
+        self.sort_selection = 'date'
         self.localcontext.update( {
             'time': time,
             'lines': self.lines,
@@ -49,15 +50,13 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_fiscalyear': self._get_fiscalyear,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
-            'print_data':self._print_data,    
+            'print_data':self._print_data,
             'get_sortby': self._get_sortby,
+                    })
 
-        })
-
-    def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
+    def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
         self.query_get_clause = ''
-        self.sort_selection = 'date'
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
             self.query_get_clause = 'AND '
@@ -87,29 +86,29 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.account_currency = result[0]
         else:
             self.account_currency = False
-        
+
     def _get_fiscalyear(self, data):
         if data['model']=='account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).fiscalyear_id.name
-        return super(journal_print ,self)._get_fiscalyear(data) 
-                       
+        return super(journal_print ,self)._get_fiscalyear(data)
+
     def _get_account(self, data):
         if data['model'] == 'account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
         return super(journal_print ,self)._get_account(data)
 
     def _print_data(self, data):
-        if data['model']=='account.journal.period':
+        if data['model'] == 'account.journal.period':
            return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).journal_id.currency or False
         return data['form']['amount_currency']
-            
+
     def _get_sortby(self, data):
-        if data.get('form', False) and data['form'].get('sort_selection', False):
-            if data['form']['sort_selection']=='date':
-                return 'Date'
-            elif data['form']['sort_selection'] == 'ref':
-                return 'Reference Number'
+        if self.sort_selection == 'date':
+            return 'Date'
+        elif self.sort_selection == 'ref':
+            return 'Reference Number'
         return super(journal_print ,self)._get_sortby(data)
+
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
