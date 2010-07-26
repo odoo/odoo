@@ -95,8 +95,10 @@ class hr_timesheet_sheet(osv.osv):
     _table = 'hr_timesheet_sheet_sheet'
     _order = "id desc"
 
-    def _total_day(self, cr, uid, ids, name, args, context):
+    def _total_day(self, cr, uid, ids, name, args, context=None):
         res = {}
+        if context is None:
+            context = {}
         cr.execute('SELECT sheet.id, day.total_attendance, day.total_timesheet, day.total_difference\
                 FROM hr_timesheet_sheet_sheet AS sheet \
                 LEFT JOIN hr_timesheet_sheet_sheet_day AS day \
@@ -564,7 +566,9 @@ class hr_attendance(osv.osv):
         'name': _get_default_date,
     }
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         if 'sheet_id' in context:
             ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, context['sheet_id'])
             if ts.state not in ('draft', 'new'):
@@ -581,6 +585,8 @@ class hr_attendance(osv.osv):
         return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context={}):
+        if context is None:
+            context = {}
         self._check(cr, uid, ids)
         res = super(hr_attendance,self).write(cr, uid, ids, vals, context=context)
         if 'sheet_id' in context:

@@ -48,10 +48,10 @@ class mrp_workcenter(osv.osv):
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
-        'costs_hour': fields.float('Cost per hour'),
+        'costs_hour': fields.float('Cost per hour', help="Specify Cost of Workcenter per hour."),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
-        'costs_cycle': fields.float('Cost per cycle'),
+        'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Workcenter per cycle."),
         'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
@@ -201,7 +201,6 @@ class mrp_bom(osv.osv):
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production planning."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
-        'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
         'child_complete_ids': fields.function(_child_compute, relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
@@ -209,7 +208,7 @@ class mrp_bom(osv.osv):
         'active': lambda *a: 1,
         'product_efficiency': lambda *a: 1.0,
         'product_qty': lambda *a: 1.0,
-        'product_rounding': lambda *a: 1.0,
+        'product_rounding': lambda *a: 0.0,
         'type': lambda *a: 'normal',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),
     }
@@ -270,11 +269,11 @@ class mrp_bom(osv.osv):
                 max_prop = prop
         return result
 
-    def _bom_explode(self, cr, uid, bom, factor, properties, addthis=False, level=0):
+    def _bom_explode(self, cr, uid, bom, factor, properties=[], addthis=False, level=0):
         """ Finds Products and Workcenters for related BoM for manufacturing order.
         @param bom: BoM of particular product.
         @param factor: Factor of product UoM.
-        @param properties: A dictionary for contextual values.
+        @param properties: A List of properties Ids.
         @param addthis: If BoM found then True else False.
         @param level: Depth level to find BoM lines starts from 10.
         @return: result: List of dictionaries containing product details.
@@ -325,25 +324,6 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
-
-    def set_indices(self, cr, uid, ids, context={}):
-        """ Sets Indices.
-        @return: True
-        """
-        if not ids or (ids and not ids[0]):
-            return True
-        res = self.read(cr, uid, ids, ['revision_ids', 'revision_type'])
-        rev_ids = res[0]['revision_ids']
-        idx = 1
-        new_idx = []
-        bom_rev_obj = self.pool.get('mrp.bom.revision')
-        for rev_id in rev_ids:
-            if res[0]['revision_type'] == 'numeric':
-                bom_rev_obj.write(cr, uid, [rev_id], {'indice': idx})
-            else:
-                bom_rev_obj.write(cr, uid, [rev_id], {'indice': "%c" %(idx+96,)})
-            idx += 1
-        return True
 
 mrp_bom()
 
@@ -657,13 +637,11 @@ class mrp_production(osv.osv):
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
 
-            message = ("%s %s %s %s %s %s") % (
-                    _('Manufacturing Order '),
-                    name,
-                    _("scheduled the"),
-                    datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
-                    _("for"),
-                    production.product_id.name)
+            message = ("Manufacturing Order '%s' for %s %s is Ready to produce.") % (
+                                    name,
+                                    production.product_qty, 
+                                    production.product_id.name, 
+                                   )
             self.log(cr, uid, production_id, message)
         return True
 
@@ -762,7 +740,7 @@ class mrp_production(osv.osv):
         
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
-        message = _('Manufacturing order ') + " '" + production.name + "' "+ _("is finished.")
+        message = str(production_qty) + " '[" + production.product_id.code + '] ' + production.product_id.name + _("' have been manufactured for ") + production.name
         self.log(cr, uid, production_id, message)
         return True
 
@@ -932,7 +910,16 @@ class mrp_production(osv.osv):
                 proc_ids.append(proc_id)                
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
-            message = _('Manufacturing order ') + " '" + production.name + "' "+ _("is confirmed.")
+            message = ("%s '%s' %s %s %s %s %s %s.") % (
+                                    _('Manufacturing Order'), 
+                                    production.name,
+                                    _('for'), 
+                                    production.product_qty, 
+                                    production.product_id.name, 
+                                    _('scheduled for date '), 
+                                    datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
+                                    _('is waiting') 
+                                   )
             self.log(cr, uid, production.id, message)
         return picking_id
 

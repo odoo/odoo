@@ -6,7 +6,7 @@
             <field name="model">account.voucher</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Accounting Vouchers">
+                <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open','proforma','posted','recheck','audit')" string="Accounting Vouchers">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="name"/>
@@ -139,12 +139,24 @@
             </field>
         </record>
 
+        <record id="account_cash_statement_graph" model="ir.ui.view">
+            <field name="name">account.voucher.graph</field>
+            <field name="model">account.voucher</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Voucher Statistics" type="bar">
+                    <field name="date"/>
+                    <field name="amount" operator="+"/>
+                </graph>
+            </field>
+         </record>
+        
         <!--  Receipt Vouchers -->
         <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list">
             <field name="name">Receivable Vouchers</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('journal_id.type','=','sale')]</field>
             <field name="context">{'type':'sale'}</field>
@@ -158,7 +170,7 @@
             <field name="name">Payable Vouchers</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('journal_id.type','=','purchase')]</field>
             <field name="context">{'type':'purchase'}</field>
@@ -172,7 +184,7 @@
             <field name="name">Journal Vouchers</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="context">{'type':'general'}</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="search_view_id" ref="view_voucher_filter"/>

@@ -291,8 +291,7 @@ class procurement_order(osv.osv):
             if not procurement.product_id.seller_ids:
                 cr.execute('update procurement_order set message=%s where id=%s', (_('No supplier defined for this product !'), procurement.id))
                 return False
-            partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id and partner_id.sequence])
-            partner = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].name or False
+            partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:

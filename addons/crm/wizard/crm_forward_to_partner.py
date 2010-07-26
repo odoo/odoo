@@ -187,12 +187,14 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         email_re = r'([^ ,<@]+@[^> ,]+)'
         email_cc = re.findall(email_re, case.email_cc or '')
         new_cc = []
+        if case.email_cc:
+            new_cc.append(case.email_cc)
         for to in this.email_to.split(','):
             email_to = re.findall(email_re, to)
             email_to = email_to and email_to[0] or ''
             if email_to not in email_cc:
                 new_cc.append(to)
-        to_write.update({'email_cc' : case.email_cc or '' + ','.join(new_cc)})
+        to_write.update({'email_cc' : ', '.join(new_cc) })
         case_pool.write(cr, uid, case.id, to_write, context=context)
 
         return {}
@@ -231,7 +233,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]), 
             "Contact: %s" % (pa.name or ''), 
             "Title: %s" % (pa.title or ''), 
-            "Function: %s" % (pa.function and pa.function.name_get()[0][1] or ''), 
+            "Function: %s" % (pa.function or ''), 
             "Street: %s" % (pa.street or ''), 
             "Street2: %s" % (pa.street2 or ''), 
             "Zip: %s" % (pa.zip or ''), 
@@ -242,6 +244,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             "Phone: %s" % (pa.phone or ''), 
             "Fax: %s" % (pa.fax or ''), 
             "Mobile: %s" % (pa.mobile or ''), 
+            "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''), 
+            "Details: %s" % (lead.description or ''), 
             ]
         return "\n".join(body + ['---'])
 

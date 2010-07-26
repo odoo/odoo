@@ -48,6 +48,8 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
+    if isinstance(fileloc, unicode):
+        fileloc = fileloc.encode('utf-8')
     href=doc.createElement("D:href")
     davpath = self._dataclass.parent.get_davpath()
     hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
@@ -126,6 +128,8 @@ def mk_propname_response(self,uri,propnames,doc):
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
+    if isinstance(fileloc, unicode):
+        fileloc = fileloc.encode('utf-8')
     href=doc.createElement("D:href")
     davpath = self._dataclass.parent.get_davpath()
     hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))

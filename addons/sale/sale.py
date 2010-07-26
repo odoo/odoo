@@ -561,13 +561,12 @@ class sale_order(osv.osv):
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
+            message = _('Sale order') + " '" + sale.name + _(" is cancelled")
+            self.log(cr, uid, sale.id, message)
         self.write(cr, uid, ids, {'state': 'cancel'})
-        message = _('Sale order') + " '" + sale.name + "' "+ _("created on")+" '" +sale.create_date + _(" is cancelled")
-        self.log(cr, uid, id, message)
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        product=[]
         product_obj = self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
@@ -575,11 +574,8 @@ class sale_order(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            for line in o.order_line:
-                product.append(line.product_id.default_code)
-        params = ', '.join(map(lambda x : str(x),product))
-        message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
-        self.log(cr, uid, id, message)
+            message = _('Quotation') + " '" + o.name + "' "+ _("is converted to Sale order")
+            self.log(cr, uid, o.id, message)
         return True
 
     def procurement_lines_get(self, cr, uid, ids, *args):
@@ -659,7 +655,6 @@ class sale_order(osv.osv):
                             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
                             'company_id': order.company_id.id,
                         })
-
                     move_id = self.pool.get('stock.move').create(cr, uid, {
                         'name': line.name[:64],
                         'picking_id': picking_id,
@@ -721,7 +716,6 @@ class sale_order(osv.osv):
                             val['state'] = 'manual'
                             break
             self.write(cr, uid, [order.id], val)
-
         return True
 
     def action_ship_end(self, cr, uid, ids, context=None):
@@ -941,10 +935,11 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
-#            if line.order_id.picking_ids:
-#                raise osv.except_osv(
-#                        _('Could not cancel sale order line!'),
-#                        _('You must first cancel stock move attached to this sale order line.'))
+            for pick in line.order_id.picking_ids:
+                if pick.state != 'cancel':
+                    raise osv.except_osv(
+                            _('Could not cancel sale order line!'),
+                            _('You must first cancel all pickings attached with sale order.'))
         message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
         self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})
@@ -952,9 +947,6 @@ class sale_order_line(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Sale order line') + " '" + name + "' "+ _("is confirmed")
-            self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def button_done(self, cr, uid, ids, context=None):
@@ -964,8 +956,6 @@ class sale_order_line(osv.osv):
         res = self.write(cr, uid, ids, {'state': 'done'})
         for line in self.browse(cr, uid, ids, context=context):
             wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
-        message = _('Sale order line') + " '" + line.name + "' "+_("is done")
-        self.log(cr, uid, id, message)
         return res
 
     def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):

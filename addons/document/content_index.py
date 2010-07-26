@@ -153,7 +153,10 @@ class contentIndex(object):
                 if realfname :
                     fname = realfname
                 else:
-                    bname,ext = os.path.splitext(filename)
+                    try:
+                        bname,ext = os.path.splitext(filename or 'test.tmp')
+                    except Exception:
+                        bname, ext = filename, 'tmp'
                     fd, fname = tempfile.mkstemp(suffix=ext)
                     os.write(fd, content)
                     os.close(fd)
