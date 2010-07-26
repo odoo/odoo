@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+        <menuitem id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <menuitem
             id="menu_hr_deshboard"
             name="Human Resources"
@@ -33,7 +33,7 @@
             <field name="view_id" ref="board_hr_form"/>
         </record>
 		<menuitem id="menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>
-		<menuitem icon="terp-graph" id="menu_hr_dasboard" name="Dashboard" parent="menu_hr_reporting" sequence="0"/>
+		<menuitem id="menu_hr_dasboard" name="Dashboard" parent="menu_hr_reporting" sequence="0"/>
         <menuitem
             action="open_board_hr"
             icon="terp-graph"
