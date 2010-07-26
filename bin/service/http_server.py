@@ -287,7 +287,7 @@ def init_xmlrpc():
         reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler, True))
         logging.getLogger("web-services").info("Registered XML-RPC over HTTPS")
 
-class StaticHTTPHandler(HttpLogHandler, HTTPHandler):
+class StaticHTTPHandler(HttpLogHandler, FixSendError, HTTPHandler):
     _logger = logging.getLogger('httpd')
 
     def __init__(self,request, client_address, server):
