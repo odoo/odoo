@@ -74,6 +74,7 @@ class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer)
         HTTPServer.__init__(self, addr, requestHandler)
         
         self.numThreads = 0
+        self.__threadno = 0
 
         # [Bug #1222790] If possible, set close-on-exec flag; if a
         # method spawns a subprocess, the subprocess shouldn't have
@@ -95,6 +96,10 @@ class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer)
     def _mark_end(self, thread):
         self.numThreads -= 1
 
+
+    def _get_next_name(self):
+        self.__threadno += 1
+        return 'http-client-%d' % self.__threadno
 class HttpLogHandler:
     """ helper class for uniform log handling
     Please define self._logger at each class that is derived from this

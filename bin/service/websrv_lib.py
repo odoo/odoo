@@ -439,11 +439,15 @@ class ConnThreadingMixIn:
     # main process
     daemon_threads = False
 
+    def _get_next_name(self):
+        return None
+
     def _handle_request_noblock(self):
         """Start a new thread to process the request."""
         if not threading: # happens while quitting python
             return
-        t = threading.Thread(target = self._handle_request2)
+        n = self._get_next_name()
+        t = threading.Thread(name=n, target = self._handle_request2)
         if self.daemon_threads:
             t.setDaemon (1)
         t.start()
