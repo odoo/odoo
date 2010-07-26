@@ -740,7 +740,8 @@ class mrp_production(osv.osv):
         
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
-        message = str(production_qty) + " '[" + production.product_id.code + '] ' + production.product_id.name + _("' have been manufactured for ") + production.name
+        for (id, name) in self.pool.get('product.product').name_get(cr, uid, [production.product_id.id]):
+            message = str(production_qty) + ' ' + production.product_uom.name +" '" + name + _("' have been manufactured for ") + production.name
         self.log(cr, uid, production_id, message)
         return True
 

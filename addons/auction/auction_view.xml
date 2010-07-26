@@ -1540,7 +1540,7 @@ Object encoded
         <field name="model">report.unclassified.objects</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft','unsold');black:state in ('sold');gray:state in ('paid')"string="Unclassified objects">
+            <tree colors="blue:state in ('draft','unsold');black:state in ('sold');gray:state in ('paid')" string="Unclassified objects">
                 <field name="obj_num" string="Ref" select="1"/>
                 <field name="name" select="1"/>
                 <field name="ach_login"/>
