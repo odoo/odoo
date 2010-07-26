@@ -34,6 +34,8 @@ import netsvc
 import errno
 import threading
 import tools
+import posixpath
+import urllib
 import os
 import select
 import socket
@@ -272,6 +274,47 @@ def init_xmlrpc():
         reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler, True))
         netsvc.Logger().notifyChannel('web-services', netsvc.LOG_INFO,
                                       "Registered XML-RPC over HTTPS")
+
+class StaticHTTPHandler(HTTPHandler):
+    def __init__(self,request, client_address, server):
+        HTTPHandler.__init__(self,request,client_address,server)
+        dir_path = tools.config.get_misc('static-http', 'dir_path', False)
+        assert dir_path
+        self.__basepath = dir_path
+
+    def translate_path(self, path):
+        """Translate a /-separated PATH to the local filename syntax.
+
+        Components that mean special things to the local file system
+        (e.g. drive or directory names) are ignored.  (XXX They should
+        probably be diagnosed.)
+
+        """
+        # abandon query parameters
+        path = path.split('?',1)[0]
+        path = path.split('#',1)[0]
+        path = posixpath.normpath(urllib.unquote(path))
+        words = path.split('/')
+        words = filter(None, words)
+        path = self.__basepath
+        for word in words:
+            if word in (os.curdir, os.pardir): continue
+            path = os.path.join(path, word)
+        return path
+
+def init_static_http():
+    if not tools.config.get_misc('static-http','enable', True):
+        return
+    
+    dir_path = tools.config.get_misc('static-http', 'dir_path', False)
+    assert dir_path
+    
+    base_path = tools.config.get_misc('static-http', 'base_path', '/')
+    
+    reg_http_service(HTTPDir(base_path,StaticHTTPHandler))
+    
+    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO,
+            "Registered HTTP dir %s for %s" % (dir_path, base_path))
 
 class OerpAuthProxy(AuthProxy):
     """ Require basic authentication..
