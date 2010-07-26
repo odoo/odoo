@@ -53,13 +53,11 @@
         'wizard/hr_payroll_create_analytic.xml',
         'wizard/hr_payroll_employees_detail.xml',
         'wizard/hr_payroll_year_salary.xml',
-
     ],
     'test': [
-             'test/payslip.yml',
-             'test/payment_advice.yml',
-             'test/payroll_register.yml',
- 
+         'test/payslip.yml',
+         'test/payment_advice.yml',
+         'test/payroll_register.yml',
     ],
     'demo_xml': [
         'hr_payroll_demo.xml'

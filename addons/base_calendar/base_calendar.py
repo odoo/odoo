@@ -1147,7 +1147,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'active': fields.boolean('Active', help="If the active field is set to \
 true, it will allow you to hide the event alarm information without removing it.")
     }
-
     _defaults = {
             'state': 'tentative',
             'class': 'public',
