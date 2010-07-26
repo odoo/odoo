@@ -305,7 +305,7 @@ class db(netsvc.ExportService):
                 else:
                     cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
                 res = [str(name) for (name,) in cr.fetchall()]
-            except:
+            except Exception:
                 res = []
         finally:
             cr.close()
@@ -497,7 +497,7 @@ GNU Public Licence.
                 try:
                     try:
                         base64_decoded = base64.decodestring(zips[module])
-                    except:
+                    except Exception:
                         l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to read the module %s' % (module,))
                         raise
 
@@ -506,13 +506,13 @@ GNU Public Licence.
                     try:
                         try:
                             tools.extract_zip_file(zip_contents, tools.config['addons_path'] )
-                        except:
+                        except Exception:
                             l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to extract the module %s' % (module, ))
                             rmtree(module)
                             raise
                     finally:
                         zip_contents.close()
-                except:
+                except Exception:
                     l.notifyChannel('migration', netsvc.LOG_ERROR, 'restore the previous version of the module %s' % (module, ))
                     nmp = os.path.join(backup_directory, module)
                     if os.path.isdir(nmp):

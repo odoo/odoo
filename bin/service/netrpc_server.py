@@ -48,7 +48,8 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
             try:
                 self.socket.shutdown(
                     getattr(socket, 'SHUT_RDWR', 2))
-            except Exception: pass
+            except Exception:
+                pass
             # That should garbage-collect and close it, too
             self.sock = None
 
