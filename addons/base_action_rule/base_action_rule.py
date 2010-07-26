@@ -364,17 +364,17 @@ the rule to mark CC(mail to any other person defined in actions)."),
                     continue
 
                 base = False
-                if hasattr(obj, 'create_date') and action.trg_date_type=='create':
+                if action.trg_date_type=='create' and hasattr(obj, 'create_date'):
                     base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif hasattr(obj, 'create_date') and action.trg_date_type=='action_last':
+                elif action.trg_date_type=='action_last' and hasattr(obj, 'create_date'):
                     if hasattr(obj, 'date_action_last') and obj.date_action_last:
                         base = datetime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
                     else:
                         base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif hasattr(obj, 'date_deadline') and action.trg_date_type=='deadline' \
+                elif action.trg_date_type=='deadline' and hasattr(obj, 'date_deadline') \
                                 and obj.date_deadline:
                     base = datetime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
-                elif hasattr(obj, 'date') and action.trg_date_type=='date' and obj.date:
+                elif action.trg_date_type=='date' and hasattr(obj, 'date') and obj.date:
                     base = datetime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
                 if base:
                     fnct = {
