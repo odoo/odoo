@@ -100,7 +100,7 @@ class HttpLogHandler:
         self._logger.error(format % args)
 
     def log_request(self, code='-', size='-'):
-        self._logger.debug('"%s" %s %s',
+        self._logger.log(netsvc.logging.DEBUG_RPC, '"%s" %s %s',
                         self.requestline, str(code), str(size))
     
 class MultiHandler2(HttpLogHandler, MultiHTTPHandler):
