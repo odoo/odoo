@@ -43,7 +43,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
-        super(general_ledger, self).set_context(objects, data, new_ids, report_type=report_type)
+        return super(general_ledger, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def __init__(self, cr, uid, name, context=None):
         if context is None:
