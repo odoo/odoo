@@ -38,11 +38,11 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
 
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
+        self.sortby = data['form']['sortby']
         self.query = data['form']['query_line']
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
-        self.sortby = data['form']['sortby']
-        objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         super(general_ledger, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def __init__(self, cr, uid, name, context=None):
