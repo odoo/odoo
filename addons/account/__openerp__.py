@@ -131,7 +131,6 @@ module named account_vouchers
         'board_account_demo.xml',
     ],
     'test': [
-        'test/account_sequence_test.yml',
         'test/account_customer_invoice.yml',
         'test/account_supplier_invoice.yml',
         'test/account_change_currency.yml',
@@ -141,7 +140,7 @@ module named account_vouchers
         'test/account_invoice_state.yml',
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
-#        'test/account_fiscalyear_close.yml',
+        'test/account_fiscalyear_close.yml',
     ],
     'installable': True,
     'active': False,
