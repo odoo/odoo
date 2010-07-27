@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.board_account_form"/>              
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/vpaned/child1" position="inside"> 
+                <xpath expr="/form/hpaned/child2/action[@string='Aged receivables']" position="before"> 
                     <button colspan="4" icon="terp-purchase" name="%(account_report.action_account_report_tree_view_indicator)d" string="My indicators" type="action"/>
                 </xpath>
             </field>
