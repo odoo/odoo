@@ -190,7 +190,7 @@
     <blockTable colWidths="539.0" style="Table_Heading">
       <tr>
         <td>
-          <para style="terp_header_Centre">[[ get_company(data['form']) ]]</para>
+          <para style="terp_header_Centre">[[ get_company(data) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -211,7 +211,7 @@
       	<td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
     	<td><para style="terp_tblheader_General_Centre">Journals</para></td>        
-        <td><para style="terp_tblheader_General_Centre">Filters By <font>[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font></para></td>
+        <td><para style="terp_tblheader_General_Centre">Filters By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
 		<td><para style="terp_tblheader_General_Centre">Display Account</para></td>  
         <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
@@ -241,7 +241,7 @@
 	        	</tr>
         	 </blockTable>        	 
         	</td>
-		<td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_movement' and 'With movements') or 'With balance is not equal to 0']]</para></td>        	
+		<td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='movement' and 'With movements') or 'With balance is not equal to 0']]</para></td>        	
 		<td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
 	</tr>
 	</blockTable>
