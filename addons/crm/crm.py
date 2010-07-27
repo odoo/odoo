@@ -301,6 +301,13 @@ class crm_case(object):
         self.write(cr, uid, ids, {'state': 'cancel',
                                   'active': True})
         self._action(cr, uid, cases, 'cancel')
+        for case in cases:
+            message = "The " + self._description + " '" + case.name + "' has been Cancelled."
+            #TODO: Need to differentiate lead and opportunity
+#            if hasattr(case, 'type'):
+#                #TO CHECK: hasattr gives warning for other crm objects that don't have field 'type'
+#                message = "The " + (case.type or 'Case').title() + " '" + case.name + "' has been Cancelled."
+            self.log(cr, uid, case.id, message)
         return True
 
     def case_pending(self, cr, uid, ids, *args):
@@ -422,7 +429,7 @@ class crm_case(object):
         rule_obj = self.pool.get('base.action.rule')
         model_obj = self.pool.get('ir.model')
         model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('name','=',model_ids[0])])
+        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
     def format_body(self, body):

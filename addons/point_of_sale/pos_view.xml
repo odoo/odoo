@@ -12,9 +12,9 @@
             <field name="arch" type="xml">
                 <form string="Sales Order POS">
                     <group col="6" colspan="4">
-                        <field name="user_salesman_id" />
+                        <!--field name="user_salesman_id" />
                         <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
-                        <field name="contract_number" groups="base.group_extended"/>
+                        <field name="contract_number" groups="base.group_extended"/> -->
 
                     </group>
                      <notebook colspan="4">
@@ -22,19 +22,20 @@
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
-                                    <field name="qty" />
-                                    <field name="qty_rfd" groups="base.group_extended"/>
+                                    <field name="qty"/>
+                                    <!--<field name="qty" on_change="onchange_qty(qty,price_unit)"/>-->
+                                    <!--field name="qty_rfd" groups="base.group_extended"/-->
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
-                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
+                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
                                     <field name="price_unit" readonly="1"/>
-                                    <field name="notice"/>
-                                    <field name="serial_number"/>
+                                    <field name="notice" on_change="onchange_dis(qty,price_subtotal_incl,discount)"/>
+                                    <!--field name="serial_number"/-->
                                     <field name="price_subtotal" />
-                                    <field name="price_subtotal_incl"/>
+                                    <field name="price_subtotal_incl" sum="Subtotal"/>
                                 </tree>
                                 <form string="Order lines" >
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
-                                    <field name="qty" />
+                                    <field name="qty"/>
                                     <field name="qty_rfd" groups="base.group_extended"/>
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
@@ -47,24 +48,24 @@
                             <group colspan="4" col="7">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="%(action_pos_discount)d" string="D_iscount" icon="gtk-execute" type="action" states="draft"/>
-                                <button name="dummy_button" string="Compute" icon="gtk-execute" type="object" />
+                                <!--button name="%(action_pos_discount)d" string="D_iscount" type="action" states="draft"/>
+                                <button name="dummy_button" string="Compute" type="object" /-->
                             </group>
 
-                            <group colspan="4" col="9" groups="base.group_extended">
-                            <separator colspan="4" string="Validation of the Sale"/>
-                                <newline/>
-                                <field name="state_2" />
-                                <button name="button_validate"
-                                        string="Accept"
-                                        type="object"
-                                     icon="gtk-ok"
-                                    states="paid, draft"
-                                        attrs="{'invisible':[('state_2','=','accepted')]}"/>
-                              </group>
+<!--                            <group colspan="4" col="9" groups="base.group_extended">-->
+<!--                            <separator colspan="4" string="Validation of the Sale"/>-->
+<!--                                <newline/>-->
+<!--                                <field name="state_2" />-->
+<!--                                <button name="button_validate"-->
+<!--                                        string="Accept"-->
+<!--                                        type="object"-->
+<!--                                     icon="gtk-ok"-->
+<!--                                    states="paid, draft"-->
+<!--                                        attrs="{'invisible':[('state_2','=','accepted')]}"/>-->
+<!--                              </group>-->
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
-                                <field name="state"/>
+                                <field name="state" />
                                 <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" />
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
@@ -76,11 +77,12 @@
                         <page string="Order and Payment">
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Order Information" colspan="4"/>
+                                <field name="user_salesman_id" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="shop_id" widget="selection"  />
                                 <field name="name"/>
-                                <field name="user_id" />
-                                <field name="sale_manager" />
+                                <field name="user_id" string="Salesman"/>
+                                <!--field name="sale_manager" /-->
                                 <field name="price_type" />
                             </group>
                             <group colspan="2" col="2" name="Type">
@@ -91,13 +93,14 @@
                                 <field name="type_rec"  colspan="4"/>
                             </group>
                             <group colspan="4">
-                                <separator string="Invoicing" colspan="4"/>
-                                <field name="sale_journal" domain="[('type','=','sale'),('company_id','=',company_id)]"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]"/>
-                                <field name="invoice_id"/>
-                                <group colspan="2" col="4">
-                                    <button name="invoice" icon="gtk-execute" string="Create _Invoice" states="paid"/>
-                                </group>
+<!--                                <separator string="Invoicing" colspan="4"/>-->
+                                <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)" invisible="1"/>
+                                <field name="sale_journal" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
+<!--                                <field name="invoice_id"/>-->
+<!--                                <group colspan="2" col="4">-->
+<!--                                    <button name="invoice" icon="gtk-execute" string="Create _Invoice" states="paid"/>-->
+<!--                                </group>-->
                             </group>
 
                             <field name="statement_ids" colspan="4" nolabel="1">
@@ -172,9 +175,9 @@
             </field>
         </record>
 
-        <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
+        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="3" />
         <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
-        <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="29" />
+        <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
         <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2" name="Products"/>
 
@@ -186,7 +189,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">['|',('state_2','=','to_verify'),('state','=','advance')]</field>
+            <field name="domain">['|',('state','=','advance')]</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_pos_order_filter"/>
 
@@ -743,7 +746,7 @@
         </record>
 
         <menuitem name="Configuration" parent="menu_point_root"
-            id="menu_point_config_product" sequence="6"/>
+            id="menu_point_config_product" sequence="25"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
             <field name="name">Products</field>
@@ -795,16 +798,16 @@
                     action="action_product_output"
                     id="products_for_output_operations"/>
 
-        <menuitem name="Register Management" parent="menu_point_root"
-            id="menu_point_config" sequence="3"/>
+<!--        <menuitem name="Register Management" parent="menu_point_root"-->
+<!--            id="menu_point_config" sequence="4"/>-->
         <menuitem
-            name="Input Operations" parent="menu_point_config"
+            name="Input Operations" parent="menu_point_of_sale"
             string="Refloat"
             action="action_box_entries"
-            id="menu_wizard_enter_jrnl" sequence="3" />
+            id="menu_wizard_enter_jrnl" sequence="2" />
 
         <menuitem
-            name="Output Operations" parent="menu_point_config"
+            name="Output Operations" parent="menu_point_of_sale"
             string="Refloat"
             action="action_box_out"
             id="menu_wizard_enter_jrnl2" sequence="3" />
@@ -860,7 +863,7 @@
         </record>
 
         <!--  Miscelleanous Operations/Reporting -->
-        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="30"/>
+        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20"/>
         <menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
         <menuitem name="Sales" parent="menu_point_rep" id="menu_point_report_sale" sequence="1" />
 

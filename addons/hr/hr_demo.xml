@@ -4,38 +4,38 @@
 
         <!-- Employee Category -->
 
-        <record id="category1" model="hr.employee.category">
+        <record id="category_ceo" model="hr.employee.category">
             <field name="name">CEO</field>
         </record>
 
-        <record id="category2" model="hr.employee.category">
+        <record id="category_cto" model="hr.employee.category">
             <field name="name">CTO</field>
-            <field name="parent_id" ref="category1"/>
+            <field name="parent_id" ref="category_ceo"/>
         </record>
 
-        <record id="category3" model="hr.employee.category">
+        <record id="category_managers" model="hr.employee.category">
             <field name="name">Managers(Tech. Heads)</field>
-            <field name="parent_id" ref="category2"/>
+            <field name="parent_id" ref="category_cto"/>
         </record>
 
-        <record id="category4" model="hr.employee.category">
+        <record id="category_project_managers" model="hr.employee.category">
             <field name="name">Project Managers</field>
-            <field name="parent_id" ref="category3"/>
+            <field name="parent_id" ref="category_managers"/>
         </record>
 
-        <record id="category5" model="hr.employee.category">
+        <record id="category_sr_exec" model="hr.employee.category">
             <field name="name">Sr. Executives(Team Leads)</field>
-            <field name="parent_id" ref="category4"/>
+            <field name="parent_id" ref="category_project_managers"/>
         </record>
 
-        <record id="category6" model="hr.employee.category">
+        <record id="category_jr_exec" model="hr.employee.category">
             <field name="name">Jr. Executives(Developers)</field>
-            <field name="parent_id" ref="category5"/>
+            <field name="parent_id" ref="category_sr_exec"/>
         </record>
 
-        <record id="category7" model="hr.employee.category">
+        <record id="category_trainee" model="hr.employee.category">
             <field name="name">Trainee(Intership)</field>
-            <field name="parent_id" ref="category6"/>
+            <field name="parent_id" ref="category_jr_exec"/>
         </record>
 
 
@@ -46,9 +46,10 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <!--<field name="regime">45</field>-->
             <field name="user_id" ref="base.user_root"/>
-            <field name="category_id" ref="hr.category1"/>
+            <field name="category_id" ref="hr.category_ceo"/>
             <!--<field name="holiday_max">25</field>-->
         </record>
+
 
     </data>
 </openerp>

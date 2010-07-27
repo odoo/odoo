@@ -27,8 +27,8 @@
                 <separator string="Status" colspan="4" />
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
-                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
-                    <button name="state_done_set" string="Done" states="running" icon="gtk-ok"/>
+                    <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
+                    <button name="state_done_set" string="Close" states="running" icon="gtk-ok"/>
                     <button name="state_cancel_set" string="Cancelled" states="running" icon="gtk-cancel"/>
                 </group>
               </form>
@@ -142,7 +142,7 @@
                 <separator string="Status" colspan="4"/>
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
-                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
+                    <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
                     <button name="state_done_set" string="Close" states="running" icon="gtk-ok"/>
                     <button name="state_cancel_set" string="Cancel" states="running" icon="gtk-cancel"/>
                 </group>
