@@ -19,11 +19,9 @@
 #
 ##############################################################################
 
-import os, time
+import time
 
 from report import report_sxw
-import pooler
-from tools.translate import _
 from common_report_header import common_report_header
 
 class account_balance(report_sxw.rml_parse, common_report_header):
@@ -33,9 +31,9 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         new_ids = ids
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
-        objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         self.query_get_clause = data['form']['query_line'] or ''
-        super(account_balance, self).set_context(objects, data, new_ids, report_type)
+        return super(account_balance, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def __init__(self, cr, uid, name, context=None):
         super(account_balance, self).__init__(cr, uid, name, context=context)
@@ -52,27 +50,29 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             'get_filter': self._get_filter,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period ,
-            'get_account': self._get_account,   
+            'get_account': self._get_account,
             'get_journal': self._get_journal,
             'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,            
+            'get_end_date':self._get_end_date,
         })
         self.context = context
 
     def _add_header(self, node, header=1):
-        if header==0:
+        if header == 0:
             self.rml_header = ""
         return True
 
     def lines(self, form, ids=[], done=None, level=1):
+        obj_account = self.pool.get('account.account')
         if not ids:
             ids = self.ids
         if not ids:
             return []
         if not done:
             done={}
-        res={}
-        result_acc=[]
+
+        res = {}
+        result_acc = []
         ctx = self.context.copy()
 
         ctx['fiscalyear'] = form['fiscalyear_id']
@@ -81,15 +81,15 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         elif form['filter'] == 'filter_date':
             ctx['date_from'] = form['date_from']
             ctx['date_to'] =  form['date_to']
-#        accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
+#        accounts = obj_account.browse(self.cr, self.uid, ids, ctx)
 #        def cmp_code(x, y):
 #            return cmp(x.code, y.code)
 #        accounts.sort(cmp_code)
 
-        child_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, ids, ctx)
+        child_ids = obj_account._get_children_and_consol(self.cr, self.uid, ids, ctx)
         if child_ids:
             ids = child_ids
-        accounts = self.pool.get('account.account').read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id'], ctx)
+        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id'], ctx)
         for account in accounts:
             if account['id'] in done:
                 continue
@@ -120,7 +120,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
 #                if not _check_rec(account) :
 #                    continue
             if account['parent_id']:
-#                acc = self.pool.get('account.account').read(self.cr, self.uid, [ account['parent_id'][0] ] ,['name'], ctx)
+#                acc = obj_account.read(self.cr, self.uid, [ account['parent_id'][0] ] ,['name'], ctx)
                 for r in result_acc:
                     if r['id'] == account['parent_id'][0]:
                         res['level'] = r['level'] + 1
@@ -144,6 +144,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
 #
 #                result_acc += self.lines(form, ids2, done, level+1)
         return result_acc
+
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header="internal")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

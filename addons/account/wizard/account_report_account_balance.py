@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
 
 class account_balance_report(osv.osv_memory):
     _inherit = "account.common.report"
