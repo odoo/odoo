@@ -26,17 +26,19 @@ from tools.safe_eval import safe_eval as eval
 import tools
 import netsvc
 import os
+import logging
 
 def _check_xml(self, cr, uid, ids, context={}):
+    logger = logging.getLogger('init')
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch.encode('utf8'))
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
         relaxng_doc = etree.parse(frng)
         relaxng = etree.RelaxNG(relaxng_doc)
         if not relaxng.validate(eview):
-            logger = netsvc.Logger()
-            logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view does not fit the required schema !')
-            logger.notifyChannel('init', netsvc.LOG_ERROR, tools.ustr(relaxng.error_log.last_error))
+            for error in relaxng.error_log:
+                logger.error(tools.ustr(error))
+            raise Error("Fuck toi")
             return False
     return True
 
