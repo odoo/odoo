@@ -140,19 +140,28 @@ class mailgate_thread(osv.osv):
         return True
 mailgate_thread()
 
+def format_date_tz(date, tz=None):
+    if not date: 
+        return 'n/a'
+    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
+    return tools.server_to_local_timestamp(date, format, format, tz)
+
 class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
     def _get_display_text(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        tz = context.get('tz')
         result = {}
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
             if message.history:
-                msg_txt += (message.email_from or '/') + ' wrote on ' + message.date + ':\n\t'
+                msg_txt += (message.email_from or '/') + ' wrote on ' + format_date_tz(message.date, tz) + ':\n\t'
                 msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
             else:
-                msg_txt = (message.user_id.name or '/') + '  on ' + message.date + ':\n\t'
+                msg_txt = (message.user_id.name or '/') + '  on ' + format_date_tz(message.date, tz) + ':\n\t'
                 if message.name == 'Opportunity':
                     msg_txt += "Converted to Opportunity"
                 else:
