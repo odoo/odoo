@@ -202,7 +202,7 @@
           <para style="terp_default_Centre_8">[[ picking.origin ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
+          <para style="terp_default_Centre_8">[[ (picking.address_id  and picking.address_id.title) or '' ]] [[ (picking.address_id and  and picking.address_id.name) or '' ]] </para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>

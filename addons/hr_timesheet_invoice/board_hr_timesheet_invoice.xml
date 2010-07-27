@@ -17,7 +17,7 @@
              <field name="type">form</field>
             <field name="inherit_id" ref="account.board_account_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/vpaned/child1/action[@string='Draft Customer Invoices']" position="before">
+                <xpath expr="/form/hpaned/child1/action[@string='Draft Customer Invoices']" position="before">
                     <action colspan="4" height="160" name="%(hr_timesheet_invoice.action_analytic_account_tree)d" string="Analytic accounts to close" width="510"/>
                     <action colspan="4" height="160" name="%(act_my_account)d" string="Accounts to invoice" width="510"/>
                 </xpath>
@@ -31,7 +31,7 @@
              <field name="type">form</field>
             <field name="inherit_id" ref="account.board_account_form"/>
             <field name="arch" type="xml">
-                  <xpath expr="/form/vpaned/child2/group/action[@string='Aged receivables']" position="before">
+                  <xpath expr="/form/hpaned/child2/action[@string='Aged income']" position="after">
                 <action colspan="4" height="220" name="%(action_account_analytic_line_to_invoice)d" string="Costs to invoice"/>
                 </xpath>
             </field>

@@ -1030,7 +1030,6 @@ class account_move(osv.osv):
             res.append((move.id, name))
         return res
 
-
     def _get_period(self, cr, uid, context):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
@@ -1117,6 +1116,7 @@ class account_move(osv.osv):
             'You cannot create entries on different periods/journals in the same move',
             ['line_id']),
     ]
+    
     def post(self, cr, uid, ids, context=None):
         if self.validate(cr, uid, ids, context) and len(ids):
             for move in self.browse(cr, uid, ids):

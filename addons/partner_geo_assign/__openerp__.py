@@ -32,6 +32,7 @@ based on geolocalization.
     'depends': ['crm'],
     'data': [
         'res_partner_view.xml',
+        'crm_lead_view.xml',
         ],
     'installable': True,
     'active': False,
