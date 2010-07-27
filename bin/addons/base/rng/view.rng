@@ -177,11 +177,11 @@
             <rng:optional><rng:attribute name="object"/></rng:optional>
             <rng:optional><rng:attribute name="link"/></rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
-            <rng:oneOrMore>
-                <rng:optional><rng:ref name="field"/></rng:optional>
-            </rng:oneOrMore>
             <rng:zeroOrMore>
-                <rng:optional><rng:ref name="html"/></rng:optional>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+            <rng:zeroOrMore>
+                <rng:ref name="html"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -476,7 +476,7 @@
                 <rng:ref name="field"/>
             </rng:oneOrMore>
             <rng:zeroOrMore>
-                <rng:optional><rng:ref name="html"/></rng:optional>
+                <rng:ref name="html"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -491,7 +491,7 @@
                 <rng:ref name="field"/>
             </rng:oneOrMore>
             <rng:zeroOrMore>
-                <rng:optional><rng:ref name="html"/></rng:optional>
+                <rng:ref name="html"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
