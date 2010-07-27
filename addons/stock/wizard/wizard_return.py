@@ -71,7 +71,7 @@ def _create_returns(self, cr, uid, data, context):
 
     for move in move_obj.browse(cr, uid, data['form'].get('returns',[])):
         if not new_picking:
-            if pick.type=='out':
+            if pick.type in ['out','delivery']:
                 new_type='in'
             elif pick.type=='in':
                 new_type='out'
