@@ -50,7 +50,7 @@ class thunderbird_installer(osv.osv_memory):
         'thunderbird' : True,
         'name' : 'OpenERP_plugin-2.0.xpi',
         'pdf_name' : 'Installation Guide to OpenERP Thunderbid Plug-in.pdf',
-        'description' : """ * Save the Thunderbird plug­in. \n * Follow  the Steps to configure OpenERP in Thunderbird. \n -> 1. Go to Tools > OpenERP Synchronization. \n -> 2. check  data (configured by default). \n -> 3. Click Test  Connection. \n -> 4. A message appears with state of your connection. \n -> 5. If your connection failed, check if your database is open, and check your  data. \n -> 6. If you  have a good connection, click Ok and start to archive mail in  OpenERP.
+        'description' : """ * Save the Thunderbird plug­in. \n * Follow  the Steps to configure OpenERP in Thunderbird. \n -> 1. Go to Tools > OpenERP Synchronization. \n -> 2. check  data (configured by default). \n -> 3. Click Test  Connection. \n -> 4. A message appears with state of your connection. \n -> 5. If your connection failed, check if your database is open, and check your  data. \n -> 6. If you  have a good connection, click Ok and start to archive mail in  OpenERP."""
         }
 
 thunderbird_installer()
