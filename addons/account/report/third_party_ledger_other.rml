@@ -332,7 +332,7 @@
                 <para style="P9">Journal</para>
               </td>
               <td>
-                <para style="P9">Filters By</para>
+                <para style="P9">Filters By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para>
               </td>
               <td>
                 <para style="P9">Partner's</para>
@@ -349,7 +349,7 @@
                 <para style="P11">[[ get_fiscalyear(data) or '' ]]</para>
               </td>
                <td><para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]]</para></td>
-              <td>
+              <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
                 <blockTable colWidths="73.0,73.0" style="Table9">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
                   <tr>
                     <td>
