@@ -244,7 +244,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     res_init['type'] = 3
                     res_init['ref'] = ''
                     res_init['code'] = ''
-                    res_init['name'] = 'Intial Balance'
+                    res_init['name'] = 'Initial Balance'
                     res_init['balance'] = debit - credit
                     res_init['enlitige'] = 0.0 # fix me
 
