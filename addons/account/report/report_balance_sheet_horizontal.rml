@@ -3,19 +3,7 @@
   <template pageSize="(1120.0,770.0)" title="Balance sheet" author="Openerp" allowSplitting="20" >
     <pageTemplate id="first">
       <frame id="first" x1="22.0" y1="15.0" width="1080" height="680"/>
-			<pageGraphics>
-				<setFont name="Helvetica-Bold" size="9"/>
-				<!--COL 1-->
-				<drawString x="1.3cm" y="25.50cm">[[ get_company(data['form']) ]]</drawString>
-				<!--COL 2-->
-				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.3cm" y="0.50cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
-				<drawString x="37.20cm" y="0.50cm">Page <pageNumber/></drawString>
-
-			    <lineMode width="0.7"/>
-				<lines>1.3cm 24.9cm 38.3cm 24.9cm</lines>
-				<setFont name="Helvetica" size="8"/>
-			  </pageGraphics>
+	
     </pageTemplate>
   </template>
   <stylesheet>
@@ -203,7 +191,7 @@
       	<td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
     	<td><para style="terp_tblheader_General_Centre">Journals</para></td>        
-        <td><para style="terp_tblheader_General_Centre">Filters By <font>[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font></para></td>
+        <td><para style="terp_tblheader_General_Centre">Filters By  [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
 		<td><para style="terp_tblheader_General_Centre">Display Account</para></td>  
         <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
@@ -267,19 +255,19 @@
 	  <tr>
 	      <td>
 
-	        <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines(), 'a') ]]</font> <font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]]</font><font>[[ a['code'] ]]</font></para>
+	        <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines(), 'a') ]]</font> <font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]]</font><font>[[ a['code'] ]]</font></para>
 	      </td>
 	      <td>
-	        <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]][[ a['name'] ]]</font></para>
+	        <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font></para>
 	      </td>
 	      <td>
 	        <para style="terp_default_Right_9_Bold">[[ a['balance'] and formatLang(get_abs(a['balance'])) or 0.0 ]]</para>
 	      </td>
 	      <td>
-	        <para style="terp_default_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]]</font><font>[[ a['code1'] ]]</font></para>
+	        <para style="terp_default_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]]</font><font>[[ a['code1'] ]]</font></para>
 	      </td>
 	      <td>
-	        <para style="terp_default_9"><font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]][[ a['name1'] ]]</font></para>
+	        <para style="terp_default_9"><font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name1'] ]]</font></para>
 	      </td>
 	      <td>
 	        <para style="terp_default_Right_9_Bold">[[ a['balance1'] and formatLang(get_abs(a['balance1'])) or 0.0 ]]</para>
@@ -289,13 +277,13 @@
     <blockTable colWidths="408.16,116.32,408.16,116.32" style="Table_Net_Profit_Loss">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Balance:([[ get_currency(data['form']) ]])</para>
+          <para style="terp_default_Bold_9">Balance:([[ get_currency(data) ]])</para>
         </td>
         <td>
           <para style="terp_default_Right_9_Bold"><u>[[ sum_dr() and formatLang(get_abs(sum_dr())) or 0.0 ]]</u></para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Balance:([[ get_currency(data['form']) ]])</para>
+          <para style="terp_default_Bold_9">Balance:([[ get_currency(data) ]])</para>
         </td>
         <td>
         </td>
