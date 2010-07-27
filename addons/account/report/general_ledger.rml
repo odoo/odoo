@@ -4,30 +4,7 @@
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
 			<pageGraphics>
-				<!--logo-->
-				<!--<fill color="darkblue"/>-->
-				<!--<stroke color="darkblue"/>-->
 
-				<!--TITLE COMPANY-->
-				<!-- <drawString x="4.6cm" y="28.7cm">[[ company.partner_id.name ]]</drawString> -->
-
-				<setFont name="Helvetica-Bold" size="9"/>
-
-
-				<!--COL 1-->
-				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
-				<drawString x="16.7cm" y="28.1cm">General Ledger - [[ company.currency_id.name ]]</drawString>
-
-				<!--COL 2-->
-				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.0cm" y="1cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
-				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
-				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-
-
-			    <lineMode width="0.7"/>
-				<lines>0.88cm 27.7cm 20.12cm 27.7cm</lines>
-				<setFont name="Helvetica" size="8"/>
 				</pageGraphics>
     </pageTemplate>
   </template>
@@ -226,7 +203,7 @@
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
 		<td><para style="terp_tblheader_General_Centre">Journals</para></td>
 		<td><para style="terp_tblheader_General_Centre">Display Account </para></td>
-        <td><para style="terp_tblheader_General_Centre">Filters By <font color="white">[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font><font>[[ get_filter(data) ]]</font></para></td>
+        <td><para style="terp_tblheader_General_Centre">Filters By  [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
          <td><para style="terp_tblheader_General_Centre">Entries Sorted By</para></td>
         <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>

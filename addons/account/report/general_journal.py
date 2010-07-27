@@ -116,7 +116,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
 
     def _get_currency(self, data):
         if data['model']=='account.journal.period':
-           return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).journal_id.currency or False
+            return True
         return data['form']['amount_currency']
 
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header='internal')
