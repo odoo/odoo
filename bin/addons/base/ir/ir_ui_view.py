@@ -38,7 +38,6 @@ def _check_xml(self, cr, uid, ids, context={}):
         if not relaxng.validate(eview):
             for error in relaxng.error_log:
                 logger.error(tools.ustr(error))
-            raise Error("Fuck toi")
             return False
     return True
 
