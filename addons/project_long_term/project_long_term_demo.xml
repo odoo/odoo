@@ -249,14 +249,14 @@
             <field eval="1" name="active"/>
             <field eval="1" name="warn_manager"/>
             <field eval="0" name="warn_customer"/>
-            <field name="date_start" eval="time.strftime('%Y-%m-%d 12:12')"/>
+            <field name="date_start" eval="(DateTime.now()-timedelta(70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="1" name="priority"/>
             <field name="state">open</field>
             <field name="type">normal</field>
             <field name="description">Develop an OpenERP Website.</field>
             <field eval="[(6, 0, [ref('res_users_manager0'), ref('res_users_user0'), ref('res_users_userfinance0'), ref('res_users_userdesign0'), ref('res_users_userdeveloper0'), ref('res_users_usertester0'), ref('res_users_useranalyst0')])]" name="members"/>
-            <field name="date" eval="(DateTime.now()+timedelta(60)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date" eval="(DateTime.now()+timedelta(60-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="currency_id" ref="base.EUR"/>
             <field eval="[(6, 0, [])]" name="type_ids"/>
@@ -269,14 +269,14 @@
             <field name="name">Information Gathering and Understanding</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(18)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_start" eval="time.strftime('%Y-%m-%d 12:12')"/>
+            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(18-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_start" eval="(DateTime.now()-timedelta(70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">draft</field>
             <field name="responsible_id" ref="res_users_demouser1"/>
             <field eval="15.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(15)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(2-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(DateTime.now()+timedelta(15-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="project_phase_planning0" model="project.phase">
@@ -284,14 +284,14 @@
             <field name="name">Planning</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(28)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(10)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(28-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_start" eval="(DateTime.now()+timedelta(10-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">draft</field>
             <field name="responsible_id" ref="res_users_manager0"/>
             <field eval="15.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(13)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(25)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(13-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(DateTime.now()+timedelta(25-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="project_phase_webdesign0" model="project.phase">
@@ -299,14 +299,14 @@
             <field name="name">Web Design </field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(45)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(20)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(45-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_start" eval="(DateTime.now()+timedelta(20-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">draft</field>
             <field name="responsible_id" ref="res_users_userdesign0"/>
             <field eval="20.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(25)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(25-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="project_phase_developmentintegrationandtesting0" model="project.phase">
@@ -314,14 +314,14 @@
             <field name="name">Development, Integration and Testing</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(57)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(30)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(57-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_start" eval="(DateTime.now()+timedelta(30-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">draft</field>
             <field name="responsible_id" ref="res_users_manager0"/>
             <field eval="22.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(35)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(52)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(35-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(DateTime.now()+timedelta(52-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="project_phase_websitedeployment0" model="project.phase">
@@ -329,14 +329,14 @@
             <field name="name">Website Deployment</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
-            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(63)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(55)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_end" eval="(DateTime.now()+timedelta(63-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_start" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">draft</field>
             <field name="responsible_id" ref="res_users_manager0"/>
             <field eval="5.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(58)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(60)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="constraint_date_start" eval="(DateTime.now()+timedelta(58-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_end" eval="(DateTime.now()+timedelta(60-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <!--  Project Resource Allocation -->
@@ -397,10 +397,10 @@
         <!-- Tasks -->
         <record id="project_task_preparerequirementsdocument0" model="project.task">
             <field eval="15" name="sequence"/>
-            <field name="date_end" eval="(DateTime.now()+timedelta(50)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="100.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_user0"/>
-            <field name="date_start" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()-timedelta(70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -408,7 +408,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Prepare Requirements Document</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="100.0" name="total_hours"/>
             <field eval="100.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
@@ -418,7 +418,8 @@
             <field eval="10" name="sequence"/>
             <field eval="80.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_useranalyst0"/>
-            <field name="date_start" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()-timedelta(70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -426,7 +427,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Define Website Goals, Purposes and Target Audience</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(10)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(10-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="80.0" name="total_hours"/>
             <field eval="80.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
@@ -436,7 +437,8 @@
             <field eval="17" name="sequence"/>
             <field eval="40.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_userdesign0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(48)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(48-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -444,7 +446,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Use Cases</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="40.0" name="total_hours"/>
             <field eval="40.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_informationgatheringandunderstanding0"/>
@@ -454,7 +456,8 @@
             <field eval="10" name="sequence"/>
             <field eval="25.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_userfinance0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(10)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(10-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -462,7 +465,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Budget Planning</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(18)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(18-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="25.0" name="total_hours"/>
             <field eval="25.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_planning0"/>
@@ -472,7 +475,8 @@
             <field eval="10" name="sequence"/>
             <field eval="25.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_user0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(10)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(10-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -480,7 +484,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Quality Planning</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(18)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(18-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="25.0" name="total_hours"/>
             <field eval="25.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_planning0"/>
@@ -490,7 +494,8 @@
             <field eval="10" name="sequence"/>
             <field eval="20.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_user1"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(13)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(13-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -498,7 +503,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Risk Management Planning</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(20)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(20-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="20.0" name="total_hours"/>
             <field eval="20.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_planning0"/>
@@ -508,7 +513,8 @@
             <field eval="10" name="sequence"/>
             <field eval="30.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_manager0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(20)).strftime('%Y-%m-%d %H:%M:%S')"/>
+			<field name="state">open</field>            
+            <field name="date_start" eval="(DateTime.now()+timedelta(20-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -516,7 +522,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Create Project Schedules</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(25)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(25-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="30.0" name="total_hours"/>
             <field eval="30.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_planning0"/>
@@ -526,7 +532,8 @@
             <field eval="10" name="sequence"/>
             <field eval="10.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_manager0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(20)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(20-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -534,7 +541,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Dataflow Design</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(23)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(23-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="10.0" name="total_hours"/>
             <field eval="10.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_webdesign0"/>
@@ -544,7 +551,8 @@
             <field eval="10" name="sequence"/>
             <field eval="50.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_userdesign0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(22)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(22-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -552,7 +560,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">User Interface Design</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="150.0" name="total_hours"/>
             <field eval="150.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_webdesign0"/>
@@ -562,7 +570,8 @@
             <field eval="10" name="sequence"/>
             <field eval="40.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_userdesign0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(30)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(30-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -570,7 +579,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Task Level WBS</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="40.0" name="total_hours"/>
             <field eval="40.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_webdesign0"/>
@@ -580,7 +589,8 @@
             <field eval="10" name="sequence"/>
             <field eval="90.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_userdeveloper0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(30)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(30-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -588,7 +598,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Modular Programming</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(50)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(50-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="90.0" name="total_hours"/>
             <field eval="90.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
@@ -598,7 +608,8 @@
             <field eval="10" name="sequence"/>
             <field eval="20.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_userdeveloper1"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(45)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(45-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -606,7 +617,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Integrate Modules</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(53)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(53-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="20.0" name="total_hours"/>
             <field eval="20.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
@@ -616,7 +627,8 @@
             <field eval="10" name="sequence"/>
             <field eval="50.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_usertester0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -624,7 +636,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Unit Testing</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="50.0" name="total_hours"/>
             <field eval="50.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
@@ -634,7 +646,8 @@
             <field eval="10" name="sequence"/>
             <field eval="30.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_usertester0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -642,7 +655,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Regression Test</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="30.0" name="total_hours"/>
             <field eval="30.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
@@ -652,7 +665,8 @@
             <field eval="10" name="sequence"/>
             <field eval="15.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_demouser1"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(40-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -660,7 +674,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Documentation</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="15.0" name="total_hours"/>
             <field eval="15.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_websitedeployment0"/>
@@ -670,7 +684,8 @@
             <field eval="10" name="sequence"/>
             <field eval="40.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_usertester1"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(45)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(45-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -678,7 +693,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Performance Tuning</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(55)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="40.0" name="total_hours"/>
             <field eval="40.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
@@ -688,7 +703,8 @@
             <field eval="10" name="sequence"/>
             <field eval="5.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_userdeveloper0"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(55)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(55-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -696,7 +712,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Deploy Website</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(60)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(60-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="5.0" name="total_hours"/>
             <field eval="5.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_websitedeployment0"/>
@@ -706,7 +722,8 @@
             <field eval="10" name="sequence"/>
             <field eval="10.0" name="planned_hours"/>
             <field name="user_id" ref="res_users_demouser1"/>
-            <field name="date_start" eval="(DateTime.now()+timedelta(58)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">open</field>
+            <field name="date_start" eval="(DateTime.now()+timedelta(58-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
@@ -714,7 +731,7 @@
             <field eval="[(6, 0, [])]" name="parent_ids"/>
             <field eval="1" name="active"/>
             <field name="name">Presentation</field>
-            <field name="date_deadline" eval="(DateTime.now()+timedelta(65)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_deadline" eval="(DateTime.now()+timedelta(65-70)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field eval="10.0" name="total_hours"/>
             <field eval="10.0" name="remaining_hours"/>
             <field name="phase_id" ref="project_phase_websitedeployment0"/>
