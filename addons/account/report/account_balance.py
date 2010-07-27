@@ -125,7 +125,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                     if r['id'] == account['parent_id'][0]:
                         res['level'] = r['level'] + 1
                         break
-            if form['display_account'] == 'bal_mouvement':
+            if form['display_account'] == 'bal_movement':
                 if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
                     result_acc.append(res)
             elif form['display_account'] == 'bal_solde':

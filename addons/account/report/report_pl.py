@@ -119,7 +119,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
                         self.result_sum_dr += abs(account.debit - account.credit)
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += abs(account.debit - account.credit)
-                    if data['form']['display_account'] == 'bal_mouvement':
+                    if data['form']['display_account'] == 'bal_movement':
                         if account.credit > 0 or account.debit > 0 or account.balance > 0 :
                             accounts_temp.append(account)
                     elif data['form']['display_account'] == 'bal_solde':

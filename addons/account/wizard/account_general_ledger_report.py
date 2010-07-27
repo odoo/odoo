@@ -40,7 +40,7 @@ class account_general_ledger_report(osv.osv_memory):
         'periods': fields.many2many('account.period', 'ledger_period_rel', 'ledger_id', 'period_id', 'Periods',  help='All periods if empty' ),
         'sortbydate': fields.selection([('sort_date','Date'),
                                 ('sort_mvt','Movement')],"Sort by:"),
-        'display_account': fields.selection([('bal_all','All'), ('bal_mouvement','With movements'),
+        'display_account': fields.selection([('bal_all','All'), ('bal_movement','With movements'),
                          ('bal_solde','With balance is not equal to 0'),
                          ],'Display accounts', required=True),
 
