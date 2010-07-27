@@ -49,7 +49,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_filter': self._get_filter,
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
-            'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_fiscalyear': self._get_fiscalyear,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
@@ -435,10 +434,10 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
         'addons/account/report/third_party_ledger.rml',parser=third_party_ledger,
-        header=False)
+        header='internal')
 
 report_sxw.report_sxw('report.account.third_party_ledger_other', 'res.partner',
         'addons/account/report/third_party_ledger_other.rml',parser=third_party_ledger,
-        header=False)
+        header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

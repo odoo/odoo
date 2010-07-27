@@ -61,7 +61,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'sum_credit_account': self._sum_credit_account,
             'sum_balance_account': self._sum_balance_account,
             'get_children_accounts': self.get_children_accounts,
-            'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
             'get_account': self._get_account,
@@ -215,19 +214,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             sum_balance += self.cr.fetchone()[0] or 0.0
         return sum_balance
 
-    def _sum_currency_amount_account(self, account, form):
-        #FIXME: not working
-        self.cr.execute("SELECT sum(l.amount_currency) as tot_currency "\
-                "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s"%(account.id, self.query))
-        sum_currency = self.cr.fetchone()[0] or 0.0
-        if form.get('initial_balance', False):
-            self.cr.execute("SELECT sum(l.amount_currency) as tot_currency "\
-                    "FROM account_move_line l "\
-                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
-            # Add initial balance to the result
-            sum_currency += self.cr.fetchone()[0] or 0.0
-        return str(sum_currency)
 
     def _get_sortby(self, data):
         if self.sortby == 'sort_date':

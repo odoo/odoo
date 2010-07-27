@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -51,7 +50,6 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_sortby': self._get_sortby,
-            'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_filter': self._get_filter,
             'get_journal': self._get_journal,
             'get_start_date':self._get_start_date,
