@@ -438,11 +438,7 @@ GNU Public Licence.
         return info
 
     def exp_timezone_get(self, db, login, password):
-        #timezone detection is safe in multithread, so lazy init is ok here
-        if (not tools.config['timezone']):
-            tools.config['timezone'] = tools.misc.detect_server_timezone()
-        return tools.config['timezone']
-
+        return tools.misc.get_server_timezone()
 
     def exp_get_available_updates(self, contract_id, contract_password):
         import tools.maintenance as tm
