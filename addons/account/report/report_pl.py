@@ -37,6 +37,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         self.result_temp = []
         self.localcontext.update( {
             'time': time,
+            'get_abs' : self.get_abs,
             'get_lines' : self.get_lines,
             'get_lines_another' : self.get_lines_another,
 #            'get_company': self._get_company,
@@ -58,18 +59,9 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             'get_company':self._get_company,       
         })
         self.context = context
-        
-    def _sum_currency_amount_account(self, account, form):
-        self._set_get_account_currency_code(account.id)
-        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
-        total = self.cr.fetchone()
-
-        if self.account_currency:
-            return_field = str(total[0]) + self.account_currency
-            return return_field
-        else:
-            currency_total = self.tot_currency = 0.0
-            return currency_total
+    def get_abs(self,amount):
+        return abs(amount)
+     
     def final_result(self):
         return self.res_pl
 

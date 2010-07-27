@@ -53,14 +53,12 @@ class account_bs_report(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.balancesheet.horizontal',
                 'datas': data,
-                'nodestroy':True,
                 }
         else:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.balancesheet',
                 'datas': data,
-                'nodestroy':True,
                 }
 
 account_bs_report()

@@ -48,18 +48,45 @@ class account_pl_report(osv.osv_memory):
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'display_type'])[0])
         if data['form']['display_type']:
             return {
-                    'type': 'ir.actions.report.xml',
-                    'report_name': 'pl.account.horizontal',
-                    'datas': data,
-                    'nodestroy':True,
-                    }
+                'type': 'ir.actions.report.xml',
+                'report_name': 'pl.account.horizontal',
+                'datas': data,
+                }
         else:
             return {
-                    'type': 'ir.actions.report.xml',
-                    'report_name': 'pl.account',
-                    'datas': data,
-                    'nodestroy':True,
+                'type': 'ir.actions.report.xml',
+                'report_name': 'pl.account',
+                'datas': data,
+                }
+            
+    def _check_date(self, cr, uid, data, context=None):
+        if context is None:
+            context = {}
+        sql = """
+            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
+        cr.execute(sql,(data['form']['date_from'],))
+        res = cr.dictfetchall()
+        if res:
+
+            if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
+                raise  osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (res[0]['date_start'], res[0]['date_stop']))
+            else:
+                if data['form']['display_type']:
+                    return {
+                        'type': 'ir.actions.report.xml',
+                        'report_name': 'pl.account.horizontal',
+                        'datas': data,
+                        'nodestroy':True,
                         }
+                else:
+                    return {
+                        'type': 'ir.actions.report.xml',
+                        'report_name': 'pl.account',
+                        'datas': data,
+                        'nodestroy':True,
+                        }
+        else:
+            raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
 
 account_pl_report()
 

@@ -274,29 +274,30 @@
         <tr>
           <td>
             <para style="terp_default_9">
-              <font face="Times-Roman">[[ repeatIn(get_lines(),'a' ) ]] </font>[[ a['code'] ]]<font>[[ a['level']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]]</font>
+
+              <font face="Times-Roman">[[ repeatIn(get_lines(),'a' ) ]] </font>[[ a['code'] ]]<font>[[ a['level']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]]</font>
             </para>
           </td>
           <td>
             <para style="terp_default_9">
-              <font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or  removeParentNode('font')  ]][[ a['name'] ]]</font>
+              <font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]][[ a['name'] ]]</font>
             </para>
           </td>
           <td>
-            <para style="terp_default_Right_9_Bold">[[ a['balance'] and formatLang(a['balance']) or 0.0 ]]</para>
+            <para style="terp_default_Right_9_Bold">[[ a['balance'] and formatLang(get_abs(a['balance'])) or 0.0 ]]</para>
           </td>
           <td>
             <para style="terp_default_9">
-              [[ a['code1'] ]]<font>[[ a['level1']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or  removeParentNode('font') ]]</font>
+              [[ a['code1'] ]]<font>[[ a['level1']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]]</font>
             </para>
           </td>
           <td>
             <para style="terp_default_9">
-              <font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or  removeParentNode('font')  ]][[ a['name1'] ]]</font>
+              <font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]][[ a['name1'] ]]</font>
             </para>
           </td>
           <td>
-            <para style="terp_default_Right_9_Bold">[[ formatLang(a['balance1'])  or  0.0 ]]</para>
+            <para style="terp_default_Right_9_Bold">[[ a['balance1'] and formatLang(get_abs(a['balance1'])) or 0.0 ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -309,7 +310,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit C.F.B.L.' and final_result()['type'] or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit C.F.B.L.' and  formatLang(final_result()['balance']) or 0.0 ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit C.F.B.L.' and  formatLang(get_abs(final_result()['balance'])) or 0.0 ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9"></para>
@@ -318,7 +319,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss C.F.B.L.' and final_result()['type'] or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(final_result()['balance']) or 0.0 ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(get_abs(final_result()['balance'])) or 0.0 ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -326,16 +327,16 @@
     <blockTable colWidths="408.16,116.32,408.16,116.32" style="Table_Net_Profit_Loss">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Total:([[ get_currency(data) ]])</para>
+          <para style="terp_default_Bold_9">Total:([[ get_currency(data['form']) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ sum_dr() and formatLang(sum_dr()) or 0.0 ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ sum_dr() and formatLang(get_abs(sum_dr())) or 0.0 ]]</u></para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Total:([[ get_currency(data) ]])</para>
+          <para style="terp_default_Bold_9">Total:([[ get_currency(data['form']) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ sum_cr() and formatLang(sum_cr()) or 0.0 ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ sum_cr() and formatLang(get_abs(sum_cr())) or 0.0 ]]</u></para>
         </td>
       </tr>
     </blockTable>
