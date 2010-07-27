@@ -275,12 +275,12 @@
           <td>
             <para style="terp_default_9">
 
-              <font face="Times-Roman">[[ repeatIn(get_lines(),'a' ) ]] </font>[[ a['code'] ]]<font>[[ a['level']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]]</font>
+              <font face="Times-Roman">[[ repeatIn(get_lines(),'a' ) ]] </font>[[ a['code'] ]]<font>[[ a['level']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'}))  or removeParentNode('font') ]]</font>
             </para>
           </td>
           <td>
             <para style="terp_default_9">
-              <font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]][[ a['name'] ]]</font>
+              <font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'}))  or removeParentNode('font') ]][[ a['name'] ]]</font>
             </para>
           </td>
           <td>
@@ -293,7 +293,7 @@
           </td>
           <td>
             <para style="terp_default_9">
-              <font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]][[ a['name1'] ]]</font>
+              <font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;3 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]][[ a['name1'] ]]</font>
             </para>
           </td>
           <td>
