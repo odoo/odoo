@@ -785,7 +785,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Picking list">
-                    <group col="6" colspan="4">
+                    <group col="6" colspan="4" attrs="{'readonly': [('state','not in',['draft','auto'])]}">
                         <field name="name" readonly="1"/>
                         <field name="address_id" required="1"/>
                         <field name="origin"/>
@@ -1185,7 +1185,6 @@
             <field name="arch" type="xml">
                 <form string="Input Picking List">
                     <group colspan="4" col="6">
-
                         <field name="name" readonly="1"/>
                         <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" />
                         <field name="origin"/>
