@@ -1127,21 +1127,27 @@ class stock_move(osv.osv):
 
         def create_chained_picking(self, cr, uid, moves, context):
             new_moves = []
+            picking_obj = self.pool.get('stock.picking')
+            move_obj = self.pool.get('stock.move')
             for picking, todo in self._chain_compute(cr, uid, moves, context).items():
                 ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-                pickid = self.pool.get('stock.picking').create(cr, uid, {
-                    'name': picking.name,
-                    'origin': str(picking.origin or ''),
-                    'type': ptype,
-                    'note': picking.note,
-                    'move_type': picking.move_type,
-                    'auto_picking': todo[0][1][1] == 'auto',
-                    'address_id': picking.address_id.id,
-                    'invoice_state': 'none'
-                })
+                check_picking_ids = picking_obj.search(cr, uid, [('name','=',picking.name),('origin','=',str(picking.origin or '')),('type','=',ptype),('move_type','=',picking.move_type)])
+                if check_picking_ids:
+                    pickid = check_picking_ids[0]
+                else:
+                    pickid = picking_obj.create(cr, uid, {
+                        'name': picking.name,
+                        'origin': str(picking.origin or ''),
+                        'type': ptype,
+                        'note': picking.note,
+                        'move_type': picking.move_type,
+                        'auto_picking': todo[0][1][1] == 'auto',
+                        'address_id': picking.address_id.id,
+                        'invoice_state': 'none'
+                    })
                 for move, (loc, auto, delay) in todo:
                     # Is it smart to copy ? May be it's better to recreate ?
-                    new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
+                    new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,
                         'location_dest_id': loc.id,
                         'date_moved': time.strftime('%Y-%m-%d'),
@@ -1151,7 +1157,7 @@ class stock_move(osv.osv):
                         'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
                         'move_history_ids2': []}
                     )
-                    self.pool.get('stock.move').write(cr, uid, [move.id], {
+                    move_obj.write(cr, uid, [move.id], {
                         'move_dest_id': new_id,
                         'move_history_ids': [(4, new_id)]
                     })
