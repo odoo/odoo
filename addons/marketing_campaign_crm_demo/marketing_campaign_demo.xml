@@ -1,6 +1,16 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
+        <record id="action_dummy" model="ir.actions.server">
+            <field name="name">Dummy Action</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="state">dummy</field>
+            <field name="code"></field>
+            <field eval="5" name="sequence"/>
+            <field eval="True" name="condition"/>
+        </record>
+    </data>
+    <data>
 
 <!-- Document directory -->
         <record id="document_directory_marketingcampaign" model="document.directory">
@@ -178,7 +188,7 @@
 
         <record id="marketing_campaign_activity_0" model="marketing.campaign.activity">
             <field name="name">Propose a 1 month free trial for an OnDemand offer</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
             <field name="report_directory_id" ref="document_directory_campaign1"/>
             <field name="type">paper</field>
@@ -187,27 +197,27 @@
         </record>
         <record id="marketing_campaign_activity_1" model="marketing.campaign.activity">
             <field name="name">Thanks for showing interest</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
             <field name="email_template_id" ref="email_template_1"/>
         </record>
 
         <record id="marketing_campaign_activity_2" model="marketing.campaign.activity">
             <field name="name">Propose to subscribe to the Open ERP Discovery Day on May 2010</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
              <field name="email_template_id" ref="email_template_2"/>
         </record>
 
         <record id="marketing_campaign_activity_3" model="marketing.campaign.activity">
             <field name="name">Thanks for subscribing to the Open ERP Discovery Day</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
             <field name="email_template_id" ref="email_template_3"/>
         </record>
         <record id="marketing_campaign_activity_4" model="marketing.campaign.activity">
             <field name="name">Propose to buy the Open ERP Book</field>
-           <field name="server_action_id" ref="base.action_start_configurator"/>
+           <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
             <field name="report_directory_id" ref="document_directory_campaign1"/>
             <field name="type">paper</field>
@@ -216,33 +226,33 @@
 
         <record id="marketing_campaign_activity_5" model="marketing.campaign.activity">
             <field name="name">Thanks for buying the Open ERP book</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
             <field name="email_template_id" ref="email_template_4"/>
         </record>
         <record id="marketing_campaign_activity_6" model="marketing.campaign.activity">
             <field name="name">Propose a free technical training to Gold partners</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
             <field name="email_template_id" ref="email_template_5"/>
         </record>
         <record id="marketing_campaign_activity_7" model="marketing.campaign.activity">
             <field name="name">Propose paid training to Silver partners</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
             <field name="email_template_id" ref="email_template_6"/>
         </record>
 
         <record id="marketing_campaign_activity_8" model="marketing.campaign.activity">
             <field name="name">Propose gold partnership to silver partners</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
             <field name="email_template_id" ref="email_template_7"/>
         </record>
 
          <record id="marketing_campaign_activity_9" model="marketing.campaign.activity">
             <field name="name">Thanks for subscribing to technical training</field>
-            <field name="server_action_id" ref="base.action_start_configurator"/>
+            <field name="server_action_id" ref="action_dummy"/>
             <field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
         <field name="email_template_id" ref="email_template_8"/>
         </record>

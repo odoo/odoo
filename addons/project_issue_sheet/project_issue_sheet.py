@@ -27,7 +27,7 @@ class project_issue(osv.osv):
     _description = 'project issue'
     _columns = {
         'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
-        'analytic_account_id': fields.related('project_id', 'category_id', string='Analytic Account')
+        'analytic_account_id': fields.related('project_id', 'analytic_account_id', string='Analytic Account')
     }
     
 project_issue()
@@ -48,15 +48,6 @@ class hr_analytic_issue(osv.osv):
     _columns = {
         'issue_id' : fields.many2one('project.issue', 'Issue'),
     }
-    
-    def _get_analytic_account(self, cr, uid, context={}):
-        if context.get('account_id', False):
-            return context.get('account_id')
-        return False
-    
-    _defaults = {
-              'account_id' : _get_analytic_account,
-              }
 
 hr_analytic_issue()
 
