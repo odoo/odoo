@@ -314,7 +314,7 @@
             <para style="terp_default_Right_9">[[ formatLang(line['credit']) ]]</para>
           </td>
       		<td>
-            <para style="terp_default_Right_9">[[ formatLang(line['debit']-line['debit'] ) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['credit']-line['debit'] ) ]]</para>
           </td>          
         </tr>
       </blockTable>
@@ -324,8 +324,8 @@
           <td><para style="terp_default_9">[[ line['name'] ]]</para></td>
           <td><para style="terp_default_Right_9">[[ formatLang(line['debit'] )]]</para></td>
           <td><para style="terp_default_Right_9">[[ formatLang(line['credit']) ]]</para></td>
-		  <td><para style="terp_default_Right_9">[[ formatLang(line['debit']-line['debit'] ) ]]</para></td>            
-          <td><para style="terp_default_Right_9">[[ formatLang(line['amount_currency'] or '') ]] [[ line['currency_code'] or '' ]]</para></td>        
+		  <td><para style="terp_default_Right_9">[[ formatLang(line['credit']-line['debit'] ) ]]</para></td>            
+          <td><para style="terp_default_Right_9">[[ line['currency_id'] and formatLang(line['amount_currency'] ) ]] [[ line['currency_code'] or '' ]]</para></td>        
         </tr>
       </blockTable>
       <para style="terp_default_2">

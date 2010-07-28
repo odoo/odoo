@@ -84,15 +84,15 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def lines(self, period_id, journal_id=[]):
         if not self.journal_ids:
             return []
-        self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.code AS currency_code, '
+        self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.code AS currency_code,l.currency_id , '
                         'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
                         'FROM account_move_line l '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
                         'LEFT JOIN res_currency c on (l.currency_id=c.id)'
                         'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +''
-                        'GROUP BY j.id, j.code, j.name, l.amount_currency,c.code ',
+                        'GROUP BY j.id, j.code, j.name, l.amount_currency,c.code,l.currency_id ',
                         (period_id, tuple(self.journal_ids)))
-
+        
         return self.cr.dictfetchall()
     def _set_get_account_currency_code(self, account_id):
         self.cr.execute("SELECT c.code as code "\

@@ -60,6 +60,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'sum_debit_account': self._sum_debit_account,
             'sum_credit_account': self._sum_credit_account,
             'sum_balance_account': self._sum_balance_account,
+            'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_children_accounts': self.get_children_accounts,
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
@@ -70,8 +71,23 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'get_sortby': self._get_sortby,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
+            
         })
         self.context = context
+
+    def _sum_currency_amount_account(self, account, form):
+        #FIXME: not working
+        self.cr.execute("SELECT sum(l.amount_currency) as tot_currency "\
+                "FROM account_move_line l "\
+                "WHERE l.account_id = %s AND %s"%(account.id, self.query))
+        sum_currency = self.cr.fetchone()[0] or 0.0
+        if form.get('initial_balance', False):
+            self.cr.execute("SELECT sum(l.amount_currency) as tot_currency "\
+                    "FROM account_move_line l "\
+                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+            # Add initial balance to the result
+            sum_currency += self.cr.fetchone()[0] or 0.0
+        return str(sum_currency)
 
     def get_children_accounts(self, account, form):
         res = []
