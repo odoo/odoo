@@ -46,8 +46,6 @@ class account_analytic_profit(osv.osv_memory):
 
     def print_report(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.analytic.line')
-        product_obj = self.pool.get('product.product')
-        price_obj = self.pool.get('product.pricelist')
         if context is None:
             context = {}
         data = {}
@@ -67,14 +65,12 @@ class account_analytic_profit(osv.osv_memory):
              'ids': [],
              'model': 'account.analytic.line',
              'form': data['form']
-                 }
+             }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.analytic.profit',
             'datas': datas,
-            'nodestroy': True
-
-            }
+             }
 
 account_analytic_profit()
 
