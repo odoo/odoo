@@ -429,7 +429,7 @@ class crm_case(object):
         rule_obj = self.pool.get('base.action.rule')
         model_obj = self.pool.get('ir.model')
         model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('name','=',model_ids[0])])
+        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
     def format_body(self, body):

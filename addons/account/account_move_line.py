@@ -819,7 +819,7 @@ class account_move_line(osv.osv):
         fld = []
         fields = {}
         flds = []
-        title = self.view_header_get(cr, uid, view_id, view_type, context)
+        title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
         journal_pool = self.pool.get('account.journal')
 

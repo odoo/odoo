@@ -477,9 +477,9 @@
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
+                        <field name="journal_id" widget="selection"/>      
                         <field name="date"/>
                         <field name="name"/>
-                        <field name="journal_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -498,7 +498,7 @@
                 <form string="Bank Statement">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date" select="1"/>
+                        <field name="date" select="1" on_change="onchange_date(date)"/>
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1"/>
                         <field name="period_id"/>
                         <field name="balance_start"/>
@@ -578,12 +578,12 @@
             <field name="filter" eval="True"/>
         </record>
 
-        <record id="action_bank_statement_tree2" model="ir.actions.act_window">
-            <field name="name">New Statement</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
+<!--        <record id="action_bank_statement_tree2" model="ir.actions.act_window">-->
+<!--            <field name="name">New Statement</field>-->
+<!--            <field name="res_model">account.bank.statement</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">form,tree</field>-->
+<!--        </record>-->
 
         <record id="view_bank_statement_reconcile" model="ir.ui.view">
             <field name="name">account.bank.statement.reconcile.form</field>
@@ -2420,7 +2420,7 @@
                         </page>
                         <page string="CashBox">
                             <group col="2" colspan="2" expand="1">
-                                <field name="starting_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','=','draft')]}">
+                                <field name="starting_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','draft')]}">
                                     <tree string = "Opening Balance" editable="bottom">
                                         <field name="pieces"/>
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
@@ -2434,7 +2434,7 @@
                                 </field>
                             </group>
                             <group col="2" colspan="2" expand="1">
-                                <field name="ending_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','=','draft')]}">
+                                <field name="ending_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','open')]}">
                                     <tree string = "Closing Balance" editable="bottom">
                                         <field name="pieces"/>
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
@@ -2455,7 +2455,7 @@
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Dates" colspan="4"/>
-                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date)"/>
                             <field name="closing_date" select="1" attrs="{'readonly':[('state','=','confirm')]}"/>
                         </group>
                         <group col="2" colspan="2">

@@ -59,6 +59,19 @@ class hr_recruitment_stage(osv.osv):
     }
 hr_recruitment_stage()
 
+class hr_recruitment_degree(osv.osv):
+    """ Degree of HR Recruitment """
+    _name = "hr.recruitment.degree"
+    _description = "Degree of Recruitment"
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of degrees."),
+    }
+    _defaults = {
+        'sequence': 1,
+    }
+hr_recruitment_degree()
+
 class hr_applicant(osv.osv, crm.crm_case):
     _name = "hr.applicant"
     _description = "Applicant"
@@ -88,6 +101,8 @@ class hr_applicant(osv.osv, crm.crm_case):
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
+        'date_action': fields.date('Next Action Date'),
+        'title_action': fields.char('Next Action', size=64),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
         'job_id': fields.many2one('hr.job', 'Applied Job'),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
@@ -96,7 +111,7 @@ class hr_applicant(osv.osv, crm.crm_case):
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('object_id.model', '=', 'hr.applicant')]"),
+        'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id':fields.many2one('hr.department', 'Department'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
@@ -237,7 +252,7 @@ class hr_applicant(osv.osv, crm.crm_case):
     def message_new(self, cr, uid, msg, context):
         """
         Automatically calls when new email message arrives
-        
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
@@ -249,7 +264,7 @@ class hr_applicant(osv.osv, crm.crm_case):
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-        
+
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -259,15 +274,15 @@ class hr_applicant(osv.osv, crm.crm_case):
         }
         if msg.get('priority', False):
             vals['priority'] = priority
-        
+
         res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context)
-        
+
         message = _('A Job Request created') + " '" + subject + "' " + _("from Mailgate.")
         self.log(cr, uid, res, message)
-        
+
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -283,16 +298,16 @@ class hr_applicant(osv.osv, crm.crm_case):
         return res
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
-        """ 
+        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs 
+        @param ids: List of update mail’s IDs
         """
-        
+
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        
+
         msg_from = msg['from']
         vals.update({
             'description': msg['body']
@@ -312,7 +327,7 @@ class hr_applicant(osv.osv, crm.crm_case):
             if res and maps.get(res.group(1).lower(), False):
                 key = maps.get(res.group(1).lower())
                 vls[key] = res.group(2).lower()
-        
+
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
         return res
@@ -328,7 +343,7 @@ class hr_applicant(osv.osv, crm.crm_case):
             @param **args: Return Dictionary of Keyword Value
         """
         return True
-    
+
     def case_open(self, cr, uid, ids, *args):
         """
         @param self: The object pointer

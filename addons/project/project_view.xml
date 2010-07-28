@@ -40,7 +40,6 @@
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                                <field name="project_escalation_id"/>
                                 <field name="warn_manager"/>
                             </group>
                             <newline/>
@@ -166,7 +165,7 @@
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current':1}</field>
-            <field name="help"> Consult and define yours projects here. A project content a set of related activities that will be performed by your company. Any project can be put into a hierarchy, as a child of a Parent Project. This allows you to design large project structure very useful for work organization.</field>
+            <field name="help">Consult and define your projects here. A project contains a set of related activities that will be performed by your company. Any project can be put into a hierarchy, as a child of a Parent Project. This allows you to design large project structure very useful for work organization.</field>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
