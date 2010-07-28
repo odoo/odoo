@@ -29,7 +29,7 @@
     but you would also be able to connect with them through the file system using the 
     a FTP client.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'document'],
     'init_xml': [],

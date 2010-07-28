@@ -28,7 +28,7 @@
         the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'project', 'hr_timesheet_sheet'],
     'init_xml': [],

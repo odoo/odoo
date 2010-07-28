@@ -30,7 +30,7 @@
     orders generated from sale orders.
     It adds sale name and sale Reference on production order
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['mrp', 'sale'],
     'init_xml': [],

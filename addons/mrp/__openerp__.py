@@ -23,7 +23,7 @@
 {
     "name" : "Manufacturing Resource Planning",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
