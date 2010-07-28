@@ -106,7 +106,7 @@
          <field name="view_mode">tree,form</field>
          <field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />
         <field name="domain">[('ref','like','crm.meeting,')]</field>
-         <field name="context">{"search_default_user_id":uid}</field>
+         <field name="context">{"search_default_toreview":1, "search_default_user_id":uid}</field>
      </record>
 
     <menuitem id="menu_attendee_invitations"
