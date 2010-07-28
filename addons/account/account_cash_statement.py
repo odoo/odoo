@@ -182,7 +182,7 @@ class account_cash_statement(osv.osv):
                 'pieces':rs,
                 'number':0
             }
-            res.append(dct)
+            res.append((0,0,dct))
         return res
     
     _columns = {
