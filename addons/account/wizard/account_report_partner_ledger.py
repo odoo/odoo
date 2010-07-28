@@ -29,7 +29,7 @@ class account_partner_ledger(osv.osv_memory):
     _inherit = 'account.common.partner.report'
     _description = 'Account Partner Ledger'
     _columns = {
-        'soldeinit': fields.boolean('Include initial balances',
+        'initial_balance': fields.boolean('Include initial balances',
                                     help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
         'reconcil': fields.boolean('Include Reconciled Entries'),
         'page_split': fields.boolean('One Partner Per Page', help='Display Ledger Report with One partner per page'),
@@ -37,7 +37,7 @@ class account_partner_ledger(osv.osv_memory):
                 }
     _defaults = {
        'reconcile' : True,
-       'soldeinit' : True,
+       'initial_balance' : True,
        'page_split' : False,
                }
 
@@ -45,7 +45,7 @@ class account_partner_ledger(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['soldeinit', 'reconcil', 'page_split', 'amount_currency'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['initial_balance', 'reconcil', 'page_split', 'amount_currency'])[0])
         if data['form']['page_split']:
             return {
                 'type': 'ir.actions.report.xml',

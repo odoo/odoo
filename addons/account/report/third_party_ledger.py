@@ -166,7 +166,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         self.account_ids = [a for (a,) in self.cr.fetchall()]
         partner_to_use = []
 
-        if self.date_lst and data['form']['soldeinit'] :
+        if self.date_lst and data['form']['initial_balance'] :
             self.cr.execute(
                 "SELECT DISTINCT line.partner_id " \
                 "FROM account_move_line AS line, account_account AS account " \
@@ -212,7 +212,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         else:
             RECONCILE_TAG = "AND l.reconcile_id IS NULL"
 
-#        if data['form']['soldeinit'] :
+#        if data['form']['initial_balance'] :
 #
 #            self.cr.execute(
 #                    "SELECT l.id,l.date,j.code, l.ref, l.name, l.debit, l.credit " \
@@ -259,7 +259,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.date_lst and data['form']['soldeinit'] :
+        if self.date_lst and data['form']['initial_balance'] :
             self.cr.execute(
                 "SELECT sum(debit) " \
                 "FROM account_move_line " \
@@ -297,7 +297,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.date_lst and data['form']['soldeinit'] :
+        if self.date_lst and data['form']['initial_balance'] :
             self.cr.execute(
                     "SELECT sum(credit) " \
                     "FROM account_move_line " \
@@ -337,7 +337,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.date_lst and data['form']['soldeinit'] :
+        if self.date_lst and data['form']['initial_balance'] :
             self.cr.execute(
                     "SELECT sum(debit) " \
                     "FROM account_move_line " \
@@ -375,7 +375,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.date_lst and data['form']['soldeinit'] :
+        if self.date_lst and data['form']['initial_balance'] :
             self.cr.execute(
                     "SELECT sum(credit) " \
                     "FROM account_move_line " \

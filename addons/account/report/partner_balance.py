@@ -175,7 +175,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     "WHERE a.type IN %s " \
                     "AND a.active", (self.ACCOUNT_TYPE,))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
-        self.soldeinit = data['form']['soldeinit'] # for include initial balance
+        self.initial_balance = data['form']['initial_balance'] # for include initial balance
         return super(partner_balance, self).set_context(objects, data, ids, report_type)
 
     def lines(self, data):
@@ -209,7 +209,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             res = self.cr.dictfetchall()
 
             #For include intial balance..
-            if self.soldeinit:
+            if self.initial_balance:
                 date_init = (datetime.datetime.strptime(self.date_lst[0], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
                 self.cr.execute(
                     "SELECT '1' as type, '' as ref, l.account_id as account_id, '' as account_name, '' as code, '' as name, sum(debit) as debit, sum(credit) as credit, " \
@@ -271,7 +271,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
-        if not self.soldeinit:
+        if not self.initial_balance:
             return subtotal_row
 
         #If include initial balance is selected..
@@ -415,7 +415,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                         "AND l.date IN %s",
                         (tuple(self.account_ids), tuple(self.date_lst)))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
-#            if self.soldeinit:
+#            if self.initial_balance:
 #                date_init = (datetime.datetime.strptime(self.date_lst[0], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
 #                self.cr.execute(
 #                        "SELECT sum(debit) " \
@@ -440,7 +440,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                         "AND l.date IN %s",
                         (tuple(self.account_ids), tuple(self.date_lst),))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
-#            if self.soldeinit:
+#            if self.initial_balance:
 #                date_init = (datetime.datetime.strptime(self.date_lst[0], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
 #                self.cr.execute(
 #                        "SELECT sum(credit) " \
@@ -466,7 +466,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                         "AND l.blocked=TRUE ",
                         (tuple(self.account_ids), tuple(self.date_lst),))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
-#            if self.soldeinit:
+#            if self.initial_balance:
 #                date_init = (datetime.datetime.strptime(self.date_lst[0], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
 #                self.cr.execute(
 #                        "SELECT sum(debit-credit) " \
