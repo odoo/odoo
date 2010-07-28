@@ -492,16 +492,7 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
     </section>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
     <para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
     <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table4">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]] 
       <tr>
@@ -606,7 +597,7 @@
             <para style="terp_default_Right_9">[[ formatLang((line['progress'])) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['amount_currency'] or 0.00) ]] [[ line['conrency_code' or '' ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['amount_currency'] or '') ]] [[ line['conrency_code' or '' ]]</para>
           </td>
         </tr>
       </blockTable>
