@@ -238,7 +238,7 @@
                     <filter icon="terp-go-week" string="7 Days" help="Evaluations to close within the next 7 days"
                         domain="[('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" />
                         <filter icon="terp-gnome-cpu-frequency-applet+" string="Overpassed"
-                            help="Evaluations that overpassed the deadline" domain="[('date','&gt;=',(datetime.date.today()))]" />
+                            help="Evaluations that overpassed the deadline" domain="[('date','&gt;=',str(datetime.date.today()))]" />
                         <separator orientation="vertical"/>
                         <field name="employee_id" />
                         <field name="plan_id" widget="selection" />

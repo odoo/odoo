@@ -629,8 +629,8 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
-            help="The sequence used for invoice numbers in this journal."),
+#        'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
+#            help="The sequence used for invoice numbers in this journal."),
         'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
@@ -695,13 +695,13 @@ class account_journal(osv.osv):
                 'sequence_id':seq_id
             })
 
-        if journal.type in journal_type and not journal.invoice_sequence_id:
-            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
-            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
-            inv_seq_id
-            res.update({
-                'invoice_sequence_id':inv_seq_id
-            })
+#        if journal.type in journal_type and not journal.invoice_sequence_id:
+#            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
+#            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
+#            inv_seq_id
+#            res.update({
+#                'invoice_sequence_id':inv_seq_id
+#            })
         
         result = self.write(cr, uid, [journal.id], res)
             
