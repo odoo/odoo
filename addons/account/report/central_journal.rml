@@ -113,7 +113,7 @@
     </blockTableStyle>    
  <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
-      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="-1,0"/>
+   <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
     </blockTableStyle>       
     <blockTableStyle id="Table_Final_Total">
       <blockAlignment value="LEFT"/>
@@ -248,7 +248,7 @@
       	<para style="terp_tblheader_General_Centre">Chart of Account <font color="white"> [[ data['model']=='ir.ui.menu' or removeParentNode('para') ]]</font></para></td>        
 	        <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
 			<td><para style="terp_tblheader_General_Centre">Journal</para></td>        
-	        <td><para style="terp_tblheader_General_Centre">Filters By </para></td>
+	        <td><para style="terp_tblheader_General_Centre">Filters By  [[get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
 	        <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
 	<tr>
