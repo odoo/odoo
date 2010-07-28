@@ -169,7 +169,6 @@ class act_window(osv.osv):
                 return s.encode('utf8')
             return s
         for act in self.browse(cr, uid, ids):
-            context.update(eval(act.context, context.copy()))
             fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid, context=context)
             search_view_id = False
             if act.search_view_id:
