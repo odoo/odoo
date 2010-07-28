@@ -19,15 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
-from datetime import datetime, timedelta
+from osv import fields, osv
+from datetime import datetime
 import crm
-import math
 import time
 import mx.DateTime
 from tools.translate import _
 from crm import crm_case
-import collections
 import binascii
 import tools
 
@@ -348,7 +346,6 @@ class crm_lead(osv.osv, crm_case):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
-        msg_from = msg['from']
         if msg.get('priority'):
             vals['priority'] = msg.get('priority')
 
