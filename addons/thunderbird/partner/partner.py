@@ -108,51 +108,51 @@ class tinythunderbird_partner(osv.osv):
         res = {}
         if partner:
             partner=partner[0]
+            print "partnert",partner
             test = address_obj.read(cr,user, partner)
             res = {
                 'partner_name': test['partner_id'] and test['partner_id'][1] or '',
                 'contactname': test['name'] or '',
-#                'type': test['type'] or '',
                 'street': test['street'] or '',
                 'street2': test['street2'] or '',
                 'zip': test['zip'] or '',
                 'city': test['city'] or '',
-                'country': test['country_id'] and test['country_id'][1] or '',
-                'state': test['state_id'] and test['state_id'][1] or '',
+                'country': test['country_id'] and test['country_id'][0] or '',
+                'state': test['state_id'] and test['state_id'][0] or '',
                 'email': test['email'] or '',
                 'phone': test['phone'] or '',
                 'mobile': test['mobile'] or '',
                 'fax': test['fax'] or '',
-                'res_id':test['id'] or '',
+                'res_id': str(partner),
             }
         return res.items()
 
-
-    def thunderbird_createcontact1(self,cr,user,vals):
+    def thunderbird_newcreatecontact(self,cr,user,vals):
         dictcreate = dict(vals)
-        email = dictcreate['email']
-        add_obj = self.pool.get('res.partner.address')
-        partner_ids = add_obj.search(cr,user,[('email','ilike',email)])
-        if partner_ids:
-            partner_ids = partner_ids[0]
-            partner = add_obj.read(cr,user,partner_ids)
-            res = {}
-            res = dictcreate.update({'partner_id':partner['partner_id'][0],
-                               'name':partner['name'],
-                               'street':partner['street'],
-                               'street2':partner['street2'],
-                               'zip':partner['zip'],
-                               'city':partner['city'],
-                               'country_id':partner['country_id'][0],
-                               'state_id':partner['state_id'],
-                               'phone':partner['phone'],
-                               'fax':partner['fax'],
-                               'mobile':partner['mobile'],
-                               'email':partner['email'],
-                               'res_id':partner['id']})
-            return res
-#        create_id = add_obj.create(cr, user, dictcreate)
-#        return create_id
+        res_id = dictcreate.get('res_id',False)
+        result={}
+        if res_id:
+            dictcreate.pop('res_id')
+            add_obj = self.pool.get('res.partner.address')
+            add_data = add_obj.read(cr, user, int(res_id), [])
+            result={           'partner_id': add_data['partner_id'] and add_data['partner_id'][0] or False,
+                               'country_id': dictcreate['country_id'] and int(dictcreate['country_id'][0]) or False,
+                               'state_id': dictcreate['state_id'] and int(dictcreate['state_id'][0]) or False,
+                               'name': dictcreate['name'],
+                               'street': dictcreate['street'],
+                               'street2': dictcreate['street2'],
+                               'zip': dictcreate['zip'],
+                               'city': dictcreate['city'],
+                               'country_id': dictcreate['country_id'][0],
+                               'state_id': dictcreate['state_id'],
+                               'phone': dictcreate['phone'],
+                               'fax': dictcreate['fax'],
+                               'mobile': dictcreate['mobile'],
+                               'email': dictcreate['email'],
+                               }
+        add_obj.write(cr, user,res_id,result )
+
+        return True
 
     def thunderbird_createpartner(self,cr,user,vals):
         dictcreate = dict(vals)
@@ -162,16 +162,6 @@ class tinythunderbird_partner(osv.osv):
             return 0
         create_id = address_obj.create(cr, user, dictcreate)
         return create_id
-
-#    def thunderbird_createnewaddress(self,cr,user,vals):
-#        dictcreate = dict(vals)
-#        address_obj = self.pool.get('res.partner.address')
-#        search_id = address_obj.search(cr, user,[('name','=',dictcreate['name'])])
-#        if search_id:
-#            return 0
-#        create_id = address_obj.create(cr, user, dictcreate)
-#        return create_id
-
 
     def thunderbird_searchobject(self,cr,user,vals):
         dictcreate = dict(vals)
@@ -267,6 +257,17 @@ class tinythunderbird_partner(osv.osv):
             if model_obj.search(cr, user, [('model', '=', obj[0])]):
                 object.append(obj)
         return object
+
+    def thunderbird_objectcountry(self,cr,user,vals):
+        country_list = []
+        cr.execute("SELECT id, name from res_country")
+        country_list = cr.fetchall()
+        return country_list
+
+    def thunderbird_objectstate(self,cr,user,vals):
+        cr.execute("SELECT id, name from res_country_state")
+        state_country_list = cr.fetchall()
+        return state_country_list
 
     def thunderbird_list_search_object(self,cr,user,vals):
         model_obj = self.pool.get('ir.model')
