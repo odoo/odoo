@@ -46,9 +46,9 @@ class hr_installer(osv.osv_memory):
                  "performance review of employees."),
         'hr_attendance': fields.boolean('Attendances (Sign In/Out)',
             help="Simplifies the management of employee attendances."),
-        'hr_payroll': fields.boolean('Payroll' ,
+        'hr_payroll': fields.boolean('Payroll',
             help="Generic Payroll system"),
-        'hr_payroll_account': fields.boolean('Payroll with Accounting',
+        'hr_payroll_account': fields.boolean('Payroll Accounting',
             help="Generic Payroll system Integrated with Accountings."),
         }
     _defaults = {

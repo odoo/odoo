@@ -215,7 +215,7 @@ class project_task(osv.osv):
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if not context:
             context = {}
-        if not context.get('planning'):
+        if not context.get('planning', False):
             return super(project_task,self).search(cr, user, args, offset, limit, order, context)
         cr.execute(" SELECT t.id, t.name \
                         from project_task t \
@@ -529,7 +529,7 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
                     project_task
                 WHERE
                 ''' + where + '''
-                    project_id IN (select id from project_project where category_id=%s) AND
+                    project_id IN (select id from project_project where analytic_account_id=%s) AND
                     date_end>=%s AND
                     date_end<=%s''', (
                 line.account_id.id,

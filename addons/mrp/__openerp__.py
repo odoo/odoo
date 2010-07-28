@@ -72,7 +72,6 @@
         'wizard/mrp_change_standard_price_view.xml',
 #        'wizard/mrp_track_prod_view.xml',
         'mrp_view.xml',
-        'mrp_wizard.xml',
         'mrp_report.xml',
         'company_view.xml',
         'process/stockable_product_process.xml',

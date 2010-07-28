@@ -27,19 +27,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Board">
-                    <vpaned>
+                    <hpaned>
                         <child1>
-                            <action colspan="4" height="160" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
+                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
                         </child1>
                         <child2>
-                            <group col="2" colspan="2" expand="1">
-                                <action colspan="4" name="%(action_aged_receivable)d" string="Aged receivables"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/>
-                            </group>
+                            <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged receivables"/>
+                            <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/>
                         </child2>
-                    </vpaned>
+                    </hpaned>
                 </form>
             </field>
         </record>
@@ -53,7 +49,7 @@
             <field name="view_id" ref="board_account_form"/>
         </record>
 
-        <menuitem icon="terp-graph" id="menu_dashboard_acc" name="Dashboard" sequence="2" parent="account.menu_finance_reporting"/>
+        <menuitem id="menu_dashboard_acc" name="Dashboard" sequence="2" parent="account.menu_finance_reporting"/>
         <menuitem action="open_board_account" icon="terp-graph" id="menu_board_account" parent="menu_dashboard_acc" sequence="1"/>
     </data>
 </openerp>

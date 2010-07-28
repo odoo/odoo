@@ -149,6 +149,8 @@
                             <newline/>
                             <field groups="base.group_extended" name="cost_method"/>
                             <newline/>
+                            <field groups="base.group_extended" name="seller_id"/>
+                            <newline/>  
                             <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
@@ -453,8 +455,10 @@
                     <field name="sequence"/>
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>
-                    <field name="delay"/>
+                    <field name="min_qty"/>
+                    <field name="product_uom" widget="selection"/>
                     <field name="qty"/>
+                    <field name="delay"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" groups="base.group_extended" name="pricelist_ids" nolabel="1" widget="one2many_list">
                         <tree editable="bottom" string="Pricelist">

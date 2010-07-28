@@ -59,6 +59,19 @@ class hr_recruitment_stage(osv.osv):
     }
 hr_recruitment_stage()
 
+class hr_recruitment_degree(osv.osv):
+    """ Degree of HR Recruitment """
+    _name = "hr.recruitment.degree"
+    _description = "Degree of Recruitment"
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of degrees."),
+    }
+    _defaults = {
+        'sequence': 1,
+    }
+hr_recruitment_degree()
+
 class hr_applicant(osv.osv, crm.crm_case):
     _name = "hr.applicant"
     _description = "Applicant"
@@ -88,6 +101,8 @@ class hr_applicant(osv.osv, crm.crm_case):
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
+        'date_action': fields.date('Next Action Date'),
+        'title_action': fields.char('Next Action', size=64),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
         'job_id': fields.many2one('hr.job', 'Applied Job'),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
@@ -96,7 +111,7 @@ class hr_applicant(osv.osv, crm.crm_case):
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('object_id.model', '=', 'hr.applicant')]"),
+        'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id':fields.many2one('hr.department', 'Department'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
@@ -121,11 +136,14 @@ class hr_applicant(osv.osv, crm.crm_case):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
-    def onchange_job(self,cr, uid, ids, job, context={}):
+    def onchange_job(self,cr, uid, ids, job, context=None):
+        job_obj = self.pool.get('hr.job')
+        if context is None:
+            context = {}
         result = {}
+
         if job:
-            job_obj = self.pool.get('hr.job')
-            result['department_id'] = job_obj.browse(cr, uid, job).department_id.id
+            result['department_id'] = job_obj.browse(cr, uid, job, context=context).department_id.id
             return {'value': result}
         return {'value': {'department_id': []}}
 
@@ -137,14 +155,15 @@ class hr_applicant(osv.osv, crm.crm_case):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
+        stage_obj = self.pool.get('hr.recruitment.stage')
         if not context:
             context = {}
-        for case in self.browse(cr, uid, ids, context):
+        for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
-            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)])
+            stage_ids = stage_obj.search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)], context=context)
             if st and stage_ids.index(st):
-                self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)-1]})
+                self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)-1]}, context=context)
         return True
 
     def stage_next(self, cr, uid, ids, context=None):
@@ -155,14 +174,15 @@ class hr_applicant(osv.osv, crm.crm_case):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
+        stage_obj = self.pool.get('hr.recruitment.stage')
         if not context:
             context = {}
-        for case in self.browse(cr, uid, ids, context):
+        for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
-            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)])
+            stage_ids = stage_obj.search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)], context=context)
             if st and len(stage_ids) != stage_ids.index(st)+1:
-                self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)+1]})
+                self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)+1]}, context=context)
         return True
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
@@ -176,13 +196,14 @@ class hr_applicant(osv.osv, crm.crm_case):
 
         @return : Dictionary value for created Meeting view
         """
+        data_obj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
         value = {}
-        for opp in self.browse(cr, uid, ids):
-            data_obj = self.pool.get('ir.model.data')
-
+        for opp in self.browse(cr, uid, ids, context=context):
             # Get meeting views
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-            res = data_obj.read(cr, uid, result, ['res_id'])
+            res = data_obj.read(cr, uid, result, ['res_id'], context=context)
             id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
             id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
             id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
@@ -228,28 +249,30 @@ class hr_applicant(osv.osv, crm.crm_case):
         """
         if not context:
             context = {}
-        record = self.browse(cr, uid, ids, context)
+        record = self.browse(cr, uid, ids, context=context)
         record = record and record[0]
         context.update({'survey_id': record.survey.id, 'response_id' : [record.response], 'response_no':0, })
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
         return value
 
-    def message_new(self, cr, uid, msg, context):
+    def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
-        
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-
         mailgate_pool = self.pool.get('email.server.tools')
+        attach_obj = self.pool.get('ir.attachment')
+        if context is None:
+            context = {}
 
         subject = msg.get('subject')
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-        
+
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -259,15 +282,15 @@ class hr_applicant(osv.osv, crm.crm_case):
         }
         if msg.get('priority', False):
             vals['priority'] = priority
-        
+
         res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
-        res = self.create(cr, uid, vals, context)
-        
+        res = self.create(cr, uid, vals, context=context)
+
         message = _('A Job Request created') + " '" + subject + "' " + _("from Mailgate.")
         self.log(cr, uid, res, message)
-        
+
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -278,21 +301,23 @@ class hr_applicant(osv.osv, crm.crm_case):
                 'res_model': self._name,
                 'res_id': res,
             }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
+            attach_obj.create(cr, uid, data_attach, context=context)
 
         return res
 
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
-        """ 
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
+        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs 
+        @param ids: List of update mail’s IDs
         """
-        
+        if context is None:
+            context = {}
+
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        
+
         msg_from = msg['from']
         vals.update({
             'description': msg['body']
@@ -312,9 +337,9 @@ class hr_applicant(osv.osv, crm.crm_case):
             if res and maps.get(res.group(1).lower(), False):
                 key = maps.get(res.group(1).lower())
                 vls[key] = res.group(2).lower()
-        
+
         vals.update(vls)
-        res = self.write(cr, uid, ids, vals)
+        res = self.write(cr, uid, ids, vals, context=context)
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
@@ -328,7 +353,7 @@ class hr_applicant(osv.osv, crm.crm_case):
             @param **args: Return Dictionary of Keyword Value
         """
         return True
-    
+
     def case_open(self, cr, uid, ids, *args):
         """
         @param self: The object pointer

@@ -34,6 +34,8 @@ class hr_employee_category(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from hr_employee_category where id IN %s', (tuple(ids), ))
@@ -62,6 +64,8 @@ hr_employee_marital_status()
 class hr_job(osv.osv):
 
     def _no_of_employee(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
         res = {}
         for emp in self.browse(cr, uid, ids):
             res[emp.id] = len(emp.employee_ids or [])
@@ -133,6 +137,8 @@ class hr_employee(osv.osv):
     }
 
     def _get_photo(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         return open(os.path.join(
             tools.config['addons_path'], 'hr/image', 'photo.png'),
                     'rb') .read().encode('base64')

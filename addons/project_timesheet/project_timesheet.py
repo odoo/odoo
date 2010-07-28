@@ -69,7 +69,7 @@ class project_work(osv.osv):
         vals_line['product_id'] = result['product_id']
         vals_line['date'] = vals['date'][:10]
         vals_line['unit_amount'] = vals['hours']
-        acc_id = obj_task.project_id.category_id.id
+        acc_id = obj_task.project_id.analytic_account_id.id
         vals_line['account_id'] = acc_id
         res = obj_timesheet.on_change_account_id(cr, uid, False, acc_id)
         if res.get('value'):
@@ -165,7 +165,7 @@ class task(osv.osv):
             task_obj_l = self.browse(cr, uid, ids, context)
             if (vals.has_key('project_id') and vals['project_id']):
                 project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'])
-                acc_id = project_obj.category_id.id
+                acc_id = project_obj.analytic_account_id.id
 
             for task_obj in task_obj_l:
                 if len(task_obj.work_ids):
@@ -188,7 +188,7 @@ class project_project(osv.osv):
             context = {}
         result = []
         for project in self.browse(cr, user, ids, context):
-            name = "[%s] %s" % (project.category_id and project.category_id.code or '?', project.name)
+            name = "[%s] %s" % (project.analytic_account_id and project.analytic_account_id.code or '?', project.name)
             result.append((project.id, name))
         return result
 

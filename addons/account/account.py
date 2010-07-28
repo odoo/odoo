@@ -248,59 +248,59 @@ class account_account(osv.osv):
 
     def __compute(self, cr, uid, ids, field_names, arg=None, context=None,
                   query='', query_params=()):
-            """ compute the balance, debit and/or credit for the provided
-            account ids
-            Arguments:
-            `ids`: account ids
-            `field_names`: the fields to compute (a list of any of
-                           'balance', 'debit' and 'credit')
-            `arg`: unused fields.function stuff
-            `query`: additional query filter (as a string)
-            `query_params`: parameters for the provided query string
-                            (__compute will handle their escaping) as a
-                            tuple
-            """
-            mapping = {
-                'balance': "COALESCE(SUM(l.debit),0) " \
-                           "- COALESCE(SUM(l.credit), 0) as balance",
-                'debit': "COALESCE(SUM(l.debit), 0) as debit",
-                'credit': "COALESCE(SUM(l.credit), 0) as credit"
-            }
-            #get all the necessary accounts
-            children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
-            #compute for each account the balance/debit/credit from the move lines
-            accounts = {}
-            if children_and_consolidated:
-                aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        """ compute the balance, debit and/or credit for the provided
+        account ids
+        Arguments:
+        `ids`: account ids
+        `field_names`: the fields to compute (a list of any of
+                       'balance', 'debit' and 'credit')
+        `arg`: unused fields.function stuff
+        `query`: additional query filter (as a string)
+        `query_params`: parameters for the provided query string
+                        (__compute will handle their escaping) as a
+                        tuple
+        """
+        mapping = {
+            'balance': "COALESCE(SUM(l.debit),0) " \
+                       "- COALESCE(SUM(l.credit), 0) as balance",
+            'debit': "COALESCE(SUM(l.debit), 0) as debit",
+            'credit': "COALESCE(SUM(l.credit), 0) as credit"
+        }
+        #get all the necessary accounts
+        children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
+        #compute for each account the balance/debit/credit from the move lines
+        accounts = {}
+        if children_and_consolidated:
+            aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
-                wheres = [""]
-                if query.strip():
-                    wheres.append(query.strip())
-                if aml_query.strip():
-                    wheres.append(aml_query.strip())
-                filters = " AND ".join(wheres)
-                self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                          'Filters: %s'%filters)
-                # IN might not work ideally in case there are too many
-                # children_and_consolidated, in that case join on a
-                # values() e.g.:
-                # SELECT l.account_id as id FROM account_move_line l
-                # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
-                # ON l.account_id = tmp.id
-                # or make _get_children_and_consol return a query and join on that
-                request = ("SELECT l.account_id as id, " +\
-                           ' , '.join(map(mapping.__getitem__, field_names)) +
-                           " FROM account_move_line l" \
-                           " WHERE l.account_id IN %s " \
-                                + filters +
-                           " GROUP BY l.account_id")
-                params = (tuple(children_and_consolidated),) + query_params
-                cr.execute(request, params)
-                self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
-                                          'Status: %s'%cr.statusmessage)
+            wheres = [""]
+            if query.strip():
+                wheres.append(query.strip())
+            if aml_query.strip():
+                wheres.append(aml_query.strip())
+            filters = " AND ".join(wheres)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Filters: %s'%filters)
+            # IN might not work ideally in case there are too many
+            # children_and_consolidated, in that case join on a
+            # values() e.g.:
+            # SELECT l.account_id as id FROM account_move_line l
+            # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
+            # ON l.account_id = tmp.id
+            # or make _get_children_and_consol return a query and join on that
+            request = ("SELECT l.account_id as id, " +\
+                       ' , '.join(map(mapping.__getitem__, field_names)) +
+                       " FROM account_move_line l" \
+                       " WHERE l.account_id IN %s " \
+                            + filters +
+                       " GROUP BY l.account_id")
+            params = (tuple(children_and_consolidated),) + query_params
+            cr.execute(request, params)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Status: %s'%cr.statusmessage)
 
-                for res in cr.dictfetchall():
-                    accounts[res['id']] = res
+            for res in cr.dictfetchall():
+                accounts[res['id']] = res
 
             # consolidate accounts with direct children
             children_and_consolidated.reverse()
@@ -629,8 +629,8 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
-            help="The sequence used for invoice numbers in this journal."),
+#        'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
+#            help="The sequence used for invoice numbers in this journal."),
         'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
@@ -656,9 +656,18 @@ class account_journal(osv.osv):
         @param context: context arguments, like lang, time zone
         @return: return a result
         """
+
+        journal_type = ('sale', 'sale_refund', 'purchase', 'purchase_refund')
+        journal_seq = {
+            'sale':'seq_out_invoice',
+            'purchase':'seq_in_invoice',
+            'purchase_refund':'seq_out_refund',
+            'sale_refund':'seq_in_refund'
+        }
         
         seq_pool = self.pool.get('ir.sequence')
         seq_typ_pool = self.pool.get('ir.sequence.type')
+        date_pool = self.pool.get('ir.model.data')
         
         result = True
         
@@ -685,11 +694,14 @@ class account_journal(osv.osv):
             res.update({
                 'sequence_id':seq_id
             })
-        
-        if not journal.invoice_sequence_id:
-            res.update({
-                'invoice_sequence_id':seq_id
-            })
+
+#        if journal.type in journal_type and not journal.invoice_sequence_id:
+#            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
+#            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
+#            inv_seq_id
+#            res.update({
+#                'invoice_sequence_id':inv_seq_id
+#            })
         
         result = self.write(cr, uid, [journal.id], res)
             
@@ -1018,7 +1030,6 @@ class account_move(osv.osv):
             res.append((move.id, name))
         return res
 
-
     def _get_period(self, cr, uid, context):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
@@ -1066,24 +1077,13 @@ class account_move(osv.osv):
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
-        'type': fields.selection([
-            ('pay_voucher','Cash Payment'),
-            ('bank_pay_voucher','Bank Payment'),
-            ('rec_voucher','Cash Receipt'),
-            ('bank_rec_voucher','Bank Receipt'),
-            ('cont_voucher','Contra'),
-            ('journal_sale_vou','Journal Sale'),
-            ('journal_pur_voucher','Journal Purchase'),
-            ('journal_voucher','Journal Voucher'),
-            ],'Entry Type', select=True , size=128, readonly=True, states={'draft':[('readonly',False)]}),
-        'narration':fields.text('Narration', readonly=True, select=True, states={'draft':[('readonly',False)]}),
+        'narration':fields.text('Narration', select=True),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
     _defaults = {
         'name': lambda *a: '/',
         'state': lambda *a: 'draft',
         'period_id': _get_period,
-        'type' : lambda *a : 'journal_voucher',
         'date': lambda *a:time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
@@ -1116,6 +1116,7 @@ class account_move(osv.osv):
             'You cannot create entries on different periods/journals in the same move',
             ['line_id']),
     ]
+    
     def post(self, cr, uid, ids, context=None):
         if self.validate(cr, uid, ids, context) and len(ids):
             for move in self.browse(cr, uid, ids):
@@ -1162,8 +1163,20 @@ class account_move(osv.osv):
     # TODO: Check if period is closed !
     #
     def create(self, cr, uid, vals, context={}):
-        if 'line_id' in vals:
-            if 'journal_id' in vals:
+        if 'line_id' in vals and context.get('copy'):
+            for l in vals['line_id']:
+                if not l[0]:
+                    l[2].update({
+                        'reconcile_id':False,
+                        'reconcil_partial_id':False,
+                        'analytic_lines':False,
+                        'invoice':False,
+                        'ref':False,
+                        'balance':False,
+                        'account_tax_id':False,
+                    })
+            
+            if 'journal_id' in vals and vals.get('journal_id', False):
                 for l in vals['line_id']:
                     if not l[0]:
                         l[2]['journal_id'] = vals['journal_id']
@@ -1189,11 +1202,14 @@ class account_move(osv.osv):
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update({'state':'draft', 'name':'/',})
+    def copy(self, cr, uid, id, default={}, context={}):
+        default.update({
+            'state':'draft',
+            'name':'/',
+        })
+        context.update({
+            'copy':True
+        })
         return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context={}, check=True):
@@ -2527,9 +2543,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     'account_paid_id': acc_template_ref[value['account_paid_id']],
                 })
 
-        # Creating Journals
+        # Creating Journals Sales and Purchase
         vals_journal={}
-        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')])
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
         data = data_pool.browse(cr, uid, data_id[0])
         view_id = data.res_id
         
@@ -2561,6 +2577,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['type'] = 'purchase'
         vals_journal['code'] = _('EXJ')
         vals_journal['sequence_id'] = seq_id_purchase
+        vals_journal['view_id'] = view_id
 
         if obj_multi.chart_template_id.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]

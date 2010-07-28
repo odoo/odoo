@@ -181,7 +181,7 @@ class project_issue(osv.osv, crm.crm_case):
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'assigned_to': fields.related('task_id', 'user_id', type='many2one', relation='res.users', string='Assigned to', help='This is the current user to whom the related task have been assigned', readonly=True),
+        'assigned_to': fields.many2one('res.users', 'Assigned to', help='This is the current user to whom the related task have been assigned'),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
@@ -406,8 +406,21 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
     _columns = {
-        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+        'resource_calendar_id' : fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+        'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.'),
+        'reply_to' : fields.char('Reply-To Email Address', size=256)
     }
+    
+    def _check_escalation(self, cr, uid, ids):
+         project_obj = self.browse(cr, uid, ids[0])
+         if project_obj.project_escalation_id:
+             if project_obj.project_escalation_id.id == project_obj.id:
+                 return False
+         return True
+
+    _constraints = [
+        (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
+    ]
 project()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

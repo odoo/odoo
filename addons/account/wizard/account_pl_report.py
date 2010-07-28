@@ -111,14 +111,12 @@ class account_pl_report(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'pl.account.horizontal',
                 'datas': data,
-                'nodestroy':True,
                 }
         else:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'pl.account',
                 'datas': data,
-                'nodestroy':True,
                 }
             
     def _check_date(self, cr, uid, data, context=None):

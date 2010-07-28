@@ -36,8 +36,6 @@ AVAILABLE_STATES = [
 
 class crm_opportunity(osv.osv):
     """ Opportunity Cases """
-    _name = "crm.lead"
-    _description = "Opportunity"
     _order = "priority,date_action,id desc"
     _inherit = 'crm.lead'
     _columns = {
@@ -72,8 +70,10 @@ class crm_opportunity(osv.osv):
 
         self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Won.")
-            self.log(cr, uid, id, message)
+            opp = self.browse(cr, uid, id)
+            if opp.type == 'opportunity':
+                message = _('The Opportunity') + " '" + name + "' "+ _("has been Won.")
+                self.log(cr, uid, id, message)
         return res
 
     def case_mark_lost(self, cr, uid, ids, *args):
@@ -95,7 +95,7 @@ class crm_opportunity(osv.osv):
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Lost.")
+                message = _('The Opportunity') + " '" + name + "' "+ _("has been Lost.")
                 self.log(cr, uid, id, message)
         return res
 

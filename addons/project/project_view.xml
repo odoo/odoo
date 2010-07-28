@@ -40,14 +40,13 @@
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                                <field name="project_escalation_id"/>
                                 <field name="warn_manager"/>
                             </group>
                             <newline/>
                             <group col="9" colspan="8">
                                 <field name="state" select="1" readonly="1"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
-                                <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,done" icon="gtk-ok"/>
+                                <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
@@ -131,7 +130,7 @@
                     	<filter string="Parent" name="Parent"  icon="terp-personal" domain = "[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Users" name="Users"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner"  icon="terp-personal" domain = "[]" context="{'group_by':'partner_id'}"/>
-                      </group>
+                    </group>
                </search>
             </field>
         </record>
@@ -166,7 +165,7 @@
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current':1}</field>
-            <field name="help"> Consult and define yours projects here. A project content a set of related activities that will be performed by your company. Any project can be put into a hierarchy, as a child of a Parent Project. This allows you to design large project structure very useful for work organization.</field>
+            <field name="help">Consult and define your projects here. A project contains a set of related activities that will be performed by your company. Any project can be put into a hierarchy, as a child of a Parent Project. This allows you to design large project structure very useful for work organization.</field>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
@@ -246,7 +245,7 @@
                 <form string="Task edition">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id" required="1" select="1" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
+                        <field name="project_id" required="1" select="1" domain="[('user_id','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline"/>
                         <field name="user_id" select="1"/>
@@ -317,6 +316,7 @@
                                 <separator string="Dates" colspan="2"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
+                                <field name="create_date"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id"/>
@@ -419,7 +419,7 @@
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
 						<filter name="edit"  
-	                        string="Edit" context="{'set_editable':'True','seq_visible': True}"
+	                        string="Edit" context="{'set_editable':True,'seq_visible': True}"
 	                        icon="gtk-execute"
 	                        groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -538,7 +538,6 @@ Issues like bugs in a system, client complain, materials breakdown are collected
 
         <act_window
             domain="[('project_id', '=', active_id)]"
-            context="{'set_default_template':1}"
             id="act_project_project_2_project_task_all"
             name="Tasks"
             res_model="project.task"

@@ -198,8 +198,8 @@ class crm_lead(osv.osv, crm_case):
             self.write(cr, uid, ids, value)
 
         for (id, name) in self.name_get(cr, uid, ids):
-            type = self.browse(cr, uid, id).type
-            message = (_('The ') + type.title() or 'Lead') + " '" + name + "' "+ _("has been written as Open.")
+            type = self.browse(cr, uid, id).type or 'Lead'
+            message = (_('The ') + type.title()) + " '" + name + "' "+ _("has been Opened.")
             self.log(cr, uid, id, message)
         return res
 
@@ -216,7 +216,7 @@ class crm_lead(osv.osv, crm_case):
         for (id, name) in self.name_get(cr, uid, ids):
             lead = self.browse(cr, uid, id)
             if lead.type == 'lead':
-                message = _('The Lead') + " '" + name + "' "+ _("has been written as Closed.")
+                message = _('The Lead') + " '" + name + "' "+ _("has been Closed.")
                 self.log(cr, uid, id, message)
         return res
 
