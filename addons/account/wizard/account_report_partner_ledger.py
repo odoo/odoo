@@ -29,10 +29,11 @@ class account_partner_ledger(osv.osv_memory):
     _inherit = 'account.common.partner.report'
     _description = 'Account Partner Ledger'
     _columns = {
-        'soldeinit': fields.boolean('Include initial balances'),
+        'soldeinit': fields.boolean('Include initial balances',
+                                    help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
         'reconcil': fields.boolean('Include Reconciled Entries'),
-        'page_split': fields.boolean('One Partner Per Page'),
-        'amount_currency': fields.boolean("With Currency", help='Print report with currency column'),
+        'page_split': fields.boolean('One Partner Per Page', help='Display Ledger Report with One partner per page'),
+        'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
                 }
     _defaults = {
        'reconcile' : True,

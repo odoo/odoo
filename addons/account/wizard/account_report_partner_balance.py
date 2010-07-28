@@ -29,7 +29,8 @@ class account_partner_balance(osv.osv_memory):
     _name = 'account.partner.balance'
     _description = 'Print Account Partner Balance'
     _columns = {
-        'soldeinit': fields.boolean('Include Initial Balances'),
+        'soldeinit': fields.boolean('Include Initial Balances'
+                                    ,help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
                 }
     _defaults = {
         'soldeinit': True,
