@@ -9,6 +9,7 @@
                 <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open','proforma','posted','recheck','audit')" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
+                    <field name="reference"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="type" invisible=" not context.get('set_visible',True)"/>
@@ -105,8 +106,11 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Extended options...">
-                       <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                       <field name="period_id" widget="selection" context="{'period_id': self}" groups="base.group_extended"/>
+                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
+                        <field name="period_id" widget="selection" context="{'period_id': self}" groups="base.group_extended"/>
+                        <separator orientation="vertical"/>
+                        <field name="narration" select="1"/>
+                        <field name="date" select='1'/>
                    </group>
                 </search>
             </field>
