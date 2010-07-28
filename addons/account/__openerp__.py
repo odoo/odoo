@@ -43,6 +43,7 @@ module named account_vouchers
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
+    "depends" : ["product", "analytic", "process","board"],
     'update_xml': [
         #'test/test_parent_structure.yml',
         'security/account_security.xml',
