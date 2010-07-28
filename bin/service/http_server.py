@@ -292,9 +292,11 @@ def init_xmlrpc():
         reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler))
         logging.getLogger("web-services").info("Registered XML-RPC over HTTP")
 
-    if tools.config.get('xmlrpcs', False):
-        reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler, True))
-        logging.getLogger("web-services").info("Registered XML-RPC over HTTPS")
+    if tools.config.get('xmlrpcs', False) \
+            and not tools.config.get('xmlrpc', False):
+        # only register at the secure server
+        reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler), True)
+        logging.getLogger("web-services").info("Registered XML-RPC over HTTPS only")
 
 class StaticHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
     _logger = logging.getLogger('httpd')
