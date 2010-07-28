@@ -20,32 +20,27 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
 
 class account_pl_report(osv.osv_memory):
     """
     This wizard will provide the account profit and loss report by periods, between any two dates.
     """
-    _inherit = "account.common.report"
+    _inherit = "account.common.account.report"
     _name = "account.pl.report"
     _description = "Account Profit And Loss Report"
     _columns = {
-#       'company_id': fields.many2one('res.company', 'Company', required=True),
-        'display_account': fields.selection([('bal_all','All'), ('bal_movement','With movements'),
-                         ('bal_solde','With balance is not equal to 0'),
-                         ],'Display accounts', required=True),
         'display_type': fields.boolean("Landscape Mode"),
                 }
 
     _defaults = {
-        'display_account': 'bal_all',
         'display_type': True,
                 }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
             context = {}
-        data['form'].update(self.read(cr, uid, ids, ['display_account',  'display_type'])[0])
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data['form'].update(self.read(cr, uid, ids, ['display_type'])[0])
         if data['form']['display_type']:
             return {
                 'type': 'ir.actions.report.xml',
@@ -58,35 +53,6 @@ class account_pl_report(osv.osv_memory):
                 'report_name': 'pl.account',
                 'datas': data,
                 }
-            
-    def _check_date(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
-        sql = """
-            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date_from'],))
-        res = cr.dictfetchall()
-        if res:
-
-            if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                raise  osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (res[0]['date_start'], res[0]['date_stop']))
-            else:
-                if data['form']['display_type']:
-                    return {
-                        'type': 'ir.actions.report.xml',
-                        'report_name': 'pl.account.horizontal',
-                        'datas': data,
-                        'nodestroy':True,
-                        }
-                else:
-                    return {
-                        'type': 'ir.actions.report.xml',
-                        'report_name': 'pl.account',
-                        'datas': data,
-                        'nodestroy':True,
-                        }
-        else:
-            raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
 
 account_pl_report()
 

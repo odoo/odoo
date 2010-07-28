@@ -22,6 +22,7 @@
 import account_report_common
 import account_report_common_partner
 import account_report_common_journal
+import account_report_common_account
 
 import account_automatic_reconcile
 import account_move_line_reconcile_select
@@ -47,7 +48,7 @@ import account_open_closed_fiscalyear
 import account_compare_account_balance_report
 import account_invoice_state
 import account_chart
-#TODO: remove this file no moe used 
+#TODO: remove this file no moe used
 # also remove related view fiel
 #import account_move_line_select
 

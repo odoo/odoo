@@ -20,34 +20,30 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
 
 class account_bs_report(osv.osv_memory):
     """
     This wizard will provide the account balance sheet report by periods, between any two dates.
     """
     _name = 'account.bs.report'
-    _inherit = "account.common.report"
+    _inherit = "account.common.account.report"
     _description = 'Account Balance Sheet Report'
 
     _columns = {
-        'display_account': fields.selection([('bal_all','All'), ('bal_movement','With movements'),
-                 ('bal_solde','With balance is not equal to 0'),
-                 ],'Display accounts', required=True),
         'display_type': fields.boolean("Landscape Mode"),
         'reserve_account_id': fields.many2one('account.account', 'Reserve & Surplus Account',required = True,
                                       help='This Account is used for trasfering Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report', domain = [('type','=','payable')]),
         }
 
     _defaults={
-        'display_account': 'bal_all',
         'display_type': True,
         }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
             context = {}
-        data['form'].update(self.read(cr, uid, ids, ['display_account',  'display_type', 'reserve_account_id'])[0])
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data['form'].update(self.read(cr, uid, ids, ['display_type', 'reserve_account_id'])[0])
         if data['form']['display_type']:
             return {
                 'type': 'ir.actions.report.xml',

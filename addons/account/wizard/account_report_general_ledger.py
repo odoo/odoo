@@ -22,21 +22,17 @@
 from osv import fields, osv
 
 class account_report_general_ledger(osv.osv_memory):
-    _inherit = "account.common.report"
+    _inherit = "account.common.account.report"
     _name = "account.report.general.ledger"
     _description = "General Ledger Report"
 
     _columns = {
-        'display_account': fields.selection([('all','All'), ('movement','With movements'),
-                         ('balance','With balance is not equal to 0'),
-                         ],'Display accounts', required=True),
         'landscape': fields.boolean("Landscape Mode"),
         'initial_balance': fields.boolean("Include initial balances"),
         'amount_currency': fields.boolean("With Currency"),
         'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By', required=True),
     }
     _defaults = {
-        'display_account': 'all',
         'landscape': True,
         'amount_currency': True,
         'sortby': 'sort_date',
@@ -52,12 +48,13 @@ class account_report_general_ledger(osv.osv_memory):
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
             context = {}
-        data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
         if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
             data['form'].update({'initial_balance': False})
         if data['form']['landscape']:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True }
-        return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data, 'nodestroy':True}
+        return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data}
 
 account_report_general_ledger()
 
