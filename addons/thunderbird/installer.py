@@ -33,7 +33,7 @@ class thunderbird_installer(osv.osv_memory):
         data = super(thunderbird_installer, self).default_get(cr, uid, fields, context)
         pdf_file = open(config['addons_path'] + "/thunderbird/doc/Installation Guide to OpenERP Thunderbid Plug-in.pdf", 'r')
         data['pdf_file'] = base64.encodestring(pdf_file.read())
-        file = open(config['addons_path'] + "/thunderbird/plugin/OpenERP_plugin-2.0.xpi", 'r')
+        file = open(config['addons_path'] + "/thunderbird/plugin/tiny_plugin-2.0.xpi", 'r')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
 
