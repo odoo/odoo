@@ -45,7 +45,7 @@
         <field name="type">tree</field>
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <tree string="Work Orders">
+            <tree string="Work Orders" colors="gray:state in ('done','cancel');black:state in ('draft','startworking');red: state=='pause'">
                 <field name="production_id"/>
                 <field name="date_planned"/>
                 <field name="product"/>
@@ -103,7 +103,7 @@
                         <field name="uom"/>
                     </group>
 
-                    <separator string="Status" colspan="4"/>
+                    <separator string="State" colspan="4"/>
                     <group colspan="8" col="8">
                         <field name="state"/>
                         <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
