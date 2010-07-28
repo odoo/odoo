@@ -303,8 +303,8 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 new_header['ref'] = ''
                 new_header['name'] = r['account_name']
                 new_header['code'] = r['code']
-                new_header['debit'] = tot_debit
-                new_header['credit'] = tot_credit
+                new_header['debit'] = r['credit'] #tot_credit
+                new_header['credit'] = r['debit'] #tot_debit
                 new_header['scredit'] = tot_scredit
                 new_header['sdebit'] = tot_sdebit
                 new_header['enlitige'] = tot_enlitige
