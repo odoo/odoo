@@ -38,33 +38,37 @@
     </rng:optional>
   </rng:define>
 
+  <rng:define name="container">
+    <rng:optional><rng:attribute name="col"/></rng:optional>
+    <rng:zeroOrMore>
+      <rng:choice>
+        <rng:ref name="notebook"/>
+        <rng:ref name="field"/>
+        <rng:ref name="shortcut"/>
+        <rng:ref name="group"/>
+        <rng:ref name="button"/>
+        <rng:ref name="hpaned" />
+        <rng:ref name="label" />
+        <rng:ref name="separator"/>
+        <rng:ref name="image"/>
+        <rng:ref name="form"/>
+        <rng:ref name="vpaned"/>
+        <rng:ref name="filter"/>
+        <rng:ref name="html"/>
+        <rng:element name="newline"><rng:empty/></rng:element>
+        <rng:element name="properties"><rng:empty/></rng:element>
+      </rng:choice>
+    </rng:zeroOrMore>
+  </rng:define>
+
     <rng:define name="form">
         <rng:element name="form">
             <rng:ref name="overload"/>
             <rng:optional><rng:attribute name="string"/></rng:optional>
-            <rng:optional><rng:attribute name="col"/></rng:optional>
             <rng:optional><rng:attribute name="editable"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:optional><rng:attribute name="link"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="notebook"/>
-                    <rng:ref name="field"/>
-		    		<rng:ref name="shortcut"/>
-                    <rng:ref name="group"/>
-                    <rng:ref name="button"/>
-                    <rng:ref name="hpaned" />
-                    <rng:ref name="label" />
-                    <rng:ref name="separator"/>
-                    <rng:ref name="image"/>
-                    <rng:ref name="form"/>
-                    <rng:ref name="vpaned"/>
-                    <rng:ref name="filter"/>
-                    <rng:ref name="html"/>
-                    <rng:element name="newline"><rng:empty/></rng:element>
-                    <rng:element name="properties"><rng:empty/></rng:element>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:ref name="container"/>
         </rng:element>
     </rng:define>
 
@@ -459,7 +463,6 @@
         <rng:element name="group">
             <rng:ref name="overload"/>
             <rng:optional><rng:attribute name="attrs"/></rng:optional>
-            <rng:optional><rng:attribute name="col"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="rowspan"/></rng:optional>
             <rng:optional><rng:attribute name="expand"/></rng:optional>
@@ -471,24 +474,7 @@
             <rng:optional><rng:attribute name="width"/></rng:optional>
             <rng:optional><rng:attribute name="name"/></rng:optional>
             <rng:optional><rng:attribute name="color" /></rng:optional>
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="separator"/>
-                    <rng:ref name="button"/>
-                    <rng:ref name="field"/>
-		    		<rng:ref name="shortcut"/>
-                    <rng:ref name="label" />
-                    <rng:ref name="group" />
-                    <rng:ref name="filter"/>
-                    <rng:element name="properties"><rng:empty/></rng:element>
-                    <rng:element name="newline"><rng:empty/></rng:element>
-                    <rng:ref name="image"/>
-                    <rng:ref name="notebook"/>
-                    <rng:ref name="hpaned"/>
-                    <rng:ref name="vpaned"/>
-                    <rng:ref name="html"/>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:ref name="container"/>
         </rng:element>
     </rng:define>
 
