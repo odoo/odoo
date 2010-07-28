@@ -624,7 +624,10 @@ class crm_case(osv.osv):
                 if not destination:
                     src,dest = dest,src
                     if case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature)
+                        if body:
+                            body += '\n\n%s' % (case.user_id.signature)
+                        else:
+                            body = '\n\n%s' % (case.user_id.signature)
                 dest = [dest]
 
                 attach_to_send = None
