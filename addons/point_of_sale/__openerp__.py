@@ -35,7 +35,7 @@ Main features :
  - Allow to refund former sales.
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['sale', 'delivery'],
     'init_xml': [],
 

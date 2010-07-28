@@ -21,7 +21,7 @@
 {
     "name"      : "Stock Accounting for Anglo Saxon countries",
     "version"   : "1.2",
-    "author"    : "Tiny, Veritos",
+    "author"    : "OpenERP SA, Veritos",
     "website"   : "http://tinyerp.com - http://veritos.nl",
     "description" : """This module will support the Anglo-Saxons accounting methodology by
     changing the accounting logic with stock transactions. The difference between the Anglo-Saxon accounting countries

@@ -31,7 +31,7 @@
 {
 	"name" : "WebDAV server for Document Management",
 	"version" : "2.0",
-	"author" : "Tiny",
+	"author" : "OpenERP SA",
 	"category" : "Generic Modules/Others",
 	"website": "http://www.openerp.com",
 	"description": """ With this module, the WebDAV server for the documents is activated.

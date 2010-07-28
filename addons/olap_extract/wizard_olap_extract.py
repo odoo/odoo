@@ -128,7 +128,7 @@ class wizard_olap_extract(wizard.interface):
         _terp= """{
                 "name" : "%(modulename)s",
                 "version" : "0.1",
-                "author" : "Tiny",
+                "author" : "OpenERP SA",
                 "website" : "http://tinyerp.com/",
                 "depends" : ["olap"],
                 "category" : "Generic Modules/Others",

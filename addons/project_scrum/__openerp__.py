@@ -46,7 +46,7 @@
     More information on the methodology:
     * http://controlchaos.com
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['project', 'process'],
     'init_xml': [],
     'update_xml': [

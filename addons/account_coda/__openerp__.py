@@ -22,7 +22,7 @@
 {
     "name"      : "Account CODA - import bank statements from coda file",
     "version"   : "1.0",
-    "author"    : "Tiny",
+    "author"    : "OpenERP SA",
     "category"  : "Account CODA",
     "description": """
     Module provides functionality to import

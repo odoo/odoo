@@ -24,7 +24,7 @@
     "name" : "Share Management",
     "version" : "1.1",
     "depends" : ["base"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules',
     "description": """The goal is to implement a generic sharing mechanism, where user of OpenERP
 can share data from OpenERP to their colleagues, customers, or friends.

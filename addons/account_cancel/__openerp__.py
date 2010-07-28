@@ -22,7 +22,7 @@
 {
     "name" : "Account Cancel",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Accounting',
     "description": """
     Module adds 'Allow cancelling entries' field on form view of account journal. If set to true it allows user to cancel entries & invoices.

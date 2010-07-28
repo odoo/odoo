@@ -21,11 +21,11 @@
 {
     "name":"Master Procurement Schedule",
     "version":"1.1",
-    "author":"Tiny and Grzegorz Grzelak (Cirrus)",
+    "author":"OpenERP SA and Grzegorz Grzelak (Cirrus)",
     "category":"Custom",
     "depends":["hr","stock","sale"],
     "description": """
-This module is based on original Tiny module stock_planning version 1.0 of the same name Master Procurement Schedule.
+This module is based on original OpenERP SA module stock_planning version 1.0 of the same name Master Procurement Schedule.
 
 Purpose of MPS is to allow create a manual procurement (requisition) apart of MRP scheduler (which works automatically on minimum stock rules).
 

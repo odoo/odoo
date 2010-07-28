@@ -30,7 +30,7 @@
     Different users may give different answers of question and according to that survey is done. 
     Partners are also sent mails with user name and password for the invitation of the survey
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['base'],
     'update_xml': ['survey_report.xml',
                    'survey_data.xml',

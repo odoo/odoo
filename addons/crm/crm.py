@@ -376,7 +376,10 @@ class crm_case(object):
                 if not destination:
                     src, dest = dest, src
                     if body and case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature)
+                        if body:
+                            body += '\n\n%s' % (case.user_id.signature)
+                        else:
+                            body = '\n\n%s' % (case.user_id.signature)
 
                 body = self.format_body(body)
 

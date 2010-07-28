@@ -46,7 +46,7 @@
     * Graph of sales by product
     * Graph of cases of the month
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['product', 'stock', 'procurement', 'process','board'],
     'init_xml': [],

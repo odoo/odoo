@@ -30,7 +30,7 @@
     * Email based Document submission
     * user based document subission
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [

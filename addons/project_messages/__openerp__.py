@@ -24,7 +24,7 @@
     "name": "In-Project Messaging System",
     "version": "1.0",
     "depends": ["project"],
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "description": """
     This module provides the functionality to send messages within a project.
     A user can send messages individually to other user. He can even broadcast

@@ -38,7 +38,7 @@
        * Objects Statistics (list)
        * My Objects By Day (list)
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['base', 'account', 'hr_attendance'],
     'init_xml': ['auction_sequence.xml'],
     'update_xml': [

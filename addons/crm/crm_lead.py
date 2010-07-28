@@ -164,6 +164,11 @@ class crm_lead(osv.osv, crm_case):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
+
+    def create(self, cr, uid, vals, context=None):
+        if not vals.get('stage_id',False):
+            raise osv.except_osv('Error', _('There is no stage defined for this Sales Team'))
+        return super(crm_lead, self).create(cr, uid, vals, context=context)
     
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
