@@ -117,19 +117,7 @@
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="3,-1" stop="3,-1"/>
+    	<lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -194,7 +182,7 @@
         <para style="terp_default_9">
       <font color="white"> </font>
     </para>	
-      <blockTable colWidths="80.0,80.0,80.0,140.0,80.0,80.0" style="Table2_header" >
+      <blockTable colWidths="80.0,80.0,80.0,130.0,80.0,90.0" style="Table2_header" >
       <tr>
       	<td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
@@ -218,7 +206,7 @@
 	        		<td><para style="terp_default_Centre_8">[[get_end_date(data) ]]</para></td>        	
 	        	</tr>
         	</blockTable>
-        	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+        	<blockTable colWidths="65.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
 				<tr>
 			        <td><para style="terp_tblheader_Details_Centre">Start Period</para></td>
 			        <td><para style="terp_tblheader_Details_Centre">End Period</para></td>      	
