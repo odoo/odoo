@@ -121,7 +121,6 @@ class crm_case(object):
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
         stage = False
-        stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
                 st =  not context.get('force_domain', False) and case.stage_id.id  or False
@@ -141,8 +140,18 @@ class crm_case(object):
         if not context:
             context = {}
         stage_obj = self.pool.get('crm.case.stage')
-        tmp = self.read(cr, uid, ids, ['section_id'], context)[0]['section_id']
-        section_id = tmp and tmp[0] or False
+        res = self.read(cr, uid, ids, ['section_id', 'stage_id'], context)[0]
+        section_id = res['section_id'] and res['section_id'][0] or False
+        stage_id = res['stage_id'] and res['stage_id'][0] or False
+
+        # We select either the stages in the same section as the current stage
+        # if it a stage that does not have a section, or the stages of the 
+        # current section of the case
+        if stage_id:
+            stage_record = stage_obj.browse(cr, uid, stage_id)
+            if not stage_record.section_id:
+                section_id = False # only select stages without section
+
         domain = [('object_id.model', '=', self._name), ('section_id', '=', section_id)]
         if 'force_domain' in context and context['force_domain']:
             domain += context['force_domain']
@@ -150,6 +159,7 @@ class crm_case(object):
         s = {}
         previous = {}
         section = self._name
+
         for stage in stage_obj.browse(cr, uid, sid, context=context):
             s.setdefault(section, {})
             s[section][previous.get(section, False)] = stage.id
