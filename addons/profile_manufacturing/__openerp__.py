@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Profile',
     'description': """Profile for manufacturing industries""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['mrp', 'sale', 'delivery', 'board_manufacturing', 'product_margin', 'sale_delivery_report'],
     'update_xml': ['security/ir.model.access.csv', 'profile_manufacturing.xml'],
     'demo_xml': [],

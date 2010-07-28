@@ -23,7 +23,7 @@
 {
     "name": "Project Management",
     "version": "1.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Generic Modules/Projects & Services",
     "depends": ["product", "analytic", "mail_gateway", "board"],

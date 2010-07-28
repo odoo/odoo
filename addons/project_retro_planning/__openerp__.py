@@ -26,7 +26,7 @@
     'description': """
         - If deadline date of project is changed
           then the deadline date for all the tasks will change to the same  """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['base', 'project'],
     'init_xml': [],
     'update_xml': [],

@@ -166,11 +166,9 @@ class crm_lead(osv.osv, crm_case):
     }
 
     def create(self, cr, uid, vals, context=None):
-        lead_id = vals and vals.get('stage_id',False)
-        if not lead_id:
+        if not vals.get('stage_id',False):
             raise osv.except_osv('Error', _('There is no stage defined for this Sales Team'))
-        res_id = super(crm_lead, self).create(cr, uid, vals, context=context)
-        return res_id
+        return super(crm_lead, self).create(cr, uid, vals, context=context)
     
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address

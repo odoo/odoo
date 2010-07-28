@@ -1081,7 +1081,7 @@ class olap_query_logs(osv.osv):
     _description = "Olap query logs"
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'Tiny ERP User'),
+        'user_id': fields.many2one('res.users', 'OpenERP SA User'),
         'query': fields.text('Query', required = True),
         'time': fields.datetime('Time', required = True),
         'result_size': fields.integer('Result Size', readonly = True),

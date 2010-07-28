@@ -33,7 +33,7 @@ This module adds wizards to Import/Export .sxw report that
 you can modify in OpenOffice.Once you have modified it you can
 upload the report using the same wizard.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': ['base_report_data.xml'],

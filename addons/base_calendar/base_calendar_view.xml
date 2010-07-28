@@ -77,11 +77,11 @@
             <field name="arch" type="xml">
                 <tree string="Invitation details">
                     <field name="sent_by_uid" string="Invitation From" />
-                    <field name="role" string="My Role"/>                    
+                    <field name="role" string="My Role"/>
                     <field name="cutype" string="Invitation type"/>
                     <field name="state" />
                     <field name="rsvp" string="Required to Join"/>
-                    <button name="do_tentative" states="needs-action,declined,accepted"                                
+                    <button name="do_tentative" states="needs-action,declined,accepted"
                                 string="Uncertain" type="object"
                                 icon="terp-crm" />
                     <button name="do_accept" string="Accept"
@@ -108,12 +108,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
+                   <filter icon="terp-camera_test" name="toreview" string="To Review"
+                       domain="[('state','=', 'needs-action')]"
+                       separator="1" help="Invitations To Review" />
                    <filter icon="terp-check" string="Accepted"
                        domain="[('state','=', 'accepted')]"
                        separator="1" help="Accepted Invitations" />
                    <filter icon="terp-dialog-close" string="Declined"
                        domain="[('state','=', 'declined')]"
                        separator="1" help="Declined Invitations" />
+                   <filter icon="gtk-sort-descending" string="Delegated"
+                       domain="[('state','=', 'delegated')]"
+                       separator="1" help="Delegated Invitations" />
                    <separator orientation="vertical"/>
                    <field name="email" select='1'/>
                    <field name="user_id" select="1"/>

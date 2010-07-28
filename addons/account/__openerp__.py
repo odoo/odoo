@@ -21,8 +21,7 @@
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "analytic", "process","board"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
     General accountings

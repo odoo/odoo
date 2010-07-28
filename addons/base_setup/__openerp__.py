@@ -37,7 +37,7 @@
     It also asks screens to help easily configure your company, the header and
     footer, the account chart to install and the language.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': ['base_setup_data.xml'],

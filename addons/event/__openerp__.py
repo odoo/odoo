@@ -38,7 +38,7 @@
     - You can access predefined reports about number of registration per event or per event category in:
                 Events / Reporting
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['crm', 'base_contact', 'account'],
     'init_xml': [],
     'update_xml': [
