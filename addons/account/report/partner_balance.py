@@ -533,11 +533,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         debit, credit = self._sum_debit(data), self._sum_credit(data)
         return credit > debit and credit - debit
 
-    def _get_currency(self, data):
-        if data.get('form', False) and data['form'].get('chart_account_id', False):
-            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.code
-        return '' 
-
     def _get_partners(self, data):
         if data['form']['result_selection']=='customer':
             return 'Receivable Accounts'

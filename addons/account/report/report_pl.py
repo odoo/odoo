@@ -173,11 +173,6 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
     def get_lines_another(self, group):
         return self.result.get(group, [])
 
-    def _get_currency(self, data):
-        if data.get('form', False) and data['form'].get('chart_account_id', False):
-            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.code
-    
-
 report_sxw.report_sxw('report.pl.account.horizontal', 'account.account',
     'addons/account/report/report_pl_account_horizontal.rml',parser=report_pl_account_horizontal, header=False)
 

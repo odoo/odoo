@@ -408,9 +408,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #    def _get_company(self, form):
 #        return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
 
-    def _get_currency(self, form):
-        return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
-
     def _get_partners(self, data):
         if data['form']['result_selection']=='customer':
             return 'Receivable Accounts'
