@@ -33,7 +33,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         self.date_lst = []
         self.date_lst_string = ''
         super(third_party_ledger, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'lines': self.lines,
             'sum_debit_partner': self._sum_debit_partner,
@@ -50,12 +50,11 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_end_date': self._get_end_date,
             'get_fiscalyear': self._get_fiscalyear,
             'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,
+            'get_end_date': self._get_end_date,
             'get_journal': self._get_journal,
-            'get_partners':self._get_partners,
-            'get_intial_balance':self._get_intial_balance,
-
-        })
+            'get_partners': self._get_partners,
+            'get_intial_balance': self._get_intial_balance,
+            })
 
     def date_range(self, start, end):
         if not start or not end:
@@ -433,7 +432,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
-
         return result_tmp
 #
 #    def _get_company(self, form):
@@ -452,7 +450,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         self._set_get_account_currency_code(account.id)
         self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
         total = self.cr.fetchone()
-
         if self.account_currency:
             return_field = str(total[0]) + self.account_currency
             return return_field
