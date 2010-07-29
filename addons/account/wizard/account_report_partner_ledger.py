@@ -28,6 +28,7 @@ class account_partner_ledger(osv.osv_memory):
     _name = 'account.partner.ledger'
     _inherit = 'account.common.partner.report'
     _description = 'Account Partner Ledger'
+
     _columns = {
         'initial_balance': fields.boolean('Include initial balances',
                                     help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
@@ -36,9 +37,9 @@ class account_partner_ledger(osv.osv_memory):
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
                 }
     _defaults = {
-       'reconcile' : True,
-       'initial_balance' : True,
-       'page_split' : False,
+       'reconcile': True,
+       'initial_balance': True,
+       'page_split': False,
                }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
