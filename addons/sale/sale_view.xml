@@ -163,12 +163,14 @@
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state"/>
                                                 <field name="invoiced"/>
+                                                <group attrs="{'invisible':[('invoiced','=',True)]}">
                                                 <button colspan="1"
                                                     name="create_sale_order_line_invoice"
                                                     states="confirmed"
                                                     string="Create Invoice"
                                                     type="object"
                                                     icon="terp-document-new" />
+                                                 </group>
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
