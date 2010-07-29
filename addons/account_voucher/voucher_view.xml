@@ -6,9 +6,10 @@
             <field name="model">account.voucher</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open','proforma','posted','recheck','audit')" string="Accounting Vouchers">
+                <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open','proforma','posted','recheck','audit')" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
+                    <field name="reference"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="type" invisible=" not context.get('set_visible',True)"/>
@@ -34,7 +35,7 @@
                         <field name="type" on_change="onchange_journal(journal_id,type)"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Journal Entries">
+                        <page string="Voucher Entry">
                             <field name="payment_ids" colspan="4" nolabel="1" height="200">
                                 <tree string="Voucher Lines" editable="top">
                                     <field name="partner_id" on_change="onchange_partner(partner_id,type,parent.type, parent.currency_id)"/>
@@ -55,7 +56,6 @@
                                 <field name="reference" select="1"/>
                                 <field name="date" select="1"/>
                                 <field name="currency_id" select="1"/>
-                                
                             </group>
                         </page>
                         <page string="Accounting Entries">
@@ -88,11 +88,13 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-check" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <filter icon="terp-gtk-stop" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers"/>
+                        <filter icon="terp-stock_effects-object-colorize" string="Reviewed" domain="[('state','=','audit')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-stop" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
-                        <field name="date" select='1'/>
-                        <field name="name" select='1'/>
+                        <field name="reference" select="1"/>
                         <field name="number" select='1'/>
+                        <field name="name" select='1'/>
+                        <field name="account_id" select="1"/>
                         <field name="partner_id" select='1'/>
                     </group>
                     <newline/>
@@ -104,9 +106,11 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Extended options...">
-                       <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                       <field name="period_id" widget="selection" context="{'period_id': self}" groups="base.group_extended"/>
-                       <field name="type" context="{'type': self}" />
+                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
+                        <field name="period_id" widget="selection" context="{'period_id': self}" groups="base.group_extended"/>
+                        <separator orientation="vertical"/>
+                        <field name="narration" select="1"/>
+                        <field name="date" select='1'/>
                    </group>
                 </search>
             </field>
@@ -120,13 +124,23 @@
                     <group col='8' colspan='4'>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-check" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <filter icon="terp-gtk-stop" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers"/>
+                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','audit')]" help="Posted Vouchers"/>
+                        <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-stop" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
-                        <field name="date" select='1'/>
-                        <field name="name" select='1'/>
+                        <field name="reference" select="1"/>
                         <field name="number" select='1'/>
+                        <field name="name" select='1'/>
+                        <field name="account_id" select="1"/>
                         <field name="partner_id" select='1'/>
+                    </group>
+                    <newline/>
+                    <group col='8' colspan='4'>
+                        <field name="journal_id" widget="selection" select="1"/>
+                        <field name="period_id" widget="selection" select="1"/>
+                        <separator orientation="vertical"/>
+                        <field name="narration" select="1"/>
+                        <field name="date" select='1'/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">

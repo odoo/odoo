@@ -76,14 +76,14 @@
 	            <field name="model">olap.parameters.config.wizard</field>
 	            <field name="type">form</field>
 	            <field name="arch" type="xml">
-                <form string="Parameters Configure wizard">
+                <form string="Business Intelligence Server Configuration">
                    <group colspan="4" col="8">
                        <group colspan="3" width="220" height="250">
                            <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
                            <newline/>
                            <label align="0.0" string="This wizard will automatically configure the web client for Business Intelligence." width="200" colspan="2"/>
                        </group>
-                       <separator string="" orientation="vertical" colspan="1" rowspan="12"/>
+                       <!--separator string="" orientation="vertical" colspan="1" rowspan="12"/-->
                        <group colspan="4">
                            <separator string=" Business Intelligence Web Client" colspan="4"/>
                            <field name="host_name" colspan="4"/>

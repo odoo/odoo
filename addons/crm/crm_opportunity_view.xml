@@ -35,6 +35,8 @@
                             <field name="date_action"/>
                             <field name="title_action"/>
                             <field name="priority" string="Priority"/>
+                            <button string="Merge with Other Opportunity"
+                                name="%(merge_opportunity_act)d" icon="gtk-add" type="action" />
                             <newline/>
                             <field name="type" invisible="1"/>
                         </group>
@@ -156,7 +158,7 @@
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.lead'}"
                                 icon="terp-mail-message-new" type="action" />
-                            <button colspan="2" string="Forward to Partner"
+                            <button colspan="2" string="Forward"
                                 name="%(crm_lead_forward_to_partner_act)d"
                                 icon="terp-mail-forward" type="action" />
                         </page>

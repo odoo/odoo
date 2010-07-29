@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -14,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -138,7 +139,14 @@ Remarks:
 - When you wish to work with different periods for some part of products define two kinds of periods (fe. Weekly and Monthly) and use them for different products. Example: If you use always Weekly periods for Products A, and Monthly periods for Products B your all calculations will work correctly. You can also use different kind of periods for the same products from different warehouse or companies. But you cannot use overlapping periods for the same product, warehouse and company because results can be unpredictable. The same apply to Forecasts lines.
 """,
     "demo_xml":[],
-    "update_xml":["security/ir.model.access.csv","stock_planning_view.xml"],
+    "update_xml": [
+        "security/ir.model.access.csv",
+        "stock_planning_view.xml",
+        "wizard/stock_planning_create_periods_view.xml",
+        "wizard/stock_planning_forecast_view.xml",
+        "wizard/stock_planning_createlines_view.xml",
+    ],
+    "test": ["test/stock_planning.yml"],
     "active": False,
     "installable": True,
 }
