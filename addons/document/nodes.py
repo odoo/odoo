@@ -44,6 +44,20 @@ from StringIO import StringIO
 #   root: if we are at the first directory of a ressource
 #
 
+def _str2time(cre):
+    """ Convert a string with time representation (from db) into time (float)
+    
+        Note: a place to fix if datetime is used in db.
+    """
+    if not cre:
+        return time.time()
+    frac = 0.0
+    if isinstance(cre, basestring) and '.' in cre:
+        fdot = cre.find('.')
+        frac = float(cre[fdot:])
+        cre = cre[:fdot]
+    return time.mktime(time.strptime(cre,'%Y-%m-%d %H:%M:%S')) + frac
+
 def get_node_context(cr, uid, context):
     return node_context(cr, uid, context)
 
@@ -255,19 +269,16 @@ class node_class(object):
             see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
         return self._get_ttag(cr) + ':' + self._get_wtag(cr)
 
-    def _get_wtag(self,cr):
+    def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
-        if self.write_date:
-            wtime = time.mktime(time.strptime(self.write_date,'%Y-%m-%d %H:%M:%S'))
-        else: wtime = time.time()
-        return str(wtime)
+        return str(_str2time(self.write_date))
 
     def _get_ttag(self,cr):
         """ Get a unique tag for this type/id of object.
             Must be overriden, so that each node is uniquely identified.
         """
         print "node_class.get_ttag()",self
-        raise RuntimeError("get_etag stub()")
+        raise NotImplementedError("get_etag stub()")
 
     def get_dav_props(self, cr):
         """ If this class has special behaviour for GroupDAV etc, export
@@ -595,19 +606,6 @@ class node_dir(node_database):
         if data is not None:
             fnode.set_data(cr, data, fil)
         return fnode
-
-    def get_etag(self, cr):
-        """ Get a tag, unique per object + modification.
-
-            see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
-        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
-
-    def _get_wtag(self, cr):
-        """ Return the modification time as a unique, compact string """
-        if self.write_date:
-            wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
-        else: wtime = time.time()
-        return str(wtime)
 
     def _get_ttag(self,cr):
         return 'dir-%d' % self.dir_id

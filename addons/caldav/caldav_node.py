@@ -28,18 +28,6 @@ import base64
 from document import nodes
 import StringIO
 
-def _str2time(cre):
-    """ Convert a string with time representation (from db) into time (float)
-    """
-    if not cre:
-        return time.time()
-    frac = 0.0
-    if isinstance(cre, basestring) and '.' in cre:
-        fdot = cre.find('.')
-        frac = float(cre[fdot:])
-        cre = cre[:fdot]
-    return time.mktime(time.strptime(cre,'%Y-%m-%d %H:%M:%S')) + frac
-
 class node_database(nodes.node_database):
     def _child_get(self, cr, name=False, parent_id=False, domain=None):
         dirobj = self.context._dirobj
@@ -107,18 +95,8 @@ class node_calendar_collection(nodes.node_dir):
 	# Todo?
         return False
 
-    def get_etag(self, cr):
-        """ Get a tag, unique per object + modification.
-
-            see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
-        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
-
-    def _get_wtag(self, cr):
-        """ Return the modification time as a unique, compact string """
-        return str(_str2time(self.write_date))
-
     def _get_ttag(self, cr):
-        return 'calendar collection-%d' % self.dir_id
+        return 'calen-dir-%d' % self.dir_id
 
     def _get_dav_getctag(self, cr):
         result = self.get_etag(cr)
@@ -266,27 +244,15 @@ class node_calendar(nodes.node_class):
 
     def set_data(self, cr, data, fil_obj = None):
         uid = self.context.uid
+        *-*
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
         return calendar_obj.import_cal(cr, uid, base64.encodestring(data), self.calendar_id)
 
     def get_data_len(self, cr, fil_obj = None):
         return self.content_length
 
-
     def _get_ttag(self,cr):
         return 'calendar-%d' % (self.calendar_id,)
-
-
-
-    def get_etag(self, cr):
-        """ Get a tag, unique per object + modification.
-
-            see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
-        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
-
-    def _get_wtag(self, cr):
-        """ Return the modification time as a unique, compact string """
-        return str(_str2time(self.write_date))
 
     def rmcol(self, cr):
         return False
@@ -434,20 +400,7 @@ class res_node_calendar(nodes.node_class):
 
         return res
 
-
-
     def _get_caldav_schedule_outbox_URL(self, cr):
         return self._get_caldav_schedule_inbox_URL(cr)
-
-
-    def get_etag(self, cr):
-        """ Get a tag, unique per object + modification.
-
-            see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
-        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
-
-    def _get_wtag(self, cr):
-        """ Return the modification time as a unique, compact string """
-        return str(_str2time(self.write_date))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
