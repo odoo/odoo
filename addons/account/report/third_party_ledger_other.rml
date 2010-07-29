@@ -455,6 +455,20 @@
 	<section>
 	<para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
     <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table2">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+        <tr>[[ data['form']['initial_balance'] and get_intial_balance(p,data) or  removeParentNode('tr') ]]
+    <td>
+          <para style="P2"></para>
+        </td>
+        <td>
+          <para style="P5"></para>
+        </td>
+        <td>
+          <para style="P5"></para>
+        </td>
+        <td>
+          <para style="P5"></para>
+        </td>
+    </tr>
       <tr>
         <td>
           <para style="P2">[[ p.ref ]] - [[ p.name ]]</para>
@@ -552,6 +566,21 @@
     <section>
     <para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
     <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table6">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+        <td>
+          <para style="P2"></para>
+        </td>
+        <td>
+          <para style="P5"></para>
+        </td>
+        <td>
+          <para style="P5"></para>
+        </td>
+        <td>
+          <para style="P5"></para>
+        </td>
+   		<td>
+          <para style="P5"></para>
+        </td>        
       <tr>
         <td>
           <para style="P2"> [[ p.ref ]] - [[ p.name ]]</para>

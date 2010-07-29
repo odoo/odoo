@@ -53,6 +53,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_end_date':self._get_end_date,
             'get_journal': self._get_journal,
             'get_partners':self._get_partners,
+            'get_intial_balance':self._get_intial_balance,
 
         })
 
@@ -445,7 +446,9 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         else:
             currency_total = self.tot_currency = 0.0
             return currency_total
-
+    def _get_intial_balance(self, parnter, data):
+        return ''
+        
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
         'addons/account/report/third_party_ledger.rml',parser=third_party_ledger,
         header='internal')
