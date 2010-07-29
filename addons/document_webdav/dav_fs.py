@@ -158,7 +158,11 @@ class openerp_dav_handler(dav_interface):
                 for key, val in node.http_options.items():
                     if isinstance(val, basestring):
                         val = [val, ]
-                    ret.setdefault(key, []).extend(val)
+                    if key in ret:
+                        ret[key] = ret[key][:]  # copy the orig. array
+                    else:
+                        ret[key] = []
+                    ret[key].extend(val)
                 
                 self.parent.log_message('options: %s' % ret)
             else:
