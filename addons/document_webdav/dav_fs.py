@@ -134,6 +134,32 @@ class openerp_dav_handler(dav_interface):
         cr.close()          
         return res  
 
+    def prep_http_options(self, uri, opts):
+        """see HttpOptions._prep_OPTIONS """
+        self.parent.log_message('get options: %s' % uri)
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri, allow_last=True)
+
+        if not dbname:
+            if cr: cr.close()
+            return opts
+        node = self.uri2object(cr, uid, pool, uri2[:])
+
+        if not node:
+            if cr: cr.close()
+            return opts
+        else:
+            if hasattr(node, 'http_options'):
+                ret = opts.copy()
+                for key, val in node.http_options.items():
+                    if isinstance(val, basestring):
+                        val = [val, ]
+                    ret.setdefault(key, []).extend(val)
+                
+                self.parent.log_message('options: %s' % ret)
+            else:
+                ret = opts
+            return ret
+
     def get_prop(self, uri, ns, propname):
         """ return the value of a given property
 

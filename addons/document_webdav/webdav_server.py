@@ -32,12 +32,13 @@ import tools
 from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
-from service.websrv_lib import HTTPDir,FixSendError
+from service.websrv_lib import HTTPDir, FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
 from string import atoi,split
 from DAV.errors import *
+# from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 
 def OpenDAVConfig(**kw):
     class OpenDAV:
@@ -53,10 +54,15 @@ def OpenDAVConfig(**kw):
     return Config()
 
 
-class DAVHandler(FixSendError,DAVRequestHandler):
+class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
     protocol_version = 'HTTP/1.1'
-    
+    _HTTP_OPTIONS= { 'DAV' : ['1',],
+                    'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT', 
+                            'PROPFIND', 'PROPPATCH', 'OPTIONS', 'MKCOL',
+                            'DELETE', 'TRACE', 'REPORT', ]
+                    }
+
     def get_userinfo(self,user,pw):
         return False
     def _log(self, message):
@@ -99,6 +105,18 @@ class DAVHandler(FixSendError,DAVRequestHandler):
     def log_error(self, format, *args):
         netsvc.Logger().notifyChannel('xmlrpc', netsvc.LOG_WARNING, format % args)
 
+    def _prep_OPTIONS(self, opts):
+        ret = opts
+        dc=self.IFACE_CLASS
+        uri=urlparse.urljoin(self.get_baseuri(dc), self.path)
+        uri=urllib.unquote(uri)
+        try:
+            #location = dc.put(uri,body,ct)
+            ret = dc.prep_http_options(uri, opts)
+        except DAV_Error, (ec,dd):
+            pass
+        return ret
+            
     def send_response(self, code, message=None):
         # the BufferingHttpServer will send Connection: close , while
         # the BaseHTTPRequestHandler will only accept int code.
