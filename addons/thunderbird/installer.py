@@ -33,7 +33,7 @@ class thunderbird_installer(osv.osv_memory):
         data = super(thunderbird_installer, self).default_get(cr, uid, fields, context)
         pdf_file = open(config['addons_path'] + "/thunderbird/doc/Installation Guide to OpenERP Thunderbid Plug-in.pdf", 'r')
         data['pdf_file'] = base64.encodestring(pdf_file.read())
-        file = open(config['addons_path'] + "/thunderbird/plugin/OpenERP_plugin-2.0.xpi", 'r')
+        file = open(config['addons_path'] + "/thunderbird/plugin/tiny_plugin-2.0.xpi", 'r')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
 
@@ -50,7 +50,7 @@ class thunderbird_installer(osv.osv_memory):
         'thunderbird' : True,
         'name' : 'OpenERP_plugin-2.0.xpi',
         'pdf_name' : 'Installation Guide to OpenERP Thunderbid Plug-in.pdf',
-        'description' : """ * Save the Thunderbird plug­in. \n * Follow  the Steps to configure OpenERP in Thunderbird. \n -> 1. Go to Tools > OpenERP Synchronization. \n -> 2. check  data (configured by default). \n -> 3. Click Test  Connection. \n -> 4. A message appears with state of your connection. \n -> 5. If your connection failed, check if your database is open, and check your  data. \n -> 6. If you  have a good connection, click Ok and start to archive mail in  OpenERP."""
+        'description' : """ * Save the Thunderbird plug­in. \n * Follows the step to install Thunderbird plug­in. \n -> 1.From Menu Bar of Thunderbird, open Tools ­> Add ons. \n -> 2. Click on install button and a browser window appears. \n -> 3. Select the plug-in(.xpi file) and click Ok. \n -> 4. Software installation window appears and within a short time “Install Now” button will be enabled \n -> 5. Click "Install Now". \n -> 6. Restart Thunderbird. \n Follow the steps to configure OpenERP in Thunderbird. \n -> 1. Go to Tools > OpenERP Synchronization. \n -> 2. Check  data (configured by default) \n -> 3. Click Test  Connection. \n -> 4. A message appears with state of your connection. \n -> 5. If your connection failed, check if your database is open, and check your data. \n -> 6. If you have a good connection, click Ok and start to archive mail in OpenERP. """
         }
 
 thunderbird_installer()

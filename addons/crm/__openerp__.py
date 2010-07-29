@@ -50,7 +50,7 @@ Create dashboard for CRM that includes:
     * My Cases (list)
     * Jobs Tracking (graph)
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'base',

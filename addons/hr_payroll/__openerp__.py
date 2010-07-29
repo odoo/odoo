@@ -33,7 +33,7 @@
     * Monthly Payroll Register
     * Integrated with Holiday Management
     """,
-    'author':'Tiny/Axelor',
+    'author':'OpenERP SA/Axelor',
     'website':'http://www.openerp.com',
     'depends': [
         'hr',

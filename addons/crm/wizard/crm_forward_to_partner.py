@@ -203,11 +203,11 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         body = []
         lead_proxy = self.pool.get('crm.lead')
         lead = lead_proxy.browse(cr, uid, lead_id, context=context)
-        if not lead.type or lead.type == 'lead':
+        if not lead.type or lead.type == 'lead' or not lead.partner_address_id:
                 field_names = [
-                    'partner_name', 'title', 'function', 'street', 'street2', 
-                    'zip', 'city', 'country_id', 'state_id', 'email_from', 
-                    'phone', 'fax', 'mobile'
+                    'partner_name', 'title', 'function', 'street', 'street2',
+                    'zip', 'city', 'country_id', 'state_id', 'email_from',
+                    'phone', 'fax', 'mobile', 'categ_id', 'description',
                 ]
 
                 for field_name in field_names:
@@ -218,7 +218,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                         if hasattr(field_definition.selection, '__call__'):
                             key = field_definition.selection(lead_proxy, cr, uid, context=context)
                         else:
-                            key = field.definition.selection
+                            key = field_definition.selection
                         value = dict(key).get(lead[field_name], lead[field_name])
                     elif field_definition._type == 'many2one':
                         if lead[field_name]:
@@ -230,22 +230,22 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         elif lead.type == 'opportunity':
             pa = lead.partner_address_id
             body = [
-            "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]), 
-            "Contact: %s" % (pa.name or ''), 
-            "Title: %s" % (pa.title or ''), 
-            "Function: %s" % (pa.function or ''), 
-            "Street: %s" % (pa.street or ''), 
-            "Street2: %s" % (pa.street2 or ''), 
-            "Zip: %s" % (pa.zip or ''), 
-            "City: %s" % (pa.city or ''), 
-            "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''), 
-            "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''), 
-            "Email: %s" % (pa.email or ''), 
-            "Phone: %s" % (pa.phone or ''), 
-            "Fax: %s" % (pa.fax or ''), 
-            "Mobile: %s" % (pa.mobile or ''), 
-            "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''), 
-            "Details: %s" % (lead.description or ''), 
+                "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]), 
+                "Contact: %s" % (pa.name or ''), 
+                "Title: %s" % (pa.title or ''), 
+                "Function: %s" % (pa.function or ''), 
+                "Street: %s" % (pa.street or ''), 
+                "Street2: %s" % (pa.street2 or ''), 
+                "Zip: %s" % (pa.zip or ''), 
+                "City: %s" % (pa.city or ''), 
+                "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''), 
+                "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''), 
+                "Email: %s" % (pa.email or ''), 
+                "Phone: %s" % (pa.phone or ''), 
+                "Fax: %s" % (pa.fax or ''), 
+                "Mobile: %s" % (pa.mobile or ''), 
+                "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''), 
+                "Details: %s" % (lead.description or ''), 
             ]
         return "\n".join(body + ['---'])
 

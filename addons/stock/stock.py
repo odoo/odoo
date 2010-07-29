@@ -1583,16 +1583,19 @@ class stock_move(osv.osv):
 
         def create_chained_picking(self, cr, uid, moves, context=None):
             new_moves = []
-            res_obj =  self.pool.get('res.company')
+            res_obj = self.pool.get('res.company')
+            picking_obj = self.pool.get('stock.picking')
+            move_obj = self.pool.get('stock.move')
             if context is None:
                 context = {}
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
                 ptype = todo[0][1][5] and todo[0][1][5] or self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-                pick_name = ''
+                pick_name = picking.name
                 if ptype == 'delivery':
                     pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.delivery')
-                pickid = self.pool.get('stock.picking').create(cr, uid, {
-                    'name': pick_name or picking.name,
+
+                pickid = picking_obj.create(cr, uid, {
+                    'name': pick_name,
                     'origin': str(picking.origin or ''),
                     'type': ptype,
                     'note': picking.note,
@@ -1604,9 +1607,9 @@ class stock_move(osv.osv):
                     'invoice_state': 'none',
                     'date': picking.date,
                     'sale_id': picking.sale_id.id
-                })
+                    })
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
-                    new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
+                    new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,
                         'location_dest_id': loc.id,
                         'date_moved': time.strftime('%Y-%m-%d'),
@@ -1617,7 +1620,7 @@ class stock_move(osv.osv):
                         'date_planned': (datetime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                         'move_history_ids2': []}
                     )
-                    self.pool.get('stock.move').write(cr, uid, [move.id], {
+                    move_obj.write(cr, uid, [move.id], {
                         'move_dest_id': new_id,
                         'move_history_ids': [(4, new_id)]
                     })

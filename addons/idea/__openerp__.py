@@ -31,7 +31,7 @@
     Each idea has a score based on the different votes.
     The managers can obtain an easy view on best ideas from all the users.
     Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
     'init_xml': [],

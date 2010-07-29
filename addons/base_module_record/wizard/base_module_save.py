@@ -63,7 +63,7 @@ intro_start_fields = {
     'name': {'string':'Module Name', 'type':'char', 'size':64, 'required':True},
     'directory_name': {'string':'Directory Name', 'type':'char', 'size':32, 'required':True},
     'version': {'string':'Version', 'type':'char', 'size':16, 'required':True},
-    'author': {'string':'Author', 'type':'char', 'size':64, 'default': lambda *args: 'Tiny', 'required':True},
+    'author': {'string':'Author', 'type':'char', 'size':64, 'default': lambda *args: 'OpenERP SA', 'required':True},
     'category': {'string':'Category', 'type':'char', 'size':64, 'default': lambda *args: 'Vertical Modules/Parametrization', 'required':True},
     'website': {'string':'Documentation URL', 'type':'char', 'size':64, 'default': lambda *args: 'http://www.openerp.com', 'required':True},
     'description': {'string':'Full Description', 'type':'text', 'required':True},

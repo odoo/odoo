@@ -45,7 +45,7 @@ This module is useful to be able to invoice services based on tasks
 automatically created via sale orders.
 
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
     'init_xml': [],

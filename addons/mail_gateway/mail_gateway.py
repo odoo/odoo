@@ -159,7 +159,8 @@ class mailgate_message(osv.osv):
             msg_txt = ''
             if message.history:
                 msg_txt += (message.email_from or '/') + ' wrote on ' + format_date_tz(message.date, tz) + ':\n\t'
-                msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
+                if message.description:
+                    msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
             else:
                 msg_txt = (message.user_id.name or '/') + '  on ' + format_date_tz(message.date, tz) + ':\n\t'
                 if message.name == 'Opportunity':

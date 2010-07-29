@@ -31,7 +31,7 @@ This module is integrated with the mail gateway to automatically tracks email
 sent to jobs@YOURCOMPANY.com. It's also integrated with the document management
 system to store and search in your CV base.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['hr','survey','crm'],
     'update_xml': [
