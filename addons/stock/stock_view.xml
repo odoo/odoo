@@ -785,7 +785,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Picking list">
-                    <group col="6" colspan="4">
+                    <group col="6" colspan="4" attrs="{'readonly': [('state','not in',['draft','auto'])]}">
                         <field name="name" readonly="1"/>
                         <field name="address_id" required="1"/>
                         <field name="origin"/>
@@ -1185,7 +1185,6 @@
             <field name="arch" type="xml">
                 <form string="Input Picking List">
                     <group colspan="4" col="6">
-
                         <field name="name" readonly="1"/>
                         <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" />
                         <field name="origin"/>
@@ -1220,7 +1219,7 @@
                                     <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize"
-                                        states="draft,assigned,confirmed,done"/>
+                                        states="draft,assigned,confirmed"/>
                                     <field name="state"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
@@ -1249,9 +1248,9 @@
 
                                             <newline/>
                                             <label/>
-                                             <button groups="base.group_extended" name="267" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"/>
+                                             <button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" states="draft,assigned,confirmed"/>
                                             <label/>
-                                            <button name="275" string="Split Stock Moves" type="action"
+                                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
                                               groups="base.group_extended"
                                               icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" states="draft,assigned,confirmed,done"/>
                                             <separator colspan="4" string="Move State"/>
