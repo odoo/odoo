@@ -3780,21 +3780,30 @@ class orm(orm_template):
                 tables.append(t)
 
         if len(qu1):
-            qu1 = ' where '+string.join(qu1, ' and ')
+            qu1 = ' where '
+            qu1 += ' and '.join(qu1)
         else:
             qu1 = ''
 
-
         order_by = self._order
+        qu1_join = ''
         if order:
             self._check_qorder(order)
             o = order.split(' ')[0]
             if (o in self._columns) and getattr(self._columns[o], '_classic_write'):
                 order_by = order
+            elif (o in self._inherit_fields):
+                #Allowing _inherits field for server side sorting
+                table_join,qu1_join = self._inherits_join_calc(o,[],[])
+                order_by = table_join[0] + '.' + order
+                tables += table_join
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
-
+        
+        if len(qu1_join):
+            qu1 = qu1 + ' and '
+            qu1 += ' and '.join(qu1_join)
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +
@@ -3839,9 +3848,9 @@ class orm(orm_template):
     # private implementation of name_search, allows passing a dedicated user for the name_get part to
     # solve some access rights issues
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
-        if not args:
+        if args is None:
             args = []
-        if not context:
+        if context is None:
             context = {}
         args = args[:]
         if name:
@@ -3894,7 +3903,7 @@ class orm(orm_template):
         if 'lang' in context:
             del context_wo_lang['lang']
         data = self.read(cr, uid, [id], context=context_wo_lang)[0]
-
+        
         fields = self.fields_get(cr, uid, context=context)
         for f in fields:
             ftype = fields[f]['type']
