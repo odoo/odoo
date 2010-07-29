@@ -149,7 +149,9 @@
                                             <field name="state" select="2"/>
                                             <group col="3" colspan="2">
                                                 <field name="invoiced" select="2"/>
+                                                <group attrs="{'invisible':[('invoiced','=',True)]}">
                                                 <button colspan="1" name="%(wizard_sale_order_line_invoice)d" states="confirmed" string="Make Invoice" type="action"/>
+                                                </group>
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
