@@ -46,6 +46,10 @@ CACHE_SIZE=20000
 urlparse.uses_netloc.append('webdav')
 urlparse.uses_netloc.append('webdavs')
 
+day_names = { 0: 'Mon', 1: 'Tue' , 2: 'Wed', 3: 'Thu', 4: 'Fri', 5: 'Sat', 6: 'Sun' }
+month_names = { 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
+        7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec' }
+
 class DAV_NotFound2(DAV_NotFound):
     """404 exception, that accepts our list uris
     """
@@ -426,6 +430,17 @@ class openerp_dav_handler(dav_interface):
                 return today
         finally:
             if cr: cr.close()
+
+    def _get_dav_getlastmodified(self,uri):
+        """ return the last modified date of a resource 
+        """
+        d=self.get_lastmodified(uri)
+        # format it. Note that we explicitly set the day, month names from
+        # an array, so that strftime() doesn't use its own locale-aware
+        # strings.
+        gmt = time.gmtime(d)
+        return time.strftime("%%s, %d %%s %Y %H:%M:%S GMT", gmt ) % \
+                    (day_names[gmt.tm_wday], month_names[gmt.tm_mon])
 
     @memoize(CACHE_SIZE)
     def get_creationdate(self, uri):
