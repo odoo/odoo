@@ -168,21 +168,21 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         partner_to_use = []
 
 #        if self.date_lst and data['form']['initial_balance'] :
-        if data['form']['initial_balance']:
-            self.cr.execute(
-                "SELECT DISTINCT line.partner_id " \
-                "FROM account_move_line AS line, account_account AS account " \
-                "WHERE line.partner_id IS NOT NULL " \
-                    "AND line.account_id = account.id " \
-                    "AND line.date >= %s " \
-                    "AND line.date <= %s " \
-                    "AND line.reconcile_id IS NULL " \
-                    "AND line.account_id IN %s" \
-                    " " + PARTNER_REQUEST + " " \
-#                    "AND account.company_id = %s " \
-                    "AND account.active " ,
-                (self.date_lst[0],self.date_lst[len(self.date_lst)-1],tuple(self.account_ids),))
-        else:
+#        if data['form']['initial_balance']:
+#            self.cr.execute(
+#                "SELECT DISTINCT line.partner_id " \
+#                "FROM account_move_line AS line, account_account AS account " \
+#                "WHERE line.partner_id IS NOT NULL " \
+#                    "AND line.account_id = account.id " \
+#                    "AND line.date >= %s " \
+#                    "AND line.date <= %s " \
+#                    "AND line.reconcile_id IS NULL " \
+#                    "AND line.account_id IN %s" \
+#                    " " + PARTNER_REQUEST + " " \
+##                    "AND account.company_id = %s " \
+#                    "AND account.active " ,
+#                (self.date_lst[0],self.date_lst[len(self.date_lst)-1],tuple(self.account_ids),))
+#        else:
 #            self.cr.execute(
 #                "SELECT DISTINCT line.partner_id " \
 #                "FROM account_move_line AS line, account_account AS account " \
@@ -195,18 +195,18 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 #                    "AND account.active " ,
 #                (data['form']['company_id']))
 
-            self.cr.execute(
-                    "SELECT DISTINCT l.partner_id " \
-                    "FROM account_move_line AS l, account_account AS account " \
-                    "WHERE l.partner_id IS NOT NULL " \
-                        "AND l.account_id = account.id " \
-    #                    "AND line.date IN (" + self.date_lst_string + ") " \
-                        "AND " + self.query +" " \
-                        "AND l.account_id IN %s " \
-                        " " + PARTNER_REQUEST + " " \
-    #                    "AND account.company_id = %s " \
-                        "AND account.active " ,
-                    (tuple(self.account_ids),)) # data form compnay id..removed..
+        self.cr.execute(
+                "SELECT DISTINCT l.partner_id " \
+                "FROM account_move_line AS l, account_account AS account " \
+                "WHERE l.partner_id IS NOT NULL " \
+                    "AND l.account_id = account.id " \
+#                    "AND line.date IN (" + self.date_lst_string + ") " \
+                    "AND " + self.query +" " \
+                    "AND l.account_id IN %s " \
+                    " " + PARTNER_REQUEST + " " \
+#                    "AND account.company_id = %s " \
+                    "AND account.active " ,
+                (tuple(self.account_ids),)) # data form compnay id..removed..
 
         res = self.cr.dictfetchall()
 
@@ -218,7 +218,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
         super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
-    def lines(self, partner,data):
+    def lines(self, partner, data):
         full_account = []
         if data['form']['reconcil'] :
             RECONCILE_TAG = " "
@@ -264,6 +264,18 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             r['progress'] = sum
             full_account.append(r)
         return full_account
+
+    def _get_intial_balance(self, partner, data):
+        self.cr.execute(
+                "SELECT sum(debit), sum(credit), sum(debit-credit) " \
+                "FROM account_move_line " \
+                "WHERE partner_id = %s " \
+                    "AND account_id IN %s" \
+                    "AND reconcile_id IS NULL " \
+                    "AND date < %s " ,
+                (partner.id, tuple(self.account_ids), self.date_lst[0],))
+        res = self.cr.fetchall()
+        return res[0][0],res[0][1],res[0][2]
 
     def _sum_debit_partner(self, partner, data):
         result_tmp = 0.0
@@ -421,6 +433,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
+
         return result_tmp
 #
 #    def _get_company(self, form):
@@ -446,9 +459,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         else:
             currency_total = self.tot_currency = 0.0
             return currency_total
-    def _get_intial_balance(self, parnter, data):
-        return ''
-        
+
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
         'addons/account/report/third_party_ledger.rml',parser=third_party_ledger,
         header='internal')
