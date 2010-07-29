@@ -79,6 +79,7 @@ class openerp_dav_handler(dav_interface):
             return props
         node = self.uri2object(cr, uid, pool, uri2)
         if node:
+            props = props.copy()
             props.update(node.get_dav_props(cr))
         cr.close()     
         return props
