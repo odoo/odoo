@@ -268,7 +268,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             full_account.append(r)
         return full_account
 
-    def _get_intial_balance(self, partner, data):
+    def _get_intial_balance(self, partner):
         self.cr.execute(
                 "SELECT sum(debit), sum(credit), sum(debit-credit) " \
                 "FROM account_move_line " \
@@ -467,8 +467,8 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
     def _display_currency(self,data):
          if data['form']['amount_currency'] :
              return True
-         return False         
-        
+         return False
+
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
         'addons/account/report/third_party_ledger.rml',parser=third_party_ledger,
         header='internal')
