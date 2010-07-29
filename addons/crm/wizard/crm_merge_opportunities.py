@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from crm import crm
 from osv import osv, fields
 from tools.translate import _
 
@@ -47,9 +47,12 @@ class crm_merge_opportunity(osv.osv_memory):
             if not opp.partner_id:
                 raise osv.except_osv(_('Warning!'), _('Opportunity must have Partner assigned before merging with other Opportunity.'))
             #Search for Opportunity for the same partner
-            opp_ids = opp_obj.search(cr, uid, [('partner_id', '=', opp.partner_id.id), ('type', '=', 'opportunity')])
-            if not len(opp_ids) > 1:
-                raise osv.except_osv(_('Warning!'), _("There are no other Opportunities for the partner '%s'.") % (opp.partner_id.name))
+            opp_ids = opp_obj.search(cr, uid, [('partner_id', '=', opp.partner_id.id), ('type', '=', 'opportunity'), ('state', 'in', ('open', 'pending'))])
+            # Removing current opportunity
+            if record_id in opp_ids:
+                opp_ids.remove(record_id)
+            if not opp_ids:
+                raise osv.except_osv(_('Warning!'), _("There are no other 'Open' or 'Pending' Opportunities for the partner '%s'.") % (opp.partner_id.name))
         pass
 
 
@@ -97,12 +100,21 @@ class crm_merge_opportunity(osv.osv_memory):
                         if history.history:
                             new_history = message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
                     opp_obj._history(cr, uid, [current_opp], _('Merged into Opportunity: %s') % (opp.id))
-        opp_obj.case_cancel(cr, uid, [record_id])
 
+            if this.state == 'unchanged':
+                    pass
+            elif this.state == 'done':
+                opp_obj.case_close(cr, uid, [record_id])
+            elif this.state == 'draft':
+                opp_obj.case_reset(cr, uid, [record_id])
+            elif this.state in ['cancel', 'open', 'pending']:
+                act = 'case_' + this.state
+                getattr(opp_obj, act)(cr, uid, [record_id])
         return {}
 
     _columns = {
         'opportunity_ids' : fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
+        'state': fields.selection(crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')], string='Set State To', required=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -122,12 +134,16 @@ class crm_merge_opportunity(osv.osv_memory):
         if record_id:
             opp_obj = self.pool.get('crm.lead')
             opp = opp_obj.browse(cr, uid, record_id, context=context)
-            opp_ids = opp_obj.search(cr, uid, [('partner_id', '=', opp.partner_id.id), ('type', '=', 'opportunity')])
+            opp_ids = opp_obj.search(cr, uid, [('partner_id', '=', opp.partner_id.id), ('type', '=', 'opportunity'), ('state', 'in', ('open', 'pending'))])
             # Removing current opportunity
-            opp_ids.remove(record_id)
+            if record_id in opp_ids:
+                opp_ids.remove(record_id)
 
             if 'opportunity_ids' in fields:
                 res.update({'opportunity_ids': opp_ids})
+            if 'state' in fields:
+                res.update({'state': u'cancel'})
+
         return res
 
 crm_merge_opportunity()
