@@ -19,18 +19,6 @@
 #
 ##############################################################################
 
-
-{
-    'name': 'Manufacturing industry profile',
-    'version': '1.0',
-    'category': 'Profile',
-    'description': """Profile for manufacturing industries""",
-    'author': 'OpenERP SA',
-    'depends': ['mrp', 'sale', 'delivery', 'board_manufacturing', 'product_margin', 'sale_delivery_report'],
-    'update_xml': ['security/ir.model.access.csv', 'profile_manufacturing.xml'],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': '0027737506213',
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import stock_planning_create_periods
+import stock_planning_forecast
+import stock_planning_createlines

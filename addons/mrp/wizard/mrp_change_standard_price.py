@@ -26,7 +26,8 @@ class change_standard_price(osv.osv_memory):
     _description = "Change Standard Price"
     
     _columns = {
-        'change_parent_price': fields.boolean('Change Parent Price'),
+        'change_parent_price': fields.boolean('Change Parent Price', help="This will change the price of parent products also "
+                                              "according to the BoM structure specified for the product."),
     }
     
     
