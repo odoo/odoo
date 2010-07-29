@@ -301,7 +301,7 @@ class node_class(object):
             logger.debug('No namespace: %s ("%s")',ns, prop)
             return None
 
-        mname = prefix + "_" + prop
+        mname = prefix + "_" + prop.replace('-','_')
 
         if not hasattr(self, mname):
             return None
