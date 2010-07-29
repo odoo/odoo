@@ -326,7 +326,10 @@
       <font color="white"> </font>
     </para>
 		<para style="terp_header_Centre">Third Party Ledger</para>
-          <blockTable colWidths="92.0,79.0,98.0,141.0,65.0,68.0" style="Table8">
+		        <para style="terp_default_2">
+      <font color="white"> </font>
+    </para>
+          <blockTable colWidths="82.0,79.0,90.0,130.0,65.0,90.0" style="Table8">
             <tr>
               <td>
                 <para style="P9">Chart of Account</para>
@@ -356,7 +359,7 @@
               </td>
                <td><para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]]</para></td>
               <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
-                <blockTable colWidths="73.0,73.0" style="Table9">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+                <blockTable colWidths="65.0,60.0" style="Table9">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
                   <tr>
                     <td>
                       <para style="P8">Start Date</para>
@@ -374,7 +377,7 @@
                     </td>
                   </tr>
                 </blockTable>
-                <blockTable colWidths="72.0,72.0" style="Table10">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+                <blockTable colWidths="65.0,60.0" style="Table10">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
                   <tr>
                     <td>
                       <para style="P12">Start Period</para>
@@ -394,10 +397,10 @@
                 </blockTable>
               </td>
               <td>
-                <para style="P11">[[ get_partners(data) ]]</para>
+                <para style="terp_default_Centre_8">[[ get_partners(data) ]]</para>
               </td>
               <td>
-                <para style="P10">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]]</para>
+                <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]]</para>
               </td>
             </tr>
           </blockTable>
