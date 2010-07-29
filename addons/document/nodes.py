@@ -349,6 +349,7 @@ class node_class(object):
         raise NotImplementedError(repr(self))
 
     def get_domain(self, cr, filters):
+        # TODO Document
         return []
 
     def check_perms(self, perms):

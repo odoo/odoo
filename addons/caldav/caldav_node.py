@@ -53,7 +53,7 @@ class node_database(nodes.node_database):
 
 class node_calendar_collection(nodes.node_dir):
     DAV_PROPS = {
-            "http://calendarserver.org/ns/" : ('getctag'),
+            "http://calendarserver.org/ns/" : ('getctag',),
             }
     DAV_M_NS = {
            "http://calendarserver.org/ns/" : '_get_dav',
@@ -115,11 +115,10 @@ class node_calendar_collection(nodes.node_dir):
         result = self.get_etag(cr)
         return str(result)
 
-
 class node_calendar(nodes.node_class):
     our_type = 'collection'
     DAV_PROPS = {
-            "http://calendarserver.org/ns/" : ('getctag'),
+            "http://calendarserver.org/ns/" : ('getctag',),
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description',
                     'calendar-data',
@@ -167,12 +166,13 @@ class node_calendar(nodes.node_class):
         return res
 
     def get_domain(self, cr, filters):
+        # TODO: doc.
         res = []
-        dirobj = self.context._dirobj
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        calendar_obj = dirobj.pool.get('basic.calendar')
+        # dirobj = self.context._dirobj
+        #uid = self.context.uid
+        #ctx = self.context.context.copy()
+        #ctx.update(self.dctx)
+        # calendar_obj = dirobj.pool.get('basic.calendar')
         if not filters:
             return res
         if filters.localName == 'calendar-query':

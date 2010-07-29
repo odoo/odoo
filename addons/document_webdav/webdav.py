@@ -65,17 +65,20 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     gp=doc.createElement("D:prop")
     for ns in good_props.keys():
         ns_prefix="ns"+str(self.namespaces.index(ns))+":"
-        for p,v in good_props[ns].items():            
+        for p,v in good_props[ns].items():
             if not v:
-                pass
+                continue
             pe=doc.createElement(ns_prefix+str(p))
             if hasattr(v, '__class__') and v.__class__.__name__ == 'Element':
                 pe.appendChild(v)
             else:
-                if p=="resourcetype":
-                    if v==1:
+                if ns == 'DAV:' and p=="resourcetype":
+                    if v == 1:
                         ve=doc.createElement("D:collection")
                         pe.appendChild(ve)
+                elif isinstance(v,tuple) and v[1] == ns:
+                    ve=doc.createElement(ns_prefix+v[0])
+                    pe.appendChild(ve)
                 else:
                     ve=doc.createTextNode(tools.ustr(v))
                     pe.appendChild(ve)
@@ -147,12 +150,13 @@ def mk_propname_response(self,uri,propnames,doc):
         pr.setAttribute("xmlns:"+nsp,ns)
         nsnum=nsnum+1
 
-    # write propertynames
-    for p in plist:
-        pe=doc.createElement(nsp+":"+p)
-        pr.appendChild(pe)
+        # write propertynames
+        for p in plist:
+            pe=doc.createElement(nsp+":"+p)
+            pr.appendChild(pe)
 
-    ps.appendChild(pr)
+        ps.appendChild(pr)
+
     re.appendChild(ps)
 
     return re
