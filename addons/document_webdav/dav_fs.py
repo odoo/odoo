@@ -71,7 +71,7 @@ def _str2time(cre):
         frac = float(cre[fdot:])
         cre = cre[:fdot]
     return time.mktime(time.strptime(cre,'%Y-%m-%d %H:%M:%S')) + frac
-    
+
 class openerp_dav_handler(dav_interface):
     """
     This class models a OpenERP interface for the DAV server
@@ -101,14 +101,14 @@ class openerp_dav_handler(dav_interface):
         cr.close()     
         return props
 
-    def _try_function(self, funct, args, opname='run function', cr=None, 
-	    default_exc=DAV_Forbidden):
+    def _try_function(self, funct, args, opname='run function', cr=None,
+            default_exc=DAV_Forbidden):
         """ Try to run a function, and properly convert exceptions to DAV ones.
-        
+
             @objname the name of the operation being performed
             @param cr if given, the cursor to close at exceptions
         """
-        
+
         try:
             return funct(*args)
         except DAV_Error:
@@ -178,7 +178,7 @@ class openerp_dav_handler(dav_interface):
                     else:
                         ret[key] = []
                     ret[key].extend(val)
-                
+
                 self.parent.log_message('options: %s' % ret)
             else:
                 ret = opts
@@ -210,18 +210,18 @@ class openerp_dav_handler(dav_interface):
         """Parse the uri and get the dbname and the rest.
            Db name should be the first component in the unix-like
            path supplied in uri.
-           
+
            @param rest_ret Instead of the db_name, return (db_name, rest),
                 where rest is the remaining path
            @param allow_last If the dbname is the last component in the
                 path, allow it to be resolved. The default False value means
                 we will not attempt to use the db, unless there is more
                 path.
-                
+
            @return db_name or (dbname, rest) depending on rest_ret,
                 will return dbname=False when component is not found.
         """
-        
+
         uri2 = self.uri2local(uri)
         if uri2.startswith('/'):
             uri2 = uri2[1:]
@@ -345,7 +345,7 @@ class openerp_dav_handler(dav_interface):
         try:
             if not dbname:
                 raise DAV_Error, 409
-            node = self.uri2object(cr, uid, pool, uri2)   
+            node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
             try:
@@ -448,7 +448,7 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()
 
     def _get_dav_getlastmodified(self,uri):
-        """ return the last modified date of a resource 
+        """ return the last modified date of a resource
         """
         d=self.get_lastmodified(uri)
         # format it. Note that we explicitly set the day, month names from
@@ -468,7 +468,7 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
-            
+
             return _str2time(node.create_date)
         finally:
             if cr: cr.close()
@@ -538,7 +538,7 @@ class openerp_dav_handler(dav_interface):
                 cr.close()
                 raise DAV_NotFound('Parent folder not found')
 
-            self._try_function(dir_node.create_child, (cr, objname, data), 
+            self._try_function(dir_node.create_child, (cr, objname, data),
                     "create %s" % objname, cr=cr)
         else:
             self._try_function(node.set_data, (cr, data), "save %s" % objname, cr=cr)
