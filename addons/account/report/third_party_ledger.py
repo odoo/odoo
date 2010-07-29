@@ -52,9 +52,13 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_start_date':self._get_start_date,
             'get_end_date': self._get_end_date,
             'get_journal': self._get_journal,
-            'get_partners': self._get_partners,
-            'get_intial_balance': self._get_intial_balance,
-            })
+            'get_partners':self._get_partners,
+            'get_intial_balance':self._get_intial_balance,
+            'display_initial_balance':self._display_initial_balance,
+            'display_currency':self._display_currency,
+
+        })
+
 
     def date_range(self, start, end):
         if not start or not end:
@@ -274,7 +278,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     "AND date < %s " ,
                 (partner.id, tuple(self.account_ids), self.date_lst[0],))
         res = self.cr.fetchall()
-        return res[0][0],res[0][1],res[0][2]
+        return res
 
     def _sum_debit_partner(self, partner, data):
         result_tmp = 0.0
@@ -456,7 +460,15 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         else:
             currency_total = self.tot_currency = 0.0
             return currency_total
-
+    def _display_initial_balance(self, data):
+         if data['form']['initial_balance'] :
+             return True
+         return False
+    def _display_currency(self,data):
+         if data['form']['amount_currency'] :
+             return True
+         return False         
+        
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
         'addons/account/report/third_party_ledger.rml',parser=third_party_ledger,
         header='internal')

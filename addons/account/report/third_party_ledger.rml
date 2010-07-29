@@ -227,7 +227,7 @@
       <font color="white"> </font>
     </para>
     
-    <blockTable colWidths="65.0,28.0,45.0,175.0,77.0,75.0,74.0" style="Table_header_1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="65.0,28.0,45.0,175.0,77.0,75.0,74.0" style="Table_header_1">[[ display_currecny(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -255,7 +255,7 @@
     <para style="P4">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_default_Bold_9">Balance Brought Forward</para>
@@ -274,19 +274,19 @@
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table2">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
-    <tr>[[ data['form']['initial_balance'] and get_intial_balance(p,data) or  removeParentNode('tr') ]]
-    <td>
-          <para style="P2"></para>
+    <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table2">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+    <tr>
+    <td>[[ data['form']['initial_balance'] or  removeParentNode('tr') ]]
+          <para style="P2">Initial Balance</para>
         </td>
         <td>
-          <para style="P5"></para>
+          <para style="P5">[[ get_intial_balance(p,data)[0][0] or 0.0 ]]</para>
         </td>
         <td>
-          <para style="P5"></para>
+          <para style="P5">[[ get_intial_balance(p,data)[0][1] or 0.0 ]]</para>
         </td>
         <td>
-          <para style="P5"></para>
+          <para style="P5">[[ get_intial_balance(p,data)[0][2] or 0.0 ]]</para>
         </td>
     </tr>
       <tr>
@@ -309,7 +309,7 @@
     </para>
     <section>
       <para style="P1">[[ repeatIn(lines(p,data), 'line') ]]</para>
-      <blockTable colWidths="65.0,28.0,45.0,175.0,77.0,75.0,74.0" style="Table3">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+      <blockTable colWidths="65.0,28.0,45.0,175.0,77.0,75.0,74.0" style="Table3">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3">[[ formatLang(line['date'],date=True) ]]</para>
@@ -338,7 +338,7 @@
         <font color="white"> </font>
       </para>
     </section>
-     <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table4">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+     <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -369,7 +369,7 @@
     <para style="P4">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table5">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+    <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table5">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_default_Bold_9">Balance Brought Forward</para>
@@ -390,25 +390,23 @@
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table6">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
-    <tr>[[ data['form']['initial_balance'] and get_intial_balance(p,data) or  removeParentNode('tr') ]]
-    <td>
-          <para style="P2"></para>
+    <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table6">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+    <tr>
+        <td>[[display_initial_balance(data) or  removeParentNode('tr') ]]
+          <para style="P2">Initial Balance</para>
+        </td>
+         <td>
+          <para style="P5">[[ get_intial_balance(p,data)[0][0] or 0.0 ]]</para>
         </td>
         <td>
-          <para style="P5"></para>
+          <para style="P5">[[ get_intial_balance(p,data)[0][1] or 0.0 ]]</para>
         </td>
         <td>
+          <para style="P5">[[ get_intial_balance(p,data)[0][2] or 0.0 ]]</para>
+        </td>
+   		<td>
           <para style="P5"></para>
-        </td>
-        <td>
-          <para style="P5"></para>
-        </td>
-            <td>
-          <para style="P5">
-            <font color="white"> </font>
-          </para>
-        </td>
+        </td>  
     </tr>
       <tr>
         <td>
@@ -435,7 +433,7 @@
     </para>
     <section>
       <para style="P1">[[ repeatIn(lines(p,data), 'line') ]]</para>
-      <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table7">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+      <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table7">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3">[[ formatLang(line['date'],date=True) ]]</para>
