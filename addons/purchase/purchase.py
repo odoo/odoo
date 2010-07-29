@@ -79,7 +79,7 @@ class purchase_order(osv.osv):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
-            res[purchase.id] = False
+            res[purchase.id] = time.strftime('%Y-%m-%d %H:%M:%S')
             if purchase.order_line:
                 min_date=purchase.order_line[0].date_planned
                 for line in purchase.order_line:
