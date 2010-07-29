@@ -25,21 +25,19 @@
       "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_action_account_tree2")],
       "tz": False, "active_id": ref("account.menu_action_account_tree2"), })
 
--
-  In order to test Account Move Line Wizard I check the move line entries using this wizard
--
-  !record {model: account.move.line.select, id: account_move_line_select_0}:
-    {}
--
-  I clicked on Button to open the account move lines
--
-  !python {model: account.move.line.select}: |
-    self.open_window(cr, uid, [ref("account_move_line_select_0")], {"lang": 'en_US',
-      "state": "all", "tz": False, "active_model": "account.account", "active_ids":
-      [ref("account.a_recv")], "fiscalyear": 1, "active_id": ref("account.a_recv"),
-      })
-
-
+#-
+#  In order to test Account Move Line Wizard I check the move line entries using this wizard
+#-
+#  !record {model: account.move.line.select, id: account_move_line_select_0}:
+#    {}
+#-
+#  I clicked on Button to open the account move lines
+#-
+#  !python {model: account.move.line.select}: |
+#    self.open_window(cr, uid, [ref("account_move_line_select_0")], {"lang": 'en_US',
+#      "state": "all", "tz": False, "active_model": "account.account", "active_ids":
+#      [ref("account.a_recv")], "fiscalyear": 1, "active_id": ref("account.a_recv"),
+#      })
 -
   In order to test the Analytic Charts of Account wizard I will generate chart
 
