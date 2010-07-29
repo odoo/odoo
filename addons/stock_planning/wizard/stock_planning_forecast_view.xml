@@ -9,21 +9,19 @@
             <field name="model">stock.sale.forecast.createlines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock and Sales Forecasts">
+                <form string="Create Forecasts Lines">
+                    <separator colspan ="4" string="Creates forecast lines for selected warehouse and period."/>
+                    <field name="period_id"/>
+                    <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
+                    <field name="copy_forecast"/>
+                    <field name="product_categ_id" widget="selection"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
-                    <field name="period_id"/>
-                    <newline/>
-                    <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
-                    <newline/>
-                    <field name="product_categ_id" widget="selection"/>
-                    <newline/>
-                    <field name="copy_forecast"/>
-                    <separator colspan ="4" string="Forecast lines creation"/>
-                    <label  colspan ="4" string="Creates forecast lines for selected warehouse and period. Doesn't duplicate existing lines created by you."/>
+                    <label colspan ="4" string="Note: Doesn't duplicate existing lines created by you."/>
+                    <separator colspan ="4" />
                     <group colspan="4">
-                        <button icon="gtk-cancel"  special="cancel" string="Cancel"/>
-                        <button icon="gtk-execute" name="create_forecast" string="Create Forecasts" type="object" />
+                        <button icon="gtk-cancel"  special="cancel" string="Close"/>
+                        <button icon="gtk-execute" name="create_forecast" string="Create" type="object" />
                     </group>
                 </form>
             </field>

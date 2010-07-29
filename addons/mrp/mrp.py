@@ -533,35 +533,46 @@ class mrp_production(osv.osv):
             return {'value': {'location_dest_id': src}}
         return {}
 
-    def product_id_change(self, cr, uid, ids, product, context=None):
+    def product_id_change(self, cr, uid, ids, product_id, context=None):
         """ Finds UoM of changed product.
-        @param product: Id of changed product.
+        @param product_id: Id of changed product.
         @return: Dictionary of values.
         """
-        if not product:
+        if not product_id:
             return {'value': {
                 'product_uom': False,
                 'bom_id': False,
                 'routing_id': False
             }}
-        res = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        bom_obj = self.pool.get('mrp.bom')
+        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        bom_id = bom_obj._bom_find(cr, uid, product.id, product.uom_id and product.uom_id.id, [])
+        routing_id = False
+        if bom_id:
+            bom_point = bom_obj.browse(cr, uid, bom_id, context=context)
+            routing_id = bom_point.routing_id.id or False
         result = {
-            'product_uom': res.uom_id and res.uom_id.id or False,
-            'bom_id': res.bom_ids and res.bom_ids[0].id or False,
-            'routing_id': res.bom_ids and res.bom_ids[0].routing_id.id or False
+            'product_uom': product.uom_id and product.uom_id.id or False,
+            'bom_id': bom_id,
+            'routing_id': routing_id
         }
         return {'value': result}
 
-    def bom_id_change(self, cr, uid, ids, product):
+    def bom_id_change(self, cr, uid, ids, bom_id, context=None):
         """ Finds routing for changed BoM.
         @param product: Id of product.
         @return: Dictionary of values.
         """
-        if not product:
-            return {}
-        res = self.pool.get('mrp.bom').read(cr, uid, [product], ['routing_id'])[0]
-        routing_id = res['routing_id'] and res['routing_id'][0]
-        result = {'routing_id': routing_id}
+        if not bom_id:
+            return {'value': {
+                'routing_id': False
+            }}
+        bom_pool = self.pool.get('mrp.bom')
+        bom_point = bom_pool.browse(cr, uid, bom_id, context=context)
+        routing_id = bom_point.routing_id.id or False
+        result = {
+            'routing_id': routing_id
+        }
         return {'value': result}
 
     def action_picking_except(self, cr, uid, ids):

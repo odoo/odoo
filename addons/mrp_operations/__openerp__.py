@@ -51,7 +51,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['stock', 'hr', 'purchase', 'product', 'mrp'],
+    'depends': ['mrp'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
