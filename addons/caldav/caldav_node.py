@@ -70,11 +70,9 @@ class node_calendar_collection(nodes.node_dir):
         ctx.update(self.dctx)
         where = [('collection_id','=',self.dir_id)]
         ext = False
-        if name:
-            res = name.split('.ics')
-            if len(res) > 1:
-                name = res[0]
-                ext = '.ics'
+        if name and name.endswith('.ics'):
+            name = name[-4]
+            ext = '.ics'
         if name:
             where.append(('name','=',name))
         if not domain:
@@ -220,6 +218,8 @@ class node_calendar(nodes.node_class):
         ctx.update(self.dctx)
         where = []
         if name:
+            if name.endswith('.ics'):
+                name = name[:-4]
             where.append(('id','=',int(name)))
         if not domain:
             domain = []
@@ -399,8 +399,7 @@ class res_node_calendar(nodes.node_class):
         if self.model and self.res_id:
             document_obj = self.context._dirobj.pool.get(self.model)
             if document_obj:
-                res = False
-                #res = document_obj.unlink(cr, uid, [self.res_id]) #TOFIX
+                res =  document_obj.unlink(cr, uid, [self.res_id])
 
         return res
 

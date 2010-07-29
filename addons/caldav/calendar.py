@@ -134,7 +134,7 @@ def map_data(cr, uid, obj, context=None):
                     continue
                 mapping = obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
-                    map_val = mapping[map_val.lower()]
+                    map_val = mapping.get(map_val.lower(), False)
                 else:
                     map_val = map_val.lower()
             if field_type == 'many2many':
@@ -474,7 +474,7 @@ class Calendar(CalDAV, osv.osv):
                 data_ids = mod_obj.search(cr, uid, line_domain, context=context)
                 for data in mod_obj.browse(cr, uid, data_ids, context):
                     ctx = parent and parent.context or None
-                    node = res_node_calendar('%s' %data.id, parent, ctx, data, line.object_id.model, data.id)
+                    node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)
                     res.append(node)
         return res
 
