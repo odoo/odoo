@@ -115,6 +115,9 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             ret = dc.prep_http_options(uri, opts)
         except DAV_Error, (ec,dd):
             pass
+        except Exception,e:
+            self.log_error("Error at options: %s", str(e))
+            raise
         return ret
             
     def send_response(self, code, message=None):

@@ -110,7 +110,7 @@ class openerp_dav_handler(dav_interface):
         """
         
         try:
-            funct(*args)
+            return funct(*args)
         except DAV_Error:
             if cr: cr.close()
             raise
@@ -129,7 +129,7 @@ class openerp_dav_handler(dav_interface):
             raise default_exc(err.strerror)
         except Exception,e:
             import traceback
-            self.parent.log_error("Cannot create %s: %s", opname, str(e))
+            self.parent.log_error("Cannot %s: %s", opname, str(e))
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc("Operation failed")
 
@@ -182,6 +182,7 @@ class openerp_dav_handler(dav_interface):
                 self.parent.log_message('options: %s' % ret)
             else:
                 ret = opts
+            cr.close()
             return ret
 
     def get_prop(self, uri, ns, propname):
@@ -389,11 +390,11 @@ class openerp_dav_handler(dav_interface):
         self.parent.log_message('get DN: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
-            cr.close()
+            if cr: cr.close()
             return COLLECTION
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
-            cr.close()
+            if cr: cr.close()
             raise DAV_NotFound2(uri2)
         cr.close()
         return node.displayname
@@ -409,7 +410,7 @@ class openerp_dav_handler(dav_interface):
             return str(result)
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
-            cr.close()
+            if cr: cr.close()
             raise DAV_NotFound2(uri2)
         result = node.content_length or 0
         cr.close()
@@ -422,13 +423,13 @@ class openerp_dav_handler(dav_interface):
         result = 0
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
-            cr.close()
+            if cr: cr.close()
             return '0'
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
             cr.close()
             raise DAV_NotFound2(uri2)
-        result = node.get_etag(cr)
+        result = self._try_function(node.get_etag ,(cr,), "etag %s" %uri, cr=cr)
         cr.close()
         return str(result)
 
@@ -477,6 +478,7 @@ class openerp_dav_handler(dav_interface):
         self.parent.log_message('get contenttype: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
+            if cr: cr.close()
             return 'httpd/unix-directory'
         try:            
             node = self.uri2object(cr, uid, pool, uri2)
@@ -495,10 +497,10 @@ class openerp_dav_handler(dav_interface):
         self.parent.log_message('MKCOL: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not uri2[-1]:
-            cr.close()
+            if cr: cr.close()
             raise DAV_Error(409, "Cannot create nameless collection")
         if not dbname:
-            cr.close()
+            if cr: cr.close()
             raise DAV_Error, 409
         node = self.uri2object(cr,uid,pool, uri2[:-1])
         if not node:
@@ -520,10 +522,11 @@ class openerp_dav_handler(dav_interface):
         parent='/'.join(uri.split('/')[:-1])
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:
+            if cr: cr.close()
             raise DAV_Forbidden
         try:
             node = self.uri2object(cr, uid, pool, uri2[:])
-        except:
+        except Exception:
             node = False
         
         objname = uri2[-1]
@@ -548,9 +551,11 @@ class openerp_dav_handler(dav_interface):
         """ delete a collection """
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)        
         if not dbname:
+            if cr: cr.close()
             raise DAV_Error, 409
+
         node = self.uri2object(cr, uid, pool, uri2)             
-        node.rmcol(cr)
+        self._try_function(node.rmcol, (cr,), "rmcol %s" % uri, cr=cr)
 
         cr.commit()
         cr.close()
@@ -559,11 +564,12 @@ class openerp_dav_handler(dav_interface):
     def rm(self,uri):
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:        
-            cr.close()
+            if cr: cr.close()
             raise DAV_Error, 409
         node = self.uri2object(cr, uid, pool, uri2)
-        res = node.rm(cr)
+        res = self._try_function(node.rm, (cr,), "rm %s"  % uri, cr=cr)
         if not res:
+            if cr: cr.close()
             raise OSError(1, 'Operation not permited.')        
         cr.commit()
         cr.close()
@@ -725,7 +731,7 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr, uid, pool, uri2)
             if node:
                 result = True
-        except:
+        except Exception:
             pass
         cr.close()
         return result
