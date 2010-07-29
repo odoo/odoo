@@ -25,6 +25,7 @@ import time
 from mx import DateTime
 from decimal import Decimal
 from tools.translate import _
+import decimal_precision as dp
 
 class account_cashbox_line(osv.osv):
     
@@ -55,9 +56,9 @@ class account_cashbox_line(osv.osv):
         return {'value':{'subtotal': sub or 0.0}}
 
     _columns = {
-        'pieces': fields.float('Values', digits=(16,2)),
+        'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
         'number': fields.integer('Number'),
-        'subtotal': fields.function(_sub_total, method=True, string='Sub Total', type='float',digits=(16,2)),
+        'subtotal': fields.function(_sub_total, method=True, string='Sub Total', type='float', digits_compute=dp.get_precision('Account')),
         'starting_id': fields.many2one('account.bank.statement',ondelete='cascade'),
         'ending_id': fields.many2one('account.bank.statement',ondelete='cascade'),
      }
@@ -173,10 +174,21 @@ class account_cash_statement(osv.osv):
         
         return company_id
 
+    def _get_cash_box_lines(self, cr, uid, ids, context={}):
+        res = []
+        curr = [1, 2, 5, 10, 20, 50, 100, 500]
+        for rs in curr:
+            dct = {
+                'pieces':rs,
+                'number':0
+            }
+            res.append((0,0,dct))
+        return res
+    
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-        'balance_end_real': fields.float('Closing Balance', digits=(16,2), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
+        'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('confirm', 'Confirm'),
@@ -196,24 +208,23 @@ class account_cash_statement(osv.osv):
         'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
         'journal_id': _default_journal_id,
         'user_id': lambda self, cr, uid, context=None: uid,
-        'company_id': _get_company
+        'company_id': _get_company,
+        'starting_details_ids':_get_cash_box_lines,
+        'ending_details_ids':_get_cash_box_lines
      }
 
     def create(self, cr, uid, vals, context=None):
         company_id = vals and vals.get('company_id',False)
         if company_id:
-            open_jrnl = self.search(cr, uid, [('company_id', '=', vals['company_id']), ('journal_id', '=', vals['journal_id']), ('state', '=', 'open')])
+            sql = [
+                ('company_id', '=', vals['company_id']), 
+                ('journal_id', '=', vals['journal_id']), 
+                ('state', '=', 'open')
+            ]
+            open_jrnl = self.search(cr, uid, sql)
             if open_jrnl:
-                raise osv.except_osv('Error', u'Une caisse de type espèce est déjà ouverte')
-            if 'starting_details_ids' in vals:
-                vals['starting_details_ids'] = starting_details_ids = map(list, vals['starting_details_ids'])
-                for i in starting_details_ids:
-                    if i and i[0] and i[1]:
-                        i[0], i[1] = 0, 0
+                raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
-        res = self._get_starting_balance(cr, uid, [res_id])
-        for rs in res:
-            super(account_cash_statement, self).write(cr, uid, rs, res.get(rs))
         return res_id
     
     def write(self, cr, uid, ids, vals, context=None):
@@ -283,27 +294,26 @@ class account_cash_statement(osv.osv):
         
         number = self.pool.get('ir.sequence').get(cr, uid, statement.journal_id.sequence_id.code)
         
-        if len(statement.starting_details_ids) > 0:
-            sid = []
-            for line in statement.starting_details_ids:
-                sid.append(line.id)
-            
-            cash_pool.unlink(cr, uid, sid)
-        
-        cr.execute("select id from account_bank_statement where journal_id=%s and user_id=%s and state=%s order by id desc limit 1", (statement.journal_id.id, uid, 'confirm'))
-        rs = cr.fetchone()
-        rs = rs and rs[0] or None
-        if rs:
-            statement = statement_pool.browse(cr, uid, rs)
-            balance_start = statement.balance_end_real or 0.0
-            open_ids = cash_pool.search(cr, uid, [('ending_id','=',statement.id)])
-            for sid in open_ids:
-                default = {
-                    'ending_id': False,
-                    'starting_id':ids[0]
-                }
-                cash_pool.copy(cr, uid, sid, default)
-            
+#        if len(statement.starting_details_ids) > 0:
+#            sid = []
+#            for line in statement.starting_details_ids:
+#                sid.append(line.id)
+#            cash_pool.unlink(cr, uid, sid)
+#        
+#        cr.execute("select id from account_bank_statement where journal_id=%s and user_id=%s and state=%s order by id desc limit 1", (statement.journal_id.id, uid, 'confirm'))
+#        rs = cr.fetchone()
+#        rs = rs and rs[0] or None
+#        if rs:
+#            statement = statement_pool.browse(cr, uid, rs)
+#            balance_start = statement.balance_end_real or 0.0
+#            open_ids = cash_pool.search(cr, uid, [('ending_id','=',statement.id)])
+#            for sid in open_ids:
+#                default = {
+#                    'ending_id': False,
+#                    'starting_id':ids[0]
+#                }
+#                cash_pool.copy(cr, uid, sid, default)
+#            
         vals = {
             'date':time.strftime("%Y-%m-%d %H:%M:%S"), 
             'state':'open',

@@ -23,7 +23,7 @@
 {
     "name": "Project Management",
     "version": "1.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Generic Modules/Projects & Services",
     "depends": ["product", "analytic", "mail_gateway", "board"],
@@ -56,7 +56,8 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         'board_project_demo.xml',
     ],
     'test':[
-            'test/test_project.yml'
+            'test/test_project.yml',
+            'test/test_project_delegation.yml',
             ],
     'installable': True,
     'active': False,

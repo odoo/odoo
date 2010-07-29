@@ -536,16 +536,7 @@ class stock_picking(osv.osv):
         if ('name' not in vals) or (vals.get('name')=='/'):
             seq_obj_name =  'stock.picking.' + vals['type']
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
-        type_list = {
-            'out':_('Picking List'),
-            'in':_('Reception'),
-            'internal': _('Internal Picking'),
-            'delivery': _('Delivery Order')
-        }
         new_id = super(stock_picking, self).create(cr, user, vals, context)
-        if not vals.get('auto_picking', False):
-            message = type_list.get(vals.get('type', False), _('Picking')) + " '" + (vals['name'] or "n/a") + _(" with origin")+" '" + (vals.get('origin') or "n/a") + "' "+ _("is created.")
-            self.log(cr, user, new_id, message)
         return new_id
 
     _columns = {
@@ -626,6 +617,9 @@ class stock_picking(osv.osv):
             for r in picking.move_lines:
                 if r.state == 'draft':
                     todo.append(r.id)
+
+        self.log_picking(cr, uid, ids, context=context)
+
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
@@ -710,16 +704,8 @@ class stock_picking(osv.osv):
         """ Changes picking state to assigned.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids, context=context):
-            type_list = {
-                'out':'Picking List',
-                'in':'Reception',
-                'internal': 'Internal picking',
-                'delivery': 'Delivery order'
-            }
-            message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or 'n/a') + "' "+ _("is ready to be processed.")
-            self.log(cr, uid, id, message)
         self.write(cr, uid, ids, {'state': 'assigned'})
+        self.log_picking(cr, uid, ids, context=context)
         return True
 
     def test_finnished(self, cr, uid, ids):
@@ -758,8 +744,7 @@ class stock_picking(osv.osv):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
         self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
-        message = _('Picking') + " '" + pick.name + "' "+_("is cancelled")
-        self.log(cr, uid, id, message)
+        self.log_picking(cr, uid, ids, context=context)
         return True
 
     #
@@ -1190,6 +1175,31 @@ class stock_picking(osv.osv):
 
         return res
 
+    def log_picking(self, cr, uid, ids, context=None):
+        """ This function will create log messages for picking.
+        @param cr: the database cursor
+        @param uid: the current user's ID for security checks,
+        @param ids: List of Picking Ids
+        @param context: A standard dictionary for contextual values
+        """
+        for pick in self.browse(cr, uid, ids, context=context):
+            type_list = {
+                'out':'Picking List',
+                'in':'Reception',
+                'internal': 'Internal picking',
+                'delivery': 'Delivery order'
+            }
+            message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or 'n/a') + "' "
+            state_list = {
+                          'confirmed': "is scheduled for the '" + datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d') + "'.", 
+                          'assigned': 'is ready to process.', 
+                          'cancel': 'is Cancelled.', 
+                          'done': 'is processed.', 
+                          }
+            message += state_list[pick.state]
+            self.log(cr, uid, pick.id, message)
+        return True
+
 stock_picking()
 
 class stock_production_lot(osv.osv):
@@ -1377,7 +1387,7 @@ class stock_move(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking List', select=True),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
-                                  help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
+                                  help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits_compute= dp.get_precision('Account')),
@@ -1573,16 +1583,19 @@ class stock_move(osv.osv):
 
         def create_chained_picking(self, cr, uid, moves, context=None):
             new_moves = []
-            res_obj =  self.pool.get('res.company')
+            res_obj = self.pool.get('res.company')
+            picking_obj = self.pool.get('stock.picking')
+            move_obj = self.pool.get('stock.move')
             if context is None:
                 context = {}
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
                 ptype = todo[0][1][5] and todo[0][1][5] or self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-                pick_name = ''
+                pick_name = picking.name
                 if ptype == 'delivery':
                     pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.delivery')
-                pickid = self.pool.get('stock.picking').create(cr, uid, {
-                    'name': pick_name or picking.name,
+
+                pickid = picking_obj.create(cr, uid, {
+                    'name': pick_name,
                     'origin': str(picking.origin or ''),
                     'type': ptype,
                     'note': picking.note,
@@ -1591,11 +1604,12 @@ class stock_move(osv.osv):
                     'stock_journal_id': todo[0][1][3],
                     'company_id': todo[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context),
                     'address_id': picking.address_id.id,
-
-                    'invoice_state': 'none'
-                })
+                    'invoice_state': 'none',
+                    'date': picking.date,
+                    'sale_id': picking.sale_id.id
+                    })
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
-                    new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
+                    new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,
                         'location_dest_id': loc.id,
                         'date_moved': time.strftime('%Y-%m-%d'),
@@ -1606,7 +1620,7 @@ class stock_move(osv.osv):
                         'date_planned': (datetime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                         'move_history_ids2': []}
                     )
-                    self.pool.get('stock.move').write(cr, uid, [move.id], {
+                    move_obj.write(cr, uid, [move.id], {
                         'move_dest_id': new_id,
                         'move_history_ids': [(4, new_id)]
                     })
@@ -1843,8 +1857,6 @@ class stock_move(osv.osv):
                         'ref': move.picking_id and move.picking_id.name,
                         })
             
-            message = _('Move line') + " '" + move.name + "' "+ _("is processed.")
-            self.log(cr, uid, move.id, message)
         # This can be removed
         #tracking_lot = False
         #if context:
@@ -1864,9 +1876,7 @@ class stock_move(osv.osv):
         for pick_id in picking_ids:
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 
-        for (id,name) in picking_obj.name_get(cr, uid, picking_ids):
-            message = _('Document') + " '" + name + "' "+ _("is processed.")
-            self.log(cr, uid, id, message)
+        picking_obj.log_picking(cr, uid, picking_ids, context=context)
         return True
 
     def create_account_move(self, cr, uid, move,account_id, account_variation, amount, context=None):
@@ -1939,8 +1949,11 @@ class stock_move(osv.osv):
             new_move = self.copy(cr, uid, move.id, default_val)
             #self.write(cr, uid, [new_move], {'move_history_ids':[(4,move.id)]}) #TODO : to track scrap moves
             res += [new_move]
-            message = _('Product ') + " '" + move.product_id.name + "' "+ _("is scraped with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
+            product_obj = self.pool.get('product.product')
+            for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
+                message = _('Product ') + " '" + name + "' "+ _("is scraped with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
             self.log(cr, uid, move.id, message)
+
         self.action_done(cr, uid, res)
         return res
 
@@ -2067,8 +2080,12 @@ class stock_move(osv.osv):
                     }
 
                     self.write(cr, uid, [move.id], update_val)
-            message = _('Product ') + " '" + move.product_id.name + "' "+ _("is consumed with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
-            self.log(cr, uid, move.id, message)
+
+            product_obj = self.pool.get('product.product')
+            for new_move in self.browse(cr, uid, res, context=context):
+                for (id, name) in product_obj.name_get(cr, uid, [new_move.product_id.id]):
+                    message = _('Product ') + " '" + name + "' "+ _("is consumed with") + " '" + str(new_move.product_qty) + "' "+ _("quantity.")
+                    self.log(cr, uid, new_move.id, message)
         self.action_done(cr, uid, res)
 
         return res

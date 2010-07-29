@@ -219,8 +219,8 @@ class account_invoice(osv.osv):
 
     _name = "account.invoice"
     _description = 'Invoice'
-    _order = "number"
-    _log_create = True
+    _order = "id"
+
     _columns = {
         'name': fields.char('Description', size=64, select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice.", readonly=True, states={'draft':[('readonly',False)]}),
@@ -231,24 +231,25 @@ class account_invoice(osv.osv):
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=True, select=True, change_default=True),
 
-        'number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
+        'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
+        #'number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'comment': fields.text('Additional Information', translate=True),
+        'comment': fields.text('Additional Information'),
 
         'state': fields.selection([
             ('draft','Draft'),
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
             ('open','Open'),
-            ('paid','Done'),
+            ('paid','Paid'),
             ('cancel','Cancelled')
             ],'State', select=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
-            \n* The \'Done\' state is set automatically when invoice is paid.\
+            \n* The \'Paid\' state is set automatically when invoice is paid.\
             \n* The \'Cancelled\' state is used when user cancel invoice.'),
         'date_invoice': fields.date('Date Invoiced', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]},
@@ -299,8 +300,8 @@ class account_invoice(osv.osv):
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
-        'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
-            help='The bank account to pay to or to be paid from', readonly=True, states={'draft':[('readonly',False)]}),
+        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
+            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Parner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={
@@ -344,6 +345,9 @@ class account_invoice(osv.osv):
     def create(self, cr, uid, vals, context=None):
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
+            for inv_id, name in self.name_get(cr, uid, [res], context=context):
+                message = _('Invoice ') + " '" + name + "' "+ _("is waiting for validation.")
+                self.log(cr, uid, inv_id, message)
             return res
         except Exception, e:
             if '"journal_id" viol' in e.args[0]:
@@ -354,9 +358,6 @@ class account_invoice(osv.osv):
 
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Document ') + " '" + name + "' "+ _("has been paid.")
-            self.log(cr, uid, id, message)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -373,8 +374,8 @@ class account_invoice(osv.osv):
 #   def get_invoice_address(self, cr, uid, ids):
 #       res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #       return [{}]
-    def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank=False, company_id=False):
+    def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
+            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         invoice_addr_id = False
         contact_addr_id = False
         partner_payment_term = False
@@ -429,7 +430,7 @@ class account_invoice(osv.osv):
         }
 
         if type in ('in_invoice', 'in_refund'):
-            result['value']['partner_bank'] = bank_id
+            result['value']['partner_bank_id'] = bank_id
 
         if payment_term != partner_payment_term:
             if partner_payment_term:
@@ -439,7 +440,7 @@ class account_invoice(osv.osv):
             else:
                 result['value']['date_due'] = False
 
-        if partner_bank != bank_id:
+        if partner_bank_id != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             result['value'].update(to_update['value'])
         return result
@@ -474,7 +475,7 @@ class account_invoice(osv.osv):
     def onchange_invoice_line(self, cr, uid, ids, lines):
         return {}
 
-    def onchange_partner_bank(self, cursor, user, ids, partner_bank):
+    def onchange_partner_bank(self, cursor, user, ids, partner_bank_id=False):
         return {'value': {}}
 
     def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
@@ -768,8 +769,8 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         context = {}
         for inv in self.browse(cr, uid, ids):
-            if not inv.journal_id.invoice_sequence_id:
-                raise osv.except_osv(_('Error !'), _('Please define invoice sequence on invoice journal'))
+            if not inv.journal_id.sequence_id:
+                raise osv.except_osv(_('Error !'), _('Please define sequence on invoice journal'))
             if not inv.invoice_line:
                 raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
             if inv.move_id:
@@ -875,7 +876,14 @@ class account_invoice(osv.osv):
 
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
-            move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date, 'type': entry_type}
+            move = {
+                'ref': inv.number, 
+                'line_id': line, 
+                'journal_id': journal_id, 
+                'date': date, 
+                'type': entry_type,
+                'narration':inv.comment
+            }
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:
                 period_ids= self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
@@ -890,8 +898,11 @@ class account_invoice(osv.osv):
             new_move_name = self.pool.get('account.move').browse(cr, uid, move_id).name
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
-            self.pool.get('account.move').post(cr, uid, [move_id])
+            # Pass invoice in context in method post: used if you want to get the same
+            # account move reference when creating the same invoice after a cancelled one:
+            self.pool.get('account.move').post(cr, uid, [move_id], context={'invoice':inv})
         self._log_event(cr, uid, ids)
+
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -916,36 +927,35 @@ class account_invoice(osv.osv):
         }
 
     def action_number(self, cr, uid, ids, *args):
-        cr.execute('SELECT id, type, number, move_id, reference ' \
-                    'FROM account_invoice ' \
-                    'WHERE id IN %s',
-                    (tuple(ids),))
-        obj_inv = self.browse(cr, uid, ids)[0]
-        for (id, invtype, number, move_id, reference) in cr.fetchall():
-            if not number:
-                if obj_inv.journal_id.invoice_sequence_id:
-                    sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
-                else:
-                    number = self.pool.get('ir.sequence').get(cr, uid,
-                            'account.invoice.' + invtype)
-                if invtype in ('in_invoice', 'in_refund'):
-                    ref = reference
-                else:
-                    ref = self._convert_ref(cr, uid, number)
-                cr.execute('UPDATE account_invoice SET number=%s ' \
-                        'WHERE id=%s', (number, id))
-                cr.execute('UPDATE account_move SET ref=%s ' \
-                        'WHERE id=%s AND (ref is null OR ref = \'\')',
+        #TODO: not correct fix but required a frech values before reading it.
+        self.write(cr, uid, ids, {})
+        
+        for obj_inv in self.browse(cr, uid, ids):
+            id = obj_inv.id
+            invtype = obj_inv.type
+            number = obj_inv.number
+            move_id = obj_inv.move_id and obj_inv.move_id.id or False
+            reference = obj_inv.reference or ''
+            
+            if invtype in ('in_invoice', 'in_refund'):
+                ref = reference
+            else:
+                ref = self._convert_ref(cr, uid, number)
+
+            cr.execute('UPDATE account_move SET ref=%s ' \
+                    'WHERE id=%s AND (ref is null OR ref = \'\')',
+                    (ref, move_id))
+            cr.execute('UPDATE account_move_line SET ref=%s ' \
+                    'WHERE move_id=%s AND (ref is null OR ref = \'\')',
+                    (ref, move_id))
+            cr.execute('UPDATE account_analytic_line SET ref=%s ' \
+                    'FROM account_move_line ' \
+                    'WHERE account_move_line.move_id = %s ' \
+                        'AND account_analytic_line.move_id = account_move_line.id',
                         (ref, move_id))
-                cr.execute('UPDATE account_move_line SET ref=%s ' \
-                        'WHERE move_id=%s AND (ref is null OR ref = \'\')',
-                        (ref, move_id))
-                cr.execute('UPDATE account_analytic_line SET ref=%s ' \
-                        'FROM account_move_line ' \
-                        'WHERE account_move_line.move_id = %s ' \
-                            'AND account_analytic_line.move_id = account_move_line.id',
-                            (ref, move_id))
+            for inv_id, name in self.name_get(cr, uid, [id]):
+                message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
+                self.log(cr, uid, inv_id, message)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1161,12 +1171,18 @@ class account_invoice(osv.osv):
                    ((move_id, invoice.move_id.id),))
         lines = line.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
         for l in lines+invoice.payment_ids:
-            if l.account_id.id==src_account_id:
+            if l.account_id.id == src_account_id:
                 line_ids.append(l.id)
                 total += (l.debit or 0.0) - (l.credit or 0.0)
+
+        inv_id, name = self.name_get(cr, uid, [invoice.id], context=context)[0]
         if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
+            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is totally paid."))
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
+            code = invoice.currency_id.code
+            amt = str(pay_amount) + code + ' on ' + str(invoice.amount_total) + code + ' (' + str(total) + code + ' remaining)'
+            self.log(cr, uid, inv_id, _('Invoice ') + " '" + name + "' "+ _("is paid partially: ") + amt)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute

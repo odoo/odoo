@@ -48,7 +48,10 @@
      if not new_prj:
      	raise Exception( "New project based on template not created")
      new_id = new_prj['res_id']
-     state = self.read(cr, uid, [new_id], ['state'])[0]['state']
+     new_prj = self.read(cr, uid, [new_id], ['name', 'state'])[0]
+     state = new_prj['state']
+     name = new_prj['name'] 
+     print "Project '%s' created"%name
      assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state          
 - 
   Reset project template to normal project  
@@ -109,23 +112,24 @@
        - state == "open"
 
 
-
 -
   Test for task work allocation
-- 
-  Check if task 'Technical Training' in draft state
-- 
-  !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: Project is in draft state}:
-       - state == "draft"
-- 
-  Open task 'Technical Training' 
-- 
-  !python {model: project.task}: |
-    self.do_open(cr, uid, [ref("project_task_technicaltraining0")], {"lang": "en_US", "active_ids": [ref("project.menu_action_view_task")],
-      "tz": False, "active_model": "ir.ui.menu", "search_default_project_id":
-      False, "search_default_user_id": 1, "search_default_current": 1, "project_id":
-      False, "active_id": ref("project.menu_action_view_task"), })
-- 
+-
+  As i cancelled my project before, i check if the task 'Technical Training' is in cancelled state
+-
+  !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: Task is in cancelled state}:
+       - state == "cancelled"
+-
+  Now in order to reactivate the task 'Technical Training', i click on the "Reactivate" button and fill the remaining hour field
+-
+  !record {model: config.compute.remaining, id: project_task_technicaltraining_remainingwiz0}:
+    remaining_hours: 30.0
+- |
+  I click the apply button
+-
+  !python {model: config.compute.remaining}: |
+      self.compute_hours(cr, uid, [ref('project_task_technicaltraining_remainingwiz0')], {'active_id': ref("project_task_technicaltraining0"),'button_reactivate': True})
+- |
   Check if task 'Technical Training' in  open state and for other initial values
 - 
   !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: Project is in open state}:
@@ -231,10 +235,7 @@
   Close the task
 - 
   !python {model: project.task}: |
-    self.do_close(cr, uid, [ref("project_task_technicaltraining0")], {"lang": "en_US", "active_ids": [ref("project.menu_action_view_task")],
-      "tz": False, "active_model": "ir.ui.menu", "search_default_project_id":
-      False, "search_default_user_id": 1, "search_default_current": 1, "project_id":
-      False, "active_id": ref("project.menu_action_view_task"), })
+    self.do_close(cr, uid, [ref("project_task_technicaltraining0")], {'mail_send': False})
 - 
   Check if task in done state
 - 
@@ -277,7 +278,7 @@
         name: Training on yml
         user_id: base.user_root
 -
-   Check for effective hours and remaining hours
+   Check for effective hours and remaining hours, remaining_hours must be 5, effective_hours must be 45
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After work task of 5 hours effective_hours must be equal to 45 and remaining_hours is 5}:
        - planned_hours == 30
@@ -289,10 +290,7 @@
   Close the task
 - 
   !python {model: project.task}: |
-    self.do_close(cr, uid, [ref("project_task_technicaltraining0")], {"lang": "en_US", "active_ids": [ref("project.menu_action_view_task")],
-      "tz": False, "active_model": "ir.ui.menu", "search_default_project_id":
-      False, "search_default_user_id": 1, "search_default_current": 1, "project_id":
-      False, "active_id": ref("project.menu_action_view_task"), })
+    self.do_close(cr, uid, [ref("project_task_technicaltraining0")], {'mail_send': False})
 - 
   Check if task in done state
 - 
@@ -317,6 +315,6 @@
 - 
   Check if project in close state
 - 
-  !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error}:
+  !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: "Project must be in closed state"}:
        - state == "close"               
                      

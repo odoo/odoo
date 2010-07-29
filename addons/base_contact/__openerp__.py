@@ -38,7 +38,7 @@
 
     Pay attention that this module converts the existing addresses into "addresses + contacts". It means that some fields of the addresses will be missing (like the contact name), since these are supposed to be defined in an other object.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base','process'],
     'init_xml': [],

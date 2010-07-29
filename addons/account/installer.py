@@ -33,8 +33,9 @@ class account_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     def _get_default_accounts(self, cr, uid, context=None):
-        accounts = [{'acc_name':'Current','account_type':'cash'},
-                    {'acc_name':'Deposit','account_type':'cash'}]
+        accounts = [{'acc_name':'Current','account_type':'bank'},
+                    {'acc_name':'Deposit','account_type':'bank'},
+                    {'acc_name':'Cash','account_type':'cash'}]
         return accounts
 
     def _get_charts(self, cr, uid, context=None):
@@ -67,6 +68,12 @@ class account_installer(osv.osv_memory):
         'account_asset':fields.boolean('Assets Management',
             help="Enables asset management in the accounting application, "
                  "including asset categories and usage periods."),
+        'account_voucher':fields.boolean('Voucher Management',
+            help="Account Voucher module includes all the basic requirements of "
+                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
+        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
+            help="Extension Account Voucher module includes allows to link payment / receipt "
+                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period':fields.selection([('month','Monthly'), ('3months','3 Monthly')],
@@ -289,9 +296,12 @@ class account_installer(osv.osv_memory):
                     'account_paid_id': acc_template_ref[value['account_paid_id']],
                 })
 
-        # Creating Journals
+        # Creating Journals Sales and Purchase
         vals_journal={}
-        view_id = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Journal View')])[0]
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
+        data = data_pool.browse(cr, uid, data_id[0])
+        view_id = data.res_id
+        
         seq_id = obj_sequence.search(cr,uid,[('name','=','Account Journal')])[0]
 
         if seq_journal:

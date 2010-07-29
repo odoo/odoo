@@ -36,7 +36,7 @@ So that, each department manager can know if someone in his team has still unall
 
 At the end of the month, the planning manager can also check if the encoded timesheets are respecting the planned time on each analytic account.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'project',

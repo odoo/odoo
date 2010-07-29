@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    d$
 #
@@ -28,7 +28,7 @@
     * Payment Encoding
     * Comany Contribution Managemet
     """,
-    'author':'Tiny/Axelor',
+    'author':'OpenERP SA/Axelor',
     'website':'http://www.openerp.com',
     'depends': [
         'hr_payroll',

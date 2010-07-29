@@ -50,7 +50,7 @@ Create dashboard for CRM that includes:
     * My Cases (list)
     * Jobs Tracking (graph)
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'base',
@@ -83,9 +83,10 @@ Create dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_send_email_view.xml',
+        'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_custom_create_menu_view.xml',
+        'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
 

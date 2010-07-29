@@ -31,11 +31,12 @@ This module is integrated with the mail gateway to automatically tracks email
 sent to jobs@YOURCOMPANY.com. It's also integrated with the document management
 system to store and search in your CV base.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['hr','survey','crm'],
     'update_xml': [
         'wizard/hr_recruitment_phonecall_view.xml',
+        'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
         'hr_recruitment_menu.xml',
 #        'report_hr_recruitment_view.xml',
@@ -43,7 +44,6 @@ system to store and search in your CV base.
         'security/ir.model.access.csv',
         'board_hr_recruitment_statistical_view.xml',
         'report/hr_recruitment_report_view.xml',
-        'wizard/hr_recruitment_create_partner_job_view.xml',
      ],
     'init_xml': [
         'hr_recruitment_data.xml'

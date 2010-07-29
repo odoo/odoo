@@ -22,6 +22,7 @@
 import time
 from osv import fields
 from osv import osv
+from tools.translate import _
 
 journal2type = {
     'cash':'rec_voucher',
@@ -111,17 +112,16 @@ class account_voucher(osv.osv):
             ('bank_pay_voucher','Bank Payment'),
             ('rec_voucher','Cash Receipt'),
             ('bank_rec_voucher','Bank Receipt'),
-#            ('cont_voucher','Contra'),
             ('journal_sale_vou','Journal Sale'),
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
             ],'Entry Type', select=True , size=128, readonly=True, states={'draft':[('readonly',False)]}),
-        'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
+        'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','<>','view')]),
-        'payment_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=False, states={'proforma':[('readonly',True)]}),
-        'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'posted':[('readonly',True)]}),
-        'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}, required=False),
+        'payment_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=True, states={'draft':[('readonly',False)]}),
+        'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'posted':[('readonly',False)]}),
+        'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state':fields.selection(
@@ -137,9 +137,8 @@ class account_voucher(osv.osv):
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
         'amount':fields.float('Amount', readonly=True),
-        'reference': fields.char('Voucher Reference', size=64),
-        'reference_type': fields.selection(_get_reference_type, 'Reference Type',
-            required=True),
+        'reference': fields.char('Reference', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Bank cheque number or payorder number"),
+        'reference_type': fields.selection(_get_reference_type, 'Reference Type', required=True),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids':fields.many2many('account.move.line', 'voucher_id', 'account_id', 'rel_account_move', 'Real Entry'),
@@ -262,25 +261,33 @@ class account_voucher(osv.osv):
         move_line_pool = self.pool.get('account.move.line')
         analytic_pool = self.pool.get('account.analytic.line')
         currency_pool = self.pool.get('res.currency')
+        invoice_pool = self.pool.get('account.invoice')
         
         for inv in self.browse(cr, uid, ids):
-
+            
             if inv.move_id:
                 continue
-            
-            company_currency = inv.company_id.currency_id.id
-            diff_currency_p = inv.currency_id.id <> company_currency
-            
+
             journal = journal_pool.browse(cr, uid, inv.journal_id.id)
             if journal.sequence_id:
                 name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
             
+            ref = False
+            if inv.type in ('journal_pur_voucher', 'bank_rec_voucher', 'rec_voucher'):
+                ref = inv.reference
+            else:
+                ref = invoice_pool._convert_ref(cr, uid, name)
+            
+            company_currency = inv.company_id.currency_id.id
+            diff_currency_p = inv.currency_id.id <> company_currency
+            
             move = {
-                'name' : name,
-                'journal_id': journal.id,
-                'type' : inv.type,
-                'narration' : inv.narration and inv.narration or inv.name,
-                'date':inv.date
+                'name':name,
+                'journal_id':journal.id,
+                'type':inv.type,
+                'narration':inv.narration and inv.narration or inv.name,
+                'date':inv.date,
+                'ref':ref
             }
             
             if inv.period_id:
@@ -300,7 +307,7 @@ class account_voucher(osv.osv):
                 'journal_id': inv.journal_id.id,
                 'period_id': inv.period_id.id,
                 'partner_id': False,
-                'ref': inv.reference,
+                'ref':ref,
                 'date': inv.date
             }
             if diff_currency_p:
@@ -320,18 +327,22 @@ class account_voucher(osv.osv):
             line_ids += [move_line_pool.create(cr, uid, move_line)]
             for line in inv.payment_ids:
                 amount=0.0
+                
+                if inv.type in ('bank_pay_voucher', 'pay_voucher', 'journal_voucher'):
+                    ref = line.ref
+                    
                 move_line = {
-                     'name': line.name,
-                     'debit': False,
-                     'credit': False,
-                     'account_id': line.account_id.id or False,
-                     'move_id': move_id ,
-                     'journal_id': inv.journal_id.id,
-                     'period_id': inv.period_id.id,
-                     'partner_id': line.partner_id.id or False,
-                     'ref': line.ref,
-                     'date': inv.date,
-                     'analytic_account_id': False
+                     'name':line.name,
+                     'debit':False,
+                     'credit':False,
+                     'account_id':line.account_id.id or False,
+                     'move_id':move_id ,
+                     'journal_id':inv.journal_id.id,
+                     'period_id':inv.period_id.id,
+                     'partner_id':line.partner_id.id or False,
+                     'ref':ref,
+                     'date':inv.date,
+                     'analytic_account_id':False
                 }
                 
                 if diff_currency_p:
@@ -366,6 +377,10 @@ class account_voucher(osv.osv):
                 'move_id': move_id,
                 'move_ids':[(6, 0,line_ids)]
             }
+            
+            message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirmed")
+            self.log(cr, uid, inv.id, message)
+            
             self.write(cr, uid, [inv.id], rec)
             
         return True
@@ -395,9 +410,9 @@ class account_voucher(osv.osv):
             context={}
         ids = []
         if name:
-            ids = self.search(cr, user, [('number','=',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('number','=',name)]+args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('name',operator,name)]+args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
     def copy(self, cr, uid, id, default=None, context=None):

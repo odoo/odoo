@@ -8,6 +8,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="view_id" ref="view_account_period_tree"/>
+            <field name="help"> After closing a period, you will no longer be able to post entries to the period once it has been closed.</field>
         </record>
         <menuitem
             action="action_account_period_tree"

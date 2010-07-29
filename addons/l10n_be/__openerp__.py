@@ -39,7 +39,7 @@
                            Path to access : Financial Management/Reporting/Legal Statements/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': [
                 'account',
                 'account_report',

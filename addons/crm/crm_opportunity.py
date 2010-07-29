@@ -36,8 +36,6 @@ AVAILABLE_STATES = [
 
 class crm_opportunity(osv.osv):
     """ Opportunity Cases """
-    _name = "crm.lead"
-    _description = "Opportunity"
     _order = "priority,date_action,id desc"
     _inherit = 'crm.lead'
     _columns = {
@@ -46,7 +44,7 @@ class crm_opportunity(osv.osv):
                                  domain="[('partner_id','=',partner_id)]"), 
 
         # Opportunity fields
-        'probability': fields.float('Probability (%)'),
+        'probability': fields.float('Probability (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
@@ -72,8 +70,10 @@ class crm_opportunity(osv.osv):
 
         self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Won.")
-            self.log(cr, uid, id, message)
+            opp = self.browse(cr, uid, id)
+            if opp.type == 'opportunity':
+                message = _('The Opportunity') + " '" + name + "' "+ _("has been Won.")
+                self.log(cr, uid, id, message)
         return res
 
     def case_mark_lost(self, cr, uid, ids, *args):
@@ -93,8 +93,10 @@ class crm_opportunity(osv.osv):
 
         res = self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('The Opportunity') + " '" + name + "' "+ _("has been written as Lost.")
-            self.log(cr, uid, id, message)
+            opp = self.browse(cr, uid, id)
+            if opp.type == 'opportunity':
+                message = _('The Opportunity') + " '" + name + "' "+ _("has been Lost.")
+                self.log(cr, uid, id, message)
         return res
 
     def case_cancel(self, cr, uid, ids, *args):
@@ -149,6 +151,19 @@ class crm_opportunity(osv.osv):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
+
+    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context={}):
+        """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of stage’s IDs
+            @stage_id: change state id on run time """
+
+        if not partner_assigned_id:
+            return {'value':{'date_assign': False}}
+        else:
+            return {'value':{'date_assign': time.strftime('%Y-%m-%d')}}
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),

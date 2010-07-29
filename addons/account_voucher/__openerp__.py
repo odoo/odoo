@@ -22,7 +22,7 @@
 {
     "name" : "Accounting Voucher Entries",
     "version" : "1.0",
-    "author" : 'Tiny & Axelor',
+    "author" : 'OpenERP SA & Axelor',
     "description": """Account Voucher module includes all the basic requirements of
     Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc...
     * Voucher Entry

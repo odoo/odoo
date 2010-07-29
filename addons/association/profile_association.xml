@@ -18,6 +18,9 @@
                        position="attributes">
                   <attribute name="string">Install more modules. A few modules are proposed according to the Association Profile you selected. You will be able to install them based on our requirements.</attribute>
                 </xpath>
+                <xpath expr="//button[@string='Install Modules']" position="attributes">
+                    <attribute name="string">Configure</attribute>
+                </xpath>
                 <separator string="title" position="replace"/>
                 <group colspan="8">
                   <separator string="Project Management" colspan="4"/>
@@ -59,5 +62,10 @@
       		</xpath>
       	</field>
 		</record>
+
+		<menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
+		<menuitem name="Events Organisation" id="base.menu_event_main" parent="base.menu_association" />
+		<menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+		<menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
     </data>
 </openerp>
