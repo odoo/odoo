@@ -35,7 +35,7 @@ class account_change_currency(osv.osv_memory):
             context = {}
         state = obj_inv.browse(cr, uid, context['active_id']).state
         if obj_inv.browse(cr, uid, context['active_id']).state != 'draft':
-            raise osv.except_osv(_('Error'), _('You can not change currency for Open Invoice !'))
+            raise osv.except_osv(_('Error'), _('You can only change currency for Draft Invoice !'))
         pass
 
     def change_currency(self, cr, uid, ids, context=None):

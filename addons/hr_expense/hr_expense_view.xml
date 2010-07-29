@@ -81,8 +81,8 @@
                                 <form string="Expense Lines">
                                     <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
                                     <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" widget="selection"/>
-                                    <field name="name" select="1"/>
-                                    <field name="date_value" select="1"/>
+                                    <field name="name" />
+                                    <field name="date_value" />
                                     <field name="unit_quantity"/>
                                     <field name="unit_amount"/>
                                     <field name="ref"/>
@@ -126,28 +126,17 @@
             <field name="arch" type="xml">
                 <search string="Expense">
                     <group>
-                      <filter
-                        icon="terp-document-new"
-                        domain="[('state','=','draft')]"
-                        string="Draft"
-                        help="Draft Expense"/>
+                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="Draft" help="Draft Expense"/>
                       <separator orientation="vertical"/>
-                      <filter
-                        icon="terp-gtk-go-back-rtl"
-                        domain="[('state','=','confirm')]"
-                        string="To Validate"
+                      <filter icon="terp-gtk-go-back-rtl" domain="[('state','=','confirm')]" string="To Validate"
                         help="Confirmed Expense"/>
-                      <filter
-                        icon="terp-gtk-go-back-rtl"
-                        domain="[('state','=','accepted')]"
-                        string="To Pay"
+                      <filter icon="terp-gtk-go-back-rtl" domain="[('state','=','accepted')]" string="To Pay"
                         help="Expenses to Invoice"/>
                       <separator orientation="vertical"/>
                       <field name="name" select='1'/>
                       <field name="date" select='1'/>
-                      <field name="user_id" select="1" string="User">
-                      <filter icon="terp-personal+"
-                            domain="[('department_id','=',context.get('department_id',False))]"
+                      <field name="user_id"  string="User">
+                      <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
                       <field name="department_id" widget="selection" groups="base.group_extended"/>
@@ -171,23 +160,20 @@
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 
-        <menuitem id="next_id_49" name="Expenses" sequence="4"
-           parent="hr.menu_hr_root"/>
-
-        <menuitem action="expense_all" id="menu_expense_all" name="Expenses"
-           parent="next_id_49" groups="hr.group_hr_manager"/>
+        <menuitem id="next_id_49" name="Expenses" sequence="4" parent="hr.menu_hr_root"/>
+        <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="next_id_49" groups="hr.group_hr_manager"/>
 
         <record id="view_product_hr_expense_form" model="ir.ui.view">
-         <field name="name">product.product.expense.form</field>
-         <field name="model">product.product</field>
-         <field name="inherit_id" ref="product.product_normal_form_view"/>
-         <field name="type">form</field>
-         <field name="arch" type="xml">
+            <field name="name">product.product.expense.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
             <field name="purchase_ok" position="after">
                <field name="hr_expense_ok"/>
             </field>
-         </field>
-      </record>
+            </field>
+        </record>
 
     </data>
 </openerp>

@@ -64,7 +64,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                         _("You cannot make an advance on a sale order \
                              that is defined as 'Automatic Invoice after delivery'."))
                 val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
-                        uom = False, partner_id = sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+                        uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
                 line_id =obj_lines.create(cr, uid, {
                     'name': val['value']['name'],
                     'account_id': val['value']['account_id'],

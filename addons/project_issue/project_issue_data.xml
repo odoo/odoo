@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
+
     <!--
     Case Categories
     -->
@@ -11,6 +12,7 @@
         <field name="section_id" ref="crm.section_sales_department"/>
 		<field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
     </record>    
+
     <record model="crm.case.categ" id="feature_request_categ">
         <field name="name">Feature Requests</field>
         <field name="section_id" ref="crm.section_sales_department"/>
@@ -25,7 +27,8 @@
         <field name="name">Version 4.2</field>
         <field name="section_id" ref="crm.section_sales_department"/>
 		<field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>        
-    </record>    
+    </record>
+    
     <record model="crm.case.resource.type" id="type2">
         <field name="name">Version 4.4</field>
         <field name="section_id" ref="crm.section_sales_department"/>
@@ -67,5 +70,6 @@
         <field name="section_id" ref="crm.section_sales_department"/>
 		<field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
     </record>
+
 </data>
 </openerp>

@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-
 import time
 from report import report_sxw
 import pooler
 import datetime
 
 class attendance_print(report_sxw.rml_parse):
+
     def __init__(self, cr, uid, name, context):
         super(attendance_print, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -80,14 +80,13 @@ class attendance_print(report_sxw.rml_parse):
                 total2 += r['delay']
         
         result_dict = {
-                'total' : total and str(total).split('.')[0],
-                'total2' : total2  and  str(total2).split('.')[0]
+                'total': total and str(total).split('.')[0],
+                'total2': total2  and str(total2).split('.')[0]
                 }
 #        return (self._sign(total),total2 and self._sign(total2))
         return [result_dict]
     
-report_sxw.report_sxw('report.hr.attendance.error', 'hr.employee', 'addons/hr_attendance/report/attendance_errors.rml',parser=attendance_print, header=2)
-
+report_sxw.report_sxw('report.hr.attendance.error', 'hr.employee', 'addons/hr_attendance/report/attendance_errors.rml', parser=attendance_print, header=2)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

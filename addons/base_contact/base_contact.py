@@ -26,22 +26,7 @@ class res_partner_contact(osv.osv):
 
     _name = "res.partner.contact"
     _description = "Contact"
-    _log_create = True
-
-    def _title_get(self,cr, user, context={}):
-        """
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param user: the current user,
-            @param context: A standard dictionary for contextual values
-        """
-
-        obj = self.pool.get('res.partner.title')
-        ids = obj.search(cr, user, [])
-        res = obj.read(cr, user, ids, ['shortcut', 'name','domain'], context)
-        res = [(r['shortcut'], r['name']) for r in res if r['domain']=='contact']
-        return res
-
+    
     def _main_job(self, cr, uid, ids, fields, arg, context=None):
         """
             @param self: The object pointer
@@ -63,7 +48,7 @@ class res_partner_contact(osv.osv):
         'name': fields.char('Last Name', size=30, required=True),
         'first_name': fields.char('First Name', size=30),
         'mobile': fields.char('Mobile', size=30),
-        'title': fields.selection(_title_get, 'Title'),
+        'title': fields.many2one('res.partner.title','Title'),
         'website': fields.char('Website', size=120),
         'lang_id': fields.many2one('res.lang', 'Language'),
         'job_ids': fields.one2many('res.partner.job', 'contact_id', 'Functions and Addresses'),
@@ -102,13 +87,15 @@ class res_partner_contact(osv.osv):
         if not len(ids):
             return []
         res = []
-        for r in self.read(cr, user, ids, ['name','first_name','title']):
-            addr = r['title'] and str(r['title'])+" " or ''
-            addr += r.get('name', '')
-            if r['name'] and r['first_name']:
-                addr += ' '
-            addr += (r.get('first_name', '') or '')
-            res.append((r['id'], addr))
+        for contact in self.browse(cr, user, ids, context=context):
+            _contact = ""
+            if contact.title:
+                _contact += "%s "%(contact.title.name)
+            _contact += contact.name or ""
+            if contact.name and contact.first_name:
+                _contact += " "
+            _contact += contact.first_name or ""
+            res.append((contact.id, _contact))
         return res
 
 res_partner_contact()
@@ -208,7 +195,6 @@ class res_partner_job(osv.osv):
     _name = 'res.partner.job'
     _description ='Contact Partner Function'
     _order = 'sequence_contact'
-    _log_create = True
 
     _columns = {
         'name': fields.related('address_id', 'partner_id', type='many2one',\

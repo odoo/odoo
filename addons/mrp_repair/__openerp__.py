@@ -45,6 +45,7 @@
         'mrp_repair_report.xml',
     ],
     'demo_xml': [],
+    'test': ['test/test_mrp_repair.yml'],
     'installable': True,
     'active': False,
     'certificate': '0060814381277',

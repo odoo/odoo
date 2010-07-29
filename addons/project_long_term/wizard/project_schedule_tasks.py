@@ -40,6 +40,8 @@ class project_schedule_task(osv.osv_memory):
                 }
 
     def default_get(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         res = super(project_schedule_task, self).default_get(cr, uid, fields_list, context)
         self.compute_date(cr, uid, context=context)
         return res
@@ -70,6 +72,8 @@ class project_schedule_task(osv.osv_memory):
         return resource_objs
 
     def compute_date(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         """
         Schedule the tasks according to resource available and priority.
         """
@@ -152,8 +156,9 @@ class project_schedule_task(osv.osv_memory):
                                                                     'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                     'user_id': user_id[0]},
                                                                     context=ctx)
-                loop_no +=1
+                loop_no += 1
         return {}
 
 project_schedule_task()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

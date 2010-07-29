@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
+    
+        <menuitem
+            icon="terp-project" id="base.menu_main_pm"
+            name="Project" sequence="10"
+            groups="group_project_manager,group_project_user"/>
+
         <menuitem id="menu_project_management" name="Project Management" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
 
@@ -35,10 +40,9 @@
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                                <field name="warn_manager"/>
                                 <field name="project_escalation_id"/>
+                                <field name="warn_manager"/>
                             </group>
-
                             <newline/>
                             <group col="9" colspan="8">
                                 <field name="state" select="1"/>
@@ -51,11 +55,10 @@
                                 <button
                                     string="New Project Based on Template"
                                     name="duplicate_template"  type="object"
-                                    states="template" icon="gtk-new"/>
+                                    states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
                             </group>
                         </page>
                         <page string="Members">
-                            <separator colspan="4" string="Project's members"/>
                             <field colspan="4" name="members" nolabel="1"/>
                         </page>
                         <page groups="base.group_extended" string="Partner Info">
@@ -99,6 +102,7 @@
                     <field name="complete_name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
+                    <field name="parent_id" invisible="1"/>
                     <field name="effective_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="state"/>
@@ -113,7 +117,7 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='15' colspan='4'>
-                       <filter icon="terp-document-new" string="Draft" domain="[('state', 'in',('draft'))]" help="Draft Projects" default="1"/>
+                       <filter icon="terp-document-new" string="Draft" domain="[('state', 'in',('draft',))]" help="Draft Projects" default="1"/>
                        <filter icon="terp-check" string="Current" name="Current" domain="[('state', 'in',('open','pending'))]" help="Open and Pending Projects" default="1"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-personal" string="Manager" name="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
@@ -125,6 +129,7 @@
                    </group>
                    <newline />
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    	<filter string="Parent" name="Parent"  icon="terp-personal" domain = "[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Users" name="Users"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner"  icon="terp-personal" domain = "[]" context="{'group_by':'partner_id'}"/>
                       </group>
@@ -138,11 +143,13 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree colors="red:date&lt;current_date and state in ('open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
+                <tree colors="red:date and (date&lt;current_date) and (state in ('open'));blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
                     <field name="sequence" invisible="1"/>
+                    <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
+                    <field name="parent_id" invisible="1"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
@@ -247,18 +254,19 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
+                            <group col="2" colspan="2">
+                                <field
+                                    name="planned_hours"
+                                    widget="float_time"
+                                    attrs="{'readonly':[('state','!=','draft')]}"
+                                    on_change="onchange_planned(planned_hours, effective_hours)"/>
+                                <field name="effective_hours" widget="float_time"/>
+                            </group>
                             <group col="3" colspan="2">
-                            <field
-                                name="planned_hours"
-                                widget="float_time"
-                                attrs="{'readonly':[('state','!=','draft')]}"
-                                on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_config_compute_remaining)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
-                            </group>
-                            <group col="2" colspan="2">
-                            <field name="delay_hours" widget="float_time"/>
-                            <field name="effective_hours" widget="float_time"/>
+
+                                <field name="delay_hours" widget="float_time"/>
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
@@ -427,7 +435,7 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter string="Users" name="group_user_id" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="Project" name="group_project_id" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
+                        <filter string="Project" name="group_project_id" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
@@ -489,7 +497,7 @@
                 <form string="Task Stage">
                     <field name="name" select="1"/>
                     <field name="sequence"/>
-                    <field colspan="4" name="description" select="1"/>
+                    <field colspan="4" name="description"/>
                 </form>
             </field>
         </record>
@@ -512,9 +520,10 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
         </record>
+
         <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
-        
+
         <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <act_window
@@ -539,7 +548,6 @@
                 </page>
             </field>
         </record>
-
 
       <!--     User Form-->
       <record id="view_project_users_form_simple" model="ir.ui.view">
@@ -642,5 +650,6 @@
         <act_window domain="[('user_id', '=', active_id),('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <act_window domain="[('project_id', '=', active_id)]" id="act_project_messages" name="Messages" res_model="project.message" src_model="project.project"/>
+        
     </data>
 </openerp>

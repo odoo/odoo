@@ -21,11 +21,11 @@
 
 
 {
-    "name" : "Human Resources",
-    "version" : "1.1",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
+    "name": "Human Resources",
+    "version": "1.1",
+    "author": "Tiny",
+    "category": "Generic Modules/Human Resources",
+    "website": "http://www.openerp.com",
     "description": """
     Module for human resource management. You can manage:
     * Employees and hierarchies : You can define your employee with User and display hierarchies
@@ -45,10 +45,11 @@
         'hr_installer.xml',
         'hr_data.xml',
         'board_hr_view.xml',
-    ],
-    'demo_xml': ['hr_demo.xml',
-        'hr_department_demo.xml'],
-        
+        ],
+    'demo_xml': [
+        'hr_demo.xml',
+        'hr_department_demo.xml'
+        ],        
     'test': ['test/test_hr.yml'],    
     'installable': True,
     'active': False,

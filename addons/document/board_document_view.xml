@@ -50,19 +50,21 @@
             <field name="view_id" ref="board_document_manager_form"/>
          </record>
 
-        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+        <menuitem id="menu_reporting" name="Reporting" sequence="2" parent="knowledge.menu_document"/>
          <menuitem
-            name="Document"
-            id="menu_board_document"
-            parent="base.dashboard"
+            name="Dashboard"
+            id="menu_reports_document"
+            parent="menu_reporting"
+            sequence="0"
+            icon="terp-graph"
             groups="document.group_document_manager"/>
 
 
          <menuitem
-            parent="menu_board_document"
+            parent="menu_reports_document"
             action="open_board_document_manager"
             sequence="1"
-            id="menu_board_document_manager"
+            id="menu_reports_document_manager"
             icon="terp-graph"/>
 
         <record model="ir.ui.view" id="board_document_manager_form1">
@@ -105,10 +107,10 @@
         </record>
 
         <menuitem
-            parent="menu_board_document"
+            parent="menu_reports_document"
             action="open_board_document_manager1"
             sequence="1"
-            id="menu_board_document_manager1"
+            id="menu_reports_document_manager1"
             icon="terp-graph"/>
      </data>
  </openerp>

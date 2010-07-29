@@ -76,13 +76,26 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Invitation details">
-                    <field name="email" string="Invitation To"/>
-                    <field name="user_id" string="Internal User" />
-                    <field name="partner_address_id" string="Contact" />
-                    <field name="role" />
+                    <field name="sent_by_uid" string="Invitation From" />
+                    <field name="role" string="My Role"/>                    
+                    <field name="cutype" string="Invitation type"/>
                     <field name="state" />
-                    <field name="cutype" invisible="1"/>
-                    <field name="rsvp" invisible="1"/>
+                    <field name="rsvp" string="Required to Join"/>
+                    <button name="do_tentative" states="needs-action,declined,accepted"                                
+                                string="Uncertain" type="object"
+                                icon="terp-crm" />
+                    <button name="do_accept" string="Accept"
+                        states="needs-action,tentative,declined"
+                        type="object" icon="gtk-apply" />
+                    <button name="do_decline" string="Decline"
+                        states="needs-action,tentative,accepted"
+                        type="object" icon="gtk-cancel" />
+                    <button
+                        name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                        string="Delegate" type="action"
+                        icon="gtk-sort-descending"
+                        states="needs-action,tentative,declined,accepted"
+                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                 </tree>
             </field>
         </record>
@@ -103,7 +116,7 @@
                        separator="1" help="Declined Invitations" />
                    <separator orientation="vertical"/>
                    <field name="email" select='1'/>
-                   <field name="sent_by_uid" select="1"/>
+                   <field name="user_id" select="1"/>
                    <separator orientation="vertical"/>
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
@@ -121,7 +134,7 @@
                         <filter string="Contact" icon="terp-gtk-jump-to-ltr" domain="[]"
                             context="{'group_by':'partner_address_id'}" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" help="Invitation Type"
-                            domain="[]" context="{'group_by':' state'}" />
+                            domain="[]" context="{'group_by':'state'}" />
                     </group>
                </search>
             </field>
@@ -138,7 +151,7 @@
 
         <!-- Calenadar's menu -->
           <menuitem id="base.menu_calendar_configuration" name="Calendar"
-            parent="base.menu_config_address_book" sequence="15" />
+            parent="base.menu_base_config" sequence="15" />
 
         <!-- Invitation menu -->
 
@@ -206,7 +219,7 @@
                 <form string="Events">
                     <group col="6" colspan="4">
                         <field name="name" select="1" string="Summary"
-                            colspan="4" />
+                            colspan="4" required="1" />
                         <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
                         <newline/>
                         <field name="date" string="Start Date" required="1" select="1"
@@ -222,10 +235,15 @@
                                <field name="rrule_type" string="Recurrency"
                                     colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
                                <button string="Edit All"
-                                   help="Edit all Ourrences of recurrent Meeting"
+                                   help="Edit all Ourrences of recurrent Events"
                                    attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                    name="open_event" icon="gtk-edit"
                                    type="object" />
+                               <button string="ExRule"
+                                    help="Add Exception Rule"
+                                    name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
+                                    context="{'model' : 'calendar.event'}"
+                                    attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
                         </group>
                     </group>
                     <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
@@ -284,7 +302,25 @@
                         </group>
                         <separator string="Description" colspan="4" />
                         <field name="description" nolabel="1" colspan="4" />
-                        <separator colspan="4"/>
+                        <separator colspan="4" string="" />
+                           <group col="5" colspan="4">
+                               <field name="state" select="2" />
+                               <button name="do_tentative"
+                                   states="confirmed,cancelled"
+                                   string="Uncertain"
+                                   type="object"
+                                   icon="terp-crm" />
+                               <button name="do_confirm"
+                                   string="Confirm"
+                                   states="tentative,cancelled"
+                                   type="object"
+                                   icon="gtk-apply" />
+                               <button name="do_cancel"
+                                   string="Cancel"
+                                   states="tentative,confirmed"
+                                   type="object"
+                                   icon="gtk-cancel" />
+                           </group>
                         </page>
                         <page string="Invitation Detail">
                             <button string="Invite People"
@@ -350,11 +386,12 @@
             <field name="arch" type="xml">
                 <tree string="Events">
                     <field name="name" string="Subject" />
-                    <field name="date" string="Meeting Date" />
+                    <field name="date" string="Event Date" />
                     <field name="location" />
                     <field name="show_as" />
                     <field name="class" string="Privacy" />
                     <field name="user_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -388,6 +425,10 @@
                                domain="[('user_id','=',uid)]"
                                help="My Events" />
                            <separator orientation="vertical"/>
+                           <filter icon="terp-check" string="Confirmed"
+                               domain="[('state','=','confirmed')]"
+                               help="Confirmed Events" />
+                           <separator orientation="vertical"/>
                            <field name="name" select="1" string="Summary"/>
                            <field name="location" select="1" string="Location"/>
                            <separator orientation="vertical"/>
@@ -398,6 +439,8 @@
                        </group>
                        <newline/>
                         <group expand="0" string="Group By...">
+                            <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
+                                context="{'group_by':'state'}" />
                             <filter string="Date" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'date'}" />
                             <filter string="Availability" icon="terp-camera_test"

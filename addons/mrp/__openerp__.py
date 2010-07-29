@@ -69,6 +69,7 @@
         'wizard/change_production_qty_view.xml',
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
+        'wizard/mrp_change_standard_price_view.xml',
 #        'wizard/mrp_track_prod_view.xml',
         'mrp_view.xml',
         'mrp_wizard.xml',
@@ -86,9 +87,10 @@
     ],
     'demo_xml': ['mrp_demo.xml', 'board_manufacturing_demo.xml'],
     'test': [
-             'test/mrp_phantom_bom.yml',
-             'test/mrp_production_order.yml',
-             'test/mrp_procurement.yml'
+         'test/mrp_packs.yml',
+         'test/mrp_phantom_bom.yml',
+         'test/mrp_production_order.yml',
+         'test/mrp_procurement.yml'
     ],
     'installable': True,
     'active': False,

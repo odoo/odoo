@@ -158,7 +158,6 @@ class questionnaire(osv.osv):
 
     _name="crm_profiling.questionnaire"
     _description= "Questionnaire"
-    _log_create = True
 
     def build_form(self, cr, uid, data, context):
         """

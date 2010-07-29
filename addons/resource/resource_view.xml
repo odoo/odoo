@@ -38,6 +38,10 @@
                        <field name="manager"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
+                   <newline/>
+                   <group expand="0" string="Group By..." colspan="4" col="20">
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager'}"/>
+                    </group>                   
                </search>
             </field>
         </record>
@@ -58,6 +62,8 @@
                    <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_from'}"/>
                     </group>
                </search>
             </field>

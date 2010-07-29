@@ -1,3 +1,25 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2009  Sharoon Thomas  
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 from osv import osv, fields
 import time
 import email_template_engines
@@ -41,6 +63,7 @@ class email_template_mailbox(osv.osv):
         return True
     
     def send_this_mail(self, cr, uid, ids=None, context=None):
+        result = True
         for id in (ids or []):
             try:
                 account_obj = self.pool.get('email_template.account')
@@ -56,18 +79,19 @@ class email_template_mailbox(osv.osv):
                               values['subject'] or u'',
                               {'text':values.get('body_text', u'') or u'', 'html':values.get('body_html', u'') or u''},
                               payload=payload, context=context)
-                
                 if result == True:
                     self.write(cr, uid, id, {'folder':'sent', 'state':'na', 'date_mail':time.strftime("%Y-%m-%d %H:%M:%S")}, context)
                     self.historise(cr, uid, [id], "Email sent successfully", context)
                 else:
-                    self.historise(cr, uid, [id], result, context)
+                    error = result['error_msg']
+                    self.historise(cr, uid, [id], error, context)
+                    
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel(_("Power Email"), netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (id, error))
                 self.historise(cr, uid, [id], error, context)
             self.write(cr, uid, id, {'state':'na'}, context)
-        return True
+        return result
     
     def historise(self, cr, uid, ids, message='', context=None):
         for id in ids:

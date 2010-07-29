@@ -1,6 +1,26 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+    <!-- Idea Categories Search View-->
+    <record model="ir.ui.view" id="view_idea_category_search">
+        <field name="name">idea.category.search</field>
+        <field name="model">idea.category</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Ideas Categories">
+                <group col="10" colspan="4">
+                    <field name="name" string="Category"/>
+                    <field name="parent_id" widget="selection"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By..." colspan="14">
+                    <filter string="Parent Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
 
     <!-- Idea Category Form View -->
     <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
@@ -41,6 +61,7 @@
         <field name="res_model">idea.category</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_idea_category_search"/>
     </record>
 
     <menuitem name="Configuration" parent="base.menu_tools"
@@ -149,20 +170,6 @@
         <field name="arch" type="xml">
             <search string="Ideas vote">
                 <group col="10" colspan="4">
-                    <filter icon="terp-go-year" string="  365 Days  "
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks performed in last 365 days"/>
-                    <filter icon="terp-go-month" string="   30 Days   "
-                        name="month"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks performed in last 30 days"/>
-                    <filter icon="terp-go-week"
-                         string="    7 Days    "
-                         name="week"
-                         separator="1"
-                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                         help="Tasks during last 7 days"/>
-                    <separator orientation="vertical"/>
                     <field name="idea_id" widget="selection"/>
                     <field name="user_id" string="User"/>
                 </group>
@@ -385,10 +392,9 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_idea_vote_search"/>
-        <field name="context">{'search_default_week':1}</field>
     </record>
 
-    <menuitem name="Votes" parent="menu_idea_reporting" id="menu_idea_vote" action="action_idea_vote"/>
+    <menuitem name="Votes" parent="menu_ideas1" id="menu_idea_vote" action="action_idea_vote"/>
 
     </data>
 </openerp>
