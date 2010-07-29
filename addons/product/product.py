@@ -587,14 +587,6 @@ class product_packaging(osv.osv):
         'ul' : _get_1st_ul,
     }
 
-    def checksum(ean):
-        salt = '31' * 6 + '3'
-        sum = 0
-        for ean_part, salt_part in zip(ean, salt):
-            sum += int(ean_part) * int(salt_part)
-        return (10 - (sum % 10)) % 10
-    checksum = staticmethod(checksum)
-
 product_packaging()
 
 
