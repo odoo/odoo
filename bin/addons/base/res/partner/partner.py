@@ -171,24 +171,6 @@ class res_partner(osv.osv):
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
-    def _check_ean_key(self, cr, uid, ids):
-        for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
-            thisean=partner_o['ean13']
-            if thisean and thisean!='':
-                if len(thisean)!=13:
-                    return False
-                sum=0
-                for i in range(12):
-                    if not (i % 2):
-                        sum+=int(thisean[i])
-                    else:
-                        sum+=3*int(thisean[i])
-                if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
-                    return False
-        return True
-
-#   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
-
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
