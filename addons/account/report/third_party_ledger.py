@@ -362,6 +362,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         if not self.ids:
             return 0.0
         result_tmp = 0.0
+        result_init = 0.0
         if data['form']['reconcil'] :
             RECONCILE_TAG = " "
         else:
@@ -377,9 +378,9 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     (tuple(self.partner_ids), tuple(self.account_ids), self.date_lst[0],))
             contemp = self.cr.fetchone()
             if contemp != None:
-                result_tmp = contemp[0] or 0.0
+                result_init = contemp[0] or 0.0
             else:
-                result_tmp = result_tmp + 0.0
+                result_init = result_tmp + 0.0
 
 #        if self.date_lst_string:
         self.cr.execute(
@@ -396,12 +397,13 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
-        return result_tmp
+        return result_tmp  + result_init
 
     def _sum_credit(self, data):
         if not self.ids:
             return 0.0
         result_tmp = 0.0
+        result_init = 0.0
         if data['form']['reconcil'] :
             RECONCILE_TAG = " "
         else:
@@ -417,9 +419,9 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                     (tuple(self.partner_ids), tuple(self.account_ids), self.date_lst[0],))
             contemp = self.cr.fetchone()
             if contemp != None:
-                result_tmp = contemp[0] or 0.0
+                result_init = contemp[0] or 0.0
             else:
-                result_tmp = result_tmp + 0.0
+                result_init = result_tmp + 0.0
 
 #        if self.date_lst_string:
         self.cr.execute(
@@ -436,7 +438,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
-        return result_tmp
+        return result_tmp  + result_init
 #
 #    def _get_company(self, form):
 #        return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
@@ -460,10 +462,12 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         else:
             currency_total = self.tot_currency = 0.0
             return currency_total
+
     def _display_initial_balance(self, data):
          if data['form']['initial_balance'] :
              return True
          return False
+
     def _display_currency(self,data):
          if data['form']['amount_currency'] :
              return True
