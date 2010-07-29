@@ -7,13 +7,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Change Auction Date">
-                	<group colspan="4" >
-                		 <label string="Warning, this will erase the object adjudication price and its buyer !" colspan="2"/>
-              			 <newline/>
-              			 <field name="auction_id"/>
-                    </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
+                	<label string="Warning, this will erase the object adjudication price and its buyer!" colspan="4"/>
+                	<newline/>
+              		<separator string="" colspan="4"/>
+              		<field name="auction_id"/>
+                    <separator string="" colspan="4" />
+                    <group colspan="4" col="4">
+                        <label string=" " colspan="2"/>
                     	<button  icon="gtk-cancel" special="cancel" string="Cancel"/>
                     	<button  icon="gtk-redo" string="Move to Auction date" name="auction_move_set" type="object"/>
                    </group>

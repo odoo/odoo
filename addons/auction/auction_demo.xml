@@ -10,51 +10,51 @@
     </record>
 
     <record id="res_partner_unknown_address_1" model="res.partner.address">
-    <field name="city">Bruxelles1</field>
-    <field name="name">Benoit Mortie1r1</field>
-    <field name="zip">1030</field>
-    <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+	    <field name="city">Bruxelles1</field>
+	    <field name="name">Benoit Mortie1r1</field>
+	    <field name="zip">1030</field>
+	    <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+	
+	    <field name="email">info@opensides.be</field>
+	    <field name="phone">(+32)2 211 34 83</field>
+	    <field name="street">Rue des Palais 44, bte 33</field>
+	    <field name="type">default</field>
+	    <field name="partner_id" ref="partner_record1"/>
+	</record>
 
-    <field name="email">info@opensides.be</field>
-    <field name="phone">(+32)2 211 34 83</field>
-    <field name="street">Rue des Palais 44, bte 33</field>
-    <field name="type">default</field>
-    <field name="partner_id" ref="partner_record1"/>
-</record>
-<record id="res_partner_unknown_address_2" model="res.partner.address">
-    <field name="city">Avignon CEDEX 091</field>
-    <field name="name">Laurent Jacot1</field>
-    <field name="zip">84911</field>
-    <field name="country_id" model="res.country" search="[('name','=','France')]"/>
-    <field name="email">contact@tecsas.fr</field>
-    <field name="phone">(+33)4.32.74.10.57</field>
-    <field name="street">85 rue du traite de Rome</field>
-    <field name="type">default</field>
-    <field name="partner_id" ref="partner_record1"/>
-</record>
-<record id="res_partner_unknown_address_3" model="res.partner.address">
-    <field name="city">Louvain-la-Neuve</field>
-    <field name="name">Thomas Passot</field>
-    <field name="zip">1348</field>
-    <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
-    <field name="email">info@mediapole.net</field>
-    <field name="phone">(+32).10.45.17.73</field>
-    <field name="street">Rue de l'Angelique, 1</field>
-    <field name="partner_id" ref="partner_record1"/>
-</record>
+	<record id="res_partner_unknown_address_2" model="res.partner.address">
+	    <field name="city">Avignon CEDEX 091</field>
+	    <field name="name">Laurent Jacot1</field>
+	    <field name="zip">84911</field>
+	    <field name="country_id" model="res.country" search="[('name','=','France')]"/>
+	    <field name="email">contact@tecsas.fr</field>
+	    <field name="phone">(+33)4.32.74.10.57</field>
+	    <field name="street">85 rue du traite de Rome</field>
+	    <field name="type">default</field>
+	    <field name="partner_id" ref="partner_record1"/>
+	</record>
+	<record id="res_partner_unknown_address_3" model="res.partner.address">
+	    <field name="city">Louvain-la-Neuve</field>
+	    <field name="name">Thomas Passot</field>
+	    <field name="zip">1348</field>
+	    <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+	    <field name="email">info@mediapole.net</field>
+	    <field name="phone">(+32).10.45.17.73</field>
+	    <field name="street">Rue de l'Angelique, 1</field>
+	    <field name="partner_id" ref="partner_record1"/>
+	</record>
 
         <!-- demo data for the auction_artist object-->
+        
     <record model="auction.artists" id="auction_art_1">
         <field name="name">Philippe Lavilier</field>
         <field name="birth_death_dates">1345-1450</field>
     </record>
+    
     <record model="auction.artists" id="auction_art_2">
         <field name="name">POREAU OSWALD</field>
         <field name="birth_death_dates">1877-1955</field>
     </record>
-
-
-
 
         <!-- demo data for the account tax code-->
 
@@ -98,8 +98,8 @@
         <field name="domain">sabam</field>
         <field name="base_code_id" ref="account_tax_code_id5"/>
         <field name="tax_code_id" ref="account_tax_code_id5"/>
-
     </record>
+    
     <record id="auction_tax1" model="account.tax">
                 <field name="name">TVA</field>
                 <field name="amount">0.12</field>
@@ -108,14 +108,12 @@
                 <field name="tax_code_id" ref="account_tax_code_id4"/>
     </record>
 
-
     <record id="auction_tax2" model="account.tax">
                 <field name="name">TVA1</field>
                 <field name="amount">0.2</field>
                 <field name="domain">auction</field>
                 <field name="base_code_id" ref="account_tax_code_id2"/>
                 <field name="tax_code_id" ref="account_tax_code_id2"/>
-
     </record>
     <record id="auction_tax3" model="account.tax">
                 <field name="name">Buyer Costs</field>
@@ -123,7 +121,6 @@
                 <field name="domain">auction</field>
                 <field name="base_code_id" ref="account_tax_code_id1"/>
                 <field name="tax_code_id" ref="account_tax_code_id1"/>
-
     </record>
     <record id="auction_tax4" model="account.tax">
                 <field name="name">Seller Costs1</field>
@@ -131,7 +128,6 @@
                 <field name="domain">auction</field>
                 <field name="base_code_id" ref="account_tax_code_id1"/>
                 <field name="tax_code_id" ref="account_tax_code_id1"/>
-
     </record>
     <record id="auction_tax5" model="account.tax">
                 <field name="name">Seller Costs</field>
@@ -141,8 +137,8 @@
                 <field name="tax_code_id" ref="account_tax_code_id3"/>
     </record>
 
-
 <!--        example for creating a demo data for the tax with basecode and tax code-->
+
     <record id="auction_tax6" model="account.tax">
                 <field name="name">Frais de vente</field>
                 <field name="amount">-0.15</field>
@@ -151,20 +147,18 @@
                 <field name="tax_code_id" ref="account_tax_code_id1"/>
     </record>
 
-        <record id="auction_tax20" model="account.tax">
+    <record id="auction_tax20" model="account.tax">
                 <field name="name">Frais de vente</field>
                 <field name="amount">0</field>
                 <field name="domain">auction</field>
                 <field name="base_code_id" ref="account_tax_code_id2"/>
                 <field name="tax_code_id" ref="account_tax_code_id2"/>
     </record>
+    
     <record id="monproduit" model="product.product">
         <field name="name">Oeuvres a 21%</field>
         <field name="categ_id" ref="product.product_category_pc"/>
     </record>
-
-
-
 
 
 <!--===========================================================================================-->

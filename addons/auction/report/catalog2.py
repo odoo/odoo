@@ -106,7 +106,6 @@ class auction_catalog(report_rml):
 
     #         promotion element
             promo = doc.createElement('promotion1')
-
             fp = file(config['addons_path']+'/auction/report/images/flagey_logo.jpg','r')
             file_data = fp.read()
             promo.appendChild(doc.createTextNode(base64.encodestring(file_data)))
