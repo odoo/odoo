@@ -447,8 +447,8 @@ class Calendar(CalDAV, osv.osv):
             'type': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO')], \
                                     string="Type", size=64),
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),
-            'create_date': fields.datetime('Created Date'),
-            'write_date': fields.datetime('Modifided Date'),
+            'create_date': fields.datetime('Created Date', readonly=True),
+            'write_date': fields.datetime('Modifided Date', readonly=True),
     }
 
     def get_calendar_objects(self, cr, uid, ids, parent=None, domain=None, context=None):
