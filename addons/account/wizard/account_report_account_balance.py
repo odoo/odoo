@@ -28,7 +28,7 @@ class account_balance_report(osv.osv_memory):
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
-        return {'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data}
+        return {'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data, 'nodestroy':True,}
 
 account_balance_report()
 
