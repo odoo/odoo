@@ -287,7 +287,7 @@ class node_class(object):
         if self.DAV_M_NS.has_key(ns):
             prefix = self.DAV_M_NS[ns]
         else:
-            logger.debug("No namespace: %s ( for prop: %s)",ns, prop)
+            logger.debug('No namespace: %s ("%s")',ns, prop)
             return None
 
         mname = prefix + "_" + prop
