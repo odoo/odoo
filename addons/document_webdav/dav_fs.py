@@ -59,6 +59,19 @@ class DAV_NotFound2(DAV_NotFound):
             args = (path, )
         DAV_NotFound.__init__(self, *args)
 
+
+def _str2time(cre):
+    """ Convert a string with time representation (from db) into time (float)
+    """
+    if not cre:
+        return time.time()
+    frac = 0.0
+    if isinstance(cre, basestring) and '.' in cre:
+        fdot = cre.find('.')
+        frac = float(cre[fdot:])
+        cre = cre[:fdot]
+    return time.mktime(time.strptime(cre,'%Y-%m-%d %H:%M:%S')) + frac
+    
 class openerp_dav_handler(dav_interface):
     """
     This class models a OpenERP interface for the DAV server
@@ -420,18 +433,14 @@ class openerp_dav_handler(dav_interface):
     @memoize(CACHE_SIZE)
     def get_lastmodified(self, uri):
         """ return the last modified date of the object """
-        today = time.time()
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
-            return today
+            return time.time()
         try:            
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
-            if node.write_date:
-                return time.mktime(time.strptime(node.write_date,'%Y-%m-%d %H:%M:%S'))
-            else:
-                return today
+            return _str2time(node.write_date)
         finally:
             if cr: cr.close()
 
@@ -456,11 +465,8 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
-            if node.create_date:
-                result = time.mktime(time.strptime(node.create_date,'%Y-%m-%d %H:%M:%S'))
-            else:
-                result = time.time()
-            return result
+            
+            return _str2time(node.create_date)
         finally:
             if cr: cr.close()
 

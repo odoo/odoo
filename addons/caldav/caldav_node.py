@@ -28,6 +28,18 @@ import base64
 from document import nodes
 import StringIO
 
+def _str2time(cre):
+    """ Convert a string with time representation (from db) into time (float)
+    """
+    if not cre:
+        return time.time()
+    frac = 0.0
+    if isinstance(cre, basestring) and '.' in cre:
+        fdot = cre.find('.')
+        frac = float(cre[fdot:])
+        cre = cre[:fdot]
+    return time.mktime(time.strptime(cre,'%Y-%m-%d %H:%M:%S')) + frac
+
 class node_database(nodes.node_database):
     def _child_get(self, cr, name=False, parent_id=False, domain=None):
         dirobj = self.context._dirobj
@@ -103,10 +115,7 @@ class node_calendar_collection(nodes.node_dir):
 
     def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
-        if self.write_date:
-            wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
-        else: wtime = time.time()
-        return str(wtime)
+        return str(_str2time(self.write_date))
 
     def _get_ttag(self, cr):
         return 'calendar collection-%d' % self.dir_id
@@ -277,10 +286,7 @@ class node_calendar(nodes.node_class):
 
     def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
-        if self.write_date:
-            wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
-        else: wtime = time.time()
-        return str(wtime)
+        return str(_str2time(self.write_date))
 
     def rmcol(self, cr):
         return False
@@ -311,8 +317,9 @@ class res_node_calendar(nodes.node_class):
         self.calendar_id = hasattr(parent, 'calendar_id') and parent.calendar_id or False
         if res_obj:
             if not self.calendar_id: self.calendar_id = res_obj.id
-            self.create_date = res_obj.create_date
-            self.write_date = res_obj.write_date or res_obj.create_date
+            pr = res_obj.perm_read()[0]
+            self.create_date = pr.get('create_date')
+            self.write_date = pr.get('write_date') or pr.get('create_date')
             self.displayname = res_obj.name
 
         self.content_length = 0
@@ -441,9 +448,6 @@ class res_node_calendar(nodes.node_class):
 
     def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
-        if self.write_date:
-            wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
-        else: wtime = time.time()
-        return str(wtime)
+        return str(_str2time(self.write_date))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
