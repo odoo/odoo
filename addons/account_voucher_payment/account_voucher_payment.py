@@ -45,7 +45,10 @@ class account_invoice(osv.osv):
             args += [('type','in', ['out_invoice', 'in_refund'])]
         elif ttype and ttype in ('pay_voucher', 'bank_pay_voucher'):
             args += [('type','in', ['in_invoice', 'out_refund'])]
-        
+        elif ttype and ttype in('journal_sale_vou', 'journal_pur_voucher', 'journal_voucher'):
+            raise osv.except_osv(_('Invalid action !'), _('You can not reconcile sales, purchase, or journal entry with invoice !'))
+            args += [('type','=', 'do_not_allow_search')]
+
         res = super(account_invoice, self).search(cr, user, args, offset, limit, order, context, count)
         return res
     
@@ -187,11 +190,12 @@ class account_voucher(osv.osv):
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
                 
-                if line.invoice_id:
+                if line.invoice_id and inv.type in ('pay_voucher', 'bank_pay_voucher', 'rec_voucher', 'bank_rec_voucher'):
                     rec_ids += [move_line_id]
                     for move_line in line.invoice_id.move_id.line_id:
                         if line.account_id.id == move_line.account_id.id:
-                            rec_ids += [move_line.id]            
+                            rec_ids += [move_line.id]
+
             if rec_ids:
                 move_line_pool.reconcile_partial(cr, uid, rec_ids)
             
