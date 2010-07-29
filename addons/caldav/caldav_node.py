@@ -119,6 +119,7 @@ class node_calendar(nodes.node_class):
     our_type = 'collection'
     DAV_PROPS = {
             "http://calendarserver.org/ns/" : ('getctag',),
+            'http://groupdav.org/': ('resourcetype',),
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description',
                     'calendar-data',
@@ -128,6 +129,7 @@ class node_calendar(nodes.node_class):
                     'schedule-outbox-URL',)}
     DAV_M_NS = {
            "DAV:" : '_get_dav',
+           'http://groupdav.org/': '_get_gdav',
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
 
@@ -146,6 +148,9 @@ class node_calendar(nodes.node_class):
     def _get_dav_getctag(self, cr):
         result = self._get_ttag(cr) + ':' + str(time.time())
         return str(result)
+
+    def _get_gdav_resourcetype(self, cr):
+        return (str(self.cal_type + '-collection'), 'http://groupdav.org/')
 
     def removeme_match_dav_eprop(self, cr, match, ns, prop):
 	# Why?
