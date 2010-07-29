@@ -24,7 +24,6 @@ from tools.translate import _
 import pooler
 import tools
 import time
-import base64
 from document import nodes
 import StringIO
 
@@ -235,18 +234,22 @@ class node_calendar(nodes.node_class):
             res = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self, domain=where, context=ctx)
         return res
 
-    def create_child(self,cr,path,data):
+    def create_child(self, cr, path, data):
         """ API function to create a child file object and node
             Return the node_* created
         """
-        return self.set_data(cr, data)
+        # we ignore the path, it will be re-generated automatically
+        res = self.set_data(cr, data)
+        
+        # TODO: use the res to create at least one node
+        return None
 
 
     def set_data(self, cr, data, fil_obj = None):
         uid = self.context.uid
-        *-*
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        return calendar_obj.import_cal(cr, uid, base64.encodestring(data), self.calendar_id)
+        res = calendar_obj.import_cal(cr, uid, data, self.calendar_id)
+        return res
 
     def get_data_len(self, cr, fil_obj = None):
         return self.content_length
@@ -315,7 +318,8 @@ class res_node_calendar(nodes.node_class):
     def set_data(self, cr, data, fil_obj = None):
         uid = self.context.uid
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        return calendar_obj.import_cal(cr, uid, base64.encodestring(data), self.calendar_id)
+        res =  calendar_obj.import_cal(cr, uid, data, self.calendar_id)
+        return res
 
     def _get_ttag(self,cr):
         res = False
