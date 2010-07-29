@@ -41,7 +41,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     re=doc.createElement("D:response")
     # append namespaces to response
     nsnum=0
-    for nsname in self.namespaces:
+    namespaces = self.namespaces
+    if 'DAV:' in namespaces:
+        namespaces.remove('DAV:')
+    for nsname in namespaces:
         re.setAttribute("xmlns:ns"+str(nsnum),nsname)
         nsnum=nsnum+1
     
@@ -64,7 +67,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
 
     gp=doc.createElement("D:prop")
     for ns in good_props.keys():
-        ns_prefix="ns"+str(self.namespaces.index(ns))+":"
+        if ns == 'DAV:':
+            ns_prefix = 'D:'
+        else:
+            ns_prefix="ns"+str(namespaces.index(ns))+":"
         for p,v in good_props[ns].items():
             if not v:
                 continue
@@ -103,7 +109,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             ps.appendChild(bp)
 
             for ns in bad_props[ecode].keys():
-                ns_prefix="ns"+str(self.namespaces.index(ns))+":"
+                if ns == 'DAV:':
+                    ns_prefix='D:'
+                else:
+                    ns_prefix="ns"+str(self.namespaces.index(ns))+":"
             
             for p in bad_props[ecode][ns]:
                 pe=doc.createElement(ns_prefix+str(p))
@@ -146,9 +155,12 @@ def mk_propname_response(self,uri,propnames,doc):
     for ns,plist in propnames.items():
         # write prop element
         pr=doc.createElement("D:prop")
-        nsp="ns"+str(nsnum)
-        pr.setAttribute("xmlns:"+nsp,ns)
-        nsnum=nsnum+1
+        if ns == 'DAV':
+            nsp = 'D'
+        else:
+            nsp="ns"+str(nsnum)
+            ps.setAttribute("xmlns:"+nsp,ns)
+            nsnum=nsnum+1
 
         # write propertynames
         for p in plist:
