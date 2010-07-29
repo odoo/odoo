@@ -38,7 +38,7 @@
     - After installing this module PDF's are no longer stored into the database,
       but in the servers rootpad like /server/bin/filestore.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['process','board', 'knowledge'],
     'init_xml': [],

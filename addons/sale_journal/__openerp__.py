@@ -46,7 +46,7 @@
 
     Some statistics by journals are provided.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['sale'],
     'init_xml': ['sale_journal_data.xml'],

@@ -28,7 +28,7 @@
     - Alerts (create requests)
     - Recurring events
     - Invitations to people""",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     'category': 'Generic Modules/Others',
     'website': 'http://www.openerp.com',
     "init_xml" : [

@@ -34,7 +34,7 @@ The case is then closed and linked to the generated sale order.
 We suggest you to install this module if you installed both the sale and the
 crm modules.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['sale', 'crm'],
     'init_xml': [],

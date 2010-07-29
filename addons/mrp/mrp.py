@@ -450,27 +450,27 @@ class mrp_production(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
             help="Location where the system will stock the finished products."),
 
-        'date_planned_end': fields.function(_production_date_end, method=True, type='date', string='Scheduled End'),
+        'date_planned_end': fields.function(_production_date_end, method=True, type='date', string='Scheduled End Date'),
         'date_planned_date': fields.function(_production_date, method=True, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),
         'date_start': fields.datetime('Start Date'),
         'date_finnished': fields.datetime('End Date'),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
-        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
+        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production plannification."),
 
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
-        'move_lines': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consumme', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consummed Products', domain=[('state','in', ('done', 'cancel'))], readonly=True),
+        'move_lines': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
+        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))], readonly=True),
         'move_created_ids': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
         'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))], readonly=True),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
-                                    \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production get started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
+                                    \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
@@ -665,7 +665,7 @@ class mrp_production(osv.osv):
         return res
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
-        """ To produce final product base on production mode (consume/consume&produce).
+        """ To produce final product based on production mode (consume/consume&produce).
         If Production mode is consume, all stock move lines of raw materials will be done/consumed.
         If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
         and stock move lines of final product will be also done/produced.

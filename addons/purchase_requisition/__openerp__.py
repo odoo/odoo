@@ -20,7 +20,7 @@
 {
     "name" : "Purchase - Purchase Requisition",
     "version" : "0.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category" : "Generic Modules/Sales & Purchases",
     "website" : "http://www.openerp.com",
     "description": """
