@@ -3780,8 +3780,7 @@ class orm(orm_template):
                 tables.append(t)
 
         if len(qu1):
-            qu1 = ' where '
-            qu1 += ' and '.join(qu1)
+            qu1 = ' where ' + ' and '.join(qu1)
         else:
             qu1 = ''
 
