@@ -41,6 +41,7 @@ keep track for the wiki groups, pages, and history
         'wiki_view.xml',
         'data/wiki_quickstart.xml',
         'data/wiki_main.xml',
+        'security/wiki_security.xml',
         'security/ir.model.access.csv'
     ],
     'demo_xml': [],

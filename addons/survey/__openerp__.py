@@ -37,6 +37,7 @@
                    'wizard/survey_selection.xml',
                    'wizard/survey_answer.xml',
                    'survey_view.xml',
+                   'security/survey_security.xml',
                    'security/ir.model.access.csv',
                    'wizard/survey_print_statistics.xml',
                    'wizard/survey_print_answer.xml',
