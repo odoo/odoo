@@ -52,46 +52,17 @@ class node_database(nodes.node_database):
         return res
 
 class node_calendar_collection(nodes.node_dir):
-    PROPS = {
+    DAV_PROPS = {
             "http://calendarserver.org/ns/" : ('getctag'),
             }
-    M_NS = {
+    DAV_M_NS = {
            "http://calendarserver.org/ns/" : '_get_dav',
            }
 
     http_options = { 'DAV': ['calendar-access'] }
 
-    def get_dav_props(self, cr):
-        return self.PROPS
-
-
-
-    def get_dav_eprop(self,cr, ns, propname):
-        if self.M_NS.has_key(ns):
-            prefix = self.M_NS[ns]
-        else:
-            print "No namespace:",ns, "( for prop:", propname,")"
-            return None
-
-        mname = prefix + "_" + propname
-
-        if not hasattr(self, mname):
-            return None
-
-        try:
-            m = getattr(self, mname)
-            r = m(cr)
-            return r
-        except AttributeError, e:
-            print 'Property %s not supported' % propname
-            print "Exception:", e
-        return None
-
     def _file_get(self,cr, nodename=False):
         return []
-
-
-
 
     def _child_get(self, cr, name=False, parent_id=False, domain=None):
         dirobj = self.context._dirobj
@@ -121,8 +92,8 @@ class node_calendar_collection(nodes.node_dir):
         return res
 
     def _get_dav_owner(self, cr):
+	# Todo?
         return False
-
 
     def get_etag(self, cr):
         """ Get a tag, unique per object + modification.
@@ -147,7 +118,7 @@ class node_calendar_collection(nodes.node_dir):
 
 class node_calendar(nodes.node_class):
     our_type = 'collection'
-    PROPS = {
+    DAV_PROPS = {
             "http://calendarserver.org/ns/" : ('getctag'),
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description',
@@ -156,7 +127,7 @@ class node_calendar(nodes.node_class):
                     'calendar-user-address-set',
                     'schedule-inbox-URL',
                     'schedule-outbox-URL',)}
-    M_NS = {
+    DAV_M_NS = {
            "DAV:" : '_get_dav',
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
@@ -177,7 +148,8 @@ class node_calendar(nodes.node_class):
         result = self._get_ttag(cr) + ':' + str(time.time())
         return str(result)
 
-    def match_dav_eprop(self, cr, match, ns, prop):
+    def removeme_match_dav_eprop(self, cr, match, ns, prop):
+	# Why?
         if ns == "DAV:" and prop == "getetag":
             dirobj = self.context._dirobj
             uid = self.context.uid
@@ -193,7 +165,6 @@ class node_calendar(nodes.node_class):
             return False
         res = super(node_calendar, self).match_dav_eprop(cr, match, ns, prop)
         return res
-
 
     def get_domain(self, cr, filters):
         res = []
@@ -272,32 +243,6 @@ class node_calendar(nodes.node_class):
             res = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self, domain=where, context=ctx)
         return res
 
-
-
-    def get_dav_props(self, cr):
-        return self.PROPS
-
-    def get_dav_eprop(self,cr, ns, propname):
-        if self.M_NS.has_key(ns):
-            prefix = self.M_NS[ns]
-        else:
-            print "No namespace:",ns, "( for prop:", propname,")"
-            return None
-        propname = propname.replace('-','_')
-        mname = prefix + "_" + propname
-        if not hasattr(self, mname):
-            return None
-
-        try:
-            m = getattr(self, mname)
-            r = m(cr)
-            return r
-        except AttributeError, e:
-            print 'Property %s not supported' % propname
-            print "Exception:", e
-        return None
-
-
     def create_child(self,cr,path,data):
         """ API function to create a child file object and node
             Return the node_* created
@@ -338,7 +283,7 @@ class node_calendar(nodes.node_class):
 
 class res_node_calendar(nodes.node_class):
     our_type = 'file'
-    PROPS = {
+    DAV_PROPS = {
             "http://calendarserver.org/ns/" : ('getctag'),
             "urn:ietf:params:xml:ns:caldav" : (
                     'calendar-description',
@@ -347,7 +292,7 @@ class res_node_calendar(nodes.node_class):
                     'calendar-user-address-set',
                     'schedule-inbox-URL',
                     'schedule-outbox-URL',)}
-    M_NS = {
+    DAV_M_NS = {
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
 
@@ -378,32 +323,6 @@ class res_node_calendar(nodes.node_class):
         s.name = self
         return s
 
-
-
-    def get_dav_props(self, cr):
-        return self.PROPS
-
-    def get_dav_eprop(self,cr, ns, propname):
-        if self.M_NS.has_key(ns):
-            prefix = self.M_NS[ns]
-        else:
-            print "No namespace:",ns, "( for prop:", propname,")"
-            return None
-        propname = propname.replace('-','_')
-        mname = prefix + "_" + propname
-        if not hasattr(self, mname):
-            return None
-
-        try:
-            m = getattr(self, mname)
-            r = m(cr)
-            return r
-        except AttributeError, e:
-            print 'Property %s not supported' % propname
-            print "Exception:", e
-        return None
-
-
     def get_data(self, cr, fil_obj = None):
         uid = self.context.uid
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
@@ -427,8 +346,6 @@ class res_node_calendar(nodes.node_class):
         elif self.calendar_id:
             res = '%d' % (self.calendar_id)
         return res
-
-
 
     def _get_caldav_calendar_data(self, cr):
         return self.get_data(cr)
