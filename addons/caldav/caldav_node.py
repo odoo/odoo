@@ -59,6 +59,7 @@ class node_calendar_collection(nodes.node_dir):
            "http://calendarserver.org/ns/" : '_get_dav',
            }
 
+    http_options = { 'DAV': ['calendar-access'] }
 
     def get_dav_props(self, cr):
         return self.PROPS
@@ -159,6 +160,8 @@ class node_calendar(nodes.node_class):
            "DAV:" : '_get_dav',
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
+
+    http_options = { 'DAV': ['calendar-access'] }
 
     def __init__(self,path, parent, context, calendar):
         super(node_calendar,self).__init__(path, parent,context)
@@ -347,6 +350,8 @@ class res_node_calendar(nodes.node_class):
     M_NS = {
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'}
+
+    http_options = { 'DAV': ['calendar-access'] }
 
     def __init__(self,path, parent, context, res_obj, res_model=None, res_id=None):
         super(res_node_calendar,self).__init__(path, parent, context)
