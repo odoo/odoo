@@ -316,6 +316,7 @@
     <paraStyle name="Table index 1" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica"/>
     <paraStyle name="Table" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Table index heading" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="16.0" leading="20" spaceBefore="12.0" spaceAfter="6.0"/>
+	<paraStyle name="terp_default_Right_1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>    
     <images/>
   </stylesheet>
   <story>
@@ -472,16 +473,16 @@
       </tr>
       <tr>
     <td>[[ display_initial_balance(data)  or  removeParentNode('tr') ]]
-          <para style="P2">Initial Balance</para>
+          <para style="terp_default_Centre_8"><font color="white"> Needto</font>Initial Balance</para>
         </td>
         <td>
-          <para style="P5">[[ get_intial_balance(p,data)[0][0] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][0] or 0.0 ]]</para>
         </td>
         <td>
-          <para style="P5">[[ get_intial_balance(p,data)[0][1] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][1] or 0.0 ]]</para>
         </td>
         <td>
-          <para style="P5">[[ get_intial_balance(p,data)[0][2] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][2] or 0.0 ]]</para>
         </td>
     </tr>
     </blockTable>
@@ -589,19 +590,19 @@
       </tr>
         <tr>
         <td>[[ data['form']['initial_balance'] or  removeParentNode('tr') ]]
-          <para style="P2">Initial Balance</para>
+         <para style="terp_default_Centre_8"><font color="white"> Needto</font>Initial Balance</para>
         </td>
          <td>
-          <para style="P5">[[ get_intial_balance(p,data)[0][0] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][0] or 0.0 ]]</para>
         </td>
         <td>
-          <para style="P5">[[ get_intial_balance(p,data)[0][1] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][1] or 0.0 ]]</para>
         </td>
         <td>
-          <para style="P5">[[ get_intial_balance(p,data)[0][2] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][2] or 0.0 ]]</para>
         </td>
    		<td>
-          <para style="P5"></para>
+          <para style="terp_default_Right_9"></para>
         </td>    
         </tr>   
     </blockTable>
