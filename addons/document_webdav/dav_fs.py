@@ -140,6 +140,8 @@ class openerp_dav_handler(dav_interface):
         raise DAV_NotFound
 
     def match_prop(self, uri, match, ns, propname):        
+        if self.M_NS.has_key(ns):
+            return match == dav_interface.get_prop(self, uri, ns, propname)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
