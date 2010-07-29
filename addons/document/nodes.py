@@ -157,6 +157,8 @@ class node_class(object):
         Nodes have attributes which contain usual file properties
         """
     our_type = 'baseclass'
+    DAV_PROPS = None
+    DAV_M_NS = None
 
     def __init__(self, path, parent, context):
         assert isinstance(context,node_context)
@@ -270,7 +272,7 @@ class node_class(object):
     def get_dav_props(self, cr):
         """ If this class has special behaviour for GroupDAV etc, export
         its capabilities """
-        return {}
+        return self.DAV_PROPS or {}
 
     def match_dav_eprop(self, cr, match, ns, prop):
         res = self.get_dav_eprop(cr, ns, prop)
@@ -279,6 +281,26 @@ class node_class(object):
         return False
 
     def get_dav_eprop(self, cr, ns, prop):
+        if not self.DAV_M_NS:
+            return None
+        
+        if self.DAV_M_NS.has_key(ns):
+            prefix = self.DAV_M_NS[ns]
+        else:
+            logger.debug("No namespace: %s ( for prop: %s)",ns, prop)
+            return None
+
+        mname = prefix + "_" + prop
+
+        if not hasattr(self, mname):
+            return None
+
+        try:
+            m = getattr(self, mname)
+            r = m(cr)
+            return r
+        except AttributeError:
+            logger.debug('Property %s not supported' % prop, exc_info=True)
         return None
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
