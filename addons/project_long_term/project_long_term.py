@@ -190,7 +190,7 @@ class project_phase(osv.osv):
             return super(project_phase, self).write(cr, uid, ids, vals, context=context)
         # Consider calendar and efficiency if the phase is performed by a resource
         # otherwise consider the project's working calendar
-        if type(ids) == int:
+        if isinstance(ids, (int, long)):
             ids = [ids]
         phase = self.browse(cr, uid, ids[0], context=context)
         calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
