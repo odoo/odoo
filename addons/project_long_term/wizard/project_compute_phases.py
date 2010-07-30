@@ -103,20 +103,20 @@ class project_compute_phases(osv.osv_memory):
             # Recalculate date_start and date_end
             # according to constraints on date start and date end on phase
             if phase.constraint_date_start and str(s_date) < phase.constraint_date_start:
-                start_date = datetime.datetime.strptime(phase.constraint_date_start, '%Y-%m-%d %H:%M:%S')
+                start_date = datetime.datetime.strptime(phase.constraint_date_start, '%Y-%m-%d')
             else:
                 start_date = s_date
             if phase.constraint_date_end and str(e_date) > phase.constraint_date_end:
-                end_date= datetime.datetime.strptime(phase.constraint_date_end, '%Y-%m-%d %H:%M:%S')
-                date_start = phase.constraint_date_end[:-3]
+                end_date= datetime.datetime.strptime(phase.constraint_date_end, '%Y-%m-%d')
+                date_start = phase.constraint_date_end
             else:
                 end_date = e_date
                 date_start = end_date
             # Write the calculated dates back
             ctx = context.copy()
             ctx.update({'scheduler': True})
-            phase_obj.write(cr, uid, [phase.id], {'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                                  'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')},
+            phase_obj.write(cr, uid, [phase.id], {'date_start': start_date.strftime('%Y-%m-%d'),
+                                                  'date_end': end_date.strftime('%Y-%m-%d')},
                                                    context=ctx)
             # Recursive call till all the next phases scheduled
             for phase in phase.next_phase_ids:
