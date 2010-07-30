@@ -39,7 +39,6 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             'get_abs' : self.get_abs,
             'get_lines' : self.get_lines,
             'get_lines_another' : self.get_lines_another,
-#            'get_company': self._get_company,
             'get_currency': self._get_currency,
             'get_data': self.get_data,
             'sum_dr' : self.sum_dr,
@@ -53,13 +52,13 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             'get_filter': self._get_filter,
             'get_journal': self._get_journal,
             'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,     
-            'get_company':self._get_company,       
+            'get_end_date':self._get_end_date,
+            'get_company':self._get_company,
         })
         self.context = context
     def get_abs(self,amount):
         return abs(amount)
-     
+
     def final_result(self):
         return self.res_pl
 
@@ -87,7 +86,6 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
                 ]
 
         ctx = self.context.copy()
-#        ctx['state'] = form['context'].get('state','all')
         ctx['fiscalyear'] = data['form']['fiscalyear_id']
 
         if data['form']['filter']=='filter_period' :
@@ -96,8 +94,8 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             ctx['date_from'] = data['form']['date_from']
             ctx['date_to'] =  data['form']['date_to']
 
-        cal_list={}
-        account_id =data['form']['chart_account_id']
+        cal_list = {}
+        account_id = data['form']['chart_account_id']
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
