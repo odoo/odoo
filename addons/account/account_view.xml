@@ -152,12 +152,16 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <newline/>
-                            <field name="currency_id"/>
-                            <field name="active"/>
-                            <field name="currency_mode"/>
-                            <field name="reconcile"/>
-                            <newline/>
+                            <group col="2" colspan="2">
+                                <separator string="Currency" colspan="2"/>
+                                <field name="currency_id"/>
+                                <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Reconcile" colspan="2"/>
+                                <field name="reconcile"/>
+<!--                                <field name="active"/>-->
+                            </group>
                             <separator string="Default Taxes" colspan="4"/>
                             <field colspan="4" name="tax_ids" nolabel="1" domain="[('parent_id','=',False)]"/>
                             <separator string="Consolidated Children" colspan="4"/>

@@ -1620,13 +1620,41 @@ class account_tax(osv.osv):
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        """
+        Returns a list of tupples containing id, name, as internally it is called {def name_get}
+        result format : {[(id, name), (id, name), ...]}
+        
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param name: name to search 
+        @param args: other arguments
+        @param operator: default operator is 'ilike', it can be changed
+        @param context: context arguments, like lang, time zone
+        @param limit: Returns first 'n' ids of complete result, default is 80.
+        
+        @return: Returns a list of tupples containing id and name
+        """
+        
+        if not args:
+            args=[]
+        if not context:
+            context={}
+        ids = []
+        ids = self.search(cr, user, args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context and context.has_key('type'):
-            if context['type'] in ('out_invoice','out_refund'):
-                args.append(('type_tax_use','in',['sale','all']))
-            elif context['type'] in ('in_invoice','in_refund'):
-                args.append(('type_tax_use','in',['purchase','all']))
+            if context.get('type') in ('out_invoice','out_refund'):
+                args += [('type_tax_use','in',['sale','all'])]
+            elif context.get('type') in ('in_invoice','in_refund'):
+                args += [('type_tax_use','in',['purchase','all'])]
+
+        if context and context.has_key('journal_id'):
+            args += [('type_tax_use','in',[context.get('journal_id'),'all'])]
+        
         return super(account_tax, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def name_get(self, cr, uid, ids, context={}):
@@ -1643,6 +1671,7 @@ class account_tax(osv.osv):
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+        
     _defaults = {
         'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
         'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',

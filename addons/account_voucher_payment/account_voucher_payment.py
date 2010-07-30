@@ -81,10 +81,10 @@ class account_voucher(osv.osv):
         invoice_pool = self.pool.get('account.invoice')
         
         for inv in self.browse(cr, uid, ids):
-
+            
             if inv.move_id:
                 continue
-
+            
             journal = journal_pool.browse(cr, uid, inv.journal_id.id)
             if inv.type in ('journal_pur_voucher', 'journal_sale_vou'):
                 if journal.invoice_sequence_id:
