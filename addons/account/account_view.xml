@@ -551,6 +551,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="context">{'journal_type':'bank'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
             <field name="sequence" eval="1"/>
@@ -2568,6 +2569,7 @@
             <field name="view_id" ref="view_cash_statement_tree"/>
             <field name="search_view_id" ref="view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+            <field name="context">{'journal_type':'cash'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="1"/>
