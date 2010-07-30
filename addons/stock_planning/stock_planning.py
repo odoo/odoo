@@ -48,6 +48,14 @@ class stock_period(osv.osv):
     _defaults = {
         'state': 'draft'
     }
+    
+    def button_open(self, cr, uid, ids, context):
+        self.write(cr, uid, ids, {'state': 'open'})
+        return True
+    
+    def button_close(self, cr, uid, ids, context):
+        self.write(cr, uid, ids, {'state': 'close'})
+        return True
 
 stock_period()
 
