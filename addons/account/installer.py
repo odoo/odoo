@@ -298,8 +298,8 @@ class account_installer(osv.osv_memory):
 
         # Creating Journals Sales and Purchase
         vals_journal={}
-        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
-        data = data_pool.browse(cr, uid, data_id[0])
+        data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
+        data = mod_obj.browse(cr, uid, data_id[0])
         view_id = data.res_id
         
         seq_id = obj_sequence.search(cr,uid,[('name','=','Account Journal')])[0]

@@ -388,13 +388,14 @@
                                 <field name="centralisation" groups="base.group_extended"/>
                                 <field name="entry_posted"/>
                             </group>
+                            <group colspan="2" col="2">
+                                <separator string="Invoicing Data" colspan="4"/>
+                                <field name="invoice_sequence_id"/>
+                                <field name="group_invoice_lines"/>
+                            </group>
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Sequence" colspan="4"/>
                                 <field name="sequence_id"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator string="Invoicing Data" colspan="4"/>
-                                <field name="group_invoice_lines"/>
                             </group>
                         </page>
                         <page string="Entry Controls" groups="base.group_extended">
@@ -530,9 +531,13 @@
                             <field colspan="4" name="move_line_ids" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="7" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
+                        
+                        <button name="%(action_view_account_statement_from_invoice_lines)d"
+                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}"/>
+                        
                         <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
                         <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
@@ -546,6 +551,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="context">{'journal_type':'bank'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
             <field name="sequence" eval="1"/>
@@ -2563,6 +2569,7 @@
             <field name="view_id" ref="view_cash_statement_tree"/>
             <field name="search_view_id" ref="view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+            <field name="context">{'journal_type':'cash'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="1"/>
