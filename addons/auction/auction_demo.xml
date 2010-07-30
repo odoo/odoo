@@ -166,30 +166,30 @@
     <record model="auction.lot.category" id="auction_cat_1">
         <field name="name">painting</field>
         <field name="priority">1</field>
-        <field name="aie_categ">8</field>
+        <field name="aie_categ" ref="aie_category_paint_view"/>
     </record>
+    
     <record model="auction.lot.category" id="auction_cat_2">
         <field name="name">Furniture</field>
         <field name="priority">2</field>
-        <field name="aie_categ">10</field>
-
+        <field name="aie_categ"  ref="aie_category_furn_view"/>
     </record>
 
     <record model="auction.lot.category" id="auction_cat_3">
         <field name="name">glass</field>
         <field name="priority">2</field>
-        <field name="aie_categ">25</field>
+         <field name="aie_categ"  ref="aie_category_pcg_view"/>
     </record>
     <record model="auction.lot.category" id="auction_cat_4">
         <field name="name">sculpture</field>
         <field name="priority">10</field>
-        <field name="aie_categ">18</field>
+         <field name="aie_categ"  ref="aie_category_sbe_view"/>
     </record>
 
     <record model="auction.lot.category" id="auction_cat_5">
         <field name="name">Jawellery</field>
         <field name="priority">6</field>
-        <field name="aie_categ">15</field>
+         <field name="aie_categ"  ref="aie_category_jew_view"/>
     </record>
 
 <!-- end == demo data for the auction_lot_Category-->

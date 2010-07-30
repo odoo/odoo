@@ -40,7 +40,7 @@
     """,
     'author': 'OpenERP SA',
     'depends': ['base', 'account', 'hr_attendance'],
-    'init_xml': ['auction_sequence.xml'],
+    'init_xml': ['auction_sequence.xml', 'auction_data.xml'],
     'update_xml': [
         'security/ir.model.access.csv',
        # 'wizard/auction_lots_able_view.xml',
@@ -56,6 +56,8 @@
         'wizard/auction_lots_buyer_map_view.xml',
         'auction_view.xml',
         'auction_report.xml',
+        'report/report_auction_view.xml',
+        'report/report_attendance_view.xml',
         'auction_wizard.xml',
         'board_auction_view.xml',
         'board_auction_manager_view.xml',

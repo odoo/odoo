@@ -32,7 +32,8 @@ import auction_objects
 import buyer_form_report
 import seller_form_report
 
-
+import report_auction
+import report_attendance
 
 import buyer_list
 

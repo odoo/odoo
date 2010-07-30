@@ -5,6 +5,13 @@
             <field name="name">Auction</field>
         </record>
 
+    <record model="ir.actions.act_window" id="action_report_latest_objects_tree">
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('create_uid','=',uid)]</field>
+    </record>
+
         <record model="ir.ui.view" id="board_auction_manager_form">
             <field name="name">board.auction.manager.form</field>
             <field name="model">board.board</field>
@@ -58,7 +65,7 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_auction_manager_form"/>
         </record>
-        <menuitem name="Dashboard" id="menu_board_auction" parent="auction_report_menu" sequence="0"/>
+        <menuitem name="Dashboard" id="menu_board_auction" parent="auction.auction_report_menu" sequence="0"/>
         <menuitem
             name="Auction Member"
             action="open_board_auction"
