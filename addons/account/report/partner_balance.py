@@ -176,14 +176,42 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     "AND a.active", (self.ACCOUNT_TYPE,))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
         self.initial_balance = data['form']['initial_balance'] # for include initial balance
+        self.query = data['form']['query_line']
+        self.init_query = data['form']['initial_bal_query']
         return super(partner_balance, self).set_context(objects, data, ids, report_type)
 
     def lines(self, data):
         full_account = []
         result_tmp = 0.0
-        if self.date_lst:
+        self.cr.execute(
+            "SELECT p.ref,l.account_id,ac.name as account_name,ac.code as code ,p.name, sum(debit) as debit, sum(credit) as credit, " \
+                    "CASE WHEN sum(debit) > sum(credit) " \
+                        "THEN sum(debit) - sum(credit) " \
+                        "ELSE 0 " \
+                    "END AS sdebit, " \
+                    "CASE WHEN sum(debit) < sum(credit) " \
+                        "THEN sum(credit) - sum(debit) " \
+                        "ELSE 0 " \
+                    "END AS scredit, " \
+                    "(SELECT sum(debit-credit) " \
+                        "FROM account_move_line l " \
+                        "WHERE partner_id = p.id " \
+                            "AND " + self.query + " " \
+                            "AND blocked = TRUE " \
+                    ") AS enlitige " \
+            "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
+            "JOIN account_account ac ON (l.account_id = ac.id)" \
+            "WHERE ac.type IN %s " \
+                " AND " + self.query + "" \
+            "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
+            "ORDER BY l.account_id,p.name",
+            (self.ACCOUNT_TYPE,))
+        res = self.cr.dictfetchall()
+
+        #For include intial balance..
+        if self.initial_balance:
             self.cr.execute(
-                "SELECT p.ref,l.account_id,ac.name as account_name,ac.code as code ,p.name, sum(debit) as debit, sum(credit) as credit, " \
+                "SELECT '1' as type, '' as ref, l.account_id as account_id, '' as account_name, '' as code, '' as name, sum(debit) as debit, sum(credit) as credit, " \
                         "CASE WHEN sum(debit) > sum(credit) " \
                             "THEN sum(debit) - sum(credit) " \
                             "ELSE 0 " \
@@ -195,79 +223,50 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                         "(SELECT sum(debit-credit) " \
                             "FROM account_move_line l " \
                             "WHERE partner_id = p.id " \
-                                "AND l.date IN %s " \
+                                " AND  " + self.init_query + " " \
                                 "AND blocked = TRUE " \
                         ") AS enlitige " \
                 "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
-                "JOIN account_account ac ON (l.account_id = ac.id)" \
+                "JOIN account_account ac ON (l.account_id = ac.id) " \
                 "WHERE ac.type IN %s " \
-                    "AND l.date IN %s " \
-#                    "AND ac.company_id = %s " \
+                "AND " + self.init_query + "" \
                 "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
-                "ORDER BY l.account_id,p.name",
-                (tuple(self.date_lst), self.ACCOUNT_TYPE, tuple(self.date_lst)))
-            res = self.cr.dictfetchall()
-
-            #For include intial balance..
-            if self.initial_balance:
-                date_init = (datetime.datetime.strptime(self.date_lst[0], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
-                self.cr.execute(
-                    "SELECT '1' as type, '' as ref, l.account_id as account_id, '' as account_name, '' as code, '' as name, sum(debit) as debit, sum(credit) as credit, " \
-                            "CASE WHEN sum(debit) > sum(credit) " \
-                                "THEN sum(debit) - sum(credit) " \
-                                "ELSE 0 " \
-                            "END AS sdebit, " \
-                            "CASE WHEN sum(debit) < sum(credit) " \
-                                "THEN sum(credit) - sum(debit) " \
-                                "ELSE 0 " \
-                            "END AS scredit, " \
-                            "(SELECT sum(debit-credit) " \
-                                "FROM account_move_line l " \
-                                "WHERE partner_id = p.id " \
-                                    "AND l.date < %s " \
-                                    "AND blocked = TRUE " \
-                            ") AS enlitige " \
-                    "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
-                    "JOIN account_account ac ON (l.account_id = ac.id)" \
-                    "WHERE ac.type IN %s " \
-                        "AND l.date < %s " \
-                    "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
-                    "ORDER BY l.account_id,p.name",
-                    (date_init, self.ACCOUNT_TYPE, date_init))
-                res1 = self.cr.dictfetchall()
-                final_init = {}
-                res_init = {}
-                debit = credit = 0
-                for r in res1:
-                    if final_init.get(r['account_id'], False):
-                        res_init = final_init[r['account_id']]
-                        debit += final_init[r['account_id']]['debit']
-                        credit += final_init[r['account_id']]['credit']
-                        res_init['credit'] = credit
-                        res_init['debit'] = debit
-                        res_init['type'] = 3
-                        res_init['ref'] = ''
-                        res_init['code'] = ''
-                        res_init['name'] = 'Initial Balance'
-                        res_init['balance'] = debit - credit
-                        res_init['enlitige'] = 0.0 # fix me
-                        res_init['account_id'] = final_init[r['account_id']]['account_id']
-                    else:
-                        res_init = {}
-                        debit = r['debit']
-                        credit = r['credit']
-                        res_init['credit'] = credit
-                        res_init['debit'] = debit
-                        res_init['type'] = 3
-                        res_init['ref'] = ''
-                        res_init['code'] = ''
-                        res_init['name'] = 'Initial Balance'
-                        res_init['balance'] = debit - credit
-                        res_init['enlitige'] = 0.0 # fix me
-                        res_init['account_id'] = r['account_id']
-                    final_init[r['account_id']] = res_init
-            for r in res:
-                full_account.append(r)
+                "ORDER BY l.account_id, p.name",
+                (self.ACCOUNT_TYPE, ))
+            res1 = self.cr.dictfetchall()
+            final_init = {}
+            res_init = {}
+            debit = credit = 0
+            for r in res1:
+                if final_init.get(r['account_id'], False):
+                    res_init = final_init[r['account_id']]
+                    debit += final_init[r['account_id']]['debit']
+                    credit += final_init[r['account_id']]['credit']
+                    res_init['credit'] = credit
+                    res_init['debit'] = debit
+                    res_init['type'] = 3
+                    res_init['ref'] = ''
+                    res_init['code'] = ''
+                    res_init['name'] = 'Initial Balance'
+                    res_init['balance'] = debit - credit
+                    res_init['enlitige'] = 0.0 # fix me
+                    res_init['account_id'] = final_init[r['account_id']]['account_id']
+                else:
+                    res_init = {}
+                    debit = r['debit']
+                    credit = r['credit']
+                    res_init['credit'] = credit
+                    res_init['debit'] = debit
+                    res_init['type'] = 3
+                    res_init['ref'] = ''
+                    res_init['code'] = ''
+                    res_init['name'] = 'Initial Balance'
+                    res_init['balance'] = debit - credit
+                    res_init['enlitige'] = 0.0 # fix me
+                    res_init['account_id'] = r['account_id']
+                final_init[r['account_id']] = res_init
+        for r in res:
+            full_account.append(r)
 
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
@@ -400,11 +399,9 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             i = i + 1
         return completearray
 
-
     def _sum_debit(self, data):
         if not self.ids:
             return 0.0
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         result_tmp = 0.0
         temp_res = 0.0
         if self.date_lst:
@@ -415,15 +412,14 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                         "AND l.date IN %s",
                         (tuple(self.account_ids), tuple(self.date_lst)))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
-#            if self.initial_balance:
-#                date_init = (datetime.datetime.strptime(self.date_lst[0], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
-#                self.cr.execute(
-#                        "SELECT sum(debit) " \
-#                        "FROM account_move_line AS l " \
-#                        "WHERE l.account_id IN %s" \
-#                            "AND l.date < %s",
-#                            (tuple(self.account_ids), date_init,))
-#                temp_res += float(self.cr.fetchone()[0] or 0.0)
+        if self.initial_balance:
+            self.cr.execute(
+                    "SELECT sum(debit) " \
+                    "FROM account_move_line AS l " \
+                    "WHERE l.account_id IN %s "  \
+                        "AND " + self.init_query + "" ,
+                        (tuple(self.account_ids), ))
+            temp_res += float(self.cr.fetchone()[0] or 0.0)
         result_tmp = result_tmp + temp_res
         return result_tmp
 
@@ -440,15 +436,14 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                         "AND l.date IN %s",
                         (tuple(self.account_ids), tuple(self.date_lst),))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
-#            if self.initial_balance:
-#                date_init = (datetime.datetime.strptime(self.date_lst[0], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
-#                self.cr.execute(
-#                        "SELECT sum(credit) " \
-#                        "FROM account_move_line AS l " \
-#                        "WHERE l.account_id IN %s" \
-#                            "AND l.date < %s",
-#                            (tuple(self.account_ids), date_init,))
-#                temp_res += float(self.cr.fetchone()[0] or 0.0)
+        if self.initial_balance:
+            self.cr.execute(
+                    "SELECT sum(credit) " \
+                    "FROM account_move_line AS l " \
+                    "WHERE l.account_id IN %s " \
+                        "AND " + self.init_query + "" ,
+                        (tuple(self.account_ids),))
+            temp_res += float(self.cr.fetchone()[0] or 0.0)
         result_tmp = result_tmp + temp_res
         return result_tmp
 
@@ -466,15 +461,15 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                         "AND l.blocked=TRUE ",
                         (tuple(self.account_ids), tuple(self.date_lst),))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
-#            if self.initial_balance:
-#                date_init = (datetime.datetime.strptime(self.date_lst[0], "%Y-%m-%d") + timedelta(days=-1)).strftime('%Y-%m-%d')
-#                self.cr.execute(
-#                        "SELECT sum(debit-credit) " \
-#                        "FROM account_move_line AS l " \
-#                        "WHERE l.account_id IN %s" \
-#                            "AND l.date < %s",
-#                            (tuple(self.account_ids), date_init,))
-#                temp_res += float(self.cr.fetchone()[0] or 0.0)
+            if self.initial_balance:
+                self.cr.execute(
+                        "SELECT sum(debit-credit) " \
+                        "FROM account_move_line AS l " \
+                        "WHERE l.account_id IN %s " \
+                            "AND " + self.init_query + "" ,
+                            (tuple(self.account_ids), ))
+                temp_res += float(self.cr.fetchone()[0] or 0.0)
+
         return result_tmp + temp_res
 
     def _sum_sdebit(self, data):
