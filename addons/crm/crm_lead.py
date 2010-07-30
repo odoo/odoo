@@ -163,12 +163,6 @@ class crm_lead(osv.osv, crm_case):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
-    def create(self, cr, uid, vals, context=None):
-#       FIXME: Do we really need this? if yes, this is not a correct way to check for stage
-#        if not vals.get('stage_id',False):
-#            raise osv.except_osv('Error', _('There is no stage defined for this Sales Team'))
-        return super(crm_lead, self).create(cr, uid, vals, context=context)
-    
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
         @param self: The object pointer
@@ -182,7 +176,7 @@ class crm_lead(osv.osv, crm_case):
             return {'value': {'email_from': False, 'country_id': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
-    
+
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer
@@ -195,9 +189,10 @@ class crm_lead(osv.osv, crm_case):
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
         if old_state == 'draft':
             stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
-            if not stage_id:
-                raise osv.except_osv(_('Warning !'), _('There is no stage defined for this Sale Team.'))
-            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+            if stage_id:
+                value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+            else:
+                value = {}
             value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
             self.write(cr, uid, ids, value)
 
