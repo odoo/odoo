@@ -695,13 +695,13 @@ class account_journal(osv.osv):
                 'sequence_id':seq_id
             })
 
-#        if journal.type in journal_type and not journal.invoice_sequence_id:
-#            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
-#            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
-#            inv_seq_id
-#            res.update({
-#                'invoice_sequence_id':inv_seq_id
-#            })
+        if journal.type in journal_type and not journal.invoice_sequence_id:
+            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
+            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
+            inv_seq_id
+            res.update({
+                'invoice_sequence_id':inv_seq_id
+            })
         
         result = self.write(cr, uid, [journal.id], res)
             
