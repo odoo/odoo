@@ -127,6 +127,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def set_context(self, objects, data, ids, report_type=None):
         self.query = data['form']['query_line']
+        self.init_query = data['form']['initial_bal_query']
         PARTNER_REQUEST = ''
         if (data['model'] == 'res.partner'):
             ## Si on imprime depuis les partenaires
@@ -270,13 +271,13 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def _get_intial_balance(self, partner):
         self.cr.execute(
-                "SELECT sum(debit), sum(credit), sum(debit-credit) " \
-                "FROM account_move_line " \
-                "WHERE partner_id = %s " \
-                    "AND account_id IN %s" \
-                    "AND reconcile_id IS NULL " \
-                    "AND date < %s " ,
-                (partner.id, tuple(self.account_ids), self.date_lst[0],))
+            "SELECT sum(debit), sum(credit), sum(debit-credit) " \
+            "FROM account_move_line " \
+            "WHERE partner_id = %s " \
+                "AND account_id IN %s" \
+                "AND reconcile_id IS NULL " \
+                "AND date < %s " ,
+            (partner.id, tuple(self.account_ids), self.date_lst[0],))
         res = self.cr.fetchall()
         return res
 
@@ -286,20 +287,20 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.date_lst and data['form']['initial_balance'] :
-            self.cr.execute(
-                "SELECT sum(debit) " \
-                "FROM account_move_line " \
-                "WHERE partner_id = %s " \
-                    "AND account_id IN %s" \
-                    "AND reconcile_id IS NULL " \
-                    "AND date < %s " ,
-                (partner.id, tuple(self.account_ids), self.date_lst[0],))
-            contemp = self.cr.fetchone()
-            if contemp != None:
-                result_tmp = contemp[0] or 0.0
-            else:
-                result_tmp = result_tmp + 0.0
+#        if self.date_lst and data['form']['initial_balance'] :
+#            self.cr.execute(
+#                "SELECT sum(debit) " \
+#                "FROM account_move_line " \
+#                "WHERE partner_id = %s " \
+#                    "AND account_id IN %s" \
+#                    "AND reconcile_id IS NULL " \
+#                    "AND date < %s " ,
+#                (partner.id, tuple(self.account_ids), self.date_lst[0],))
+#            contemp = self.cr.fetchone()
+#            if contemp != None:
+#                result_tmp = contemp[0] or 0.0
+#            else:
+#                result_tmp = result_tmp + 0.0
 
 #        if self.date_lst_string:
         self.cr.execute(
@@ -325,20 +326,20 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.date_lst and data['form']['initial_balance'] :
-            self.cr.execute(
-                    "SELECT sum(credit) " \
-                    "FROM account_move_line " \
-                    "WHERE partner_id=%s " \
-                        "AND account_id IN %s" \
-                        "AND reconcile_id IS NULL " \
-                        "AND date < %s " ,
-                    (partner.id, tuple(self.account_ids), self.date_lst[0],))
-            contemp = self.cr.fetchone()
-            if contemp != None:
-                result_tmp = contemp[0] or 0.0
-            else:
-                result_tmp = result_tmp + 0.0
+#        if self.date_lst and data['form']['initial_balance'] :
+#            self.cr.execute(
+#                    "SELECT sum(credit) " \
+#                    "FROM account_move_line " \
+#                    "WHERE partner_id=%s " \
+#                        "AND account_id IN %s" \
+#                        "AND reconcile_id IS NULL " \
+#                        "AND date < %s " ,
+#                    (partner.id, tuple(self.account_ids), self.date_lst[0],))
+#            contemp = self.cr.fetchone()
+#            if contemp != None:
+#                result_tmp = contemp[0] or 0.0
+#            else:
+#                result_tmp = result_tmp + 0.0
 
 #        if self.date_lst_string:
         self.cr.execute(
@@ -367,15 +368,16 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.date_lst and data['form']['initial_balance'] :
+        if data['form']['initial_balance']:#self.date_lst and
             self.cr.execute(
                     "SELECT sum(debit) " \
-                    "FROM account_move_line " \
+                    "FROM account_move_line AS l " \
                     "WHERE partner_id IN %s" \
                         "AND account_id IN %s" \
                         "AND reconcile_id IS NULL " \
-                        "AND date < %s " ,
-                    (tuple(self.partner_ids), tuple(self.account_ids), self.date_lst[0],))
+#                        "AND date < %s " ,
+                        "AND " + self.init_query + " ",
+                    (tuple(self.partner_ids), tuple(self.account_ids)))#, self.date_lst[0],
             contemp = self.cr.fetchone()
             if contemp != None:
                 result_init = contemp[0] or 0.0
@@ -408,15 +410,16 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if self.date_lst and data['form']['initial_balance'] :
+        if data['form']['initial_balance']: #self.date_lst and
             self.cr.execute(
                     "SELECT sum(credit) " \
-                    "FROM account_move_line " \
+                    "FROM account_move_line AS l " \
                     "WHERE partner_id IN %s" \
                         "AND account_id IN %s" \
                         "AND reconcile_id IS NULL " \
-                        "AND date < %s " ,
-                    (tuple(self.partner_ids), tuple(self.account_ids), self.date_lst[0],))
+#                        "AND date < %s " ,
+                        "AND " + self.init_query + " ",
+                    (tuple(self.partner_ids), tuple(self.account_ids)))
             contemp = self.cr.fetchone()
             if contemp != None:
                 result_init = contemp[0] or 0.0
@@ -438,6 +441,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = contemp[0] or 0.0
         else:
             result_tmp = result_tmp + 0.0
+
         return result_tmp  + result_init
 #
 #    def _get_company(self, form):

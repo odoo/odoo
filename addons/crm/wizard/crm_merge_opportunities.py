@@ -42,8 +42,6 @@ class crm_merge_opportunity(osv.osv_memory):
         if record_id:
             opp_obj = self.pool.get('crm.lead')
             opp = opp_obj.browse(cr, uid, record_id, context=context)
-            if opp.type != 'opportunity':
-                raise osv.except_osv(_('Warning!'), _('Can only perform this Operation for "Opportunities".'))
             if not opp.partner_id:
                 raise osv.except_osv(_('Warning!'), _('Opportunity must have Partner assigned before merging with other Opportunity.'))
             #Search for Opportunity for the same partner

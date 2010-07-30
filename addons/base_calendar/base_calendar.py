@@ -1092,7 +1092,7 @@ class calendar_event(osv.osv):
                         ('confirmed', 'Confirmed'),
                         ('cancelled', 'Cancelled')], 'State', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
-defines the list of date/time exceptions for arecurring calendar component."),
+defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
 rule or repeating pattern for an exception to a recurrence set"),
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \

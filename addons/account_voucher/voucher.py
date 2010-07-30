@@ -203,7 +203,7 @@ class account_voucher(osv.osv):
             }
             self.write(cr, uid, ids, res)
         else:
-            raise osv.except_osv('Invalid action !', 'You cannot post to Pro-Forma a voucher with Total amount = 0 !')
+            raise osv.except_osv(_('Invalid action !'), _('You can not post to Pro-Forma a voucher with Total amount = 0 !'))
         return True
 
     def proforma_voucher(self, cr, uid, ids, context={}):

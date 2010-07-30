@@ -22,6 +22,38 @@
 from osv import fields, osv
 from tools.translate import _
 
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'
+
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        """
+        Returns a list of ids based on search domain {args}
+    
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param args: list of conditions to be applied in search opertion
+        @param offset: default from first record, you can start from nth record
+        @param limit: number of records to be obtained as a result of search opertion
+        @param order: ordering on any field(s)
+        @param context: context arguments, like lang, time zone
+        @param count: 
+        
+        @return: Returns a list of ids based on search domain
+        """
+        ttype = context.get('ttype', False)
+        if ttype and ttype in ('rec_voucher', 'bank_rec_voucher'):
+            args += [('type','in', ['out_invoice', 'in_refund'])]
+        elif ttype and ttype in ('pay_voucher', 'bank_pay_voucher'):
+            args += [('type','in', ['in_invoice', 'out_refund'])]
+        elif ttype and ttype in('journal_sale_vou', 'journal_pur_voucher', 'journal_voucher'):
+            raise osv.except_osv(_('Invalid action !'), _('You can not reconcile sales, purchase, or journal entry with invoice !'))
+            args += [('type','=', 'do_not_allow_search')]
+
+        res = super(account_invoice, self).search(cr, user, args, offset, limit, order, context, count)
+        return res
+    
+account_invoice()
+
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
     _columns = {
@@ -158,11 +190,12 @@ class account_voucher(osv.osv):
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
                 
-                if line.invoice_id:
+                if line.invoice_id and inv.type in ('pay_voucher', 'bank_pay_voucher', 'rec_voucher', 'bank_rec_voucher'):
                     rec_ids += [move_line_id]
                     for move_line in line.invoice_id.move_id.line_id:
                         if line.account_id.id == move_line.account_id.id:
-                            rec_ids += [move_line.id]            
+                            rec_ids += [move_line.id]
+
             if rec_ids:
                 move_line_pool.reconcile_partial(cr, uid, rec_ids)
             
@@ -196,7 +229,7 @@ class account_voucher_line(osv.osv):
         res = super(account_voucher_line, self).move_line_get_item(cr, uid, line, context)
         res['invoice'] = line.invoice_id or False
         return res
-
+    
     def onchange_invoice_id(self, cr, uid, ids, invoice_id, currency_id):
         currency_pool = self.pool.get('res.currency')
         invoice_pool = self.pool.get('account.invoice')
