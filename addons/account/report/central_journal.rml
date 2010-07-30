@@ -302,9 +302,6 @@
 		<td><para style="terp_tblheader_Details_Right">Currency</para></td>                
       </tr>
     </blockTable>    
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="50.0,200.0,94.0,92.0,69.0" style="Table_Final_Total">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="terp_default_Bold_9">Total:</para></td>
@@ -321,12 +318,9 @@
         <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit(o.period_id.id, o.journal_id.id)) ]]</para></td>
         <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit(o.period_id.id, o.journal_id.id)) ]]</para></td>
 		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit(o.period_id.id, o.journal_id.id)-sum_credit(o.period_id.id, o.journal_id.id) ) ]]</para></td>                
-		<td></td>                        
+		 <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>              
       </tr>
     </blockTable>    
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
     <section>
       <para style="terp_default_8">[[ repeatIn(lines(o.period_id.id,o.journal_id.id),'line') ]]</para>
       <blockTable colWidths="50.0,200.0,94.0,92.0,69.0" style="Table_Journal_Line_Content">[[ display_currency(data)  == False or removeParentNode('blockTable') ]]
