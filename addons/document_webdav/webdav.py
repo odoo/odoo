@@ -30,21 +30,24 @@ import tools
 
 
 super_mk_prop_response = PROPFIND.mk_prop_response
-def mk_prop_response(self, uri, good_props, bad_props, doc):        
-    """ make a new <prop> result element 
+def mk_prop_response(self, uri, good_props, bad_props, doc):
+    """ make a new <prop> result element
 
     We differ between the good props and the bad ones for
     each generating an extra <propstat>-Node (for each error
     one, that means).
-    
-    """      
+
+    """
     re=doc.createElement("D:response")
     # append namespaces to response
     nsnum=0
-    for nsname in self.namespaces:
+    namespaces = self.namespaces
+    if 'DAV:' in namespaces:
+        namespaces.remove('DAV:')
+    for nsname in namespaces:
         re.setAttribute("xmlns:ns"+str(nsnum),nsname)
         nsnum=nsnum+1
-    
+
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
@@ -64,24 +67,30 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
 
     gp=doc.createElement("D:prop")
     for ns in good_props.keys():
-        ns_prefix="ns"+str(self.namespaces.index(ns))+":"
-        for p,v in good_props[ns].items():            
+        if ns == 'DAV:':
+            ns_prefix = 'D:'
+        else:
+            ns_prefix="ns"+str(namespaces.index(ns))+":"
+        for p,v in good_props[ns].items():
             if not v:
-                pass
+                continue
             pe=doc.createElement(ns_prefix+str(p))
             if hasattr(v, '__class__') and v.__class__.__name__ == 'Element':
                 pe.appendChild(v)
             else:
-                if p=="resourcetype":
-                    if v==1:
+                if ns == 'DAV:' and p=="resourcetype":
+                    if v == 1:
                         ve=doc.createElement("D:collection")
                         pe.appendChild(ve)
+                elif isinstance(v,tuple) and v[1] == ns:
+                    ve=doc.createElement(ns_prefix+v[0])
+                    pe.appendChild(ve)
                 else:
                     ve=doc.createTextNode(tools.ustr(v))
                     pe.appendChild(ve)
 
             gp.appendChild(pe)
-    
+
     ps.appendChild(gp)
     s=doc.createElement("D:status")
     t=doc.createTextNode("HTTP/1.1 200 OK")
@@ -100,12 +109,15 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             ps.appendChild(bp)
 
             for ns in bad_props[ecode].keys():
-                ns_prefix="ns"+str(self.namespaces.index(ns))+":"
-            
+                if ns == 'DAV:':
+                    ns_prefix='D:'
+                else:
+                    ns_prefix="ns"+str(self.namespaces.index(ns))+":"
+
             for p in bad_props[ecode][ns]:
                 pe=doc.createElement(ns_prefix+str(p))
                 bp.appendChild(pe)
-            
+
             s=doc.createElement("D:status")
             t=doc.createTextNode(utils.gen_estring(ecode))
             s.appendChild(t)
@@ -114,10 +126,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
 
     # return the new response element
     return re
-    
+
 
 def mk_propname_response(self,uri,propnames,doc):
-    """ make a new <prop> result element for a PROPNAME request 
+    """ make a new <prop> result element for a PROPNAME request
 
     This will simply format the propnames list.
     propnames should have the format {NS1 : [prop1, prop2, ...], NS2: ...}
@@ -143,16 +155,20 @@ def mk_propname_response(self,uri,propnames,doc):
     for ns,plist in propnames.items():
         # write prop element
         pr=doc.createElement("D:prop")
-        nsp="ns"+str(nsnum)
-        pr.setAttribute("xmlns:"+nsp,ns)
-        nsnum=nsnum+1
+        if ns == 'DAV':
+            nsp = 'D'
+        else:
+            nsp="ns"+str(nsnum)
+            ps.setAttribute("xmlns:"+nsp,ns)
+            nsnum=nsnum+1
 
-    # write propertynames
-    for p in plist:
-        pe=doc.createElement(nsp+":"+p)
-        pr.appendChild(pe)
+        # write propertynames
+        for p in plist:
+            pe=doc.createElement(nsp+":"+p)
+            pr.appendChild(pe)
 
-    ps.appendChild(pr)
+        ps.appendChild(pr)
+
     re.appendChild(ps)
 
     return re
