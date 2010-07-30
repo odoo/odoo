@@ -61,7 +61,11 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if header == 0:
             self.rml_header = ""
         return True
-
+    def _get_account(self, data):
+        if data['model']=='account.account':
+            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
+        return super(account_balance ,self)._get_account(data)
+    
     def lines(self, form, ids=[], done=None, level=1):
         obj_account = self.pool.get('account.account')
         if not ids:
