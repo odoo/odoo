@@ -174,7 +174,7 @@ class account_cash_statement(osv.osv):
         
         return company_id
 
-    def _get_cash_box_lines(self, cr, uid, ids, context={}):
+    def _get_cash_open_box_lines(self, cr, uid, ids, context={}):
         res = []
         curr = [1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
@@ -184,7 +184,18 @@ class account_cash_statement(osv.osv):
             }
             res.append(dct)
         return res
-    
+
+    def _get_cash_close_box_lines(self, cr, uid, ids, context={}):
+        res = []
+        curr = [1, 2, 5, 10, 20, 50, 100, 500]
+        for rs in curr:
+            dct = {
+                'pieces':rs,
+                'number':0
+            }
+            res.append((0, 0, dct))
+        return res
+        
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, domain=[('type', '=', 'cash')]),
@@ -208,8 +219,8 @@ class account_cash_statement(osv.osv):
         'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
         'user_id': lambda self, cr, uid, context=None: uid,
         'company_id': _get_company,
-        'starting_details_ids':_get_cash_box_lines,
-        'ending_details_ids':_get_cash_box_lines
+        'starting_details_ids':_get_cash_open_box_lines,
+        'ending_details_ids':_get_cash_open_box_lines
      }
 
     def create(self, cr, uid, vals, context=None):
@@ -223,6 +234,11 @@ class account_cash_statement(osv.osv):
             open_jrnl = self.search(cr, uid, sql)
             if open_jrnl:
                 raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
+
+        lines = end_lines = self._get_cash_close_box_lines(cr, uid, [], context)
+        vals.update({
+            'ending_details_ids':lines
+        })
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
         return res_id
     
