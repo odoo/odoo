@@ -235,11 +235,18 @@ class account_cash_statement(osv.osv):
             if open_jrnl:
                 raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
 
-        lines = end_lines = self._get_cash_close_box_lines(cr, uid, [], context)
-        vals.update({
-            'ending_details_ids':lines
-        })
+        if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
+            lines = end_lines = self._get_cash_close_box_lines(cr, uid, [], context)
+            vals.update({
+                'ending_details_ids':lines
+            })
+        else:
+            vals.update({
+                'ending_details_ids':False,
+                'starting_details_ids':False
+            })
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
+        self.write(cr, uid, [res_id], {})
         return res_id
     
     def write(self, cr, uid, ids, vals, context=None):
