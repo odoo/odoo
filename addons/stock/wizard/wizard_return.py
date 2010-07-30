@@ -65,11 +65,14 @@ def _create_returns(self, cr, uid, data, context):
     pick_obj = pool.get('stock.picking')
     uom_obj = pool.get('product.uom')
 
-    pick=pick_obj.browse(cr, uid, [data['id']])[0]
-    new_picking=None
-    date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
+    pick = pick_obj.browse(cr, uid, [data['id']])[0]
+    new_picking = None
+    date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
     for move in move_obj.browse(cr, uid, data['form'].get('returns',[])):
+        move_qty = data['form']['return%s' % move.id]
+        if (not move_qty) or (move_qty <= 0.0):
+            raise wizard.except_wizard(_('Warning !'), _('You cannot return a packing with a product quantity zero or less!'))
         if not new_picking:
             if pick.type in ['out','delivery']:
                 new_type='in'
@@ -83,9 +86,9 @@ def _create_returns(self, cr, uid, data, context):
         new_location=move.location_dest_id.id
 
         new_move=move_obj.copy(cr, uid, move.id, {
-            'product_qty': data['form']['return%s' % move.id],
+            'product_qty': move_qty,
             'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
-                data['form']['return%s' % move.id], move.product_uos.id),
+                move_qty, move.product_uos.id),
             'picking_id':new_picking, 'state':'draft',
             'location_id':new_location, 'location_dest_id':move.location_id.id,
             'date':date_cur, 'date_planned':date_cur,})
