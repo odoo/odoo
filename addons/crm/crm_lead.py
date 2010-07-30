@@ -164,8 +164,9 @@ class crm_lead(osv.osv, crm_case):
     }
 
     def create(self, cr, uid, vals, context=None):
-        if not vals.get('stage_id',False):
-            raise osv.except_osv('Error', _('There is no stage defined for this Sales Team'))
+#       FIXME: Do we really need this? if yes, this is not a correct way to check for stage
+#        if not vals.get('stage_id',False):
+#            raise osv.except_osv('Error', _('There is no stage defined for this Sales Team'))
         return super(crm_lead, self).create(cr, uid, vals, context=context)
     
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):

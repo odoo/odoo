@@ -99,6 +99,7 @@
 -
   !python {model: hr_timesheet_sheet.sheet}: |
     uid = ref('base.user_root')
+    import netsvc
     for sheet in self.browse(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')]):
         di = sheet.user_id.company_id.timesheet_max_difference
         if (abs(sheet.total_difference) < di) or not di:

@@ -52,7 +52,6 @@ class account_general_journal(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.general.journal',
             'datas': datas,
-            'nodestroy':True,
             }
 
 account_general_journal()
