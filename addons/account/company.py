@@ -51,7 +51,7 @@ class company_setup(osv.osv_memory):
     }
     def get_message(self,cr,uid,context={}):
         company =self.pool.get('res.users').browse(cr,uid,[uid],context)[0].company_id
-        msg = company.overdue_msg
+        msg = company.overdue_msg or ''
         phone = company.partner_id.address and (company.partner_id.address[0].phone and ' at ' + str(company.partner_id.address[0].phone) + '.' or '.') or '.'
         msg += str(phone)
         return msg
@@ -69,7 +69,7 @@ class company_setup(osv.osv_memory):
         comp_obj = self.pool.get('res.company').browse(cr,uid,company)
         res['partner_id'] = comp_obj.partner_id.id
         phone = comp_obj.partner_id.address and (comp_obj.partner_id.address[0].phone and ' at ' + str(comp_obj.partner_id.address[0].phone) + '.' or '.') or '.'
-        res['overdue_msg'] = comp_obj.overdue_msg + str(phone)
+        res['overdue_msg'] = comp_obj.overdue_msg or '' + str(phone)
         
         return {'value': res }
 
