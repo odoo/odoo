@@ -71,7 +71,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'get_sortby': self._get_sortby,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
-            
+
         })
         self.context = context
 
@@ -231,7 +231,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         return sum_balance
 
     def _get_account(self, data):
-        if data['model']=='account.account':
+        if data['model'] == 'account.account':
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
         return super(general_ledger ,self)._get_account(data)
 
