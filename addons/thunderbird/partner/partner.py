@@ -60,7 +60,7 @@ class tinythunderbird_partner(osv.osv):
         header_name = email.Header.decode_header(dictcreate['name'])
         dictcreate['name'] = header_name and header_name[0] and header_name[0][0]
         add_obj=self.pool.get('res.partner.address')
-        case_pool=self.pool.get(dictcreate.get('object','crm.case'))
+        case_pool=self.pool.get(dictcreate.get('object','crm.lead'))
         partner_ids=add_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
         partner=add_obj.read(cr,user,partner_ids,['partner_id','name'])
         if partner and partner[0] and partner[0]['partner_id']:
@@ -115,8 +115,8 @@ class tinythunderbird_partner(osv.osv):
                                'street2': dictcreate['street2'],
                                'zip': dictcreate['zip'],
                                'city': dictcreate['city'],
-                               'country_id': dictcreate['country_id'][0],
-                               'state_id': dictcreate['state_id'],
+#                               'country_id': dictcreate['country_id'][0],
+#                               'state_id': dictcreate['state_id'],
                                'phone': dictcreate['phone'],
                                'fax': dictcreate['fax'],
                                'mobile': dictcreate['mobile'],
