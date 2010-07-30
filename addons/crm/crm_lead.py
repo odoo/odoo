@@ -236,12 +236,13 @@ class crm_lead(osv.osv, crm_case):
         context.update({'active_ids': ids})
 
         data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')
         value = {}
 
         view_id = False
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+
         for case in self.browse(cr, uid, ids):
             context.update({'active_id': case.id})
             if not case.partner_id:
@@ -267,7 +268,7 @@ class crm_lead(osv.osv, crm_case):
                         'name': _('Create Opportunity'),
                         'view_type': 'form',
                         'view_mode': 'form,tree',
-                        'res_model': 'crm.lead2opportunity',
+                        'res_model': 'crm.lead2opportunity.action',
                         'view_id': False,
                         'context': context,
                         'views': [(view_id, 'form')],

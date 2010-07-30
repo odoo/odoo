@@ -12,7 +12,9 @@
               		  <separator string="" colspan="4"/>
               		  <group colspan="4" col="6">
               		  <newline/>
-		              <field name="email"/>
+		              <field name="manager_email" invisible="not context.get('send_manager',False)"/>
+		              <newline/>
+		              <field name="partner_email" invisible="not context.get('send_partner',False)"/>
 		              <newline/>
 		              <field name="description" />
 		              </group>
