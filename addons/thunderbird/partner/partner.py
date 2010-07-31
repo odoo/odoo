@@ -115,15 +115,14 @@ class tinythunderbird_partner(osv.osv):
                                'street2': dictcreate['street2'],
                                'zip': dictcreate['zip'],
                                'city': dictcreate['city'],
-                               'country_id': dictcreate['country_id'][0],
-                               'state_id': dictcreate['state_id'],
+#                               'country_id': dictcreate['country_id'][0],
+#                               'state_id': dictcreate['state_id'],
                                'phone': dictcreate['phone'],
                                'fax': dictcreate['fax'],
                                'mobile': dictcreate['mobile'],
                                'email': dictcreate['email'],
                                }
         add_obj.write(cr, user,res_id,result )
-
         return True
 
     def thunderbird_createpartner(self,cr,user,vals):
