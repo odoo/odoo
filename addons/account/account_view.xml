@@ -1659,7 +1659,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_model_form" id="menu_action_model_form" parent="account.menu_configuration_misc"/>
+        <menuitem action="action_model_form" id="menu_action_model_form" sequence="5" parent="account.menu_configuration_misc"/>
 
         <!--
             # Payment Terms
@@ -1789,39 +1789,46 @@
             <field name="model">account.subscription</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Entry Subscription">
-                    <field name="name" select="1"/>
-                    <field name="ref" select="1"/>
-
-                    <separator colspan="4" string="Subscription Periods"/>
-                    <field name="date_start" select="1"/>
-                    <field name="period_total"/>
-
-                    <field name="period_nbr"/>
-                    <field name="period_type"/>
-                    <field name="model_id"/>
+                <form string="Recurring">
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="model_id"/>
+                        <field name="ref" select="1"/>
+                    </group>
                     <group col="2" colspan="2">
-                        <button name="compute" states="draft,running" string="Compute" type="object" icon="terp-stock_format-scientific"/>
-                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
+                        <separator colspan="4" string="Starts on"/>
+                        <field name="date_start" select="1"/>
+                        <field name="period_total"/>
+                        
+                    </group>
+                    
+                    <group col="2" colspan="2">
+                        <separator colspan="4" string="Valid Up to"/>
+                        <field name="period_nbr"/>
+                        <field name="period_type"/>
+                    </group>
+                    
+                    <group col="2" colspan="2">
                     </group>
                     <separator colspan="4" string="Subscription Lines"/>
                     <field colspan="4" name="lines_id" widget="one2many_list" nolabel="1"/>
 
-                    <separator colspan="4" string="State"/>
-                    <field name="state"/>
-                    <group col="1" colspan="2">
+                    <group col="6" colspan="4">
+                        <field name="state"/>
                         <button name="state_draft" states="done" string="Set to Draft" type="object"  icon="gtk-convert" />
+                        <button name="compute" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
+                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                     </group>
                 </form>
             </field>
         </record>
         <record id="action_subscription_form" model="ir.actions.act_window">
-            <field name="name">Subscription Entries</field>
+            <field name="name">Recurring Lines</field>
             <field name="res_model">account.subscription</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem action="action_subscription_form" id="menu_action_subscription_form" parent="account.menu_finance_recurrent_entries"/>-->
+        <menuitem action="action_subscription_form" id="menu_action_subscription_form" sequence="5" parent="account.menu_configuration_misc"/>
 
         <record id="action_subscription_form_running" model="ir.actions.act_window">
             <field name="name">Running Subscriptions</field>
