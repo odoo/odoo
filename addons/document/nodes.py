@@ -314,6 +314,14 @@ class node_class(object):
             logger.debug('Property %s not supported' % prop, exc_info=True)
         return None
 
+    def get_dav_resourcetype(self, cr):
+        """ Get the DAV resource type.
+        
+            Is here because some nodes may exhibit special behaviour, like
+            CalDAV/GroupDAV collections
+        """
+        raise NotImplementedError
+
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
         """ Move this node to a new parent directory.
         @param ndir_node the collection that this node should be moved under
@@ -455,6 +463,9 @@ class node_database(node_class):
 
     def _get_ttag(self,cr):
         return 'db-%s' % cr.dbname
+
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
 
 def mkdosname(company_name, default='noname'):
     """ convert a string to a dos-like name"""
@@ -778,6 +789,9 @@ class node_res_dir(node_class):
     def _get_ttag(self,cr):
         return 'rdir-%d' % self.dir_id
 
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
+
 class node_res_obj(node_class):
     """ A special sibling to node_dir, which does only contain dynamically
         created folders foreach resource in the foreign model.
@@ -1034,6 +1048,9 @@ class node_res_obj(node_class):
     def _get_ttag(self,cr):
         return 'rodir-%d-%d' % (self.dir_id, self.res_id)
 
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
+
 class node_file(node_class):
     our_type = 'file'
     def __init__(self, path, parent, context, fil):
@@ -1167,6 +1184,9 @@ class node_file(node_class):
 
     def _get_ttag(self,cr):
         return 'file-%d' % self.file_id
+
+    def get_dav_resourcetype(self, cr):
+        return ''
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
         if ndir_node.context != self.context:
@@ -1313,6 +1333,8 @@ class node_content(node_class):
     def _get_ttag(self,cr):
         return 'cnt-%d%s' % (self.cnt_id,(self.act_id and ('-' + str(self.act_id))) or '')
 
+    def get_dav_resourcetype(self, cr):
+        return ''
 
 class nodefd_content(StringIO, node_descriptor):
     """ A descriptor to content nodes
