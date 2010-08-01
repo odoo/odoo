@@ -131,6 +131,22 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             self.close_connection = 1
         DAVRequestHandler.send_header(self, key, value)
 
+    def send_body(self, DATA, code = None, msg = None, desc = None, ctype='application/octet-stream', headers=None):
+        if headers and 'Connection' in headers:
+            pass
+        elif self.request_version in ('HTTP/1.0', 'HTTP/0.9'):
+            pass
+        elif self.close_connection == 1: # close header already sent
+            pass
+        else:
+            if headers is None:
+                headers = {}
+            if self.headers.get('Connection',False) == 'Keep-Alive':
+                headers['Connection'] = 'keep-alive'
+
+        DAVRequestHandler.send_body(self, DATA, code=code, msg=msg, desc=desc,
+                    ctype=ctype, headers=headers)
+
     def do_PUT(self):
         dc=self.IFACE_CLASS        
         uri=urlparse.urljoin(self.get_baseuri(dc), self.path)
@@ -141,6 +157,8 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             etag = None
             
             for match in self.headers['If-Match'].split(','):                
+                if match.startswith('"') and match.endswith('"'):
+                    match = match[1:-1]
                 if match == '*':
                     if dc.exists(uri):
                         test = True
@@ -150,6 +168,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
                         test = True
                         break
             if not test:
+                self._get_body()
                 self.send_status(412)
                 return
 
@@ -167,6 +186,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
                         test = False
                         break
             if not test:
+                self._get_body()
                 self.send_status(412)
                 return
 
@@ -179,10 +199,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             self._flush()
 
         # read the body
-        body=None
-        if self.headers.has_key("Content-Length"):
-            l=self.headers['Content-Length']
-            body=self.rfile.read(atoi(l))
+        body=self._get_body()
 
         # locked resources are not allowed to be overwritten
         if self._l_isLocked(uri):
@@ -207,6 +224,13 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             pass
 
         self.send_body(None, '201', 'Created', '', headers=headers)
+
+    def _get_body(self):
+        body = None
+        if self.headers.has_key("Content-Length"):
+            l=self.headers['Content-Length']
+            body=self.rfile.read(atoi(l))
+        return body
 
     def do_DELETE(self):
         try:
