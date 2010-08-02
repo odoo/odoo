@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 import re
 import copy
@@ -103,7 +104,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         elif (data['form']['result_selection'] == 'supplier'):
             self.ACCOUNT_TYPE = ('payable',)
         else:
-            self.ACCOUNT_TYPE = ('payable','receivable')
+            self.ACCOUNT_TYPE = ('payable', 'receivable')
         #
         self.cr.execute("SELECT a.id " \
                 "FROM account_account a " \
