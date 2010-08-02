@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import central_journal
+import account_central_journal
 import general_journal
 import account_journal
 import account_balance
