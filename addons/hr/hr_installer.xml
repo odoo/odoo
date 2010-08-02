@@ -10,7 +10,7 @@
       <field name="arch" type="xml">
         <data>
             <form position="attributes">
-                <attribute name="string">Select Human Resources Modules To Install</attribute>
+                <attribute name="string">Human Resources Modules Configuration</attribute>
             </form>
             <separator string="title" position="attributes">
                 <attribute name="string">Select Human Resources Modules To Install</attribute>
@@ -29,6 +29,8 @@
             <field name="hr_contract"/>
             <field name="hr_evaluation"/>
             <field name="hr_attendance"/>
+            <field name="hr_payroll"/>
+            <field name="hr_payroll_account"/>
           </group>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
               <attribute name="string">Configure</attribute>

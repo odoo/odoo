@@ -22,6 +22,39 @@
 from osv import fields, osv
 from tools.translate import _
 
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'
+
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        """
+        Returns a list of ids based on search domain {args}
+    
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param args: list of conditions to be applied in search opertion
+        @param offset: default from first record, you can start from nth record
+        @param limit: number of records to be obtained as a result of search opertion
+        @param order: ordering on any field(s)
+        @param context: context arguments, like lang, time zone
+        @param count: 
+        
+        @return: Returns a list of ids based on search domain
+        """
+        if not context:
+            context = {}
+        ttype = context.get('ttype', False)
+        if ttype and ttype in ('rec_voucher', 'bank_rec_voucher'):
+            args += [('type','in', ['out_invoice', 'in_refund'])]
+        elif ttype and ttype in ('pay_voucher', 'bank_pay_voucher'):
+            args += [('type','in', ['in_invoice', 'out_refund'])]
+        elif ttype and ttype in('journal_sale_vou', 'journal_pur_voucher', 'journal_voucher'):
+            raise osv.except_osv(_('Invalid action !'), _('You can not reconcile sales, purchase, or journal voucher with invoice !'))
+            args += [('type','=', 'do_not_allow_search')]
+
+        res = super(account_invoice, self).search(cr, user, args, offset, limit, order, context, count)
+        return res
+    
+account_invoice()
 
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
@@ -45,25 +78,41 @@ class account_voucher(osv.osv):
         analytic_pool = self.pool.get('account.analytic.line')
         currency_pool = self.pool.get('res.currency')
         invoice_pool = self.pool.get('account.invoice')
+        invoice_pool = self.pool.get('account.invoice')
         
         for inv in self.browse(cr, uid, ids):
-
+            
             if inv.move_id:
                 continue
+            
+            journal = journal_pool.browse(cr, uid, inv.journal_id.id)
+            if inv.type in ('journal_pur_voucher', 'journal_sale_vou'):
+                if journal.invoice_sequence_id:
+                    name = sequence_pool.get_id(cr, uid, journal.invoice_sequence_id.id)
+                else:
+                    raise osv.except_osv(_('Error !'), _('Please define invoice sequence on %s journal !' % (journal.name)))
+            else:
+                if journal.sequence_id:
+                    name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
+                else:
+                    raise osv.except_osv(_('Error !'), _('Please define sequence on journal !'))
+            
+            ref = False
+            if inv.type in ('journal_pur_voucher', 'bank_rec_voucher', 'rec_voucher'):
+                ref = inv.reference
+            else:
+                ref = invoice_pool._convert_ref(cr, uid, name)
             
             company_currency = inv.company_id.currency_id.id
             diff_currency_p = inv.currency_id.id <> company_currency
 
-            journal = journal_pool.browse(cr, uid, inv.journal_id.id)
-            if journal.sequence_id:
-                name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
-            
             move = {
                 'name' : name,
                 'journal_id': journal.id,
                 'type' : inv.type,
                 'narration' : inv.narration and inv.narration or inv.name,
-                'date':inv.date
+                'date':inv.date,
+                'ref':ref
             }
             
             if inv.period_id:
@@ -75,16 +124,16 @@ class account_voucher(osv.osv):
             
             #create the first line manually
             move_line = {
-                'name': inv.name,
-                'debit': False,
+                'name':inv.name,
+                'debit':False,
                 'credit':False,
-                'account_id': inv.account_id.id or False,
-                'move_id': move_id ,
-                'journal_id': inv.journal_id.id,
-                'period_id': inv.period_id.id,
-                'partner_id': False,
-                'ref': inv.reference,
-                'date': inv.date
+                'account_id':inv.account_id.id or False,
+                'move_id':move_id ,
+                'journal_id':inv.journal_id.id,
+                'period_id':inv.period_id.id,
+                'partner_id':False,
+                'ref':ref,
+                'date':inv.date
             }
             if diff_currency_p:
                 amount_currency = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
@@ -101,20 +150,26 @@ class account_voucher(osv.osv):
             
             line_ids = []
             line_ids += [move_line_pool.create(cr, uid, move_line)]
+            rec_ids = []
+            
             for line in inv.payment_ids:
                 amount=0.0
+
+                if inv.type in ('bank_pay_voucher', 'pay_voucher', 'journal_voucher'):
+                    ref = line.ref
+                
                 move_line = {
-                     'name': line.name,
-                     'debit': False,
-                     'credit': False,
-                     'account_id': line.account_id.id or False,
-                     'move_id': move_id ,
-                     'journal_id': inv.journal_id.id,
-                     'period_id': inv.period_id.id,
-                     'partner_id': line.partner_id.id or False,
-                     'ref': line.ref,
-                     'date': inv.date,
-                     'analytic_account_id': False
+                     'name':line.name,
+                     'debit':False,
+                     'credit':False,
+                     'account_id':line.account_id.id or False,
+                     'move_id':move_id ,
+                     'journal_id':inv.journal_id.id,
+                     'period_id':inv.period_id.id,
+                     'partner_id':line.partner_id.id or False,
+                     'ref':ref,
+                     'date':inv.date,
+                     'analytic_account_id':False
                 }
                 
                 if diff_currency_p:
@@ -145,17 +200,23 @@ class account_voucher(osv.osv):
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
                 
-                if line.invoice_id:
-                    rec_ids = [move_line_id]
+                if line.invoice_id and inv.type in ('pay_voucher', 'bank_pay_voucher', 'rec_voucher', 'bank_rec_voucher'):
+                    rec_ids += [move_line_id]
                     for move_line in line.invoice_id.move_id.line_id:
                         if line.account_id.id == move_line.account_id.id:
                             rec_ids += [move_line.id]
-                    move_line_pool.reconcile_partial(cr, uid, rec_ids)
+
+            if rec_ids:
+                move_line_pool.reconcile_partial(cr, uid, rec_ids)
             
             rec = {
                 'move_id': move_id,
                 'move_ids':[(6, 0,line_ids)]
             }
+            
+            message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirm")
+            self.log(cr, uid, inv.id, message)
+            
             self.write(cr, uid, [inv.id], rec)
             
         return True        
@@ -178,7 +239,7 @@ class account_voucher_line(osv.osv):
         res = super(account_voucher_line, self).move_line_get_item(cr, uid, line, context)
         res['invoice'] = line.invoice_id or False
         return res
-
+    
     def onchange_invoice_id(self, cr, uid, ids, invoice_id, currency_id):
         currency_pool = self.pool.get('res.currency')
         invoice_pool = self.pool.get('account.invoice')

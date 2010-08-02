@@ -22,7 +22,7 @@
 {
     "name" : "Load Sale Module data in Olap Tables",
     "version" : "0.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "depends" : ["olap"],
     "category" : "Generic Modules/Olap",

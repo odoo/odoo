@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -31,7 +31,7 @@ for and users.
 After installing the module, it adds a menu to define custom report in
 the "Dashboard" menu.
 """,
-    'author': 'Tiny & Axelor',
+    'author': 'OpenERP SA & Axelor',
     'website': '',
     'depends': ['base', 'board'],
     'init_xml': [],

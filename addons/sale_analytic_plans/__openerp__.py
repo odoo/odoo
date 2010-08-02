@@ -27,7 +27,7 @@
     'description': """
     The base module to manage analytic distribution and sales orders.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['sale', 'account_analytic_plans'],
     'init_xml': [],

@@ -24,7 +24,7 @@
     "name" : "Marketing",
     "version" : "1.1",
     "depends" : ["base"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
     "description": "Menu for Marketing",
     'website': 'http://www.openerp.com',

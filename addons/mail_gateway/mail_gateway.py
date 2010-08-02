@@ -41,8 +41,7 @@ class mailgate_thread(osv.osv):
     _description = 'Mailgateway Thread'
 
     _columns = {
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', readonly=True),
     }
 
     def message_new(self, cr, uid, msg, context):
@@ -141,31 +140,58 @@ class mailgate_thread(osv.osv):
         return True
 mailgate_thread()
 
+def format_date_tz(date, tz=None):
+    if not date: 
+        return 'n/a'
+    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
+    return tools.server_to_local_timestamp(date, format, format, tz)
+
 class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
+    def _get_display_text(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        tz = context.get('tz')
+        result = {}
+        for message in self.browse(cr, uid, ids, context=context):
+            msg_txt = ''
+            if message.history:
+                msg_txt += (message.email_from or '/') + ' wrote on ' + format_date_tz(message.date, tz) + ':\n\t'
+                if message.description:
+                    msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
+            else:
+                msg_txt = (message.user_id.name or '/') + '  on ' + format_date_tz(message.date, tz) + ':\n\t'
+                if message.name == 'Opportunity':
+                    msg_txt += "Converted to Opportunity"
+                else:
+                    msg_txt += "Changed Status to: " + message.name
+            result[message.id] = msg_txt
+        return result
+
     _name = 'mailgate.message'
     _description = 'Mailgateway Message'
-    _order = 'id desc'
+    _order = 'date desc'
     _columns = {
-        'name':fields.text('Subject'),
-        'model': fields.char('Object Name', size=128, select=1),
-        'res_id': fields.integer('Resource ID', select=1),
+        'name':fields.text('Subject', readonly=True),
+        'model': fields.char('Object Name', size=128, select=1, readonly=True),
+        'res_id': fields.integer('Resource ID', select=1, readonly=True),
         'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'date': fields.datetime('Date'),
-        'history': fields.boolean('Is History?'),
+        'date': fields.datetime('Date', readonly=True),
+        'history': fields.boolean('Is History?', readonly=True),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'message': fields.text('Description'),
-        'email_from': fields.char('From', size=128, help="Email From"),
-        'email_to': fields.char('To', help="Email Recipients", size=256),
-        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
-        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
+        'message': fields.text('Description', readonly=True),
+        'email_from': fields.char('From', size=128, help="Email From", readonly=True),
+        'email_to': fields.char('To', help="Email Recipients", size=256, readonly=True),
+        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256, readonly=True),
+        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256, readonly=True),
         'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
         'references': fields.text('References', readonly=True, help="References emails."),
-        'description': fields.text('Description'),
+        'description': fields.text('Description', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
+        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'), 
     }
 
     def init(self, cr):
@@ -459,7 +485,7 @@ class mailgate_tool(osv.osv_memory):
             'partner_id': False
         }
         from_email = self.to_email(from_email)[0]
-        address_ids = address_pool.search(cr, uid, [('email', '=', from_email)])
+        address_ids = address_pool.search(cr, uid, [('email', 'like', from_email)])
         if address_ids:
             address = address_pool.browse(cr, uid, address_ids[0])
             res['partner_address_id'] = address_ids[0]

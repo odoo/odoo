@@ -29,7 +29,7 @@
     Keeps account of the attendances of the employees on the basis of the
     actions(Sign in/Sign out) performed by them.
        """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['base', 'hr'],
     'update_xml': [
         'security/hr_security.xml',

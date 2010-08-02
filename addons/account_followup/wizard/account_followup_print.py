@@ -304,7 +304,6 @@ class account_followup_print_all(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account_followup.followup.print',
             'datas': datas,
-            'nodestroy': True
             }
 
 account_followup_print_all()

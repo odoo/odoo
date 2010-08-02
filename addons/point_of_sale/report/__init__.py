@@ -38,5 +38,6 @@ import pos_receipt_with_remboursment
 import pos_receipt_without_remboursment
 import point_of_sale_report
 import report_pos_order
+import report_cash_register
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -23,7 +23,7 @@
 {
     "name": "Human Resources",
     "version": "1.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "category": "Generic Modules/Human Resources",
     "website": "http://www.openerp.com",
     "description": """
@@ -32,7 +32,7 @@
     * HR Departments
     * HR Jobs
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'process', 'resource','board'],
     'init_xml': [],
@@ -48,9 +48,9 @@
         ],
     'demo_xml': [
         'hr_demo.xml',
-        'hr_department_demo.xml'
-        ],        
-    'test': ['test/test_hr.yml'],    
+        'hr_department_demo.xml',
+        ],
+    'test': ['test/test_hr.yml'],
     'installable': True,
     'active': False,
     'certificate': '0086710558965',

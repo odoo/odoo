@@ -33,7 +33,7 @@
     * Graph for quantity and amount per month    
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'account', 'stock', 'process', 'procurement'],
     'data': [

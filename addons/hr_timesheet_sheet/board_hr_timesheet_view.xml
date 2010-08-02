@@ -36,7 +36,7 @@
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Timesheets">
+                <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('done')" string="Timesheets">
                     <field name="date_from"/>
                     <field name="user_id"/>
                     <field name="name"/>

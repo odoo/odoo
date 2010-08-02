@@ -21,7 +21,7 @@
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
     General accountings
@@ -79,7 +79,7 @@ module named account_vouchers
         'wizard/account_invoice_state_view.xml',
         'wizard/account_partner_balance_report_view.xml',
         'wizard/account_balance_report_view.xml',
-        'wizard/account_move_line_select_view.xml',
+#        'wizard/account_move_line_select_view.xml',
         'wizard/account_aged_trial_balance_view.xml',
         'wizard/account_compare_account_balance_report_view.xml',
         'wizard/account_third_party_ledger.xml',
@@ -133,10 +133,10 @@ module named account_vouchers
         'test/chart_of_account.yml',
         'test/account_period_close.yml',
         'test/account_fiscalyear_close_state.yml',
-        'test/account_invoice_state.yml',
+        #'test/account_invoice_state.yml',
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
-#        'test/account_fiscalyear_close.yml',
+        'test/account_fiscalyear_close.yml',
     ],
     'installable': True,
     'active': False,

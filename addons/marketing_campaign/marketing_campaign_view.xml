@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-    <menuitem name="Configuration" id="menu_marketing_configuration" parent="marketing.marketing_menu" sequence="1"/>
+    <menuitem name="Configuration" id="menu_marketing_configuration" parent="base.marketing_menu" sequence="1"/>
 
     <!--
     ======================
@@ -27,8 +27,8 @@
                 <separator string="Status" colspan="4" />
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
-                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
-                    <button name="state_done_set" string="Done" states="running" icon="gtk-ok"/>
+                    <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
+                    <button name="state_done_set" string="Close" states="running" icon="gtk-ok"/>
                     <button name="state_cancel_set" string="Cancelled" states="running" icon="gtk-cancel"/>
                 </group>
               </form>
@@ -40,7 +40,7 @@
         <field name="model">marketing.campaign</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Campaigns">
+            <tree colors="blue:state in ('draft');black:state in ('running');gray:state in ('done','cancelled')" string="Campaigns">
                 <field name="name" select="1"/>
                 <field name="object_id" select="1"/>
                 <field name="mode"/>
@@ -106,7 +106,7 @@
 
     </record>
 
-    <menuitem name="Campaigns" id="menu_marketing_campaign" parent="marketing.marketing_menu"/>
+    <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu"/>
     <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="10" />
 
     <!--
@@ -142,7 +142,7 @@
                 <separator string="Status" colspan="4"/>
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
-                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
+                    <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
                     <button name="state_done_set" string="Close" states="running" icon="gtk-ok"/>
                     <button name="state_cancel_set" string="Cancel" states="running" icon="gtk-cancel"/>
                 </group>
@@ -155,7 +155,7 @@
         <field name="model">marketing.campaign.segment</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Segments">
+            <tree colors="blue:state in ('draft');black:state in ('running');gray:state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
                 <field name="campaign_id"/>
                 <field name="date_run"/>
@@ -224,27 +224,27 @@
                 <field name="signal"/>
                 <field name="start"/>
                 <field name="variable_cost" select="1"/>
-                <newline/> 
-                
+                <newline/>
+
                 <separator string="Action" colspan="4"/>
                 <group colspan='4' col='4'>
-                    <field name="condition" colspan='4'/>
+                    <group colspan="4" col="6">
+                        <field name="condition" colspan='5'/>
+                        <group col='2'>
+                            <field name="keep_if_condition_not_met" />
+                        </group>
+                    </group>
                     <field name="type" width='100'/>
                     <group colspan='2' col='1'>
-                        <group attrs="{'invisible':[('type','!=','email')]}" >
-                            <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
-                        </group>
+                        <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
+                               context="{'default_object_name':object_id}" />
                         <group attrs="{'invisible':[('type','!=','paper')]}" >
                             <field name="report_id" attrs="{'required':[('type','=','paper')]}" context="{'object_id':object_id}"/>
                             <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
                         </group>
-                        <group attrs="{'invisible':[('type','!=','action')]}" >
-                            <field name="server_action_id" attrs="{'required':[('type','=','action')]}" domain="[('model_id','=',object_id)]" />
-                        </group>
+                        <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]" />
                         <!--
-                        <group attrs="{'invisible':[('type','!=','subcampaign')]}" >
-                            <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
-                        </group>
+                         <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')], 'invisible':[('type','!=','subcampaign')]}" />
                         -->
                     </group>
                 </group>
@@ -272,7 +272,7 @@
             </form>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_marketing_campaign_activity_tree">
         <field name="name">marketing.campaign.activity.tree</field>
         <field name="model">marketing.campaign.activity</field>
@@ -299,15 +299,15 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Marketing Campaign Activities">
+            <tree colors="red:state in ('exception');black:state in ('todo');gray:state in ('cancelled')" string="Marketing Campaign Activities">
                 <field name="segment_id"/>
                 <field name="activity_id" />
                 <field name="res_name" />
                 <field name="partner_id"/>
                 <field name="date"/>
                 <field name="state"/>
-                <button string="Preview" states="todo" name="preview" icon="gtk-apply" type="object"/>
-                <button string="Process" states="todo" name="process" type="object" icon="gtk-ok"/>
+                <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
+                <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
                 <button string="Cancel" states="todo" name="button_cancel" type="object" icon="gtk-cancel"/>
             </tree>
         </field>
@@ -335,7 +335,7 @@
                         <separator string="Date" colspan="2"/>
                         <field name="date"/>
                         <label string="" colspan="1"/>
-                        <button string="Preview" states="todo" name="preview" icon="gtk-apply" type="object"/>
+                        <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
                     </group>
                 </group>
                 <group colspan="4" col="4" attrs="{'invisible':[('state','!=','exception')]}">
@@ -345,8 +345,8 @@
                 <separator string="Status" colspan="4"/>
                 <group colspan="4" col="11">
                     <field name="state" nolabel="1" readonly="True" select="1"/>
-                    <button string="Retry" states="exception" name="button_draft" type="object" icon="gtk-ok"/>
-                    <button string="Process" states="todo" name="process" type="object" icon="gtk-ok"/>
+                    <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
+                    <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
                     <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="gtk-cancel"/>
                 </group>
             </form>
@@ -379,7 +379,7 @@
    </record>
 
     <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
-        <field name="name">Campaign Activities (Workitems)</field>
+        <field name="name">Campaign Followup</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">marketing.campaign.workitem</field>
         <field name="view_type">form</field>
