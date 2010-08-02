@@ -57,7 +57,6 @@
         'auction_view.xml',
         'auction_report.xml',
         'report/report_auction_view.xml',
-        'report/report_attendance_view.xml',
         'auction_wizard.xml',
         'board_auction_view.xml',
         'board_auction_manager_view.xml',
