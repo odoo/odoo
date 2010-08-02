@@ -5,13 +5,6 @@
             <field name="name">Auction</field>
         </record>
 
-    <record model="ir.actions.act_window" id="action_report_latest_objects_tree">
-        <field name="res_model">auction.lots</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('create_uid','=',uid)]</field>
-    </record>
-
         <record model="ir.ui.view" id="board_auction_manager_form">
             <field name="name">board.auction.manager.form</field>
             <field name="model">board.board</field>

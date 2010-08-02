@@ -18,10 +18,6 @@
                 <field name="buyer" select="1" invisible="1"/>
                 <field name="seller" invisible="1"/>
                 <field name="object" select="1" invisible="1"/>
-                <field name="nbuyer" />
-                <field name="nseller" />
-                <field name="min_est" />
-                <field name="max_est" />
                 <field name="avg_price" select="1"/>
                 <field name="gross_revenue" />
                 <field name="net_revenue" />
@@ -73,7 +69,7 @@
                     <filter string="Buyer" icon="terp-personal" name="buyer" context="{'group_by':'buyer'}"/>
                     <filter string="Seller" icon="terp-personal" name="seller" context="{'group_by':'seller'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Auction" icon="terp-product" name="auction" context="{'group_by':'auction'}"/>
+                    <filter string="Auction" icon="terp-project" name="auction" context="{'group_by':'auction'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
@@ -101,7 +97,7 @@
     </record>    
     
     <record model="ir.actions.act_window" id="action_report_auction">
-        <field name="name">Auction Summary</field>
+        <field name="name">Auction's Summary</field>
         <field name="res_model">report.auction</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>

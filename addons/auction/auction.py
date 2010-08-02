@@ -31,6 +31,7 @@ import tools
 #----------------------------------------------------------
 # Auction Artists
 #----------------------------------------------------------
+
 class auction_artists(osv.osv):
     _name = "auction.artists"
     _columns = {
@@ -87,9 +88,11 @@ class auction_dates(osv.osv):
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True), 
 
     }
+    
     _defaults = {
         'state': lambda *a: 'draft', 
     }
+    
     _order = "auction1 desc"
 
     def close(self, cr, uid, ids, context=None):
@@ -472,7 +475,7 @@ class auction_lots(osv.osv):
         'ach_avance': fields.float('Buyer Advance'), 
         'ach_login': fields.char('Buyer Username', size=64), 
         'ach_uid': fields.many2one('res.partner', 'Buyer'), 
-        'ach_emp': fields.boolean('Taken Away', readonly=True), 
+        'ach_emp': fields.boolean('Taken Away'), 
         'is_ok': fields.boolean('Buyer\'s payment'), 
         'ach_inv_id': fields.many2one('account.invoice', 'Buyer Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
         'sel_inv_id': fields.many2one('account.invoice', 'Seller Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
@@ -974,4 +977,3 @@ class auction_bid_lines(osv.osv):
 auction_bid_lines()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

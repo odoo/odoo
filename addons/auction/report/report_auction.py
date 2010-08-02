@@ -53,10 +53,6 @@ class report_auction(osv.osv):
         'net_margin':fields.float('Net Margin', readonly=True),
         'avg_estimation':fields.float('Avg estimation', readonly=True),
         'user_id':fields.many2one('res.users', 'User', select=1),
-        'nbuyer':fields.float('No of buyers', readonly=True), 
-        'nseller':fields.float('No of sellers', readonly=True), 
-        'min_est':fields.float('Minimum Estimation', readonly=True, select=2), 
-        'max_est':fields.float('Maximum Estimation', readonly=True, select=2), 
         'state': fields.selection((('draft', 'Draft'), ('unsold', 'Unsold'), ('sold', 'Sold')), 'State', readonly=True, select=1),
         
     }
@@ -76,10 +72,6 @@ class report_auction(osv.osv):
                 to_char(ad.auction1, 'YYYY-MM-DD') as day,
                 al.ach_uid as "buyer",
                 ade.partner_id as seller,
-                count(al.ach_login) as "nbuyer",
-                count(al.bord_vnd_id) as "nseller",
-                sum(al.lot_est1) as "min_est",
-                sum(al.lot_est2) as "max_est",
                 ad.id as auction,
                 count(al.id) as "object",
                 sum(al.obj_price) as "total_price",
