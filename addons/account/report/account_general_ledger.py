@@ -101,10 +101,10 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             num_entry = self.cr.fetchone()[0] or 0
             sold_account = self._sum_balance_account(child_account,form)
             self.sold_accounts[child_account.id] = sold_account
-            if form['display_account'] == 'movement':
+            if form['display_account'] == 'bal_movement':
                 if child_account.type != 'view' and num_entry <> 0 :
                     res.append(child_account)
-            elif form['display_account'] == 'balance':
+            elif form['display_account'] == 'bal_solde':
                 if child_account.type != 'view' and num_entry <> 0 :
                     if ( sold_account <> 0.0):
                         res.append(child_account)
