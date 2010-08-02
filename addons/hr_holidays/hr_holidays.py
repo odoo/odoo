@@ -90,7 +90,7 @@ class hr_holidays_status(osv.osv):
         if employee_id:
             res = self.get_days(cr, uid, ids, employee_id, return_false, context=context)
         else:
-            res = dict.fromkeys(ids, {name: 0})
+            res = dict.fromkeys(ids, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0})
         return res
 
     # To do: we can add remaining_leaves_category field to display remaining leaves for particular type
