@@ -882,20 +882,14 @@ class account_move_line(osv.osv):
             elif field == 'credit':
                 attrs.append('sum="Total credit"')
             elif field == 'account_tax_id':
-                attrs.append('domain="[(\'parent_id\',\'=\',False), (\'type_tax_use\',\'=\',context.get(journal_id.type, \'sale\'))]"')
+                attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
             elif field == 'account_id' and journal.id:
                 attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
             elif field == 'partner_id':
                 attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
-#            elif field == 'date':
-#                attrs.append('on_change="onchange_date(date)"')
+            elif field == 'journal_id':
+                attrs.append("context=\"{'journal_id':journal_id.type}\"")
 
-#            if field.readonly:
-#                attrs.append('readonly="1"')
-#            if field.required:
-#                attrs.append('required="1"')
-#            else:
-#                attrs.append('required="0"')
             if field in ('amount_currency','currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
 
