@@ -24,7 +24,7 @@ import account_general_journal
 import account_journal
 import account_balance
 import partner_balance
-import general_ledger
+import account_general_ledger
 import third_party_ledger
 import invoice
 import overdue
