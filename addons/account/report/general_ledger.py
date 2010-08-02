@@ -38,8 +38,8 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
 
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
-        self.sortby = data['form']['sortby']
-        self.query = data['form']['query_line']
+        self.sortby = data['form'].get('sortby', 'sort_date')
+        self.query = data['form'].get('query_line', '')
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
@@ -71,20 +71,19 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'get_sortby': self._get_sortby,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
-
         })
         self.context = context
 
     def _sum_currency_amount_account(self, account, form):
         #FIXME: not working
-        self.cr.execute("SELECT sum(l.amount_currency) as tot_currency "\
+        self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s"%(account.id, self.query))
+                "WHERE l.account_id = %s AND %s" %(account.id, self.query))
         sum_currency = self.cr.fetchone()[0] or 0.0
         if form.get('initial_balance', False):
-            self.cr.execute("SELECT sum(l.amount_currency) as tot_currency "\
-                    "FROM account_move_line l "\
-                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+            self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
+                            "FROM account_move_line l "\
+                            "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
             # Add initial balance to the result
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
@@ -137,7 +136,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         else:
             sql_sort='l.date'
         sql = """
-            SELECT l.id as lid, l.date as ldate, j.code as lcode, l.amount_currency,l.ref as lref, l.name as lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id as lperiod_id, l.partner_id as lpartner_id,
+            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
             m.name AS move_name, m.id AS mmove_id,
             c.code AS currency_code,
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,
@@ -156,7 +155,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         if res_lines and form['initial_balance']:
             #FIXME: replace the label of lname with a string translatable
             sql = """
-                SELECT 0 AS lid, '' AS ldate, '' as lcode, COALESCE(SUM(l.amount_currency),0.0) as amount_currency, '' as lref, 'Initial Balance' as lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
+                SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
                 '' AS move_name, '' AS mmove_id,
                 '' AS currency_code,
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,
