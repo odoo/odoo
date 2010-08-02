@@ -40,13 +40,15 @@ class account_invoice(osv.osv):
         
         @return: Returns a list of ids based on search domain
         """
+        if not context:
+            context = {}
         ttype = context.get('ttype', False)
         if ttype and ttype in ('rec_voucher', 'bank_rec_voucher'):
             args += [('type','in', ['out_invoice', 'in_refund'])]
         elif ttype and ttype in ('pay_voucher', 'bank_pay_voucher'):
             args += [('type','in', ['in_invoice', 'out_refund'])]
         elif ttype and ttype in('journal_sale_vou', 'journal_pur_voucher', 'journal_voucher'):
-            raise osv.except_osv(_('Invalid action !'), _('You can not reconcile sales, purchase, or journal entry with invoice !'))
+            raise osv.except_osv(_('Invalid action !'), _('You can not reconcile sales, purchase, or journal voucher with invoice !'))
             args += [('type','=', 'do_not_allow_search')]
 
         res = super(account_invoice, self).search(cr, user, args, offset, limit, order, context, count)
@@ -79,13 +81,21 @@ class account_voucher(osv.osv):
         invoice_pool = self.pool.get('account.invoice')
         
         for inv in self.browse(cr, uid, ids):
-
+            
             if inv.move_id:
                 continue
-
+            
             journal = journal_pool.browse(cr, uid, inv.journal_id.id)
-            if journal.sequence_id:
-                name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
+            if inv.type in ('journal_pur_voucher', 'journal_sale_vou'):
+                if journal.invoice_sequence_id:
+                    name = sequence_pool.get_id(cr, uid, journal.invoice_sequence_id.id)
+                else:
+                    raise osv.except_osv(_('Error !'), _('Please define invoice sequence on %s journal !' % (journal.name)))
+            else:
+                if journal.sequence_id:
+                    name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
+                else:
+                    raise osv.except_osv(_('Error !'), _('Please define sequence on journal !'))
             
             ref = False
             if inv.type in ('journal_pur_voucher', 'bank_rec_voucher', 'rec_voucher'):

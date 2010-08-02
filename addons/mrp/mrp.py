@@ -60,7 +60,8 @@ class mrp_workcenter(osv.osv):
        'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
     }
     _defaults = {
-        'capacity_per_cycle': lambda *a: 1.0,
+        'capacity_per_cycle': 1.0,
+        'resource_type': 'material',
      }
 mrp_workcenter()
 
