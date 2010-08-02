@@ -196,6 +196,13 @@
         <field name="context">{"search_default_draft": "1"}</field>
     </record>
 
+    <act_window name="Open lots"
+        domain="[('auction_id', '=', active_id)]"
+        res_model="auction.lots"
+        src_model="auction.dates"
+        id="act_auction_lot_line_open"/>
+
+
     <menuitem name="Auction Dates" parent="auction_menu_root" id="auction_date_menu" sequence="1"/>
     <menuitem name="Next Auction Dates" parent="auction_date_menu" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
     
@@ -332,10 +339,7 @@
                           <field name="buyer_price"/>
                           <field name="seller_price"/>
                           <field name="ach_emp"/>
-<!--                          <group colspan="4" col="4">-->
-<!--                            <button name="auction_lots_enable" string="Unmark" type="object" icon="gtk-execute" attrs="{'invisible':[('ach_emp','=', False)]}"/>-->
-<!--                                <button name="auction_lots_able" string="Mark" type="object" icon="gtk-execute" attrs="{'invisible':[('ach_emp','=', True)]}"/>-->
-<!--                          </group>-->
+<!--                          <button name="auction_lots_enable" string="Unmark" type="object" icon="gtk-execute" attrs="{'invisible':[('ach_emp','=', False)]}"/>-->
                           <field name="gross_revenue"/>
                           <field name="net_revenue"/>
                           <field name="gross_margin"/>
@@ -371,8 +375,7 @@
                           <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
                           <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
                           <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
-                          <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>
-                          <button name="button_unpaid" string="Set to draft" states="paid" type="object" icon="gtk-convert"/>
+                          <button name="button_unpaid" string="Set to draft" states="sold,unsold,paid" type="object" icon="gtk-convert"/>
                       </group> 
                    </page>
                    <page string="Seller">
@@ -389,7 +392,7 @@
                                <field name="price"/>
                            </tree>
                        </field>
-                       </page>
+                    </page>
                     <page string="Bids">
                         <field name="bid_lines" colspan="4" nolabel="1" editable="top">
                             <tree string="Bids"  editable="top">
@@ -478,7 +481,6 @@
         <field name="context">{"search_default_draft": "1"}</field>
     </record>
 
-
     <menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu" sequence="2"/>
     <menuitem name="All objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
 
@@ -553,7 +555,7 @@
             <form string="Deposit Border Form">
                <field name="name" select="1"/>
                <field name="date_dep" select="1"/>
-               <field name="partner_id" select="1" on_change="partner_id_change(partner_id)"/>
+               <field name="partner_id" select="1"/>
                <field name="method"/>
                <newline/>
                <field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
@@ -727,7 +729,7 @@
         </field>
     </record>
 
-    <!-- BidS View -->
+<!-- BidS View -->
 
     <record model="ir.ui.view" id="v19">
         <field name="name">auction.bid.form</field>
@@ -805,6 +807,12 @@
     <menuitem name="Bids" parent="auction_buyers_menu" action="action_bid_open" id="menu_action_bid_open"/>
     
     <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
+
+    <act_window name="Bordereau de dépôt"
+        domain="[('partner_id', '=', active_id)]"
+        res_model="auction.deposit"
+        src_model="res.partner"
+        id="act_auction_lot_open_deposit"/>
 
 </data>
 </openerp> 
