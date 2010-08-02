@@ -128,7 +128,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
         super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
-    def lines(self, partner, data):
+    def lines(self, partner):
         full_account = []
         if self.reconcil:
             RECONCILE_TAG = " "
@@ -165,7 +165,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         res = self.cr.fetchall()
         return res
 
-    def _sum_debit_partner(self, partner, data):
+    def _sum_debit_partner(self, partner):
         result_tmp = 0.0
         if self.reconcil :
             RECONCILE_TAG = " "
@@ -187,7 +187,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = result_tmp + 0.0
         return result_tmp
 
-    def _sum_credit_partner(self, partner, data):
+    def _sum_credit_partner(self, partner):
         result_tmp = 0.0
         if self.reconcil :
             RECONCILE_TAG = " "
@@ -209,7 +209,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = result_tmp + 0.0
         return result_tmp
 
-    def _sum_debit(self, data):
+    def _sum_debit(self):
         if not self.ids:
             return 0.0
         result_tmp = 0.0
@@ -248,7 +248,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             result_tmp = result_tmp + 0.0
         return result_tmp  + result_init
 
-    def _sum_credit(self, data):
+    def _sum_credit(self):
         if not self.ids:
             return 0.0
         result_tmp = 0.0
@@ -288,7 +288,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
         return result_tmp  + result_init
 #
-    def _get_partners(self, data):
+    def _get_partners(self):
         if self.result_selection == 'customer':
             return 'Receivable Accounts'
         elif self.result_selection == 'supplier':

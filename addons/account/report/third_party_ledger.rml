@@ -220,7 +220,7 @@
 	        	</tr>
         	 </blockTable>        	 
         	</td>
-	<td><para style="terp_default_Centre_8">[[ get_partners(data) ]]</para></td>        	
+	<td><para style="terp_default_Centre_8">[[ get_partners() ]]</para></td>        	
 	<td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
 	</tr>
 	</blockTable>  
@@ -262,13 +262,13 @@
           <para style="terp_default_Bold_9">Balance Brought Forward</para>
         </td>
         <td>
-          <para style="P5"><u>[[ formatLang((sum_debit(data))) ]]</u></para>
+          <para style="P5"><u>[[ formatLang((sum_debit())) ]]</u></para>
         </td>
         <td>
-          <para style="P5"><u>[[ formatLang((sum_credit(data))) ]]</u></para>
+          <para style="P5"><u>[[ formatLang((sum_credit())) ]]</u></para>
         </td>
         <td>
-          <para style="P5"><u>[[ formatLang((sum_debit(data) - sum_credit(data))) ]]</u></para>
+          <para style="P5"><u>[[ formatLang((sum_debit() - sum_credit())) ]]</u></para>
         </td>
       </tr>
     </blockTable>
@@ -310,7 +310,7 @@
       <font color="white"> </font>
     </para>
     <section>
-      <para style="P1">[[ repeatIn(lines(p,data), 'line') ]]</para>
+      <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>
       <blockTable colWidths="65.0,28.0,45.0,175.0,77.0,75.0,74.0" style="Table3">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
@@ -377,13 +377,13 @@
           <para style="terp_default_Bold_9">Balance Brought Forward</para>
         </td>
         <td>
-          <para style="P5"><u>[[ formatLang((sum_debit(data))) ]]</u></para>
+          <para style="P5"><u>[[ formatLang((sum_debit())) ]]</u></para>
         </td>
         <td>
-          <para style="P5"><u>[[ formatLang((sum_credit(data))) ]]</u></para>
+          <para style="P5"><u>[[ formatLang((sum_credit())) ]]</u></para>
         </td>
         <td>
-          <para style="P5"><u>[[ formatLang((sum_debit(data) - sum_credit(data))) ]]</u></para>
+          <para style="P5"><u>[[ formatLang((sum_debit() - sum_credit())) ]]</u></para>
         </td>
           <td>
         </td>
@@ -435,7 +435,7 @@
       <font color="white"> </font>
     </para>
     <section>
-      <para style="P1">[[ repeatIn(lines(p,data), 'line') ]]</para>
+      <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>
       <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table7">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
         <tr>
           <td>
