@@ -24,7 +24,7 @@ import time
 import pooler
 import rml_parse
 from report import report_sxw
-from account.report import report_pl
+from account.report import account_profit_loss
 from common_report_header import common_report_header
 
 class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
