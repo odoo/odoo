@@ -118,18 +118,18 @@ class account_cash_statement(osv.osv):
             res2[statement.id]=encoding_total
         return res2
 
-    def _default_journal_id(self, cr, uid, context={}):
+#    def _default_journal_id(self, cr, uid, context={}):
 
-        """ To get default journal for the object" 
-        @param name: Names of fields.
-        @return: journal 
-        """
-        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        journal = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
-        if journal:
-            return journal[0]
-        else:
-            return False
+#        """ To get default journal for the object" 
+#        @param name: Names of fields.
+#        @return: journal 
+#        """
+#        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+#        journal = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
+#        if journal:
+#            return journal[0]
+#        else:
+#            return False
     
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
         res_currency_obj = self.pool.get('res.currency')
@@ -174,7 +174,7 @@ class account_cash_statement(osv.osv):
         
         return company_id
 
-    def _get_cash_box_lines(self, cr, uid, ids, context={}):
+    def _get_cash_open_box_lines(self, cr, uid, ids, context={}):
         res = []
         curr = [1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
@@ -182,12 +182,23 @@ class account_cash_statement(osv.osv):
                 'pieces':rs,
                 'number':0
             }
-            res.append((0,0,dct))
+            res.append(dct)
         return res
-    
+
+    def _get_cash_close_box_lines(self, cr, uid, ids, context={}):
+        res = []
+        curr = [1, 2, 5, 10, 20, 50, 100, 500]
+        for rs in curr:
+            dct = {
+                'pieces':rs,
+                'number':0
+            }
+            res.append((0, 0, dct))
+        return res
+        
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
+        'journal_id': fields.many2one('account.journal', 'Journal', required=True, domain=[('type', '=', 'cash')]),
         'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),
@@ -206,11 +217,10 @@ class account_cash_statement(osv.osv):
         'state': lambda *a: 'draft',
         'name': lambda *a: '/',
         'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
-        'journal_id': _default_journal_id,
         'user_id': lambda self, cr, uid, context=None: uid,
         'company_id': _get_company,
-        'starting_details_ids':_get_cash_box_lines,
-        'ending_details_ids':_get_cash_box_lines
+        'starting_details_ids':_get_cash_open_box_lines,
+        'ending_details_ids':_get_cash_open_box_lines
      }
 
     def create(self, cr, uid, vals, context=None):
@@ -224,7 +234,19 @@ class account_cash_statement(osv.osv):
             open_jrnl = self.search(cr, uid, sql)
             if open_jrnl:
                 raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
+
+        if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
+            lines = end_lines = self._get_cash_close_box_lines(cr, uid, [], context)
+            vals.update({
+                'ending_details_ids':lines
+            })
+        else:
+            vals.update({
+                'ending_details_ids':False,
+                'starting_details_ids':False
+            })
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
+        self.write(cr, uid, [res_id], {})
         return res_id
     
     def write(self, cr, uid, ids, vals, context=None):

@@ -81,7 +81,7 @@ class account_installer(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
         'sale_tax':fields.float('Sale Tax(%)'),
         'purchase_tax':fields.float('Purchase Tax(%)')
-        }
+    }
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
@@ -90,7 +90,7 @@ class account_installer(osv.osv_memory):
         'purchase_tax':lambda *a:0.0,
         #'charts':'configurable',
         'bank_accounts_id':_get_default_accounts
-        }
+    }
 
     def on_change_tax(self, cr, uid, id, tax):
         return{'value':{'purchase_tax':tax}}
@@ -115,6 +115,7 @@ class account_installer(osv.osv_memory):
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
+        data_pool = self.pool.get('ir.model.data')
         company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
         seq_journal = True
 
@@ -298,8 +299,8 @@ class account_installer(osv.osv_memory):
 
         # Creating Journals Sales and Purchase
         vals_journal={}
-        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
-        data = data_pool.browse(cr, uid, data_id[0])
+        data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
+        data = mod_obj.browse(cr, uid, data_id[0])
         view_id = data.res_id
         
         seq_id = obj_sequence.search(cr,uid,[('name','=','Account Journal')])[0]

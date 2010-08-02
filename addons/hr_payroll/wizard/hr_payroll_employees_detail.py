@@ -63,7 +63,6 @@ class hr_payroll_employees_detail(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'employees.salary',
             'datas': datas,
-            'nodestroy':True,
        }
 
 hr_payroll_employees_detail()

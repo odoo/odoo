@@ -166,7 +166,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 #
                 # Compute for lines
                 #
-                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(data['ids']), product_id, factor_id))
+                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(context['active_ids']), product_id, factor_id))
 
                 line_ids = cr.dictfetchall()
                 note = []
@@ -188,7 +188,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
 
                 curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
                 invoice_line_obj.create(cr, uid, curr_line, context=context)
-                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s" ,(last_invoice, account.id,tuple(data['ids'])))
+                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s" ,(last_invoice, account.id, tuple(context['active_ids'])))
 
         invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
 
