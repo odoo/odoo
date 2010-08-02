@@ -204,81 +204,68 @@
     
     <!-- tree1 form1 for NEW object in the deposit border -->
     
-    <record model="ir.ui.view" id="v5">
-        <field name="name">Auction lots</field>
-        <field name="model">auction.lots</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-                <tree string="Auction Objects">
-                    <field name="lot_num"/>
-                    <field name="obj_num"/>
-                    <field name="name"/>
-                    <field name="auction_id"/>
-                    <field name="vnd_lim"/>
-                    <field name="lot_est1"/>
-                    <field name="lot_est2"/>
-                    <field name="buyer_price"/>
-                    <field name="is_ok"/>
-                    <field name="seller_price"/>
-                    <field name="gross_revenue"/>
-                    <field name="net_revenue"/>
-                    <field name="gross_margin"/>
-                    <field name="net_margin"/>
-                    <field name="costs"/>
-                    <field name="obj_price_l"/>
-                </tree>
-        </field>
-    </record>
-    
-    <record model="ir.ui.view" id="auction_lot_simplified">
-        <field name="name">Auction lots</field>
-        <field name="model">auction.lots</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="All Objects">
-                <field name="auction_id"/>
-                <field name="obj_num"/>
-                <field name="bord_vnd_id"/>
-                <field name="lot_num"/>
-                <field name="buyer_price"/>
-                <field name="seller_price"/>
-                <field name="gross_revenue"/>
-                <field name="net_revenue"/>
-                <field name="gross_margin"/>
-                <field name="net_margin"/>
-                <field name="costs"/>
-                <newline/>
-                <field name="name"/>
-                <field name="lot_type" select="1"/>
-                <field name="name2"/>
-                <newline/>
-                <field name="artist_id"/>
-                <field name="artist2_id"/>
-                <field name="obj_desc" colspan="4"/>
-                <field name="vnd_lim"/>
-                <field name="vnd_lim_net"/>
-                <field name="lot_est1"/>
-                <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-                <field name="lot_est2"/>
-                <field name="product_id"/>
-                <field name="state" readonly="1"/>
-            </form>
-        </field>
-    </record>
+<!--    <record model="ir.ui.view" id="v5">-->
+<!--        <field name="name">Auction lots</field>-->
+<!--        <field name="model">auction.lots</field>-->
+<!--        <field name="type">tree</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--                <tree string="Auction Objects">-->
+<!--                    <field name="lot_num"/>-->
+<!--                    <field name="obj_num"/>-->
+<!--                    <field name="name"/>-->
+<!--                    <field name="auction_id"/>-->
+<!--                    <field name="vnd_lim"/>-->
+<!--                    <field name="lot_est1"/>-->
+<!--                    <field name="lot_est2"/>-->
+<!--                    <field name="buyer_price"/>-->
+<!--                    <field name="is_ok"/>-->
+<!--                    <field name="seller_price"/>-->
+<!--                    <field name="gross_revenue"/>-->
+<!--                    <field name="net_revenue"/>-->
+<!--                    <field name="gross_margin"/>-->
+<!--                    <field name="net_margin"/>-->
+<!--                    <field name="costs"/>-->
+<!--                    <field name="obj_price_l"/>-->
+<!--                </tree>-->
+<!--        </field>-->
+<!--    </record>-->
+<!--    -->
+<!--    <record model="ir.ui.view" id="auction_lot_simplified">-->
+<!--        <field name="name">Auction lots</field>-->
+<!--        <field name="model">auction.lots</field>-->
+<!--        <field name="type">form</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form string="All Objects">-->
+<!--                <field name="auction_id"/>-->
+<!--                <field name="obj_num"/>-->
+<!--                <field name="bord_vnd_id"/>-->
+<!--                <field name="lot_num"/>-->
+<!--                <field name="buyer_price"/>-->
+<!--                <field name="seller_price"/>-->
+<!--                <field name="gross_revenue"/>-->
+<!--                <field name="net_revenue"/>-->
+<!--                <field name="gross_margin"/>-->
+<!--                <field name="net_margin"/>-->
+<!--                <field name="costs"/>-->
+<!--                <newline/>-->
+<!--                <field name="name"/>-->
+<!--                <field name="lot_type" select="1"/>-->
+<!--                <field name="name2"/>-->
+<!--                <newline/>-->
+<!--                <field name="artist_id"/>-->
+<!--                <field name="artist2_id"/>-->
+<!--                <field name="obj_desc" colspan="4"/>-->
+<!--                <field name="vnd_lim"/>-->
+<!--                <field name="vnd_lim_net"/>-->
+<!--                <field name="lot_est1"/>-->
+<!--                <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>-->
+<!--                <field name="lot_est2"/>-->
+<!--                <field name="product_id"/>-->
+<!--                <field name="state" readonly="1"/>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
 
-    <record model="ir.ui.view" id="auction_lot_graph">
-        <field name="name">Auction lots</field>
-        <field name="model">auction.lots</field>
-        <field name="type">graph</field>
-        <field name="arch" type="xml">
-            <graph string="Lots" type="bar">
-                <field name="lot_type"/>
-                <field name="lot_est1" operator="+"/>
-                <field name="lot_est2" operator="+"/>
-                <field name="obj_price" operator="+"/>
-            </graph>
-        </field>
-    </record>
 
     <!-- tree2 form2 for Catalog, All object and Unclassified objects -->
     <record model="ir.ui.view" id="v7">
@@ -468,6 +455,20 @@
              </search>
         </field>
     </record>
+    
+    <record model="ir.ui.view" id="auction_lot_graph">
+        <field name="name">Auction lots</field>
+        <field name="model">auction.lots</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Lots" type="bar">
+                <field name="lot_type"/>
+                <field name="lot_est1" operator="+"/>
+                <field name="lot_est2" operator="+"/>
+                <field name="obj_price" operator="+"/>
+            </graph>
+        </field>
+    </record>
 
     <record model="ir.actions.act_window" id="action_all_objects">
         <field name="res_model">auction.lots</field>
@@ -484,64 +485,64 @@
     <!-- form3: simplified form meant for during the sale (action button in dates) -->
     <!--form par defaut-->
     
-    <record model="ir.ui.view" id="auction_lots_sell_form">
-        <field name="name">auction.lots.form3</field>
-        <field name="model">auction.lots</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Auction">
-                <notebook>
-                <page string="Auction">
-                    <field name="obj_num" readonly="1" select="1"/>
-                    <field name="auction_id"/>
-                    <field name="obj_price" select="1"/>
-                    <field name="ach_login" select="1" comparator="="/>
-                    <field name="ach_emp"/>
-                    <field name="obj_comm"/>
-                    <field name="obj_ret" on_change="onchange_obj_ret(obj_ret)"/>
-                    <newline/>
-                    <field name="name" readonly="1" select="1"/>
-                    <field name="name2" readonly="2" select="1"/>
-                    <field name="artist_id" readonly="1"/>
-                    <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-                    <newline/>
-                    <field name="buyer_price"/>
-                    <field name="is_ok" select="1"/>
-                    <field name="obj_desc" readonly="1" colspan="4"/>
-                    <field name="lot_est1" readonly="1"/>
-                    <field name="lot_est2" readonly="1"/>
-                    <field name="vnd_lim" readonly="1"/>
-                    <field name="vnd_lim_net"/>
-                    <field name="bid_lines" colspan="4" readonly="1">
-                        <tree string="Bids">
-                            <field name="name"/>
-                            <field name="bid_id"/>
-                            <field name="price"/>
-                            <field name="call"/>
-                        </tree>
-                    </field>
-                    <field name="state" readonly="1"/>
-                    <group colspan="2" col="4">
-                        <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to" />
-                        <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
-                        <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>
-                        <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
-                    </group>
-                </page>
-                <page string="Statements">
-                    <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
-                        widget="one2many_list">
-                        <tree string="Payment's history" editable="top">
-                            <field name="name"/>
-                            <field name="amount"/>
-                            <field name="date"/>
-                        </tree>
-                    </field>
-                </page>
-            </notebook>
-            </form>
-        </field>
-    </record>
+<!--    <record model="ir.ui.view" id="auction_lots_sell_form">-->
+<!--        <field name="name">auction.lots.form3</field>-->
+<!--        <field name="model">auction.lots</field>-->
+<!--        <field name="type">form</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form string="Auction">-->
+<!--                <notebook>-->
+<!--                <page string="Auction">-->
+<!--                    <field name="obj_num" readonly="1" select="1"/>-->
+<!--                    <field name="auction_id"/>-->
+<!--                    <field name="obj_price" select="1"/>-->
+<!--                    <field name="ach_login" select="1" comparator="="/>-->
+<!--                    <field name="ach_emp"/>-->
+<!--                    <field name="obj_comm"/>-->
+<!--                    <field name="obj_ret" on_change="onchange_obj_ret(obj_ret)"/>-->
+<!--                    <newline/>-->
+<!--                    <field name="name" readonly="1" select="1"/>-->
+<!--                    <field name="name2" readonly="2" select="1"/>-->
+<!--                    <field name="artist_id" readonly="1"/>-->
+<!--                    <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>-->
+<!--                    <newline/>-->
+<!--                    <field name="buyer_price"/>-->
+<!--                    <field name="is_ok" select="1"/>-->
+<!--                    <field name="obj_desc" readonly="1" colspan="4"/>-->
+<!--                    <field name="lot_est1" readonly="1"/>-->
+<!--                    <field name="lot_est2" readonly="1"/>-->
+<!--                    <field name="vnd_lim" readonly="1"/>-->
+<!--                    <field name="vnd_lim_net"/>-->
+<!--                    <field name="bid_lines" colspan="4" readonly="1">-->
+<!--                        <tree string="Bids">-->
+<!--                            <field name="name"/>-->
+<!--                            <field name="bid_id"/>-->
+<!--                            <field name="price"/>-->
+<!--                            <field name="call"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                    <field name="state" readonly="1"/>-->
+<!--                    <group colspan="2" col="4">-->
+<!--                        <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to" />-->
+<!--                        <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>-->
+<!--                        <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>-->
+<!--                        <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>-->
+<!--                    </group>-->
+<!--                </page>-->
+<!--                <page string="Statements">-->
+<!--                    <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"-->
+<!--                        widget="one2many_list">-->
+<!--                        <tree string="Payment's history" editable="top">-->
+<!--                            <field name="name"/>-->
+<!--                            <field name="amount"/>-->
+<!--                            <field name="date"/>-->
+<!--                        </tree>-->
+<!--                    </field>-->
+<!--                </page>-->
+<!--            </notebook>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
 
 
     <record model="ir.ui.view" id="view_deposit_border_form">
@@ -682,7 +683,6 @@
         </field>
     </record>
 
-
     <record model="ir.actions.act_window" id="action_deposit_border">
         <field name="name">Deposit border</field>
         <field name="res_model">auction.deposit</field>
@@ -695,9 +695,8 @@
     <menuitem name="Sellers" id="auction_seller_menu" parent="auction_menu_root" sequence="3"/>
     <menuitem name="Deposit border" parent="auction_seller_menu" action="action_deposit_border" id="menu_auction_deposit_border"/>
 
-    =======================================================
-        "Auction Management/Buyers/Bids
-    =======================================================
+    <!-- Bids Lines View -->
+    
     <record model="ir.ui.view" id="view_bids_tree">
         <field name="name">auction.bid_line.tree1</field>
         <field name="model">auction.bid_line</field>
@@ -728,16 +727,7 @@
         </field>
     </record>
 
-
-    <record model="ir.actions.act_window" id="b11">
-        <field name="res_model">auction.bid</field>
-        <field name="view_type">form</field>
-    </record>
-
-
-    =======================================================
-        "Auction Management/Buyers/Reporting
-    =======================================================
+    <!-- BidS View -->
 
     <record model="ir.ui.view" id="v19">
         <field name="name">auction.bid.form</field>
@@ -764,11 +754,6 @@
             </form>
         </field>
     </record>
-
-
-
-
-    <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
 
     <record model="ir.ui.view" id="view_auction_bid_tree">
         <field name="name">auction.bid.tree</field>
@@ -818,6 +803,8 @@
 
     <menuitem name="Buyers" id="auction_buyers_menu" parent="auction_menu_root" sequence="4"/>
     <menuitem name="Bids" parent="auction_buyers_menu" action="action_bid_open" id="menu_action_bid_open"/>
+    
+    <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
 
 </data>
 </openerp> 
