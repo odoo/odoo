@@ -84,7 +84,8 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         self.init_query = data['form'].get('initial_bal_query', '')
         self.reconcil = data['form'].get('reconcil', True)
         self.initial_balance = data['form'].get('initial_balance', True)
-        self.result_selection = data['form']['result_selection']
+        self.result_selection = data['form'].get('result_selection', 'customer')
+        self.amount_currency = data['form'].get('amount_currency', False)
         PARTNER_REQUEST = ''
         if (data['model'] == 'res.partner'):
             ## Si on imprime depuis les partenaires
@@ -313,7 +314,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
          return False
 
     def _display_currency(self,data):
-         if data['form']['amount_currency'] :
+         if self.amount_currency :
              return True
          return False
 
