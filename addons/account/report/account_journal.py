@@ -21,7 +21,6 @@
 
 import time
 
-import pooler
 from common_report_header import common_report_header
 from report import report_sxw
 #
@@ -36,7 +35,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         self.period_ids = []
         self.journal_ids = []
         self.sort_selection = 'date'
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'lines': self.lines,
             'sum_debit': self._sum_debit,
@@ -52,13 +51,13 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_end_date':self._get_end_date,
             'display_currency':self._display_currency,
             'get_sortby': self._get_sortby,
-                    })
+    })
 
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
         self.query_get_clause = ''
         if (data['model'] == 'ir.ui.menu'):
-            new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
+            new_ids = data['form'].get('active_ids', [])
             self.query_get_clause = 'AND '
             self.query_get_clause += data['form']['query_line'] or ''
             self.sort_selection = data['form']['sort_selection']
@@ -67,7 +66,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
             res = self.cr.fetchall()
             self.period_ids, self.journal_ids = zip(*res)
-        return super(journal_print, self).set_context(objects, data, ids, report_type)
+        return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
     def lines(self, period_id, journal_id=[]):
         obj_mline = self.pool.get('account.move.line')
@@ -88,7 +87,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.account_currency = False
 
     def _get_fiscalyear(self, data):
-        if data['model']=='account.journal.period':
+        if data['model'] == 'account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).fiscalyear_id.name
         return super(journal_print ,self)._get_fiscalyear(data)
 
