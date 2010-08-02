@@ -45,7 +45,6 @@ class account_partner_balance(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',
             'datas': data,
-            'nodestroy':True,
                 }
 
 account_partner_balance()

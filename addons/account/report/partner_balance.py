@@ -214,7 +214,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         subtotal = copy.deepcopy(subtotal_row)
         init_acnt = []
         for row in subtotal_row:
-            if final_init and row.get('account_id', False) and not row['account_id'] in init_acnt:
+            if final_init and row.get('account_id', False) and not row['account_id'] in init_acnt and final_init.get(row['account_id'], False):
                 subtotal.insert(subtotal.index(row), final_init[row['account_id']])
                 init_acnt.append(row['account_id'])
         return subtotal
@@ -455,7 +455,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return credit > debit and credit - debit
 
     def _get_partners(self, data):
-
         if data['form']['result_selection'] == 'customer':
             return 'Receivable Accounts'
         elif data['form']['result_selection'] == 'supplier':
