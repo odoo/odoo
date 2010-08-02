@@ -114,8 +114,8 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     "AND a.active", (self.ACCOUNT_TYPE,))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
         self.initial_balance = data['form']['initial_balance'] # for include initial balance
-        self.query = data['form']['query_line']
-        self.init_query = data['form']['initial_bal_query']
+        self.query = data['form'].get('query_line', '')
+        self.init_query = data['form'].get('initial_bal_query', '')
         return super(partner_balance, self).set_context(objects, data, ids, report_type)
 
     def lines(self, data):
