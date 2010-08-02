@@ -23,7 +23,7 @@ import account_central_journal
 import account_general_journal
 import account_journal
 import account_balance
-import partner_balance
+import account_partner_balance
 import account_general_ledger
 import account_partner_ledger
 import invoice
