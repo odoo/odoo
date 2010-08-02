@@ -34,7 +34,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         self.result_sum_dr = 0.0
         self.result_sum_cr = 0.0
         self.result = {}
-        self.res_pl = {}
+        self.res_bl = {}
         self.result_temp = []
         self.localcontext.update({
             'time': time,
@@ -55,26 +55,27 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
             'get_filter': self._get_filter,
             'get_journal': self._get_journal,
             'get_start_date':self._get_start_date,
-            'get_end_date':self._get_end_date,     
-            'get_company':self._get_company,              
+            'get_end_date':self._get_end_date,
+            'get_company':self._get_company,
 
         })
         self.context = context
+
     def get_abs(self,amount):
         return abs(amount)
-        
+
     def sum_dr(self):
-        if self.res_pl['type'] == 'Net Profit':
-            self.result_sum_dr += self.res_pl['balance']
+        if self.res_bl['type'] == 'Net Profit':
+            self.result_sum_dr += self.res_bl['balance']
         return self.result_sum_dr or 0.0
 
     def sum_cr(self):
-        if self.res_pl['type'] == 'Net Loss':
-            self.result_sum_cr += self.res_pl['balance']
+        if self.res_bl['type'] == 'Net Loss':
+            self.result_sum_cr += self.res_bl['balance']
         return self.result_sum_cr or 0.0
 
     def get_pl_balance(self):
-        return self.res_pl or 0.0
+        return self.res_bl or 0.0
 
     def get_data(self,data):
         cr, uid = self.cr, self.uid
@@ -82,7 +83,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
 
         #Getting Profit or Loss Balance from profit and Loss report
         result_pl=self.obj_pl.get_data(data)
-        self.res_pl=self.obj_pl.final_result()
+        self.res_bl = self.obj_pl.final_result()
 
         type_pool = db_pool.get('account.account.type')
         account_pool = db_pool.get('account.account')
@@ -95,31 +96,30 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
 
         ctx = self.context.copy()
 #        ctx['state'] = form['context'].get('state','filter_no')
-        ctx['fiscalyear'] = data['form']['fiscalyear_id']
+        ctx['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
-        if data['form']['filter']=='filter_period' :
-            ctx['periods'] = data['form']['periods']
-        elif data['form']['filter']== 'filter_date':
-            ctx['date_from'] = data['form']['date_from']
-            ctx['date_to'] =  data['form']['date_to']
+        if data['form']['filter'] == 'filter_period' :
+            ctx['periods'] = data['form'].get('periods', False)
+        elif data['form']['filter'] == 'filter_date':
+            ctx['date_from'] = data['form'].get('date_from', False)
+            ctx['date_to'] =  data['form'].get('date_to', False)
 
-
-        cal_list={}
+        cal_list = {}
         pl_dict = {}
         account_dict = {}
-        account_id = data['form']['chart_account_id']
+        account_id = data['form'].get('chart_account_id', False)
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
-        if self.res_pl['type'] == 'Net Profit C.F.B.L.':
-            self.res_pl['type'] = 'Net Profit'
+        if self.res_bl['type'] == 'Net Profit C.F.B.L.':
+            self.res_bl['type'] = 'Net Profit'
         else:
-            self.res_pl['type'] = 'Net Loss'
+            self.res_bl['type'] = 'Net Loss'
         pl_dict  = {
             'code' : False,
-            'name' : self.res_pl['type'],
+            'name' : self.res_bl['type'],
             'level': False,
-            'balance':self.res_pl['balance'],
+            'balance':self.res_bl['balance'],
         }
         for typ in types:
             accounts_temp = []
@@ -140,7 +140,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
                         if account.credit > 0 or account.debit > 0 or account.balance > 0 :
                             accounts_temp.append(account_dict)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if  account.balance != 0:
+                        if account.balance != 0:
                             accounts_temp.append(account_dict)
                     else:
                         accounts_temp.append(account_dict)
@@ -152,7 +152,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
             cal_list[typ]=self.result[typ]
 
         if cal_list:
-            temp={}
+            temp = {}
             for i in range(0,max(len(cal_list['liability']),len(cal_list['asset']))):
                 if i < len(cal_list['liability']) and i < len(cal_list['asset']):
                     temp={
@@ -206,3 +206,5 @@ report_sxw.report_sxw('report.account.balancesheet.horizontal', 'account.account
 report_sxw.report_sxw('report.account.balancesheet', 'account.account',
     'addons/account/report/report_balance_sheet.rml',parser=report_balancesheet_horizontal,
     header='internal')
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

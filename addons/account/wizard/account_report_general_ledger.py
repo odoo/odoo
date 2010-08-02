@@ -54,7 +54,7 @@ class account_report_general_ledger(osv.osv_memory):
         if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
             data['form'].update({'initial_balance': False})
         if data['form']['landscape']:
-            return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True }
+            return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data}
         return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data}
 
 account_report_general_ledger()

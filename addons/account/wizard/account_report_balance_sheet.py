@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from lxml import etree
+
 from osv import osv, fields
 
 class account_bs_report(osv.osv_memory):
@@ -37,7 +39,19 @@ class account_bs_report(osv.osv_memory):
 
     _defaults={
         'display_type': True,
+        'journal_ids': [],
         }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        mod_obj = self.pool.get('ir.model.data')
+        res = super(account_bs_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//field[@name='journal_ids']")
+        for node in nodes:
+            node.set('readonly', '1')
+            node.set('required', '0')
+        res['arch'] = etree.tostring(doc)
+        return res
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
@@ -49,14 +63,12 @@ class account_bs_report(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.balancesheet.horizontal',
                 'datas': data,
-                'nodestroy':True,
                 }
         else:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.balancesheet',
                 'datas': data,
-                'nodestroy':True,
                 }
 
 account_bs_report()

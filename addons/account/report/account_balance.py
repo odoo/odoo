@@ -32,7 +32,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
-        self.query_get_clause = data['form']['query_line'] or ''
+        self.query_get_clause = data['form'].get('query_line', False) or ''
         return super(account_balance, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def __init__(self, cr, uid, name, context=None):
@@ -65,7 +65,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if data['model']=='account.account':
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
         return super(account_balance ,self)._get_account(data)
-    
+
     def lines(self, form, ids=[], done=None, level=1):
         obj_account = self.pool.get('account.account')
         if not ids:

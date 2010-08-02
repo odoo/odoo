@@ -56,6 +56,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             'get_company':self._get_company,
         })
         self.context = context
+
     def get_abs(self,amount):
         return abs(amount)
 
@@ -86,16 +87,16 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
                 ]
 
         ctx = self.context.copy()
-        ctx['fiscalyear'] = data['form']['fiscalyear_id']
+        ctx['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
-        if data['form']['filter']=='filter_period' :
-            ctx['periods'] =  data['form']['periods']
-        elif data['form']['filter']== 'filter_date':
-            ctx['date_from'] = data['form']['date_from']
-            ctx['date_to'] =  data['form']['date_to']
+        if data['form']['filter'] == 'filter_period' :
+            ctx['periods'] =  data['form'].get('periods', False)
+        elif data['form']['filter'] == 'filter_date':
+            ctx['date_from'] = data['form'].get('date_from', False)
+            ctx['date_to'] =  data['form'].get('date_to', False)
 
         cal_list = {}
-        account_id = data['form']['chart_account_id']
+        account_id = data['form'].get('chart_account_id', False)
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
@@ -177,3 +178,4 @@ report_sxw.report_sxw('report.pl.account.horizontal', 'account.account',
 report_sxw.report_sxw('report.pl.account', 'account.account',
     'addons/account/report/report_pl_account.rml',parser=report_pl_account_horizontal, header='internal')
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
