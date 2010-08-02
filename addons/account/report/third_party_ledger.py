@@ -313,7 +313,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
              return True
          return False
 
-    def _display_currency(self,data):
+    def _display_currency(self, data):
          if self.amount_currency :
              return True
          return False
