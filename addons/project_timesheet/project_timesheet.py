@@ -142,7 +142,13 @@ class task(osv.osv):
         
         return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
     
-    def write(self, cr, uid, ids,vals,context={}):
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
         if (vals.has_key('project_id') and vals['project_id']) or (vals.has_key('name') and vals['name']):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
