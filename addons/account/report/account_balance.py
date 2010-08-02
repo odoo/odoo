@@ -61,6 +61,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if header == 0:
             self.rml_header = ""
         return True
+
     def _get_account(self, data):
         if data['model']=='account.account':
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
@@ -99,8 +100,8 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                 continue
             done[account['id']] = 1
             res = {
-                    'id' : account['id'],
-                    'type' : account['type'],
+                    'id': account['id'],
+                    'type': account['type'],
                     'code': account['code'],
                     'name': account['name'],
                     'level': level,
