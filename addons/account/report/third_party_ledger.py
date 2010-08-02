@@ -84,15 +84,16 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         self.init_query = data['form'].get('initial_bal_query', '')
         self.reconcil = data['form'].get('reconcil', True)
         self.initial_balance = data['form'].get('initial_balance', True)
+        self.result_selection = data['form']['result_selection']
         PARTNER_REQUEST = ''
         if (data['model'] == 'res.partner'):
             ## Si on imprime depuis les partenaires
             if ids:
                 PARTNER_REQUEST =  "AND line.partner_id IN %s",(tuple(ids),)
 
-        if data['form']['result_selection'] == 'supplier':
+        if self.result_selection == 'supplier':
             self.ACCOUNT_TYPE = ['payable']
-        elif data['form']['result_selection'] == 'customer':
+        elif self.result_selection == 'customer':
             self.ACCOUNT_TYPE = ['receivable']
         else:
             self.ACCOUNT_TYPE = ['payable','receivable']
@@ -287,11 +288,11 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         return result_tmp  + result_init
 #
     def _get_partners(self, data):
-        if data['form']['result_selection'] == 'customer':
+        if self.result_selection == 'customer':
             return 'Receivable Accounts'
-        elif data['form']['result_selection'] == 'supplier':
+        elif self.result_selection == 'supplier':
             return 'Payable Accounts'
-        elif data['form']['result_selection'] == 'customer_supplier':
+        elif self.result_selection == 'customer_supplier':
             return 'Receivable and Payable Accounts'
         return ''
 
