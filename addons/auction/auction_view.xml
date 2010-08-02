@@ -558,58 +558,64 @@
                <field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                <field name="transfer"/>
                <newline/>
-               <field name="lot_id" colspan="4" mode="tree,graph" nolabel="1">
-                    <tree string="Objects">
-                       <field name="lot_num"/>
-                       <field name="obj_num"/>
-                       <field name="auction_id"/>
-                       <field name="name"/>
-                       <field name="obj_price"/>
-                       <field name="vnd_lim"/>
-                       <field name="lot_est1"/>
-                       <field name="lot_est2"/>
-                    </tree>
-                    <form string="Objects">
-                        <notebook colspan="4">
-                            <page string="Description">
-                              <field name="auction_id" colspan="4"/>
-                              <field name="lot_num"/>
-                              <field name="obj_num"/>
-                              <newline/>
-                              <field name="name"/>
-                              <field name="lot_type" select="1"/>
-                              <field name="name2"/>
-                              <newline/>
-                              <field name="artist_id"/>
-                              <field name="artist2_id"/>
-                              <separator string="Objects Description" colspan="4"/>
-                              <field name="obj_desc" colspan="4" nolabel="1"/>
-                              <field name="vnd_lim"/>
-                              <field name="vnd_lim_net"/>
-                              <field name="lot_est1"/>
-                              <field name="lot_est2"/>
-                              <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-                              <field name="product_id" domain="[('sale_ok','=',True)]"/>
-                              <field name="state" readonly="1" colspan="4"/>
-                            </page>
-                            <page string="Photos">
-                                <field name="image" colspan="4" widget="image"/>
-                            </page>
-                        </notebook>
-                    </form>
-               </field>
-               <field name="specific_cost_ids" widget="one2many_list" nolabel="1" colspan="4">
-                  <tree string="Deposit Costs" editable="top">
-                     <field name="name"/>
-                     <field name="amount"/>
-                     <field name="account" domain="[('type','=','income')]"/>
-                  </tree>
-                  <form string="Deposit Costs">
-                     <field name="name"/>
-                     <field name="amount"/>
-                     <field name="account"/>
-                  </form>
-               </field>
+               <notebook colspan="4">
+                <page string="General Information">
+	               <field name="lot_id" colspan="4" mode="tree,graph" nolabel="1">
+	                    <tree string="Objects">
+	                       <field name="lot_num"/>
+	                       <field name="obj_num"/>
+	                       <field name="auction_id"/>
+	                       <field name="name"/>
+	                       <field name="obj_price"/>
+	                       <field name="vnd_lim"/>
+	                       <field name="lot_est1"/>
+	                       <field name="lot_est2"/>
+	                    </tree>
+	                    <form string="Objects">
+	                        <notebook colspan="4">
+	                            <page string="Description">
+	                              <field name="auction_id" colspan="4"/>
+	                              <field name="lot_num"/>
+	                              <field name="obj_num"/>
+	                              <newline/>
+	                              <field name="name"/>
+	                              <field name="lot_type" select="1"/>
+	                              <field name="name2"/>
+	                              <newline/>
+	                              <field name="artist_id"/>
+	                              <field name="artist2_id"/>
+	                              <separator string="Objects Description" colspan="4"/>
+	                              <field name="obj_desc" colspan="4" nolabel="1"/>
+	                              <field name="vnd_lim"/>
+	                              <field name="vnd_lim_net"/>
+	                              <field name="lot_est1"/>
+	                              <field name="lot_est2"/>
+	                              <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
+	                              <field name="product_id" domain="[('sale_ok','=',True)]"/>
+	                              <field name="state" readonly="1" colspan="4"/>
+	                            </page>
+	                            <page string="Photos">
+	                                <field name="image" colspan="4" widget="image"/>
+	                            </page>
+	                        </notebook>
+	                    </form>
+	               </field>
+                </page>
+	            <page string="Extra Costs">  
+	               <field name="specific_cost_ids" widget="one2many_list" nolabel="1" colspan="4">
+	                  <tree string="Deposit Costs" editable="top">
+	                     <field name="name"/>
+	                     <field name="amount"/>
+	                     <field name="account" domain="[('type','=','income')]"/>
+	                  </tree>
+	                  <form string="Deposit Costs">
+	                     <field name="name"/>
+	                     <field name="amount"/>
+	                     <field name="account"/>
+	                  </form>
+	               </field>
+                </page>
+               </notebook> 	               
             </form>
         </field>
     </record>
