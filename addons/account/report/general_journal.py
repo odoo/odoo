@@ -93,6 +93,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         (period_id, tuple(self.journal_ids)))
 
         return self.cr.dictfetchall()
+
     def _set_get_account_currency_code(self, account_id):
         self.cr.execute("SELECT c.code AS code "\
                 "FROM res_currency c, account_account AS ac "\
