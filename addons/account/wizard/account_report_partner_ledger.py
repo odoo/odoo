@@ -37,7 +37,7 @@ class account_partner_ledger(osv.osv_memory):
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
                 }
     _defaults = {
-       'reconcile': True,
+       'reconcil': True,
        'initial_balance': True,
        'page_split': False,
                }
@@ -52,13 +52,11 @@ class account_partner_ledger(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger',
                 'datas': data,
-                'nodestroy':True,
                     }
         return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger_other',
                 'datas': data,
-                'nodestroy':True,
                 }
 
 account_partner_ledger()

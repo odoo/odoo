@@ -56,7 +56,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'get_intial_balance':self._get_intial_balance,
             'display_initial_balance':self._display_initial_balance,
             'display_currency':self._display_currency,
-
         })
 
 
@@ -81,8 +80,10 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
         return string_map
 
     def set_context(self, objects, data, ids, report_type=None):
-        self.query = data['form']['query_line']
-        self.init_query = data['form']['initial_bal_query']
+        self.query = data['form'].get('query_line', '')
+        self.init_query = data['form'].get('initial_bal_query', '')
+        self.reconcil = data['form'].get('reconcil', True)
+        self.initial_balance = data['form'].get('initial_balance', True)
         PARTNER_REQUEST = ''
         if (data['model'] == 'res.partner'):
             ## Si on imprime depuis les partenaires
@@ -101,7 +102,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             "FROM account_account a " \
             "LEFT JOIN account_account_type t " \
                 "ON (a.type=t.code) " \
-#            "WHERE a.company_id = %s " \
                 'WHERE a.type IN %s' \
                 "AND a.active", (tuple(self.ACCOUNT_TYPE), ))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
@@ -119,7 +119,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                 (tuple(self.account_ids),))
 
         res = self.cr.dictfetchall()
-
         for res_line in res:
                 partner_to_use.append(res_line['partner_id'])
         new_ids = partner_to_use
@@ -129,7 +128,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def lines(self, partner, data):
         full_account = []
-        if data['form']['reconcil'] :
+        if self.reconcil:
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND l.reconcile_id IS NULL"
@@ -166,7 +165,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def _sum_debit_partner(self, partner, data):
         result_tmp = 0.0
-        if data['form']['reconcil'] :
+        if self.reconcil :
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
@@ -188,7 +187,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def _sum_credit_partner(self, partner, data):
         result_tmp = 0.0
-        if data['form']['reconcil'] :
+        if self.reconcil :
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
@@ -213,11 +212,11 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             return 0.0
         result_tmp = 0.0
         result_init = 0.0
-        if data['form']['reconcil'] :
+        if self.reconcil :
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if data['form']['initial_balance']:
+        if self.initial_balance:
             self.cr.execute(
                     "SELECT sum(debit) " \
                     "FROM account_move_line AS l " \
@@ -252,11 +251,11 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             return 0.0
         result_tmp = 0.0
         result_init = 0.0
-        if data['form']['reconcil'] :
+        if self.reconcil :
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND reconcile_id IS NULL"
-        if data['form']['initial_balance']: #self.date_lst and
+        if self.initial_balance:
             self.cr.execute(
                     "SELECT sum(credit) " \
                     "FROM account_move_line AS l " \
@@ -308,7 +307,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             return currency_total
 
     def _display_initial_balance(self, data):
-         if data['form']['initial_balance'] :
+         if self.initial_balance :
              return True
          return False
 
