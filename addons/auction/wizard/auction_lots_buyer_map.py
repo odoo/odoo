@@ -53,7 +53,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
         res.update(self._start(cr, uid, context.get('active_ids', []), context))
         return res
     
-    def _start(self, cr, uid, ids, context):
+    def _start(self, cr, uid, ids, context=None):
         """ 
          Returns login if already there in the selected record.
          @param self: The object pointer.
@@ -63,6 +63,8 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: login field from current record. 
         """
+        if not context:
+            context={}
         lots_obj = self.pool.get('auction.lots')
         for rec in lots_obj.browse(cr, uid, ids, context):
             if (len(ids)==1) and (not rec.ach_uid and not rec.ach_login):
@@ -71,7 +73,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
                 return {'ach_login': rec.ach_login}
         return {}
     
-    def buyer_map_set(self, cr, uid, ids, context):
+    def buyer_map_set(self, cr, uid, ids, context=None):
         """ 
          To map the buyer and login name.
          @param self: The object pointer.
@@ -80,6 +82,8 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param ids: List of ids 
          @param context: A standard dictionary 
         """
+        if not context:
+            context={}
         rec_ids = context and context.get('active_ids',[]) or []
         assert rec_ids, _('Active IDs not Found')
         lots_obj = self.pool.get('auction.lots')
