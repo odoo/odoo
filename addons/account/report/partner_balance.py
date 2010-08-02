@@ -121,7 +121,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         full_account = []
         result_tmp = 0.0
         self.cr.execute(
-            "SELECT p.ref,l.account_id,ac.name as account_name,ac.code as code ,p.name, sum(debit) as debit, sum(credit) as credit, " \
+            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code ,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
                         "THEN sum(debit) - sum(credit) " \
                         "ELSE 0 " \
@@ -148,7 +148,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         #For include intial balance..
         if self.initial_balance:
             self.cr.execute(
-                "SELECT '1' as type, '' as ref, l.account_id as account_id, '' as account_name, '' as code, '' as name, sum(debit) as debit, sum(credit) as credit, " \
+                "SELECT '1' AS type, '' AS ref, l.account_id AS account_id, '' AS account_name, '' AS code, '' AS name, sum(debit) AS debit, sum(credit) AS credit, " \
                         "CASE WHEN sum(debit) > sum(credit) " \
                             "THEN sum(debit) - sum(credit) " \
                             "ELSE 0 " \
