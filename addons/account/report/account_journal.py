@@ -59,8 +59,8 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         if (data['model'] == 'ir.ui.menu'):
             new_ids = data['form'].get('active_ids', [])
             self.query_get_clause = 'AND '
-            self.query_get_clause += data['form']['query_line'] or ''
-            self.sort_selection = data['form']['sort_selection']
+            self.query_get_clause += data['form'].get('query_line', '')
+            self.sort_selection = data['form'].get('sort_selection', 'date')
             objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
         if new_ids:
             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
