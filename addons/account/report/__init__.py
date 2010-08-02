@@ -41,6 +41,6 @@ import account_entries_report
 import account_analytic_entries_report
 import voucher_print
 import account_balance_sheet
-import report_pl
+import account_profit_loss
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

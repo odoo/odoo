@@ -173,9 +173,9 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         return self.result.get(group, [])
 
 report_sxw.report_sxw('report.pl.account.horizontal', 'account.account',
-    'addons/account/report/report_pl_account_horizontal.rml',parser=report_pl_account_horizontal, header='internal')
+    'addons/account/report/account_profit_horizontal.rml.rml',parser=report_pl_account_horizontal, header='internal')
 
 report_sxw.report_sxw('report.pl.account', 'account.account',
-    'addons/account/report/report_pl_account.rml',parser=report_pl_account_horizontal, header='internal')
+    'addons/account/report/account_profit_loss.rml',parser=report_pl_account_horizontal, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
