@@ -21,7 +21,6 @@
 
 import time
 
-import pooler
 from common_report_header import common_report_header
 from report import report_sxw
 #
@@ -55,7 +54,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'display_currency':self._display_currency
         })
 
-    def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
+    def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
         self.query_get_clause = ''
         if (data['model'] == 'ir.ui.menu'):
@@ -67,7 +66,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
             res = self.cr.fetchall()
             self.period_ids, self.journal_ids = zip(*res)
-        return super(journal_print, self).set_context(objects, data, ids, report_type)
+        return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
     # returns a list of period objs
     def periods(self, journal_period_objs):
@@ -92,12 +91,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +''
                         'GROUP BY j.id, j.code, j.name, l.amount_currency,c.code,l.currency_id ',
                         (period_id, tuple(self.journal_ids)))
-        
+
         return self.cr.dictfetchall()
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.code as code "\
-                "FROM res_currency c,account_account as ac "\
-                "WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
+        self.cr.execute("SELECT c.code AS code "\
+                "FROM res_currency c, account_account AS ac "\
+                "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()
         if result:
             self.account_currency = result[0]
@@ -115,7 +114,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return super(journal_print ,self)._get_fiscalyear(data)
 
     def _display_currency(self, data):
-        if data['model']=='account.journal.period':
+        if data['model'] == 'account.journal.period':
             return True
         return data['form']['amount_currency']
 
