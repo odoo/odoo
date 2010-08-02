@@ -41,7 +41,7 @@ How to use it:
 Run Administration/Customization/Module Creation/Export Customizations As a Module wizard.
 Select datetime critearia of recording and objects to be recorded and Record module.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],

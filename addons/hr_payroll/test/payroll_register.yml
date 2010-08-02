@@ -2,7 +2,7 @@
   I test the 'Payroll Register' in order to check the hr_payroll in OpenERP
 -
   I create a new employee “Keith”
-- 
+-
   !record {model: hr.employee, id: hr_employee_keith0}:
     address_home_id: base.res_partner_address_3
     address_id: base.res_partner_address_9
@@ -27,7 +27,7 @@
     salary_account: account.a_recv
     vehicle_distance: 0.0
 -
-  I create a payroll register record
+  I create a payroll register record.
 -
   !record {model: hr.payroll.register, id: hr_payroll_register_payroll0}:
     bank_journal_id: account.bank_journal
@@ -38,8 +38,8 @@
         bank_journal_id: account.bank_journal
         journal_id: account.expenses_journal
     name: payroll1
-- 
-  I click on Compute button
+-
+  I click on Compute button.
 -
   !python {model: hr.payroll.register}: |
     self.compute_sheet(cr, uid, [ref("hr_payroll_register_payroll0")], {"lang": "en_US",
@@ -47,7 +47,7 @@
       [ref("hr_payroll.hr_menu_payroll_register")], "section_id": False, "active_id":
       ref("hr_payroll.hr_menu_payroll_register"), })
 -
-  Then I click on Verify Sheet button
+  Then I click on Verify Sheet button.
 -
   !python {model: hr.payroll.register}: |
     self.verify_sheet(cr, uid, [ref("hr_payroll_register_payroll0")], {"lang": "en_US",
@@ -60,4 +60,4 @@
   !python {model: hr.payroll.register}: |
     from tools.translate import _
     reg_brw=self.browse(cr, uid, ref("hr_payroll_register_payroll0"))
-    assert(reg_brw.state == 'hr_check'), _('State not changed!') 
+    assert(reg_brw.state == 'hr_check'), _('State not changed!')

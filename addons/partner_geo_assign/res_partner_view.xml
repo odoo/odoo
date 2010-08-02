@@ -1,33 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record id="view_crm_opportunity_geo_assign_form" model="ir.ui.view">
-            <field name="name">crm.lead.geo_assign.inherit</field>
-            <field name="model">crm.lead</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
-            <field name="arch" type="xml">
-                <xpath expr="//notebook[last()]" position="inside">
-                    <page string="Geo Assignation">
-                        <field name="partner_assigned_id"/>
-                        <newline/>
-                        <field name="partner_latitude"/>
-                        <field name="partner_longitude"/>
-                        <field name="date_assign"/>
-                        <label string="" colspan="1"/>
-                        <group colspan="1" col="2">
-                            <button string="Geo Assign" name="assign_partner" type="object" colspan="1"
-                                icon="gtk-apply"/>
-                            <button string="Forward"
-                                name="forward_to_partner" attrs="{'invisible':[('partner_assigned_id','=',False)]}"
-                                icon="gtk-apply"
-                                type="object"/>
-                        </group>
-                    </page>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_crm_partner_geo_form" model="ir.ui.view">
             <field name="name">res.partner.geo.inherit</field>
             <field name="model">res.partner</field>
@@ -35,7 +8,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
-                    <page string="Geo Location">
+                    <page string="Geo Localization">
                         <field name="partner_weight"/>
                         <label string="" colspan="1"/>
                         <button
@@ -46,11 +19,10 @@
                         <newline/>
                         <field name="partner_latitude"/>
                         <field name="partner_longitude"/>
-                        <field name="date_assign"/>
+                        <field name="date_localization"/>
                     </page>
                 </xpath>
             </field>
         </record>
-
     </data>
 </openerp>

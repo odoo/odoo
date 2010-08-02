@@ -43,7 +43,7 @@ The validation can be configured in the company:
 * Period size (day, week, month, year)
 * Maximal difference between timesheet and attendances
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
     'init_xml': [],

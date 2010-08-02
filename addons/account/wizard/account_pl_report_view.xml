@@ -55,6 +55,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Select Chart">
+                    <label string="Select account chart to print profit and loss account report" colspan="4"/>
+                    <separator colspan="4"/>
                     <field name="Account_list"/>
                     <separator colspan="4"/>
                     <button icon="gtk-cancel" special="cancel" string="Cancel"/>
@@ -74,11 +76,6 @@
              <field name="target">new</field>
        </record>
        
-       <menuitem 
-            parent="account.menu_finance_legal_statement" 
-            id="final_accounting_reports"
-            name="Accounting Reports"/>
-
         <menuitem icon="STOCK_PRINT"
                 name="Profit And Loss"
                 action="action_pl_balance_account_report"

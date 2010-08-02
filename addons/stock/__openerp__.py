@@ -22,7 +22,7 @@
 {
     "name" : "Inventory Management",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "description" : """OpenERP Inventory Management module can manage multi-warehouses, multi and structured stock locations.
 Thanks to the double entry management, the inventory controlling is powerful and flexible:
 * Moves history and planning,

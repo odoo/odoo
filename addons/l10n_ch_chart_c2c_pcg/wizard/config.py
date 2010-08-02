@@ -62,14 +62,12 @@ class Tax_template(osv.osv_memory):
         }
 
     def _on_change(self, cr, uid, id, tax, vals):
-        if account:
-            self.pool.get('account.tax.template').write(
-                cr, uid, tax, vals=vals)
+        if tax:
+            self.pool.get('account.tax.template').write(cr, uid, tax, vals=vals)
         return {}
 
-    def on_change_collected(self, cr, uid, id, tax, account):
-        return self._on_change(
-            cr, uid, ids, tax, vals={'account_collected_id': account})
+    def on_change_collected(self, cr, uid, ids, tax, account):
+        return self._on_change(cr, uid, ids, tax, vals={'account_collected_id': account})
 
     def on_change_paid(self, cr, uid, id, tax, account):
         return self._on_change(

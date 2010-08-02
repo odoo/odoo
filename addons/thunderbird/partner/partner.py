@@ -81,20 +81,20 @@ class tinythunderbird_partner(osv.osv):
         res = {}
         if partner:
             partner=partner[0]
-            test = address_obj.read(cr,user, partner)
+            data = address_obj.read(cr,user, partner)
             res = {
-                'partner_name': test['partner_id'] and test['partner_id'][1] or '',
-                'contactname': test['name'] or '',
-                'street': test['street'] or '',
-                'street2': test['street2'] or '',
-                'zip': test['zip'] or '',
-                'city': test['city'] or '',
-                'country': test['country_id'] and test['country_id'][0] or '',
-                'state': test['state_id'] and test['state_id'][0] or '',
-                'email': test['email'] or '',
-                'phone': test['phone'] or '',
-                'mobile': test['mobile'] or '',
-                'fax': test['fax'] or '',
+                'partner_name': data['partner_id'] and data['partner_id'][1] or '',
+                'contactname': data['name'] or '',
+                'street': data['street'] or '',
+                'street2': data['street2'] or '',
+                'zip': data['zip'] or '',
+                'city': data['city'] or '',
+                'country': data['country_id'] and data['country_id'][1] or '',
+                'state': data['state_id'] and data['state_id'][1] or '',
+                'email': data['email'] or '',
+                'phone': data['phone'] or '',
+                'mobile': data['mobile'] or '',
+                'fax': data['fax'] or '',
                 'res_id': str(partner),
             }
         return res.items()
@@ -123,7 +123,6 @@ class tinythunderbird_partner(osv.osv):
                                'email': dictcreate['email'],
                                }
         add_obj.write(cr, user,res_id,result )
-
         return True
 
     def thunderbird_createpartner(self,cr,user,vals):

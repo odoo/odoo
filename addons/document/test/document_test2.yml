@@ -1,10 +1,10 @@
-- 
-    In order to test the document management
 -
-    I make sure the default installation has some storage and root directory.
+    In order to test the document management I make sure the default installation has some storage.
 -
     !assert {model: document.storage, id: storage_default }:
       - id != False
+-
+    I make sure the default installation has some root directory.
 -
     !assert {model: document.directory, id: dir_root}:
       - storage_id != False
@@ -19,11 +19,12 @@
     defaults work)
 -
     !record {model: ir.attachment, id: file_test1 }:
-        name: Test file
+        name: Test file.txt
 -
     I delete the attachment from the root folder
 -
-    !delete {model: ir.attachment, id: file_test1, search: }
+    !python {model: ir.attachment}: |
+     self.unlink(cr, uid, [ref('file_test1')])
 -
     I create an attachment into the Testing folder.
 -
@@ -34,13 +35,13 @@
     I update the attachment with data, namely "abcd"
 -
     !record {model: ir.attachment, id: file_test2 }:
-        datas: "abcd"
+        datas: "YWJjZA==\n"
 -
     I test that the datas of the attachment are correct
 -
     !assert {model: ir.attachment, id: file_test2 }:
-        - datas == "abcd\n"
-        - file_size == 5
+        - datas == "YWJjZA==\n"
+        - file_size == 4
         - file_type == 'text/plain'
 -
     I rename the attachment.
@@ -57,9 +58,9 @@
     I create an attachment to a 3rd resource, eg. a res.country
 -
     !record {model: ir.attachment, id: attach_3rd }:
-        name: 'Res country attachment.txt'
+        name: 'Country attachment.txt'
         parent_id: dir_tests
-        datas: 'defg'
+        datas: "Q291bnRyeSBhdHRhY2htZW50IGNvbnRlbnQ=\n"
         res_model: res.country
         res_id: !eval ref("base.za")
 -
@@ -69,4 +70,7 @@
         ids = self.search(cr, uid, [('res_model', '=', 'res.country'), ('res_id', '=', ref("base.za"))])
         assert ids == [ ref("attach_3rd")], ids
 -
-    !delete {model: ir.attachment, id: attach_3rd, search: }
+    I delete the attachment
+-
+    !python {model: ir.attachment}: |
+     self.unlink(cr, uid, [ref('attach_3rd')])

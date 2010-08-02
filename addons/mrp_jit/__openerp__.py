@@ -39,7 +39,7 @@
     
     
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['procurement'],
     'update_xml': ['mrp_jit.xml'],
     'demo_xml': [],

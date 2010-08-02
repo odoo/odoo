@@ -26,8 +26,8 @@ class member_unpaid_invoice(osv.osv_memory):
     _name = "membership.unpaid.invoice"
     _description = "List of Unpaid Partner"
     _columns ={
-        'product': fields.many2one('product.product','Membership product', size=64,required=True, help='Select Membership product'),
-               }
+        'product': fields.many2one('product.product','Membership', size=64,required=True, help='Select Membership.'),
+    }
 
     def invoice_membership(self, cr, uid, ids, context):
         model_obj = self.pool.get('ir.model.data')
@@ -45,7 +45,7 @@ class member_unpaid_invoice(osv.osv_memory):
 
         return {
             'domain': [('id', 'in', partners)],
-            'name': 'Unpaid Partners',
+            'name': 'Unpaid Members',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'res.partner',

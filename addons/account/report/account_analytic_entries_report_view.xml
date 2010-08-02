@@ -71,7 +71,7 @@
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended options..." groups="base.group_extended">
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
 					<field name="currency_id" widget="selection"/>
 					<field name="general_account_id" widget="selection"/>
 					<field name="product_uom_id" widget="selection"/>
@@ -104,6 +104,7 @@
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_entries_report_search"/>
+        <field name="help">A tool search lets you know statistics on your analytics records that match your needs.</field>
     </record>
 
     <menuitem action="action_analytic_entries_report" id="menu_action_analytic_entries_report" parent="account.menu_finance_statistic_report_statement"  sequence="4"/>

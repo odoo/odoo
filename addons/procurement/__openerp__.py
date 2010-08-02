@@ -23,7 +23,7 @@
 {
     "name" : "Procurements",
     "version" : "1.0",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
     "depends" : ["base","process", "product", "stock"],

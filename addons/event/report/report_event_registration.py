@@ -51,6 +51,7 @@ class report_event_registration(osv.osv):
         initialize the sql view for the event registration
         cr -- the cursor
         """
+        tools.drop_view_if_exists(cr, 'report_event_registration')
         cr.execute("""
          create or replace view report_event_registration as (
                 select

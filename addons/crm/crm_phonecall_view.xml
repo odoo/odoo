@@ -38,13 +38,14 @@
         <field name="model">crm.phonecall</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)">
+            <tree colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
                 <field name="date" string="Date"/>
                 <field name="name" string="Call Summary"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_contact"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
+                <field name="categ_id" string="Type"/>
                 <button string="Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"
@@ -107,6 +108,9 @@
                 </group>
                 <group col="2" colspan="2">
                     <separator colspan="2" string="Categorization" />
+                    <field name="categ_id" widget="selection"
+                        domain="[('object_id.model', '=', 'crm.phonecall')]"
+                        string="Type" />
                     <field name="priority"/>
                     <field name="opportunity_id"/>
                 </group>
@@ -182,6 +186,9 @@
                 </group>
                 <group col="2" colspan="2">
                     <separator colspan="2" string="Categorization" />
+                    <field name="categ_id" widget="selection"
+                        domain="[('object_id.model', '=', 'crm.phonecall')]"
+                        string="Type" />
                     <field name="priority"/>
                     <field name="opportunity_id"/>
                 </group>
@@ -209,6 +216,9 @@
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                 <field name="partner_phone"/>
                 <field name="user_id"/>
+                <field name="categ_id" widget="selection"
+                	domain="[('object_id.model', '=', 'crm.phonecall')]"
+                	string="Type" />
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <button string="Opportunity"
@@ -274,7 +284,7 @@
                    select="1" widget="selection" string="Sales Team">
                    <filter icon="terp-personal+"
                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                       help="My Sale Team" />
+                       help="My Sales Team(s)" />
                </field>
                <newline/>
                <group expand="0" string="Group By..." colspan="4">

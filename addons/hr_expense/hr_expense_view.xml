@@ -45,7 +45,7 @@
             <field name="model">hr.expense.expense</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" editable="top">
+                <tree colors="blue:state in ('draft');black:state in ('confirm','accepted','invoiced','paid');gray:state in('cancelled')"  string="Expenses" editable="top">
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="department_id" groups="base.group_extended"/>
@@ -128,7 +128,7 @@
                     <group>
                       <filter icon="terp-document-new" domain="[('state','=','draft')]" string="Draft" help="Draft Expense"/>
                       <separator orientation="vertical"/>
-                      <filter icon="terp-gtk-go-back-rtl" domain="[('state','=','confirm')]" string="To Validate"
+                      <filter icon="terp-gtk-go-back-rtl" domain="[('state','=','confirm')]" string="To Approve"
                         help="Confirmed Expense"/>
                       <filter icon="terp-gtk-go-back-rtl" domain="[('state','=','accepted')]" string="To Pay"
                         help="Expenses to Invoice"/>
@@ -158,6 +158,7 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
+            <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>
         </record>
 
         <menuitem id="next_id_49" name="Expenses" sequence="4" parent="hr.menu_hr_root"/>

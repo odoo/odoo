@@ -25,7 +25,7 @@
     'category': 'Generic Modules/Others',
     'description': """Quality Manual Template
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['wiki'],
     'init_xml': [],

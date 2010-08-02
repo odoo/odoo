@@ -62,6 +62,7 @@ import email_template_engines
 import tools
 import report
 import pooler
+import logging
 
 def get_value(cursor, user, recid, message=None, template=None, context=None):
     """
@@ -99,6 +100,7 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
                 reply = templ.render(Context(env))
             return reply or False
         except Exception:
+            logging.exception("can't render %r", message)
             return u""
     else:
         return message
@@ -131,11 +133,13 @@ class email_template(osv.osv):
                    string="Enforce From Account",
                    help="Emails will be sent only from this account(which are approved)."),
         'from_email' : fields.related('enforce_from_account', 'email_id',
-                                                type='char', string='From',),        
+                                                type='char', string='From',
+                                                help='From Email (select mail account)',
+                                                readonly=True),        
         'def_to':fields.char(
-                 'Recepient (To)',
+                 'Recipient (To)',
                  size=250,
-                 help="The default recepient of email." 
+                 help="The default recipient of email." 
                  "Placeholders can be used here."),
         'def_cc':fields.char(
                  'Default CC',
@@ -170,7 +174,7 @@ class email_template(osv.osv):
         'use_sign':fields.boolean(
                   'Signature',
                   help="the signature from the User details" 
-                  "will be appened to the mail"),
+                  " will be appended to the mail"),
         'file_name':fields.char(
                 'File Name Pattern',
                 size=200,
@@ -543,7 +547,7 @@ class email_template(osv.osv):
         if lang:
             ctx = context.copy()
             ctx.update({'lang':lang})
-            template = self.browse(cursor, user, template_id, context=ctx)
+            template = self.browse(cursor, user, template.id, context=ctx)
         mailbox_values = {
             'email_from': tools.ustr(from_account['name']) + \
                         "<" + tools.ustr(from_account['email_id']) + ">",
@@ -641,7 +645,7 @@ class email_template(osv.osv):
                                                         context=context
                                                               )
             if template.report_template:
-                self._generate_attach_reports(
+                self.generate_attach_reports(
                                               cursor,
                                               user,
                                               template,
