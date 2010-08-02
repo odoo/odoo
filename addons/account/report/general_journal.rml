@@ -299,6 +299,55 @@
     </blockTable>    
     
     <section>
+ 		<blockTable colWidths="80.0,100.0,73.0,80.0,80.0,80.0" style="Table_Journal_Title">[[ display_currency(data)  or removeParentNode('blockTable') ]]
+        <tr>
+          <td>
+            <para style="terp_default_Bold_9">[[ o.name ]] :</para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9">
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit_period(o.id)) ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)) ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+     		<td>
+            <para style="terp_default_Bold_9">
+              <font color="white"> </font>
+            </para>
+          </td>          
+        </tr>
+      </blockTable>    
+ 		<blockTable colWidths="82.0,118.0,83.0,88.0,100.0" style="Table_Journal_Title">[[ display_currency(data)==False  or removeParentNode('blockTable') ]]
+        <tr>
+          <td>
+            <para style="terp_default_Bold_9">[[ o.name ]] :</para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9">
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit_period(o.id)) ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)) ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Bold_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+        </tr>
+      </blockTable>         
       <blockTable colWidths="82.0,118.0,83.0,88.0,100.0" style="Table_Journal_Detail">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
         <tr>
           <td>

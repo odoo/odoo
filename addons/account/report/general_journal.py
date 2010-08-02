@@ -118,6 +118,27 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         if data['model'] == 'account.journal.period':
             return True
         return data['form']['amount_currency']
+        return res
+
+    def _sum_debit_period(self, period_id, journal_id=None):
+        journals = journal_id or self.journal_ids
+        if not journals:
+            return 0.0
+        self.cr.execute('SELECT SUM(debit) FROM account_move_line '
+                        'WHERE period_id=%s AND journal_id IN %s '
+                        'AND state<>\'draft\'',
+                        (period_id, tuple(journals)))
+        return self.cr.fetchone()[0] or 0.0
+
+    def _sum_credit_period(self, period_id, journal_id=None):
+        journals = journal_id or self.journal_ids
+        if not journals:
+            return 0.0
+        self.cr.execute('SELECT SUM(credit) FROM account_move_line '
+                        'WHERE period_id=%s AND journal_id IN %s '
+                        'AND state<>\'draft\'',
+                        (period_id, tuple(journals)))
+        return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header='internal')
 
