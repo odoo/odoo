@@ -137,7 +137,7 @@ module named account_vouchers
         'test/chart_of_account.yml',
         'test/account_period_close.yml',
         'test/account_fiscalyear_close_state.yml',
-        'test/account_invoice_state.yml',
+        #'test/account_invoice_state.yml',
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',
