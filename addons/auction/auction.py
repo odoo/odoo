@@ -428,12 +428,10 @@ class auction_lots(osv.osv):
             res[lot.id] =  total_tax
         return res
 
-    def _is_paid_vnd(self, cr, uid, ids, context=None):
+    def _is_paid_vnd(self, cr, uid, ids, *a):
         res = {}
-        
-        if not context:
-            context={}
-        lots=self.browse(cr, uid, ids, context)
+
+        lots=self.browse(cr, uid, ids)
         for lot in lots:
             res[lot.id] = False
             if lot.sel_inv_id:
