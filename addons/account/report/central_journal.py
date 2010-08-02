@@ -23,7 +23,6 @@ import time
 
 from report import report_sxw
 from common_report_header import common_report_header
-import pooler
 #
 # Use period and Journal for selection or resources
 #
@@ -80,12 +79,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.account_currency = False
 
     def _get_account(self, data):
-        if data['model']=='account.journal.period':
+        if data['model'] == 'account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
         return super(journal_print ,self)._get_account(data)
 
     def _get_fiscalyear(self, data):
-        if data['model']=='account.journal.period':
+        if data['model'] == 'account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).fiscalyear_id.name
         return super(journal_print ,self)._get_fiscalyear(data)
 
