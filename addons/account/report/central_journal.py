@@ -48,10 +48,10 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_sortby': self._get_sortby,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
-            'display_currency':self._display_currency,             
+            'display_currency':self._display_currency,
         })
 
-    def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
+    def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
         self.query_get_clause = ''
         if (data['model'] == 'ir.ui.menu'):
@@ -63,12 +63,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
             res = self.cr.fetchall()
             self.period_ids, self.journal_ids = zip(*res)
-        return super(journal_print, self).set_context(objects, data, ids, report_type)
+        return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
     def lines(self, period_id, journal_id):
         self.cr.execute('SELECT a.currency_id ,a.code, a.name, c.code AS currency_code,l.currency_id ,l.amount_currency ,SUM(debit) AS debit, SUM(credit) AS credit from account_move_line l LEFT JOIN account_account a ON (l.account_id=a.id)  LEFT JOIN res_currency c on (l.currency_id=c.id)WHERE l.period_id=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name,l.amount_currency,c.code , a.currency_id,l.currency_id', (period_id, journal_id))
-        res = self.cr.dictfetchall()
-        return res
+        return self.cr.dictfetchall()
+
     def _set_get_account_currency_code(self, account_id):
         self.cr.execute("SELECT c.code as code "\
                 "FROM res_currency c,account_account as ac "\
@@ -82,17 +82,18 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def _get_account(self, data):
         if data['model']=='account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
-        return super(journal_print ,self)._get_account(data) 
+        return super(journal_print ,self)._get_account(data)
 
     def _get_fiscalyear(self, data):
         if data['model']=='account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).fiscalyear_id.name
-        return super(journal_print ,self)._get_fiscalyear(data) 
-                       
+        return super(journal_print ,self)._get_fiscalyear(data)
+
     def _display_currency(self, data):
-        if data['model']=='account.journal.period':
+        if data['model'] == 'account.journal.period':
             return True
-        return data['form']['amount_currency']             
+        return data['form']['amount_currency']
+
 report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/central_journal.rml', parser=journal_print, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
