@@ -1,8 +1,8 @@
 // constants
-const APP_DISPLAY_NAME = "OpenERP Plugins";
+const APP_DISPLAY_NAME = "OpenERP Thunderbird Plugins";
 const APP_NAME = "OpenERP";
 const APP_VERSION = "1.0";
-const WARNING = "WARNING: You need administrator privileges to install OpenERP Plugin. It will be installed in the application directory for all users.";
+const WARNING = "WARNING: You need administrator privileges to install OpenERP Thunderbird Plugin. It will be installed in the application directory for all users.";
 const VERSION_ERROR = "This extension can only be installed in a version higher than 2.0";
 const NOT_WRITABLE_ERROR = "This extension requires write access to the application directory to install properly."
 const locales = [
@@ -94,7 +94,7 @@ if (!incompatible && confirm(WARNING, APP_DISPLAY_NAME)) {
 		if (err != SUCCESS && err != 999)
 			throw "Committing installation failed (error code " + err + ").";
 
-		alert("OpenERP Plugin " + APP_VERSION + " is now installed.\n" +
+		alert("OpenERP Thunderbird Plugin " + APP_VERSION + " is now installed.\n" +
 					"It will become active after you restart your browser.");
 	}
 	catch (ex) {
