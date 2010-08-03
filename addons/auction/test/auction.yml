@@ -18,12 +18,25 @@
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
+    
 -
   I create a new artist for an object. 
 - 
   !record {model: auction.artists, id: auction_artists_vincentvangogh0}:
     birth_death_dates: 1853-1900
     name: Vincent van Gogh
+ 
+- 
+  I modifying a expenses journal record for analytic journal. 
+- 
+  !record {model: account.journal, id: account.expenses_journal}:
+    analytic_journal_id: account.exp
+- 
+  I modifying a sales journal record for analytic journal. 
+- 
+  !record {model: account.journal, id: account.sales_journal}:
+    analytic_journal_id: account.cose_journal_sale    
+        
 -      
   I'm creating new partner "Mark Johnson" with him email "info@mycustomer.com".
 - 
@@ -58,12 +71,12 @@
     date_dep: '2010-05-18'
     method: keep
     name: AD/006
-    partner_id: res_partner_markjohnson0
+    partner_id: base.res_partner_9
 -
   I create a new object wooden-chair which is to be auctioned.
 -
   !record {model: auction.lots, id: auction_lots_woodenchair0}:
-    ach_uid: base.res_partner_2
+    ach_uid: res_partner_markjohnson0
     artist_id: auction_artists_vincentvangogh0
     auction_id: auction_dates_antiquefurnitureexhibition0
     bord_vnd_id: auction_deposit_ad0
@@ -85,7 +98,7 @@
     auction_id: auction_dates_antiquefurnitureexhibition0
     contact_tel: (+32)2 211 34 83
     name: bid/001
-    partner_id: auction.partner_record1
+    partner_id: res_partner_markjohnson0
 -
   I create a bid line.
 -
@@ -100,7 +113,7 @@
   !record {model: auction.bid, id: auction_bid_bid1}:
     auction_id: auction_dates_antiquefurnitureexhibition0
     name: bid/002
-    partner_id: base.res_partner_2
+    partner_id: res_partner_markjohnson0
 -
   I create a bid line.
 -
