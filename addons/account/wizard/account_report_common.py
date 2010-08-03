@@ -54,13 +54,13 @@ class account_common_report(osv.osv_memory):
             res['arch'] = etree.tostring(doc)
         return res
 
-    def onchange_filter(self, cr, uid, ids, filter='filter_no', context=None):
+    def onchange_filter(self, cr, uid, ids, filter='filter_no', fiscalyear_id=False, context=None):
         res = {}
         if filter == 'filter_no':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False}
         if filter == 'filter_date':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
-        if filter == 'filter_period':
+        if filter == 'filter_period' and fiscalyear_id:
             start_period = end_period = False
             cr.execute('SELECT p.id FROM account_fiscalyear AS f \
                         LEFT JOIN account_period AS p on p.fiscalyear_id=f.id \
@@ -70,7 +70,8 @@ class account_common_report(osv.osv_memory):
                             AND p.date_start IN \
                                 (SELECT max(date_start) from account_period WHERE p.fiscalyear_id = f.id)\
                             OR p.date_stop IN \
-                                (SELECT min(date_stop) from account_period WHERE p.fiscalyear_id = f.id)) ')
+                                (SELECT min(date_stop) from account_period WHERE p.fiscalyear_id = f.id)) \
+                            AND f.id = ' + str(fiscalyear_id) + ' ')
             periods =  [i[0] for i in cr.fetchall()]
             if periods:
                 start_period = periods[0]
