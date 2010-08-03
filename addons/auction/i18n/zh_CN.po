@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-07-15 11:03+0000\n"
+"PO-Revision-Date: 2010-08-03 03:11+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-16 03:39+0000\n"
+"X-Launchpad-Export-Date: 2010-08-03 03:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -34,6 +34,7 @@ msgstr "设为草稿"
 #. module: auction
 #: field:auction.deposit,partner_id:0
 #: view:auction.lots:0
+#: xsl:report.auction.seller.list:0
 #: field:report.deposit.border,seller:0
 #: field:report.seller.auction,seller:0
 #: field:report.seller.auction2,seller:0
@@ -980,6 +981,7 @@ msgid "Antique/Carpet and textilles"
 msgstr ""
 
 #. module: auction
+#: xsl:report.auction.seller.list:0
 #: field:report.object.encoded.manager,adj:0
 msgid "Adj."
 msgstr "最终结果"
@@ -988,6 +990,7 @@ msgstr "最终结果"
 #: field:auction.lot.history,name:0
 #: field:report.attendance,name:0
 #: field:report.auction.adjudication,date:0
+#: xsl:report.auction.deposit:0
 #: field:report.auction.estimation.adj.category,date:0
 msgid "Date"
 msgstr "日期"
@@ -1070,7 +1073,9 @@ msgid "Aie Category"
 msgstr "Aie类别"
 
 #. module: auction
+#: xsl:flagey.huissier:0
 #: rml:report.auction.buyer.result:0
+#: xsl:report.auction.deposit:0
 msgid "Num"
 msgstr "编号"
 
@@ -1249,6 +1254,7 @@ msgstr "登录"
 
 #. module: auction
 #: rml:buyer.list:0
+#: xsl:report.auction.seller.list:0
 msgid "To pay"
 msgstr "支付"
 
@@ -1472,6 +1478,7 @@ msgstr "下一拍卖"
 
 #. module: auction
 #: rml:buyer.list:0
+#: xsl:report.auction.seller.list:0
 msgid "#"
 msgstr "#"
 
@@ -1602,6 +1609,7 @@ msgstr "买家记录集合"
 
 #. module: auction
 #: selection:auction.lots,state:0
+#: xsl:report.auction.ach_bordereau:0
 #: selection:report.object.encoded,state:0
 #: selection:report.unclassified.objects,state:0
 msgid "Paid"
@@ -1641,6 +1649,9 @@ msgstr "古董/ 雕塑, 青铜"
 
 #. module: auction
 #: rml:buyer.list:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.seller.list:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Total:"
 msgstr "合计:"
 
@@ -1811,6 +1822,8 @@ msgstr "允许负数金额"
 #: view:auction.lots:0
 #: rml:auction.total.rml:0
 #: model:ir.ui.menu,name:auction.auction_report_auction_menu
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.deposit:0
 msgid "Auction"
 msgstr "拍卖"
 
@@ -1892,6 +1905,7 @@ msgstr "艺术家"
 
 #. module: auction
 #: field:report.attendance,total_attendance:0
+#: xsl:report.auction.ach_bordereau:0
 msgid "Total"
 msgstr "合计"
 
@@ -2406,6 +2420,11 @@ msgstr "报告登进/ 登出"
 #: view:auction.lots:0
 #: wizard_field:auction.lots.numerotate,search,obj_desc:0
 #: rml:bids.phones.details:0
+#: xsl:flagey.huissier:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.deposit:0
+#: xsl:report.auction.lots.list.landscape:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Description"
 msgstr "说明"
 

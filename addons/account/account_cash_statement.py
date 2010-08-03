@@ -215,7 +215,6 @@ class account_cash_statement(osv.osv):
     }
     _defaults = {
         'state': lambda *a: 'draft',
-        'name': lambda *a: '/',
         'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
         'user_id': lambda self, cr, uid, context=None: uid,
         'company_id': _get_company,
@@ -310,11 +309,16 @@ class account_cash_statement(osv.osv):
         statement_pool = self.pool.get('account.bank.statement')
 
         statement = statement_pool.browse(cr, uid, ids[0])
+        vals = {}
         
         if not self._user_allow(cr, uid, ids, statement, context={}):
             raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
         
-        number = self.pool.get('ir.sequence').get(cr, uid, statement.journal_id.sequence_id.code)
+        if statement.name and statement.name == '/':
+            number = self.pool.get('ir.sequence').get(cr, uid, 'account.cash.statement')
+            vals.update({
+                'name':number
+            })
         
 #        if len(statement.starting_details_ids) > 0:
 #            sid = []
@@ -336,11 +340,11 @@ class account_cash_statement(osv.osv):
 #                }
 #                cash_pool.copy(cr, uid, sid, default)
 #            
-        vals = {
+        vals.update({
             'date':time.strftime("%Y-%m-%d %H:%M:%S"), 
             'state':'open',
-            'name':number
-        }
+            
+        })
         
         self.write(cr, uid, ids, vals)
         return True

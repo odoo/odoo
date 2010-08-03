@@ -150,16 +150,15 @@ class account_move_line(osv.osv):
             if context['journal']:
                 journal_obj=self.pool.get('account.journal').browse(cr, uid, context['journal'])
                 if journal_obj.type == 'purchase':
-                    if total_new>0:
+                    if total_new > 0:
                         account = journal_obj.default_credit_account_id
                     else:
                         account = journal_obj.default_debit_account_id
                 else:
-                    if total_new>0:
+                    if total_new > 0:
                         account = journal_obj.default_credit_account_id
                     else:
                         account = journal_obj.default_debit_account_id
-
 
                 if account and ((not fields) or ('debit' in fields) or ('credit' in fields)) and 'partner_id' in data and (data['partner_id']):
                     part = self.pool.get('res.partner').browse(cr, uid, data['partner_id'])
@@ -546,15 +545,19 @@ class account_move_line(osv.osv):
             id2 =  part.property_account_receivable.id
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
-                if jt == 'sale':
+                #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
+                # Bank and cash journal can have a payment or receipt transection, and in both type partner account 
+                # will not be same id payment then payable, and if receipt then receivable
+                #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
+                if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id2)
-
-                elif jt == 'purchase':
+                elif jt in ('purchase', 'sale_refund', 'expense'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id1)
+                
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
-
+                
         return {'value':val}
 
     def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False):
@@ -881,10 +884,12 @@ class account_move_line(osv.osv):
                 attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
             elif field == 'journal_id':
                 attrs.append("context=\"{'journal_id':journal_id}\"")
-
-            if field in ('amount_currency','currency_id'):
+            elif field == 'statement_id':
+                attrs.append("domain=\"[('state','!=','confirm'),('journal_id.type','=','bank')]\"")
+                
+            if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
-
+            
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
 
