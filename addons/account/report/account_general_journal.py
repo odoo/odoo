@@ -78,7 +78,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         filtered_objs = filter(filter_unique, journal_period_objs)
         return map(lambda x: x.period_id, filtered_objs)
 
-    def lines(self, period_id, journal_id=[]):
+    def lines(self, period_id):
         if not self.journal_ids:
             return []
         self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.code AS currency_code,l.currency_id , '
