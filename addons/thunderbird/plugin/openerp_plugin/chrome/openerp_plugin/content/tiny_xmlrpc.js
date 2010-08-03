@@ -1412,7 +1412,6 @@ function createContact(){
 	strmethod.data = 'create_contact';
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
-
 	var a = ['partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
 	var b = [getPartnerId(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,getSenderEmail()];
 	var arrofarr = dictcontact(a,b);
