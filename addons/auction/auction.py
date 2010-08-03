@@ -182,8 +182,11 @@ auction_deposit_cost()
 def _type_get(self, cr, uid, context=None):
     if not context:
         context = {}
-    cr.execute('select name, name from auction_lot_category order by name')
-    return cr.fetchall()
+    obj = self.pool.get('auction.lot.category')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['name'], context)
+    res = [(r['name'], r['name']) for r in res]   
+    return res 
 
 
 class aie_category(osv.osv):
@@ -301,6 +304,7 @@ class auction_lots(osv.osv):
                  'paid_vnd': False
                  }    
             if name=="buyer_price":
+                
                 montant=lot.obj_price or 0.0
                 if lot.author_right:
                     taxes.append(lot.author_right)
@@ -325,6 +329,7 @@ class auction_lots(osv.osv):
                 res[lot.id]['seller_price'] =  montant+amount_total
                 
             if name=="gross_margin":
+                
                 if ((lot.obj_price==0) and (lot.state=='draft')):
                     montant=lot.lot_est1 or 0.0
                 else:
@@ -336,16 +341,19 @@ class auction_lots(osv.osv):
                 res[lot.id]['gross_margin']=round(total, 2)  
                 
             if name=="gross_revenue":
+                
                 if lot.auction_id:
                     total_tax += lot.buyer_price - lot.seller_price
                 res[lot.id]['gross_revenue'] = total_tax   
                   
             if name=="net_revenue":
+                
                 if lot.auction_id:
                     total_tax += lot.buyer_price -lot.seller_price -lot.costs
                 res[lot.id]['net_revenue'] = total_tax  
                                               
             if name=="net_margin":
+                
                 if ((lot.obj_price==0) and (lot.state=='draft')):
                     montant=lot.lot_est1
                 else: 
@@ -357,11 +365,13 @@ class auction_lots(osv.osv):
                 res[lot.id]['net_margin'] =  total_tax
                    
             if name=="paid_ach":
+                
                 if lot.ach_inv_id:
                     if lot.ach_inv_id.state == 'paid':
                         res[lot.id]['paid_ach'] = True
                                         
             if name=="paid_vnd":
+                
                 if lot.sel_inv_id:
                     if lot.sel_inv_id.state == 'paid':
                         res[lot.id]['paid_vnd']= True       
@@ -521,6 +531,7 @@ class auction_lots(osv.osv):
             #amount+=lot.obj_price
         amount_total['value']= amount
         amount_total['amount']= amount
+        
         return amount_total
 
 
@@ -825,19 +836,19 @@ class auction_lots(osv.osv):
         return invoices.values()
 
 
-    def numerotate(self, cr, uid, ids, context=None):
-                
-        cr.execute('select auction_id from auction_lots where id=%s', (ids[0],))
-        auc_id = cr.fetchone()[0]
-        cr.execute('select max(obj_num) from auction_lots where auction_id=%s', (auc_id,))
-        try:
-            max = cr.fetchone()[0]
-        except:
-            max = 0
-        for id in ids:
-            max+=1
-            cr.execute('update auction_lots set obj_num=%s where id=%s', (max, id))
-        return []
+#    def numerotate(self, cr, uid, ids, context=None):
+#                
+#        cr.execute('select auction_id from auction_lots where id=%s', (ids[0],))
+#        auc_id = cr.fetchone()[0]
+#        cr.execute('select max(obj_num) from auction_lots where auction_id=%s', (auc_id,))
+#        try:
+#            max = cr.fetchone()[0]
+#        except:
+#            max = 0
+#        for id in ids:
+#            max+=1
+#            cr.execute('update auction_lots set obj_num=%s where id=%s', (max, id))
+#        return []
 
 auction_lots()
 
