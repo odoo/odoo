@@ -45,7 +45,6 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
         auction_lots_obj= self.pool.get('auction.lots')
         lots_ids = auction_lots_obj.search(cr, uid, [('ach_uid', '=', ''), ('ach_login', '!=', '')])
         for lots_id in lots_ids:
-            
             for rec in self.pool.get('auction.lots').browse(cr, uid, lots_id, context):
                 if (not rec.ach_uid or not rec.ach_login):
                     res.update(self._start(cr, uid, context.get('active_ids', []), context))
@@ -103,6 +102,8 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view.
         """
+        if not context:
+            context={}
         record_ids = context and context.get('active_ids', []) or []
         res = super(wiz_auc_lots_buyer_map, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         lots_obj = self.pool.get('auction.lots')
