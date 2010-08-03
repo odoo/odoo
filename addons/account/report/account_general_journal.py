@@ -117,6 +117,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return data['form']['amount_currency']
 
     def _sum_debit_period(self, period_id, journal_id=False):
+
         if journal_id:
             journals = [journal_id]
         else:
