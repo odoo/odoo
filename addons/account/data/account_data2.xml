@@ -460,7 +460,6 @@
             <field eval="1" name="number_increment"/>
         </record>
 
-
         <record id="sequence_statement_type" model="ir.sequence.type">
             <field name="name">Bank Statement</field>
             <field name="code">account.bank.statement</field>
@@ -468,10 +467,21 @@
         <record id="sequence_statement" model="ir.sequence">
             <field name="name">Account Bank Statement</field>
             <field name="code">account.bank.statement</field>
-            <field name="prefix">St. %(month)s/%(day)s</field>
+            <field name="prefix">St. %(month)s/%(day)s/</field>
             <field eval="0" name="number_next"/>
             <field eval="1" name="number_increment"/>
         </record>
-
+        
+        <record id="cash_sequence_statement_type" model="ir.sequence.type">
+            <field name="name">Cash Statement</field>
+            <field name="code">account.cash.statement</field>
+        </record>
+        <record id="cash_sequence_statement" model="ir.sequence">
+            <field name="name">Account Cash Statement</field>
+            <field name="code">account.cash.statement</field>
+            <field name="prefix">Cr. %(month)s/%(day)s/</field>
+            <field eval="0" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
     </data>
 </openerp>
