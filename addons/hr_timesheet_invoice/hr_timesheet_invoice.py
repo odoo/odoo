@@ -154,9 +154,10 @@ class account_invoice(osv.osv):
 
         inv = self.browse(cr, uid, [id])[0]
         if inv.type == 'in_invoice':
+            obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:
                 if il['account_analytic_id']:
-                    to_invoice = self.pool.get('account.analytic.account').read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
+                    to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
                     if to_invoice:
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
         return iml

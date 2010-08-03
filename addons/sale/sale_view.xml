@@ -93,14 +93,6 @@
             </field>
         </record>
 
-        <act_window name="Deposit"
-           res_model="sale.advance.payment.inv"
-           src_model="sale.order"
-           view_mode="form"
-           target="new"
-           key2="client_action_multi"
-           id="action_view_sale_advance_payment_inv"/>
-
         <record id="view_order_form" model="ir.ui.view">
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
@@ -205,7 +197,7 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute" attrs="{'invisible':[('state','!=','draft')]}"/>
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>

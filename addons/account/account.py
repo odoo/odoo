@@ -629,8 +629,8 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-#        'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
-#            help="The sequence used for invoice numbers in this journal."),
+        'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
+            help="The sequence used for invoice numbers in this journal."),
         'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
@@ -695,13 +695,13 @@ class account_journal(osv.osv):
                 'sequence_id':seq_id
             })
 
-#        if journal.type in journal_type and not journal.invoice_sequence_id:
-#            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
-#            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
-#            inv_seq_id
-#            res.update({
-#                'invoice_sequence_id':inv_seq_id
-#            })
+        if journal.type in journal_type and not journal.invoice_sequence_id:
+            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
+            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
+            inv_seq_id
+            res.update({
+                'invoice_sequence_id':inv_seq_id
+            })
         
         result = self.write(cr, uid, [journal.id], res)
             
@@ -1620,13 +1620,44 @@ class account_tax(osv.osv):
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        """
+        Returns a list of tupples containing id, name, as internally it is called {def name_get}
+        result format : {[(id, name), (id, name), ...]}
+        
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param name: name to search 
+        @param args: other arguments
+        @param operator: default operator is 'ilike', it can be changed
+        @param context: context arguments, like lang, time zone
+        @param limit: Returns first 'n' ids of complete result, default is 80.
+        
+        @return: Returns a list of tupples containing id and name
+        """
+        if not args:
+            args=[]
+        if not context:
+            context={}
+        ids = []
+        ids = self.search(cr, user, args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        journal_pool = self.pool.get('account.journal')
+        
         if context and context.has_key('type'):
-            if context['type'] in ('out_invoice','out_refund'):
-                args.append(('type_tax_use','in',['sale','all']))
-            elif context['type'] in ('in_invoice','in_refund'):
-                args.append(('type_tax_use','in',['purchase','all']))
+            if context.get('type') in ('out_invoice','out_refund'):
+                args += [('type_tax_use','in',['sale','all'])]
+            elif context.get('type') in ('in_invoice','in_refund'):
+                args += [('type_tax_use','in',['purchase','all'])]
+
+        if context and context.has_key('journal_id'):
+            journal = journal_pool.browse(cr, uid, context.get('journal_id'))
+            if journal.type in ('sale', 'purchase'):
+                args += [('type_tax_use','in',[journal.type,'all'])]
+        
         return super(account_tax, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def name_get(self, cr, uid, ids, context={}):
@@ -1643,6 +1674,7 @@ class account_tax(osv.osv):
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+        
     _defaults = {
         'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
         'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',

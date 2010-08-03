@@ -67,7 +67,6 @@
                     <field name="date_closed" string="Closure Date"/>
                     <field name="categ_id" string="Type" select="1"/>
                     <field name="stage_id" invisible="1"/>
-                    <field name="som" invisible="1"/>
                     <field name="state"/>
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
@@ -209,7 +208,6 @@
                                 <field name="id" select="1"/>
                                 <field name="active"/>
                                 <field name="canal_id"/>
-                                <field name="som"/>
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
                                 <field name="date_closed"/>
@@ -312,10 +310,6 @@
                        <filter string="Closure" icon="terp-go-month"
                            domain="[]" help="Date Closed"
                            context="{'group_by':'date_closed'}" />
-                       <separator orientation="vertical"/>
-                        <filter string="State of Mind"
-                            icon="terp-face-plain"
-                            domain="[]" context="{'group_by':'som'}" />
                    </group>
                </search>
            </field>
