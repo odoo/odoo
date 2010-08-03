@@ -117,15 +117,14 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return data['form']['amount_currency']
 
     def _sum_debit_period(self, period_id, journal_id=False):
-
         if journal_id:
             journals = [journal_id]
         else:
             journals = self.journal_ids
         if not journals:
             return 0.0
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line '
-                        'WHERE period_id=%s AND journal_id IN %s '
+        self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
+                        'WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + ' ' \
                         'AND state<>\'draft\'',
                         (period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
@@ -137,8 +136,8 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             journals = self.journal_ids
         if not journals:
             return 0.0
-        self.cr.execute('SELECT SUM(credit) FROM account_move_line '
-                        'WHERE period_id=%s AND journal_id IN %s '
+        self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
+                        'WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause + ' ' \
                         'AND state<>\'draft\'',
                         (period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
