@@ -61,7 +61,21 @@ class account_common_report(osv.osv_memory):
         if filter == 'filter_date':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
         if filter == 'filter_period':
-            res['value'] = {'period_from': False, 'period_to': False, 'date_from': False, 'date_to': False}
+            start_period = end_period = False
+            cr.execute('SELECT p.id FROM account_fiscalyear AS f \
+                        LEFT JOIN account_period AS p on p.fiscalyear_id=f.id \
+                        WHERE p.id IN \
+                            (SELECT id FROM account_period \
+                            WHERE p.fiscalyear_id = f.id \
+                            AND p.date_start IN \
+                                (SELECT max(date_start) from account_period WHERE p.fiscalyear_id = f.id)\
+                            OR p.date_stop IN \
+                                (SELECT min(date_stop) from account_period WHERE p.fiscalyear_id = f.id)) ')
+            periods =  [i[0] for i in cr.fetchall()]
+            if periods:
+                start_period = periods[0]
+                end_period = periods[1]
+            res['value'] = {'period_from': start_period, 'period_to': end_period, 'date_from': False, 'date_to': False}
         return res
 
     def _get_account(self, cr, uid, context=None):
