@@ -120,7 +120,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         self.account_ids = [a for (a,) in self.cr.fetchall()]
         return super(partner_balance, self).set_context(objects, data, ids, report_type=report_type)
 
-    def lines(self, data):
+    def lines(self):
         full_account = []
         result_tmp = 0.0
         self.cr.execute(
@@ -339,7 +339,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             i = i + 1
         return completearray
 
-    def _sum_debit(self, data):
+    def _sum_debit(self):
         if not self.ids:
             return 0.0
         temp_res = 0.0
@@ -360,7 +360,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             temp_res += float(self.cr.fetchone()[0] or 0.0)
         return temp_res
 
-    def _sum_credit(self, data):
+    def _sum_credit(self):
         if not self.ids:
             return 0.0
         temp_res = 0.0
@@ -381,7 +381,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             temp_res += float(self.cr.fetchone()[0] or 0.0)
         return temp_res
 
-    def _sum_litige(self, data):
+    def _sum_litige(self):
         if not self.ids:
             return 0.0
         temp_res = 0.0
@@ -404,7 +404,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             temp_res += float(self.cr.fetchone()[0] or 0.0)
         return temp_res
 
-    def _sum_sdebit(self, data):
+    def _sum_sdebit(self):
         if not self.ids:
             return 0.0
         result_tmp = 0.0
@@ -427,7 +427,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             result_tmp = 0.0
         return result_tmp
 
-    def _sum_scredit(self, data):
+    def _sum_scredit(self):
         if not self.ids:
             return 0.0
         result_tmp = 0.0
@@ -449,15 +449,15 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             result_tmp = 0.0
         return result_tmp
 
-    def _solde_balance_debit(self, data):
-        debit, credit = self._sum_debit(data), self._sum_credit(data)
+    def _solde_balance_debit(self):
+        debit, credit = self._sum_debit(), self._sum_credit()
         return debit > credit and debit - credit
 
-    def _solde_balance_credit(self, data):
-        debit, credit = self._sum_debit(data), self._sum_credit(data)
+    def _solde_balance_credit(self):
+        debit, credit = self._sum_debit(), self._sum_credit()
         return credit > debit and credit - debit
 
-    def _get_partners(self, data):
+    def _get_partners(self):
         if self.result_selection == 'customer':
             return 'Receivable Accounts'
         elif self.result_selection == 'supplier':
