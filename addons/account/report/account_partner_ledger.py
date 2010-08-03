@@ -296,7 +296,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             return currency_total
 
     def _display_initial_balance(self, data):
-         if self.initial_balance :
+         if self.initial_balance:
              return True
          return False
 
