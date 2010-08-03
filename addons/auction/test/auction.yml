@@ -46,6 +46,7 @@
     method: keep
     name: AD/006
     partner_id: base.res_partner_4
+
 -
   I create a new object wooden-chair which is to be auctioned.
 -
@@ -105,61 +106,15 @@
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
     assert(auc_id.buyer_price,auc_id.seller_price), _('Buyer price and seller price are not available!')
 -
-  I check that a record gets created in the Seller's Summary.
--
-  !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    auc_deposit_obj=self.pool.get('auction.deposit')
-    rep_sell_obj = self.pool.get('report.seller.auction')
-    ids =rep_sell_obj.search(cr, uid, [('auction', '=', auc_id.auction_id.id),('seller', '=',auc_id.bord_vnd_id.partner_id.id)])
-    assert ids, _('No record found!')
--
-  I check that a record gets created in the Seller's Revenues.
--
-  !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    auc_deposit_obj=self.pool.get('auction.deposit')
-    rep_sell_obj = self.pool.get('report.seller.auction2')
-    ids =rep_sell_obj.search(cr, uid, [('auction', '=', auc_id.auction_id.id),('seller', '=',auc_id.bord_vnd_id.partner_id.id)])
-    assert ids, _('No record found!')
--
-  I check that a record gets created in the Buyer's Summary.
--
-  !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id1=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    rep_buy_obj1 = self.pool.get('report.buyer.auction')
-    ids1=rep_buy_obj1.search(cr, uid, [('auction', '=', auc_id1.auction_id.id),('buyer', '=',auc_id1.ach_uid.id)])
-    assert ids1, _('No record found!')
--
-  I check that a record gets created in the Buyer's Revenue.
--
-  !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id1=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    rep_buy_obj1 = self.pool.get('report.buyer.auction2')
-    ids1=rep_buy_obj1.search(cr, uid, [('auction', '=', auc_id1.auction_id.id),('buyer', '=',auc_id1.ach_uid.id)])
-    assert ids1, _('No record found!')
--
+
   I check that a record gets created in the Auction's Summary.
 -
   !python {model: auction.lots}: |
     from tools.translate import _
     auc_id2=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    rep_auc_obj1 = self.pool.get('report.auction.view')
-    ids2=rep_auc_obj1.search(cr, uid, [('auction_id', '=', auc_id2.auction_id.id)])
-    assert ids2, _('No record found!')
--
-  I check that a record gets created in the Auction's Revenues.
--
-  !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id3=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    rep_auc_obj1 = self.pool.get('report.auction.view2')
-    ids3=rep_auc_obj1.search(cr, uid, [('auction', '=', auc_id3.auction_id.id)])
-    assert ids3, _('No record found!')
+    rep_auc_obj1 = self.pool.get('report.auction')
+    ids2=rep_auc_obj1.search(cr, uid, [('auction', '=', auc_id2.auction_id.id)])
+    assert ids2, _('No record found!')   
 -
   An object has been sold,so I click on the "Sold" button.
 -
@@ -174,6 +129,7 @@
     from tools.translate import _
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
     assert(auc_id.state == 'sold'), _('State not changed!')
+        
 -
   Then I click on the Taken Away button.
 -
@@ -189,7 +145,7 @@
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
     assert(auc_id.state == 'taken_away'), _('State not changed!')
 -
-  I click on the "Close + Create all invoices" button
+  I click on the "Create all invoices" button
 -
   !python {model: auction.dates}: |
     self.close(cr, uid, [ref("auction.auction_dates_antiquefurnitureexhibition0")],
@@ -202,3 +158,4 @@
     from tools.translate import _
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
     assert(auc_id.sel_inv_id), _('Seller Invoice has not been created!') 
+    
