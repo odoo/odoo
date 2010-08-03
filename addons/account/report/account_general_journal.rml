@@ -309,13 +309,13 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit_period(o.id, o.journal_id.id)) ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit_period(o.id)) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id, o.journal_id.id)) ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)) ]]</para>
           </td>
           <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id, o.journal_id.id)-sum_debit_period(o.id, o.journal_id.id)) ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)-sum_debit_period(o.id)) ]]</para>
 
           </td>
      		<td>
