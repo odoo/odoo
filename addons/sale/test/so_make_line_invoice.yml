@@ -134,7 +134,6 @@
  I click on the "Create Invoice" button of sale order and verify that it gives a warning message
 -
   !python {model: sale.order}: |
-    sale_order_obj = self.pool.get('sale.order')
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     try:
