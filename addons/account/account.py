@@ -1636,7 +1636,6 @@ class account_tax(osv.osv):
         
         @return: Returns a list of tupples containing id and name
         """
-        
         if not args:
             args=[]
         if not context:
@@ -1646,6 +1645,8 @@ class account_tax(osv.osv):
         return self.name_get(cr, user, ids, context=context)
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        journal_pool = self.pool.get('account.journal')
+        
         if context and context.has_key('type'):
             if context.get('type') in ('out_invoice','out_refund'):
                 args += [('type_tax_use','in',['sale','all'])]
@@ -1653,7 +1654,9 @@ class account_tax(osv.osv):
                 args += [('type_tax_use','in',['purchase','all'])]
 
         if context and context.has_key('journal_id'):
-            args += [('type_tax_use','in',[context.get('journal_id'),'all'])]
+            journal = journal_pool.browse(cr, uid, context.get('journal_id'))
+            if journal.type in ('sale', 'purchase'):
+                args += [('type_tax_use','in',[journal.type,'all'])]
         
         return super(account_tax, self).search(cr, uid, args, offset, limit, order, context, count)
 
