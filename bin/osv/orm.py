@@ -2785,7 +2785,7 @@ class orm(orm_template):
         :param ids: id or list of the ids of the records to read
         :param fields: optional list of field names to return (default: all fields would be returned)
         :type fields: list (example ['field_name_1', ...])
-        :param context(optional, highly recommended): context arguments, like lang, time zone
+        :param context: (optional) context arguments, like lang, time zone
         :return: list of dictionaries((dictionary per record asked)) with requested field values
         :rtype: [{‘name_of_the_field’: value, ...}, ...]
         :raise AccessError: * if user has no read rights on the requested object
@@ -3068,7 +3068,7 @@ class orm(orm_template):
         :param cr: database cursor
         :param uid: current user id
         :param ids: id or list of ids
-        :param context(optional, highly recommended): context arguments, like lang, time zone
+        :param context: (optional) context arguments, like lang, time zone
         :return: True
         :raise AccessError: * if user has no unlink rights on the requested object
                             * if user tries to bypass access rules for unlink on the requested object
@@ -3120,39 +3120,46 @@ class orm(orm_template):
 
         :param cr: database cursor
         :param user: current user id
-        :type user: integer (example 1)
-        :param ids: id or list of ids
-        :param vals: dictionary of field values to update
-        :type vals: dictionary (example {'field_name': 'value', ...})
-        :param context(optional, highly recommended): context arguments, like lang, time zone
+        :type user: integer
+        :param ids: object id or list of object ids to update according to **vals**
+        :param vals: field values to update, e.g {'field_name': new_field_value, ...}
+        :type vals: dictionary
+        :param context: (optional) context arguments, e.g. {'lang': 'en_us', 'tz': 'UTC', ...}
+        :type context: dictionary
         :return: True
         :raise AccessError: * if user has no write rights on the requested object
                             * if user tries to bypass access rules for write on the requested object
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
-        :raise UserError: if recurssion is found
+        :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
 
-        vals format for relational field type.
+        **Note**: The type of field values to pass in ``vals`` for relationship fields is specific:
 
-            + many2many field :
+            + For a many2many field, a list of tuples is expected.
+              Here is the list of tuple that are accepted, with the corresponding semantics ::
 
-                For write operation on a many2many fields a list of tuple is
-                expected. The folowing tuples are accepted:
-                 (0, 0,  { fields })    create
-                 (1, ID, { fields })    update (write fields to ID)
-                 (2, ID)                remove (calls unlink on ID, that will also delete the relationship because of the ondelete)
-                 (3, ID)                unlink (delete the relationship between the two objects but does not delete ID)
-                 (4, ID)                link (add a relationship)
-                 (5, ID)                unlink all
-                 (6, 0, list of ids)    set a list of links
+                 (0, 0,  { values })    link to a new record that needs to be created with the given values dictionary
+                 (1, ID, { values })    update the linked record with id = ID (write *values* on it)
+                 (2, ID)                remove and delete the linked record with id = ID (calls unlink on ID, that will delete the object completely, and the link to it as well)
+                 (3, ID)                cut the link to the linked record with id = ID (delete the relationship between the two objects but does not delete the target object itself)
+                 (4, ID)                link to existing record with id = ID (adds a relationship)
+                 (5)                    unlink all (like using (3,ID) for all linked records)
+                 (6, 0, [IDs])          replace the list of linked IDs (like using (5) then (4,ID) for each ID in the list of IDs)
 
-                Example:
+                 Example:
+                    [(6, 0, [8, 5, 6, 4])] sets the many2many to ids [8, 5, 6, 4]
 
-                    [(6, 0, [8, 5, 6, 4])] set the many2many to ids [8, 5, 6, 4]
+            + For a one2many field, a lits of tuples is expected.
+              Here is the list of tuple that are accepted, with the corresponding semantics ::
 
-            + one2many field : [(0, 0, dictionary of values)] (example: [(0, 0, {'field_name':field_value, ...})])
-            + many2one field : ID of related record
-            + reference field :  model name, id (example: 'product.product, 5')
+                 (0, 0,  { values })    link to a new record that needs to be created with the given values dictionary
+                 (1, ID, { values })    update the linked record with id = ID (write *values* on it)
+                 (2, ID)                remove and delete the linked record with id = ID (calls unlink on ID, that will delete the object completely, and the link to it as well)
 
+                 Example:
+                    [(0, 0, {'field_name':field_value_record1, ...}), (0, 0, {'field_name':field_value_record2, ...})]
+
+            + For a many2one field, simply use the ID of target record, which must already exist, or ``False`` to remove the link.
+            + For a reference field, use a string with the model name, a comma, and the target object id (example: ``'product.product, 5'``)
 
         """
         readonly = None
@@ -3383,22 +3390,20 @@ class orm(orm_template):
 
         :param cr: database cursor
         :param user: current user id
-        :type user: integer (example 1)
-        :param vals: dictionary for new record {'field_name': field_value, ...}
-        :type vals: dictionary (example {'field_name': field_value, ...})
-        :param context(optional, highly recommended): context arguments, like lang, time zone
-        :type context: dictionary (example {'lang': 'en_us', ...})
+        :type user: integer
+        :param vals: field values for new record, e.g {'field_name': field_value, ...}
+        :type vals: dictionary
+        :param context: optional context arguments, e.g. {'lang': 'en_us', 'tz': 'UTC', ...}
+        :type context: dictionary
         :return: id of new record created
         :raise AccessError: * if user has no create rights on the requested object
                             * if user tries to bypass access rules for create on the requested object
         :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
+        :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
 
-        vals format for relational field type.
-
-            + many2many field : [(6, 0, list of ids)] (example: [(6, 0, [8, 5, 6, 4])])
-            + one2many field : [(0, 0, dictionary of values)] (example: [(0, 0, {'field_name':field_value, ...})])
-            + many2one field : ID of related record
-            + reference field :  model name, id (example: 'product.product, 5')
+        **Note**: The type of field values to pass in ``vals`` for relationship fields is specific.
+        Please see the description of the :py:meth:`~osv.osv.osv.write` method for details about the possible values and how
+        to specify them.
 
         """
         if not context:
@@ -3747,24 +3752,44 @@ class orm(orm_template):
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
         """
-        Search for record/s with or without domain
+        Search for record/s based on a search domain.
 
         :param cr: database cursor
         :param user: current user id
-        :param args: list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
-        :param offset: optional number from search starts
-        :param limit: optional max number of records to return
+        :param args: list of tuples specifying the search domain [('field_name', 'operator', value), ...]. Pass an empty list to match all records.
+        :param offset: optional number of results to skip in the returned values (default: 0)
+        :param limit: optional max number of records to return (default: **None**)
         :param order: optional columns to sort by (default: self._order=id )
-        :param context(optional, highly recommended): context arguments, like lang, time zone
-        :param count: if True, returns only the number of records matching the criteria, not their ids
+        :param context: optional context arguments, like lang, time zone
+        :type context: dictionary
+        :param count: optional (default: **False**), if **True**, returns only the number of records matching the criteria, not their ids
         :return: id or list of ids of records matching the criteria
         :rtype: integer or list of integers
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
 
-        Operators:
-            *  =, !=, >, >=, <, <=, like, ilike, in, not in, child_of, parent_left, parent_right
-        Prefix operators:
-            * '&' (default), '|', '!'
+        **Expressing a search domain (args)**
+
+        Each tuple in the search domain needs to have 3 elements, in the form: **('field_name', 'operator', value)**, where:
+
+            * **field_name** must be a valid name of field of the object model, possibly following many-to-one relationships using dot-notation, e.g 'street' or 'partner_id.country' are valid values.
+            * **operator** must be a string with a valid comparison operator from this list: ``=, !=, >, >=, <, <=, like, ilike, in, not in, child_of, parent_left, parent_right``
+              The semantics of most of these operators are obvious.
+              The ``child_of`` operator will look for records who are children or grand-children of a given record,
+              according to the semantics of this model (i.e following the relationship field named by
+              ``self._parent_name``, by default ``parent_id``.
+            * **value** must be a valid value to compare with the values of **field_name**, depending on its type.
+
+        Domain criteria can be combined using 3 logical operators than can be added between tuples:  '**&**' (logical AND, default), '**|**' (logical OR), '**!**' (logical NOT).
+        These are **prefix** operators and the arity of the '**&**' and '**|**' operator is 2, while the arity of the '**!**' is just 1.
+        Be very careful about this when you combine them the first time.
+
+        Here is an example of searching for Partners named *ABC* from Belgium and Germany whose language is not english ::
+
+            [('name','=','ABC'),'!',('language.code','=','en_US'),'|',('country_id.code','=','be'),('country_id.code','=','de'))
+
+        The '&' is omitted as it is the default, and of course we could have used '!=' for the language, but what this domain really represents is::
+
+            (name is 'ABC' AND (language is NOT english) AND (country is Belgium OR Germany))
 
         """
         if context is None:
@@ -3829,9 +3854,10 @@ class orm(orm_template):
 
         :param cr: database cursor
         :param user: current user id
-        :type user: integer (example 1)
+        :type user: integer
         :param ids: list of ids
         :param context: context arguments, like lang, time zone
+        :type context: dictionary
         :return: tuples with the text representation of requested objects for to-many relationships
 
         """
@@ -3867,10 +3893,12 @@ class orm(orm_template):
         :param args: list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
         :param operator: operator for search criterion
         :param context: context arguments, like lang, time zone
+        :type context: dictionary
         :param limit: optional max number of records to return
         :return: list of object names matching the search criteria, used to provide completion for to-many relationships
 
-        This method is equivalent of search() on name + name_get()
+        This method is equivalent of :py:meth:`~osv.osv.osv.search` on **name** + :py:meth:`~osv.osv.osv.name_get` on the result.
+        See :py:meth:`~osv.osv.osv.search` for an explanation of the possible values for the search domain specified in **args**.
 
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
@@ -3881,9 +3909,11 @@ class orm(orm_template):
 
         :param cr: database cursor
         :param user: current user id
-        :param ids: id of the record to copy
-        :param default: dictionary of field values to update before saving the duplicate object
+        :param id: id of the record to copy
+        :param default: field values to override in the original values of the copied record
+        :type default: dictionary
         :param context: context arguments, like lang, time zone
+        :type context: dictionary
         :return: dictionary containing all the field values
         """
 
@@ -3902,7 +3932,7 @@ class orm(orm_template):
         if 'lang' in context:
             del context_wo_lang['lang']
         data = self.read(cr, uid, [id], context=context_wo_lang)[0]
-        
+
         fields = self.fields_get(cr, uid, context=context)
         for f in fields:
             ftype = fields[f]['type']
@@ -3992,9 +4022,10 @@ class orm(orm_template):
         :param cr: database cursor
         :param uid: current user id
         :param id: id of the record to copy
-        :param default: dictionary of field values to update before saving the duplicate object
-        :type default: dictionary (example {'field_name': field_value, ...})
+        :param default: dictionary of field values to override in the original values of the copied record, e.g: ``{'field_name': overriden_value, ...}``
+        :type default: dictionary
         :param context: context arguments, like lang, time zone
+        :type context: dictionary
         :return: True
 
         """
@@ -4012,13 +4043,15 @@ class orm(orm_template):
 
     def check_recursion(self, cr, uid, ids, parent=None):
         """
-        Check recursion in records
+        Verifies that there is no loop in a hierarchical structure of records,
+        by following the parent relationship using the **parent** field until a loop
+        is detected or until a top-level record is found.
 
         :param cr: database cursor
         :param uid: current user id
-        :param ids: list of ids of records
-        :param parent: parent field name
-        :return: True or False based on recursion detection
+        :param ids: list of ids of records to check
+        :param parent: optional parent field name (default: ``self._parent_name = parent_id``)
+        :return: **True** if the operation can proceed safely, or **False** if an infinite loop is detected.
         """
 
         if not parent:
@@ -4041,12 +4074,13 @@ class orm(orm_template):
         """Find out the XML ID of any database record, if there
         is one. This method works as a possible implementation
         for a function field, to be able to add it to any
-        model object easily, referencing it as 'osv.osv.get_xml_id'.
+        model object easily, referencing it as ``osv.osv.get_xml_id``.
 
-        get_xml_id(cr, uid, ids) -> { 'id': 'module.xml_id' }
+        **Synopsis**: ``get_xml_id(cr, uid, ids) -> { 'id': 'module.xml_id' }``
 
         :return: the fully qualified XML ID of the given object,
-                 defaulting to an empty string when there's none.
+                 defaulting to an empty string when there's none
+                 (to be usable as a function field).
         """
         result = dict.fromkeys(ids, '')
         model_data_obj = self.pool.get('ir.model.data')
