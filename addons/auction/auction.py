@@ -302,76 +302,69 @@ class auction_lots(osv.osv):
                  'net_revenue': False,
                  'paid_ach': False,
                  'paid_vnd': False
-                 }    
-            if name=="buyer_price":
+                 }
                 
-                montant=lot.obj_price or 0.0
+            if name=="buyer_price":
+                amount=lot.obj_price or 0.0
                 if lot.author_right:
                     taxes.append(lot.author_right)
                 if lot.auction_id:
                     taxes += lot.auction_id.buyer_costs
-                tax=pt_tax.compute_all(cr, uid, taxes, montant, 1)['taxes']
+                tax=pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
                 for t in tax:
                     amount_total+=t['amount']
-                amount_total += montant
+                amount_total += amount
                 res[lot.id]['buyer_price'] = amount_total
                 
             if name=="seller_price":
-                
-                montant=lot.obj_price or 0.0
+                amount=lot.obj_price or 0.0
                 if lot.bord_vnd_id.tax_id:
                     taxes.append(lot.bord_vnd_id.tax_id)
                 elif lot.auction_id and lot.auction_id.seller_costs:
                     taxes += lot.auction_id.seller_costs
-                tax=pt_tax.compute_all(cr, uid, taxes, montant, 1)['taxes']
+                tax=pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
                 for t in tax:
                     amount_total+=t['amount']
-                res[lot.id]['seller_price'] =  montant+amount_total
+                res[lot.id]['seller_price'] =  amount+amount_total
                 
             if name=="gross_margin":
-                
                 if ((lot.obj_price==0) and (lot.state=='draft')):
-                    montant=lot.lot_est1 or 0.0
+                    amount=lot.lot_est1 or 0.0
                 else:
-                    montant=lot.obj_price or 0.0
-                if montant>0:
-                    total=(lot.gross_revenue*100.0) /montant
+                    amount=lot.obj_price or 0.0
+                if amount>0:
+                    total=(lot.gross_revenue*100.0) /amount
                 else:
                     total = 0.0
                 res[lot.id]['gross_margin']=round(total, 2)  
                 
             if name=="gross_revenue":
-                
                 if lot.auction_id:
                     total_tax += lot.buyer_price - lot.seller_price
                 res[lot.id]['gross_revenue'] = total_tax   
                   
             if name=="net_revenue":
-                
                 if lot.auction_id:
                     total_tax += lot.buyer_price -lot.seller_price -lot.costs
                 res[lot.id]['net_revenue'] = total_tax  
                                               
             if name=="net_margin":
-                
                 if ((lot.obj_price==0) and (lot.state=='draft')):
-                    montant=lot.lot_est1
+                    amount=lot.lot_est1
                 else: 
-                    montant=lot.obj_price
-                if montant>0:
-                    total_tax += (lot.net_revenue*100)/montant
+                    amount=lot.obj_price
+                if amount>0:
+                    total_tax += (lot.net_revenue*100)/amount
                 else:
                     total_tax=0
                 res[lot.id]['net_margin'] =  total_tax
                    
             if name=="paid_ach":
-                
                 if lot.ach_inv_id:
                     if lot.ach_inv_id.state == 'paid':
                         res[lot.id]['paid_ach'] = True
                                         
             if name=="paid_vnd":
-                
                 if lot.sel_inv_id:
                     if lot.sel_inv_id.state == 'paid':
                         res[lot.id]['paid_vnd']= True       
@@ -834,7 +827,6 @@ class auction_lots(osv.osv):
         #   wf_service.trg_validate(uid, 'account.invoice',l.id, 'invoice_proforma', cr)
             wf_service.trg_validate(uid, 'account.invoice', l.id, 'invoice_open', cr)
         return invoices.values()
-
 
 #    def numerotate(self, cr, uid, ids, context=None):
 #                
