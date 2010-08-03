@@ -56,7 +56,7 @@ class auction_lots_make_invoice(osv.osv_memory):
         lots_obj = self.pool.get('auction.lots') 
         for lot in lots_obj.browse(cr, uid, context.get('active_ids', [])):
             if 'amount' in fields:
-                res.update({'amount': lot.buyer_price})                
+                res.update({'amount': lot.seller_price})                
             if 'objects' in fields:
                 res.update({'objects': len(context.get('active_ids', []))})   
         return res               

@@ -86,7 +86,6 @@ class auction_dates(osv.osv):
         'state': fields.selection((('draft', 'Draft'), ('closed', 'Closed')), 'State', select=1, readonly=True, 
                                   help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'), 
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True), 
-
     }
     
     _defaults = {
@@ -180,6 +179,13 @@ auction_deposit_cost()
 # Lots Categories
 #----------------------------------------------------------
 
+def _type_get(self, cr, uid, context=None):
+    if not context:
+        context = {}
+    cr.execute('select name, name from auction_lot_category order by name')
+    return cr.fetchall()
+
+
 class aie_category(osv.osv):
     
     _name="aie.category"
@@ -187,7 +193,7 @@ class aie_category(osv.osv):
     _columns={
        'name': fields.char('Name', size=64, required=True), 
        'code':fields.char('Code', size=64), 
-       'parent_id': fields.many2one('aie.category', 'Parent aie Category'), 
+       'parent_id': fields.many2one('aie.category', 'Parent aie Category', ondelete='cascade'), 
        'child_ids': fields.one2many('aie.category', 'parent_id', help="Childs aie category")       
     }
     
@@ -217,18 +223,12 @@ class auction_lot_category(osv.osv):
         'name': fields.char('Category Name', required=True, size=64), 
         'priority': fields.float('Priority'), 
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."), 
-        'aie_categ': fields.many2one('aie.category', 'Category'), 
+        'aie_categ': fields.many2one('aie.category', 'Category', ondelete='cascade'), 
     }
     _defaults = {
         'active' : lambda *a: 1, 
     }
 auction_lot_category()
-
-def _type_get(self, cr, uid, context=None):
-    if not context:
-        context = {}
-    cr.execute('select name, name from auction_lot_category order by name')
-    return cr.fetchall()
 
 #----------------------------------------------------------
 # Lots
@@ -270,95 +270,101 @@ class auction_lots(osv.osv):
             context={}
         return self.write(cr, uid, ids, {'state':'sold'})
 
-    def _buyerprice(self, cr, uid, ids, name, args, context=None):
-        """This Function compute amount total with tax for buyer.
+    def _getprice(self, cr, uid, ids, name, args, context=None):
+        """This Function compute amount total with tax for buyer and seller.
         @param ids: List of  auction lots's id
-        @param name: List of function field(buyer_price).
+        @param name: List of function fields.
         @param context: A standard dictionary for contextual values
-        @return: Dictionary of function field "buyer price" value.
+        @return: Dictionary of function fields value.
         """
         if not context:
             context={}
-        
+        name=name[0]    
         res={}
-        lots = self.browse(cr, uid, ids, context={})
+        lots = self.browse(cr, uid, ids, context)
         pt_tax=self.pool.get('account.tax')
         for lot in lots:
             amount_total=0.0
+            total_tax = 0.0
     #       if ((lot.obj_price==0) and (lot.state=='draft')):
     #           montant=lot.lot_est1
     #       else:
-            montant=lot.obj_price or 0.0
             taxes = []
-            if lot.author_right:
-                taxes.append(lot.author_right)
-            if lot.auction_id:
-                taxes += lot.auction_id.buyer_costs
-            tax=pt_tax.compute_all(cr, uid, taxes, montant, 1)['taxes']
-            for t in tax:
-                amount_total+=t['amount']
-            amount_total += montant
-            res[lot.id] = amount_total
-        return res
-
-    def _sellerprice(self, cr, uid, ids, *a):
-        """This Function compute amount total with tax for seller.
-        @param ids: List of  auction lots's id
-        @param name: List of function field(seller_price).
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary of function field "buyer price" value.
-        """
-        res={}
-        lots=self.browse(cr, uid, ids)
-        pt_tax=self.pool.get('account.tax')
-        for lot in lots:
-            amount_total=0.0
-        #   if ((lot.obj_price==0) and (lot.state=='draft')):
-        #       montant=lot.lot_est1
-        #   else:
-            montant=lot.obj_price
-            taxes = []
-            if lot.bord_vnd_id.tax_id:
-                taxes.append(lot.bord_vnd_id.tax_id)
-            elif lot.auction_id and lot.auction_id.seller_costs:
-                taxes += lot.auction_id.seller_costs
-            tax=pt_tax.compute_all(cr, uid, taxes, montant, 1)['taxes']
-            for t in tax:
-                amount_total+=t['amount']
-            res[lot.id] =  montant+amount_total
-        return res
-
-    def _grossprice(self, cr, uid, ids, name, args, context=None):
-        """gross revenue"""
-        res={}
-        if not context:
-            context={}
-        lots = self.browse(cr, uid, ids, context)
-        for lot in lots:
-            total_tax = 0.0
-            if lot.auction_id:
-                total_tax += lot.buyer_price - lot.seller_price
-            res[lot.id] = total_tax
-        return res
-
-    def _grossmargin(self, cr, uid, ids, name, args, context=None):
-        """
-        gross Margin : Gross revenue * 100 / Adjudication
-        (state==unsold or obj_ret_price>0): adj_price = 0 (=> gross margin = 0, net margin is negative)
-        """
-        res={}
-        if not context:
-            context={}
-        for lot in self.browse(cr, uid, ids, context={}):
-            if ((lot.obj_price==0) and (lot.state=='draft')):
-                montant=lot.lot_est1
-            else:
-                montant=lot.obj_price
-            if lot.obj_price>0:
-                total=(lot.gross_revenue*100.0) /lot.obj_price
-            else:
-                total = 0.0
-            res[lot.id]=round(total, 2)
+            res[lot.id]={
+                 'buyer_price': False,
+                 'seller_price': False,
+                 'gross_margin': False,
+                 'gross_revenue': False,
+                 'net_margin': False,
+                 'net_revenue': False,
+                 'paid_ach': False,
+                 'paid_vnd': False
+                 }    
+            if name=="buyer_price":
+                montant=lot.obj_price or 0.0
+                if lot.author_right:
+                    taxes.append(lot.author_right)
+                if lot.auction_id:
+                    taxes += lot.auction_id.buyer_costs
+                tax=pt_tax.compute_all(cr, uid, taxes, montant, 1)['taxes']
+                for t in tax:
+                    amount_total+=t['amount']
+                amount_total += montant
+                res[lot.id]['buyer_price'] = amount_total
+                
+            if name=="seller_price":
+                
+                montant=lot.obj_price or 0.0
+                if lot.bord_vnd_id.tax_id:
+                    taxes.append(lot.bord_vnd_id.tax_id)
+                elif lot.auction_id and lot.auction_id.seller_costs:
+                    taxes += lot.auction_id.seller_costs
+                tax=pt_tax.compute_all(cr, uid, taxes, montant, 1)['taxes']
+                for t in tax:
+                    amount_total+=t['amount']
+                res[lot.id]['seller_price'] =  montant+amount_total
+                
+            if name=="gross_margin":
+                if ((lot.obj_price==0) and (lot.state=='draft')):
+                    montant=lot.lot_est1 or 0.0
+                else:
+                    montant=lot.obj_price or 0.0
+                if montant>0:
+                    total=(lot.gross_revenue*100.0) /montant
+                else:
+                    total = 0.0
+                res[lot.id]['gross_margin']=round(total, 2)  
+                
+            if name=="gross_revenue":
+                if lot.auction_id:
+                    total_tax += lot.buyer_price - lot.seller_price
+                res[lot.id]['gross_revenue'] = total_tax   
+                  
+            if name=="net_revenue":
+                if lot.auction_id:
+                    total_tax += lot.buyer_price -lot.seller_price -lot.costs
+                res[lot.id]['net_revenue'] = total_tax  
+                                              
+            if name=="net_margin":
+                if ((lot.obj_price==0) and (lot.state=='draft')):
+                    montant=lot.lot_est1
+                else: 
+                    montant=lot.obj_price
+                if montant>0:
+                    total_tax += (lot.net_revenue*100)/montant
+                else:
+                    total_tax=0
+                res[lot.id]['net_margin'] =  total_tax
+                   
+            if name=="paid_ach":
+                if lot.ach_inv_id:
+                    if lot.ach_inv_id.state == 'paid':
+                        res[lot.id]['paid_ach'] = True
+                                        
+            if name=="paid_vnd":
+                if lot.sel_inv_id:
+                    if lot.sel_inv_id.state == 'paid':
+                        res[lot.id]['paid_vnd']= True       
         return res
 
     def onchange_obj_ret(self, cr, uid, ids, obj_ret, context=None):
@@ -396,59 +402,6 @@ class auction_lots(osv.osv):
             res[lot.id]=som/lot_count
         return res
 
-    def _netprice(self, cr, uid, ids, name, args, context=None):
-        """This is the net revenue"""
-        res={}
-        if not context:
-            context={}
-        lots = self.browse(cr, uid, ids, context)
-        for lot in lots:
-            total_tax = 0.0
-            if lot.auction_id:
-                total_tax += lot.buyer_price -lot.seller_price -lot.costs
-            res[lot.id] = total_tax
-        return res
-
-    def _netmargin(self, cr, uid, ids, name, args, context=None):
-        res={}
-        if not context:
-            context={}
-        total_tax = 0.0
-        total=0.0
-        montant=0.0
-        auction_lots = self.browse(cr, uid, ids, context)
-        for lot in auction_lots:
-            if ((lot.obj_price==0) and (lot.state=='draft')):
-                montant=lot.lot_est1
-            else: montant=lot.obj_price
-            if montant>0:
-                total_tax += (lot.net_revenue*100)/montant
-            else:
-                total_tax=0
-            res[lot.id] =  total_tax
-        return res
-
-    def _is_paid_vnd(self, cr, uid, ids, *a):
-        res = {}
-
-        lots=self.browse(cr, uid, ids)
-        for lot in lots:
-            res[lot.id] = False
-            if lot.sel_inv_id:
-                if lot.sel_inv_id.state == 'paid':
-                    res[lot.id] = True
-        return res
-    
-    def _is_paid_ach(self, cr, uid, ids, *a):
-        res = {}
-        lots=self.browse(cr, uid, ids)
-        for lot in lots:
-            res[lot.id] = False
-            if lot.ach_inv_id:
-                if lot.ach_inv_id.state == 'paid':
-                    res[lot.id] = True
-        return res
-                        
     _columns = {
         'bid_lines':fields.one2many('auction.bid_line', 'lot_id', 'Bids'), 
         'auction_id': fields.many2one('auction.dates', 'Auction Date', select=1), 
@@ -482,9 +435,9 @@ class auction_lots(osv.osv):
         'vnd_lim': fields.float('Seller limit'), 
         'vnd_lim_net': fields.boolean('Net limit ?', readonly=True), 
         'image': fields.binary('Image'), 
-        'paid_vnd':fields.function(_is_paid_vnd, string='Seller Paid', method=True, type='boolean', store=True), 
+        'paid_vnd':fields.function(_getprice, string='Seller Paid', method=True, type='boolean', store=True, multi="paid_vnd"), 
         #'paid_vnd':fields.boolean('Seller Paid', readonly=True), 
-        'paid_ach':fields.function(_is_paid_ach, string='Buyer invoice reconciled', method=True, type='boolean', store=True), 
+        'paid_ach':fields.function(_getprice, string='Buyer invoice reconciled', method=True, type='boolean', store=True, multi="paid_ach"), 
         'state': fields.selection((
             ('draft', 'Draft'), 
             ('unsold', 'Unsold'), 
@@ -495,14 +448,14 @@ class auction_lots(osv.osv):
                 \n* The \'Unsold\' state is used when object does not sold for long time, user can also set it as draft state after unsold. \
                 \n* The \'Paid\' state is used when user pay for the object \
                 \n* The \'Sold\' state is used when user buy the object.'), 
-        'buyer_price': fields.function(_buyerprice, method=True, string='Buyer price', store=True), 
-        'seller_price': fields.function(_sellerprice, method=True, string='Seller price', store=True), 
-        'gross_revenue':fields.function(_grossprice, method=True, string='Gross revenue', store=True), 
-        'gross_margin':fields.function(_grossmargin, method=True, string='Gross Margin (%)', store=True), 
+        'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price"), 
+        'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price"), 
+        'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue"), 
+        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin"), 
         'costs':fields.function(_costs, method=True, string='Indirect costs', store=True), 
         'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment'), 
-        'net_revenue':fields.function(_netprice, method=True, string='Net revenue', store=True), 
-        'net_margin':fields.function(_netmargin, method=True, string='Net Margin (%)', store=True), 
+        'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue"), 
+        'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin"), 
     }
     _defaults = {
         'state':lambda *a: 'draft', 
@@ -551,7 +504,7 @@ class auction_lots(osv.osv):
     def compute_buyer_costs(self, cr, uid, ids):
         amount_total = {}
         lots = self.browse(cr, uid, ids)
-##CHECKME: est-ce que ca vaudrait la peine de faire des groupes de lots qui ont les memes couts pour passer des listes de lots a compute?
+##CHECKME: Is that AC would be worthwhile to make groups of lots that have the same costs to spend a lot of lists compute?
         taxes = []
         amount=0.0
         pt_tax = self.pool.get('account.tax')
@@ -656,7 +609,7 @@ class auction_lots(osv.osv):
     # sum remise limite net and ristourne
     def compute_seller_costs_summed(self, cr, uid, ids): #ach_pay_id
         
-        """Compute Seller Costs"""
+        """This Fuction  sum Net remittance limit and refund"""
         
         taxes = self.compute_seller_costs(cr, uid, ids)
         taxes_summed = {}
