@@ -48,6 +48,14 @@ class stock_period(osv.osv):
     _defaults = {
         'state': 'draft'
     }
+    
+    def button_open(self, cr, uid, ids, context):
+        self.write(cr, uid, ids, {'state': 'open'})
+        return True
+    
+    def button_close(self, cr, uid, ids, context):
+        self.write(cr, uid, ids, {'state': 'close'})
+        return True
 
 stock_period()
 
@@ -60,14 +68,14 @@ class stock_sale_forecast(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=True),
         'create_uid': fields.many2one('res.users', 'Responsible'),
         'name': fields.char('Name', size=64, readonly=True, states={'draft': [('readonly',False)]}),
-        'user_id': fields.many2one('res.users' , 'Created/Validated by',readonly=True, \
+        'user_id': fields.many2one('res.users', 'Created/Validated by',readonly=True, \
                                         help='Shows who created this forecast, or who validated.'),
-        'warehouse_id': fields.many2one('stock.warehouse' , 'Warehouse', required=True, readonly=True, states={'draft': [('readonly',False)]}, \
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, readonly=True, states={'draft': [('readonly',False)]}, \
                                         help='Shows which warehouse this forecast concerns. '\
                                          'If during stock planning you will need sales forecast for all warehouses choose any warehouse now.'),
-        'period_id': fields.many2one('stock.period' , 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
+        'period_id': fields.many2one('stock.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
                                         help = 'Shows which period this forecast concerns.'),
-        'product_id': fields.many2one('product.product' , 'Product', readonly=True, required=True, states={'draft':[('readonly',False)]}, \
+        'product_id': fields.many2one('product.product', 'Product', readonly=True, required=True, states={'draft':[('readonly',False)]}, \
                                         help = 'Shows which product this forecast concerns.'),
         'product_qty': fields.float('Product Quantity', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
                                         help= 'Forecasted quantity.'),
@@ -81,13 +89,13 @@ class stock_sale_forecast(osv.osv):
 # Field used in onchange_uom to check what uom was before change and recalculate quantities acording to old uom (active_uom) and new uom.
         'active_uom': fields.many2one('product.uom',  string = "Active UoM"),
         'state': fields.selection([('draft','Draft'),('validated','Validated')],'State',readonly=True),
-        'analyzed_period1_id': fields.many2one('stock.period' , 'Period1', readonly=True, states={'draft':[('readonly',False)]},),
-        'analyzed_period2_id': fields.many2one('stock.period' , 'Period2', readonly=True, states={'draft':[('readonly',False)]},),
-        'analyzed_period3_id': fields.many2one('stock.period' , 'Period3', readonly=True, states={'draft':[('readonly',False)]},),
-        'analyzed_period4_id': fields.many2one('stock.period' , 'Period4', readonly=True, states={'draft':[('readonly',False)]},),
+        'analyzed_period1_id': fields.many2one('stock.period', 'Period1', readonly=True, states={'draft':[('readonly',False)]},),
+        'analyzed_period2_id': fields.many2one('stock.period', 'Period2', readonly=True, states={'draft':[('readonly',False)]},),
+        'analyzed_period3_id': fields.many2one('stock.period', 'Period3', readonly=True, states={'draft':[('readonly',False)]},),
+        'analyzed_period4_id': fields.many2one('stock.period', 'Period4', readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_period5_id': fields.many2one('stock.period' , 'Period5', readonly=True, states={'draft':[('readonly',False)]},),
-        'analyzed_user_id': fields.many2one('res.users' , 'This User', required=False, readonly=True, states={'draft':[('readonly',False)]},),
-        'analyzed_dept_id': fields.many2one('hr.department' , 'This Department', required=False, \
+        'analyzed_user_id': fields.many2one('res.users', 'This User', required=False, readonly=True, states={'draft':[('readonly',False)]},),
+        'analyzed_dept_id': fields.many2one('hr.department', 'This Department', required=False, \
                                     readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_warehouse_id': fields.many2one('stock.warehouse' , 'This Warehouse', required=False, \
                                     readonly=True, states={'draft':[('readonly',False)]}),
@@ -192,7 +200,7 @@ class stock_sale_forecast(osv.osv):
     def _to_default_uom_factor(self, cr, uid, val, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
-        coef =  uom.factor
+        coef = uom.factor
         if uom.category_id.id <> val.product_id.uom_id.category_id.id:
             coef = coef / val.product_id.uos_coeff
         return val.product_id.uom_id.factor / coef
@@ -245,7 +253,7 @@ class stock_sale_forecast(osv.osv):
                     dept_ids = dept_obj.search(cr,uid,[('parent_id','child_of',dept_id)])
 #                    dept_ids_set = ','.join(map(str,dept_ids))
 #                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN %s)" ,(tuple(dept_ids),))
-                    cr.execute("SELECT id FROM hr_employee WHERE (department_id IN %s)" ,(tuple(dept_ids),))
+                    cr.execute("SELECT user_id FROM resource_resource rsc, hr_employee emp WHERE (emp.resource_id = rsc.id and emp.department_id IN %s)" ,(tuple(dept_ids),))
                     dept_users = [x for x, in cr.fetchall()]
 #                    dept_users_set =  ','.join(map(str,dept_users))
                     dept_users_set =  map(str,dept_users)
