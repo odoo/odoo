@@ -26,8 +26,8 @@ class purchase_order_line(osv.osv):
     _name='purchase.order.line'
     _inherit='purchase.order.line'
     _columns = {
-        'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
-                }
+         'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
+    }
 
 purchase_order_line()
 
