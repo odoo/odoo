@@ -68,9 +68,9 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             per_ids = self.pool.get('account.period').browse(self.cr, self.uid, form['periods'])
             for r in per_ids:
                 if r == per_ids[len(per_ids)-1]:
-                    result+=r.name+". "
+                    result += r.name + ". "
                 else:
-                    result+=r.name+", "
+                    result += r.name + ", "
         else:
             fy_obj = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear'])
             res = fy_obj.period_ids
@@ -99,13 +99,18 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
     def set_context(self, objects, data, ids, report_type=None):
         ## Compute Code
         #
-        if (data['form']['result_selection'] == 'customer' ):
+        self.initial_balance = data['form'].get('initial_balance', True)
+        self.query = data['form'].get('query_line', '')
+        self.init_query = data['form'].get('initial_bal_query', '')
+        self.result_selection = data['form'].get('result_selection')
+
+        if (self.result_selection == 'customer' ):
             self.ACCOUNT_TYPE = ('receivable',)
-        elif (data['form']['result_selection'] == 'supplier'):
+        elif (self.result_selection == 'supplier'):
             self.ACCOUNT_TYPE = ('payable',)
         else:
             self.ACCOUNT_TYPE = ('payable', 'receivable')
-        #
+
         self.cr.execute("SELECT a.id " \
                 "FROM account_account a " \
                 "LEFT JOIN account_account_type t " \
@@ -113,10 +118,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     "WHERE a.type IN %s " \
                     "AND a.active", (self.ACCOUNT_TYPE,))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
-        self.initial_balance = data['form']['initial_balance'] # for include initial balance
-        self.query = data['form'].get('query_line', '')
-        self.init_query = data['form'].get('initial_bal_query', '')
-        return super(partner_balance, self).set_context(objects, data, ids, report_type)
+        return super(partner_balance, self).set_context(objects, data, ids, report_type=report_type)
 
     def lines(self, data):
         full_account = []
@@ -140,7 +142,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
             "JOIN account_account ac ON (l.account_id = ac.id)" \
             "WHERE ac.type IN %s " \
-                " AND " + self.query + "" \
+            "AND " + self.query + "" \
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
             "ORDER BY l.account_id,p.name",
             (self.ACCOUNT_TYPE,))
@@ -456,11 +458,11 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return credit > debit and credit - debit
 
     def _get_partners(self, data):
-        if data['form']['result_selection'] == 'customer':
+        if self.result_selection == 'customer':
             return 'Receivable Accounts'
-        elif data['form']['result_selection'] == 'supplier':
+        elif self.result_selection == 'supplier':
             return 'Payable Accounts'
-        elif data['form']['result_selection'] == 'customer_supplier':
+        elif self.result_selection == 'customer_supplier':
             return 'Receivable and Payable Accounts'
         return ''
 

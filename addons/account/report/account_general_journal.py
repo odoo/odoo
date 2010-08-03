@@ -23,9 +23,7 @@ import time
 
 from common_report_header import common_report_header
 from report import report_sxw
-#
-# Use period and Journal for selection or resources
-#
+
 class journal_print(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
@@ -88,16 +86,15 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         'FROM account_move_line l '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
                         'LEFT JOIN res_currency c on (l.currency_id=c.id)'
-                        'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +''
-                        'GROUP BY j.id, j.code, j.name, l.amount_currency,c.code,l.currency_id ',
+                        'WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + ''
+                        'GROUP BY j.id, j.code, j.name, l.amount_currency,c.code, l.currency_id ',
                         (period_id, tuple(self.journal_ids)))
-
         return self.cr.dictfetchall()
 
     def _set_get_account_currency_code(self, account_id):
         self.cr.execute("SELECT c.code AS code "\
-                "FROM res_currency c, account_account AS ac "\
-                "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
+                        "FROM res_currency c, account_account AS ac "\
+                        "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()
         if result:
             self.account_currency = result[0]
@@ -105,20 +102,19 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.account_currency = False
 
     def _get_account(self, data):
-        if data['model']=='account.journal.period':
+        if data['model'] == 'account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).company_id.name
         return super(journal_print ,self)._get_account(data)
 
     def _get_fiscalyear(self, data):
-        if data['model']=='account.journal.period':
+        if data['model'] == 'account.journal.period':
             return self.pool.get('account.journal.period').browse(self.cr, self.uid, data['id']).fiscalyear_id.name
-        return super(journal_print ,self)._get_fiscalyear(data)
+        return super(journal_print, self)._get_fiscalyear(data)
 
     def _display_currency(self, data):
         if data['model'] == 'account.journal.period':
             return True
         return data['form']['amount_currency']
-        return res
 
     def _sum_debit_period(self, period_id, journal_id=None):
         journals = journal_id or self.journal_ids

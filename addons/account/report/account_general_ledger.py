@@ -75,7 +75,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         self.context = context
 
     def _sum_currency_amount_account(self, account, form):
-        #FIXME: not working
         self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s" %(account.id, self.query))
@@ -84,7 +83,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
                             "FROM account_move_line l "\
                             "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
-            # Add initial balance to the result
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
 
@@ -94,7 +92,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc):
             sql = """
                 SELECT count(id)
-                FROM account_move_line l
+                FROM account_move_line AS l
                 WHERE %s AND l.account_id = %%s
             """ % (self.query)
             self.cr.execute(sql, (child_account.id,))

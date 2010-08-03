@@ -26,7 +26,6 @@ from lxml import etree
 
 from osv import fields, osv
 from tools.translate import _
-import tools
 
 class account_common_report(osv.osv_memory):
     _name = "account.common.report"
@@ -82,7 +81,7 @@ class account_common_report(osv.osv_memory):
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
-                }
+    }
 
     def _build_periods(self, cr, uid, period_from, period_to):
         period_obj = self.pool.get('account.period')

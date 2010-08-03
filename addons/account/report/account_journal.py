@@ -23,9 +23,7 @@ import time
 
 from common_report_header import common_report_header
 from report import report_sxw
-#
-# Use period and Journal for selection or resources
-#
+
 class journal_print(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
@@ -77,9 +75,9 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return obj_mline.browse(self.cr, self.uid, ids)
 
     def _set_get_account_currency_code(self, account_id):
-        self.cr.execute("SELECT c.code as code "\
-                "FROM res_currency c,account_account as ac "\
-                "WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
+        self.cr.execute("SELECT c.code AS code "\
+                "FROM res_currency c,account_account AS ac "\
+                "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
         result = self.cr.fetchone()
         if result:
             self.account_currency = result[0]

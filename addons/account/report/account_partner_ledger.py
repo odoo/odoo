@@ -21,7 +21,6 @@
 
 import time
 import re
-import datetime
 
 import rml_parse
 from report import report_sxw
@@ -30,8 +29,6 @@ from common_report_header import common_report_header
 class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
-        self.date_lst = []
-        self.date_lst_string = ''
         super(third_party_ledger, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
@@ -58,27 +55,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             'display_currency':self._display_currency,
         })
 
-
-    def comma_me(self, amount):
-        if  type(amount) is float :
-            amount = str('%.2f'%amount)
-        else :
-            amount = str(amount)
-        if (amount == '0'):
-             return ' '
-        orig = amount
-        new = re.sub("^(-?\d+)(\d{3})", "\g<1>'\g<2>", amount)
-        if orig == new:
-            return new
-        else:
-            return self.comma_me(new)
-
-    def special_map(self):
-        string_map = ''
-        for date_string in self.date_lst:
-            string_map = date_string + ','
-        return string_map
-
     def set_context(self, objects, data, ids, report_type=None):
         self.query = data['form'].get('query_line', '')
         self.init_query = data['form'].get('initial_bal_query', '')
@@ -91,7 +67,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             ## Si on imprime depuis les partenaires
             if ids:
                 PARTNER_REQUEST =  "AND line.partner_id IN %s",(tuple(ids),)
-
         if self.result_selection == 'supplier':
             self.ACCOUNT_TYPE = ['payable']
         elif self.result_selection == 'customer':
@@ -108,7 +83,6 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
                 "AND a.active", (tuple(self.ACCOUNT_TYPE), ))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
         partner_to_use = []
-
         self.cr.execute(
                 "SELECT DISTINCT l.partner_id " \
                 "FROM account_move_line AS l, account_account AS account " \
@@ -122,11 +96,25 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
 
         res = self.cr.dictfetchall()
         for res_line in res:
-                partner_to_use.append(res_line['partner_id'])
+            partner_to_use.append(res_line['partner_id'])
         new_ids = partner_to_use
         self.partner_ids = new_ids
         objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
-        super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
+        return super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
+
+    def comma_me(self, amount):
+        if type(amount) is float :
+            amount = str('%.2f'%amount)
+        else :
+            amount = str(amount)
+        if (amount == '0'):
+             return ' '
+        orig = amount
+        new = re.sub("^(-?\d+)(\d{3})", "\g<1>'\g<2>", amount)
+        if orig == new:
+            return new
+        else:
+            return self.comma_me(new)
 
     def lines(self, partner):
         full_account = []
@@ -162,8 +150,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             "AND reconcile_id IS NULL  " \
             "AND " + self.init_query + "  ",
             (partner.id, tuple(self.account_ids)))
-        res = self.cr.fetchall()
-        return res
+        return self.cr.fetchall()
 
     def _sum_debit_partner(self, partner):
         result_tmp = 0.0
