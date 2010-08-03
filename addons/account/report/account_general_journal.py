@@ -116,8 +116,11 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return True
         return data['form']['amount_currency']
 
-    def _sum_debit_period(self, period_id, journal_id=None):
-        journals = journal_id or self.journal_ids
+    def _sum_debit_period(self, period_id, journal_id=False):
+        if journal_id:
+            journals = [journal_id]
+        else:
+            journals = self.journal_ids
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(debit) FROM account_move_line '
@@ -127,7 +130,10 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit_period(self, period_id, journal_id=None):
-        journals = journal_id or self.journal_ids
+        if journal_id:
+            journals = [journal_id]
+        else:
+            journals = self.journal_ids
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line '
