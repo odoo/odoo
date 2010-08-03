@@ -18,14 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
-from mx import DateTime
 
 from osv import fields, osv
-import netsvc
-import ir
-import pooler
-from tools import config
+
 
 class purchase_order_line(osv.osv):
     _name='purchase.order.line'
