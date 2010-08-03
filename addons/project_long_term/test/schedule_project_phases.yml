@@ -136,8 +136,8 @@
 -
   !python {model: project.project}: |
      prj=self.browse(cr, uid, [ref("project_project_worldbanksproject0")])[0]
-     for task in prj.tasks:
-     	if (not task.user_id) or (not task.date_start) or (not task.date_end):
+     for phase in prj.phase_ids:
+        if (not phase.responsible_id) or (not phase.date_start) or (not phase.date_end):
      	   raise AssertionError("Tasks not scheduled")      
       
    

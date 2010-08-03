@@ -1601,8 +1601,8 @@ class account_tax(osv.osv):
         #
         # Fields used for the VAT declaration
         #
-        'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
+        'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the VAT declaration."),
+        'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the VAT declaration."),
         'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
