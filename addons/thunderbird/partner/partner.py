@@ -26,47 +26,24 @@ import base64
 import netsvc
 from tools.translate import _
 
-class tinythunderbird_partner(osv.osv):
-
-    def _links_get(self, cr, uid, context={}):
-        obj = self.pool.get('res.request.link')
-        ids = obj.search(cr, uid, [])
-        res = obj.read(cr, uid, ids, ['object', 'name'], context)
-
-        return [(r['object'], r['name']) for r in res]
-
-    _name = "tinythunderbird.partner"
+class thunderbird_partner(osv.osv_memory):
+    _name = "thunderbird.partner"
     _description="Thunderbid mails"
     _rec_name="sender"
-    _columns = {
-                'sender':fields.char("Sender",size=128,required=True,select=True),
-                'receiver':fields.text("Receiver"),
-                "copy_to":fields.text("Copy To"),
-                "date":fields.date("Date",select=True),
-                "title":fields.char("Subject",size=128,select=True),
-                "description":fields.text("Description"),
-                "reference":fields.reference("Reference", selection=_links_get, size=128),
-                "res_user_id":fields.many2one("res.users","User"),
-                "attachments":fields.text("Attached Files",readonly=True),
-                }
-    _defaults = {
-                 'res_user_id':lambda obj,cr,uid,context: uid,
-                 'date': lambda *a: time.strftime('%Y-%m-%d')
-                 }
-
+   
     def mailcreate(self,cr,user,vals):
         dictcreate = dict(vals)
         import email
         header_name = email.Header.decode_header(dictcreate['name'])
         dictcreate['name'] = header_name and header_name[0] and header_name[0][0]
-        address_obj=self.pool.get('res.partner.address')
-        case_pool=self.pool.get(dictcreate.get('object','crm.lead'))
-        partner_ids=address_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
-        partner=address_obj.read(cr,user,partner_ids,['partner_id','name'])
+        address_obj = self.pool.get('res.partner.address')
+        case_pool = self.pool.get(dictcreate.get('object','crm.lead'))
+        partner_ids = address_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
+        partner = address_obj.read(cr,user,partner_ids,['partner_id','name'])
         if partner and partner[0] and partner[0]['partner_id']:
             dictcreate.update({'partner_id':partner[0]['partner_id'][0],'partner_name':partner[0]['name']})
         create_id = case_pool.create(cr, user, dictcreate)
-        cases=case_pool.browse(cr,user,[create_id])
+        cases = case_pool.browse(cr,user,[create_id])
         case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)
         return create_id
 
@@ -248,4 +225,4 @@ class tinythunderbird_partner(osv.osv):
                 object += "null,"
         return object
 
-tinythunderbird_partner()
+thunderbird_partner()
