@@ -54,15 +54,15 @@ class tinythunderbird_partner(osv.osv):
                  'date': lambda *a: time.strftime('%Y-%m-%d')
                  }
 
-    def thunderbird_mailcreate(self,cr,user,vals):
+    def mailcreate(self,cr,user,vals):
         dictcreate = dict(vals)
         import email
         header_name = email.Header.decode_header(dictcreate['name'])
         dictcreate['name'] = header_name and header_name[0] and header_name[0][0]
-        add_obj=self.pool.get('res.partner.address')
+        address_obj=self.pool.get('res.partner.address')
         case_pool=self.pool.get(dictcreate.get('object','crm.lead'))
-        partner_ids=add_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
-        partner=add_obj.read(cr,user,partner_ids,['partner_id','name'])
+        partner_ids=address_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
+        partner=address_obj.read(cr,user,partner_ids,['partner_id','name'])
         if partner and partner[0] and partner[0]['partner_id']:
             dictcreate.update({'partner_id':partner[0]['partner_id'][0],'partner_name':partner[0]['name']})
         create_id = case_pool.create(cr, user, dictcreate)
@@ -70,12 +70,12 @@ class tinythunderbird_partner(osv.osv):
         case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)
         return create_id
 
-    def thunderbird_createcontact(self,cr,user,vals):
+    def create_contact(self,cr,user,vals):
         dictcreate = dict(vals)
         create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
         return create_id
 
-    def thunderbird_tempsearch_address(self, cr, user, vals):
+    def search_contact(self, cr, user, vals):
         address_obj = self.pool.get('res.partner.address')
         partner = address_obj.search(cr, user,[('email','=',vals)])
         res = {}
@@ -99,15 +99,15 @@ class tinythunderbird_partner(osv.osv):
             }
         return res.items()
 
-    def thunderbird_newcreatecontact(self,cr,user,vals):
+    def update_contact(self,cr,user,vals):
         dictcreate = dict(vals)
         res_id = dictcreate.get('res_id',False)
         result={}
         if res_id:
             dictcreate.pop('res_id')
-            add_obj = self.pool.get('res.partner.address')
-            add_data = add_obj.read(cr, user, int(res_id), [])
-            result={           'partner_id': add_data['partner_id'] and add_data['partner_id'][0] or False,
+            address_obj = self.pool.get('res.partner.address')
+            address_data = address_obj.read(cr, user, int(res_id), [])
+            result={           'partner_id': address_data['partner_id'] and address_data['partner_id'][0] or False,
                                'country_id': dictcreate['country_id'] and int(dictcreate['country_id'][0]) or False,
                                'state_id': dictcreate['state_id'] and int(dictcreate['state_id'][0]) or False,
                                'name': dictcreate['name'],
@@ -115,41 +115,39 @@ class tinythunderbird_partner(osv.osv):
                                'street2': dictcreate['street2'],
                                'zip': dictcreate['zip'],
                                'city': dictcreate['city'],
-#                               'country_id': dictcreate['country_id'][0],
-#                               'state_id': dictcreate['state_id'],
                                'phone': dictcreate['phone'],
                                'fax': dictcreate['fax'],
                                'mobile': dictcreate['mobile'],
                                'email': dictcreate['email'],
                                }
-        add_obj.write(cr, user,res_id,result )
+        address_obj.write(cr, user,res_id,result )
         return True
 
-    def thunderbird_createpartner(self,cr,user,vals):
+    def create_partner(self,cr,user,vals):
         dictcreate = dict(vals)
-        address_obj = self.pool.get('res.partner')
-        search_id = address_obj.search(cr, user,[('name','=',dictcreate['name'])])
+        partner_obj = self.pool.get('res.partner')
+        search_id =  partner_obj.search(cr, user,[('name','=',dictcreate['name'])])
         if search_id:
             return 0
-        create_id = address_obj.create(cr, user, dictcreate)
+        create_id =  partner_obj.create(cr, user, dictcreate)
         return create_id
 
-    def thunderbird_searchobject(self,cr,user,vals):
+    def search_document(self,cr,user,vals):
         dictcreate = dict(vals)
         search_id = self.pool.get('ir.model').search(cr, user,[('model','=',dictcreate['model'])])
         return (search_id and search_id[0]) or 0
 
-    def thunderbird_searchcontact(self,cr,user,vals):
-        address_obj = self.pool.get('res.partner.address')
-        search_id1 = address_obj.search(cr,user,[('name','ilike',vals)])
-        search_id2 = address_obj.search(cr,user,[('email','=',vals)])
-        if search_id1:
-            return address_obj.name_get(cr, user, search_id1)
-        elif search_id2:
-            return address_obj.name_get(cr, user, search_id2)
-        return []
+#    def thunderbird_searchcontact(self,cr,user,vals):
+#        address_obj = self.pool.get('res.partner.address')
+#        search_id1 = address_obj.search(cr,user,[('name','ilike',vals)])
+#        search_id2 = address_obj.search(cr,user,[('email','=',vals)])
+#        if search_id1:
+#            return address_obj.name_get(cr, user, search_id1)
+#        elif search_id2:
+#            return address_obj.name_get(cr, user, search_id2)
+#        return []
 
-    def thunderbird_tempsearch(self,cr,user,vals):
+    def search_checkbox(self,cr,user,vals):
         if vals[0]:
             value = vals[0][0]
         if vals[1]:
@@ -181,7 +179,7 @@ class tinythunderbird_partner(osv.osv):
             name_get.append(er_val)
         return name_get
 
-    def thunderbird_attachment(self,cr,user,vals):
+    def create_attachment(self,cr,user,vals):
         dictcreate = dict(vals)
         datas = [dictcreate['datas']]
         name = [dictcreate['name']]
@@ -197,11 +195,11 @@ class tinythunderbird_partner(osv.osv):
             create_id = self.pool.get('ir.attachment').create(cr,user,dictcreate)
         return 0
 
-    def thunderbird_login(self,cr,user,vals):
-        dictcreate = dict(vals)
-        service = netsvc.LocalService('common')
-        res = service.login(dictcreate['db'],dictcreate['login'],dictcreate['passwd'])
-        return res or 0
+#    def thunderbird_login(self,cr,user,vals):
+#        dictcreate = dict(vals)
+#        service = netsvc.LocalService('common')
+#        res = service.login(dictcreate['db'],dictcreate['login'],dictcreate['passwd'])
+#        return res or 0
 
     def read(self, cr, user, ids, fields=None, context={}, load='_classic_read'):
          ret_read = super(tinythunderbird_partner, self).read(cr, user, ids,fields,context,load)
@@ -220,7 +218,7 @@ class tinythunderbird_partner(osv.osv):
         attach_obj.unlink(cr,uid,attachments)
         return super(tinythunderbird_partner, self).unlink(cr, uid, ids,context)
 
-    def thunderbird_objectsearch(self,cr,user,vals):
+    def list_alldocument(self,cr,user,vals):
         obj_list= [('crm.lead','Lead'),('project.issue','Project Issue'), ('hr.applicant','HR Recruitment')]
         object=[]
         model_obj = self.pool.get('ir.model')
@@ -229,18 +227,18 @@ class tinythunderbird_partner(osv.osv):
                 object.append(obj)
         return object
 
-    def thunderbird_objectcountry(self,cr,user,vals):
+    def list_allcountry(self,cr,user,vals):
         country_list = []
         cr.execute("SELECT id, name from res_country")
         country_list = cr.fetchall()
         return country_list
 
-    def thunderbird_objectstate(self,cr,user,vals):
+    def list_allstate(self,cr,user,vals):
         cr.execute("SELECT id, name from res_country_state")
         state_country_list = cr.fetchall()
         return state_country_list
 
-    def thunderbird_list_search_object(self,cr,user,vals):
+    def search_document_attachment(self,cr,user,vals):
         model_obj = self.pool.get('ir.model')
         object=''
         for obj in vals[0][1].split(','):
