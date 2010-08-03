@@ -920,7 +920,6 @@ class sale_order_line(osv.osv):
                 })
                 cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
                 self.write(cr, uid, [line.id], {'invoiced': True})
-
                 sales[line.order_id.id] = True
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -935,11 +934,11 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
-            for pick in line.order_id.picking_ids:
-                if pick.state != 'cancel':
+            for move_line in line.move_ids:
+                if move_line.state != 'cancel':
                     raise osv.except_osv(
                             _('Could not cancel sale order line!'),
-                            _('You must first cancel all pickings attached with sale order.'))
+                            _('You must first cancel stock moves attached to this sale order line.'))
         message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
         self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})
