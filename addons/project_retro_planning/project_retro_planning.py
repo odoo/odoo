@@ -35,12 +35,13 @@ class project_project(osv.osv):
                 if prj.date:
                     old_end_date = date(*time.strptime(prj.date,'%Y-%m-%d')[:3])
                     for task in prj.tasks:
-                        start_dt = (datetime(*time.strptime(task.date_start,'%Y-%m-%d  %H:%M:%S')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
-                        if task.date_deadline:
-                            deadline_dt = (datetime(*time.strptime(task.date_deadline,'%Y-%m-%d')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
-                            self.pool.get('project.task').write(cr, uid, task.id, {'date_start':start_dt, 'date_deadline':deadline_dt})
-                        else:
-                            self.pool.get('project.task').write(cr, uid, task.id, {'date_start':start_dt})
+                        if task.date_start:
+                            start_dt = (date(*time.strptime(str(task.date_start),'%Y-%m-%d  %H:%M:%S')[:3])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
+                            if task.date_deadline:
+                                deadline_dt = (datetime(*time.strptime(str(task.date_deadline),'%Y-%m-%d')[:3])+(new_end_date-old_end_date)).strftime('%Y-%m-%d')
+                                self.pool.get('project.task').write(cr, uid, task.id, {'date_start':start_dt, 'date_deadline':deadline_dt})
+                            else:
+                                self.pool.get('project.task').write(cr, uid, task.id, {'date_start':start_dt})
         return super(project_project,self).write(cr, uid, ids, vals, *args, **kwargs)
 
 project_project()
