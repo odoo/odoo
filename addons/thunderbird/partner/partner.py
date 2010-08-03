@@ -30,8 +30,9 @@ class thunderbird_partner(osv.osv_memory):
     _name = "thunderbird.partner"
     _description="Thunderbid mails"
     _rec_name="sender"
-   
+
     def mailcreate(self,cr,user,vals):
+        print "vvvvvvvvvvv",vals
         dictcreate = dict(vals)
         import email
         header_name = email.Header.decode_header(dictcreate['name'])
@@ -49,6 +50,8 @@ class thunderbird_partner(osv.osv_memory):
 
     def create_contact(self,cr,user,vals):
         dictcreate = dict(vals)
+        if not eval(dictcreate.get('partner_id')):
+            dictcreate.update({'partner_id': False})
         create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
         return create_id
 
@@ -81,7 +84,7 @@ class thunderbird_partner(osv.osv_memory):
         res_id = dictcreate.get('res_id',False)
         if res_id:
             address_obj = self.pool.get('res.partner.address')
-            result={           
+            result={
                 'partner_id': dictcreate.get('partner_id',False),
                 'country_id': dictcreate.get('country_id', False),
                 'state_id': dictcreate('state_id', False),
