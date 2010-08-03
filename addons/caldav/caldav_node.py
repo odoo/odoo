@@ -133,25 +133,10 @@ class node_calendar(nodes.node_class):
         result = self._get_ttag(cr) + ':' + str(time.time())
         return str(result)
 
-    def _get_gdav_resourcetype(self, cr):
-        return (str(self.cal_type + '-collection'), 'http://groupdav.org/')
-
-    def removeme_match_dav_eprop(self, cr, match, ns, prop):
-	# Why?
-        if ns == "DAV:" and prop == "getetag":
-            dirobj = self.context._dirobj
-            uid = self.context.uid
-            ctx = self.context.context.copy()
-            tem, dav_time = tuple(match.split(':'))
-            model, res_id = tuple(tem.split('_'))
-            model_obj = dirobj.pool.get(model)
-            model = model_obj.browse(cr, uid, res_id, context=ctx)
-            write_time = model.write_date or model.create_date
-            wtime = time.mktime(time.strptime(write_time,'%Y-%m-%d %H:%M:%S'))
-            if float(dav_time) == float(wtime):
-                return True
-            return False
-        res = super(node_calendar, self).match_dav_eprop(cr, match, ns, prop)
+    def get_dav_resourcetype(self, cr):
+        res = [ ('collection', 'DAV:'),
+                (str(self.cal_type + '-collection'), 'http://groupdav.org/'),
+                ('calendar', 'urn:ietf:params:xml:ns:caldav') ]
         return res
 
     def get_domain(self, cr, filters):

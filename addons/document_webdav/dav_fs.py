@@ -370,19 +370,22 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()    
 
     @memoize(CACHE_SIZE)
-    def _get_dav_resourcetype(self,uri):
+    def _get_dav_resourcetype(self, uri):
         """ return type of object """        
         self.parent.log_message('get RT: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         try:
             if not dbname:
                 return COLLECTION
-            node = self.uri2object(cr,uid,pool, uri2)
+            node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
-            if node.type in ('collection','database'):
-                return COLLECTION
-            return OBJECT
+            try:
+                return node.get_dav_resourcetype(cr)
+            except NotImplementedError:
+                if node.type in ('collection','database'):
+                    return ('collection', 'DAV:')
+                return ''
         finally:
             if cr: cr.close()
 
@@ -739,6 +742,17 @@ class openerp_dav_handler(dav_interface):
     @memoize(CACHE_SIZE)
     def is_collection(self, uri):
         """ test if the given uri is a collection """
-        return self._get_dav_resourcetype(uri)==COLLECTION
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        try:
+            if not dbname:
+                return True
+            node = self.uri2object(cr,uid,pool, uri2)
+            if not node:
+                raise DAV_NotFound2(uri2)
+            if node.type in ('collection','database'):
+                return True
+            return False
+        finally:
+            if cr: cr.close()
 
 #eof
