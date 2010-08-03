@@ -270,6 +270,7 @@
         <td><para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]]</u></para></td>
         <td> <para style="P12"><u>[[ formatLang((sum_credit(o.period_id.id, o.journal_id.id) - sum_debit(o.period_id.id, o.journal_id.id))) ]]</u></para></td>
       </tr>
+      <para style="Standard"><font color="white">[[lines(o.period_id.id, o.journal_id.id) or removeParentNode('story') ]]</font></para>
       <tr>
         <td><para style="terp_default_8">[[ repeatIn(lines(o.period_id.id, o.journal_id.id), 'line') ]]</para><para style="terp_default_8">[[ formatLang(line.date,date=True) ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ line.ref ]]</para></td>
@@ -305,6 +306,7 @@
         <td><para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]]</u></para></td>
 		<td> <para style="P12"><u>[[ formatLang((sum_debit(o.period_id.id, o.journal_id.id) - sum_credit(o.period_id.id, o.journal_id.id))) ]]</u></para></td>
       </tr>
+       <para style="Standard"><font color="white">[[lines(o.period_id.id, o.journal_id.id) or removeParentNode('story') ]]</font></para>
       <tr>
         <td><para style="terp_default_8">[[ repeatIn(lines(o.period_id.id, o.journal_id.id), 'line') ]]</para><para style="terp_default_8">[[ formatLang(line.date,date=True) ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ line.ref ]]</para></td>
