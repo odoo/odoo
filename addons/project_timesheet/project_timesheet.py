@@ -62,6 +62,7 @@ class project_work(osv.osv):
         obj_timesheet = self.pool.get('hr.analytic.timesheet')
         task_obj = self.pool.get('project.task')
         vals_line = {}
+        context = kwargs.get('context', {})
         obj_task = task_obj.browse(cr, uid, vals['task_id'])
         result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
         vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
@@ -76,71 +77,76 @@ class project_work(osv.osv):
             vals_line.update(res['value'])
         vals_line['general_account_id'] = result['general_account_id']
         vals_line['journal_id'] = result['journal_id']
-        vals_line['amount'] = 00.0
+        vals_line['amount'] = 0.0
         vals_line['product_uom_id'] = result['product_uom_id']
         amount = vals_line['unit_amount']
         prod_id = vals_line['product_id']
         unit = False
-        timeline_id = obj_timesheet.create(cr, uid, vals=vals_line, context=kwargs['context'])
+        timeline_id = obj_timesheet.create(cr, uid, vals=vals_line, context=context)
 
         # Compute based on pricetype
         amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
-            prod_id, amount, unit, context=kwargs['context'])
-        if amount_unit:
-            vals_line['amount'] = (-1) * vals['hours']* (amount_unit.get('value',{}).get('amount',0.0) or 0.0)
-        obj_timesheet.write(cr, uid, [timeline_id], vals_line, {})
+            prod_id, amount, unit, context=context)
+        if amount_unit and 'amount' in amount_unit.get('value',{}):
+            updv = { 'amount': amount_unit['value']['amount'] * (-1.0) }
+            obj_timesheet.write(cr, uid, [timeline_id], updv, context=context)
         vals['hr_analytic_timesheet_id'] = timeline_id
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-        vals_line = {}
         obj = self.pool.get('hr.analytic.timesheet')
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
-        task = self.pool.get('project.task.work').browse(cr, uid, ids, context=context)[0]
-        line_id = task.hr_analytic_timesheet_id
-        # in case,if a record is deleted from timesheet,but we change it from tasks!
-        list_avail_ids = timesheet_obj.search(cr, uid, [], context=context)
-        if line_id in list_avail_ids:
+        if isinstance(ids, (long, int)):
+            ids = [ids,]
+
+        for task in self.browse(cr, uid, ids, context=context):
+            line_id = task.hr_analytic_timesheet_id
+            if not line_id:
+                # if a record is deleted from timesheet, the line_id will become
+                # null because of the foreign key on-delete=set null
+                continue
+            vals_line = {}
             if 'name' in vals:
                 vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
                 result = self.get_user_related_details(cr, uid, vals['user_id'])
-                vals_line['product_id'] = result['product_id']
-                vals_line['general_account_id'] = result['general_account_id']
-                vals_line['journal_id'] = result['journal_id']
-                vals_line['product_uom_id'] = result['product_uom_id']
+                for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
+                    if result.get(fld, False):
+                        vals_line[fld] = result[fld]
+                        
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
                 vals_line['unit_amount'] = vals['hours']
+                prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
                 # Compute based on pricetype
-                unit = False
-                amount_unit=obj.on_change_unit_amount(cr, uid, line_id,
-                    vals_line['product_id'], vals_line['unit_amount'], unit, context=context)
-                
-                if amount_unit:
-                     vals_line['amount'] = (-1) * vals['hours'] * (amount_unit.get('value',{}).get('amount',0.0) or 0.0)
-                     
-            obj.write(cr, uid, [line_id], vals_line, context=context)
+                amount_unit = obj.on_change_unit_amount(cr, uid, line_id.id,
+                    prod_id=prod_id,
+                    unit_amount=vals_line['unit_amount'], unit=False, context=context)
 
+                if amount_unit and 'amount' in amount_unit.get('value',{}):
+                    vals_line['amount'] = amount_unit['value']['amount'] * (-1.0)
+
+            obj.write(cr, uid, [line_id.id], vals_line, context=context)
+            
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
-        pool_analytic_timesheet = self.pool.get('hr.analytic.timesheet')
-        for work_id in ids:
-            timesheet_id = self.read(cr, uid, work_id, ['hr_analytic_timesheet_id'])['hr_analytic_timesheet_id']
+        hat_obj = self.pool.get('hr.analytic.timesheet')
+        hat_ids = []
+        for task in self.browse(cr, uid, ids):
+            if task.hr_analytic_timesheet_id:
+                hat_ids.append(task.hr_analytic_timesheet_id)
 #            delete entry from timesheet too while deleting entry to task.
-            list_avail_ids = pool_analytic_timesheet.search(cr, uid, [])
-            if timesheet_id in list_avail_ids:
-                obj = pool_analytic_timesheet.unlink(cr, uid, [timesheet_id], *args, **kwargs)
-
+        if hat_ids:
+            hat_obj.unlink(cr, uid, hat_ids, *args, **kwargs)
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns={
-        'hr_analytic_timesheet_id':fields.integer('Related Timeline Id')
+        'hr_analytic_timesheet_id':fields.many2one('hr.analytic.timesheet','Related Timeline Id', ondelete='set null'),
     }
 
 project_work()

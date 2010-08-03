@@ -126,7 +126,7 @@ class account_bank_statement(osv.osv):
             currency_id = res[statement_id]
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
-
+        
     _order = "date desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
@@ -158,8 +158,7 @@ class account_bank_statement(osv.osv):
     }
 
     _defaults = {
-        'name': lambda self, cr, uid, context=None: \
-                self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement'),
+        'name': lambda *a: "/",
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
         'balance_start': _default_balance_start,
@@ -192,7 +191,7 @@ class account_bank_statement(osv.osv):
             'value':res,
             'context':context,
         }
-
+    
     def button_confirm_bank(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
@@ -368,8 +367,13 @@ class account_bank_statement(osv.osv):
 
                 if st.journal_id.entry_posted:
                     account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
+                    
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
             done.append(st.id)
+
+            next_number = self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement')
+            self.write(cr, uid, [st.id], {'name':next_number}, context)
+
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
         return True
 
@@ -431,7 +435,6 @@ class account_bank_statement(osv.osv):
         return super(account_bank_statement, self).copy(cr, uid, id, default, context)
 
 account_bank_statement()
-
 
 class account_bank_statement_reconcile(osv.osv):
     _name = "account.bank.statement.reconcile"
