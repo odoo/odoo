@@ -230,7 +230,7 @@ class CalDAV(object):
         att_data = []
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
-                self.ical_set(cal_data.name.lower(), {'name': cal_data.params['CN'][0]}, 'value')
+                self.ical_set(cal_data.name.lower(), {'name': cal_data.params.get('CN') and cal_data.params.get('CN')[0]}, 'value')
                 continue
             if cal_data.name.lower() == 'attendee':
                 ctx = context.copy()
