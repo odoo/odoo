@@ -3823,7 +3823,10 @@ class orm(orm_template):
         offset_str = offset and ' offset %d' % offset or ''
         
         where.extend(qu1_join)
-        where_str = " WHERE %s" % " AND ".join(where)
+        if where:
+            where_str = " WHERE %s" % " AND ".join(where)
+        else:
+            where_str = ""
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +
