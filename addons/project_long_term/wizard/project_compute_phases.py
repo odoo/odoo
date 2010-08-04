@@ -74,6 +74,8 @@ class project_compute_phases(osv.osv_memory):
                 resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
                 time_efficiency = resource.time_efficiency
                 leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource.id, resource.calendar_id.id)
+            if not phase.responsible_id:
+                raise osv.except_osv(_('No responsible person assigned !'),_("You must assign a responsible person for phase '%s' !") % (phase.name,))
             phase_resource_obj = classobj((phase.responsible_id.name.encode('utf8')), (Resource,),
                                                {'__doc__': phase.responsible_id.name,
                                                 '__name__': phase.responsible_id.name,

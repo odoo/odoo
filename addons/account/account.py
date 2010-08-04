@@ -81,7 +81,7 @@ class account_payment_term(osv.osv):
             if amt:
                 next_date = datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days)
                 if line.days2 < 0:
-                    next_date += relativedelta(day=31)
+                    next_date += relativedelta(day=line.days2)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
@@ -860,7 +860,7 @@ class account_period(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
                                   help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
-        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company'),
+        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -1236,7 +1236,7 @@ class account_move(osv.osv):
         return amount
 
     def _centralise(self, cr, uid, move, mode, context=None):
-        assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
+        assert(mode in ('debit', 'credit'), 'Invalid Mode') #to prevent sql injection
         if context is None:
             context = {}
 
@@ -1292,11 +1292,10 @@ class account_move(osv.osv):
     #
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
-
     def validate(self, cr, uid, ids, context={}):
         if context and ('__last_update' in context):
             del context['__last_update']
-        
+
         valid_moves = [] #Maintains a list of moves which can be responsible to create analytic entries
 
         for move in self.browse(cr, uid, ids, context):
@@ -1332,7 +1331,7 @@ class account_move(osv.osv):
                 valid_moves.append(move)
 
                 # Check whether the move lines are confirmed
-                
+
                 if not len(line_draft_ids):
                     continue
                 # Update the move lines (set them as valid)
@@ -1345,7 +1344,7 @@ class account_move(osv.osv):
 
                 account = {}
                 account2 = {}
-                
+
                 if journal.type in ('purchase','sale'):
                     for line in move.line_id:
                         code = amount = 0
@@ -1602,8 +1601,8 @@ class account_tax(osv.osv):
         #
         # Fields used for the VAT declaration
         #
-        'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
+        'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the VAT declaration."),
+        'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the VAT declaration."),
         'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
@@ -1620,13 +1619,44 @@ class account_tax(osv.osv):
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        """
+        Returns a list of tupples containing id, name, as internally it is called {def name_get}
+        result format : {[(id, name), (id, name), ...]}
+        
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param name: name to search 
+        @param args: other arguments
+        @param operator: default operator is 'ilike', it can be changed
+        @param context: context arguments, like lang, time zone
+        @param limit: Returns first 'n' ids of complete result, default is 80.
+        
+        @return: Returns a list of tupples containing id and name
+        """
+        if not args:
+            args=[]
+        if not context:
+            context={}
+        ids = []
+        ids = self.search(cr, user, args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        journal_pool = self.pool.get('account.journal')
+        
         if context and context.has_key('type'):
-            if context['type'] in ('out_invoice','out_refund'):
-                args.append(('type_tax_use','in',['sale','all']))
-            elif context['type'] in ('in_invoice','in_refund'):
-                args.append(('type_tax_use','in',['purchase','all']))
+            if context.get('type') in ('out_invoice','out_refund'):
+                args += [('type_tax_use','in',['sale','all'])]
+            elif context.get('type') in ('in_invoice','in_refund'):
+                args += [('type_tax_use','in',['purchase','all'])]
+
+        if context and context.has_key('journal_id'):
+            journal = journal_pool.browse(cr, uid, context.get('journal_id'))
+            if journal.type in ('sale', 'purchase'):
+                args += [('type_tax_use','in',[journal.type,'all'])]
+        
         return super(account_tax, self).search(cr, uid, args, offset, limit, order, context, count)
 
     def name_get(self, cr, uid, ids, context={}):
@@ -1643,6 +1673,7 @@ class account_tax(osv.osv):
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+        
     _defaults = {
         'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
         'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
@@ -2164,6 +2195,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
     def _get_def_cparent(self, cr, uid, context):
         acc_obj=self.pool.get('account.account')
         tmpl_obj=self.pool.get('account.account.template')
+        #print "Searching for ",context
         tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
         if not tids or not tids[0]['parent_id']:
             return False
@@ -2205,6 +2237,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
             # 'tax_ids': [(6,0,tax_ids)], todo!!
             'company_id': company_id,
             }
+        # print "Creating:", vals
         new_account = acc_obj.create(cr, uid, vals)
         return {'type':'state', 'state': 'end' }
 
@@ -2225,7 +2258,7 @@ class account_tax_code_template(osv.osv):
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
-        'sign': fields.float('Sign for parent', required=True, help="Choose 1.00 to add the total to the parent account or -1.00 to subtract it"),
+        'sign': fields.float('Sign for parent', required=True),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
@@ -2257,7 +2290,7 @@ class account_chart_template(osv.osv):
 
     _columns={
         'name': fields.char('Name', size=64, required=True),
-        'account_root_id': fields.many2one('account.account.template','Root Account',required=True,domain=[('parent_id','=',False)], help=""),
+        'account_root_id': fields.many2one('account.account.template','Root Account',required=True,domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template','Root Tax Code',required=True,domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
         'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),

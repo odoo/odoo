@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 from datetime import datetime
+
 import netsvc
 from osv import fields, osv
 from tools.translate import _
@@ -35,8 +36,10 @@ class account_move_line(osv.osv):
         fiscalperiod_obj = self.pool.get('account.period')
         fiscalyear_ids = []
         fiscalperiod_ids = []
-        if not context.get('fiscalyear', False):
+        if not context.get('fiscalyear', False) and not context.get('empty_fy_allow', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
+        elif context.get('empty_fy_allow', False):
+            fiscalyear_ids = context['fiscalyear']
         else:
             fiscalyear_ids = [context['fiscalyear']]
 
@@ -53,12 +56,18 @@ class account_move_line(osv.osv):
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
 
-
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
-            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
+            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
             query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
+
+        if context.get('journal_ids', False):
+            query += ' AND '+obj+'.journal_id in (%s)' % ','.join(map(str, context['journal_ids']))
+
+        if context.get('chart_account_id', False):
+            child_ids = self.pool.get('account.account')._get_children_and_consol(cr, uid, [context['chart_account_id']], context=context)
+            query += ' AND '+obj+'.account_id in (%s)' % ','.join(map(str, child_ids))
 
         if context.get('period_manner','') == 'created':
             #the query have to be build with no reference to periods but thanks to the creation date
@@ -150,16 +159,15 @@ class account_move_line(osv.osv):
             if context['journal']:
                 journal_obj=self.pool.get('account.journal').browse(cr, uid, context['journal'])
                 if journal_obj.type == 'purchase':
-                    if total_new>0:
+                    if total_new > 0:
                         account = journal_obj.default_credit_account_id
                     else:
                         account = journal_obj.default_debit_account_id
                 else:
-                    if total_new>0:
+                    if total_new > 0:
                         account = journal_obj.default_credit_account_id
                     else:
                         account = journal_obj.default_debit_account_id
-
 
                 if account and ((not fields) or ('debit' in fields) or ('credit' in fields)) and 'partner_id' in data and (data['partner_id']):
                     part = self.pool.get('res.partner').browse(cr, uid, data['partner_id'])
@@ -453,7 +461,7 @@ class account_move_line(osv.osv):
                         context=context)
                 dt = period.date_start
         return dt
-        
+
     def _get_currency(self, cr, uid, context={}):
         if not context.get('journal_id', False):
             return False
@@ -507,7 +515,7 @@ class account_move_line(osv.osv):
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
-        (_check_company_id, 'Company must be same for its related account and period.', ['company_id']),
+        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -546,15 +554,19 @@ class account_move_line(osv.osv):
             id2 =  part.property_account_receivable.id
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
-                if jt == 'sale':
+                #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
+                # Bank and cash journal can have a payment or receipt transection, and in both type partner account 
+                # will not be same id payment then payable, and if receipt then receivable
+                #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
+                if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id2)
-
-                elif jt == 'purchase':
+                elif jt in ('purchase', 'sale_refund', 'expense'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id1)
+                
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
-
+                
         return {'value':val}
 
     def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False):
@@ -674,7 +686,7 @@ class account_move_line(osv.osv):
             account_id = line['account_id']['id']
             partner_id = (line['partner_id'] and line['partner_id']['id']) or False
         writeoff = debit - credit
-        
+
         # Ifdate_p in context => take this date
         if context.has_key('date_p') and context['date_p']:
             date=context['date_p']
@@ -812,7 +824,7 @@ class account_move_line(osv.osv):
 #        }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
-        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar, submenu=submenu)
+        result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
             return result
 
@@ -873,23 +885,20 @@ class account_move_line(osv.osv):
             elif field == 'credit':
                 attrs.append('sum="Total credit"')
             elif field == 'account_tax_id':
-                attrs.append('domain="[(\'parent_id\',\'=\',False), (\'type_tax_use\',\'=\',context.get(journal_id.type, \'sale\'))]"')
+                attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
+                attrs.append("context=\"{'journal_id':journal_id}\"")
             elif field == 'account_id' and journal.id:
                 attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
             elif field == 'partner_id':
                 attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
-#            elif field == 'date':
-#                attrs.append('on_change="onchange_date(date)"')
-
-#            if field.readonly:
-#                attrs.append('readonly="1"')
-#            if field.required:
-#                attrs.append('required="1"')
-#            else:
-#                attrs.append('required="0"')
-            if field in ('amount_currency','currency_id'):
+            elif field == 'journal_id':
+                attrs.append("context=\"{'journal_id':journal_id}\"")
+            elif field == 'statement_id':
+                attrs.append("domain=\"[('state','!=','confirm'),('journal_id.type','=','bank')]\"")
+                
+            if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
-
+            
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
 
@@ -1111,7 +1120,7 @@ class account_move_line(osv.osv):
 
         #if not 'currency_id' in vals:
         #    vals['currency_id'] = account.company_id.currency_id.id
-        
+
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
         if vals.get('account_tax_id', False):

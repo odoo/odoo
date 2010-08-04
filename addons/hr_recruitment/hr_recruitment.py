@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
+import time
+from datetime import datetime, timedelta
+
 from osv import fields, osv
 from crm import crm
 import tools
@@ -77,6 +80,43 @@ class hr_applicant(osv.osv, crm.crm_case):
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['mailgate.thread']
+
+    def _compute_day(self, cr, uid, ids, fields, args, context=None):
+        if context is None:
+            context = {}
+        """
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Openday’s IDs
+        @return: difference between current date and log date
+        @param context: A standard dictionary for contextual values
+        """
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            for field in fields:
+                res[issue.id] = {}
+                duration = 0
+                ans = False
+                hours = 0
+
+                if field in ['day_open']:
+                    if issue.date_open:
+                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
+                        ans = date_open - date_create
+                        date_until = issue.date_open
+
+                elif field in ['day_close']:
+                    if issue.date_closed:
+                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
+                        date_until = issue.date_closed
+                        ans = date_close - date_create
+                if ans:
+                    duration = float(ans.days)
+                    res[issue.id][field] = abs(float(duration))
+        return res
+
     _columns = {
         'name': fields.char('Name', size=128, required=True),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
@@ -100,6 +140,7 @@ class hr_applicant(osv.osv, crm.crm_case):
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True),
+        'date_open': fields.datetime('Opened', readonly=True),
         'date': fields.datetime('Date'),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
@@ -117,6 +158,10 @@ class hr_applicant(osv.osv, crm.crm_case):
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response' : fields.integer("Response"),
         'reference': fields.char('Reference', size=128),
+        'day_open': fields.function(_compute_day, string='Days to Open', \
+                                method=True, multi='day_open', type="float", store=True),
+        'day_close': fields.function(_compute_day, string='Days to Close', \
+                                method=True, multi='day_close', type="float", store=True),
     }
 
     def _get_stage(self, cr, uid, context=None):
@@ -343,7 +388,6 @@ class hr_applicant(osv.osv, crm.crm_case):
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
-
         """ Send The Message
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -363,6 +407,9 @@ class hr_applicant(osv.osv, crm.crm_case):
         @param *args: Give Tuple Value
         """
         res = super(hr_applicant, self).case_open(cr, uid, ids, *args)
+        date = self.read(cr, uid, ids, ['date_open'])[0]
+        if not date['date_open']:
+            self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
         for (id, name) in self.name_get(cr, uid, ids):
             message = _('Job request for') + " '" + name + "' "+ _("is Open.")
             self.log(cr, uid, id, message)
@@ -381,6 +428,19 @@ class hr_applicant(osv.osv, crm.crm_case):
             message = _('Applicant ') + " '" + name + "' "+ _("is Hired.")
             self.log(cr, uid, id, message)
         return res
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Resets case as draft
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'date_open': False, 'date_closed':False})
+        return res
+
 
 hr_applicant()
 

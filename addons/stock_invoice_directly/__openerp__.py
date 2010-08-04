@@ -34,6 +34,7 @@
     'init_xml': [],
     'update_xml': [],
     'demo_xml': [],
+    'test': ['test/stock_invoice_directly.yml'],
     'installable': True,
     'active': False,
     'certificate': '0081385081261',

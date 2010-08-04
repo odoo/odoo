@@ -13,10 +13,11 @@
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <separator colspan="4" string=""/>
-                    <group col="3" colspan="4">
-                        <button name="create_stock_periods" icon="gtk-execute" string="Create Daily Periods" type="object"/>
-                        <button name="create_stock_periods" icon="gtk-execute"  string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}"/>
-                        <button name="create_stock_periods" icon="gtk-execute" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}"/>
+                    <group col="4" colspan="4">
+                        <button string="Cancel" special="cancel" icon="gtk-cancel"/>
+                        <button name="create_stock_periods" icon="gtk-dnd" string="Create Daily Periods" type="object"/>
+                        <button name="create_stock_periods" icon="gtk-dnd"  string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}"/>
+                        <button name="create_stock_periods" icon="gtk-dnd" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}"/>
                     </group>
                 </form>
             </field>
