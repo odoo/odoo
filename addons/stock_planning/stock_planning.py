@@ -127,7 +127,7 @@ class stock_sale_forecast(osv.osv):
     }
 
     def action_validate(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'validated','user_id':uid})
+        self.write(cr, uid, ids, {'state': 'validated','user_id': uid})
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -138,7 +138,7 @@ class stock_sale_forecast(osv.osv):
                 unlink_ids.append(t['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Validated Sale Forecasts !'))
-        osv.osv.unlink(self, cr, uid, unlink_ids,context=context)
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
     def onchange_company(self, cr, uid, ids, company_id=False):
@@ -259,7 +259,6 @@ class stock_sale_forecast(osv.osv):
                         if so_period_ids:
                             if obj.analyzed_user_id:
                                 user_set = str(obj.analyzed_user_id.id)
-
                                 sales[i][0] = self._sales_per_users(cr, uid, so_period_ids, so_line_product_ids, obj.company_id.id, user_set)
                                 sales[i][0] *= factor
                             if dept_users:
@@ -295,7 +294,6 @@ class stock_sale_forecast(osv.osv):
         })
         return True
 
-
 stock_sale_forecast()
 
 # The main Stock Planning object
@@ -325,10 +323,9 @@ class stock_planning(osv.osv):
         context['compute_child'] = True
         prod_id = val.product_id.id
         if done:
-            c1 = context.copy()
-            c1.update({ 'states':('done',), 'what':(direction,) })
+            context.update({ 'states':('done',), 'what':(direction,) })
             prod_ids = [prod_id]
-            st = product_obj.get_product_available(cr,uid, prod_ids, context=c1)
+            st = product_obj.get_product_available(cr, uid, prod_ids, context=context)
             res = mapping[direction]['adapter'](st.get(prod_id,0.0))
         else:
             product = product_obj.read(cr, uid, prod_id,[], context)
@@ -562,12 +559,12 @@ class stock_planning(osv.osv):
             day = mx.DateTime.strptime(start_date_current_period, '%Y-%m-%d %H:%M:%S')
             dbefore = mx.DateTime.DateTime(day.year, day.month, day.day) - one_minute
             date_for_start = dbefore.strftime('%Y-%m-%d %H:%M:%S')   # one day before current period
-            already_out = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='out', done = True, context=context),
-            already_in = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='in', done = True, context=context),
-            outgoing = self._get_in_out(cr, uid, val, val.period_id.date_start, val.period_id.date_stop, direction='out', done = False, context=context),
-            incoming = self._get_in_out(cr, uid, val, val.period_id.date_start, val.period_id.date_stop, direction='in', done = False, context=context),
+            already_out = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='out', done=True, context=context),
+            already_in = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='in', done=True, context=context),
+            outgoing = self._get_in_out(cr, uid, val, val.period_id.date_start, val.period_id.date_stop, direction='out', done=False, context=context),
+            incoming = self._get_in_out(cr, uid, val, val.period_id.date_start, val.period_id.date_stop, direction='in', done=False, context=context),
             outgoing_before = self._get_outgoing_before(cr, uid, val, start_date_current_period, day_before_calculated_period, context=context),
-            incoming_before = self._get_in_out(cr, uid, val, start_date_current_period, day_before_calculated_period, direction='in', done = False, context=context),
+            incoming_before = self._get_in_out(cr, uid, val, start_date_current_period, day_before_calculated_period, direction='in', done=False, context=context),
             stock_start = self._get_stock_start(cr, uid, val, date_for_start, context=context),
             if start_date_current_period == val.period_id.date_start:   # current period is calculated
                 current = True
@@ -652,7 +649,7 @@ class stock_planning(osv.osv):
             self.calculate_planning(cr, uid, ids, context)
             prev_text = obj.history or ""
             self.write(cr, uid, ids, {
-                    'history' : prev_text + _('Requisition (') + str(user.login) + ", " + time.strftime('%Y.%m.%d %H:%M) ') + str(obj.incoming_left) + \
+                    'history': prev_text + _('Requisition (') + str(user.login) + ", " + time.strftime('%Y.%m.%d %H:%M) ') + str(obj.incoming_left) + \
                     " " + obj.product_uom.name + "\n",
                 })
         return True
@@ -671,7 +668,7 @@ class stock_planning(osv.osv):
                             'origin': _('MPS(') + str(user.login) +') '+ obj.period_id.name,
                             'type': 'internal',
                             'state': 'auto',
-                            'date' : obj.period_id.date_start,
+                            'date': obj.period_id.date_start,
                             'move_type': 'direct',
                             'invoice_state':  'none',
                             'company_id': obj.company_id.id,
