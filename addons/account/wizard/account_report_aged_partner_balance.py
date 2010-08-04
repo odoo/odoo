@@ -22,67 +22,60 @@
 import time
 import datetime
 from mx.DateTime import *
+from lxml import etree
 
 from osv import osv, fields
 from tools.translate import _
 
 class account_aged_trial_balance(osv.osv_memory):
-
+    _inherit = 'account.common.partner.report'
     _name = 'account.aged.trial.balance'
     _description = 'Account Aged Trial balance Report'
 
     _columns = {
-        'company_id': fields.many2one('res.company', 'Company', required=True),
         'period_length':fields.integer('Period length (days)', required=True),
-        'date1': fields.date('Start of period', required=True),
-        'result_selection': fields.selection([('customer','Receivable'),
-                                              ('supplier','Payable'),
-                                              ('all','Receivable and Payable')],
-                                              'Filter on Partners', required=True),
         'direction_selection': fields.selection([('past','Past'),
                                                  ('future','Future')],
                                                  'Analysis Direction', required=True),
-        }
-
-    def _get_company(self, cr, uid, context=None):
-        user_obj = self.pool.get('res.users')
-        company_obj = self.pool.get('res.company')
-        if context is None:
-            context = {}
-        user = user_obj.browse(cr, uid, uid, context=context)
-        if user.company_id:
-           return user.company_id.id
-        else:
-           return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
-
+                }
     _defaults = {
-        'company_id': _get_company,
         'period_length': 30,
-        'date1' : time.strftime('%Y-%m-%d'),
-        'result_selection': 'customer',
+        'date_from' : time.strftime('%Y-%m-%d'),
         'direction_selection': 'past',
-                 }
+                }
 
-    def calc_dates(self, cr, uid, ids, context=None):
-        fiscalyear_obj = self.pool.get('account.fiscalyear')
-        data={}
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        mod_obj = self.pool.get('ir.model.data')
+        res = super(account_aged_trial_balance, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//field[@name='journal_ids']")
+        for node in nodes:
+            node.set('invisible', '1')
+            node.set('required', '0')
+        res['arch'] = etree.tostring(doc)
+        return res
+
+    def _print_report(self, cr, uid, ids, data, query_line, context=None):
         res = {}
         if context is None:
             context = {}
-        data['ids'] = context.get('active_ids',[])
-        data['model'] = 'res.partner'
-        data['form'] = self.read(cr, uid, ids, [])[0]
-        data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection'])[0])
+
         period_length = data['form']['period_length']
         if period_length<=0:
             raise osv.except_osv(_('UserError'), _('You must enter a period length that cannot be 0 or below !'))
-        start = datetime.date.fromtimestamp(time.mktime(time.strptime(data['form']['date1'],"%Y-%m-%d")))
-        start = DateTime(int(start.year),int(start.month),int(start.day))
+        if not data['form']['date_from']:
+            raise osv.except_osv(_('UserError'), _('Enter a Start date !'))
+
+        start = datetime.date.fromtimestamp(time.mktime(time.strptime(data['form']['date_from'], "%Y-%m-%d")))
+        start = DateTime(int(start.year), int(start.month), int(start.day))
         if data['form']['direction_selection'] == 'past':
             for i in range(5)[::-1]:
                 stop = start - RelativeDateTime(days=period_length)
                 res[str(i)] = {
-                    'name' : str((5-(i+1))*period_length) + '-' + str((5-i)*period_length),
+                    'name' : str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length),
                     'stop': start.strftime('%Y-%m-%d'),
                     'start' : stop.strftime('%Y-%m-%d'),
                     }
@@ -91,17 +84,18 @@ class account_aged_trial_balance(osv.osv_memory):
             for i in range(5):
                 stop = start + RelativeDateTime(days=period_length)
                 res[str(5-(i+1))] = {
-                    'name' : str((i)*period_length)+'-'+str((i+1)*period_length),
+                    'name' : str((i) * period_length)+'-' + str((i+1) * period_length),
                     'start': start.strftime('%Y-%m-%d'),
-                    'stop' : stop.strftime('%Y-%m-%d'),
+                    'stop': stop.strftime('%Y-%m-%d'),
                     }
                 start = stop + RelativeDateTime(days=1)
         data['form'].update(res)
+
         return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'account.aged_trial_balance',
-                'datas': data,
-            }
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account.aged_trial_balance',
+            'datas': data
+                }
 
 account_aged_trial_balance()
 
