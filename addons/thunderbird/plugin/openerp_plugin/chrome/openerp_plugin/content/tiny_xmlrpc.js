@@ -1434,9 +1434,8 @@ function UpdateContact(){
 	strmethod.data = 'update_contact';
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
-    alert(getResourceId());
-	var a = ['res_id','partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
-	var b = [getResourceId(),getPartnerName(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,getSenderEmail()];
+	var a = ['res_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
+	var b = [getResourceId(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,getSenderEmail()];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listUpdateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
@@ -1446,19 +1445,7 @@ var listAttachHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
-		/*if(createId){
-			attach =  getAttachment()		
-			if (attach_eml=="yes")
-			{
-				//alert("Mail Archived Successfully");
-			}
-			else if (attach_eml =="no" && attach =="yes")
-			{
-				alert("Mail Archived Successfully With Attachments");
-			}
-			//getPref().setCharPref("attachmentdata","")
-			attach_eml="no"
-		}*/
+		
 	},
 	onFault: function (client, ctxt, fault) {
 //		alert('XML-RPC Fault: '+fault);

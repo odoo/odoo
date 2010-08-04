@@ -45,7 +45,7 @@ var myPrefObserver =
 	//set the initial value of name and email field of create contact window
 	createContact: function()
 	{
-		//document.getElementById("txtselectpartner").value= getPartnerID();
+		//document.getElementById("txtselectpartner").value= getPartnerName();
         document.getElementById("txtname").value= getSenderName();
         document.getElementById("txtemail").value= getSenderEmail();
         document.getElementById("country").value=getAllCountry();
@@ -93,6 +93,7 @@ var myPrefObserver =
 
     createContactAddress: function()
 	{
+//        getResourceId();
 	  	document.getElementById("txtname").value= getPartnerName();
         document.getElementById("txtcontactname").value= getSenderName();
         document.getElementById("txtstreet").value= getStreet();

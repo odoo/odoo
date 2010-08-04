@@ -99,7 +99,7 @@ class thunderbird_partner(osv.osv_memory):
                        'mobile': dictcreate['mobile'],
                        'email': dictcreate['email'],
                        }
-        address_obj.write(cr, user,res_id,result )
+            address_obj.write(cr, user,int(res_id),result )
         return True
 
     def create_partner(self,cr,user,vals):
