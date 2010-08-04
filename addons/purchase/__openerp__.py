@@ -57,7 +57,7 @@
     'test': [
              'test/purchase_from_order.yml',
              'test/purchase_from_manual.yml',
-#             'test/purchase_from_picking.yml',
+             'test/purchase_from_picking.yml',
              'purchase_unit_test.xml',
              'test/procurement_buy.yml',
     ],

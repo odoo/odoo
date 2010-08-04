@@ -897,7 +897,7 @@ class stock_picking(osv.osv):
                     'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'comment': (comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                     'date_invoice':context.get('date_inv',False),
-                    'user_id':picking.sale_id.user_id and picking.sale_id.user_id.id or False
+                    'user_id':uid 
                 }
                 invoice_obj.write(cr, uid, [invoice_id], invoice_vals, context=context)
             else:
@@ -914,7 +914,7 @@ class stock_picking(osv.osv):
                     'fiscal_position': partner.property_account_position.id,
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
-                    'user_id':picking.sale_id.user_id and picking.sale_id.user_id.id or False
+                    'user_id':uid
                     }
                 cur_id = self.get_currency_id(cr, uid, picking)
                 if cur_id:
