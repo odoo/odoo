@@ -42,13 +42,12 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @return: A dictionary which of fields with values. 
         """
         res = super(wiz_auc_lots_buyer_map,self).default_get(cr, uid, fields, context)
-        auction_lots_obj= self.pool.get('auction.lots')
+        auction_lots_obj = self.pool.get('auction.lots')
         lots_ids = auction_lots_obj.search(cr, uid, [('ach_uid', '=', ''), ('ach_login', '!=', '')])
-        for lots_id in lots_ids:
-            for rec in self.pool.get('auction.lots').browse(cr, uid, lots_id, context):
-                if (not rec.ach_uid or not rec.ach_login):
-                    res.update(self._start(cr, uid, context.get('active_ids', []), context))
-                    return res
+        for rec in auction_lots_obj.browse(cr, uid, lots_ids, context):
+            if (not rec.ach_uid or not rec.ach_login):
+                res.update(self._start(cr, uid, context.get('active_ids', []), context))
+            return res
         res.update(self._start(cr, uid, context.get('active_ids', []), context))
         return res
     
@@ -106,6 +105,8 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
             context={}
         record_ids = context and context.get('active_ids', []) or []
         res = super(wiz_auc_lots_buyer_map, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if context.get('active_model','') != 'auction.lots':
+            return res
         lots_obj = self.pool.get('auction.lots')
         if record_ids:
             try:

@@ -179,7 +179,7 @@
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -209,9 +209,9 @@
     <para style="P11">
       <font color="white"> </font>
     </para>    
-    <blockTable colWidths="100.0,60.0,88.0,140.0,90.0" style="Table8">
+    <blockTable colWidths="130.0,80.0,100.0,140.0,90.0" style="Table8">
       <tr>
-        <td><para style="terp_tblheader_General_Right">Company <font color="white"> [[ data['model']=='account.account' or removeParentNode('para') ]]</font></para>        
+        <td><para style="terp_tblheader_General_Centre">[[ data['model']=='account.account' and 'Company'or removeParentNode('para') ]]</para>        
       	<para style="terp_tblheader_General_Centre"> [[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para></td>       
         <td>
           <para style="terp_tblheader_General_Centre">Fiscal Year</para>

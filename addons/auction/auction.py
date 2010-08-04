@@ -103,8 +103,6 @@ class auction_dates(osv.osv):
 
         RETURN: True
         """
-        # objects vendus mais non factures
-        #TODO: convert this query to tiny API
         if not context:
             context={}
         lots_obj = self.pool.get('auction.lots')
@@ -120,16 +118,6 @@ auction_dates()
 #----------------------------------------------------------
 # Deposits
 #----------------------------------------------------------
-#def _inv_uniq(cr, ids):
-#    cr.execute('SELECT id FROM auction_lots '
-#                   'WHERE auction_id IN %s '
-#                   'AND obj_price>0', (tuple(ids),))
-#    for datas in cr.fetchall():
-#        cr.execute('select count(*) from auction_deposit where name=%s', (datas[0],))
-#        if cr.fetchone()[0]>1:
-#            return False
-#    return True
-
 class auction_deposit(osv.osv):
     """Auction Deposit Border"""
     
@@ -150,7 +138,6 @@ class auction_deposit(osv.osv):
         'total_neg': fields.boolean('Allow Negative Amount'), 
     }
     _defaults = {
-#       'date_dep': lambda *a: time.strftime('%Y-%m-%d'),
         'method': lambda *a: 'keep', 
         'total_neg': lambda *a: False, 
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'auction.deposit'), 
@@ -178,17 +165,6 @@ auction_deposit_cost()
 #----------------------------------------------------------
 # Lots Categories
 #----------------------------------------------------------
-
-def _type_get(self, cr, uid, context=None):
-    if not context:
-        context = {}
-    obj = self.pool.get('auction.lot.category')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['name'], context)
-    res = [(r['name'], r['name']) for r in res]   
-    return res 
-
-
 class aie_category(osv.osv):
     
     _name="aie.category"
@@ -203,7 +179,6 @@ class aie_category(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not context:
             context = {}
-
         res = []
         if not ids:
             return res
@@ -236,15 +211,14 @@ auction_lot_category()
 #----------------------------------------------------------
 # Lots
 #----------------------------------------------------------
-def _inv_constraint(self, cr, uid, ids):
-    cr.execute('SELECT id, bord_vnd_id, lot_num FROM auction_lots '
-               'WHERE id IN %s', 
-               (tuple(ids),))
-    for datas in cr.fetchall():
-        cr.execute('select count(*) from auction_lots where bord_vnd_id=%s and lot_num=%s', (datas[1], datas[2]))
-        if cr.fetchone()[0]>1:
-            return False
-    return True
+def _type_get(self, cr, uid, context=None):
+    if not context:
+        context = {}
+    obj = self.pool.get('auction.lot.category')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['name'], context)
+    res = [(r['name'], r['name']) for r in res]   
+    return res 
 
 class auction_lots(osv.osv):
     
@@ -273,7 +247,7 @@ class auction_lots(osv.osv):
             context={}
         return self.write(cr, uid, ids, {'state':'sold'})
 
-    def _getprice(self, cr, uid, ids, name, args, context=None):
+    def _getprice(self, cr, uid, ids, fields, args, context=None):
         """This Function compute amount total with tax for buyer and seller.
         @param ids: List of  auction lots's id
         @param name: List of function fields.
@@ -281,93 +255,83 @@ class auction_lots(osv.osv):
         @return: Dictionary of function fields value.
         """
         if not context:
-            context={}
-        name=name[0]    
-        res={}
+            context = {}
+        
+        res = {}
+        account_analytic_line_obj = self.pool.get('account.analytic.line')
         lots = self.browse(cr, uid, ids, context)
-        pt_tax=self.pool.get('account.tax')
+        pt_tax = self.pool.get('account.tax')
         for lot in lots:
-            amount_total=0.0
             total_tax = 0.0
-    #       if ((lot.obj_price==0) and (lot.state=='draft')):
-    #           montant=lot.lot_est1
-    #       else:
             taxes = []
-            res[lot.id]={
-                 'buyer_price': False,
-                 'seller_price': False,
-                 'gross_margin': False,
-                 'gross_revenue': False,
-                 'net_margin': False,
-                 'net_revenue': False,
-                 'paid_ach': False,
-                 'paid_vnd': False
-                 }
-                
-            if name=="buyer_price":
-                amount=lot.obj_price or 0.0
-                if lot.author_right:
-                    taxes.append(lot.author_right)
-                if lot.auction_id:
-                    taxes += lot.auction_id.buyer_costs
-                tax=pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
-                for t in tax:
-                    amount_total+=t['amount']
-                amount_total += amount
-                res[lot.id]['buyer_price'] = amount_total
-                
-            if name=="seller_price":
-                amount=lot.obj_price or 0.0
-                if lot.bord_vnd_id.tax_id:
-                    taxes.append(lot.bord_vnd_id.tax_id)
-                elif lot.auction_id and lot.auction_id.seller_costs:
-                    taxes += lot.auction_id.seller_costs
-                tax=pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
-                for t in tax:
-                    amount_total+=t['amount']
-                res[lot.id]['seller_price'] =  amount+amount_total
-                
-            if name=="gross_margin":
-                if ((lot.obj_price==0) and (lot.state=='draft')):
-                    amount=lot.lot_est1 or 0.0
-                else:
-                    amount=lot.obj_price or 0.0
-                if amount>0:
-                    total=(lot.gross_revenue*100.0) /amount
-                else:
-                    total = 0.0
-                res[lot.id]['gross_margin']=round(total, 2)  
-                
-            if name=="gross_revenue":
-                if lot.auction_id:
-                    total_tax += lot.buyer_price - lot.seller_price
-                res[lot.id]['gross_revenue'] = total_tax   
-                  
-            if name=="net_revenue":
-                if lot.auction_id:
-                    total_tax += lot.buyer_price -lot.seller_price -lot.costs
-                res[lot.id]['net_revenue'] = total_tax  
-                                              
-            if name=="net_margin":
-                if ((lot.obj_price==0) and (lot.state=='draft')):
-                    amount=lot.lot_est1
-                else: 
-                    amount=lot.obj_price
-                if amount>0:
-                    total_tax += (lot.net_revenue*100)/amount
-                else:
-                    total_tax=0
-                res[lot.id]['net_margin'] =  total_tax
-                   
-            if name=="paid_ach":
-                if lot.ach_inv_id:
-                    if lot.ach_inv_id.state == 'paid':
-                        res[lot.id]['paid_ach'] = True
+            for name in fields:
+                res[lot.id] = {name: False}
+                amount = lot.obj_price or 0.0
+                result = 0.0
+                if name == "buyer_price":
+                    if lot.author_right:
+                        taxes.append(lot.author_right)
+                    if lot.auction_id:
+                        taxes += lot.auction_id.buyer_costs
+                    tax = pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
+                    for t in tax:
+                        result += t['amount']
+                    result += amount
+                elif name == "seller_price":
+                    if lot.bord_vnd_id.tax_id:
+                        taxes.append(lot.bord_vnd_id.tax_id)
+                    elif lot.auction_id and lot.auction_id.seller_costs:
+                        taxes += lot.auction_id.seller_costs
+                    tax = pt_tax.compute_all(cr, uid, taxes, amount, 1)['taxes']
+                    for t in tax:
+                        result += t['amount']
+                    result += amount
+                elif name == "gross_revenue":
+                    if lot.auction_id:
+                        result = lot.buyer_price - lot.seller_price
+                elif name == "net_revenue":
+                    if lot.auction_id:
+                        result = lot.buyer_price - lot.seller_price - lot.costs
+
+                elif name == "net_margin":
+                    if ((lot.obj_price==0) and (lot.state=='draft')):
+                        amount = lot.lot_est1
+                    else: 
+                        amount = lot.obj_price
+                    if amount > 0:
+                        result = (lot.net_revenue * 100) / amount
+                elif name == "costs":
+                    # costs: Total credit of analytic account
+                    # objects sold during this auction (excluding analytic lines that are in the analytic journal of the auction date)
+                    som = 0.0
+                    if lot.auction_id:
+                        auct_id = lot.auction_id.id
+                        lot_count = self.search(cr, uid, [('auction_id', '=', auct_id)], count=True)
+                        line_ids = account_analytic_line_obj.search(cr, uid, [
+                                    ('account_id', '=', lot.auction_id.account_analytic_id.id), 
+                                    ('journal_id', '<>', lot.auction_id.journal_id.id), 
+                                    ('journal_id', '<>', lot.auction_id.journal_seller_id.id)])
+                        indir_cost = lot.bord_vnd_id.specific_cost_ids
+                        for r in lot.bord_vnd_id.specific_cost_ids:
+                            som += r.amount
+                        for line in account_analytic_line_obj.browse(cr, uid, line_ids, context=context):
+                            if line.amount:
+                                som -= line.amount
+                        result = som/lot_count
+                    
+                elif name=="paid_ach":
+                    result = False
+                    if lot.ach_inv_id and lot.ach_inv_id.state == 'paid':
+                        result = True
                                         
-            if name=="paid_vnd":
-                if lot.sel_inv_id:
-                    if lot.sel_inv_id.state == 'paid':
-                        res[lot.id]['paid_vnd']= True       
+                elif name=="paid_vnd":
+                    result = False
+                    if lot.sel_inv_id and lot.sel_inv_id.state == 'paid':
+                        result = True  
+    
+                res[lot.id][name] = result
+                
+            
         return res
 
     def onchange_obj_ret(self, cr, uid, ids, obj_ret, context=None):
@@ -376,33 +340,6 @@ class auction_lots(osv.osv):
         if obj_ret:
             return {'value': {'obj_price': 0}}
         return {}
-
-    def _costs(self, cr, uid, ids, context, *a):
-        """
-        costs: Total credit of analytic account
-        / # objects sold during this auction
-        (excluding analytic lines that are in the analytic journal of the auction date).
-        """
-        res={}
-        for lot in self.browse(cr, uid, ids, context={}):
-            som=0.0
-            if not lot.auction_id:
-                res[lot.id] = 0.0
-                continue
-            auct_id=lot.auction_id.id
-            lot_count = self.search(cr, uid, [('auction_id', '=', auct_id)], count=True)
-          #  cr.execute('select count(*) from auction_lots where auction_id=%s', (auct_id,))
-          #  nb = cr.fetchone()[0]
-            account_analytic_line_obj = self.pool.get('account.analytic.line')
-            line_ids = account_analytic_line_obj.search(cr, uid, [('account_id', '=', lot.auction_id.account_analytic_id.id), ('journal_id', '<>', lot.auction_id.journal_id.id), ('journal_id', '<>', lot.auction_id.journal_seller_id.id)])
-            #indir_cost=lot.bord_vnd_id.specific_cost_ids
-            #for r in lot.bord_vnd_id.specific_cost_ids:
-            #   som+=r.amount
-            for line in account_analytic_line_obj.browse(cr, uid, line_ids):
-                if line.amount:
-                    som-=line.amount
-            res[lot.id]=som/lot_count
-        return res
 
     _columns = {
         'bid_lines':fields.one2many('auction.bid_line', 'lot_id', 'Bids'), 
@@ -438,7 +375,6 @@ class auction_lots(osv.osv):
         'vnd_lim_net': fields.boolean('Net limit ?', readonly=True), 
         'image': fields.binary('Image'), 
         'paid_vnd':fields.function(_getprice, string='Seller Paid', method=True, type='boolean', store=True, multi="paid_vnd"), 
-        #'paid_vnd':fields.boolean('Seller Paid', readonly=True), 
         'paid_ach':fields.function(_getprice, string='Buyer invoice reconciled', method=True, type='boolean', store=True, multi="paid_ach"), 
         'state': fields.selection((
             ('draft', 'Draft'), 
@@ -454,7 +390,7 @@ class auction_lots(osv.osv):
         'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price"), 
         'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue"), 
         'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin"), 
-        'costs':fields.function(_costs, method=True, string='Indirect costs', store=True), 
+        'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs"), 
         'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment'), 
         'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue"), 
         'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin"), 
@@ -464,10 +400,7 @@ class auction_lots(osv.osv):
         'lot_num':lambda *a:1, 
         'is_ok': lambda *a: False, 
     }
-    _constraints = [
-#       (_inv_constraint, 'Twice the same inventory number !', ['lot_num','bord_vnd_id'])
-    ]
-
+    
     def name_get(self, cr, user, ids, context=None):
         if not context:
             context={}
@@ -506,7 +439,7 @@ class auction_lots(osv.osv):
     def compute_buyer_costs(self, cr, uid, ids):
         amount_total = {}
         lots = self.browse(cr, uid, ids)
-##CHECKME: Is that AC would be worthwhile to make groups of lots that have the same costs to spend a lot of lists compute?
+        ##CHECKME: Is that AC would be worthwhile to make groups of lots that have the same costs to spend a lot of lists compute?
         taxes = []
         amount=0.0
         pt_tax = self.pool.get('account.tax')
@@ -519,29 +452,16 @@ class auction_lots(osv.osv):
             tax=pt_tax.compute_all(cr, uid, taxes, lot.obj_price, 1)['taxes']
             for t in tax:
                 amount+=t['amount']
-            #amount+=lot.obj_price*0.2
-            #amount+=lot.obj_price
         amount_total['value']= amount
         amount_total['amount']= amount
         
         return amount_total
 
 
-#       for t in taxes_res:
-#           t.update({'type': 0})
-#       return self._sum_taxes_by_type_and_id(taxes_res)
-
-#   lots=self.browse(cr,uid,ids)
-#   amount=0.0
-#   for lot in lots:
-#       taxes=lot.product_id.taxe_id
-
-
     def _compute_lot_seller_costs(self, cr, uid, lot, manual_only=False):
         costs = []
         tax_cost_ids=[]
-#       tax_cost_ids = [i.id for i in lot.auction_id.seller_costs]
-        # if there is a specific deposit cost for this depositer, add it
+
         border_id = lot.bord_vnd_id
         if border_id:
             if border_id.tax_id:
@@ -561,14 +481,13 @@ class auction_lots(osv.osv):
                 c.update({'type': 0})
 ######
         if lot.vnd_lim_net<0 and lot.obj_price>0:
-#FIXME:the string passes have lot 'should go through the system translations.
+            #FIXME:the string passes have lot 'should go through the system translations.
             obj_price_wh_costs = reduce(lambda x, y: x + y['amount'], tax_costs, lot.obj_price)
             if obj_price_wh_costs < lot.vnd_lim:
                 costs.append({  'type': 1, 
                                 'id': lot.obj_num, 
                                 'name': 'Remise lot '+ str(lot.obj_num), 
                                 'amount': lot.vnd_lim - obj_price_wh_costs}
-                                #'account_id': lot.auction_id.acc_refund.id
                             )
         return costs
     
@@ -603,9 +522,9 @@ class auction_lots(osv.osv):
                         total_cost += c['amount']
                     costs.extend(bord_costs)
             if (total_adj+total_cost)<0:
-#FIXME: translate tax name
+                #FIXME: translate tax name
                 new_id = bord and bord.id or 0
-                c = {'type':3, 'id':new_id, 'amount':-total_cost-total_adj, 'name':'Ristourne'}#, 'account_id':lots[0].auction_id.acc_refund.id}
+                c = {'type':3, 'id':new_id, 'amount':-total_cost-total_adj, 'name':'Ristourne'}
                 costs.append(c)
         return self._sum_taxes_by_type_and_id(costs)
 
@@ -619,7 +538,7 @@ class auction_lots(osv.osv):
         for tax in taxes:
             if tax['type'] == 1:
                 tax['id'] = 0
-    #FIXME: translate tax names
+                #FIXME: translate tax names
                 tax['name'] = 'Discount sharp boundary'
             elif tax['type'] == 2:
                 tax['id'] = 0
@@ -643,7 +562,6 @@ class auction_lots(osv.osv):
         res_obj = self.pool.get('res.partner')
         inv_line_obj = self.pool.get('account.invoice.line')
         wf_service = netsvc.LocalService('workflow')
-#       acc_receiv=self.pool.get('account.account').search([cr,uid,[('code','=','4010')]])
         for lot in self.browse(cr, uid, ids, context):
             if not lot.obj_price>0:
                 continue
@@ -687,9 +605,6 @@ class auction_lots(osv.osv):
                     'price_unit': lot.obj_price, 
                 }
                 inv_line_obj.create(cr, uid, inv_line, context)
-            #   inv_ref.button_compute(cr, uid, [inv_id])
-            #   wf_service = netsvc.LocalService('workflow')
-            #   wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
             inv_ref.button_compute(cr, uid, invoice.values())
             wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_proforma2', cr)
         return invoices.values()
@@ -726,7 +641,6 @@ class auction_lots(osv.osv):
                     'type': 'in_invoice', 
                 }
                 inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'in_invoice', lot.bord_vnd_id.partner_id.id)['value'])
-            #   inv['account_id'] = inv['account_id'] and inv['account_id'][0]
                 inv_id = inv_ref.create(cr, uid, inv, context)
                 invoices[lot.bord_vnd_id.id] = inv_id
 
@@ -775,7 +689,6 @@ class auction_lots(osv.osv):
         wf_service = netsvc.LocalService('workflow')
         invoices={}
         for lot in self.browse(cr, uid, ids, context):
-        #   partner_ref = lot.ach_uid.id
             if not lot.auction_id.id:
                 continue
             if not lot.ach_uid.id:
@@ -798,7 +711,6 @@ class auction_lots(osv.osv):
                 if invoice_number:
                     inv['number'] = invoice_number
                 inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', lot.ach_uid.id)['value'])
-                #inv['account_id'] = inv['account_id'] and inv['account_id'][0]
                 inv_id = inv_ref.create(cr, uid, inv, context)
                 invoices[(lot.auction_id.id, lot.ach_uid.id)] = inv_id
             self.write(cr, uid, [lot.id], {'ach_inv_id':inv_id, 'state':'sold'})
@@ -819,27 +731,10 @@ class auction_lots(osv.osv):
                 'price_unit': lot.obj_price, 
             }
             inv_line_obj.create(cr, uid, inv_line, context)
-    #   inv_ref.button_compute(cr, uid, [inpq tu dis cav_id])
-    #       inv_ref.button_compute(cr, uid, [inv_id])
             inv_ref.button_compute(cr, uid, [inv_id])
         for l in  inv_ref.browse(cr, uid, invoices.values(), context):
-        #   wf_service.trg_validate(uid, 'account.invoice',l.id, 'invoice_proforma', cr)
             wf_service.trg_validate(uid, 'account.invoice', l.id, 'invoice_open', cr)
         return invoices.values()
-
-#    def numerotate(self, cr, uid, ids, context=None):
-#                
-#        cr.execute('select auction_id from auction_lots where id=%s', (ids[0],))
-#        auc_id = cr.fetchone()[0]
-#        cr.execute('select max(obj_num) from auction_lots where auction_id=%s', (auc_id,))
-#        try:
-#            max = cr.fetchone()[0]
-#        except:
-#            max = 0
-#        for id in ids:
-#            max+=1
-#            cr.execute('update auction_lots set obj_num=%s where id=%s', (max, id))
-#        return []
 
 auction_lots()
 
@@ -895,12 +790,6 @@ class auction_bid_lines(osv.osv):
     _name = "auction.bid_line"
     _description="Bid"
 
-#   def get_nom(self,cr,uid,ids,*a):
-#       res = {}
-#       lots=self.browse(cr,uid,ids)
-#       for lot in lots:
-#           res[lot.id] = lot.lot_id.auction_id.name
-#       return res
     _columns = {
         'name': fields.char('Bid date', size=64), 
         'bid_id': fields.many2one('auction.bid', 'Bid ID', required=True, ondelete='cascade'), 

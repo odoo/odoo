@@ -48,6 +48,7 @@
         <record id="account_type_cash_equity" model="account.account.type">
             <field name="name">Equity</field>
             <field name="code">equity</field>
+            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
         <record id="account_type_cash_moves" model="account.account.type">
@@ -60,7 +61,7 @@
         <!--
         Chart of Account
         -->
-        
+
         <record id="chart0" model="account.account">
             <field name="code">X0</field>
             <field name="name">Chart For Automated Tests</field>
@@ -78,7 +79,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="account_type_root"/>
         </record>
-        
+
         <record model="account.account" id="assets_view">
             <field name="name">Assets - (test)</field>
             <field name="code">X10</field>
@@ -87,7 +88,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="bal"/>
         </record>
-        
+
         <record model="account.account" id="liabilities_view">
             <field name="name">Liabilities - (test)</field>
             <field name="code">X11</field>
@@ -96,7 +97,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="bal"/>
         </record>
-            
+
         <record id="fas" model="account.account">
             <field name="code">X100</field>
             <field name="name">Fixed Assets - (test)</field>
@@ -204,7 +205,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="account_type_root"/>
         </record>
-        
+
         <record model="account.account" id="income_view">
             <field name="name">Income - (test)</field>
             <field name="code">X20</field>
@@ -213,7 +214,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="gpf"/>
         </record>
-        
+
         <record model="account.account" id="income_fx_income">
             <field name="name">Foreign Exchange Gain - (test)</field>
             <field name="code">X201</field>
@@ -222,7 +223,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="income_view"/>
         </record>
-        
+
         <record model="account.account" id="expense_view">
             <field name="name">Expense - (test)</field>
             <field name="code">X21</field>
@@ -231,9 +232,9 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="gpf"/>
         </record>
-        
+
         <record id="rev" model="account.account">
-            <field name="code">X200</field>        
+            <field name="code">X200</field>
             <field name="name">Revenue - (test)</field>
             <field ref="income_view" name="parent_id"/>
             <field name="type">view</field>
@@ -279,7 +280,7 @@
             <field name="type">other</field>
             <field name="user_type" ref="account_type_expense"/>
         </record>
-        
+
         <record model="account.account" id="income_fx_expense">
             <field name="name">Foreign Exchange Loss - (test)</field>
             <field name="code">X2111</field>
@@ -288,7 +289,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="ovr"/>
         </record>
-        
+
         <!-- Properties -->
         <record forcecreate="True" id="property_account_receivable" model="ir.property">
             <field name="name">property_account_receivable</field>
