@@ -128,6 +128,7 @@ class ExportService(object):
             raise
 
 LOG_NOTSET = 'notset'
+LOG_DEBUG_SQL = 'debug_sql'
 LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_TEST = 'test'
@@ -138,6 +139,8 @@ LOG_CRITICAL = 'critical'
 
 logging.DEBUG_RPC = logging.DEBUG - 2
 logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
+logging.DEBUG_SQL = logging.DEBUG_RPC - 2
+logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
 
 logging.TEST = logging.INFO - 5
 logging.addLevelName(logging.TEST, 'TEST')
@@ -150,6 +153,7 @@ COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
 COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
+    logging.DEBUG_SQL: (WHITE, MAGENTA),
     logging.DEBUG_RPC: (BLUE, WHITE),
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
@@ -215,7 +219,6 @@ def init_logger():
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
 
-
 class Logger(object):
     def __init__(self):
         warnings.warn("The netsvc.Logger API shouldn't be used anymore, please "
@@ -263,8 +266,11 @@ class Logger(object):
             # better ignore the exception and carry on..
             pass
 
-    def set_loglevel(self, level):
-        log = logging.getLogger()
+    def set_loglevel(self, level, logger=None):
+        if logger is not None:
+            log = logging.getLogger(str(logger))
+        else:
+            log = logging.getLogger()
         log.setLevel(logging.INFO) # make sure next msg is printed
         log.info("Log level changed to %s" % logging.getLevelName(level))
         log.setLevel(level)
