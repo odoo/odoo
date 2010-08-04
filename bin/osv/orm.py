@@ -3804,13 +3804,10 @@ class orm(orm_template):
             if t not in tables:
                 tables.append(t)
 
-        if len(qu1):
-            qu1 = ' where ' + ' and '.join(qu1)
-        else:
-            qu1 = ''
+        where = qu1
 
         order_by = self._order
-        qu1_join = ''
+        qu1_join = []
         if order:
             self._check_qorder(order)
             o = order.split(' ')[0]
@@ -3825,16 +3822,15 @@ class orm(orm_template):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         
-        if len(qu1_join):
-            qu1 = qu1 + ' and '
-            qu1 += ' and '.join(qu1_join)
+        where.extend(qu1_join)
+        where_str = " WHERE %s" % " AND ".join(where)
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +
-                    ','.join(tables) +qu1 + limit_str + offset_str, qu2)
+                    ','.join(tables) + where_str + limit_str + offset_str, qu2)
             res = cr.fetchall()
             return res[0][0]
-        cr.execute('select %s.id from ' % self._table + ','.join(tables) +qu1+' order by '+order_by+limit_str+offset_str, qu2)
+        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str +' order by '+order_by+limit_str+offset_str, qu2)
         res = cr.fetchall()
         return [x[0] for x in res]
 
