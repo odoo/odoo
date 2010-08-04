@@ -18,11 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import netsvc
-import pooler
 import time
 
 class stock_partial_picking(osv.osv_memory):
@@ -230,15 +228,5 @@ class stock_partial_picking(osv.osv_memory):
 stock_partial_picking()
 
 
-
-#_moves_arch_end = '''<?xml version="1.0"?>
-#<form string="Picking result">
-#    <label string="The picking has been successfully made !" colspan="4"/>
-#    <field name="back_order_notification" colspan="4" nolabel="1"/>
-#</form>'''
-
-#_moves_fields_end = {
-#    'back_order_notification': {'string':'Back Order' ,'type':'text', 'readonly':True}
-#                     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

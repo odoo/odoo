@@ -20,10 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import netsvc
-import pooler
 import time
 
 class stock_partial_move(osv.osv_memory):

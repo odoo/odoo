@@ -20,13 +20,9 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-from tools.misc import UpdateableStr, UpdateableDict
+
 from tools.translate import _
-import netsvc
-import pooler
 import time
-import wizard
 
 class stock_inventory_line_split(osv.osv_memory):
     _inherit = "stock.move.split"
@@ -105,7 +101,6 @@ class stock_inventory_line_split(osv.osv_memory):
                     if quantity_rest > 0:                        
                         update_val['product_qty'] = quantity_rest                                            
                         line_obj.write(cr, uid, [inv_line.id], update_val)
-
                     
         return new_line
 stock_inventory_line_split()
