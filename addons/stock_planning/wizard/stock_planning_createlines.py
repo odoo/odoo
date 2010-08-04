@@ -88,9 +88,7 @@ class stock_planning_createlines(osv.osv_memory):
                                 ORDER BY period.date_stop DESC",
                                     (uid, uid, f.warehouse_id.id, p.id, f.period_id.date_stop) )
                     ret=cr.fetchone()
-#                        forecast_qty = ret and ret[0] or 0.0
                     if ret:
-#                            raise osv.except_osv(_('Error !'), _('ret is %s %s %s %s %s %s')%(ret[0],ret[2],ret[3],ret[4],ret[5],ret[6],))
                         prod_uom = ret[1]
                         planned_out = ret[2]
                         to_procure = ret[3]
