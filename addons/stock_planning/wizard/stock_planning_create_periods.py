@@ -44,8 +44,8 @@ class stock_period_createlines(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Period Name', size=64),
-        'date_start': fields.date('Start Date', required=True),
-        'date_stop': fields.date('End Date', required=True),
+        'date_start': fields.date('Start Date', required=True, help="Starting date for planning period."),
+        'date_stop': fields.date('End Date', required=True, help="Ending date for planning period."),
         'period_ids': fields.one2many('stock.period', 'planning_id', 'Periods'),
     }
     _defaults={

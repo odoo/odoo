@@ -424,11 +424,6 @@
 	                        groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
-                        <filter name="template" domain="[('active', '=', False)]"
-	                        string="Template"
-	                        icon="terp-project"
-	                        groups="base.group_extended"
-	                        help="Change Type"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="project_id" select="1">
@@ -460,7 +455,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, 'search_default_current': 1}</field>
+            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, "search_default_current": 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">In OpenERP, a project is made of a set of activities (or tasks) for completion.A list view allows the manager to quickly check for task status and make it evolve, delegate task, etc. A search tool allows a multi-criteria sort of activities.
 
