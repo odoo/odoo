@@ -6,7 +6,7 @@
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" groups="base.group_hr_manager" sequence="1"/>
-        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees" sequence="1"/>
+        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees" sequence="1" />
 
         <!--
         ==========
@@ -126,7 +126,7 @@
             <field name="view_type">tree</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_employee_tree"/>
-            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="domain">[('parent_id','=',False),('user_id','=',uid)]</field>
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
 
@@ -393,7 +393,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root"/>
+        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_manager"/>
         <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="action_hr_job" sequence="2"/>
 
     </data>
