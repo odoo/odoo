@@ -91,6 +91,7 @@
                <field name="auction2" string="End of auction"/>
                <field name="name" string="Names"/>
                <field name="state"/>
+               <button string="Create Invoices" help="Create Invoices" name="close" states="draft" type="object" icon="gtk-yes"/>
             </tree>
         </field>
     </record>
@@ -297,6 +298,10 @@
                 <field name="lot_est2"/>
                 <field name="lot_type" select="1"/>
                 <field name="auction_id"/>
+                <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
+                <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
+                <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
+                <button name="button_unpaid" string="Set to draft" states="sold,unsold,paid" type="object" icon="gtk-convert"/>
             </tree>
         </field>
     </record>
