@@ -18,21 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
-from mx import DateTime
 
 from osv import fields, osv
-import netsvc
-import ir
-import pooler
-from tools import config
+
 
 class purchase_order_line(osv.osv):
     _name='purchase.order.line'
     _inherit='purchase.order.line'
     _columns = {
-        'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
-                }
+         'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
+    }
 
 purchase_order_line()
 

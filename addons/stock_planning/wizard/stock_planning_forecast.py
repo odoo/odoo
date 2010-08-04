@@ -27,20 +27,13 @@ class stock_sale_forecast_createlines(osv.osv_memory):
     _name = "stock.sale.forecast.createlines"
     _description = "stock.sale.forecast.createlines"
 
-# FIXME Add some period sugestion like below
-
-#    def _get_latest_period(self,cr,uid,context={}):
-#        cr.execute("select max(date_stop) from stock_period")
-#        result=cr.fetchone()
-#        return result and result[0] or False
-
 
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
         'warehouse_id': fields.many2one('stock.warehouse' , 'Warehouse', required=True, \
                                 help='Warehouse which forecasts will concern. '\
                                    'If during stock planning you will need sales forecast for all warehouses choose any warehouse now.'),
-        'period_id': fields.many2one('stock.period' , 'Period', required=True, help = 'Period which forecasts will concern.' ),
+        'period_id': fields.many2one('stock.period', 'Period', required=True, help='Period which forecasts will concern.'),
         'product_categ_id': fields.many2one('product.category' , 'Product Category', required=True, \
                                 help ='Product Category of products which created forecasts will concern.'),
         'copy_forecast': fields.boolean('Copy Last Forecast', help="Copy quantities from last Stock and Sale Forecast."),

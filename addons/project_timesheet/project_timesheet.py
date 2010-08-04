@@ -165,21 +165,21 @@ class task(osv.osv):
     def write(self, cr, uid, ids,vals,context=None):
         if context is None:
             context = {}
-        if (vals.has_key('project_id') and vals['project_id']) or (vals.has_key('name') and vals['name']):
+        if vals.get('project_id',False) or vals.get('name',False):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
             task_obj_l = self.browse(cr, uid, ids, context)
-            if (vals.has_key('project_id') and vals['project_id']):
+            if vals.get('project_id',False):
                 project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'])
                 acc_id = project_obj.analytic_account_id.id
 
             for task_obj in task_obj_l:
                 if len(task_obj.work_ids):
                     for task_work in task_obj.work_ids:
-                        line_id = task_work.hr_analytic_timesheet_id
-                        if (vals.has_key('project_id') and vals['project_id']):
+                        line_id = task_work.hr_analytic_timesheet_id.id
+                        if vals.get('project_id',False):
                             vals_line['account_id'] = acc_id
-                        if (vals.has_key('name') and vals['name']):
+                        if vals.get('name',False):
                             vals_line['name'] = '%s: %s' % (tools.ustr(vals['name']), tools.ustr(task_work.name) or '/')
                         hr_anlytic_timesheet.write(cr, uid, [line_id], vals_line, {})
         return super(task,self).write(cr, uid, ids, vals, context)
