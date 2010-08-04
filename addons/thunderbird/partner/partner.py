@@ -32,7 +32,6 @@ class thunderbird_partner(osv.osv_memory):
     _rec_name="sender"
 
     def mailcreate(self,cr,user,vals):
-        print "vvvvvvvvvvv",vals
         dictcreate = dict(vals)
         import email
         header_name = email.Header.decode_header(dictcreate['name'])
@@ -82,23 +81,25 @@ class thunderbird_partner(osv.osv_memory):
     def update_contact(self,cr,user,vals):
         dictcreate = dict(vals)
         res_id = dictcreate.get('res_id',False)
+        result={}
         if res_id:
             address_obj = self.pool.get('res.partner.address')
+            address_data = address_obj.read(cr, user, int(res_id), [])
             result={
-                'partner_id': dictcreate.get('partner_id',False),
-                'country_id': dictcreate.get('country_id', False),
-                'state_id': dictcreate('state_id', False),
-                'name': dictcreate.get('name', False),
-                'street': dictcreate.get('street', False),
-                'street2': dictcreate.get('street2', False),
-                'zip': dictcreate.get('zip', False),
-                'city': dictcreate.get('city', False),
-                'phone': dictcreate.get('phone', False),
-                'fax': dictcreate.get('fax', False),
-                'mobile': dictcreate.get('mobile', False),
-                'email': dictcreate.get('email', False),
-            }
-            address_obj.write(cr, user,res_id,result )
+                       'partner_id': address_data['partner_id'] and address_data['partner_id'][0] or False,
+                       'country_id': dictcreate['country_id'] and int(dictcreate['country_id'][0]) or False,
+                       'state_id': dictcreate['state_id'] and int(dictcreate['state_id'][0]) or False,
+                       'name': dictcreate['name'],
+                       'street': dictcreate['street'],
+                       'street2': dictcreate['street2'],
+                       'zip': dictcreate['zip'],
+                       'city': dictcreate['city'],
+                       'phone': dictcreate['phone'],
+                       'fax': dictcreate['fax'],
+                       'mobile': dictcreate['mobile'],
+                       'email': dictcreate['email'],
+                       }
+        address_obj.write(cr, user,res_id,result )
         return True
 
     def create_partner(self,cr,user,vals):

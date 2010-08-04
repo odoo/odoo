@@ -3,7 +3,7 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/config_change.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"  onload="config_change_load()"
-	title="Server" height="160" width="320">
+	title="Server" height="140" width="240">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
@@ -18,7 +18,8 @@
 	<hbox>	
 		<label id="lblport" control="txtcport" value="&lblport.label;" width="80"/>
 		<textbox id="txtcport" width="100" />
-	</hbox>    
+	</hbox>
+    
 </groupbox>
 <hbox align="rightr">
 	<spacer width="50"/>

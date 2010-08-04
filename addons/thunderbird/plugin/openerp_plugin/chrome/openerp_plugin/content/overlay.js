@@ -177,6 +177,72 @@ function searchmail()
 	}
 }
 
+function open_contact()
+{	
+	setTimeout("createConnection()",5000)
+	if (getconnect_server() == "false")
+	{
+		alert("Please Login To The Database First !")
+		return false;
+	}
+	setTimeout("module_install()", 10000)
+	if (getmodule_install() == "no")
+	{
+		alert("Please install the thunderbird module on your '" + getDbName() +"' database Or try again !");
+		return false
+	}
+	if(GetNumSelectedMessages() < 1 || GetNumSelectedMessages() > 1){
+		alert("You must select only one mail For Open Contact Detail");
+		return false
+	}
+
+	//gives the selected email uri
+	var messageUri= gDBView.URIForFirstSelectedMessage;
+
+	var messenger = Components.classes['@mozilla.org/messenger;1'].createInstance(Components.interfaces.nsIMessenger);
+
+	//gives the selected email object 
+	var message = messenger.messageServiceFromURI(messageUri).messageURIToMsgHdr(messageUri);
+
+	//functionality to split the author name and email
+	if(message.author.charAt(0) == '"'){
+		sendername = message.author.split('"')[1].split('"')[0];
+	}
+	else if(message.author.indexOf('<')!=-1){
+		sendername = message.author.split('<')[0];
+	}
+	else{
+		sendername = message.author;
+	}
+	if(message.author.indexOf('<')!=-1){
+		senderemail = message.author.split('<')[1].split('>')[0];
+	}
+	else{
+		senderemail = message.author
+	}
+
+	//set the initial information for the selected email
+	setSenderEmail(senderemail);
+	setSenderName(sendername);
+    setPartnerName("");
+    setStreet("");
+    setStreet2("");
+    setZipCode("");
+    setCity("");
+    setOfficenumber("");
+    setFax("");
+    setMobilenumber("");
+
+    if (getmodule_install() == "no")
+	{
+		alert("Please install the thunderbird module on your '" + getDbName() +"' database  Or try again !");
+		return false
+	}
+	window.open("chrome://openerp_plugin/content/address.xul", "", "chrome, resizable=yes");
+
+}
+
+
 //function to open the configuration window
 var Config = {
   onLoad: function() {
@@ -220,12 +286,8 @@ var Address = {
 	},
 
 	onMenuItemCommand: function(){
-   //     if(GetNumSelectedMessages() < 1 || GetNumSelectedMessages() > 1){
-	//	alert("You must select only one mail to archive");
-		//return false
-	//}
+        open_contact();
         searchContact();
-		window.open("chrome://openerp_plugin/content/address.xul", "", "chrome");
 	}
 };
 

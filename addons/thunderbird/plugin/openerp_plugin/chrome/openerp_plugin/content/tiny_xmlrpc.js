@@ -303,7 +303,7 @@ function setCity(argCity){
 
 //set preference value for country
 function setCountry(argCountry){
-	getPref().setCharPref('country',argCountry)
+	 getPref().setCharPref('country',argCountry)
 }
 
 //set preference value for state
@@ -940,6 +940,7 @@ var listSearchContactHandler = {
 			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
             var strlSearchResult = strlResult.QueryElementAt(0, Components.interfaces.nsISupportsCString);
             var strlSearchResultValue = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
+           
             if(strlSearchResult=="partner_name"){
                  setPartnerName(strlSearchResultValue);
                  var t = getPartnerName();}
@@ -1326,8 +1327,8 @@ function archivemail(){
 		strmethod.data = 'mailcreate';
 		var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 		strobj.data = 'thunderbird.partner';
-		var a = ['sender','receiver','date','title','description'];
-	    var b = [getSenderEmail(),getReceiverEmail(),getReceivedDate(),getSubject(),getMessageBody()];
+		var a = ['name','object','date','email_from','email_cc','description','user_id'];
+		var b = [getSubject(),object,getReceivedDate(),getSenderEmail(),getCCList(),getMessageBody(),branchobj.getIntPref('userid')];
 		var arrofarr = dictcontact(a,b);
 		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 		}
@@ -1367,23 +1368,23 @@ var listCreateContactHandler = {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
 		setContactId(createId);
-		//alert("Contact Created Successfully.");	
+		alert("Contact Created Successfully.");	
 		window.close();
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+		alert('XML-RPC Fault: '+fault);
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: '+errorMsg);
+		alert('Error: '+errorMsg);
 	}
 }
 
 var listUpdateContactHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-		var partnerId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
-		setResourceId(partnerId);
+		var ResourceId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
+		setResourceId(ResourceId);
 		//alert("Contact Created Successfully.");	
 		window.close();
 	},
@@ -1417,7 +1418,7 @@ function createContact(){
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listCreateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
-//ksa
+
 function UpdateContact(){
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
@@ -1433,6 +1434,7 @@ function UpdateContact(){
 	strmethod.data = 'update_contact';
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
+    alert(getResourceId());
 	var a = ['res_id','partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
 	var b = [getResourceId(),getPartnerName(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,getSenderEmail()];
 	var arrofarr = dictcontact(a,b);

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    Copyright (c) 2004 Axelor SPRL. (http://www.axelor.com) All Rights Reserved.
 #
 #    This program is free software: you can redistribute it and/or modify

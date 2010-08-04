@@ -16,7 +16,7 @@
 <hbox id="root">
    <vbox width="400">
       <groupbox height="30" id="existsobjectgroup" width="400">
-         <caption label="&gptinydoc.label;" />
+         <caption label="&gptinyobj.label;" />
 	   <hbox>
 	   <label id="lblsearch" control="txtvalueobj" value="&search.label;"/>
 	   <textbox id="txtvalueobj" size="30"/>
@@ -25,7 +25,7 @@
 	   <vbox align="left" id="checkbox-dynamic"> 
 	  </vbox> 
 	  <hbox align="center">
-	   <image src='chrome://openerp_plugin/skin/perform.gif'/>
+	   <image src='chrome://tiny_plugin/skin/perform.gif'/>
 	    <checkbox id="cbxselectall" oncommand="selectAllCheckbox();" label="&cbxselectall.label;" checked="false"/>
 	    <spacer width="10"/>
         <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s"/>
@@ -48,10 +48,10 @@
    </vbox>
    <vbox>
       <groupbox id="newobjectgroup" align="center" width="170" height="375">
-	<caption label="&newdocument.label;" />
+	<caption label="&newobject.label;" />
 	<hbox>
 	<label id="lblex" value=" "/>
-         <label id="lblex3" control="section" value="&document.label;"/>
+         <label id="lblex3" control="section" value="&object.label;"/>
          <menulist id="section" width="150">
            <menupopup>
 	     <menuitem label="" value=""/>

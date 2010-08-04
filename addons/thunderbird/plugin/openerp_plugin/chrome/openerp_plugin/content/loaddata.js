@@ -45,11 +45,12 @@ var myPrefObserver =
 	//set the initial value of name and email field of create contact window
 	createContact: function()
 	{
-		//document.getElementById("txtselectpartner").value= getPartnerName();
+		//document.getElementById("txtselectpartner").value= getPartnerID();
         document.getElementById("txtname").value= getSenderName();
         document.getElementById("txtemail").value= getSenderEmail();
         document.getElementById("country").value=getAllCountry();
         document.getElementById("state").value=getAllState();
+        setPartnerId(0);
 	},
 
 	//sets the value of email information in preferences and adds observer for the window
@@ -98,14 +99,13 @@ var myPrefObserver =
         document.getElementById("txtstreet2").value= getStreet2();
         document.getElementById("txtzip").value= getZipCode();
         document.getElementById("txtcity").value= getCity();
-       // document.getElementById("txtcountry").value= getCountry();
-      //  document.getElementById("txtstate").value= getState();
         document.getElementById("txtoffice").value= getOfficenumber();
         document.getElementById("txtfax").value= getFax();
         document.getElementById("txtmobile").value= getMobilenumber();
 	    document.getElementById("txtemail").value= getSenderEmail();
         document.getElementById("country").value=getAllCountry();
         document.getElementById("state").value=getAllState();
+
 	},
 
 	//unregistering the window observer
