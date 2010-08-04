@@ -26,8 +26,6 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 from osv import osv, fields
 import netsvc
 from tools.translate import _
-#from tools import config
-
 
 def rounding(fl, round_value):
     if not round_value:
@@ -251,11 +249,8 @@ class stock_sale_forecast(osv.osv):
                     dept_obj = self.pool.get('hr.department')
                     dept_id =  obj.analyzed_dept_id.id and [obj.analyzed_dept_id.id] or []
                     dept_ids = dept_obj.search(cr,uid,[('parent_id','child_of',dept_id)])
-#                    dept_ids_set = ','.join(map(str,dept_ids))
-#                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN %s)" ,(tuple(dept_ids),))
                     cr.execute("SELECT user_id FROM resource_resource rsc, hr_employee emp WHERE (emp.resource_id = rsc.id and emp.department_id IN %s)" ,(tuple(dept_ids),))
                     dept_users = [x for x, in cr.fetchall()]
-#                    dept_users_set =  ','.join(map(str,dept_users))
                     dept_users_set =  map(str,dept_users)
                 else:
                     dept_users = False
@@ -264,7 +259,6 @@ class stock_sale_forecast(osv.osv):
                     if period:
                         so_period_ids = so_obj.search(cr, uid, [('date_order','>=',period.date_start),('date_order','<=',period.date_stop) ], context = context)
                         if so_period_ids:
-                           # so_period_set = ','.join(map(str,so_period_ids))
                             if obj.analyzed_user_id:
                                 user_set = str(obj.analyzed_user_id.id)
 
@@ -312,7 +306,6 @@ class stock_planning(osv.osv):
     _name = "stock.planning"
 
     def _get_in_out(self, cr, uid, val, date_start, date_stop, direction, done, context=None):
-#        res = {}
         if not context:
             context = {}
         product_obj = self.pool.get('product.product')
@@ -343,7 +336,6 @@ class stock_planning(osv.osv):
             product = product_obj.read(cr, uid, prod_id,[], context)
             product_qty = product[mapping[direction]['field']]
             res = mapping[direction]['adapter'](product_qty)
-#            res[val.id] = product_obj['incoming_qty']
         return res
 
     def _get_outgoing_before(self, cr, uid, val, date_start, date_stop, context=None):
