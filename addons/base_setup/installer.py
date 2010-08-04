@@ -82,7 +82,7 @@ class base_setup_installer(osv.osv_memory):
             help="Installs a preselected set of OpenERP "
                  "applications which will help you manage your association "
                  "more efficiently."),
-        'profile_auction':fields.boolean('Auction Houses',
+        'auction':fields.boolean('Auction Houses',
             help="Installs a preselected set of OpenERP "
                  "applications selected to help you manage your auctions "
                  "as well as the business processes around them."),

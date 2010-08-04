@@ -27,7 +27,6 @@ import tools
 class auction_pay_buy(osv.osv_memory):
     _name = "auction.pay.buy"
     _description = "Pay buy"
-    
     _columns= {
        'amount': fields.float('Amount paid', digits= (16, 2)), 
        'buyer_id':fields.many2one('res.partner', 'Buyer'), 
@@ -39,7 +38,7 @@ class auction_pay_buy(osv.osv_memory):
        'total': fields.float('Amount paid', digits = (16, 2), readonly =True), 
     }
     
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
          To get default values for the object.
          @param self: The object pointer.
@@ -49,8 +48,11 @@ class auction_pay_buy(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """        
-        res = super(auction_pay_buy, self).default_get(cr, uid, fields, context=context)       
-        for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
+        if not context:
+            context={}
+        res = super(auction_pay_buy, self).default_get(cr, uid, fields, context=context)
+        auction_lots_obj= self.pool.get('auction.lots')       
+        for lot in auction_lots_obj.browse(cr, uid, context.get('active_ids', [])):
             if 'amount' in fields:
                 res.update({'amount': lot.buyer_price})                
             if 'buyer_id' in fields:
@@ -73,22 +75,20 @@ class auction_pay_buy(osv.osv_memory):
         
         for datas in self.read(cr, uid, ids):
             if not abs(datas['total'] - (datas['amount'] + datas['amount2'] + datas['amount3'])) <0.01:
-                rest = datas['total']-(datas['amount'] + datas['amount2'] + datas['amount3'])
+                rest = datas['total'] - (datas['amount'] + datas['amount2'] + datas['amount3'])
                 raise osv.except_osv('Payment aborted !', 'You should pay all the total: "%.2f" are missing to accomplish the payment.' %(round(rest, 2)))
     
             lots = lot_obj.browse(cr, uid, context['active_ids'], context)
-            ref_bk_s = bank_statement_line_obj
-    
             for lot in lots:
                 if datas['buyer_id']:
-                    lot_obj.write(cr, uid, [lot.id], {'ach_uid':datas['buyer_id']})
+                    lot_obj.write(cr, uid, [lot.id], {'ach_uid': datas['buyer_id']})
                 if not lot.auction_id:
                     raise osv.except_osv('Error !', 'No auction date for "%s": Please set one.'%(lot.name))
                 lot_obj.write(cr, uid, [lot.id], {'is_ok':True})
     
             for st, stamount in [('statement_id1', 'amount'), ('statement_id2', 'amount2'), ('statement_id3', 'amount3')]:
                 if datas[st]:
-                    new_id = ref_bk_s.create(cr, uid, {
+                    new_id = bank_statement_line_obj.create(cr, uid, {
                         'name':'Buyer:'+ str(lot.ach_login or '')+', auction:'+ lots[0].auction_id.name, 
                         'date': time.strftime('%Y-%m-%d'), 
                         'partner_id': datas['buyer_id'] or False, 
@@ -100,7 +100,6 @@ class auction_pay_buy(osv.osv_memory):
                     for lot in lots:
                         lot_obj.write(cr, uid, [lot.id], {'statement_id':[(4, new_id)]})
             return {}
-    
 auction_pay_buy()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
