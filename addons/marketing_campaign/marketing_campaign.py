@@ -674,7 +674,6 @@ class marketing_campaign_workitem(osv.osv):
                 'type' : 'ir.actions.report.xml',
                 'report_name': wi_obj.activity_id.report_id.report_name,
                 'datas' : datas,
-                'nodestroy': True,
             }
         else:
             raise osv.except_osv(_('No preview'),_('The current step for this item has no email or report to preview.'))

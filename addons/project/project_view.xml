@@ -20,9 +20,9 @@
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
                         <field name="parent_id" string="Parent Project"/>
-                        <field name="user_id" string="Project Manager" select="1"/>
-                        <field name="date_start"/>
-                        <field name="date"/>
+                        <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
+                        <field name="date_start" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
+                        <field name="date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="progress_rate" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
@@ -48,8 +48,8 @@
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
                                 <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
-                                <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
+                                <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
                                 <button
                                     string="New Project Based on Template"
@@ -247,8 +247,8 @@
                         <field name="name" select="1"/>
                         <field name="project_id" required="1" select="1" domain="[('user_id','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
-                        <field name="date_deadline"/>
-                        <field name="user_id" select="1"/>
+                        <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
+                        <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
@@ -424,11 +424,6 @@
 	                        groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
-                        <filter name="template" domain="[('active', '=', False)]"
-	                        string="Template"
-	                        icon="terp-project"
-	                        groups="base.group_extended"
-	                        help="Change Type"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="project_id" select="1">
@@ -460,7 +455,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, 'search_default_current': 1}</field>
+            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, "search_default_current": 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">In OpenERP, a project is made of a set of activities (or tasks) for completion.A list view allows the manager to quickly check for task status and make it evolve, delegate task, etc. A search tool allows a multi-criteria sort of activities.
 

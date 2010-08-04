@@ -93,6 +93,7 @@ class hr_recruitment_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'date': fields.date('Date', readonly=True),
+        'opening_date': fields.date('Date of Opening', readonly=True),
         'date_closed': fields.date('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
@@ -103,7 +104,11 @@ class hr_recruitment_report(osv.osv):
         'salary_exp' : fields.float("Salary Expected"),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact Name',readonly=True),
-        'available' : fields.float("Availability")
+        'available' : fields.float("Availability"),
+        'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
+                                       help="Number of Days to close the project issue"),
+        'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
+                                       help="Number of Days to close the project issue"),
 
     }
     _order = 'date desc'
@@ -131,6 +136,8 @@ class hr_recruitment_report(osv.osv):
                      s.stage_id,
                      sum(salary_proposed) as salary_prop,
                      sum(salary_expected) as salary_exp,
+                     extract('epoch' from (s.date_open-s.create_date))/(3600*24) as  delay_open,
+                     extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as  delay_close,
                      count(*) as nbr
                  from hr_applicant s
                  group by
@@ -139,6 +146,9 @@ class hr_recruitment_report(osv.osv):
                      to_char(s.create_date, 'YYYY-MM-DD') ,
                      date_trunc('day',s.create_date),
                      date_trunc('day',s.date_closed),
+                     s.date_open,
+                     s.create_date,
+                     s.date_closed,
                      s.state,
                      s.partner_id,
                      s.partner_address_id,

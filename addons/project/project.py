@@ -92,7 +92,26 @@ where prp.id in %s''',(tuple(ids),))
           child_ids = self.get_all_child_projects(cr, uid, child_ids)
 
         return ids+child_ids
-
+    
+    def _get_user_and_default_uom_ids(self, cr, uid):
+        users_obj = self.pool.get('res.users')
+        model_data_obj = self.pool.get('ir.model.data')
+        
+        model_data_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
+        default_uom = user_uom = model_data_obj.read(cr, uid, [model_data_id], ['res_id'])[0]['res_id']
+        obj_tm = users_obj.browse(cr, uid, uid).company_id.project_time_mode_id
+        if obj_tm:
+            user_uom = obj_tm.id
+        return user_uom, default_uom
+    
+    def _compute_duration(self, cr, uid, duration=0.0, to_uom='default'):
+        uom_obj = self.pool.get('product.uom')
+        user_uom, default_uom = self._get_user_and_default_uom_ids(cr, uid)
+        if to_uom == 'default':
+            return uom_obj._compute_qty(cr, uid, user_uom, duration, default_uom)
+        else:
+            return uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
+        
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}
@@ -127,11 +146,18 @@ where prp.id in %s''',(tuple(ids),))
                 p = tocompute.pop()
                 for i in range(3):
                     s[i] += progress.get(p, (0.0, 0.0, 0.0))[i]
+                    
+            user_uom, def_uom = self._get_user_and_default_uom_ids(cr, uid)
+            if user_uom != def_uom:
+                s[0] = self._compute_duration(cr, uid, s[0])
+                s[1] = self._compute_duration(cr, uid, s[1])
+                s[2] = self._compute_duration(cr, uid, s[2])
+                
             if project.state == 'close':
                 progress_rate = 100.0
             else:
                 progress_rate = s[1] and round(min(100.0 * s[2] / s[1], 99.99), 2)
-
+            
             res[project.id] = {
                 'planned_hours': s[0],
                 'effective_hours': s[2],
@@ -145,24 +171,24 @@ where prp.id in %s''',(tuple(ids),))
             if proj.tasks:
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
-
+    
     _columns = {
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
-        'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
+        'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects."),
         'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
         'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects."),
         'progress_rate': fields.function(_progress_rate, multi="progress", method=True, string='Progress', type='float', help="Percent of tasks closed according to the total of tasks todo."),
-        'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."),
-        'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed."),
-        'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
-        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
+        'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
      }
 
     _order = "sequence"
@@ -234,11 +260,10 @@ where prp.id in %s''',(tuple(ids),))
             default['name'] = proj.name+_(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
 
-        task_ids = task_obj.search(cr, uid, [('project_id','=', res), ('active','=',False)])
+        task_ids = task_obj.search(cr, uid, [('project_id','=', res), ('active','=',True)])
         tasks = task_obj.browse(cr, uid, task_ids)
         for task in tasks:
             date_deadline = None
-            date_end = None
             if task.date_start:
                 ds = date(*time.strptime(task.date_start,'%Y-%m-%d %H:%M:%S')[:3])
                 if task.date_deadline:
@@ -246,11 +271,11 @@ where prp.id in %s''',(tuple(ids),))
                     diff = dd-ds
                     date_deadline = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
             task_obj.write(cr, uid, task.id, {'active':True,
-                                              'date_start':time.strftime('%Y-%m-%d %H:%M:%S'),
+                                              'date_start': False,
+                                              'date_end': False,
                                               'date_deadline':date_deadline,
-                                              'date_end':date_end})
+                                              })
 
-        ids = self.search(cr, uid, [('parent_id','child_of', [res])])
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -317,28 +342,45 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
+    
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        for domain in args:
+            if len(domain) == 3 and domain[0] == 'project_id':
+                id = isinstance(domain[2], list) and int(domain[2][0]) or int(domain[2])
+                if id:
+                    if self.pool.get('project.project').read(cr, user, id, ['state'])['state'] == 'template':
+                        args.append(['active', '=', False])
+        return super(task, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def _str_get(self, task, level=0, border='***', context=None):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
             (task.description or '')+'\n\n'
-
+    
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        project_obj = self.pool.get('project.project')
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
+        
+        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+        if user_uom != default_uom:
+            for task in self.browse(cr, uid, ids, context=context):
+                if hours.get(task.id, False):
+                    dur_in_user_uom =  project_obj._compute_duration(cr, uid, duration=hours.get(task.id, 0.0), to_uom='user')
+                    hours[task.id] = dur_in_user_uom
+            
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
+            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
-                if task.state != 'done':
-                    res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99), 2)
-
-            if task.state in ('done', 'cancel'):
+                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
+            if task.state in ('done','cancelled'):
                 res[task.id]['progress'] = 100.0
-            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
         return res
+
 
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
         return {'value':{'remaining_hours': planned - effective}}
@@ -357,6 +399,7 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
         default['work_ids'] = []
+        default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
         return super(task, self).copy_data(cr, uid, id, default, context)
 
@@ -375,7 +418,7 @@ class task(osv.osv):
                 if task.project_id.active == False or task.project_id.state == 'template':
                     res[task.id] = False
         return res
-
+    
     _columns = {
         'active': fields.function(_is_template, method=True, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True),
@@ -397,7 +440,7 @@ class task(osv.osv):
         'notes': fields.text('Notes'),
         'planned_hours': fields.float('Planned Hours', required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True, help="Computed using the sum of the task work done."),
-        'remaining_hours': fields.float('Remaining Hours', digits=(16,4), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
+        'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
         'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', store=True, help="Computed as: Time Spent + Remaining Time."),
         'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', store=True, help="Computed as: Time Spent / Total Time."),
         'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', store=True, help="Computed as difference of the time estimated by the project manager and the real time to close the task."),
@@ -480,7 +523,8 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
-                elif project.warn_manager and cntx.get('mail_send',True):
+                elif (project.warn_manager or project.warn_customer) and cntx.get('mail_send',True):
+                    cntx.update({'send_manager': project.warn_manager, 'send_partner': project.warn_customer})
                     mail_send = True
             message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
             self.log(cr, uid, task.id, message)
@@ -613,27 +657,55 @@ class project_work(osv.osv):
     }
 
     _order = "date desc"
-
+    
     def create(self, cr, uid, vals, *args, **kwargs):
-        if 'hours' in vals and (not vals['hours']):
+        if (not 'task_id' in vals) or (not 'hours' in vals):
+            return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+        if not vals['hours']:
             vals['hours'] = 0.00
-        if 'task_id' in vals:
-            cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
+         
+        project_obj = self.pool.get('project.project')
+        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+        duration = vals['hours']
+        
+        if user_uom != default_uom:
+            duration =  project_obj._compute_duration(cr, uid, duration=duration, to_uom='user')
+        cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (duration, vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-        if 'hours' in vals and (not vals['hours']):
-            vals['hours'] = 0.00
-        if 'hours' in vals:
+        if not vals['hours']:
+            vals['hours'] = 0.00        
+         
+        project_obj = self.pool.get('project.project')
+        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)   
+        duration = vals['hours']
+         
+        if user_uom == default_uom:
             for work in self.browse(cr, uid, ids, context):
-                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
+                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, work.hours, work.task_id.id))
+        else:
+            for work in self.browse(cr, uid, ids, context):
+                duration =  project_obj._compute_duration(cr, uid, duration=duration, to_uom='user')
+                del_work =  project_obj._compute_duration(cr, uid, duration=work.hours, to_uom='user')
+                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, del_work, work.task_id.id))
+            
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
-        for work in self.browse(cr, uid, ids):
-            cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
+        context = kwargs.get('context', {})
+        project_obj = self.pool.get('project.project')
+        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)   
+         
+        if user_uom == default_uom:
+            for work in self.browse(cr, uid, ids, context):
+                cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
+        else:
+            for work in self.browse(cr, uid, ids, context):
+                duration =  project_obj._compute_duration(cr, uid, duration=work.hours, to_uom='user')
+                cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (duration, work.task_id.id))
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
 
 project_work()

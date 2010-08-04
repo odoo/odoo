@@ -48,7 +48,10 @@
      if not new_prj:
      	raise Exception( "New project based on template not created")
      new_id = new_prj['res_id']
-     state = self.read(cr, uid, [new_id], ['state'])[0]['state']
+     new_prj = self.read(cr, uid, [new_id], ['name', 'state'])[0]
+     state = new_prj['state']
+     name = new_prj['name'] 
+     print "Project '%s' created"%name
      assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state          
 - 
   Reset project template to normal project  
@@ -275,7 +278,7 @@
         name: Training on yml
         user_id: base.user_root
 -
-   Check for effective hours and remaining hours
+   Check for effective hours and remaining hours, remaining_hours must be 5, effective_hours must be 45
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After work task of 5 hours effective_hours must be equal to 45 and remaining_hours is 5}:
        - planned_hours == 30
@@ -312,6 +315,6 @@
 - 
   Check if project in close state
 - 
-  !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error}:
+  !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: "Project must be in closed state"}:
        - state == "close"               
                      

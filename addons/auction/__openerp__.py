@@ -53,7 +53,7 @@
         #'wizard/auction_payer_sel_view.xml',
         'wizard/auction_lots_sms_send_view.xml',
         'wizard/auction_catalog_flagey_view.xml',
-        'wizard/auction_lots_buyer_map_view.xml',
+        #'wizard/auction_lots_buyer_map_view.xml',
         'auction_view.xml',
         'auction_report.xml',
         'report/report_auction_view.xml',

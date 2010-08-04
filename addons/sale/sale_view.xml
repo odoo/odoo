@@ -79,11 +79,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales orders">
-                    <field name="date_order"/>
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="partner_shipping_id"/>
                     <field name="user_id" />
+                    <field name="date_order"/>
+                    <field name="partner_shipping_id"/>
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
@@ -92,14 +92,6 @@
                 </tree>
             </field>
         </record>
-
-        <act_window name="Deposit"
-           res_model="sale.advance.payment.inv"
-           src_model="sale.order"
-           view_mode="form"
-           target="new"
-           key2="client_action_multi"
-           id="action_view_sale_advance_payment_inv"/>
 
         <record id="view_order_form" model="ir.ui.view">
             <field name="name">sale.order.form</field>
@@ -163,12 +155,14 @@
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state"/>
                                                 <field name="invoiced"/>
+                                                <group attrs="{'invisible':[('invoiced','=',True)]}">
                                                 <button colspan="1"
                                                     name="create_sale_order_line_invoice"
                                                     states="confirmed"
                                                     string="Create Invoice"
                                                     type="object"
                                                     icon="terp-document-new" />
+                                                 </group>
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
@@ -181,8 +175,8 @@
                                             <field colspan="4" name="notes" nolabel="1"/>
                                         </page>
                                         <page string="History" groups="base.group_extended">
-                                            <separator colspan="4" string="Invoice Lines"/>
-                                            <field colspan="4" name="invoice_lines" nolabel="1"/>
+                                            <separator colspan="4" string="Invoice"/>
+                                            <field colspan="2" name="line_invoice_id" nolabel="1"/>
                                             <separator colspan="4" string="Stock Moves"/>
                                             <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
                                         </page>
@@ -203,7 +197,7 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute" attrs="{'invisible':[('state','!=','draft')]}"/>
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>
@@ -280,8 +274,9 @@
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     </group>
                </search>
             </field>
@@ -419,8 +414,8 @@
 <!--                        <page string="Properties" groups="base.group_extended">-->
 <!--                            <field name="property_ids" nolabel="1"/>-->
 <!--                        </page>-->
-                        <page string="Invoice Lines" groups="base.group_extended">
-                            <field colspan="4" name="invoice_lines" nolabel="1"/>
+                        <page string="Invoice" groups="base.group_extended">
+                            <field colspan="2" name="line_invoice_id" nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields,osv
 
 class product(osv.osv):

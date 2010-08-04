@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-07-22 20:15+0000\n"
+"PO-Revision-Date: 2010-08-02 18:24+0000\n"
 "Last-Translator: lyyser <logard.1961@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-23 04:07+0000\n"
+"X-Launchpad-Export-Date: 2010-08-03 03:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -189,6 +189,8 @@ msgstr "Liiguta valitud rida"
 #. module: account
 #: rml:account.journal.period.print:0
 #: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Entry label"
 msgstr "Kirje silt"
 
@@ -233,6 +235,7 @@ msgstr "Perioodilised kirjed"
 #: field:account.move,amount:0
 #: field:account.tax,amount:0
 #: field:account.tax.template,amount:0
+#: xsl:account.transfer:0
 msgid "Amount"
 msgstr "Kogus"
 
@@ -292,6 +295,7 @@ msgstr "Tasumata Maksed"
 #. module: account
 #: wizard_view:account.account.balance.report,checktype:0
 #: wizard_view:account.analytic.account.analytic.check.report,init:0
+#: wizard_view:account.analytic.account.balance.report,init:0
 #: wizard_view:account.analytic.account.cost_ledger.report,init:0
 #: wizard_view:account.analytic.account.inverted.balance.report,init:0
 #: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
@@ -331,7 +335,6 @@ msgid "Delta Debit"
 msgstr "Delta deebet"
 
 #. module: account
-#: model:account.account.type,name:account.account_type_tax
 #: rml:account.invoice:0
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
@@ -346,9 +349,7 @@ msgstr "Deebet tehing"
 #. module: account
 #: field:account.analytic.line,account_id:0
 #: field:account.invoice.line,account_analytic_id:0
-#: wizard_field:account.invoice.pay,addendum,analytic_id:0
 #: field:account.move.line,analytic_account_id:0
-#: wizard_field:account.move.line.reconcile,addendum,analytic_id:0
 #: field:report.hr.timesheet.invoice.journal,account_id:0
 msgid "Analytic Account"
 msgstr "Analüütiline konto"
@@ -664,11 +665,8 @@ msgstr "Vahesumma:"
 #. module: account
 #: field:account.analytic.account,line_ids:0
 #: view:account.analytic.line:0
-#: code:addons/account/project/wizard/wizard_account_analytic_line.py:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
-#: model:ir.actions.act_window,name:account.action_account_tree1
 #: model:ir.ui.menu,name:account.next_id_41
-#, python-format
 msgid "Analytic Entries"
 msgstr "Analüütilised kirjed"
 
@@ -683,7 +681,6 @@ msgid "Associated Partner"
 msgstr "Seotud partner"
 
 #. module: account
-#: view:account.invoice:0
 #: field:account.invoice,comment:0
 msgid "Additional Information"
 msgstr "Lisainfo"
@@ -1453,9 +1450,6 @@ msgstr "Hoia tühjana, et kasutada tulude kontot"
 #: field:account.bank.statement.reconcile,line_new_ids:0
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
-#: code:addons/account/wizard/wizard_pay_invoice.py:0
-#: code:addons/account/wizard/wizard_reconcile.py:0
-#, python-format
 msgid "Write-Off"
 msgstr "Mahakandmine"
 
@@ -1861,6 +1855,7 @@ msgstr ""
 #: field:account.journal,type:0
 #: field:account.move,type:0
 #: field:account.move.reconcile,type:0
+#: xsl:account.transfer:0
 msgid "Type"
 msgstr "Tüüp"
 
@@ -2294,13 +2289,13 @@ msgstr ""
 #: selection:account.general.ledger.report,checktype,sortbydate:0
 #: rml:account.journal.period.print:0
 #: field:account.move,date:0
-#: wizard_field:account.move.line.reconcile,addendum,date_p:0
 #: rml:account.overdue:0
 #: wizard_field:account.subscription.generate,init,date:0
 #: field:account.subscription.line,date:0
 #: rml:account.tax.code.entries:0
 #: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
+#: xsl:account.transfer:0
 msgid "Date"
 msgstr "Kuupäev"
 
@@ -2417,7 +2412,6 @@ msgstr "Lõppkuupäev"
 #: view:account.bank.statement:0
 #: field:account.move.reconcile,line_id:0
 #: model:ir.actions.act_window,name:account.action_move_line_search
-#: model:ir.actions.act_window,name:account.action_move_line_select
 #: model:ir.actions.act_window,name:account.action_move_line_tree1
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
@@ -2609,8 +2603,6 @@ msgstr ""
 
 #. module: account
 #: rml:account.analytic.account.journal:0
-#: wizard_view:account.invoice.pay,addendum:0
-#: wizard_view:account.move.line.reconcile,addendum:0
 #: model:ir.ui.menu,name:account.next_id_40
 #: model:process.node,name:account.process_node_analytic0
 #: model:process.node,name:account.process_node_analyticcost0
@@ -2714,7 +2706,6 @@ msgid "Invoice Number"
 msgstr "Arve number"
 
 #. module: account
-#: wizard_field:account.analytic.account.balance.report,init,date2:0
 #: field:account.period,date_stop:0
 msgid "End of Period"
 msgstr "Perioodi lõpp"
@@ -2898,6 +2889,8 @@ msgstr "Täielik konto nimi"
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 msgid "1cm 27.7cm 20cm 27.7cm"
 msgstr ""
@@ -2954,11 +2947,9 @@ msgstr "Kirje read"
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 #: wizard_view:account.move.line.reconcile.select,init:0
-#: code:addons/account/wizard/wizard_reconcile_select.py:0
 #: model:ir.ui.menu,name:account.next_id_20
 #: model:process.node,name:account.process_node_reconciliation0
 #: model:process.node,name:account.process_node_supplierreconciliation0
-#, python-format
 msgid "Reconciliation"
 msgstr ""
 
@@ -3018,6 +3009,7 @@ msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
+#: xsl:account.transfer:0
 msgid "Document"
 msgstr "Dokument"
 
@@ -3065,8 +3057,6 @@ msgstr ""
 
 #. module: account
 #: rml:account.general.ledger:0
-#: rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0
 msgid "Entry Label"
 msgstr ""
 
@@ -3258,7 +3248,6 @@ msgid "Generate Fiscal Year Opening Entries"
 msgstr "Genereeri majandusaasta avatud kirjetega"
 
 #. module: account
-#: view:account.move.reconcile:0
 #: model:ir.actions.wizard,name:account.wizard_reconcile
 msgid "Reconcile Entries"
 msgstr ""
@@ -3606,6 +3595,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: wizard_field:account.invoice.pay,addendum,comment:0
 #: wizard_field:account.invoice.pay,init,name:0
 msgid "Entry Name"
 msgstr "Kirje Nimi"
@@ -4913,7 +4903,6 @@ msgid "Invoice Lines"
 msgstr "Arve read"
 
 #. module: account
-#: wizard_field:account.analytic.account.balance.report,init,date1:0
 #: field:account.period,date_start:0
 msgid "Start of Period"
 msgstr "Perioodi algus"
@@ -5306,6 +5295,8 @@ msgstr "Tarnija arve protsess"
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 msgid "Page"
 msgstr ""
@@ -5387,6 +5378,7 @@ msgstr "Perioodide arv"
 
 #. module: account
 #: wizard_field:account.analytic.account.analytic.check.report,init,date2:0
+#: wizard_field:account.analytic.account.balance.report,init,date2:0
 #: wizard_field:account.analytic.account.cost_ledger.report,init,date2:0
 #: wizard_field:account.analytic.account.inverted.balance.report,init,date2:0
 #: wizard_field:account.analytic.account.journal.report,init,date2:0
@@ -5575,6 +5567,7 @@ msgstr "Majandusaasta mida sulgeda"
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,date1:0
 #: wizard_field:account.analytic.account.analytic.check.report,init,date1:0
+#: wizard_field:account.analytic.account.balance.report,init,date1:0
 #: wizard_field:account.analytic.account.cost_ledger.report,init,date1:0
 #: wizard_field:account.analytic.account.inverted.balance.report,init,date1:0
 #: wizard_field:account.analytic.account.journal.report,init,date1:0
@@ -6042,12 +6035,12 @@ msgstr ""
 #. module: account
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Fiscal Year(s)(Maximum Three Years)"
-msgstr ""
+msgstr "Vali finantsaasta(d) (maksimum kolm aastat)"
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,select_account:0
 msgid "Select Reference Account(for  % comparision)"
-msgstr ""
+msgstr "Valige võrdluskonto (% võrdluseks)"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_account_balance_report
@@ -6098,7 +6091,7 @@ msgid "Show Comparision in %"
 msgstr "Näita võrdlus protsentides %"
 
 #. module: account
-#: wizard_view:account.analytic.account.balance.report,init:0
+#: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Period"
 msgstr "Vali periood"
 

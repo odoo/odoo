@@ -49,9 +49,16 @@ class account_bank_statement(osv.osv):
         }
 
     def _default_journal_id(self, cr, uid, context={}):
-        if context.get('journal_id', False):
-            return context['journal_id']
-        return False
+        journal_pool = self.pool.get('account.journal')
+        journal_type = context.get('journal_type', False)
+        journal_id = False
+        
+        if journal_type:
+            ids = journal_pool.search(cr, uid, [('type', '=', journal_type)])
+            if ids:
+                journal_id = ids[0]
+            
+        return journal_id 
 
     def _default_balance_start(self, cr, uid, context={}):
         cr.execute('select id from account_bank_statement where journal_id=%s order by date desc limit 1', (1,))
@@ -119,7 +126,7 @@ class account_bank_statement(osv.osv):
             currency_id = res[statement_id]
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
-
+        
     _order = "date desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
@@ -128,7 +135,7 @@ class account_bank_statement(osv.osv):
         'date': fields.date('Date', required=True,
             states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
-            states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'cash')]),
+            states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'bank')]),
         'period_id': fields.many2one('account.period', 'Period', required=True,
             states={'confirm':[('readonly', True)]}),
         'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),
@@ -151,8 +158,7 @@ class account_bank_statement(osv.osv):
     }
 
     _defaults = {
-        'name': lambda self, cr, uid, context=None: \
-                self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement'),
+        'name': lambda *a: "/",
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
         'balance_start': _default_balance_start,
@@ -185,7 +191,7 @@ class account_bank_statement(osv.osv):
             'value':res,
             'context':context,
         }
-
+    
     def button_confirm_bank(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
@@ -361,8 +367,13 @@ class account_bank_statement(osv.osv):
 
                 if st.journal_id.entry_posted:
                     account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
+                    
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
             done.append(st.id)
+
+            next_number = self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement')
+            self.write(cr, uid, [st.id], {'name':next_number}, context)
+
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
         return True
 
@@ -424,7 +435,6 @@ class account_bank_statement(osv.osv):
         return super(account_bank_statement, self).copy(cr, uid, id, default, context)
 
 account_bank_statement()
-
 
 class account_bank_statement_reconcile(osv.osv):
     _name = "account.bank.statement.reconcile"

@@ -96,7 +96,7 @@ class account_analytic_line(osv.osv):
             # Take the company currency as the reference one
             context['currency_id']=company_obj.browse(cr, uid, company_id).currency_id.id
             amount_unit=prod.price_get(pricetype.field, context)[prod.id]
-            amount=amount_unit*unit_amount or 1.0
+            amount = amount_unit*unit_amount or 1.0
             return {'value': {
                 'amount': - round(amount, 2),
                 'general_account_id': a,

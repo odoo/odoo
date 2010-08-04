@@ -26,7 +26,10 @@ class change_standard_price(osv.osv_memory):
     _name = "stock.change.standard.price"
     _description = "Change Standard Price"
     _columns = {
-            'new_price': fields.float('Price', required=True),
+            'new_price': fields.float('Price', required=True, 
+                                      help="If cost price is increased, stock variation account will be debited " 
+                                            "and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+                                            "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."),
             'stock_account_input':fields.many2one('account.account', 'Stock Input Account'),
             'stock_account_output':fields.many2one('account.account', 'Stock Output Account'),
             'stock_journal':fields.many2one('account.journal', 'Stock journal', required=True),

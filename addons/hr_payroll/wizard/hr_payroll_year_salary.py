@@ -65,7 +65,6 @@ class hr_payroll_year_salary(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'year.salary',
             'datas': datas,
-            'nodestroy':True,
        }
 
 hr_payroll_year_salary()

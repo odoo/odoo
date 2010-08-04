@@ -203,7 +203,7 @@ class account_voucher(osv.osv):
             }
             self.write(cr, uid, ids, res)
         else:
-            raise osv.except_osv('Invalid action !', 'You cannot post to Pro-Forma a voucher with Total amount = 0 !')
+            raise osv.except_osv(_('Invalid action !'), _('You can not post to Pro-Forma a voucher with Total amount = 0 !'))
         return True
 
     def proforma_voucher(self, cr, uid, ids, context={}):
@@ -269,8 +269,16 @@ class account_voucher(osv.osv):
                 continue
 
             journal = journal_pool.browse(cr, uid, inv.journal_id.id)
-            if journal.sequence_id:
-                name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
+            if inv.type in ('journal_pur_voucher', 'journal_sale_vou'):
+                if journal.invoice_sequence_id:
+                    name = sequence_pool.get_id(cr, uid, journal.invoice_sequence_id.id)
+                else:
+                    raise osv.except_osv(_('Error !'), _('Please define invoice sequence on %s journal !' % (journal.name)))
+            else:
+                if journal.sequence_id:
+                    name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
+                else:
+                    raise osv.except_osv(_('Error !'), _('Please define sequence on journal !'))
             
             ref = False
             if inv.type in ('journal_pur_voucher', 'bank_rec_voucher', 'rec_voucher'):
@@ -462,25 +470,24 @@ class account_voucher_line(osv.osv):
         account_id = False
 
         partner = partner_pool.browse(cr, uid, partner_id)
+        balance = 0.0
         
-        if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
+        if type1 in ('rec_voucher', 'bank_rec_voucher', 'journal_voucher'):
             account_id = partner.property_account_receivable.id
             balance = partner.credit
             ttype = 'cr'
             
-        elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') :
+        elif type1 in ('pay_voucher', 'bank_pay_voucher', 'journal_voucher') :
             account_id = partner.property_account_payable.id
             balance = partner.debit
             ttype = 'dr'
             
         elif type1 in ('journal_sale_vou') :
             account_id = partner.property_account_receivable.id
-            balance = partner.credit
             ttype = 'dr'
             
         elif type1 in ('journal_pur_voucher') :
             account_id = partner.property_account_payable.id
-            balance = partner.debit
             ttype = 'cr'
         
         if company.currency_id != currency:

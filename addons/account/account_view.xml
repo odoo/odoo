@@ -152,12 +152,16 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <newline/>
-                            <field name="currency_id"/>
-                            <field name="active"/>
-                            <field name="currency_mode"/>
-                            <field name="reconcile"/>
-                            <newline/>
+                            <group col="2" colspan="2">
+                                <separator string="Currency" colspan="2"/>
+                                <field name="currency_id"/>
+                                <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Reconcile" colspan="2"/>
+                                <field name="reconcile"/>
+<!--                                <field name="active"/>-->
+                            </group>
                             <separator string="Default Taxes" colspan="4"/>
                             <field colspan="4" name="tax_ids" nolabel="1" domain="[('parent_id','=',False)]"/>
                             <separator string="Consolidated Children" colspan="4"/>
@@ -388,13 +392,14 @@
                                 <field name="centralisation" groups="base.group_extended"/>
                                 <field name="entry_posted"/>
                             </group>
+                            <group colspan="2" col="2">
+                                <separator string="Invoicing Data" colspan="4"/>
+                                <field name="invoice_sequence_id"/>
+                                <field name="group_invoice_lines"/>
+                            </group>
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Sequence" colspan="4"/>
                                 <field name="sequence_id"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator string="Invoicing Data" colspan="4"/>
-                                <field name="group_invoice_lines"/>
                             </group>
                         </page>
                         <page string="Entry Controls" groups="base.group_extended">
@@ -455,7 +460,7 @@
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
                     <button type="object" string="Confirm" name="button_confirm_bank" states="open" icon="terp-gtk-go-back-rtl"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
@@ -530,12 +535,16 @@
                             <field colspan="4" name="move_line_ids" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="7" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
+                        
+                        <button name="%(action_view_account_statement_from_invoice_lines)d"
+                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}"/>
+                        
                         <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -546,6 +555,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="context">{'journal_type':'bank'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
             <field name="sequence" eval="1"/>
@@ -818,7 +828,7 @@
                             <field groups="base.group_extended" name="price_include"/>
                             <field name="type_tax_use"/>
                             <newline/>
-                            <field colspan="4" groups="base.group_extended" name="child_ids"/>
+                            <field colspan="4" groups="base.group_extended" name="child_ids" nolabel="1"/>
                         </page>
                         <page string="Tax Declaration">
                             <separator colspan="4" string="Invoices"/>
@@ -1261,7 +1271,7 @@
                             <group col="4" colspan="4">
                                 <field name="state" select="1"/>
                                 <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
-                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="terp-gtk-stop"/>
+                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                     </notebook>
@@ -1481,7 +1491,7 @@
                         <field name="balance_end"/>
                         <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -1649,7 +1659,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_model_form" id="menu_action_model_form" parent="account.menu_configuration_misc"/>
+        <menuitem action="action_model_form" id="menu_action_model_form" sequence="5" parent="account.menu_configuration_misc"/>
 
         <!--
             # Payment Terms
@@ -1779,39 +1789,46 @@
             <field name="model">account.subscription</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Entry Subscription">
-                    <field name="name" select="1"/>
-                    <field name="ref" select="1"/>
-
-                    <separator colspan="4" string="Subscription Periods"/>
-                    <field name="date_start" select="1"/>
-                    <field name="period_total"/>
-
-                    <field name="period_nbr"/>
-                    <field name="period_type"/>
-                    <field name="model_id"/>
+                <form string="Recurring">
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="model_id"/>
+                        <field name="ref" select="1"/>
+                    </group>
                     <group col="2" colspan="2">
-                        <button name="compute" states="draft,running" string="Compute" type="object" icon="terp-stock_format-scientific"/>
-                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
+                        <separator colspan="4" string="Starts on"/>
+                        <field name="date_start" select="1"/>
+                        <field name="period_total"/>
+                        
+                    </group>
+                    
+                    <group col="2" colspan="2">
+                        <separator colspan="4" string="Valid Up to"/>
+                        <field name="period_nbr"/>
+                        <field name="period_type"/>
+                    </group>
+                    
+                    <group col="2" colspan="2">
                     </group>
                     <separator colspan="4" string="Subscription Lines"/>
                     <field colspan="4" name="lines_id" widget="one2many_list" nolabel="1"/>
 
-                    <separator colspan="4" string="State"/>
-                    <field name="state"/>
-                    <group col="1" colspan="2">
+                    <group col="6" colspan="4">
+                        <field name="state"/>
                         <button name="state_draft" states="done" string="Set to Draft" type="object"  icon="gtk-convert" />
+                        <button name="compute" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
+                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                     </group>
                 </form>
             </field>
         </record>
         <record id="action_subscription_form" model="ir.actions.act_window">
-            <field name="name">Subscription Entries</field>
+            <field name="name">Recurring Lines</field>
             <field name="res_model">account.subscription</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem action="action_subscription_form" id="menu_action_subscription_form" parent="account.menu_finance_recurrent_entries"/>-->
+        <menuitem action="action_subscription_form" id="menu_action_subscription_form" sequence="5" parent="account.menu_configuration_misc"/>
 
         <record id="action_subscription_form_running" model="ir.actions.act_window">
             <field name="name">Running Subscriptions</field>
@@ -2433,7 +2450,7 @@
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
                     <button type="object" string="Confirm" name="button_confirm_bank" states="open" icon="terp-gtk-go-back-rtl"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
@@ -2537,7 +2554,7 @@
                         <field name="state" colspan="4"/>
                         <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-check" type="object"/>
                         <button name="button_open" states="draft" string="Open CashBox" icon="terp-document-new" type="object"/>
-                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
+                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="gtk-cancel" type="object" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>
@@ -2563,6 +2580,7 @@
             <field name="view_id" ref="view_cash_statement_tree"/>
             <field name="search_view_id" ref="view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+            <field name="context">{'journal_type':'cash'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="1"/>

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-07-28 14:41+0000\n"
-"Last-Translator: Leandro Chaves <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 03:08+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-29 03:33+0000\n"
+"X-Launchpad-Export-Date: 2010-08-04 03:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -34,6 +34,7 @@ msgstr "Definir como rascunho"
 #. module: auction
 #: field:auction.deposit,partner_id:0
 #: view:auction.lots:0
+#: xsl:report.auction.seller.list:0
 #: field:report.deposit.border,seller:0
 #: field:report.seller.auction,seller:0
 #: field:report.seller.auction2,seller:0
@@ -982,6 +983,7 @@ msgid "Antique/Carpet and textilles"
 msgstr ""
 
 #. module: auction
+#: xsl:report.auction.seller.list:0
 #: field:report.object.encoded.manager,adj:0
 msgid "Adj."
 msgstr ""
@@ -990,6 +992,7 @@ msgstr ""
 #: field:auction.lot.history,name:0
 #: field:report.attendance,name:0
 #: field:report.auction.adjudication,date:0
+#: xsl:report.auction.deposit:0
 #: field:report.auction.estimation.adj.category,date:0
 msgid "Date"
 msgstr ""
@@ -1072,7 +1075,9 @@ msgid "Aie Category"
 msgstr ""
 
 #. module: auction
+#: xsl:flagey.huissier:0
 #: rml:report.auction.buyer.result:0
+#: xsl:report.auction.deposit:0
 msgid "Num"
 msgstr ""
 
@@ -1251,6 +1256,7 @@ msgstr ""
 
 #. module: auction
 #: rml:buyer.list:0
+#: xsl:report.auction.seller.list:0
 msgid "To pay"
 msgstr ""
 
@@ -1474,6 +1480,7 @@ msgstr ""
 
 #. module: auction
 #: rml:buyer.list:0
+#: xsl:report.auction.seller.list:0
 msgid "#"
 msgstr ""
 
@@ -1605,6 +1612,7 @@ msgstr ""
 
 #. module: auction
 #: selection:auction.lots,state:0
+#: xsl:report.auction.ach_bordereau:0
 #: selection:report.object.encoded,state:0
 #: selection:report.unclassified.objects,state:0
 msgid "Paid"
@@ -1644,6 +1652,9 @@ msgstr ""
 
 #. module: auction
 #: rml:buyer.list:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.seller.list:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Total:"
 msgstr ""
 
@@ -1816,6 +1827,8 @@ msgstr ""
 #: view:auction.lots:0
 #: rml:auction.total.rml:0
 #: model:ir.ui.menu,name:auction.auction_report_auction_menu
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.deposit:0
 msgid "Auction"
 msgstr ""
 
@@ -1897,6 +1910,7 @@ msgstr ""
 
 #. module: auction
 #: field:report.attendance,total_attendance:0
+#: xsl:report.auction.ach_bordereau:0
 msgid "Total"
 msgstr ""
 
@@ -2411,6 +2425,11 @@ msgstr ""
 #: view:auction.lots:0
 #: wizard_field:auction.lots.numerotate,search,obj_desc:0
 #: rml:bids.phones.details:0
+#: xsl:flagey.huissier:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.deposit:0
+#: xsl:report.auction.lots.list.landscape:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Description"
 msgstr ""
 
