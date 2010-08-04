@@ -27,6 +27,7 @@ class stock_sale_forecast_createlines(osv.osv_memory):
     _name = "stock.sale.forecast.createlines"
     _description = "stock.sale.forecast.createlines"
 
+
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
         'warehouse_id': fields.many2one('stock.warehouse' , 'Warehouse', required=True, \
