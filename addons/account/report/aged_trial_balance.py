@@ -40,6 +40,9 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 			'get_for_period': self._get_for_period,
 			'get_company': self._get_company,
 			'get_currency': self._get_currency,
+			'get_partners':self._get_partners,
+			'get_account': self._get_account,
+			'get_fiscalyear': self._get_fiscalyear,
 		})
 
 	def set_context(self, objects, data, ids, report_type=None):
@@ -207,6 +210,15 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 	def _get_for_period(self,pos):
 		period = self.total_account[int(pos)]
 		return period
+
+	def _get_partners(self,data):
+		if data['form']['result_selection'] == 'customer':
+		    return 'Receivable Accounts'
+		elif data['form']['result_selection'] == 'supplier':
+		    return 'Payable Accounts'
+		elif data['form']['result_selection'] == 'customer_supplier':
+		    return 'Receivable and Payable Accounts'
+		return ''	
 
 report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
 		'addons/account/report/aged_trial_balance.rml',parser=aged_trial_report, header=False)
