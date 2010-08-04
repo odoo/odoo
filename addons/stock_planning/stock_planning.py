@@ -166,50 +166,48 @@ class stock_sale_forecast(osv.osv):
         res = {'value': ret}
         return res
 
-    def onchange_uom(self, cr, uid, ids, product_uom=False, product_qty=0.0, active_uom=False):
+    def onchange_uom(self, cr, uid, ids, product_uom=False, product_qty=0.0, 
+                     active_uom=False, product_id=False):
         ret = {}
-        if not ids:
-            return {}
-        if product_uom:
-            val1 = self.browse(cr, uid, ids)
-            val = val1[0]
-            coeff_uom2def = self._to_default_uom_factor(cr, uid, val, active_uom, {})
-            coeff_def2uom, round_value = self._from_default_uom_factor( cr, uid, val, product_uom, {})
+        if product_uom and product_id:
+            coeff_uom2def = self._to_default_uom_factor(cr, uid, product_id, active_uom, {})
+            coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, product_id, product_uom, {})
             coeff = coeff_uom2def * coeff_def2uom
             ret['product_qty'] = rounding(coeff * product_qty, round_value)
             ret['active_uom'] = product_uom
         return {'value': ret}
 
-    def product_amt_change(self, cr, uid, ids, product_amt = 0.0, product_uom=False):
-        ret = {}
-        if not ids:
-            return {}
+    def product_amt_change(self, cr, uid, ids, product_amt=0.0, product_uom=False, product_id=False):
         round_value = 1
-        if product_amt:
+        qty = 0.0
+        if product_amt and product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id)
             coeff_def2uom = 1
-            val1 = self.browse(cr, uid, ids)
-            val = val1[0]
-            if (product_uom != val.product_id.uom_id.id):
-                coeff_def2uom, round_value = self._from_default_uom_factor( cr, uid, val, product_uom, {})
-            ret['product_qty'] = rounding(coeff_def2uom * product_amt/(val.product_id.product_tmpl_id.list_price), round_value)
-        res = {'value': ret}
+            if (product_uom != product.uom_id.id):
+                coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, product_id, product_uom, {})
+            qty = rounding(coeff_def2uom * product_amt/(product.product_tmpl_id.list_price), round_value)
+        res = {'value': {'product_qty': qty}}
         return res
 
-    def _to_default_uom_factor(self, cr, uid, val, uom_id, context=None):
+    def _to_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
+        product_obj = self.pool.get('product.product')
+        product = product_obj.browse(cr, uid, product_id)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         coef = uom.factor
-        if uom.category_id.id <> val.product_id.uom_id.category_id.id:
-            coef = coef / val.product_id.uos_coeff
-        return val.product_id.uom_id.factor / coef
+        if uom.category_id.id <> product.uom_id.category_id.id:
+            coef = coef / product.uos_coeff
+        return product.uom_id.factor / coef
 
-    def _from_default_uom_factor(self, cr, uid, val, uom_id, context):
+    def _from_default_uom_factor(self, cr, uid, product_id, uom_id, context):
         uom_obj = self.pool.get('product.uom')
+        product_obj = self.pool.get('product.product')
+        product = product_obj.browse(cr, uid, product_id)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         res = uom.factor
-        if uom.category_id.id <> val.product_id.uom_id.category_id.id:
-            res = res / val.product_id.uos_coeff
-        return res / val.product_id.uom_id.factor, uom.rounding
+        if uom.category_id.id <> product.uom_id.category_id.id:
+            res = res / product.uos_coeff
+        return res / product.uom_id.factor, uom.rounding
 
     def _sales_per_users(self, cr, uid, so, so_line, company, users):
         cr.execute("SELECT sum(sol.product_uom_qty) FROM sale_order_line AS sol LEFT JOIN sale_order AS s ON (s.id = sol.order_id) " \
@@ -254,7 +252,7 @@ class stock_sale_forecast(osv.osv):
                     dept_users_set =  map(str,dept_users)
                 else:
                     dept_users = False
-                factor, round_value = self._from_default_uom_factor(cr, uid, obj, obj.product_uom.id, context=context)
+                factor, round_value = self._from_default_uom_factor(cr, uid, obj.product_id.id, obj.product_uom.id, context=context)
                 for i, period in enumerate(periods):
                     if period:
                         so_period_ids = so_obj.search(cr, uid, [('date_order','>=',period.date_start),('date_order','<=',period.date_stop) ], context = context)
@@ -356,8 +354,8 @@ class stock_planning(osv.osv):
         if qtys:
             uom_obj = self.pool.get('product.uom')
             for qty, prod_uom in qtys:
-                coef = self._to_default_uom_factor(cr, uid, val, prod_uom, context=context)
-                res_coef, round_value = self._from_default_uom_factor(cr, uid, val, val.product_uom.id, context=context)
+                coef = self._to_default_uom_factor(cr, uid, val.product_id.id, prod_uom, context=context)
+                res_coef, round_value = self._from_default_uom_factor(cr, uid, val.product_id.id, val.product_uom.id, context=context)
                 coef = coef * res_coef
                 res_qty += rounding(qty * coef, round_value)
         return res_qty
@@ -418,8 +416,8 @@ class stock_planning(osv.osv):
             coef = 1
             round_value = 1
             if ret[2]:
-                coef = self._to_default_uom_factor(cr, uid, val, ret[2], context)
-                res_coef, round_value = self._from_default_uom_factor(cr, uid, val, val.product_uom.id, context=context)
+                coef = self._to_default_uom_factor(cr, uid, val.product_id.id, ret[2], context)
+                res_coef, round_value = self._from_default_uom_factor(cr, uid, val.product_id.id, val.product_uom.id, context=context)
                 coef = coef * res_coef
             res[val.id]['minimum_op'] = rounding(ret[0]*coef, round_value)
             res[val.id]['maximum_op'] = ret[1]*coef
@@ -431,20 +429,17 @@ class stock_planning(osv.osv):
             result['warehouse_id'] = False
         return {'value': result}
 
-    def onchange_uom(self, cr, uid, ids, product_uom=False):
+    def onchange_uom(self, cr, uid, ids, product_uom=False, product_id=False, active_uom=False, 
+                     planned_outgoing=0.0, to_procure=0.0):
         ret = {}
         if not product_uom:
             return {}
-        if not ids:
-            return {}
-        val1 = self.browse(cr, uid, ids)
-        val = val1[0]
-        if val.active_uom:
-            coeff_uom2def = self._to_default_uom_factor(cr, uid, val, val.active_uom.id, {})
-            coeff_def2uom, round_value = self._from_default_uom_factor( cr, uid, val, product_uom, {})
+        if active_uom:
+            coeff_uom2def = self._to_default_uom_factor(cr, uid, product_id, active_uom, {})
+            coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, product_id, product_uom, {})
             coeff = coeff_uom2def * coeff_def2uom
-            ret['planned_outgoing'] = rounding(coeff * val.planned_outgoing, round_value)
-            ret['to_procure'] = rounding(coeff * val.to_procure, round_value)
+            ret['planned_outgoing'] = rounding(coeff * planned_outgoing, round_value)
+            ret['to_procure'] = rounding(coeff * to_procure, round_value)
         ret['active_uom'] = product_uom
         return {'value': ret}
 
@@ -524,22 +519,26 @@ class stock_planning(osv.osv):
 
     _order = 'period_id'
 
-    def _to_default_uom_factor(self, cr, uid, val, uom_id, context=None):
+    def _to_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
+        product_obj = self.pool.get('product.product')
+        product = product_obj.browse(cr, uid, product_id)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         coef = uom.factor
-        if uom.category_id.id != val.product_id.uom_id.category_id.id:
-            coef = coef / val.product_id.uos_coeff
-        return val.product_id.uom_id.factor / coef
+        if uom.category_id.id != product.uom_id.category_id.id:
+            coef = coef / product.uos_coeff
+        return product.uom_id.factor / coef
 
 
-    def _from_default_uom_factor(self, cr, uid, val, uom_id, context=None):
+    def _from_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
+        product_obj = self.pool.get('product.product')
+        product = product_obj.browse(cr, uid, product_id)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         res = uom.factor
-        if uom.category_id.id != val.product_id.uom_id.category_id.id:
-            res = res / val.product_id.uos_coeff
-        return res / val.product_id.uom_id.factor, uom.rounding
+        if uom.category_id.id != product.uom_id.category_id.id:
+            res = res / product.uos_coeff
+        return res / product.uom_id.factor, uom.rounding
 
     def calculate_planning(self, cr, uid, ids, context, *args):
         one_minute = RelativeDateTime(minutes=1)
@@ -574,7 +573,7 @@ class stock_planning(osv.osv):
                 current = True
             else:
                 current = False
-            factor, round_value = self._from_default_uom_factor(cr, uid, val, val.product_uom.id, context=context)
+            factor, round_value = self._from_default_uom_factor(cr, uid, val.product_id.id, val.product_uom.id, context=context)
             self.write(cr, uid, ids, {
                 'already_out': rounding(already_out[0]*factor,round_value),
                 'already_in': rounding(already_in[0]*factor,round_value),
@@ -603,16 +602,16 @@ class stock_planning(osv.osv):
             uom = val.product_uom.id
             if val.product_id.uos_id:
                 uos = val.product_id.uos_id.id
-                coeff_uom2def = self._to_default_uom_factor(cr, uid, val, val.product_uom.id, {})
-                coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, val, uos, {})
+                coeff_uom2def = self._to_default_uom_factor(cr, uid, val.product_id.id, val.product_uom.id, {})
+                coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, val.product_id.id, uos, {})
                 uos_qty = rounding(val.incoming_left * coeff_uom2def * coeff_def2uom, round_value)
         elif val.product_uom.category_id.id == val.product_id.uos_id.category_id.id:
-            coeff_uom2def = self._to_default_uom_factor(cr, uid, val, val.product_uom.id, {})
+            coeff_uom2def = self._to_default_uom_factor(cr, uid, val.product_id.id, val.product_uom.id, {})
             uos = val.product_id.uos_id.id
-            coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, val, uos, {})
+            coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, val.product_id.id, uos, {})
             uos_qty = rounding(val.incoming_left * coeff_uom2def * coeff_def2uom, round_value)
             uom = val.product_id.uom_id.id
-            coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, val, uom, {})
+            coeff_def2uom, round_value = self._from_default_uom_factor(cr, uid, val.product_id.id, uom, {})
             uom_qty = rounding(val.incoming_left * coeff_uom2def * coeff_def2uom, round_value)
         return uom_qty, uom, uos_qty, uos
 
