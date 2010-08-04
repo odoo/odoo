@@ -398,7 +398,6 @@ class auction_lots(osv.osv):
             #indir_cost=lot.bord_vnd_id.specific_cost_ids
             #for r in lot.bord_vnd_id.specific_cost_ids:
             #   som+=r.amount
-
             for line in account_analytic_line_obj.browse(cr, uid, line_ids):
                 if line.amount:
                     som-=line.amount
@@ -562,7 +561,7 @@ class auction_lots(osv.osv):
                 c.update({'type': 0})
 ######
         if lot.vnd_lim_net<0 and lot.obj_price>0:
-#FIXME: la string 'remise lot' devrait passer par le systeme de traductions
+#FIXME:the string passes have lot 'should go through the system translations.
             obj_price_wh_costs = reduce(lambda x, y: x + y['amount'], tax_costs, lot.obj_price)
             if obj_price_wh_costs < lot.vnd_lim:
                 costs.append({  'type': 1, 
@@ -621,13 +620,13 @@ class auction_lots(osv.osv):
             if tax['type'] == 1:
                 tax['id'] = 0
     #FIXME: translate tax names
-                tax['name'] = 'Remise limite nette'
+                tax['name'] = 'Discount sharp boundary'
             elif tax['type'] == 2:
                 tax['id'] = 0
-                tax['name'] = 'Frais divers'
+                tax['name'] = 'Miscellaneous expenditure'
             elif tax['type'] == 3:
                 tax['id'] = 0
-                tax['name'] = 'Rist.'
+                tax['name'] = 'Cross.'
             key = (tax['type'], tax['id'])
             if key in taxes_summed:
                 taxes_summed[key]['amount'] += tax['amount']
