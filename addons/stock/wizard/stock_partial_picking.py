@@ -177,12 +177,12 @@ class stock_partial_picking(osv.osv_memory):
                 if (m.product_id.cost_method == 'average'):
                     currency = False
                     price = 0
-                    if (pick.type == 'in'):
+                    if (pick.type == 'in') and 'purchase_id' in pick._columns.keys():
                         if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
                             price = m.purchase_line_id.price_unit
                         if hasattr(pick, 'purchase_id') and pick.purchase_id:
                             currency = pick.purchase_id.pricelist_id.currency_id.id
-                    if (pick.type == 'out'):
+                    if (pick.type == 'out') and 'sale_id' in pick._columns.keys():
                         if hasattr(m, 'sale_line_id') and m.sale_line_id:
                             price = m.sale_line_id.price_unit
                         if hasattr(pick, 'sale_id') and pick.sale_id:
