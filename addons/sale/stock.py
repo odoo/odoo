@@ -96,7 +96,7 @@ class stock_picking(osv.osv):
         sale_line_obj = self.pool.get('sale.order.line')
         if move_line.sale_line_id:
             sale_line_obj.write(cursor, user, [move_line.sale_line_id.id], {'invoiced':True,
-                'line_invoice_id': invoice_line_id,
+                'invoice_lines': [(4, invoice_line_id)],
                 })
         return super(stock_picking, self)._invoice_line_hook(cursor, user,
                 move_line, invoice_line_id)
@@ -185,7 +185,7 @@ class stock_picking(osv.osv):
                         'account_analytic_id': account_analytic_id,
                         }, context=context)
                     self.pool.get('sale.order.line').write(cursor, user, [sale_line.id], {'invoiced':True,
-                        'line_invoice_id': invoice_line_id,
+                        'invoice_lines': [(6, 0, [invoice_line_id])],
                         })
 
         return result
