@@ -64,10 +64,6 @@ class stock_sale_forecast_createlines(osv.osv_memory):
                                                        ('user_id','=',uid), \
                                                        ('warehouse_id','=',f.warehouse_id.id)]))== 0:
                     forecast_qty = 0.0
-# Not sure if it is expected quantity for this feature (copying forecast from previous period)
-# because it can take incidental forecast of this warehouse, this product and this user (creating, writing or validating forecast).
-# It takes only one forecast line (no sum). If user creates only one forecast per period it will be OK. If not I have no idea how to count it.
-
                     prod_uom = False
                     if copy:
                         cr.execute("SELECT period.date_stop, forecast.product_qty, forecast.product_uom \
