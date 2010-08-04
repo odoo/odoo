@@ -18,6 +18,8 @@
                 <field name="buyer" select="1" invisible="1"/>
                 <field name="seller" invisible="1"/>
                 <field name="object" select="1" invisible="1"/>
+                <field name="state" select="1" invisible="1"/>
+                <field name="lot_type" select="1" invisible="1"/>
                 <field name="avg_price" select="1"/>
                 <field name="gross_revenue" />
                 <field name="net_revenue" />
@@ -62,6 +64,8 @@
                             domain="[('user_id','=',uid)]"/>
                     </field>
                     <field name="object"/>
+                    <field name="state"/>
+                    <field name="lot_type"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
@@ -70,6 +74,12 @@
                     <filter string="Seller" icon="terp-personal" name="seller" context="{'group_by':'seller'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Auction" icon="terp-project" name="auction" context="{'group_by':'auction'}"/>
+                    <separator orientation="vertical" />
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Type"
+                         icon="terp-stock_symbol-selection"
+                         help="Object Category" domain="[]"
+                         context="{'group_by':'lot_type'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
@@ -488,7 +498,6 @@ Auction adjudication
                 <field name="user_id" group="True"/>
             </graph>
         </field>
-
     </record>
 
     <record model="ir.actions.act_window" id="action_report_auction_adjudication_tree">
@@ -591,7 +600,6 @@ Object encoded
         <field name="domain"> [('user_id','=',uid),('date','ilike',time.strftime('%Y-%m'))]</field>
     </record>
 
-
     <record model="ir.ui.view" id="view_report_object_encoded_manager_tree">
         <field name="name">report.object.encoded.tree</field>
         <field name="model">report.object.encoded.manager</field>
@@ -607,7 +615,6 @@ Object encoded
                 <field name="net_revenue"  sum="Total net rev."/>
                 <field name="gross_revenue"  sum="Total gross rev."/>
                 <field name="date" select="1"/>
-
             </tree>
         </field>
     </record>

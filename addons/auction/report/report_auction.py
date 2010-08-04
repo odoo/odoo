@@ -28,7 +28,14 @@ import os
 import time
 import tools
 
-
+def _type_get(self, cr, uid, context=None):
+    if not context:
+        context = {}
+    obj = self.pool.get('auction.lot.category')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['name'], context)
+    res = [(r['name'], r['name']) for r in res]   
+    return res 
 
 class report_auction(osv.osv):
     
@@ -46,7 +53,8 @@ class report_auction(osv.osv):
         'buyer':fields.many2one('res.partner', 'Buyer', readonly=True, select=2), 
         'seller': fields.many2one('res.partner', 'Seller', readonly=True, select=1),
         'object':fields.integer('No of objects', readonly=True, select=1), 
-        'total_price':fields.float('Total Adj.', digits=(16, 2), readonly=True, select=2), 
+        'total_price':fields.float('Total Adj.', digits=(16, 2), readonly=True, select=2),
+        'lot_type': fields.selection(_type_get, 'Object category', size=64), 
         'avg_price':fields.float('Avg Adj.', digits=(16, 2), readonly=True, select=2), 
         'date': fields.date('Create Date', select=1),
         'auction': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
@@ -73,6 +81,7 @@ class report_auction(osv.osv):
                 to_char(ad.auction1, 'MM') as month,
                 to_char(ad.auction1, 'YYYY-MM-DD') as day,
                 al.ach_uid as "buyer",
+                al.lot_type as lot_type,
                 ade.partner_id as seller,
                 ad.id as auction,
                 count(al.id) as "object",
@@ -95,7 +104,8 @@ class report_auction(osv.osv):
                 al.ach_login,
                 ade.partner_id,
                 al.state,
-                al.create_uid
+                al.create_uid,
+                al.lot_type
              )
          ''')
 report_auction()
@@ -104,14 +114,6 @@ report_auction()
 #==========================
 #Others Report for Dashboard (Employee & Manager)
 #==========================
-def _type_get(self, cr, uid, context=None):
-    if not context:
-        context = {}
-    obj = self.pool.get('auction.lot.category')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['name'], context)
-    res = [(r['name'], r['name']) for r in res]   
-    return res 
 
 class report_auction_object_date(osv.osv):
     _name = "report.auction.object.date"
