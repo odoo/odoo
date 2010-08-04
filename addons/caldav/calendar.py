@@ -228,6 +228,7 @@ class CalDAV(object):
         @param context: A standard dictionary for contextual values """
 
         att_data = []
+        exdates = []
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
                 self.ical_set(cal_data.name.lower(), {'name': cal_data.params.get('CN') and cal_data.params.get('CN')[0]}, 'value')
@@ -249,11 +250,11 @@ class CalDAV(object):
                 self.ical_set(cal_data.name.lower(), vals, 'value')
                 continue
             if cal_data.name.lower() == 'exdate':
-                exval = map(lambda x: str(x), cal_data.value)
+                exdates += cal_data.value
+                exval = map(lambda x: x.strftime('%Y%m%dT%H%M%SZ'), exdates)
                 self.ical_set(cal_data.name.lower(), ','.join(exval), 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
-
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
                     self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
@@ -305,12 +306,13 @@ class CalDAV(object):
                         alarm_obj = self.pool.get('basic.calendar.alarm')
                         vevent = alarm_obj.export_cal(cr, uid, model, \
                                     data[map_field][0], vevent, context=ctx)
-                    elif field == 'vtimezone' and data[map_field] and data[map_field] not in timezones:
+                    elif field == 'vtimezone' and data[map_field]:
                         tzval = data[map_field]
-                        tz_obj = self.pool.get('basic.calendar.timezone')
-                        ical = tz_obj.export_cal(cr, uid, None, \
-                                     data[map_field], ical, context=context)
-                        timezones.append(data[map_field])
+                        if tzval not in timezones:
+                            tz_obj = self.pool.get('basic.calendar.timezone')
+                            ical = tz_obj.export_cal(cr, uid, None, \
+                                         data[map_field], ical, context=context)
+                            timezones.append(data[map_field])
                     elif field == 'organizer' and data[map_field]:
                         event_org = vevent.add('organizer')
                         organizer_id = data[map_field][0]
@@ -326,9 +328,15 @@ class CalDAV(object):
                                 vevent.add(field).value = tools.ustr(data[map_field])
                         elif map_type in ('datetime', 'date') and data[map_field]:
                             dtfield = vevent.add(field)
-                            dtfield.value = parser.parse(data[map_field])
                             if tzval:
+                                date_1 = datetime.strptime(data[map_field], '%Y-%m-%d %H:%M:%S')
+                                desttz = pytz.timezone(tzval.title())
+                                srctz = pytz.timezone('GMT')
+                                date_gmt = date_1.replace(tzinfo=srctz).astimezone(desttz).strftime('%Y-%m-%d %H:%M:%S')
                                 dtfield.params['TZID'] = [tzval.title()]
+                                dtfield.value = parser.parse(date_gmt)
+                            else:
+                                dtfield.value = parser.parse(data[map_field])
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
