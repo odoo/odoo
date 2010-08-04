@@ -104,14 +104,6 @@ where prp.id in %s''',(tuple(ids),))
             user_uom = obj_tm.id
         return user_uom, default_uom
     
-    def _compute_duration(self, cr, uid, duration=0.0, to_uom='default'):
-        uom_obj = self.pool.get('product.uom')
-        user_uom, default_uom = self._get_user_and_default_uom_ids(cr, uid)
-        if to_uom == 'default':
-            return uom_obj._compute_qty(cr, uid, user_uom, duration, default_uom)
-        else:
-            return uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
-        
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}
@@ -146,12 +138,13 @@ where prp.id in %s''',(tuple(ids),))
                 p = tocompute.pop()
                 for i in range(3):
                     s[i] += progress.get(p, (0.0, 0.0, 0.0))[i]
-                    
+            
+            uom_obj = self.pool.get('product.uom')        
             user_uom, def_uom = self._get_user_and_default_uom_ids(cr, uid)
             if user_uom != def_uom:
-                s[0] = self._compute_duration(cr, uid, s[0])
-                s[1] = self._compute_duration(cr, uid, s[1])
-                s[2] = self._compute_duration(cr, uid, s[2])
+                s[0] = uom_obj._compute_qty(cr, uid, user_uom, s[0], def_uom)
+                s[1] = uom_obj._compute_qty(cr, uid, user_uom, s[1], def_uom)
+                s[2] = uom_obj._compute_qty(cr, uid, user_uom, s[2], def_uom)
                 
             if project.state == 'close':
                 progress_rate = 100.0
@@ -345,7 +338,7 @@ class task(osv.osv):
     
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         for domain in args:
-            if len(domain) == 3 and domain[0] == 'project_id':
+            if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
                 id = isinstance(domain[2], list) and int(domain[2][0]) or int(domain[2])
                 if id:
                     if self.pool.get('project.project').read(cr, user, id, ['state'])['state'] == 'template':
@@ -364,11 +357,12 @@ class task(osv.osv):
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
         
+        uom_obj = self.pool.get('product.uom')
         user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
         if user_uom != default_uom:
             for task in self.browse(cr, uid, ids, context=context):
                 if hours.get(task.id, False):
-                    dur_in_user_uom =  project_obj._compute_duration(cr, uid, duration=hours.get(task.id, 0.0), to_uom='user')
+                    dur_in_user_uom =  uom_obj._compute_qty(cr, uid, default_uom, hours.get(task.id, 0.0), user_uom)
                     hours[task.id] = dur_in_user_uom
             
         for task in self.browse(cr, uid, ids, context=context):
@@ -665,11 +659,12 @@ class project_work(osv.osv):
             vals['hours'] = 0.00
          
         project_obj = self.pool.get('project.project')
+        uom_obj = self.pool.get('product.uom')
         user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
         duration = vals['hours']
         
         if user_uom != default_uom:
-            duration =  project_obj._compute_duration(cr, uid, duration=duration, to_uom='user')
+            duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
         cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (duration, vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
@@ -680,6 +675,7 @@ class project_work(osv.osv):
             vals['hours'] = 0.00        
          
         project_obj = self.pool.get('project.project')
+        uom_obj = self.pool.get('product.uom')
         user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)   
         duration = vals['hours']
          
@@ -688,8 +684,8 @@ class project_work(osv.osv):
                 cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, work.hours, work.task_id.id))
         else:
             for work in self.browse(cr, uid, ids, context):
-                duration =  project_obj._compute_duration(cr, uid, duration=duration, to_uom='user')
-                del_work =  project_obj._compute_duration(cr, uid, duration=work.hours, to_uom='user')
+                duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
+                del_work =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
                 cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, del_work, work.task_id.id))
             
         return super(project_work,self).write(cr, uid, ids, vals, context)
@@ -704,7 +700,7 @@ class project_work(osv.osv):
                 cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
         else:
             for work in self.browse(cr, uid, ids, context):
-                duration =  project_obj._compute_duration(cr, uid, duration=work.hours, to_uom='user')
+                duration =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
                 cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (duration, work.task_id.id))
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
 
@@ -735,7 +731,35 @@ class config_compute_remaining(osv.osv_memory):
     _defaults = {
         'remaining_hours': _get_remaining
     }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+            users_obj = self.pool.get('res.users')
+            obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
+            tm = obj_tm and obj_tm.name or 'Hours'
+    
+            res = super(config_compute_remaining, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
+    
+            if tm in ['Hours','Hour']:
+                return res
+    
+            eview = etree.fromstring(res['arch'])
+    
+            def _check_rec(eview):
+                if eview.attrib.get('widget','') == 'float_time':
+                    eview.set('widget','float')
+                for child in eview:
+                    _check_rec(child)
+                return True
+    
+            _check_rec(eview)
+    
+            res['arch'] = etree.tostring(eview)
+    
+            for f in res['fields']:
+                if 'Hours' in res['fields'][f]['string']:
+                    res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
 
+            return res
     def compute_hours(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -762,7 +786,7 @@ class config_compute_remaining(osv.osv_memory):
         return {
                 'type': 'ir.actions.act_window_close',
          }
-
+        
 config_compute_remaining()
 
 class message(osv.osv):
