@@ -1,5 +1,5 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_sale_shop","sale.shop","model_sale_shop","base.group_sale_salesman",1,0,0,0
+"access_sale_shop","sale.shop","model_sale_shop","base.group_sale_salesman",1,1,1,1
 "access_sale_order","sale.order","model_sale_order","base.group_sale_salesman",1,1,1,1
 "access_sale_order_line","sale.order.line","model_sale_order_line","base.group_sale_salesman",1,1,1,0
 "access_sale_shop_admin","sale.shop","model_sale_shop","base.group_system",1,1,1,1
@@ -24,3 +24,6 @@
 "access_product_product_sale_user","product.product sale use","product.model_product_product","base.group_sale_salesman",1,1,1,1
 "access_product_template_sale","product.template sale manager","product.model_product_template","base.group_sale_manager",1,0,0,0
 "access_product_product_sale","product.product sale manager","product.model_product_product","base.group_sale_manager",1,0,0,0
+"access_sale_shop_manager","account.journal sale order.user","model_sale_shop","base.group_sale_manager",1,0,0,0
+"access_account_fiscalyear_user","account.fiscalyear.manager","account.model_account_fiscalyear","base.group_sale_manager",1,0,0,0
+"access_account_fiscalyear_user","account.fiscalyear.user","account.model_account_fiscalyear","base.group_sale_salesman",1,1,1,1
