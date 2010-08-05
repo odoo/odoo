@@ -276,6 +276,7 @@ class CalDAV(object):
         timezones = []
         for data in datas:
             tzval = None
+            exfield = None
             vevent = ical.add(name)
             for field in self.__attribute__.keys():
                 map_field = self.ical_get(field, 'field')
@@ -316,6 +317,8 @@ class CalDAV(object):
                             ical = tz_obj.export_cal(cr, uid, None, \
                                          data[map_field], ical, context=context)
                             timezones.append(data[map_field])
+                        if exfield:
+                            exfield.params['TZID'] = [tzval.title()]
                     elif field == 'organizer' and data[map_field]:
                         event_org = vevent.add('organizer')
                         organizer_id = data[map_field][0]
@@ -326,7 +329,10 @@ class CalDAV(object):
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             if field in ('exdate'):
-                                vevent.add(field).value = map(parser.parse, (data[map_field]).split(','))
+                                exfield = vevent.add(field)
+                                if tzval:
+                                    exfield.params['TZID'] = [tzval.title()]
+                                exfield.value = map(parser.parse, (data[map_field]).split(','))
                             else:
                                 vevent.add(field).value = tools.ustr(data[map_field])
                         elif map_type in ('datetime', 'date') and data[map_field]:
