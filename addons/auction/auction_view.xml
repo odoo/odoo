@@ -55,6 +55,7 @@
            </tree>
         </field>
     </record>
+    
     <record model="ir.ui.view" id="view_auction_object_categories_form">
         <field name="name">auction.lot.category.form</field>
         <field name="model">auction.lot.category</field>
@@ -91,7 +92,6 @@
                <field name="auction2" string="End of auction"/>
                <field name="name" string="Names"/>
                <field name="state"/>
-               <button string="Create Invoices" help="Create Invoices" name="close" states="draft" type="object" icon="gtk-yes"/>
             </tree>
         </field>
     </record>
@@ -183,7 +183,7 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Next Auction"
-                date_start="auction1" color="name">
+                date_start="auction1" color="">
                 <field name="name" />
                 <field name="auction1"/>
             </calendar>
@@ -191,7 +191,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_auction_dates_next">
-        <field name="name">Next Auctions Dates</field>
+        <field name="name">Auctions</field>
         <field name="res_model">auction.dates</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar</field>  
@@ -206,8 +206,8 @@
         id="act_auction_lot_line_open"/>
 
 
-    <menuitem name="Auction Dates" parent="auction_menu_root" id="auction_date_menu" sequence="1"/>
-    <menuitem name="Next Auction Dates" parent="auction_date_menu" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
+    <menuitem name="Auctions" parent="auction_menu_root" id="auction_date_menu" sequence="1"/>
+    <menuitem name="Auctions" parent="auction_date_menu" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
     
     
  
