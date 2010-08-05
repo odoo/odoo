@@ -493,7 +493,6 @@ class mrp_repair(osv.osv):
                     'state': 'done',
                 })
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id})
-
             if repair.deliver_bool:
                 pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
                 picking = pick_obj.create(cr, uid, {
@@ -506,8 +505,6 @@ class mrp_repair(osv.osv):
                     'invoice_state': 'none',
                     'type': 'out',
                 })
-                wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
-
                 move_id = move_obj.create(cr, uid, {
                     'name': repair.name,
                     'picking_id': picking,
@@ -521,6 +518,7 @@ class mrp_repair(osv.osv):
                     'tracking_id': False,
                     'state': 'assigned',    
                 })
+                wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
                 self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
                 res[repair.id] = picking
             else:
