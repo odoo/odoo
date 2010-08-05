@@ -535,7 +535,6 @@ class purchase_order(osv.osv):
                 'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
                 })
             else:
-                #order_infos['name'] += ', %s' % porder.name
                 if porder.notes:
                     order_infos['notes'] = (order_infos['notes'] or '') + ('\n%s' % (porder.notes,))
                 if porder.origin:
