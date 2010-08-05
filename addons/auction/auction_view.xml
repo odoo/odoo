@@ -40,7 +40,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_auction_artist_tree"/>
     </record>
-    <menuitem name="Define Artists" parent="auction_config_menu" action="action_auction_artist" id="menu_auction_artist"/>
+    <menuitem name="Artists" parent="auction_config_menu" action="action_auction_artist" id="menu_auction_artist"/>
 
     
   <!--  Auction Management/Configuration/objectcategories  --> 
@@ -50,7 +50,7 @@
         <field name="model">auction.lot.category</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-           <tree string="Lot Category">
+           <tree string="Object Categories">
                <field name="name"/>
            </tree>
         </field>
@@ -61,7 +61,7 @@
         <field name="model">auction.lot.category</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-           <form string="Lot Category">
+           <form string="Object Categories">
                <field name="name" colspan="4" select="1"/>
                <newline/>
                <field name="aie_categ" colspan="4"/>
