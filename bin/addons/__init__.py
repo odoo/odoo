@@ -590,7 +590,7 @@ log = logging.getLogger('init')
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
-    def process_sql_file(cr, file):
+    def process_sql_file(cr, fp):
         queries = fp.read().split(';')
         for query in queries:
             new_query = ' '.join(query.split())
@@ -655,7 +655,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             file = tools.file_open(pathname)
             # TODO manage .csv file with noupdate == (kind == 'init')
             if ext == '.sql':
-                process_sql_file(cr, fp)
+                process_sql_file(cr, file)
             elif ext == '.csv':
                 noupdate = (kind == 'init')
                 tools.convert_csv_import(cr, module_name, pathname, file.read(), id_map, mode, noupdate)

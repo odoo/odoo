@@ -788,7 +788,10 @@ class related(function):
         self._field_get2(cr, uid, obj, context)
         if not ids: return {}
         relation = obj._name
-        res = {}.fromkeys(ids, False)
+        if self._type in ('one2many', 'many2many'):
+            res = {}.fromkeys(ids, [])
+        else:
+            res = {}.fromkeys(ids, False)
 
         objlst = obj.browse(cr, 1, ids, context=context)
         for data in objlst:
@@ -808,11 +811,11 @@ class related(function):
                     break
                 if field_detail['type'] in ('one2many', 'many2many') and i != len(self.arg) - 1:
                     t_data = t_data[self.arg[i]][0]
-                else:
+                elif t_data:
                     t_data = t_data[self.arg[i]]
             if type(t_data) == type(objlst[0]):
                 res[data.id] = t_data.id
-            else:
+            elif t_data:
                 res[data.id] = t_data
         if self._type=='many2one':
             ids = filter(None, res.values())

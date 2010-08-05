@@ -133,16 +133,18 @@ class ir_translation(osv.osv):
                         'and type=%s ' \
                         'and name=%s ' \
                         'and src=%s',
-                    (lang, tt, tools.ustr(name), source))
+                    (lang or '', tt, tools.ustr(name), source))
         else:
             cr.execute('select value ' \
                     'from ir_translation ' \
                     'where lang=%s ' \
                         'and type=%s ' \
                         'and name=%s',
-                    (lang, tt, tools.ustr(name)))
+                    (lang or '', tt, tools.ustr(name)))
         res = cr.fetchone()
         trad = res and res[0] or ''
+        if source and not trad:
+            return source
         return trad
 
     def create(self, cursor, user, vals, context=None):
@@ -157,6 +159,8 @@ class ir_translation(osv.osv):
     def write(self, cursor, user, ids, vals, context=None):
         if not context:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
@@ -166,6 +170,8 @@ class ir_translation(osv.osv):
     def unlink(self, cursor, user, ids, context=None):
         if not context:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
             self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])

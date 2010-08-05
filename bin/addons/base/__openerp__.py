@@ -26,8 +26,8 @@
     'version': '1.2',
     'category': 'Generic Modules/Base',
     'description': """The kernel of OpenERP, needed for all installation.""",
-    'author': 'OpenERP s.a.',
-    'maintainer': 'OpenERP s.a.',
+    'author': 'OpenERP SA',
+    'maintainer': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [],
     'init_xml': [

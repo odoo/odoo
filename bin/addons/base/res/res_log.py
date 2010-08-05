@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+import tools 
 
 class res_log(osv.osv_memory):
     _name = 'res.log'
@@ -33,12 +34,25 @@ class res_log(osv.osv_memory):
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid
     }
-    _order='id desc'
+    _order='date desc'
+
     # TODO: do not return secondary log if same object than in the model (but unlink it)
     def get(self, cr, uid, context={}):
         ids = self.search(cr, uid, [('user_id','=',uid)], context=context)
         result = self.read(cr, uid, ids, ['name','res_model','res_id'], context=context)
         self.unlink(cr, uid, ids, context=context)
         return result
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        res = []
+        log_ids = super(res_log, self).search(cr, uid, args, offset, limit, order, context, count)
+        logs = {}
+        for log in self.browse(cr, uid, log_ids, context=context):
+            res_dict = logs.get(log.res_model, {})
+            res_dict.update({log.res_id: log.id})
+            logs.update({log.res_model: res_dict})
+        res = map(lambda x: x.values(), logs.values())
+        return tools.flatten(res)
+
 res_log()
 

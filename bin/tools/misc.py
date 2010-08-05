@@ -26,6 +26,7 @@ Miscelleanous tools used by OpenERP.
 
 import os, time, sys
 import inspect
+from datetime import datetime
 
 from config import config
 
@@ -47,7 +48,6 @@ from email.Utils import formatdate, COMMASPACE
 from email.Utils import formatdate, COMMASPACE
 from email import Encoders
 import netsvc
-
 
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
@@ -1250,7 +1250,7 @@ def get_win32_timezone():
             res = str(_winreg.QueryValueEx(current_tz_key,"StandardName")[0])  # [0] is value, [1] is type code
             _winreg.CloseKey(current_tz_key)
             _winreg.CloseKey(hklm)
-        except:
+        except Exception:
             pass
     return res
 
@@ -1308,6 +1308,63 @@ def detect_server_timezone():
     netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
         "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
     return 'UTC'
+
+def get_server_timezone():
+    # timezone detection is safe in multithread, so lazy init is ok here
+    if (not config['timezone']):
+        config['timezone'] = detect_server_timezone()
+    return config['timezone']
+
+
+DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
+DEFAULT_SERVER_DATETIME_FORMAT = DEFAULT_SERVER_DATE_FORMAT + " %H:%M:%S"
+
+def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_name,
+        tz_offset=True, ignore_unparsable_time=True):
+    """
+    Convert a source timestamp string into a destination timestamp string, attempting to apply the
+    correct offset if both the server and local timezone are recognized, or no
+    offset at all if they aren't or if tz_offset is false (i.e. assuming they are both in the same TZ).
+
+    WARNING: This method is here to allow formatting dates correctly for inclusion in strings where
+             the client would not be able to format/offset it correctly. DO NOT use it for returning
+             date fields directly, these are supposed to be handled by the client!!
+
+    @param src_tstamp_str: the str value containing the timestamp in the server timezone.
+    @param src_format: the format to use when parsing the server timestamp.
+    @param dst_format: the format to use when formatting the resulting timestamp for the local/client timezone.
+    @param dst_tz_name: name of the destination timezone (such as the 'tz' value of the client context)
+    @param ignore_unparsable_time: if True, return False if src_tstamp_str cannot be parsed
+                                   using src_format or formatted using dst_format.
+
+    @return: local/client formatted timestamp, expressed in the local/client timezone if possible
+            and if tz_offset is true, or src_tstamp_str if timezone offset could not be determined.
+    """
+    if not src_tstamp_str:
+        return False
+
+    res = src_tstamp_str
+    if src_format and dst_format:
+        # find out server timezone
+        server_tz = get_server_timezone()
+        try:
+            # dt_value needs to be a datetime.datetime object (so no time.struct_time or mx.DateTime.DateTime here!)
+            dt_value = datetime.strptime(src_tstamp_str, src_format)
+            if tz_offset and dst_tz_name:
+                try:
+                    import pytz
+                    src_tz = pytz.timezone(server_tz)
+                    dst_tz = pytz.timezone(dst_tz_name)
+                    src_dt = src_tz.localize(dt_value, is_dst=True)
+                    dt_value = src_dt.astimezone(dst_tz)
+                except Exception:
+                    pass
+            res = dt_value.strftime(dst_format)
+        except Exception:
+            # Normal ways to end up here are if strptime or strftime failed
+            if not ignore_unparsable_time:
+                return False
+    return res
 
 
 def split_every(n, iterable, piece_maker=tuple):

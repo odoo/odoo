@@ -61,7 +61,7 @@ required_modules = [
     ('pytz', 'Timezone handling library for Python'),
     ('reportlab', 'reportlab module'),
     ('yaml', 'YAML parser and emitter for Python'),
-    ('pywebdav', 'PyWebDAV is a standards compliant WebDAV server and library written in Python'),
+    ('DAV', 'PyWebDAV is a standards compliant WebDAV server and library written in Python'),
 ]
 
 def check_modules():
