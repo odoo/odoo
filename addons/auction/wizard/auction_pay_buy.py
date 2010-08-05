@@ -28,14 +28,14 @@ class auction_pay_buy(osv.osv_memory):
     _name = "auction.pay.buy"
     _description = "Pay buy"
     _columns= {
-       'amount': fields.float('Amount paid', digits= (16, 2)), 
+       'amount': fields.float('Amount', digits= (16, 2), help="Amount For First Bank Statement"), 
        'buyer_id':fields.many2one('res.partner', 'Buyer'), 
-       'statement_id1':fields.many2one('account.bank.statement', 'Statement', required=True), 
-       'amount2': fields.float('Amount paid', digits= (16, 2)), 
-       'statement_id2':fields.many2one('account.bank.statement', 'Statement'), 
-       'amount3': fields.float('Amount paid', digits = (16, 2)), 
-       'statement_id3':fields.many2one('account.bank.statement', 'Statement'), 
-       'total': fields.float('Amount paid', digits = (16, 2), readonly =True), 
+       'statement_id1':fields.many2one('account.bank.statement', 'Statement', required=True, help="First Bank Statement For Buyer"), 
+       'amount2': fields.float('Amount', digits= (16, 2), help="Amount For Second Bank Statement"), 
+       'statement_id2':fields.many2one('account.bank.statement', 'Statement', help="Second Bank Statement For Buyer"), 
+       'amount3': fields.float('Amount', digits = (16, 2), help="Amount For Third Bank Statement"), 
+       'statement_id3':fields.many2one('account.bank.statement', 'Statement', help="Third Bank Statement For Buyer"), 
+       'total': fields.float('Total Amount', digits = (16, 2), readonly =True), 
     }
     
     def default_get(self, cr, uid, fields, context=None):

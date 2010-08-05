@@ -289,6 +289,7 @@ class auction_lots(osv.osv):
                 elif name == "gross_revenue":
                     if lot.auction_id:
                         result = lot.buyer_price - lot.seller_price
+                        
                 elif name == "net_revenue":
                     if lot.auction_id:
                         result = lot.buyer_price - lot.seller_price - lot.costs
@@ -343,39 +344,40 @@ class auction_lots(osv.osv):
 
     _columns = {
         'bid_lines':fields.one2many('auction.bid_line', 'lot_id', 'Bids'), 
-        'auction_id': fields.many2one('auction.dates', 'Auction Date', select=1), 
-        'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True), 
-        'name': fields.char('Short Description', size=64, required=True), 
+        'auction_id': fields.many2one('auction.dates', 'Auctions', select=1, help="Auction For Objects"), 
+        'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True, help="Auction Deposit For Deposit Inventory"), 
+        'name': fields.char('Title', size=64, required=True, help='Auction Objects Name'), 
         'name2': fields.char('Short Description (2)', size=64), 
         'lot_type': fields.selection(_type_get, 'Object category', size=64), 
-        'author_right': fields.many2one('account.tax', 'Author rights'), 
-        'lot_est1': fields.float('Minimum Estimation'), 
-        'lot_est2': fields.float('Maximum Estimation'), 
-        'lot_num': fields.integer('List Number', required=True, select=1), 
+        'author_right': fields.many2one('account.tax', 'Author rights', help="Account Tax For Author Commission"), 
+        'lot_est1': fields.float('Minimum Estimation', help="Minimum Estimate Price Of Objects"), 
+        'lot_est2': fields.float('Maximum Estimation', help="Maximum Estimate Price Of Objects"), 
+        'lot_num': fields.integer('List Number', required=True, select=1, help="List Number For selected Object in Deposit"), 
         'create_uid': fields.many2one('res.users', 'Created by', readonly=True), 
         'history_ids':fields.one2many('auction.lot.history', 'lot_id', 'Auction history'), 
-        'lot_local':fields.char('Location', size=64), 
+        'lot_local':fields.char('Location', size=64, help="Auction Location"), 
         'artist_id':fields.many2one('auction.artists', 'Artist/Author'), 
-        'artist2_id':fields.many2one('auction.artists', 'Artist/Author 2'), 
+        'artist2_id':fields.many2one('auction.artists', 'Artist/Author2'), 
         'important':fields.boolean('To be Emphatized'), 
         'product_id':fields.many2one('product.product', 'Product', required=True), 
         'obj_desc': fields.text('Object Description'), 
         'obj_num': fields.integer('Catalog Number'), 
-        'obj_ret': fields.float('Price retired'), 
+        'obj_ret': fields.float('Price retired', help="Objects Ret"), 
         'obj_comm': fields.boolean('Commission'), 
-        'obj_price': fields.float('Adjudication price'), 
+        'obj_price': fields.float('Adjudication price', help="Objects Price"), 
         'ach_avance': fields.float('Buyer Advance'), 
         'ach_login': fields.char('Buyer Username', size=64), 
-        'ach_uid': fields.many2one('res.partner', 'Buyer'), 
-        'ach_emp': fields.boolean('Taken Away', readonly=True), 
-        'is_ok': fields.boolean('Buyer\'s payment'), 
+        'ach_uid': fields.many2one('res.partner', 'Buyer'),
+        'seller_id': fields.related('bord_vnd_id','partner_id', type='many2one', relation='res.partner', string='Seller', readonly=True, help="Seller who is related to depositor Inventory"), 
+        'ach_emp': fields.boolean('Taken Away', readonly=True, help="When This Field is True means, Objects is taken away by Buyer"), 
+        'is_ok': fields.boolean('Buyer\'s payment', help="When Buyer Pay For Account Bank statement', This field is selected as True."), 
         'ach_inv_id': fields.many2one('account.invoice', 'Buyer Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
         'sel_inv_id': fields.many2one('account.invoice', 'Seller Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
         'vnd_lim': fields.float('Seller limit'), 
         'vnd_lim_net': fields.boolean('Net limit ?', readonly=True), 
-        'image': fields.binary('Image'), 
-        'paid_vnd':fields.function(_getprice, string='Seller Paid', method=True, type='boolean', store=True, multi="paid_vnd"), 
-        'paid_ach':fields.function(_getprice, string='Buyer invoice reconciled', method=True, type='boolean', store=True, multi="paid_ach"), 
+        'image': fields.binary('Image', help="Object Image"), 
+        'paid_vnd':fields.function(_getprice, string='Seller Paid', method=True, type='boolean', store=True, multi="paid_vnd", help="When state of Seller Invoice is 'Paid', This field is selected as True."), 
+        'paid_ach':fields.function(_getprice, string='Buyer Invoice Reconciled', method=True, type='boolean', store=True, multi="paid_ach", help="When state of Buyer Invoice is 'Paid', This field is selected as True."), 
         'state': fields.selection((
             ('draft', 'Draft'), 
             ('unsold', 'Unsold'), 
@@ -386,14 +388,14 @@ class auction_lots(osv.osv):
                 \n* The \'Unsold\' state is used when object does not sold for long time, user can also set it as draft state after unsold. \
                 \n* The \'Paid\' state is used when user pay for the object \
                 \n* The \'Sold\' state is used when user buy the object.'), 
-        'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price"), 
-        'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price"), 
-        'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue"), 
-        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin"), 
-        'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs"), 
-        'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment'), 
-        'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue"), 
-        'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin"), 
+        'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price", help="Objects Price which Buyer Given For Objects"), 
+        'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price", help="Seller Price"), 
+        'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue", help="Revenue Minus Cost Of Objects Sold."), 
+        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin", help="Gross Income Divided by Net Sales"), 
+        'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs", help="Total credit of analytic account"), 
+        'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment', help="Account Bank statement Line For Given Buyer"), 
+        'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue", help="Total Revenue Minus Returns"), 
+        'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin", help="The ratio of net profits to revenues"), 
     }
     _defaults = {
         'state':lambda *a: 'draft', 

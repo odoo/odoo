@@ -111,7 +111,7 @@
                         <separator string="Auction Dates" colspan="4"/>
                         <field name="auction1" select="1"/>
                         <field name="auction2" select="1"/>
-                        <label string="" colspan="4"/>
+                        <separator string="" colspan="4"/>
                         <field name="state"/>
                         <button name="close" states="draft" string="Create Invoices" type="object" colspan="2" icon="gtk-yes"/>
                     </page>
@@ -209,7 +209,6 @@
     <menuitem name="Auctions" parent="auction_menu_root" id="auction_date_menu" sequence="1"/>
     <menuitem name="Auctions" parent="auction_date_menu" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
     
-    
  
     <record model="ir.ui.view" id="view_auction_lot_tree">
         <field name="name">Auction lots</field>
@@ -246,57 +245,90 @@
         <field name="priority" eval="8"/>
         <field name="arch" type="xml">
             <form string="Objects">
-              <group colspan="4" col="4">
-                  <group colspan="2" col="4">  
-                    <field colspan="2" name="name"/>
-                    <field name="obj_num" select="1"/>
-                    <field name="lot_type"/>
-                    <field name="auction_id" select="1"/>
-                    <field name="artist_id"/>
-                    <field name="artist2_id"/>
-                    <field name="lot_est1"/>
-                    <field name="lot_est2"/>
-                    <field name="product_id"/>
-                    <field name="lot_local"/>
-                    <field name="bord_vnd_id" select="1"/>
-                    <field name="lot_num"/>
-                    <newline/>
-                   </group> 
-                  <group colspan="2" col="1">
-                    <field name="image" widget='image' nolabel="1"/>
-                  </group>
-              </group>
+              <group colspan="4" col="8">
+                <field name="name" colspan="4"/>
+                <field name="obj_num"/>
+                <newline/>
+                <field name="auction_id"/>
+                <field name="lot_type"/>
+                <field name="lot_local"/> 
+              </group>  
               <notebook colspan="4">
-                  <page string="Buyer">
-                      <separator string="Buyer information" colspan="4"/>
+                  <page string="Catalog">
+                      <separator string="Inventory" colspan="2"/>
                       <group colspan="4" col="6">
-                          <field name="ach_uid" />
-                          <field name="ach_login" select="1" />
-                          <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-                          <field name="obj_price"/>
-                          <field name="obj_ret"/>
-                          <field name="obj_comm"/>
-                          <field name="buyer_price"/>
-                          <field name="seller_price"/>
-                          <field name="ach_emp"/>
-                          <field name="gross_revenue"/>
-                          <field name="net_revenue"/>
-                          <field name="gross_margin"/>
-                          <field name="net_margin"/>
-                          <field name="costs"/>
-                          <newline/>
-                          <field name="ach_inv_id"/>
-                          <field name="paid_ach"/>
-                          <field name="is_ok"/>
+                          <group colspan="2" col="4">  
+                            <field name="product_id" colspan="4"/>
+                            <field name="lot_num" select="1" />
+                            <field name="bord_vnd_id"/>
+                          </group>
+                          <group colspan="2" col="1">
+                            <field name="image" widget='image' nolabel="1"/>
+                          </group>
+                      </group>
+                      <group colspan="4" col="6">
+                        <group colspan="2" col="1">
+                            <separator string="Authors" colspan="2"/>
+                            <field name="artist_id"/>
+                            <field name="artist2_id"/>
+                            <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
+                        </group>
+                        <group colspan="2" col="1">
+                            <separator string="Price" colspan="4"/>
+                            <field name="lot_est1"/>
+                            <field name="lot_est2"/>
+                            <field name="obj_price"/>
+                            <field name="obj_comm"/>
+                        </group>
+                        <group colspan="2" col="1">
+                            <separator string="Statistical" colspan="4"/>
+                            <field name="gross_revenue"/>
+                            <field name="net_revenue"/>
+                            <field name="gross_margin"/>
+                            <field name="net_margin"/>
+                            <field name="costs"/>
+                        </group>
+                      </group>
+                      <group colspan="4" col="4">
+                        <separator string="Seller Information" colspan="4"/>
+                        <field name="seller_id"/>
+                        <field name="seller_price"/>
+                        <newline/>
+                        <field name="vnd_lim"/>
+                        <field name="vnd_lim_net"/>
+                        <field name="sel_inv_id"/>
+                        <field name="paid_vnd"/>
+                        <separator string="" colspan="4"/>
+                        <field name="state" colspan="1"/>
+                        <group col="8" colspan="2">
+                            <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
+                            <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
+                            <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
+                            <button name="button_unpaid" string="Set to draft" states="sold,unsold,paid" type="object" icon="gtk-convert"/>
+                        </group> 
+                      </group>    
+                   </page>
+                   <page string="Bids">
+                       <separator string="Finalists Bid" colspan="4"/>
+                       <group colspan="4" col="6">
+                        <field name="ach_uid"/>
+                        <field name="ach_login" select="1" />
+                        <newline/>
+                        <field name="buyer_price"/>
+                        <field name="ach_inv_id"/>
+                        <newline/>
+                        <field name="is_ok"/>
+                        <field name="paid_ach"/>
+                        <field name="ach_emp"/>
                        </group>
-                      <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
+                       <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
                           widget="one2many_list">
-                          <tree string="Payment's history">
+                          <tree string="Buyer's Payment History">
                               <field name="statement_id"/>
                               <field name="amount"/>
                               <field name="date"/>
                           </tree>
-                          <form string="Bank Statement">
+                          <form string="Buyer's Payment History">
                               <field name="name"/>
                               <field name="sequence"/>
                               <field name="date"/>
@@ -308,44 +340,30 @@
                               <field name="amount"/>
                               <field name="reconcile_amount"/>
                           </form>
-                      </field>
-                      <field name="state" colspan="1"/>
-                      <group col="8" colspan="2">
-                          <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
-                          <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
-                          <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
-                          <button name="button_unpaid" string="Set to draft" states="sold,unsold,paid" type="object" icon="gtk-convert"/>
-                      </group> 
-                   </page>
-                   <page string="Seller">
-                       <separator string="Seller information" colspan="4"/>
-                       <field name="vnd_lim"/>
-                       <field name="vnd_lim_net"/>
-                       <field name="sel_inv_id"/>
-                       <field name="paid_vnd"/>
-                       <field name="history_ids" colspan="4" readonly="1" nolabel="1">
-                           <tree string="History">
-                               <field name="name"/>
-                               <field name="lot_id"/>
-                               <field name="auction_id"/>
-                               <field name="price"/>
-                           </tree>
                        </field>
-                    </page>
-                    <page string="Bids">
-                        <field name="bid_lines" colspan="4" nolabel="1" editable="top">
-                            <tree string="Bids"  editable="top">
+                       <field name="bid_lines" colspan="4" nolabel="1" editable="top">
+                            <tree string="Bids Details"  editable="top">
                                 <field name="bid_id"/>
                                 <field name="price"/>
                                 <field name="call"/>
                             </tree>
-                            <form string="Bids" >
+                            <form string="Bids Details" >
                                 <field name="bid_id"/>
                                 <field name="lot_id" domain="[('auction_id','=',parent['auction_id'])]" on_change="onchange_name(lot_id)"/>
                                 <field name="price"/>
                                 <field name="call"/>
                             </form>
                         </field>
+                    </page>
+                    <page string="History">
+                       <field name="history_ids" colspan="4" readonly="1" nolabel="1">
+                          <tree string="History">
+                             <field name="name"/>
+                             <field name="lot_id"/>
+                             <field name="auction_id"/>
+                             <field name="price"/>
+                          </tree>
+                       </field>
                     </page>
                     <page string="Note">
                         <field name="obj_desc" colspan="4" nolabel="1"/>
@@ -421,6 +439,14 @@
         <field name="search_view_id" ref="view_auction_lots_filter"/>
         <field name="context">{"search_default_draft": "1"}</field>
     </record>
+    
+    <!-- Action for Bids -->
+    
+    <act_window name="Open Bids"
+        domain="[('lot_id', '=', active_id)]"
+        res_model="auction.bid_line"
+        src_model="auction.lots"
+        id="act_auction_lot_open_bid"/>
 
     <menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu" sequence="2"/>
     <menuitem name="Objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
@@ -684,7 +710,7 @@
     
     <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
 
-    <act_window name="Bordereau de dépôt"
+    <act_window name="Deposit slip"
         domain="[('partner_id', '=', active_id)]"
         res_model="auction.deposit"
         src_model="res.partner"
