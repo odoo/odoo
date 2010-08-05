@@ -773,7 +773,7 @@ class _rml_template(object):
             ps = map(lambda x:x.strip(), node.get('pageSize').replace(')', '').replace('(', '').split(','))
             pageSize = ( utils.unit_get(ps[0]),utils.unit_get(ps[1]) )
 
-        self.doc_tmpl = TinyDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','title':'str','author':'str'}))
+        self.doc_tmpl = TinyDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','rotation':'int','title':'str','author':'str'}))
         self.page_templates = []
         self.styles = doc.styles
         self.doc = doc
