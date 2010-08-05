@@ -114,7 +114,7 @@
 		    			<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
 		    			<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
 		    			<td><para style="P9b"><u>[[ formatLang(sum_solde_account(o, data['form'])) ]]</u></para></td>
-		    			<td><para style="P9b"><u> [[ formatLang(sum_currency_amount_account(o, data['form'])) ]]</u></para></td>
+		    			<td><para style="P9b"><u> [[ formatLang(sum_currency_amount_account(a, data['form'])) ]] [[ get_currency() ]]</u></para></td>
 		   			</tr>
 	    		</blockTable>
 	    	</td>

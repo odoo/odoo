@@ -65,6 +65,7 @@ class general_ledger(rml_parse.rml_parse):
             'sum_solde': self._sum_solde,
             'get_children_accounts': self.get_children_accounts,
             'sum_currency_amount_account': self._sum_currency_amount_account,
+            'get_currency' : self._get_currency,
         })
         self.context = context
 
@@ -323,15 +324,17 @@ class general_ledger(rml_parse.rml_parse):
                 "WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
         result = self.cr.fetchone()
         self.account_currency = result and result[0] or False
-
+    
+    def _get_currency(self):
+        return self.account_currency
+        
     def _sum_currency_amount_account(self, account, form):
         self._set_get_account_currency_code(account.id)
         self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
         total = self.cr.fetchone()
 
         if self.account_currency:
-            return_field = str(total[0]) + self.account_currency
-            return return_field
+            return total[0]
         else:
             currency_total = self.tot_currency = 0.0
             return currency_total
