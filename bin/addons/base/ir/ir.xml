@@ -1178,7 +1178,10 @@
                         <field name="action" colspan="4" />
                         <field name="icon" on_change="onchange_icon(icon)" colspan="2"/>
                         <field name="icon_pict" widget="picture" nolabel="1" colspan="2"/>
-                        <field name="groups_id"  colspan="8"  height="400"/>
+                    </group>
+                    <group col="4" colspan="4" expand="1">
+                        <separator string="Security on Groups" colspan="4"/>
+                        <field name="groups_id"  colspan="4" nolabel="1"/>
                     </group>
                 </form>
             </field>
