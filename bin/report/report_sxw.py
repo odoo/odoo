@@ -110,7 +110,7 @@ class _date_format(str, _format):
         if self.val:
             if getattr(self,'name', None):
                 date = datetime.strptime(self.name, DT_FORMAT)
-                return date.strftime(self.lang_obj.date_format)
+                return date.strftime(str(self.lang_obj.date_format)) 
         return self.val
 
 class _dttime_format(str, _format):
@@ -121,8 +121,8 @@ class _dttime_format(str, _format):
     def __str__(self):
         if self.val and getattr(self,'name', None):
             return datetime.strptime(self.name, DHM_FORMAT)\
-                   .strftime("%s %s"%(self.lang_obj.date_format,
-                                      self.lang_obj.time_format))
+                   .strftime("%s %s"%(str(self.lang_obj.date_format),
+                                      str(self.lang_obj.time_format)))
         return self.val
 
 
