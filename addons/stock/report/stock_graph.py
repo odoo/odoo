@@ -24,7 +24,7 @@ import time
 from report.misc import choice_colors
 
 #
-# dRAw a graph for stocks
+# Draw a graph for stocks
 #
 class stock_graph(object):
     def __init__(self, io):

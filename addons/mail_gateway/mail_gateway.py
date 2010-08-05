@@ -234,16 +234,16 @@ class mailgate_tool(osv.osv_memory):
         msg_pool = self.pool.get('mailgate.message')
         for res_id in res_ids:
             msg_data = {
-                        'name': msg.get('subject', 'No subject'), 
-                        'date': msg.get('date') , 
-                        'description': msg.get('body', msg.get('from')), 
+                        'name': msg.get('subject', 'No subject'),
+                        'date': msg.get('date'),
+                        'description': msg.get('body', msg.get('from')),
                         'history': True,
-                        'res_model': model, 
-                        'email_cc': msg.get('cc'), 
-                        'email_from': msg.get('from'), 
+                        'res_model': model,
+                        'email_cc': msg.get('cc'),
+                        'email_from': msg.get('from'),
                         'email_to': msg.get('to'), 
-                        'message_id': msg.get('message-id'), 
-                        'references': msg.get('references'), 
+                        'message_id': msg.get('message-id'),
+                        'references': msg.get('references') or msg.get('in-reply-to'),
                         'res_id': res_id,
                         'user_id': uid,
                         'attachment_ids': [(6, 0, attach)]
@@ -380,6 +380,9 @@ class mailgate_tool(osv.osv_memory):
         if 'References' in fields:
             msg['references'] = msg_txt.get('References')
 
+        if 'In-Reply-To' in fields:
+            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
+
         if 'X-Priority' in fields:
             msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0]
 
@@ -425,12 +428,12 @@ class mailgate_tool(osv.osv_memory):
         res_ids = []
         attachment_ids = []
         new_res_id = False
-        if msg.get('references'):
-            references = msg.get('references')
+        if msg.get('references') or msg.get('in-reply-to'):
+            references = msg.get('references') or msg.get('in-reply-to')
             if '\r\n' in references:
-                references = msg.get('references').split('\r\n')
+                references = references.split('\r\n')
             else:
-                references = msg.get('references').split(' ')
+                references = references.split(' ')
             for ref in references:
                 ref = ref.strip()
                 res_id = tools.misc.reference_re.search(ref)
@@ -464,7 +467,7 @@ class mailgate_tool(osv.osv_memory):
                             email_from = msg.get('from'),
                             email_cc = msg.get('cc'),
                             message_id = msg.get('message-id'),
-                            references = msg.get('references', False),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments.items(),
                             context = context)
         else:
