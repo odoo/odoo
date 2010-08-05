@@ -705,7 +705,7 @@ class config_compute_remaining(osv.osv_memory):
 
     def _get_remaining(self,cr, uid, context=None):
         if context and 'active_id' in context:
-            return self.pool.get('project.task').browse(cr, uid, ctx['active_id'], context=context).remaining_hours
+            return self.pool.get('project.task').browse(cr, uid, context['active_id'], context=context).remaining_hours
         return False
 
     _columns = {
