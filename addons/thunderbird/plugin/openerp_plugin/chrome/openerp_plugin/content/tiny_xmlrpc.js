@@ -396,7 +396,6 @@ function getPassword(){
 //get serverservice
 function getServerService(){
 	return strServerService;
-     // return getPref().getCharPref('strServerService');
 }
 
 //get sender email
@@ -1342,11 +1341,9 @@ var listCreateContactHandler = {
 		window.close();
 	},
 	onFault: function (client, ctxt, fault) {
-		alert('XML-RPC Fault: '+fault);
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		alert('Error: '+errorMsg);
 	}
 }
 
@@ -1629,11 +1626,9 @@ var listcreateLoginHandler = {
 		}
 	},
 	onFault: function (client, ctxt, fault) {
-		alert('XML-RPC Fault: '+fault);
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		setconnect_server("false")
 	}
 }
 
@@ -1659,7 +1654,6 @@ var listCreatePartnerHandler = {
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
 		
 		if(typeof(createId.data) == 'number' && createId!=0){
-//			alert("Partner Created Successfully");
 			window.close();
 		}
 		if(createId == 0){
@@ -1847,7 +1841,6 @@ var listsearchAttachmentHandler = {
 
 //function to create a new attachment record
 function listSearchDocumentAttachment(){
-	//alert("AA:")
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');

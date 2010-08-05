@@ -246,7 +246,6 @@ function open_contact()
 //function to open the configuration window
 var Config = {
   onLoad: function() {
-    // initialization code
     this.initialized = true;
   },
 

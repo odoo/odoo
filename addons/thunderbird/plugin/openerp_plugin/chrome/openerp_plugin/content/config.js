@@ -1,8 +1,10 @@
 
 function config_close()
 {
-	window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+   window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+	window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
 }
+
 //set the value of the configuration fields
 function config_change_load()
 {
@@ -58,10 +60,12 @@ function config_ok()
 	}
 	setServer("http://"+document.getElementById('txtcurl').value +":" + document.getElementById('txtcport').value);
 	window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+    window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
 }
 function openConfigChange()
 {
-	window.open("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+    window.close("chrome://openerp_plugin/content/config.xul", "", "chrome");
+    window.open("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
 }
 
 function appendDbList()
