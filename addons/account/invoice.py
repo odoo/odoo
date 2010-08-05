@@ -761,6 +761,9 @@ class account_invoice(osv.osv):
                                                                  'account.invoice.' + invtype,
                                                                  'code=%s',
                                                                  context=tmp_context)
+                if not number:
+                    raise osv.except_osv(_('Warning !'), _('There is no active invoice sequence defined for the journal !'))
+
                 if invtype in ('in_invoice', 'in_refund'):
                     ref = reference
                 else:
