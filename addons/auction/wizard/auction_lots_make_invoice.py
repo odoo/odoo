@@ -31,7 +31,7 @@ class auction_lots_make_invoice(osv.osv_memory):
     _description = "Make invoice"
     
     _columns = {
-       'amount': fields.float('Invoiced Amount', required =True, readonly=True), 
+       'amount': fields.float('Invoiced Amount', required =True, readonly=True, help="Seller Price"), 
        'objects':fields.integer('# of objects', required =True, readonly=True), 
        'number':fields.char('Invoice Number', size=64), 
     }
