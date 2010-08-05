@@ -18,13 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import netsvc
-import pooler
-import time
-import wizard
 
 class stock_ups(osv.osv_memory):
     _name = "stock.ups"
@@ -87,7 +83,6 @@ class stock_ups_upload(osv.osv_memory):
         """
         report = netsvc._group['report']['report.stock.move.lot.ups_xml']
         data['report_type'] = 'raw'
-#FIXME: this seems unfinished   
         fp = file('/tmp/test.xml', 'w').write(report.create(uid, context['active_id'], ids, {}))
         return {}
 

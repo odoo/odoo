@@ -1,0 +1,145 @@
+-
+  In order to test the sale_mrp module in OpenERP,I start by creating a new product 'Slider Mobile'
+-
+  I define product category Mobile Products Sellable.
+-
+  !record {model: product.category, id: product_category_allproductssellable0}:
+    name: Mobile Products Sellable
+- 
+  I define product category Mobile Services. 
+- 
+  !record {model: product.category, id: product_category_services0}:
+    name: Mobile Services
+-
+  I define product template for Slider Mobile.
+-
+  !record {model: product.template, id: product_template_slidermobile0}:
+    categ_id: product_category_allproductssellable0
+    cost_method: standard
+    list_price: 200.0
+    mes_type: fixed
+    name: Slider Mobile
+    procure_method: make_to_order
+    standard_price: 189.0
+    supply_method: produce
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+-
+  I define a product Slider Mobile
+-
+  !record {model: product.product, id:  product_product_slidermobile0}:
+    categ_id: product_category_allproductssellable0
+    cost_method: standard
+    list_price: 200.0
+    mes_type: fixed
+    name: Slider Mobile
+    pricelist_purchase: 'Default Purchase Pricelist (0.00) : 189.00\n'
+    pricelist_sale: 'Public Pricelist (0.00) : 200.00\n'
+    procure_method: make_to_order
+    seller_delay: '1'
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_agrolait
+        min_qty: 2.0
+        qty: 5.0
+    standard_price: 189.0
+    supply_method: produce
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+-
+  I create a Bill of Material record for Slider Mobile
+-
+  !record {model: mrp.bom, id: mrp_bom_slidermobile0}:
+    company_id: base.main_company
+    name: Slider Mobile
+    product_efficiency: 1.0
+    product_id: product_product_slidermobile0
+    product_qty: 1.0
+    product_uom: product.product_uom_unit
+    product_uos_qty: 0.0
+    sequence: 0.0
+    type: normal
+-
+  I create a sale order for product Slider mobile
+-
+  !record {model: sale.order, id: sale_order_so0}:
+    client_order_ref: ref1
+    date_order: '2010-08-4'
+    invoice_quantity: order
+    name: Test_SO001
+    order_line:
+      - name: Slider Mobile
+        price_unit: 200
+        product_uom: product.product_uom_unit
+        product_uom_qty: 500.0
+        state: draft
+        delay: 7.0
+        product_id: product_product_slidermobile0
+        product_uos_qty: 500.0
+        type: make_to_order
+    order_policy: manual
+    partner_id: base.res_partner_4
+    partner_invoice_id: base.res_partner_address_7
+    partner_order_id: base.res_partner_address_7
+    partner_shipping_id: base.res_partner_address_7
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
+-
+  I confirm the sale order
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+-
+  I verify that a procurement has been generated for sale order
+-
+  !python {model: procurement.order}: |
+    from tools.translate import _
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    assert proc_ids, _('No Procurements!')
+-
+  Then I click on the "Run Procurement" button
+-
+  !python {model: procurement.order}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    for proc in proc_ids:
+      wf_service.trg_validate(uid, 'procurement.order',proc,'button_check', cr)
+-
+  I verify that a procurement state is "running"
+-
+  !python {model: procurement.order}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
+    assert proc_ids, _('Procurement is not in the running state!')
+-
+  I verify that a manufacturing order has been generated
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    mnf_obj=self.pool.get('mrp.production')
+    mnf_id=mnf_obj.search(cr, uid, [('origin','=',so.name)])
+    assert mnf_id, _('Manufacturing order has not been generated')
+-
+  I verify that a 'Sale Name' field of Manufacturing order gets bind with the value
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    mnf_obj=self.pool.get('mrp.production')
+    mnf_id=mnf_obj.search(cr, uid, [('sale_name','=',so.name)])
+    assert mnf_id, _('Sale Name is not bind with the value')
+-
+  I verify that a 'Sale Reference' field of Manufacturing order gets bind with the value
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    mnf_obj=self.pool.get('mrp.production')
+    mnf_id=mnf_obj.search(cr, uid, [('sale_ref','=',so.client_order_ref)])
+    assert mnf_id, _('Sale Reference is not bind with the value')

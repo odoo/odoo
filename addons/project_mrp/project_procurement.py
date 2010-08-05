@@ -64,10 +64,13 @@ class procurement_order(osv.osv):
             # Creating a project for task.Project is created from Procurement.
             project_obj = self.pool.get('project.project')
             proj_name = tools.ustr(so_ref)
-            product_project_id =procurement.product_id.project_id and procurement.product_id.project_id.id or False
+            product_project = procurement.product_id.project_id or False
             proj_exist_id = project_obj.search(cr, uid, [('name', '=', proj_name)], context=context)
-            if  not proj_exist_id:
-                project_id = project_obj.create(cr, uid, {'name': proj_name, 'partner_id': partner_id,'parent_id':product_project_id})
+            if not proj_exist_id:
+                parent_project = False 
+                if product_project:
+                    parent_project = product_project.analytic_account_id.id
+                project_id = project_obj.create(cr, uid, {'name': proj_name, 'partner_id': partner_id, 'parent_id': parent_project})
             else:
                 project_id = proj_exist_id[0]
 

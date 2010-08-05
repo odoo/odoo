@@ -606,7 +606,7 @@
                     <filter icon="terp-check" string="Deduction" domain="[('type','=','deduction')]"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
-                   	<field name="code" select="1"/>
+                     <field name="code" select="1"/>
                     <field name="type"/>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
@@ -692,11 +692,11 @@
             </field>
         </record>
 
-		<record id="view_hr_company_contribution_filter" model="ir.ui.view">
+    <record id="view_hr_company_contribution_filter" model="ir.ui.view">
             <field name="name">company.contribution.select</field>
              <field name="model">company.contribution</field>
             <field name="type">search</field>
-          	 <field name="arch" type="xml">
+             <field name="arch" type="xml">
                 <search string="Search Company Contribution">
                     <group col="8" colspan="4">
                         <filter icon="terp-document-new" string="Fixed Amount" domain="[('amount_type','=','fix')]" help="Draft Slip"/>
@@ -720,7 +720,7 @@
             <field name="res_model">company.contribution</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_company_contribution_tree"/>
-           	<field name="search_view_id" ref="view_hr_company_contribution_filter"/>
+             <field name="search_view_id" ref="view_hr_company_contribution_filter"/>
         </record>
         <menuitem
             id="menu_hr_company_contribution_tree"
@@ -814,10 +814,13 @@
                                     <field name="flag"/>
                                 </tree>
                             </field>
-                            <field name="company_id"/>
-                            <field name="chaque_nos"/>
                         </page>
                         <page string="Letter Content">
+                            <group colspan="4" col="6">
+                              <field name="company_id" on_change="onchange_company_id(company_id)"/>
+                              <field name="chaque_nos"/>
+                              <field name="bank"/>
+                            </group>
                             <separator colspan="4" string="Letter Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>

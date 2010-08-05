@@ -328,7 +328,7 @@ class sale_order(osv.osv):
         cr.execute('select id from sale_order_line where order_id IN %s and state=%s',(tuple(ids),'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
-        self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'line_invoice_id': False})
+        self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
         wf_service = netsvc.LocalService("workflow")
         for inv_id in ids:
             # Deleting the existing instance of workflow for SO
@@ -512,10 +512,11 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             for line in sale.order_line:
                 invoiced = False
-                if line.line_invoice_id and line.line_invoice_id.invoice_id.state == 'cancel':
-                    continue
-                else:
-                    invoiced = True
+                for iline in line.invoice_lines:
+                    if iline.invoice_id and iline.invoice_id.state == 'cancel':
+                        continue
+                    else:
+                        invoiced = True
                 self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced})
         self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False})
         return True
@@ -805,8 +806,7 @@ class sale_order_line(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer", readonly=True, states={'draft':[('readonly',False)]}),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
-#        'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
-        'line_invoice_id': fields.many2one('account.invoice.line','Invoice Line',readonly=True),
+        'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
@@ -918,7 +918,8 @@ class sale_order_line(osv.osv):
                     'note': line.notes,
                     'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
                 })
-                self.write(cr, uid, [line.id], {'invoiced': True, 'line_invoice_id':inv_id})
+                cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
+                self.write(cr, uid, [line.id], {'invoiced': True})
                 sales[line.order_id.id] = True
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -981,7 +982,7 @@ class sale_order_line(osv.osv):
             context = {}
         if not default:
             default = {}
-        default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'line_invoice_id': False})
+        default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'invoice_lines': []})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,

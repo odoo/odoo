@@ -20,12 +20,8 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import netsvc
-import pooler
 import time
-import wizard
 
 class stock_replacement(osv.osv_memory):
     """

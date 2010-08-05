@@ -29,7 +29,7 @@ class auction_lots_cancel(osv.osv):
         _name = 'auction.lots.cancel'
         _description = 'To cancel auction lots.'
         
-        def cancel(self, cr, uid, ids, context):
+        def cancel(self, cr, uid, ids, context=None):
             """ 
             To cancel the auction lot
     
@@ -40,10 +40,11 @@ class auction_lots_cancel(osv.osv):
             @param context: A standard dictionary 
             @return: 
             """
-
+            if not context:
+                context={}
             lots_obj = self.pool.get('auction.lots')
             invoice_obj = self.pool.get('account.invoice')
-            lot = lots_obj.browse(cr, uid, context['active_id'], context)
+            lot = lots_obj.browse(cr, uid, context.get('active_id', False), context)
             if lot.ach_inv_id:
                     supplier_refund_inv_id = invoice_obj.refund(cr, uid, [lot.ach_inv_id.id])
             if lot.sel_inv_id:
