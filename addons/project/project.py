@@ -335,28 +335,29 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
-    
+
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        obj_project = self.pool.get('project.project')
         for domain in args:
             if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
-                id = isinstance(domain[2], list) and int(domain[2][0]) or int(domain[2])
-                if id:
-                    if self.pool.get('project.project').read(cr, user, id, ['state'])['state'] == 'template':
-                        args.append(['active', '=', False])
+                id = isinstance(domain[2], list) and domain[2][0] or domain[2]
+                if id and isinstance(id, (long, int)):
+                    if obj_project.read(cr, user, id, ['state'])['state'] == 'template':
+                        args.append(('active', '=', False))
         return super(task, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def _str_get(self, task, level=0, border='***', context=None):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
             (task.description or '')+'\n\n'
-    
+
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
         project_obj = self.pool.get('project.project')
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
-        
+
         uom_obj = self.pool.get('product.uom')
         user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
         if user_uom != default_uom:
