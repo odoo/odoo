@@ -1769,7 +1769,7 @@ class orm_memory(orm_template):
 
     def _check_access(self, uid, object_id, mode):
         if uid != 1 and self.datas[object_id]['internal.create_uid'] != uid:
-            raise except_orm(_('AccessError'), '%s access is only allowed on your own records for osv_memory objects' % mode.capitalize())
+            raise except_orm(_('AccessError'), '%s access is only allowed on your own records for osv_memory objects except for the super-user' % mode.capitalize())
 
     def vaccum(self, cr, uid):
         self.check_id += 1
@@ -1963,10 +1963,11 @@ class orm_memory(orm_template):
         if not context:
             context = {}
 
-        # implicit filter on current user
-        if not args:
-            args = []
-        args.insert(0, ('internal.create_uid', '=', user))
+        # implicit filter on current user except for superuser
+        if user != 1:
+            if not args:
+                args = []
+            args.insert(0, ('internal.create_uid', '=', user))
 
         result = self._where_calc(cr, user, args, context=context)
         if result==[]:

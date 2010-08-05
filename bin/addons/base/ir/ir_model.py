@@ -386,6 +386,12 @@ class ir_model_access(osv.osv):
         else:
             model_name = model
 
+        # osv_memory objects can be read by everyone, as they only return
+        # results that belong to the current user (except for superuser)
+        model_obj = self.pool.get(model_name)
+        if isinstance(model_obj, osv.osv_memory):
+            return True
+
         # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_' + mode + ' THEN 1 ELSE 0 END) '
                    '  FROM ir_model_access a '
