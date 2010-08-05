@@ -28,7 +28,7 @@ import account_general_ledger
 import account_partner_ledger
 import invoice
 import overdue
-import aged_trial_balance
+import account_aged_partner_balance
 import tax_report
 #import account_tax_code
 import account_balance_landscape

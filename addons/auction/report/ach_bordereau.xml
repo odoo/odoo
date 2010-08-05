@@ -14,38 +14,20 @@
 			<street2 type="field" name="address.street2"/>
 			<zip type="field" name="address.zip"/>
 			<city type="field" name="address.city"/>
-			<!--<country type="field" name="address.country.name"/>-->
 			<phone type="field" name="address.phone"/>
 			<mobile type="field" name="address.mobile"/>
 		</client_info>
 		<objects>
 			<cost type="call" name="compute_buyer_costs" args="">
-					<!--<name value="name"/>-->
 					<amount value="amount"/>
 			</cost>
-
-			<!--<cost type="field" name="auction_id.buyer_costs"/>
-					<name value="name"/>
-					<amount value="amount"/>
-			</cost>-->
-
-
-			<!--<cost type="call" name="compute_buyer_costs" args="">
-				<name value="name"/>
-					<amount value="amount"/>
-			</cost>-->
-
-
-
 
 
 			<object type="fields" name="obj_num,id">
 				<id type="field" name="id"/>
 				<barcode type="field" name="id" addchecksum="false" print-text="true"/>
-				<!--<barcode value="id" addchecksum="false" print-text="true"/>
--->
+				
 				<cost type="call" name="compute_buyer_costs" args="">
-					<!--<id value="id"/>-->
 					<amount value="amount"/>
 				</cost>
 				<barcode type="field" name="id"/>

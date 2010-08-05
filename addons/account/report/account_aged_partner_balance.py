@@ -18,20 +18,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 import pooler
 import rml_parse
 from report import report_sxw
+from common_report_header import common_report_header
 
-class aged_trial_report(rml_parse.rml_parse):
+class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
 	def __init__(self, cr, uid, name, context):
 		super(aged_trial_report, self).__init__(cr, uid, name, context=context)
-		self.line_query = ''
+		self.query_line = ''
 		self.total_account = []
-
-
 		self.localcontext.update({
 			'time': time,
 			'get_lines': self._get_lines,
@@ -40,11 +40,20 @@ class aged_trial_report(rml_parse.rml_parse):
 			'get_for_period': self._get_for_period,
 			'get_company': self._get_company,
 			'get_currency': self._get_currency,
-
+			'get_partners':self._get_partners,
+			'get_account': self._get_account,
+			'get_fiscalyear': self._get_fiscalyear,
 		})
 
+	def set_context(self, objects, data, ids, report_type=None):
+		self.query = data['form'].get('query_line', '')
+		self.direction_selection = data['form'].get('direction_selection', 'past')
+		self.date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
+		return super(aged_trial_report, self).set_context(objects, data, ids, report_type=report_type)
 
 	def _get_lines(self, form):
+		res = []
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		if (form['result_selection'] == 'customer' ):
 			self.ACCOUNT_TYPE = ['receivable']
 		elif (form['result_selection'] == 'supplier'):
@@ -52,74 +61,68 @@ class aged_trial_report(rml_parse.rml_parse):
 		else:
 			self.ACCOUNT_TYPE = ['payable','receivable']
 
-
-		res = []
-		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-		self.line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='line',
-				context={'fiscalyear': form['fiscalyear']})
-		self.cr.execute("""SELECT DISTINCT res_partner.id AS id,
-					res_partner.name AS name
-				FROM res_partner,account_move_line AS line, account_account
-				WHERE (line.account_id=account_account.id)
-					AND ((reconcile_id IS NULL)
-					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
-					AND (line.partner_id=res_partner.id)
-					AND (account_account.company_id = %s)
-				ORDER BY res_partner.name""" , (form['date1'],form['company_id']))
+		self.cr.execute('SELECT DISTINCT res_partner.id AS id,\
+					res_partner.name AS name \
+				FROM res_partner,account_move_line AS l, account_account\
+				WHERE (l.account_id=account_account.id)\
+					AND ((reconcile_id IS NULL)\
+					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+					AND (l.partner_id=res_partner.id)\
+					AND ' + self.query + ' \
+				ORDER BY res_partner.name' , (self.date_from,))
 		partners = self.cr.dictfetchall()
 		## mise a 0 du total
 		for i in range(7):
 			self.total_account.append(0)
 		#
-
 		# Build a string like (1,2,3) for easy use in SQL query
 		partner_ids = [x['id'] for x in partners]
 
 		# This dictionary will store the debit-credit for all partners, using partner_id as key.
 		totals = {}
-		self.cr.execute("""SELECT partner_id, SUM(debit-credit)
-					FROM account_move_line AS line, account_account
-				    WHERE (line.account_id = account_account.id)
-					AND (account_account.type IN %s)
-					AND (partner_id IN %s)
-					AND ((reconcile_id IS NULL)
-					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
-					AND (account_account.company_id = %s)
-					AND account_account.active
-					GROUP BY partner_id""" , (tuple(self.ACCOUNT_TYPE), tuple(partner_ids),form['date1'],form['company_id'],))
+		self.cr.execute('SELECT partner_id, SUM(debit-credit) \
+					FROM account_move_line AS l, account_account\
+				    WHERE (l.account_id = account_account.id)\
+					AND (account_account.type IN %s)\
+					AND (partner_id IN %s)\
+					AND ((reconcile_id IS NULL)\
+					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+					AND ' + self.query + '\
+					AND account_account.active\
+					GROUP BY partner_id ' , (tuple(self.ACCOUNT_TYPE), tuple(partner_ids), self.date_from,))
 		t = self.cr.fetchall()
 		for i in t:
 			totals[i[0]] = i[1]
 
 		# This dictionary will store the future or past of all partners
 		future_past = {}
-		if form['direction_selection'] == 'future':
-			self.cr.execute("""SELECT partner_id, SUM(debit-credit)
-						FROM account_move_line AS line, account_account
-						WHERE (line.account_id=account_account.id)
-						AND (account_account.type IN %s)
-						AND (COALESCE(date_maturity,date) < %s)
-						AND (partner_id IN %s)
-						AND ((reconcile_id IS NULL)
-						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
-						AND (account_account.company_id = %s)
-						AND account_account.active
-						GROUP BY partner_id""", (tuple(self.ACCOUNT_TYPE), form['date1'], tuple(partner_ids),form['date1'], form['company_id'],))
+		if self.direction_selection == 'future':
+			self.cr.execute('SELECT partner_id, SUM(debit-credit) \
+						FROM account_move_line AS l, account_account\
+						WHERE (l.account_id=account_account.id)\
+						AND (account_account.type IN %s)\
+						AND (COALESCE(date_maturity, date) < %s)\
+						AND (partner_id IN %s)\
+						AND ((reconcile_id IS NULL)\
+						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+						AND '+ self.query + '\
+						AND account_account.active\
+						GROUP BY partner_id', (tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids),self.date_from,))
 			t = self.cr.fetchall()
 			for i in t:
 				future_past[i[0]] = i[1]
-		elif form['direction_selection'] == 'past': # Using elif so people could extend without this breaking
-			self.cr.execute("""SELECT partner_id, SUM(debit-credit)
-					FROM account_move_line AS line, account_account
-					WHERE (line.account_id=account_account.id)
-						AND (account_account.type IN %s)
-						AND (COALESCE(date_maturity,date) > %s)
-						AND (partner_id IN %s)
-						AND ((reconcile_id IS NULL)
-						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
-						AND (account_account.company_id = %s)
-						AND account_account.active
-						GROUP BY partner_id""" , (tuple(self.ACCOUNT_TYPE), form['date1'], tuple(partner_ids), form['date1'], form['company_id'],))
+		elif self.direction_selection == 'past': # Using elif so people could extend without this breaking
+			self.cr.execute('SELECT partner_id, SUM(debit-credit) \
+					FROM account_move_line AS l, account_account\
+					WHERE (l.account_id=account_account.id)\
+						AND (account_account.type IN %s)\
+						AND (COALESCE(date_maturity,date) > %s)\
+						AND (partner_id IN %s)\
+						AND ((reconcile_id IS NULL)\
+						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+						AND '+ self.query + '\
+						AND account_account.active\
+						GROUP BY partner_id' , (tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids), self.date_from,))
 			t = self.cr.fetchall()
 			for i in t:
 				future_past[i[0]] = i[1]
@@ -128,18 +131,17 @@ class aged_trial_report(rml_parse.rml_parse):
 		# Each history will contain : history[1] = {'<partner_id>': <partner_debit-credit>}
                 history = []
                 for i in range(5):
-			self.cr.execute("""SELECT partner_id, SUM(debit-credit)
-					FROM account_move_line AS line, account_account
-					WHERE (line.account_id=account_account.id)
-						AND (account_account.type IN %s)
-						AND (COALESCE(date_maturity,date) BETWEEN %s AND %s)
-						AND (partner_id IN %s)
-						AND ((reconcile_id IS NULL)
-						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
-						AND (account_account.company_id = %s)
-						AND account_account.active
-					GROUP BY partner_id""" , (tuple(self.ACCOUNT_TYPE), form[str(i)]['start'], form[str(i)]['stop'], tuple(partner_ids) ,form['date1'] ,form['company_id'],))
-
+			self.cr.execute('SELECT partner_id, SUM(debit-credit)\
+					FROM account_move_line AS l, account_account\
+					WHERE (l.account_id = account_account.id)\
+						AND (account_account.type IN %s)\
+						AND (COALESCE(date_maturity,date) BETWEEN %s AND %s)\
+						AND (partner_id IN %s)\
+						AND ((reconcile_id IS NULL)\
+						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+						AND '+ self.query + '\
+						AND account_account.active\
+					GROUP BY partner_id' , (tuple(self.ACCOUNT_TYPE), form[str(i)]['start'], form[str(i)]['stop'], tuple(partner_ids) ,self.date_from,))
 			t = self.cr.fetchall()
 			d = {}
 			for i in t:
@@ -149,16 +151,14 @@ class aged_trial_report(rml_parse.rml_parse):
 		for partner in partners:
 			values = {}
 			## If choise selection is in the future
-			if form['direction_selection'] == 'future':
+			if self.direction_selection == 'future':
 				# Query here is replaced by one query which gets the all the partners their 'before' value
 				before = False
 				if future_past.has_key(partner['id']):
 					before = [ future_past[partner['id']] ]
-
 				self.total_account[6] = self.total_account[6] + (before and before[0] or 0.0)
-
 				values['direction'] = before and before[0] or 0.0
-			elif form['direction_selection'] == 'past': # Changed this so people could in the future create new direction_selections
+			elif self.direction_selection == 'past': # Changed this so people could in the future create new direction_selections
 				# Query here is replaced by one query which gets the all the partners their 'after' value
 				after = False
 				if future_past.has_key(partner['id']): # Making sure this partner actually was found by the query
@@ -211,15 +211,17 @@ class aged_trial_report(rml_parse.rml_parse):
 		period = self.total_account[int(pos)]
 		return period
 
-	def _get_company(self, form):
-		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
-
-	def _get_currency(self, form):
-		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
-
+	def _get_partners(self,data):
+		if data['form']['result_selection'] == 'customer':
+		    return 'Receivable Accounts'
+		elif data['form']['result_selection'] == 'supplier':
+		    return 'Payable Accounts'
+		elif data['form']['result_selection'] == 'customer_supplier':
+		    return 'Receivable and Payable Accounts'
+		return ''	
 
 report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
-		'addons/account/report/aged_trial_balance.rml',parser=aged_trial_report,header=False)
+		'addons/account/report/account_aged_partner_balance.rml',parser=aged_trial_report, header=False)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

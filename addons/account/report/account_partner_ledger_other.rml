@@ -153,7 +153,7 @@
     <blockTableStyle id="Table8">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-    <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+    <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="-1,0"/>
       <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
@@ -193,6 +193,10 @@
       <blockValign value="TOP"/>
   		<lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table_header">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>    
     <blockTableStyle id="Table_header_1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -304,7 +308,7 @@
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -320,17 +324,33 @@
     <images/>
   </stylesheet>
   <story>
-      <para style="terp_default_2">
+   <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-        <para style="terp_default_2">
+     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-		<para style="terp_header_Centre">Third Party Ledger</para>
-		        <para style="terp_default_2">
+    <blockTable colWidths="539.0" style="Table_header">
+      <tr>
+        <td>
+          <para style="terp_header_Centre">Third Party Ledger</para>
+        </td>
+        <tr>
+          <td>
+            <para style="P4">
       <font color="white"> </font>
     </para>
-          <blockTable colWidths="82.0,79.0,90.0,130.0,65.0,90.0" style="Table8">
+        </td>
+        </tr>
+      </tr>
+      </blockTable>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+     <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+          <blockTable colWidths="85.0,79.0,90.0,130.0,65.0,90.0" style="Table8">
             <tr>
               <td>
                 <para style="P9">Chart of Account</para>

@@ -152,11 +152,11 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">[[ picking.sale_id and picking.sale_id.partner_shipping_id and 'Shipping Address :' or removeParentNode('para') ]] </para>
-          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
+          <para style="terp_tblheader_Details">[[ 'sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and 'Shipping Address :' or removeParentNode('para') ]] </para>
+          <para style="terp_default_9">[[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]] </para>
+          <para style="terp_default_9">[[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ ('sale_id' in picking._columns.keys() and picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -204,7 +204,7 @@
           <para style="terp_default_Centre_8">[[ picking.origin ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
+          <para style="terp_default_Centre_8">[[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>

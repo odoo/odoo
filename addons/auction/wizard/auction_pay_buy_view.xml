@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Pay objects">
                 	<group colspan="4" >
+                         <separator string="Pay Objects" colspan="4" />
                 		 <field name="amount"/>
                 		 <field name="statement_id1" domain="[('state','=','draft')]"/>
                 		 <field name="amount2"/>
@@ -20,7 +21,7 @@
                     </group>
                        	<separator string="" colspan="4" />
                     <group colspan="4" col="6">
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-close" special="cancel" string="Close"/>
                     	<button icon="gtk-yes"  string="Pay" name="pay_and_reconcile" type="object"/>
                    </group>
                </form>
