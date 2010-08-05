@@ -66,12 +66,6 @@ function openConfigChange()
 
 function appendDbList()
 {
-	/*var s = document.getElementById('txturl').value;
-	var a =s.split(':');
-	setPort(a[a.length-1]);
-	setServer(document.getElementById('txturl').value);
-	setUsername(document.getElementById('txtusername').value);
-	setPassword(document.getElementById('txtpassword').value);*/
 	setServerService('xmlrpc/db');
 	getDbList('DBlist');
 }
@@ -151,7 +145,6 @@ function addFile(){
 	var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
 	fp.init(this, "Select a File", nsIFilePicker.modeOpen);
 	fp.appendFilters(nsIFilePicker.filterImages);
-	//fp.appendFilter("Image Files","*.png");
 	var res = fp.show();
 	if (res == nsIFilePicker.returnOK){
 	  var thefile = fp.file;
