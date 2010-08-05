@@ -220,16 +220,11 @@
                 <field name="obj_num" string="Ref" select="1"/>
                 <field name="name" select="1"/>
                 <field name="ach_uid"/>
-                <field name="ach_login"/>
                 <field name="obj_price" sum="Total Adj."/>
-                <field name="state" select="1"/>
-                <field name="obj_comm"/>
                 <field name="bord_vnd_id"/>
                 <field name="lot_num"/>
-                <field name="lot_est1"/>
-                <field name="lot_est2"/>
-                <field name="lot_type" select="1"/>
                 <field name="auction_id"/>
+                <field name="state" select="1"/>
                 <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
                 <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
                 <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
@@ -278,6 +273,8 @@
                             <field name="lot_est1"/>
                             <field name="lot_est2"/>
                             <field name="obj_price"/>
+                            <field name="seller_price"/>
+                            <field name="buyer_price"/>
                             <field name="obj_comm"/>
                         </group>
                         <group colspan="2" col="1">
@@ -290,14 +287,26 @@
                         </group>
                       </group>
                       <group colspan="4" col="4">
-                        <separator string="Seller Information" colspan="4"/>
-                        <field name="seller_id"/>
-                        <field name="seller_price"/>
-                        <newline/>
-                        <field name="vnd_lim"/>
-                        <field name="vnd_lim_net"/>
-                        <field name="sel_inv_id"/>
-                        <field name="paid_vnd"/>
+                        <group colspan="2" col="4">
+                            <separator string="Buyer Information" colspan="4"/>
+                            <field name="ach_uid"/>
+                            <field name="is_ok"/>
+                            <field name="ach_login" />
+                            <field name="paid_ach"/>
+                            <field name="ach_inv_id"/>
+                            <field name="ach_emp"/>
+                        </group>  
+                        <group colspan="2" col="4">
+                            <separator string="Seller Information" colspan="4"/>
+                            <field name="seller_id"/>
+                            <newline/>
+                            <field name="vnd_lim"/>
+                            <field name="vnd_lim_net"/>
+                            <field name="sel_inv_id"/>
+                            <field name="paid_vnd"/>
+                        </group>
+                    </group>
+                       <group colspan="4" col="4"> 
                         <separator string="" colspan="4"/>
                         <field name="state" colspan="1"/>
                         <group col="8" colspan="2">
@@ -309,38 +318,6 @@
                       </group>    
                    </page>
                    <page string="Bids">
-                       <separator string="Finalists Bid" colspan="4"/>
-                       <group colspan="4" col="6">
-                        <field name="ach_uid"/>
-                        <field name="ach_login" select="1" />
-                        <newline/>
-                        <field name="buyer_price"/>
-                        <field name="ach_inv_id"/>
-                        <newline/>
-                        <field name="is_ok"/>
-                        <field name="paid_ach"/>
-                        <field name="ach_emp"/>
-                       </group>
-                       <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
-                          widget="one2many_list">
-                          <tree string="Buyer's Payment History">
-                              <field name="statement_id"/>
-                              <field name="amount"/>
-                              <field name="date"/>
-                          </tree>
-                          <form string="Buyer's Payment History">
-                              <field name="name"/>
-                              <field name="sequence"/>
-                              <field name="date"/>
-                              <field name="partner_id"/>
-                              <field name="account_id"/>
-                              <field name="type"/>
-                              <field name="statement_id"/>
-                              <field name="reconcile_id"/>
-                              <field name="amount"/>
-                              <field name="reconcile_amount"/>
-                          </form>
-                       </field>
                        <field name="bid_lines" colspan="4" nolabel="1" editable="top">
                             <tree string="Bids Details"  editable="top">
                                 <field name="bid_id"/>
@@ -355,19 +332,44 @@
                             </form>
                         </field>
                     </page>
-                    <page string="History">
-                       <field name="history_ids" colspan="4" readonly="1" nolabel="1">
-                          <tree string="History">
-                             <field name="name"/>
-                             <field name="lot_id"/>
-                             <field name="auction_id"/>
-                             <field name="price"/>
-                          </tree>
-                       </field>
-                    </page>
                     <page string="Note">
                         <field name="obj_desc" colspan="4" nolabel="1"/>
                     </page>
+                    <page string="History" groups="base.group_extended">
+                            <group colspan="2" col="2">
+                                <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
+                                    widget="one2many_list">
+                                    <tree string="Buyer's Payment History">
+                                        <field name="statement_id"/>
+                                        <field name="amount"/>
+                                        <field name="date"/>
+                                    </tree>
+                                    <form string="Buyer's Payment History">
+                                        <field name="name"/>
+                                        <field name="sequence"/>
+                                        <field name="date"/>
+                                        <field name="partner_id"/>
+                                        <field name="account_id"/>
+                                        <field name="type"/>
+                                        <field name="statement_id"/>
+                                        <field name="reconcile_id"/>
+                                        <field name="amount"/>
+                                        <field name="reconcile_amount"/>
+                                    </form>
+                                </field>
+                            </group>
+                            <group colspan="2" col="2"> 
+                               <field name="history_ids" colspan="4" readonly="1" nolabel="1">
+                                  <tree string="History">
+                                     <field name="name"/>
+                                     <field name="lot_id"/>
+                                     <field name="auction_id"/>
+                                     <field name="price"/>
+                                  </tree>
+                               </field>
+                            </group>
+                    </page>
+                    
                 </notebook>
            </form>
         </field>

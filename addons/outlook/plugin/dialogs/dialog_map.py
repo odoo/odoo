@@ -711,7 +711,7 @@ def SearchObjectsForText(btnProcessor,*args):
 
     search_txt = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
     if not search_txt:
-        win32ui.MessageBox("Enter text to search for", "", flag_info)
+        win32ui.MessageBox("Enter text to search for", "Archive to OpenERP", flag_info)
         return
     # Get titles from list
     obj_titles=[]
