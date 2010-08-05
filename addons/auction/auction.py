@@ -293,7 +293,16 @@ class auction_lots(osv.osv):
                 elif name == "net_revenue":
                     if lot.auction_id:
                         result = lot.buyer_price - lot.seller_price - lot.costs
-
+                        
+                elif name == "gross_margin":
+                   if ((lot.obj_price==0) and (lot.state=='draft')):
+                     amount = lot.lot_est1
+                   else: 
+                     amount = lot.obj_price
+                   if amount > 0:
+                     result = (lot.gross_revenue * 100) / amount
+                     result = round(result,2)
+                     
                 elif name == "net_margin":
                     if ((lot.obj_price==0) and (lot.state=='draft')):
                         amount = lot.lot_est1
@@ -301,6 +310,7 @@ class auction_lots(osv.osv):
                         amount = lot.obj_price
                     if amount > 0:
                         result = (lot.net_revenue * 100) / amount
+                        result = round(result,2)
                 elif name == "costs":
                     # costs: Total credit of analytic account
                     # objects sold during this auction (excluding analytic lines that are in the analytic journal of the auction date)
@@ -391,7 +401,7 @@ class auction_lots(osv.osv):
         'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price", help="Buyer Price"), 
         'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price", help="Seller Price"), 
         'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue", help="Buyer Price - Seller Price"), 
-        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin", help="Gross Income Divided by Net Sales"), 
+        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin", help="(Gross Revenue*100.0)/ Object Price"), 
         'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs", help="Total Credit of analytic account"), 
         'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment', help="Bank statement Line For Given Buyer"), 
         'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue", help="Buyer Price - Seller Price - Indirect Cost"), 
