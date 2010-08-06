@@ -1419,7 +1419,7 @@ class orm_template(object):
         view = self.fields_view_get(cr, uid, False, 'form', context)
 
         root = etree.fromstring(encode(view['arch']))
-        res = etree.XML("<search string='%s'></search>" % root.get("string", ""))
+        res = etree.XML("""<search string="%s"></search>""" % root.get("string", ""))
         node = etree.Element("group")
         res.append(node)
 
