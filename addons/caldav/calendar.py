@@ -255,8 +255,10 @@ class CalDAV(object):
                 continue
             if cal_data.name.lower() == 'exdate':
                 exdates += cal_data.value
-                exval = map(lambda x: x.strftime('%Y%m%dT%H%M%S'), exdates)
-                self.ical_set(cal_data.name.lower(), ','.join(exval), 'value')
+                exvals = []
+                for exdate in exdates:
+                    exvals.append(datetime.fromtimestamp(time.mktime(exdate.utctimetuple())).strftime('%Y%m%dT%H%M%S'))
+                self.ical_set(cal_data.name.lower(), ','.join(exvals), 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
