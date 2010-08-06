@@ -380,13 +380,14 @@ class payroll_advice(osv.osv):
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
 
-    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
         res = {}
         if context is None:
             context = {}
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-            res.update({'bank': company.partner_id.bank_ids[0].bank.name})
+            if company.partner_id.bank_ids:
+                res.update({'bank': company.partner_id.bank_ids[0].bank.name})
         return {
             'value':res
         }
