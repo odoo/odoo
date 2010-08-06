@@ -25,14 +25,12 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
     
     _name = "auction.lots.make.invoice.buyer"
     _description = __doc__
-    
     _columns= {
-       'amount': fields.float('Invoiced Amount', required =True, readonly=True), 
+       'amount': fields.float('Invoiced Amount', required =True, readonly=True, help="Buyer Price"), 
        'objects':fields.integer('# of objects', required =True, readonly=True), 
        'number':fields.char('Invoice Number', size=64), 
        'buyer_id':fields.many2one('res.partner', 'Buyer', required=True), 
     }
-
     _defaults={
        'number': lambda *a: False,
     }

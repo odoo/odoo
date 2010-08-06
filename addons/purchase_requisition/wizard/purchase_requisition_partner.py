@@ -23,9 +23,6 @@ import time
 from mx import DateTime
 
 from osv import fields, osv
-from service import web_services
-import netsvc
-import pooler
 from osv.orm import browse_record, browse_null
 
 class purchase_requisition_partner(osv.osv_memory):
