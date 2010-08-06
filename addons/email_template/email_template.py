@@ -468,18 +468,18 @@ class email_template(osv.osv):
                                           data,
                                           context)
         attachment_obj = self.pool.get('ir.attachment')
+
+        fname = tools.ustr(get_value(cursor, user, record_id,
+                                     template.file_name, template, context)
+                           or 'Report')
+        ext = '.' + format
+        if not fname.endswith(ext):
+            fname += ext
+
         new_att_vals = {
             'name':mail.subject + ' (Email Attachment)',
             'datas':base64.b64encode(result),
-            'datas_fname':tools.ustr(
-                             get_value(
-                                   cursor,
-                                   user,
-                                   record_id,
-                                   template.file_name,
-                                   template,
-                                   context
-                                   ) or 'Report') + "." + format,
+            'datas_fname': fname,
             'description':mail.subject or "No Description",
             'res_model':'email_template.mailbox',
             'res_id':mail.id
