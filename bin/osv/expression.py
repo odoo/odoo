@@ -236,7 +236,7 @@ class expression(object):
                         if isinstance(right, basestring):
                             res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
                             if res_ids:
-                                opeartor = 'in'
+                                operator = 'in'
                         else:
                             if not isinstance(right, list):
                                 res_ids = [right]

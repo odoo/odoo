@@ -395,8 +395,10 @@ class OpenERPDispatcherException(Exception):
 
 class OpenERPDispatcher:
     def log(self, title, msg):
-        if tools.config['log_level'] == logging.DEBUG_RPC:
-            Logger().notifyChannel('%s' % title, LOG_DEBUG_RPC, pformat(msg))
+        logger = logging.getLogger(title)
+        if logger.isEnabledFor(logging.DEBUG_RPC):
+            for line in pformat(msg).split('\n'):
+                logger.log(logging.DEBUG_RPC, line)
 
     def dispatch(self, service_name, method, params):
         try:
