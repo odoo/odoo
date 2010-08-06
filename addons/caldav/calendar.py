@@ -83,7 +83,7 @@ def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
 
-def get_attribute_mapping(cr, uid, calname, context={}):
+def get_attribute_mapping(cr, uid, calname, context=None):
     """ Attribute Mapping with Basic calendar fields and lines
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -378,7 +378,7 @@ class CalDAV(object):
                                         vevent.add(field).value = key1
         return vevent
 
-    def check_import(self, cr, uid, vals, context={}):
+    def check_import(self, cr, uid, vals, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -386,7 +386,8 @@ class CalDAV(object):
             @param vals: Get Values
             @param context: A standard dictionary for contextual values
         """
-
+        if not context:
+            context = {}
         ids = []
         model_obj = self.pool.get(context.get('model'))
         recur_pool = {}
@@ -614,7 +615,7 @@ class basic_calendar_line(osv.osv):
         'domain': lambda *a: '[]',
     }
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         """ create calendar's line
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -696,7 +697,7 @@ class basic_calendar_fields(osv.osv):
                 raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines' % (name)))
         return True
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         """ Create Calendar's fields
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -773,7 +774,7 @@ class Event(CalDAV, osv.osv_memory):
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
 
-    def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
+    def export_cal(self, cr, uid, datas, vobj='vevent', context=None):
         """ Export calendar
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -826,7 +827,7 @@ class ToDo(CalDAV, osv.osv_memory):
                 'rrule': None,
             }
 
-    def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
+    def export_cal(self, cr, uid, datas, vobj='vevent', context=None):
         """ Export Calendar
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -876,7 +877,7 @@ class Timezone(CalDAV, osv.osv_memory):
     'x-prop': None, # Use: O-n, Type: Text,
     }
 
-    def get_name_offset(self, cr, uid, tzid, context={}):
+    def get_name_offset(self, cr, uid, tzid, context=None):
         """ Get Name Offset value
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -893,7 +894,7 @@ class Timezone(CalDAV, osv.osv_memory):
         realoffset = (val < 0 and ('-' + realoffset) or ('+' + realoffset))
         return (mydt.tzname(), realoffset)
 
-    def export_cal(self, cr, uid, model, tzid, ical, context={}):
+    def export_cal(self, cr, uid, model, tzid, ical, context=None):
         """ Export Calendar
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -901,7 +902,8 @@ class Timezone(CalDAV, osv.osv_memory):
             @param model: Get Model's name
             @param context: A standard dictionary for contextual values
         """
-
+        if not context:
+            context = {}
         ctx = context.copy()
         ctx.update({'model': model})
         cal_tz = ical.add('vtimezone')
@@ -949,7 +951,7 @@ class Alarm(CalDAV, osv.osv_memory):
     'x-prop': None,
     }
 
-    def export_cal(self, cr, uid, model, alarm_id, vevent, context={}):
+    def export_cal(self, cr, uid, model, alarm_id, vevent, context=None):
         """ Export Calendar
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -958,7 +960,8 @@ class Alarm(CalDAV, osv.osv_memory):
             @param alarm_id: Get Alarm's Id
             @param context: A standard dictionary for contextual values
         """
-
+        if not context:
+            context = {}
         valarm = vevent.add('valarm')
         alarm_object = self.pool.get(model)
         alarm_data = alarm_object.read(cr, uid, alarm_id, [])
@@ -1069,7 +1072,7 @@ class Attendee(CalDAV, osv.osv_memory):
         vals = map_data(cr, uid, self, context=context)
         return vals
 
-    def export_cal(self, cr, uid, model, attendee_ids, vevent, context={}):
+    def export_cal(self, cr, uid, model, attendee_ids, vevent, context=None):
         """ Export Calendar
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -1078,7 +1081,8 @@ class Attendee(CalDAV, osv.osv_memory):
             @param attendee_ids: Get Attendee's Id
             @param context: A standard dictionary for contextual values
         """
-
+        if not context:
+            context = {}
         attendee_object = self.pool.get(model)
         ctx = context.copy()
         ctx.update({'model': model})
