@@ -24,7 +24,6 @@ from dateutil import parser
 from dateutil.rrule import *
 from osv import osv, fields
 from tools.translate import _
-import base64
 import math
 import pooler
 import pytz
@@ -52,6 +51,8 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
         @param rdate: Get Recurrent Date
     """
     __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
+    if not uidval:
+        return (False, None)
     wematch = __rege.match(uidval.encode('utf8'))
     if not wematch:
         return (False, None)
@@ -133,7 +134,7 @@ def map_data(cr, uid, obj, context=None):
                     continue
                 mapping = obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
-                    map_val = mapping[map_val.lower()]
+                    map_val = mapping.get(map_val.lower(), False)
                 else:
                     map_val = map_val.lower()
             if field_type == 'many2many':
@@ -229,7 +230,8 @@ class CalDAV(object):
         att_data = []
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
-                self.ical_set(cal_data.name.lower(), {'name':cal_data.params['CN']}, 'value')
+                self.ical_set(cal_data.name.lower(), {'name': cal_data.params.get('CN') and cal_data.params.get('CN')[0]}, 'value')
+                continue
             if cal_data.name.lower() == 'attendee':
                 ctx = context.copy()
                 if cal_children:
@@ -381,7 +383,7 @@ class CalDAV(object):
             raise osv.except_osv(('Error !'), (str(e)))
         return ids
 
-    def export_cal(self, cr, uid, datas, vobj=None, context={}):
+    def export_cal(self, cr, uid, datas, vobj=None, context=None):
         """ Export Calendar
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -396,7 +398,7 @@ class CalDAV(object):
             self.create_ics(cr, uid, datas, vobj, ical, context=context)
             return ical
         except Exception, e:
-            raise osv.except_osv(('Error !'), (str(e)))
+            raise  # osv.except_osv(('Error !'), (str(e)))
 
     def import_cal(self, cr, uid, content, data_id=None, context=None):
         """ Import Calendar
@@ -407,7 +409,7 @@ class CalDAV(object):
             @param context: A standard dictionary for contextual values
         """
 
-        ical_data = base64.decodestring(content)
+        ical_data = content
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
         parsedCal = vobject.readOne(ical_data)
         res = []
@@ -447,8 +449,8 @@ class Calendar(CalDAV, osv.osv):
             'type': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO')], \
                                     string="Type", size=64),
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),
-            'create_date': fields.datetime('Created Date'),
-            'write_date': fields.datetime('Modifided Date'),
+            'create_date': fields.datetime('Created Date', readonly=True),
+            'write_date': fields.datetime('Modifided Date', readonly=True),
     }
 
     def get_calendar_objects(self, cr, uid, ids, parent=None, domain=None, context=None):
@@ -473,17 +475,16 @@ class Calendar(CalDAV, osv.osv):
                 data_ids = mod_obj.search(cr, uid, line_domain, context=context)
                 for data in mod_obj.browse(cr, uid, data_ids, context):
                     ctx = parent and parent.context or None
-                    node = res_node_calendar('%s' %data.id, parent, ctx, data, line.object_id.model, data.id)
+                    node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)
                     res.append(node)
         return res
 
     def export_cal(self, cr, uid, ids, vobj='vevent', context=None):
         """ Export Calendar
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
             @param ids: List of calendar’s IDs
-            @param context: A standard dictionary for contextual values
+            @param vobj: the type of object to export
+            
+            @return the ical data.
         """
         if not context:
            context = {}
@@ -521,7 +522,7 @@ class Calendar(CalDAV, osv.osv):
         if not context:
             context = {}
         vals = []
-        ical_data = base64.decodestring(content)
+        ical_data = content
         parsedCal = vobject.readOne(ical_data)
         if not data_id:
             data_id = self.search(cr, uid, [])[0]
@@ -541,14 +542,19 @@ class Calendar(CalDAV, osv.osv):
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)
                 vals.append(val)
                 objs.append(cal_children[child.name.lower()])
+        
+        res = []
         for obj_name in list(set(objs)):
             obj = self.pool.get(obj_name)
             if hasattr(obj, 'check_import'):
-                obj.check_import(cr, uid, vals, context=context)
+                r = obj.check_import(cr, uid, vals, context=context)
                 checked = True
+                res.extend(r)
+
         if not checked:
-            self.check_import(cr, uid, vals, context=context)
-        return {}
+            r = self.check_import(cr, uid, vals, context=context)
+            res.extend(r)
+        return res
 Calendar()
 
 
@@ -632,6 +638,10 @@ class basic_calendar_fields(osv.osv):
         'fn': lambda *a: 'field',
     }
 
+    _sql_constraints = [
+        ( 'name_type_uniq', 'UNIQUE(name, type_id)', 'Can not map a field more than once'),
+    ]
+
     def check_line(self, cr, uid, vals, name, context=None):
         """ check calendar's line
             @param self: The object pointer
@@ -667,12 +677,6 @@ class basic_calendar_fields(osv.osv):
         name = name[0]
         if name in ('valarm', 'attendee'):
             self.check_line(cr, uid, vals, name, context=context)
-        cr.execute("Select count(id) from basic_calendar_fields \
-                                where name=%s and type_id=%s" % (vals.get('name'), vals.get('type_id')))
-        res = cr.fetchone()
-        if res:
-            if res[0] > 0:
-                raise osv.except_osv(_('Warning !'), _('Can not map the field more than once'))
         return super(basic_calendar_fields, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -691,13 +695,6 @@ class basic_calendar_fields(osv.osv):
             name = field.name.name
             if name in ('valarm', 'attendee'):
                 self.check_line(cr, uid, vals, name, context=context)
-            qry = "Select count(id) from basic_calendar_fields \
-                                where name=%s and type_id=%s" % (field.name.id, field.type_id.id)
-            cr.execute(qry)
-            res = cr.fetchone()
-            if res:
-                if res[0] > 1:
-                    raise osv.except_osv(_('Warning !'), _('Can not map same field more than once'))
         return super(basic_calendar_fields, self).write(cr, uid, ids, vals, context)
 
 basic_calendar_fields()
