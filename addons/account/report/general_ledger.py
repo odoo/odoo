@@ -334,7 +334,7 @@ class general_ledger(rml_parse.rml_parse):
         total = self.cr.fetchone()
 
         if self.account_currency:
-            return total[0]
+            return total[0] or 0.00
         else:
             currency_total = self.tot_currency = 0.0
             return currency_total
