@@ -51,7 +51,7 @@ class calendar_event_import(osv.osv_memory):
             id2 = data_obj._get_id(cr, uid, 'caldav', 'view_calendar_event_import_display')
             if id2:
                  id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            vals = model_obj.import_cal(cr, uid, data['file_path'], context['active_id'], context)
+            vals = model_obj.import_cal(cr, uid, base64.decodestring(data['file_path']), context['active_id'], context)
             global cnt
             if vals:
                 cnt = len(vals)

@@ -40,7 +40,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_auction_artist_tree"/>
     </record>
-    <menuitem name="Define Artists" parent="auction_config_menu" action="action_auction_artist" id="menu_auction_artist"/>
+    <menuitem name="Artists" parent="auction_config_menu" action="action_auction_artist" id="menu_auction_artist"/>
 
     
   <!--  Auction Management/Configuration/objectcategories  --> 
@@ -50,7 +50,7 @@
         <field name="model">auction.lot.category</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-           <tree string="Lot Category">
+           <tree string="Object Categories">
                <field name="name"/>
            </tree>
         </field>
@@ -61,7 +61,7 @@
         <field name="model">auction.lot.category</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-           <form string="Lot Category">
+           <form string="Object Categories">
                <field name="name" colspan="4" select="1"/>
                <newline/>
                <field name="aie_categ" colspan="4"/>
@@ -262,13 +262,13 @@
                           </group>
                       </group>
                       <group colspan="4" col="6">
-                        <group colspan="2" col="1">
-                            <separator string="Authors" colspan="2"/>
+                        <group colspan="2" col="2">
+                            <separator string="Authors" colspan="4"/>
                             <field name="artist_id"/>
                             <field name="artist2_id"/>
                             <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
                         </group>
-                        <group colspan="2" col="1">
+                        <group colspan="2" col="2">
                             <separator string="Price" colspan="4"/>
                             <field name="lot_est1"/>
                             <field name="lot_est2"/>
@@ -277,7 +277,7 @@
                             <field name="buyer_price"/>
                             <field name="obj_comm"/>
                         </group>
-                        <group colspan="2" col="1">
+                        <group colspan="2" col="2">
                             <separator string="Statistical" colspan="4"/>
                             <field name="gross_revenue"/>
                             <field name="net_revenue"/>
@@ -369,7 +369,6 @@
                                </field>
                             </group>
                     </page>
-                    
                 </notebook>
            </form>
         </field>

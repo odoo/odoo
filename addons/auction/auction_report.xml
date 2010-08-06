@@ -3,7 +3,7 @@
 	<data>
 		<!--<delete model="ir.actions.report.xml" search="[('model','like','auction.')]"/>-->
 
-    <report string="Listing Huissiers"
+    <report string="Bailiffs Listing"
 		model="auction.lots"
 		name="flagey.huissier"
 		xsl="auction/report/huissier.xsl"
@@ -11,7 +11,6 @@
 		id="v_huissier"
 		multi="1"
 		/>
-
 
     <report string="Artists Biography"
 		 model="auction.artists"
@@ -45,7 +44,7 @@
 
 
 	<report
-		string="Code barres du lot"
+		string="Barcode batch"
 		model="auction.lots"
 		name="auction.code_bar_lot"
 		rml="auction/report/report_lot_bar_code.rml"

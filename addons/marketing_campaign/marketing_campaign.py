@@ -159,11 +159,11 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         return True
 
 
-    def signal(self, cr, uid, model, res_id, signal, context=None):
+    def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
         record = self.pool.get(model).browse(cr, uid, res_id, context)
-        return self._signal(cr, uid, record, signal, context)
+        return self._signal(cr, uid, record, signal, run_existing, context)
 
-    def _signal(self, cr, uid, record, signal, context=None):
+    def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
         if not signal:
             raise ValueError('signal cannot be False')
 
@@ -182,7 +182,10 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 wi_domain = [(k, '=', v) for k, v in data.items()]
 
                 wi_ids = Workitems.search(cr, uid, wi_domain, context=context)
-                if not wi_ids:
+                if wi_ids:
+                    if not run_existing:
+                        continue
+                else:
                     partner = self._get_partner_for(campaign, record)
                     if partner:
                         data['partner_id'] = partner.id
