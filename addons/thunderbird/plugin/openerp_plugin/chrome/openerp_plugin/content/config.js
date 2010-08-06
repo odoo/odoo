@@ -1,6 +1,8 @@
 
 function config_close()
 {
+	//window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+    //ksa
    window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
 	window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
 }
@@ -60,10 +62,13 @@ function config_ok()
 	}
 	setServer("http://"+document.getElementById('txtcurl').value +":" + document.getElementById('txtcport').value);
 	window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+    //ksa
     window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
 }
 function openConfigChange()
 {
+	//window.open("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
+    //ksa
     window.close("chrome://openerp_plugin/content/config.xul", "", "chrome");
     window.open("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
 }

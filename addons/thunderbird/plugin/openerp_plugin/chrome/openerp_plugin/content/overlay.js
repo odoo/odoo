@@ -242,10 +242,10 @@ function open_contact()
 
 }
 
-
 //function to open the configuration window
 var Config = {
   onLoad: function() {
+    // initialization code
     this.initialized = true;
   },
 
@@ -289,6 +289,21 @@ var Address = {
         searchContact();
 	}
 };
+
+/*var Address = {
+	onLoad: function(){
+	this.initialized=true;
+	},
+
+	onMenuItemCommand: function(){
+   //     if(GetNumSelectedMessages() < 1 || GetNumSelectedMessages() > 1){
+	//	alert("You must select only one mail to archive");
+		//return false
+	//}
+        searchContact();
+		window.open("chrome://openerp_plugin/content/address.xul", "", "chrome");
+	}
+};*/
 
 //function to open the window for selecting the partner for a new contact creation
 var Select = {
