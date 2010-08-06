@@ -1562,10 +1562,9 @@ true, it will allow you to hide the event alarm information without removing it.
             for record in self.read(cr, uid, event_id, ['date', 'rrule', 'exdate'], context=context):
                 if record['rrule']:
                     # Remove one of the recurrent event
-                    date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
+                    date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
-                    exdate = (record['exdate'] and (record['exdate'] + ',') or '') + ''.join((re.compile('\d')).findall(date_new))
-                    res = self.write(cr, uid, event_id, {'exdate': exdate})
+                    res = self.write(cr, uid, event_id, {'exdate': date_new})
                 else:
                     res = super(calendar_event, self).unlink(cr, uid, event_id)
                     self.pool.get('res.alarm').do_alarm_unlink(cr, uid, event_id, self._name)

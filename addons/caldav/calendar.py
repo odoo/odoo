@@ -220,6 +220,10 @@ class CalDAV(object):
                 self.__attribute__[name][type] = None
         return True
 
+    def format_date_tz(self, date, tz=None):
+        format = tools.DEFAULT_SERVER_DATETIME_FORMAT
+        return tools.server_to_local_timestamp(date, format, format, tz)
+
     def parse_ics(self, cr, uid, child, cal_children=None, context=None):
         """ parse calendaring and scheduling information
         @param self: The object pointer
@@ -251,7 +255,7 @@ class CalDAV(object):
                 continue
             if cal_data.name.lower() == 'exdate':
                 exdates += cal_data.value
-                exval = map(lambda x: x.strftime('%Y%m%dT%H%M%SZ'), exdates)
+                exval = map(lambda x: x.strftime('%Y%m%dT%H%M%S'), exdates)
                 self.ical_set(cal_data.name.lower(), ','.join(exval), 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
@@ -277,6 +281,7 @@ class CalDAV(object):
         for data in datas:
             tzval = None
             exfield = None
+            exdates = []
             vevent = ical.add(name)
             for field in self.__attribute__.keys():
                 map_field = self.ical_get(field, 'field')
@@ -319,6 +324,13 @@ class CalDAV(object):
                             timezones.append(data[map_field])
                         if exfield:
                             exfield.params['TZID'] = [tzval.title()]
+                            exdates_updated = []
+                            for exdate in exdates:
+                                date1 = (datetime.strptime(exdate, "%Y%m%dT%H%M%S")).strftime('%Y-%m-%d %H:%M:%S')
+                                dest_date = self.format_date_tz(date1, tzval.title())
+                                ex_date = (datetime.strptime(dest_date, "%Y-%m-%d %H:%M:%S")).strftime('%Y%m%dT%H%M%S')
+                                exdates_updated.append(ex_date)
+                            exfield.value = map(parser.parse, exdates_updated)
                     elif field == 'organizer' and data[map_field]:
                         event_org = vevent.add('organizer')
                         organizer_id = data[map_field][0]
@@ -330,19 +342,25 @@ class CalDAV(object):
                         if map_type in ("char", "text"):
                             if field in ('exdate'):
                                 exfield = vevent.add(field)
+                                exdates = (data[map_field]).split(',')
                                 if tzval:
                                     exfield.params['TZID'] = [tzval.title()]
-                                exfield.value = map(parser.parse, (data[map_field]).split(','))
+                                    exdates_updated = []
+                                    for exdate in exdates:
+                                        date1 = (datetime.strptime(exdate, "%Y%m%dT%H%M%S")).strftime('%Y-%m-%d %H:%M:%S')
+                                        dest_date = self.format_date_tz(date1, tzval.title())
+                                        ex_date = (datetime.strptime(dest_date, "%Y-%m-%d %H:%M:%S")).strftime('%Y%m%dT%H%M%S')
+                                        exdates_updated.append(ex_date)
+                                    exdates = exdates_updated
+                                exfield.value = map(parser.parse, exdates)
                             else:
                                 vevent.add(field).value = tools.ustr(data[map_field])
                         elif map_type in ('datetime', 'date') and data[map_field]:
                             dtfield = vevent.add(field)
                             if tzval:
-                                date_1 = datetime.strptime(data[map_field], '%Y-%m-%d %H:%M:%S')
-                                desttz = pytz.timezone(tzval.title())
-                                date_gmt = date_1.replace(tzinfo=pytz.utc).astimezone(desttz).strftime('%Y-%m-%d %H:%M:%S')
+                                dest_date = self.format_date_tz(data[map_field], tzval.title())
                                 dtfield.params['TZID'] = [tzval.title()]
-                                dtfield.value = parser.parse(date_gmt)
+                                dtfield.value = parser.parse(dest_date)
                             else:
                                 dtfield.value = parser.parse(data[map_field])
                         elif map_type == "timedelta":
