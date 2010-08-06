@@ -47,3 +47,5 @@ class change_standard_price(osv.osv_memory):
         return super(change_standard_price, self).change_price(cr, uid, ids, context=context)
     
 change_standard_price()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
