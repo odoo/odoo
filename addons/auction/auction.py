@@ -293,7 +293,16 @@ class auction_lots(osv.osv):
                 elif name == "net_revenue":
                     if lot.auction_id:
                         result = lot.buyer_price - lot.seller_price - lot.costs
-
+                        
+                elif name == "gross_margin":
+                   if ((lot.obj_price==0) and (lot.state=='draft')):
+                     amount = lot.lot_est1
+                   else: 
+                     amount = lot.obj_price
+                   if amount > 0:
+                     result = (lot.gross_revenue * 100) / amount
+                     result = round(result,2)
+                     
                 elif name == "net_margin":
                     if ((lot.obj_price==0) and (lot.state=='draft')):
                         amount = lot.lot_est1
@@ -301,9 +310,11 @@ class auction_lots(osv.osv):
                         amount = lot.obj_price
                     if amount > 0:
                         result = (lot.net_revenue * 100) / amount
+                        result = round(result,2)
                 elif name == "costs":
                     # costs: Total credit of analytic account
                     # objects sold during this auction (excluding analytic lines that are in the analytic journal of the auction date)
+                    #TOCHECK: Calculation OF Indirect Cost
                     som = 0.0
                     if lot.auction_id:
                         auct_id = lot.auction_id.id
@@ -344,15 +355,15 @@ class auction_lots(osv.osv):
 
     _columns = {
         'bid_lines':fields.one2many('auction.bid_line', 'lot_id', 'Bids'), 
-        'auction_id': fields.many2one('auction.dates', 'Auctions', select=1, help="Auction For Objects"), 
-        'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True, help="Auction Deposit For Deposit Inventory"), 
-        'name': fields.char('Title', size=64, required=True, help='Auction Objects Name'), 
+        'auction_id': fields.many2one('auction.dates', 'Auction', select=1, help="Auction For Object"), 
+        'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True, help="Provide Deposit Information: seller, Withdrawned Method, Object, Deposit Costs"), 
+        'name': fields.char('Title', size=64, required=True, help='Auction Object Name'), 
         'name2': fields.char('Short Description (2)', size=64), 
         'lot_type': fields.selection(_type_get, 'Object category', size=64), 
         'author_right': fields.many2one('account.tax', 'Author rights', help="Account Tax For Author Commission"), 
-        'lot_est1': fields.float('Minimum Estimation', help="Minimum Estimate Price Of Objects"), 
-        'lot_est2': fields.float('Maximum Estimation', help="Maximum Estimate Price Of Objects"), 
-        'lot_num': fields.integer('List Number', required=True, select=1, help="List Number For selected Object in Deposit"), 
+        'lot_est1': fields.float('Minimum Estimation', help="Minimum Estimate Price"), 
+        'lot_est2': fields.float('Maximum Estimation', help="Maximum Estimate Price"), 
+        'lot_num': fields.integer('List Number', required=True, select=1, help="List Number In Depositer Inventory"), 
         'create_uid': fields.many2one('res.users', 'Created by', readonly=True), 
         'history_ids':fields.one2many('auction.lot.history', 'lot_id', 'Auction history'), 
         'lot_local':fields.char('Location', size=64, help="Auction Location"), 
@@ -362,15 +373,15 @@ class auction_lots(osv.osv):
         'product_id':fields.many2one('product.product', 'Product', required=True), 
         'obj_desc': fields.text('Object Description'), 
         'obj_num': fields.integer('Catalog Number'), 
-        'obj_ret': fields.float('Price retired', help="Objects Ret"), 
+        'obj_ret': fields.float('Price retired', help="Object Ret"), 
         'obj_comm': fields.boolean('Commission'), 
-        'obj_price': fields.float('Adjudication price', help="Objects Price"), 
+        'obj_price': fields.float('Adjudication price', help="Object Price"), 
         'ach_avance': fields.float('Buyer Advance'), 
         'ach_login': fields.char('Buyer Username', size=64), 
         'ach_uid': fields.many2one('res.partner', 'Buyer'),
-        'seller_id': fields.related('bord_vnd_id','partner_id', type='many2one', relation='res.partner', string='Seller', readonly=True, help="Seller who is related to depositor Inventory"), 
-        'ach_emp': fields.boolean('Taken Away', readonly=True, help="When This Field is True means, Objects is taken away by Buyer"), 
-        'is_ok': fields.boolean('Buyer\'s payment', help="When Buyer Pay For Account Bank statement', This field is selected as True.", readonly=True), 
+        'seller_id': fields.related('bord_vnd_id','partner_id', type='many2one', relation='res.partner', string='Seller', readonly=True), 
+        'ach_emp': fields.boolean('Taken Away', readonly=True, help="When state is Taken Away, This field is Marked as True"), 
+        'is_ok': fields.boolean('Buyer\'s payment', help="When Buyer Pay For Bank statement', This field is Marked"), 
         'ach_inv_id': fields.many2one('account.invoice', 'Buyer Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
         'sel_inv_id': fields.many2one('account.invoice', 'Seller Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
         'vnd_lim': fields.float('Seller limit'), 
@@ -388,14 +399,14 @@ class auction_lots(osv.osv):
                 \n* The \'Unsold\' state is used when object does not sold for long time, user can also set it as draft state after unsold. \
                 \n* The \'Paid\' state is used when user pay for the object \
                 \n* The \'Sold\' state is used when user buy the object.'), 
-        'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price", help="Objects Price which Buyer Given For Objects"), 
+        'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price", help="Buyer Price"), 
         'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price", help="Seller Price"), 
-        'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue", help="Revenue Minus Cost Of Objects Sold."), 
-        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin", help="Gross Income Divided by Net Sales"), 
-        'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs", help="Total credit of analytic account"), 
-        'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment', help="Account Bank statement Line For Given Buyer"), 
-        'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue", help="Total Revenue Minus Returns"), 
-        'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin", help="The ratio of net profits to revenues"), 
+        'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue", help="Buyer Price - Seller Price"), 
+        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin", help="(Gross Revenue*100.0)/ Object Price"), 
+        'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs", help="Deposit cost"), 
+        'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment', help="Bank statement Line For Given Buyer"), 
+        'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue", help="Buyer Price - Seller Price - Indirect Cost"), 
+        'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin", help="(Net Revenue * 100)/ Object Price"), 
     }
     _defaults = {
         'state':lambda *a: 'draft', 
