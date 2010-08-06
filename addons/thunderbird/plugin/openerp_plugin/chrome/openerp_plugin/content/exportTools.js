@@ -149,7 +149,6 @@ function getPredefinedFolder(type) {
 
 	var use_dir = "mboximport.exportMSG.use_dir";
 
-	//var dir_path = "mboximport.exportMSG.dir";
 	var dir_path="";
 	if(navigator.userAgent.indexOf('Linux')!= -1){
 		dir_path ="/tmp"

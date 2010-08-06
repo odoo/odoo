@@ -45,7 +45,6 @@ var myPrefObserver =
 	//set the initial value of name and email field of create contact window
 	createContact: function()
 	{
-		//document.getElementById("txtselectpartner").value= getPartnerID();
         document.getElementById("txtname").value= getSenderName();
         document.getElementById("txtemail").value= getSenderEmail();
         document.getElementById("country").value=getAllCountry();
@@ -121,13 +120,10 @@ var myPrefObserver =
     	// aData is the name of the pref that's been changed (relative to aSubject)
     	switch (aData) {
       		case "serverport":
-        	// extensions.myextension.pref1 was changed
         	break;
       	case "serverurl":
-      		// extensions.myextension.pref2 was changed
         	break;
       	case "serverdbname":
-      		// extensions.myextension.pref2 was changed
         	break;
     	}
   	},
