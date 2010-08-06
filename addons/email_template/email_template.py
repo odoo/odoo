@@ -606,14 +606,12 @@ class email_template(osv.osv):
                 mailbox_values['body_text'] += sign
             if mailbox_values['body_html']:
                 mailbox_values['body_html'] += sign
-        print 'Creating', mailbox_values
         mailbox_id = self.pool.get('email_template.mailbox').create(
                                                              cursor,
                                                              user,
                                                              mailbox_values,
                                                              context)
 
-        print 'Sending', mailbox_id
         return mailbox_id
         
 
@@ -628,7 +626,6 @@ class email_template(osv.osv):
         template = self.browse(cursor, user, template_id, context=context)
         if not template:
             raise Exception("The requested template could not be loaded")
-        print 'loaded', record_ids
         result = True
         for record_id in record_ids:
             mailbox_id = self._generate_mailbox_item_from_template(
@@ -637,7 +634,6 @@ class email_template(osv.osv):
                                                                 template,
                                                                 record_id,
                                                                 context)
-            print 'loaded'
             mail = self.pool.get('email_template.mailbox').browse(
                                                         cursor,
                                                         user,
