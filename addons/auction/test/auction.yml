@@ -42,12 +42,13 @@
 - 
   !record {model: res.partner, id: res_partner_mrpinakin0}:
     address:
-      - city: Bruxelles
-        country_id: base.be
-        street: Rue des Palais 51, bte 33
-        type: default
-        zip: '1000'
-        email: 'info@mycustomer.com'
+        - city: Namur
+          country_id: base.be
+          phone: (+32).10.45.18.77
+          street: 23, street ways
+          type: default
+          zip: '2324324'
+          email: 'info@mycustomer.com'
     name: Mr. Pinakin
 
 -      
@@ -68,11 +69,12 @@
 - 
   !record {model: res.partner, id: res_partner_mrkjohnson0}:
     address:
-      - city: Bruxelles
-        country_id: base.be
-        street: Rue des Palais 51, bte 33
-        type: default
-        zip: '1000'
+      - city: paris
+        country_id: base.fr
+        name: Mark Johnson
+        street: 1 rue Rockfeller
+        type: invoice
+        zip: '75016'
         email: 'info@mrkjohnson.com'
     name: Mr. Mark Johnson
         
@@ -91,7 +93,7 @@
         
     
 -
-  I create Account tax to give Buyer "3%" Commision.
+  I create Account tax with 0.03 amount to give Buyer "3%" Commision.
 - 
   !record {model: account.tax, id: account_tax_buyer0}:
     amount: 0.029999999999999999
@@ -103,8 +105,7 @@
     type: percent
     type_tax_use: all
 -
-  I create Account tax to give seller "4%" commision.
-  
+  I create Account tax with 0.04 amount to give seller "4%" commision.
 - 
   !record {model: account.tax, id: account_tax_sellercosts0}:
     amount: 0.040000000000000001
@@ -136,7 +137,7 @@
     buyer_costs:
       - auction.account_tax_buyer0       
 -
-  An object is being deposited for an auction,I create a seller's deposit record.  
+  An object is being deposited for an auction,I create a seller's deposit record with deposit cost.  
 -
   !record {model: auction.deposit, id: auction_deposit_ad0}:
     date_dep: '2010-08-01'
@@ -161,13 +162,13 @@
     name: wooden-chair
     name2: antique wooden chair
     obj_num: 1
-    obj_price: 3000.0
+    obj_price: 4000.0
     obj_ret: 0.0
     product_id: 'product_product_furniture0'
     state: draft
     vnd_lim: 5000.0
 -
-  I create a bid for an object "wooden-chair" which is to be auctioned in Antique furniture exhibition by Mr.Patel.
+  I create a bid for an object "wooden-chair" which is to be auctioned in Antique furniture exhibition bided by Mr.Patel.
 -
   !record {model: auction.bid, id: auction_bid_bid0}:
     auction_id: auction_dates_antiquefurnitureexhibition0
@@ -182,13 +183,14 @@
     bid_id: auction_bid_bid0
     lot_id: auction.auction_lots_woodenchair0
     price: 3100.0
+
 -
-  I create another bid for an object "wooden-chair" bided by a Mr.Johnson
+  I create another bid for an object "wooden-chair" bided by a Mr.poalrahi
 -  
   !record {model: auction.bid, id: auction_bid_bid1}:
     auction_id: auction_dates_antiquefurnitureexhibition0
     name: bid/002
-    partner_id: res_partner_mrkjohnson0
+    partner_id: res_partner_poalrahi0
 -
   I create a bid line.
 -
@@ -198,13 +200,14 @@
     call: 1
     lot_id: auction.auction_lots_woodenchair0
     price: 3200.0
+ 
 -
-  I create another bid for an object "wooden-chair" bided by a Mr.poalrahi
+  I create another bid for an object "wooden-chair" bided by a Mr.Johnson
 -  
   !record {model: auction.bid, id: auction_bid_bid2}:
     auction_id: auction_dates_antiquefurnitureexhibition0
     name: bid/003
-    partner_id: res_partner_poalrahi0
+    partner_id: res_partner_mrkjohnson0
 -
   I create a bid line.
 -
@@ -214,7 +217,8 @@
     call: 1
     lot_id: auction.auction_lots_woodenchair0
     price: 4000.0
-    
+-
+  Mr. MarkJohnson bid are selected as Finallist Bid with 4000 Euro
 -
   I check that buyer price and seller price gets bind with the value
 -
@@ -222,51 +226,20 @@
     from tools.translate import _
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
     assert(auc_id.buyer_price,auc_id.seller_price), _('Buyer price and seller price are not available!')
-    
+ 
 -
-  I check that a record gets created in the Auction Analysis.
--
-  !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id2=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    rep_auc_obj1 = self.pool.get('report.auction')
-    ids2=rep_auc_obj1.search(cr, uid, [('auction', '=', auc_id2.auction_id.id)])
-    assert ids2, _('No record found!')   
--
-  An object has been sold,so I click on the "Sold" button.
+  Now, An object has been sold,so I click on the "Sold" button.
 -
   !python {model: auction.lots}: |
     self.button_bought(cr, uid, [ref("auction_lots_woodenchair0")], {"lang": "en_US", "tz":
       False, "active_model": "ir.ui.menu", "active_ids": [ref("auction.auction_lots_woodenchair0")],
       "active_id": ref("auction.auction_lots_woodenchair0")})   
 -
-  I check that the order which was initially in the draft state has transit to sold state.
--
-  !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    assert(auc_id.state == 'sold'), _('State not changed!')
-        
--
-  Then I click on the Taken Away button.
--
-  !python {model: auction.lots}: |
-    self.button_taken_away(cr, uid, [ref("auction_lots_woodenchair0")], {"lang":
-      "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("auction.auction_all_objects_menu")],
-      "active_id": ref("auction.auction_all_objects_menu")})
--
-  I check that the order which was initially in the sold state has transit to taken away state.
--
-  !python {model: auction.lots}: |
-    from tools.translate import _
-    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    assert(auc_id.state == 'taken_away'), _('State not changed!')
--
-  I click on the "Create all invoices" button
+  I click on the "Create all invoices" button for all Objects in this Auction.
 -
   !python {model: auction.dates}: |
     self.close(cr, uid, [ref("auction.auction_dates_antiquefurnitureexhibition0")],
-      {"lang": "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids":
+      {"active_model": "ir.ui.menu", "active_ids":
       [ref("auction.menu_auction_dates_next1")], "active_id": ref("auction.menu_auction_dates_next1")})
 -
   I check that a record gets created in the "Supplier Invoices".
@@ -288,14 +261,97 @@
   Then I click on the "Create Invoices" button.
 -
   !python {model: auction.lots.make.invoice.buyer}: |
-    self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_buyer_0")], {"lang":
-      "en_US", "active_model": "auction.lots", "active_ids": [ref("auction_lots_woodenchair0")],
-      "tz": False, "active_id": ref("auction_lots_woodenchair0"), })
+    self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_buyer_0")], {"active_model": "auction.lots", "active_ids": [ref("auction_lots_woodenchair0")],
+      "active_id": ref("auction_lots_woodenchair0"), })
 -
   I check that a "Buyer Invoice" field gets bind with the value.
 -
   !python {model: auction.lots}: |
     from tools.translate import _
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    assert(auc_id.ach_inv_id), _('Seller Invoice has not been created!')     
-    
+    assert(auc_id.ach_inv_id), _('Buyer Invoice has not been created!')     
+- 
+  Buyer Create a Invoice payment record by Click on "Pay Invoice" Button of Account invoice. 
+- 
+  !record {model: account.invoice.pay, id: account_invoice_pay_furniture0}:
+    amount: 4120.0
+    date: '2010-08-06'
+    journal_id: account.cash_journal
+    name: Furniture
+    period_id: account.period_8
+- 
+  Now Buyer want to make Full payment by click on "Full Payment" button of Account Invoice wizard.
+- 
+  !python {model: account.invoice.pay}: |
+    obj_invoice = self.pool.get('account.invoice')
+    obj_lots = self.pool.get('auction.lots')
+    lots_id = obj_lots.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    invoice_ids = obj_invoice.search(cr, uid, [('id', '=', lots_id.ach_inv_id.id)])
+    self.wo_check(cr, uid, [ref("account_invoice_pay_furniture0")], {"active_model": "account.invoice", "department_id": False,
+      "record_id": 7, "search_default_draft": "1", "active_ids": invoice_ids,
+      "active_id": invoice_ids[0]})
+- 
+  After Click on Full Payment Button, Creating a account invoice pay writeoff record.
+- 
+  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
+    comment: Write-Off
+    writeoff_acc_id: auction.auction_income_costs
+    writeoff_journal_id: account.sales_journal
+- 
+  And  click on "pay_and_reconcile_writeoff" button. 
+- 
+  !python {model: account.invoice.pay.writeoff}: |
+    obj_invoice = self.pool.get('account.invoice')
+    obj_lots = self.pool.get('auction.lots')
+    lots_id = obj_lots.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    invoice_ids = obj_invoice.search(cr, uid, [('id', '=', lots_id.ach_inv_id.id)])
+    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
+      {"active_model": "account.invoice", "department_id":
+      False, "record_id": 7, "search_default_draft": "1", "active_ids": invoice_ids ,
+      "active_id": invoice_ids[0], })
+-
+  I check that "Buyer Invoice Reconciled" field is marked.
+-
+  !assert {model: auction.lots, id: auction_lots_woodenchair0}:
+      - paid_ach == True, 'Buyer Invoice should be Reconciled.'
+-
+  I check that the order which was initially in the draft state has transit to sold state.
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    assert(auc_id.state == 'sold'), _('State not changed!')
+-
+  Then I click on the Taken Away button.
+-
+  !python {model: auction.lots}: |
+    self.button_taken_away(cr, uid, [ref("auction_lots_woodenchair0")], {"lang":
+      "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("auction.auction_all_objects_menu")],
+      "active_id": ref("auction.auction_all_objects_menu")})
+-
+  I check that the order which was initially in the sold state has transit to taken away state.
+-
+  !assert {model: auction.lots, id: auction_lots_woodenchair0}:
+    - state == 'taken_away', "state is not taken Away"
+-
+  In order to change the auction for an object I use the "Change auction date" wizard.
+  This will Erase The Object Adjudication Price and Its Buyer!
+-
+  !record {model: auction.lots.auction.move, id: auction_lots_auction_move_0}:
+    auction_id: auction.auction_date_2
+- 
+  Then I click on the "Move to Auction date" button.
+- 
+  !python {model: auction.lots.auction.move}: |
+    self.auction_move_set(cr, uid, [ref("auction_lots_auction_move_0")], {"lang":
+      "en_US", "tz": False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_woodenchair0")],
+      "active_id": ref("auction_lots_woodenchair0"), })
+-
+  I check that a record gets created in the lot history.
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    auc_lot_his=self.pool.get('auction.lot.history')
+    ids=auc_lot_his.search(cr, uid, [('lot_id', '=', auc_id.id)])
+    assert ids, _('Auction history does not exists!')     
