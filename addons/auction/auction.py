@@ -380,7 +380,7 @@ class auction_lots(osv.osv):
         'ach_login': fields.char('Buyer Username', size=64), 
         'ach_uid': fields.many2one('res.partner', 'Buyer'),
         'seller_id': fields.related('bord_vnd_id','partner_id', type='many2one', relation='res.partner', string='Seller', readonly=True), 
-        'ach_emp': fields.boolean('Taken Away', readonly=True, help="When This Field is marked, Object is taken away by Buyer"), 
+        'ach_emp': fields.boolean('Taken Away', readonly=True, help="When state is Taken Away, This field is Marked as True"), 
         'is_ok': fields.boolean('Buyer\'s payment', help="When Buyer Pay For Bank statement', This field is Marked"), 
         'ach_inv_id': fields.many2one('account.invoice', 'Buyer Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
         'sel_inv_id': fields.many2one('account.invoice', 'Seller Invoice', readonly=True, states={'draft':[('readonly', False)]}), 

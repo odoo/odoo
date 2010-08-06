@@ -262,13 +262,13 @@
                           </group>
                       </group>
                       <group colspan="4" col="6">
-                        <group colspan="2" col="1">
-                            <separator string="Authors" colspan="2"/>
+                        <group colspan="2" col="2">
+                            <separator string="Authors" colspan="4"/>
                             <field name="artist_id"/>
                             <field name="artist2_id"/>
                             <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
                         </group>
-                        <group colspan="2" col="1">
+                        <group colspan="2" col="2">
                             <separator string="Price" colspan="4"/>
                             <field name="lot_est1"/>
                             <field name="lot_est2"/>
@@ -277,7 +277,7 @@
                             <field name="buyer_price"/>
                             <field name="obj_comm"/>
                         </group>
-                        <group colspan="2" col="1">
+                        <group colspan="2" col="2">
                             <separator string="Statistical" colspan="4"/>
                             <field name="gross_revenue"/>
                             <field name="net_revenue"/>
@@ -369,7 +369,6 @@
                                </field>
                             </group>
                     </page>
-                    
                 </notebook>
            </form>
         </field>
