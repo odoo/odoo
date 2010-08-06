@@ -1730,7 +1730,7 @@ class stock_move(osv.osv):
         accounts = product_obj.get_product_accounts(cr,uid,move.product_id.id,context)
         acc_src = accounts['stock_account_input']
         acc_dest = accounts['stock_account_output']
-        acc_variation = accounts['property_stock_variation']
+        acc_variation = accounts.get('property_stock_variation', False)
         journal_id = accounts['stock_journal']
 
         if context is None:
