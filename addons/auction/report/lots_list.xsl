@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
-	<xsl:import href="../../base/report/corporate_defaults.xsl"/>
+	<xsl:import href="corporate_defaults.xsl"/>
 	<xsl:template match="/">
 		<xsl:apply-templates select="lots"/>
 	</xsl:template>
