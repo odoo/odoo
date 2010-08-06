@@ -24,7 +24,7 @@ var attach_eml ="no";
 var popup_display = "yes"
 var rpc= {
 	servers: {},
-	addserver: function(name,ip,port,path) {//alert(name+','+ip+','+port+','+path);
+	addserver: function(name,ip,port,path) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		this.servers[name]= {
 			ip: ip,
@@ -84,11 +84,11 @@ var rpc= {
 				case Date: return 5;
 				case Object: return 7;
 				case Array: return 6;
-				//	base64
+
 			}
 		}
 		return 7;
-		//return [false,'error checktype','Unknown type'];
+
 	},
 	set: function(rpcobj,param) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -398,7 +398,7 @@ function getPassword(){
 //get serverservice
 function getServerService(){
 	return strServerService;
-     // return getPref().getCharPref('strServerService');
+
 }
 
 //get sender email
@@ -426,8 +426,7 @@ function getSenderName(){
         }
         else
         {
-            //string = str.replace(/[\+\/\=\?\_\-]/g, "");
-//            string = str.replace(/[\'ë']/g,'e');
+
             string = str.replace(/[\'Š',\'Ž',\'š',\'ž',\'Ÿ',\'À',\'Á',\'Â',\'Ã',\'Ä',\'Å',\'Ç',\'È',\'É',\'Ê',\'Ë',\'Ì',\'Í',\'Î',\'Ï',\'Ñ',\'Ò',\'Ó',\'Ô',\'Õ',\'Ö',\'Ø',\'Ù',\'Ú',\'Û',\'Ü',\'Ý',\'à',\'á',\'â',\'ã',\'ä',\'å',\'ç',\'è',\'é',\'ê',\'ë',\'ì',\'í',\'î',\'ï',\'ñ',\'ò',\'ó',\'ô',\'õ',\'ö',\'ø',\'ù',\'ú',\'û',\'ü',\'ý',\'ÿ',\'Þ',\'þ',\'Ð',\'ð',\'ß',\'Œ',\'œ',\'Æ',\'æ',\'µ']/g,'"',"'",'“','”',"\n","\r",'_/',"'S','Z','s','z','Y','A','A','A','A','A','A','C','E','E','E','E','I','I','I','I','N','O','O','O','O','O','O','U','U','U','U','Y','a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','n','o','o','o','o','o','o','u','u','u','u','y','y','TH','th','DH','dh','ss','OE','oe','AE','ae','u','','','','','','','-'");
 
             var utftext = "";
@@ -440,8 +439,7 @@ function getSenderName(){
 				    utftext += String.fromCharCode(c);
 			    }
 		    }
-         //   encoded_string = encodeURIComponent(utftext);
-       //     decoded_string = decodeURIComponent(encoded_string);
+
             encoded_string = encode64(utftext);
 		   return encoded_string;
         }
@@ -451,7 +449,6 @@ function getSenderName(){
 function getPartnerName(){
 	return getPref().getCharPref('partnername');
 }
-
 
 //get contact name
 function getContactName(){
@@ -674,7 +671,7 @@ function getDbList(argControl)
 	var xmlRpcClient = getXmlRpc();
 	arrDbList = [];
 	var cmbDbList = document.getElementById(argControl);
-	//setDBList("false")
+
 	xmlRpcClient.asyncCall(listDbHandler,cmbDbList,'list',[],0);
 	return arrDbList;
 }
@@ -694,9 +691,8 @@ var listAllDocumentHandler = {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
                 // Set the number of results
-		//alert(arrIdList)
 		var count = arrIdList.Count();
-//		alert("START::")
+
 		// Loop through the results, adding items to the list
 		for (i = 0; i < count; i++) {
 			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
@@ -718,11 +714,11 @@ var listAllDocumentHandler = {
 		searchCheckbox()
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: '+errorMsg );
+
 	}
 }
 
@@ -754,11 +750,11 @@ var listAllCountryHandler = {
 	
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+		
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: '+errorMsg );
+		
 	}
 }
 
@@ -769,7 +765,7 @@ var listAllStateHandler = {
 		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
                 // Set the number of results
 		var count = arrIdList.Count();
-//		alert("START::")
+
 		// Loop through the results, adding items to the list
 		for (i = 0; i < count; i++) {
 			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
@@ -792,11 +788,11 @@ var listAllStateHandler = {
 	
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: '+errorMsg );
+
 	}
 }
 
@@ -804,7 +800,6 @@ var listAllStateHandler = {
 //function to get the list of All object
 function getAllDocument(){
 	var branchobj = getPref();
-	//window.opener.document.getElementById('txtselectpartner').setAttribute('value','');
 	setServerService('xmlrpc/object');
 	var xmlRpcClient = getXmlRpc();
 	arrPartnerList = [];
@@ -825,8 +820,7 @@ function getAllDocument(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var strvalue = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strvalue.data = ""//document.getElementById('txtselectpartner').value;
-	//alert("AAAAAAAAAAAAA")
+	strvalue.data = ""
 	xmlRpcClient.asyncCall(listAllDocumentHandler,cmdObjectList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
 
@@ -852,7 +846,6 @@ function getAllCountry(){
 
 function getAllState(){
 	var branchobj = getPref();
-	//window.opener.document.getElementById('txtselectpartner').setAttribute('value','');
 	setServerService('xmlrpc/object');
 	var xmlRpcClient = getXmlRpc();
 	arrPartnerList1 = [];
@@ -906,7 +899,6 @@ function listinstallmodule( result ) {
 	if ( rpc.onfault( result ) ) 
 	{ 
 		setmodule_install('no')
-		//window.close();
 	}
 }
 
@@ -986,11 +978,11 @@ var listSearchContactHandler = {
 		}
 	},
 	onFault: function (client, ctxt, fault) {
-		alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		alert('Error: '+errorMsg);
+
 	}
 
 }
@@ -1108,11 +1100,11 @@ var listSearchCheckboxHandler = {
 	},
 
 	onFault: function (client, ctxt, fault) {
-//		alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: ThunderBird Module Not Install');
+
 	}
 };
 
@@ -1211,13 +1203,14 @@ var listPartnerHandler = {
 		}
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: '+errorMsg);
+
 	}
-	}
+}
+
 //function to get the list of partners
 function getPartnerList(){
 	var branchobj = getPref();
@@ -1265,7 +1258,7 @@ var listArchiveHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
-		//getPref().setCharPref("messagebody","");
+
 		//condition to handle the automatic attachment creation
 		attach =  getAttachment()
 		attachment = "no"
@@ -1283,26 +1276,25 @@ var listArchiveHandler = {
 				attachment = "yes"
 			}
 			else{
-//				alert("Mail Archived Successfully");
+
 				attachment = "no"
 			}
 		}
 		else{
 				
-//				alert("Mail Archived Successfully");
 			attachment = "no"
 		}
 		createAttachmentEML_CRM(popup, createId, attachment)
 
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert("You must select object !")
+
 	}
-	}
+}
 
 //function to archive the mail content through xmlrpc request
 function archivemail(){
@@ -1371,11 +1363,11 @@ var listCreateContactHandler = {
 		window.close();
 	},
 	onFault: function (client, ctxt, fault) {
-		alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		alert('Error: '+errorMsg);
+
 	}
 }
 
@@ -1384,15 +1376,14 @@ var listUpdateContactHandler = {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var partnerId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
 		setResourceId(partnerId);
-		//alert("Contact Created Successfully.");	
 		window.close();
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: '+errorMsg);
+
 	}
 }
 
@@ -1417,7 +1408,7 @@ function createContact(){
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listCreateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
-//ksa
+
 function UpdateContact(){
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
@@ -1444,26 +1435,14 @@ var listAttachHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
-		/*if(createId){
-			attach =  getAttachment()		
-			if (attach_eml=="yes")
-			{
-				//alert("Mail Archived Successfully");
-			}
-			else if (attach_eml =="no" && attach =="yes")
-			{
-				alert("Mail Archived Successfully With Attachments");
-			}
-			//getPref().setCharPref("attachmentdata","")
-			attach_eml="no"
-		}*/
+
 	},
 	onFault: function (client, ctxt, fault) {
-//		alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-//		alert('Error: '+client + ctxt + status + errorMsg);
+
 	}
 }
 
@@ -1484,7 +1463,7 @@ function createAttachment(popup,res_id){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-//	var popup = document.getElementById("section").selectedItem; // a <menupopup> element
+
 	object=popup;
 	resobj.data = object;
 	var a = ['name','datas','res_model','res_id','description','datas_fname'];
@@ -1568,10 +1547,8 @@ return output;
 function createInstance(name,test){
 	var encoded_string = '';
 	var file_name = ''
-	//alert("Downloading Attachment Data");
+
 	for(i=0;i<test.length;i++){
-		//while(!test[i].exists()){
-		//}
 		var stream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
 		stream.init(test[i], 0x01, 00004, 0);
 		var bstream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Components.interfaces.nsIBinaryInputStream);
@@ -1611,11 +1588,11 @@ var listLoginHandler = {
 		}
 	},
 	onFault: function (client, ctxt, fault) {
-		alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		alert("Database does not Exist!\n\n Please specify proper database name." + errorMsg);
+		alert("Database does not Exist!\n\n Please specify proper database name.");
 	}
 }
 
@@ -1679,12 +1656,11 @@ var listcreateLoginHandler = {
 		}
 	},
 	onFault: function (client, ctxt, fault) {
-		alert('XML-RPC Fault: '+fault);
+		
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
 		setconnect_server("false")
-		//alert("Database does not Exist!\n\n Please specify proper database name.");
 	}
 }
 
@@ -1710,7 +1686,6 @@ var listCreatePartnerHandler = {
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
 		
 		if(typeof(createId.data) == 'number' && createId!=0){
-//			alert("Partner Created Successfully");
 			window.close();
 		}
 		if(createId == 0){
@@ -1718,11 +1693,11 @@ var listCreatePartnerHandler = {
 		}
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: '+errorMsg);
+
 	}
 }
 //function to create the tiny partner object
@@ -1799,11 +1774,11 @@ var listSearchDocumentHandler = {
 		}
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('Error: '+errorMsg);
+
 	}
 }
 
@@ -1857,14 +1832,14 @@ var listsearchAttachmentHandler = {
 				{
 					continue
 				}
-				//alert(obj[i])
+
 				if(count%3==0){
 					var vbox = document.createElement("hbox");
 				}
 				count += 1
 				var hbox = document.createElement("vbox");
 				var checkbox1 = document.createElement("checkbox");
-				//checkBoxCreate()
+
 				checkbox1.setAttribute("label",object[i]);
 				checkbox1.setAttribute("id","cbx"+(i+1));
 				checkbox1.setAttribute("width",150)
@@ -1893,21 +1868,19 @@ var listsearchAttachmentHandler = {
 
 		new_grp.height = parseInt(parseInt(new_grp.height) + parseInt((count /3) * 23.5))
 		win = document.getElementById("pluginwindows").setAttribute("height",1000)
-		//win.height = 1000 //parseInt(parseInt((count /3) * 32) + parseInt(win.height))
 
 	},
 	onFault: function (client, ctxt, fault) {
-		//alert('XML-RPC Fault: '+fault);
+
 	},
 
 	onError: function (client, ctxt, status, errorMsg) {
-		//alert('ERROR:::::::: '+errorMsg);
+
 	}
 }
 
 //function to create a new attachment record
 function listSearchDocumentAttachment(){
-	//alert("AA:")
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -1929,7 +1902,6 @@ function listSearchDocumentAttachment(){
 	var a = ['object'];
 	var b = [getPref().getCharPref("object")];
 	var arrofarr = dictcontact(a,b);
-	//alert("FIRST::::::" + strDbName + struids + strpass + strobj + strmethod + arrofarr)
 	xmlRpcClient.asyncCall(listsearchAttachmentHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
 
@@ -2064,8 +2036,6 @@ function createAttachmentEML_CRM(model, id, attachment)
 			alert("Mail Archived Successfully");
             window.close();
 		}
-		//getPref().setCharPref("attachmentdata","")
-//		file.remove(true);
 		attach_eml="yes";
 		var branchobj = getPref();
 		setServerService('xmlrpc/object');
