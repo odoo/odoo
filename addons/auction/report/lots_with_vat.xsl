@@ -3,8 +3,8 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
-    <xsl:import href="../../base/report/corporate_defaults.xsl"/>
-    <xsl:import href="../../base/report/rml_template.xsl"/>
+    <xsl:import href="corporate_defaults.xsl"/>
+    <xsl:import href="rml_template.xsl"/>
     <xsl:variable name="page_format">a4_normal</xsl:variable>
 
     <xsl:template name="stylesheet">

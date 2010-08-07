@@ -105,6 +105,7 @@ class crm_lead(osv.osv, crm_case):
             select=True, help="Optional linked partner, usually after conversion of the lead"),
         
         # From crm.case
+        'id': fields.integer('ID'),
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),

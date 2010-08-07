@@ -347,7 +347,6 @@ class email_template_account(osv.osv):
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
                     return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 try:
-                    #print msg['From'],toadds
                     serv.sendmail(msg['From'], addresses_l['all'], msg.as_string())
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Server Send Error\nDescription: %s") % (id, error))
@@ -367,7 +366,6 @@ class email_template_account(osv.osv):
         logger = netsvc.Logger()
         #The standard email dates are of format similar to:
         #Thu, 8 Oct 2009 09:35:42 +0200
-        #print time_as_string
         date_as_date = False
         convertor = {'+':1, '-':-1}
         try:
@@ -406,7 +404,6 @@ class email_template_account(osv.osv):
                 offset = datetime.timedelta(hours=0)
             dt = dt + offset
             date_as_date = dt.strftime('%Y-%m-%d %H:%M:%S')
-            #print date_as_date
         except Exception, e:
             logger.notifyChannel(
                     _("Email Template"),

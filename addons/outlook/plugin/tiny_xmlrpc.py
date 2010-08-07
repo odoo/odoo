@@ -26,6 +26,12 @@ import os
 import pythoncom
 import time
 from manager import ustr
+
+import smtplib
+from email.mime.text import MIMEText
+from email.parser import*
+import email
+
 waittime = 10
 wait_count = 0
 wait_limit = 12
@@ -139,13 +145,19 @@ class XMLRpcConn(object):
         flag=False
         attachments=mail.Attachments
 
+        try:
+            fp = open(eml_path, 'rb')
+            msg =fp.read()
+            fp.close()
+            new_mail =  email.message_from_string(str(msg))
+        except Exception,e:
+            win32ui.MessageBox(str(e),"Reading Error Mail")
+
         for rec in recs: #[('res.partner', 3, 'Agrolait')]
             model = rec[0]
             res_id = rec[1]
-
             object_ids = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=',model)])
             object_name  = execute( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',object_ids,['name'])[0]['name']
-
 
             #Reading the Object ir.model Name
 
@@ -163,8 +175,8 @@ class XMLRpcConn(object):
                 'cc':mail.CC,
                 'from':mail.SenderEmailAddress,
                 'to':mail.To,
-                'message-id':str(mail.EntryID),## we are use Entry_Id as a MessageID Because MessageID is not provided by Outlook API, http://msdn.microsoft.com/en-us/library/bb176688%28v=office.12%29.aspx
-                'references':False,
+                'message-id':str(new_mail.get('Message-Id')),
+                'references':str(new_mail.get('References')),
             }
             result = {}
             if attachments:
@@ -227,36 +239,25 @@ class XMLRpcConn(object):
     def CreateCase(self, section, mail, partner_ids, with_attachments=True):
         res={}
         import win32ui
+        import eml
         section=str(section)
         partner_ids=eval(str(partner_ids))
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        res['name'] = ustr(mail.Subject)
-        res['description'] = ustr(mail.Body)
-        res['partner_name'] = ustr(mail.SenderName)
-        res['email_from'] = ustr(mail.SenderEmailAddress)
-
-        if partner_ids:
-            for partner_id in partner_ids:
-                res['partner_id'] = partner_id
-                partner_addr = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','address_get',[partner_id])
-                res['partner_address_id'] = partner_addr['default']
-                id=execute(conn,'execute',self._dbname,int(self._uid),self._pwd,section,'create',res)
-                if section == 'project.issue':
-                    execute(conn,'execute',self._dbname,int(self._uid),self._pwd,section,'convert_to_bug',[id])
-                recs=[(section,id,'')]
-                if with_attachments:
-                    self.MakeAttachment(recs, mail)
-        else:
-            id=execute(conn,'execute',self._dbname,int(self._uid),self._pwd,section,'create',res)
-            recs=[(section,id,'')]
-            if with_attachments:
-                self.MakeAttachment(recs, mail)
+        try:
+            eml_path=eml.generateEML(mail)
+            fp = open(eml_path, 'rb')
+            msg =fp.read()
+            fp.close()
+            new_mail =  email.message_from_string(str(msg))
+        except Exception,e:
+            win32ui.MessageBox(str(e),"Mail Reading Error")
+        execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(new_mail))
 
     def MakeAttachment(self, recs, mail):
         attachments = mail.Attachments
         result = {}
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        att_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\attachments\\")
+        att_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\mails\\attachments\\")
         if not os.path.exists(att_folder_path):
             os.makedirs(att_folder_path)
         for rec in recs: #[('res.partner', 3, 'Agrolait')]

@@ -35,6 +35,7 @@ class crm_phonecall(osv.osv, crm_case):
     _inherit = ['mailgate.thread']
     _columns = {
         # From crm.case
+        'id': fields.integer('ID'),
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False), 
         'date_action_last': fields.datetime('Last Action', readonly=1),
