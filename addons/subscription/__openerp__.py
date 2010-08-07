@@ -28,7 +28,7 @@
     'author': 'OpenERP SA',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'subscription_view.xml'],
+    'update_xml': ['security/subcription_security.xml', 'security/ir.model.access.csv', 'subscription_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
