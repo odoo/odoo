@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.6\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 12:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-08-08 05:43+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-04 03:41+0000\n"
+"X-Launchpad-Export-Date: 2010-08-09 03:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -35,12 +35,12 @@ msgstr "未支付的采购发票"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Entries Encoding"
-msgstr "分录"
+msgstr "凭证"
 
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
 msgid "Specify The Message for the Overdue Payment Report."
-msgstr ""
+msgstr "设置过期支付的催款信息"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -77,7 +77,7 @@ msgstr "这科目将用于当前产品分类的默认进仓"
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
-msgstr "留空使用记账(发票)日期的会计期间"
+msgstr "留空使用审核（发票）日期的会计期间"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
@@ -87,7 +87,7 @@ msgstr "对账结果"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "未对账"
+msgstr "凭证反核销"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -134,7 +134,7 @@ msgstr "基础税事务符号"
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr "未对账"
+msgstr "凭证反核销"
 
 #. module: account
 #: constraint:account.period:0
@@ -149,7 +149,7 @@ msgstr "错误!这会计期间无效 "
 #: model:ir.actions.act_window,name:account.action_move_line_form
 #: model:ir.ui.menu,name:account.menu_action_move_line_form
 msgid "Entries"
-msgstr "分录"
+msgstr "凭证"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -159,7 +159,7 @@ msgstr "借方汇总"
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_invoice_state_confirm
 msgid "Confirm draft invoices"
-msgstr "记账发票草稿"
+msgstr "发票入账"
 
 #. module: account
 #: help:account.payment.term.line,days2:0
@@ -177,7 +177,7 @@ msgstr "贷方合计"
 #. module: account
 #: field:account.config.wizard,charts:0
 msgid "Charts of Account"
-msgstr "科目一览表"
+msgstr "科目表"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_move_line_select
@@ -190,12 +190,12 @@ msgstr "选择凭证行"
 #: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
 msgid "Entry label"
-msgstr "分录标签"
+msgstr "凭证名称"
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
 msgid "Account Model Entries"
-msgstr "科目模型项"
+msgstr "凭证模板"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
@@ -212,17 +212,17 @@ msgstr "计算代码(如果类型=代码)"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr "凭证明细"
+msgstr "凭证行"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
 msgid "Aged Trial Balance"
-msgstr "账龄试算平衡表"
+msgstr "账龄分析表"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurrent Entries"
-msgstr "周期性分录"
+msgstr "周期性凭证"
 
 #. module: account
 #: field:account.analytic.line,amount:0
@@ -242,12 +242,12 @@ msgstr "金额"
 #: model:ir.actions.wizard,name:account.wizard_third_party_ledger
 #: model:ir.ui.menu,name:account.menu_third_party_ledger
 msgid "Partner Ledger"
-msgstr "业务伙伴总帐"
+msgstr "业务伙伴余额"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
 msgid "Supplier Taxes"
-msgstr "供应商税"
+msgstr "进项税"
 
 #. module: account
 #: view:account.move:0
@@ -257,7 +257,7 @@ msgstr "借方合计"
 #. module: account
 #: rml:account.tax.code.entries:0
 msgid "Accounting Entries-"
-msgstr "分录 -"
+msgstr "凭证-"
 
 #. module: account
 #: help:account.journal,view_id:0
@@ -266,7 +266,7 @@ msgid ""
 "view tell Open ERP which fields should be visible, required or readonly and "
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
-msgstr "给出业务类型中分录的浏览和写入视图. 这视图告诉系统那个字段可见,必须或只读. 你能为每个业务类型创建自己的视图."
+msgstr "给出业务类型中凭证的浏览和写入视图. 这视图告诉系统那个字段可见,必须或只读. 你能为每个业务类型创建自己的视图."
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -277,7 +277,7 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
-"如果你使用付款条款, 到期将自动生成会计分录.  如果付款条款和到期日期为空, 则意味着直接付款. 付款条款可以计算出几个到期日, 例如现在先付50%, "
+"如果你使用付款条款, 到期将自动生成凭证. 如果付款条款和到期日期为空, 则意味着直接付款. 付款条款可以计算出几个到期日, 例如现在先付50%, "
 "然后在一个月内支付余下的50%."
 
 #. module: account
@@ -312,17 +312,17 @@ msgstr "来源"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr ""
+msgstr "凭证名称"
 
 #. module: account
 #: xsl:account.transfer:0
 msgid "Reference"
-msgstr "参考"
+msgstr "关联单号"
 
 #. module: account
 #: wizard_view:account.subscription.generate,init:0
 msgid "Subscription Compute"
-msgstr "周期性分录计算"
+msgstr "生成周期性凭证"
 
 #. module: account
 #: rml:account.central.journal:0
@@ -375,12 +375,12 @@ msgstr "发票说明"
 #. module: account
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr "错误! 你不能创建递归的辅助核算项"
+msgstr "错误! 你不能创建递归的辅助核算项目"
 
 #. module: account
 #: field:account.bank.statement.reconcile,total_entry:0
 msgid "Total entries"
-msgstr "分录合计"
+msgstr "合计"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -391,23 +391,23 @@ msgstr "源科目"
 #. module: account
 #: field:account.journal,update_posted:0
 msgid "Allow Cancelling Entries"
-msgstr "允许取消分录"
+msgstr "允许取消凭证"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_paymentorderbank0
 #: model:process.transition,name:account.process_transition_paymentorderreconcilation0
 msgid "Payment Reconcilation"
-msgstr "付款对账"
+msgstr "付款核销"
 
 #. module: account
 #: model:account.journal,name:account.expenses_journal
 msgid "Journal de frais"
-msgstr "费用记录集合"
+msgstr "费用业务类型"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
-msgstr "所有辅助核算分录"
+msgstr "所有辅助核算凭证"
 
 #. module: account
 #: rml:account.overdue:0
@@ -422,12 +422,12 @@ msgstr "负数"
 #. module: account
 #: rml:account.partner.balance:0
 msgid "(Account/Partner) Name"
-msgstr ""
+msgstr "(业务伙伴/科目)名称"
 
 #. module: account
 #: selection:account.move,type:0
 msgid "Contra"
-msgstr "反向"
+msgstr "冲销"
 
 #. module: account
 #: field:account.analytic.account,state:0
@@ -449,12 +449,12 @@ msgstr "未支付的供应商退款"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Special Computation"
-msgstr "特殊计算"
+msgstr "特殊算法"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement with/without reconciliation from draft statement"
-msgstr "从草稿记账与对/不对帐"
+msgstr "银行凭证过账"
 
 #. module: account
 #: wizard_view:account.move.bank.reconcile,init:0
@@ -466,7 +466,7 @@ msgstr "银行对账"
 #. module: account
 #: rml:account.invoice:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "折扣(%)"
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -475,7 +475,7 @@ msgstr ""
 #: rml:account.overdue:0
 #: field:account.subscription,ref:0
 msgid "Ref"
-msgstr "原始凭证编号"
+msgstr "关联单号"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
