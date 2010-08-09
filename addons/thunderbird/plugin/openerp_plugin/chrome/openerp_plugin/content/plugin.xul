@@ -20,7 +20,7 @@
 	   <hbox>
 	   <label id="lblsearch" control="txtvalueobj" value="&search.label;"/>
 	   <textbox id="txtvalueobj" size="30"/>
-	  <!-- <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s"/> -->
+	   <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s"/> 
 	   </hbox>
 	   <vbox align="left" id="checkbox-dynamic"> 
 	  </vbox> 
@@ -28,9 +28,12 @@
 	   <image src='chrome://tiny_plugin/skin/perform.gif'/>
 	    <checkbox id="cbxselectall" oncommand="selectAllCheckbox();" label="&cbxselectall.label;" checked="false"/>
 	    <spacer width="10"/>
-        <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s"/>
+      
 	  </hbox>
-     
+    <label id="lblex" value=" "/>
+    <hbox>
+    <description>Documents</description>
+    </hbox>
 	<listbox height="250" id="listSearchBox" >
 	    <listhead >
 	    	<listheader label="&listSearchBox.header;"/>
@@ -41,7 +44,7 @@
 	</listbox>
 	<hbox>
 	<spacer width="360"/>
-	<button label="&attach.label;" accesskey="u" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('upload');"/>
+	<button label="&attach.label;" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('upload');"/>
 	</hbox>
       </groupbox>
 

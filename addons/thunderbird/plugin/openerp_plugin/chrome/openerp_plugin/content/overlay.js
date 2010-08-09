@@ -285,7 +285,7 @@ var Address = {
 	},
 
 	onMenuItemCommand: function(){
-        open_contact();
+       open_contact();
         searchContact();
 	}
 };

@@ -986,6 +986,81 @@ var listSearchContactHandler = {
 	}
 
 }
+var listSearchContactdetailHandler = {
+	onResult: function(client, context, result) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
+		var count = arrIdList.Count();
+		for (i = 0; i < count; i++) {
+			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
+            var strlSearchResult = strlResult.QueryElementAt(0, Components.interfaces.nsISupportsCString);
+            var strlSearchResultValue = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
+            if(strlSearchResult=="partner_name"){
+                 document.getElementById("txtname").value =strlSearchResultValue;}
+
+            if(strlSearchResult=="contactname"){
+                 document.getElementById("txtcontactname").value =strlSearchResultValue;}
+            
+            if(strlSearchResult=="street"){
+                document.getElementById("txtstreet").value =strlSearchResultValue;}
+            
+            if(strlSearchResult=="street2"){
+                 document.getElementById("txtstreet2").value =strlSearchResultValue;}
+            if(strlSearchResult=="zip"){
+                 document.getElementById("txtzip").value =strlSearchResultValue;}
+
+            if(strlSearchResult=="city"){
+                document.getElementById("txtcity").value =strlSearchResultValue;}
+            if(strlSearchResult=="phone"){
+                 document.getElementById("txtoffice").value =strlSearchResultValue;}
+        
+            if(strlSearchResult=="fax"){
+                 document.getElementById("txtfax").value =strlSearchResultValue;}
+            
+            if(strlSearchResult=="mobile"){
+                 document.getElementById("txtmobile").value =strlSearchResultValue;}
+
+            if(strlSearchResult=="email"){
+                document.getElementById("txtemail").value =strlSearchResultValue;}
+            if(strlSearchResult=="email"){
+                document.getElementById("txtemailid").value =strlSearchResultValue;}
+    
+		}
+	},
+	onFault: function (client, ctxt, fault) {
+
+	},
+
+	onError: function (client, ctxt, status, errorMsg) {
+
+	}
+
+}
+
+function searchContactdetail()
+{
+	var branchobj = getPref();
+	setServerService('xmlrpc/object');
+	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+	arrFinalList = [];
+	var xmlRpcClient = getXmlRpc();
+	var cmbSearchList = document.getElementById('listSearchBox');
+	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strDbName.data = branchobj.getCharPref("serverdbname");
+	var struid = xmlRpcClient.createType(xmlRpcClient.INT,{});
+	struid.data = branchobj.getIntPref('userid');
+	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strpass.data = branchobj.getCharPref("password");
+    var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strobj.data = 'thunderbird.partner';
+	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strmethod.data = 'search_contact';
+	var strname = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+    var t = document.getElementById("txtemail").value
+	strname.data =document.getElementById("txtemail").value;
+	xmlRpcClient.asyncCall(listSearchContactdetailHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strname ],6);
+}
+
 //xmlrpc request handler for getting the search results for the particular selected check box object
 var listSearchCheckboxHandler = {
 	onResult: function(client, context, result) {
@@ -1582,6 +1657,7 @@ var listLoginHandler = {
 			login = result.QueryInterface(Components.interfaces.nsISupportsPRInt32)
 			setUserId(login.data);
 			alert('Successful Login To OpenERP');
+            window.close();
 		}
 		else{
 			alert("Login Failed");
@@ -1600,7 +1676,7 @@ var listLoginHandler = {
 function testConnection(){
 	if (getconnect_server() == "false")
 	{
-		alert("Please Login To The Database First !")
+		alert("No Server Running..."+" "+getServer())
 		return false;
 	}
 	if (getDBList()=="false")

@@ -3,7 +3,8 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/address.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.createContactAddress()" height="350" width="800">
+	title="&title.label;" onload="myPrefObserver.createContactAddress()" height="380" width="800">
+
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
@@ -11,16 +12,21 @@
 <script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
 
 <groupbox id="gpData">
+     <hbox>
+		<description>&emailid.value;</description>
+		<spacer width="55"/>
+		 <textbox id="txtemail" width="260" />
+         <spacer width="5"/>
+         <button label="&bsearch.label;" oncommand="searchContactdetail();" image="&imagesearch.value;"/>
+	</hbox>
 	<hbox>
 		<description>&name.value;</description>
-		<spacer width="12"/>
+		<spacer width="16"/>
 		<textbox id="txtname" align="right" width="270" readonly="true"/>
+        <spacer width="5"/>
+         <button label="New Partner" image="&imagecreate.value;" oncommand="CreatePartner.onMenuItemCommand(event);"/>
 	</hbox>
-    <hbox>
-		<description>&contactname.value;</description>
-		<spacer width="9"/>
-		<textbox id="txtcontactname" align="right" width="270" />
-	</hbox>
+
     <hbox>
         <caption label="&postaladdress.value;" />
         <spacer width="300"/>
@@ -30,64 +36,63 @@
     </hbox>
 
      <hbox>
-		<description>&street.value;</description>
-		<spacer width="63"/>
-		<textbox id="txtstreet" width="270"/>
+		<description>&contactname.value;</description>
+		<spacer width="15"/>
+		<textbox id="txtcontactname" align="right" width="270" />
         <spacer width="33"/>
         <vbox>
             <description>&office.value;</description>
+            <spacer width="70"/>
         </vbox>
         <vbox>
-	        <spacer width="68"/>
 	        <textbox id="txtoffice" />
         </vbox>
 	</hbox>
 
     <hbox>
-		<description>&street2.value;</description>
-		<spacer width="54"/>
-		<textbox id="txtstreet2" width="270"/>
+		<description>&street.value;</description>
+		<spacer width="68"/>
+		<textbox id="txtstreet" width="270"/>
         <spacer width="33"/>
         <vbox>
-            <description>&fax.value;</description>
-            <spacer width="53"/>
+            <description>&mobile.value;</description>
+            <spacer width="70"/>
+        </vbox>
+        <vbox>
+	        <textbox id="txtmobile"/>
+        </vbox>
+	</hbox>
+
+    <hbox>
+		<description>&street2.value;</description>
+		<spacer width="60"/>
+		<textbox id="txtstreet2" width="270"/>
+        <spacer width="35"/>
+        <vbox>
+        <description>&fax.value;</description>
+           <spacer width="68"/>
         </vbox>
         <vbox>
 	        <textbox id="txtfax" />
         </vbox>
 	</hbox>
 
-    <hbox>
-		<description>&zip.value;</description>
-		<spacer width="82"/>
-		<textbox id="txtzip" />
-        <spacer width="110"/>
-        <vbox>
-             <description>&mobile.value;</description>
-            <spacer width="53"/>
-        </vbox>
-        <vbox>
-	        <textbox id="txtmobile" />
-        </vbox>
-	</hbox>
-
      <hbox>
-		<description>&city.value;</description>
-		<spacer width="79"/>
-		<textbox id="txtcity" />
-        <spacer width="110"/>
-        <vbox>
-              <description>&email.value;</description>
-            <spacer width="58"/>
-        </vbox>
-        <vbox>
-	        <textbox id="txtemail" width="260" />
-        </vbox>
+		<description>&zip.value;</description>
+		<spacer width="87"/>
+		<textbox id="txtzip" />
+        <spacer width="115"/>
 	</hbox>
  
     <hbox>
+		<description>&city.value;</description>
+		<spacer width="85"/>
+		<textbox id="txtcity" />
+    </hbox>
+
+    <hbox>
          <label id="lblex3" value="&country.value;"/>
-         <spacer width="54"/>
+         <spacer width="60"/>
          <menulist id="country" width="190">
            <menupopup>
 	     <menuitem label="" value=""/>
@@ -97,7 +102,7 @@
 
      <hbox>
          <label id="lblex4" value="&state.value;"/>
-         <spacer width="68"/>
+         <spacer width="73"/>
          <menulist id="state" width="190">
            <menupopup>
 	     <menuitem label="" value=""/>
@@ -105,11 +110,16 @@
       	  </menulist>
 	</hbox>
 </groupbox>
+
 <description></description>
+
 <hbox>
-  <spacer width="600"/>
+  <spacer width="450"/>
+	   <button label="&create.label;" accesskey="r" image="&imagecreate.value;" oncommand="Create.onMenuItemCommand(event);"/>
+
+    <button label="&ok.label;" image="&imageok.value;" oncommand="createContact();"/>
+
   <button label="&cancel.label;" image="&imagecancel.value;" oncommand="close();" />
-  <button label="&ok.label;" image="&imageok.value;" oncommand="UpdateContact();close()"/> 
 </hbox>
 
 </window>
