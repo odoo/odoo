@@ -104,8 +104,10 @@ class base_setup_installer(osv.osv_memory):
         return None
 
     def onchange_moduleselection(self, cr, uid, ids, *args):
-        progress = self._progress(cr, uid) - round((len(filter(lambda x: x==1, args)))*80/len(args))
-        if progress <= 10.0:
-            progress = 10.0
+        closed, total = self.get_current_progress(cr, uid)
+
+        progress = round(100. * closed / (total + len(filter(None, args))))
+        if progress < 10.:
+            progress = 10.
         return {'value':{'progress':progress}}
 base_setup_installer()
