@@ -914,7 +914,8 @@ class Timezone(CalDAV, osv.osv_memory):
         tzname, offset = self.get_name_offset(cr, uid, tzid)
         tz_std.add("TZOFFSETFROM").value = offset
         tz_std.add("TZOFFSETTO").value = offset
-        tz_std.add("DTSTART").value = datetime.now() # TODO
+        #TODO: Get start date for timezone
+        tz_std.add("DTSTART").value = datetime.strptime('1970-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
         tz_std.add("TZNAME").value = tzname
         return ical
 
