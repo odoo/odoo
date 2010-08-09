@@ -3,9 +3,9 @@
 "access_pos_order","pos.order","model_pos_order","group_pos_user",1,1,1,1
 "access_pos_order_line","pos.order.line","model_pos_order_line","group_pos_user",1,1,1,1
 "access_pos_order_manager","pos.order manager","model_pos_order","group_pos_manager",1,0,0,0
-"access_pos_order_line_manager","pos.order.line manager","model_pos_order_line","group_pos_manager",1,0,0,0
+"access_pos_order_line_manager","pos.order.line manager","model_pos_order_line","group_pos_manager",1,1,1,1
 "access_pos_payment","pos.payment","model_pos_payment","group_pos_user",1,1,1,1
-"access_report_transaction_pos","report.transaction.pos","model_report_transaction_pos","group_pos_manager",1,0,0,0
+"access_report_transaction_pos","report.transaction.pos","model_report_transaction_pos","group_pos_manager",1,1,1,1
 "access_pos_config_journal_manager","pos.config.journal.manager","model_pos_config_journal","group_pos_manager",1,1,1,1
 "access_account_journal_pos_manager","account.journal pos_manager","account.model_account_journal","group_pos_manager",1,0,0,0
 "access_account_journal_pos_user","account.journal pos_user","account.model_account_journal","group_pos_user",1,0,0,0
@@ -64,8 +64,8 @@
 "access_account_cashbox_line","account.cashbox.line","account.model_account_cashbox_line","group_pos_user",1,1,1,0
 "access_product_product","product.product","product.model_product_product","group_pos_user",1,0,0,0
 "access_product_template_pos_user","product.template pos user","product.model_product_template","group_pos_user",1,0,0,0
-"access_product_product_pos_manager","product.product.pos manager","product.model_product_product","base.group_system",1,0,0,0
-"access_product_template_pos_manager","product.template pos manager","product.model_product_template","base.group_system",1,0,0,0
+"access_product_product_pos_manager","product.product.pos manager","product.model_product_product","group_pos_manager",1,0,0,0
+"access_product_template_pos_manager","product.template pos manager","product.model_product_template","group_pos_manager",1,0,0,0
 "access_account_move_line","account.move.line","account.model_account_move_line","group_pos_user",1,1,1,0
 "access_account_move","account.move","account.model_account_move","group_pos_user",1,1,1,0
 "access_account_journal","account.journal","account.model_account_journal","group_pos_user",1,1,1,0
@@ -79,9 +79,20 @@
 "access_account_journal_column","account.journal.column","account.model_account_journal_column","group_pos_user",1,1,1,0
 "access_account_journal_column_manager","account.journal.column manager","account.model_account_journal_column","group_pos_manager",1,0,0,0
 "access_account_journal_column_system","account.journal.column system","account.model_account_journal_column","base.group_system",1,0,0,0
-"access_report_check_register_user","report.cash.register user","model_report_cash_register","group_pos_user",1,0,0,0
 "access_report_check_register","report.cash.register","model_report_cash_register","group_pos_manager",1,1,1,1
-"access_product_product_pos","product.product.pos","product.model_product_product","base.group_system",1,1,1,1
+"access_product_product_pos","product.product.pos","product.model_product_product","base.group_system",1,0,0,0
 "access_product_template_pos","product.template pos","product.model_product_template","base.group_system",1,1,1,1
 "access_pos_order_system","pos.order system","model_pos_order","base.group_system",1,0,0,0
 "access_pos_order_line_system","pos.order.line system","model_pos_order_line","base.group_system",1,0,0,0
+"access_account_bank_statement_line_manager","account.bank.statement.line manager","account.model_account_bank_statement_line","group_pos_manager",1,0,0,0
+"access_account_invoice_manager","account.invoice manager","account.model_account_invoice","group_pos_manager",1,1,1,1
+"access_pos_payment_manager","pos.payment manager","model_pos_payment","group_pos_manager",1,0,0,0
+"access_report_transaction_pos_system","report.transaction.pos system","model_report_transaction_pos","base.group_system",1,0,0,0
+"access_account_bank_statement_line_system","account.bank.statement.line system","account.model_account_bank_statement_line","base.group_system",1,0,0,0
+"access_product_product_supplierinfo","product.supplierinfo system","product.model_product_supplierinfo","base.group_system",1,0,0,0
+"access_pos_payment_system","pos.payment system","model_pos_payment","base.group_system",1,0,0,0
+"access_product_product_supplierinfo_manager","product.supplierinfo manager","product.model_product_supplierinfo","group_pos_manager",1,0,0,0
+"access_product_product_supplierinfo_user","product.supplierinfo user","product.model_product_supplierinfo","group_pos_user",1,0,0,0
+"access_product_product_packaging_system","product.packaging system","product.model_product_packaging","base.group_system",1,0,0,0
+"access_product_product_packaging_user","product.packaging user","product.model_product_packaging","group_pos_user",1,0,0,0
+"access_product_product_packaging_manager","product.packaging manager","product.model_product_packaging","group_pos_manager",1,0,0,0
