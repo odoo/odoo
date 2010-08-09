@@ -115,7 +115,6 @@ class crm_claim(osv.osv, crm.crm_case):
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
         data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
-        print data
         return {'value': data}
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):

@@ -325,6 +325,17 @@ class payroll_advice(osv.osv):
     _name = 'hr.payroll.advice'
     _description = 'Bank Advice Note'
 
+    def _get_bank(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.company_id and rec.company_id.partner_id.bank_ids:
+                res[rec.id] = rec.company_id.partner_id.bank_ids[0].bank.name
+            else:
+                res[rec.id] = ''
+        return res
+
     _columns = {
         'register_id':fields.many2one('hr.payroll.register', 'Payroll Register', required=False),
         'name':fields.char('Name', size=2048, required=True, readonly=False),
@@ -340,6 +351,7 @@ class payroll_advice(osv.osv):
         'chaque_nos':fields.char('Chaque Nos', size=256, required=False, readonly=False),
         'account_id': fields.many2one('account.account', 'Account', required=True),
         'company_id':fields.many2one('res.company', 'Company', required=False),
+        'bank': fields.function(_get_bank, method=True, string='Bank', type="char"),
     }
 
     _defaults = {
@@ -367,6 +379,19 @@ class payroll_advice(osv.osv):
             context = {}
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
+
+    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+            if company.partner_id.bank_ids:
+                res.update({'bank': company.partner_id.bank_ids[0].bank.name})
+        return {
+            'value':res
+        }
+
 
 payroll_advice()
 

@@ -6,13 +6,13 @@
             parent="base.menu_base_config" sequence="1"/-->
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
-            parent="base.menu_base_config" sequence="2" groups="base.group_extended"/>
+            parent="base.menu_base_config" sequence="2" groups="base.group_extended,base.group_system"/>
 
         <!--menuitem id="menu_crm_config_meeting" name="Meeting"
             parent="base.menu_base_config" sequence="4"/-->
 
         <menuitem id="menu_crm_config_phonecall" name="Phone Call"
-            parent="base.menu_base_config" sequence="5" groups="base.group_extended"/>
+            parent="base.menu_base_config" sequence="5" groups="base.group_extended,base.group_system"/>
 
         <menuitem id="base.next_id_64" name="Reporting"
             parent="base.menu_base_partner" sequence="11" />
@@ -87,11 +87,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
-        
+
         <menuitem action="crm_case_section_act"
             id="menu_crm_case_section_act" sequence="4"
             parent="base.menu_crm_config_lead" />
-            
+
 
         <!-- CRM Stage Tree View -->
 
@@ -177,7 +177,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_categ_tree-view"/>
         </record>
-        
+
          <menuitem action="crm_case_categ-act"
             id="menu_crm_case_categ-act" name="Categories"
             parent="base.menu_crm_config_lead" sequence="1"/>
@@ -342,7 +342,7 @@
 
        <menuitem action="crm_segmentation_tree-act"
             id="menu_crm_segmentation-act"
-            groups="base.group_extended" sequence="2"
+            groups="base.group_extended,base.group_system" sequence="2"
             parent="base.menu_base_action_rule" />
 
         <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
@@ -354,7 +354,7 @@
                 <page string="Current Activity" position="inside">
                     <field name="context_section_id" completion="1"
                         widget="selection"
-                        context="{'user_prefence':True}" 
+                        context="{'user_prefence':True}"
                         readonly="0"/>
                 </page>
             </field>
@@ -416,8 +416,8 @@
                     </field>
                 </field>
         </record>
-        
-        
+
+
         <!-- Custom Case Sections -->
         <record id="crm_case_section_custom_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.custom.form</field>
@@ -463,9 +463,9 @@
                 </tree>
             </field>
         </record>
-        
+
         <!-- Custom crm case-->
-        
+
         <record id="crm_case_custom_tree_view" model="ir.ui.view">
             <field name="name">Custom Cases - Tree</field>
             <field name="model">crm.case.custom</field>
@@ -593,7 +593,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="crm_case_custom_calendar_view">
             <field name="name">Custom Cases - Calendar</field>
             <field name="model">crm.case.custom</field>
@@ -607,7 +607,7 @@
                 </calendar>
             </field>
         </record>
-      
+
       <!-- Custom Cases Search View -->
 
     <record id="crm_case_custom_search_view" model="ir.ui.view">

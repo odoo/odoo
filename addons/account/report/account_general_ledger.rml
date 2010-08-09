@@ -9,10 +9,8 @@
     </pageTemplate>
   </template>
    <stylesheet>
-
     <blockTableStyle id="tbl_header">
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-
       <blockValign value="TOP"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Company_Name">
@@ -20,12 +18,9 @@
       <blockValign value="TOP"/>
     </blockTableStyle>
     <blockTableStyle id="tbl_content">
-
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
       <blockValign value="TOP"/>
-
     </blockTableStyle>
-
     <blockTableStyle id="Table_Subheader_Content_detail">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -107,7 +102,7 @@
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-    <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+    <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="-1,0"/>
       <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
@@ -194,12 +189,10 @@
     <para style="P9">
       <font color="white"> </font>
     </para>
-
    <para>[[ repeatIn(objects, 'a') ]]</para>
-
-    <blockTable colWidths="80.0,70.0,70.0,80.0,110.0,80.0,80.0" style="Table2">
+    <blockTable colWidths="80.0,70.0,70.0,80.0,100.0,70.0,80.0" style="Table2">
       <tr>
-      	<td><para style="terp_tblheader_General_Centre">Chat Account</para></td>
+      	<td><para style="terp_tblheader_General_Centre">Chart of Account</para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
 		<td><para style="terp_tblheader_General_Centre">Journals</para></td>
 		<td><para style="terp_tblheader_General_Centre">Display Account </para></td>

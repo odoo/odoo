@@ -19,46 +19,26 @@
 #
 ##############################################################################
 {
-    "name" : "Accounting and Financial Management",
-    "version" : "1.1",
+    "name" : "Outlook Interface",
+    "version" : "1.0",
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Accounting',
-    "description": """Financial and accounting module that covers:
-    General accountings
-    Cost / Analytic accounting
-    Third party accounting
-    Taxes management
-    Budgets
-    Customer and Supplier Invoices
-    Bank statements
-    Reconciliation process by partner
-    Creates a dashboards for accountants that includes:
-    * List of uninvoiced quotations
-    * Graph of aged receivables
-    * Graph of aged incomes
+    "website" : "http://www.openerp.com/",
+    "depends" : ["base", "mail_gateway"],
+    "category" : "Generic Modules/Outlook interface",
+    "description": '''
+      This module provide the Outlook plug-in. 
 
-The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
-grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
-module named account_vouchers
-    """,
-    'website': 'http://www.openerp.com',
-    'init_xml': [],
-    "depends" : ["product", "analytic", "process","board"],
-    'update_xml': [],
-    'demo_xml': [],
-    'test': [
-#        'test/account_customer_invoice.yml',
-#        'test/account_supplier_invoice.yml',
-#        'test/account_change_currency.yml',
-#        'test/chart_of_account.yml',
-#        'test/account_period_close.yml',
-#        'test/account_fiscalyear_close_state.yml',
-#        #'test/account_invoice_state.yml',
-#        'test/account_use_model.yml',
-#        'test/account_validate_account_move.yml',
-#        'test/account_fiscalyear_close.yml',
-    ],
-    'installable': True,
-    'active': False,
+      Outlook plug-in allows you to select an object that you’d like to add
+      to your email and its attachments from MS Outlook. You can select a partner, a task,
+      a project, an analytical account, or any other object and Archived selected
+      mail in mailgate.messages with attachments.
+
+      ''',
+    "init_xml" : [],
+    "demo_xml" : [],
+    "update_xml" : [],
+    "active": False,
+    "installable": True
+
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

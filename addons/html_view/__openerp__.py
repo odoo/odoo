@@ -9,7 +9,7 @@
     "description": """
     This is the test module which shows html tag supports in normal xml form view.
     """,
-    'update_xml': ['html_view.xml'],
+    'update_xml': ['security/ir.model.access.csv','html_view.xml',],
     'installable': True,
     'active': False,
     'certificate': '',

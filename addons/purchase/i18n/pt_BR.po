@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 17:09+0000\n"
+"PO-Revision-Date: 2010-08-07 03:51+0000\n"
 "Last-Translator: Renato Lima - http://www.akretion.com "
 "<renatonlima@gmail.com>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-04 03:37+0000\n"
+"X-Launchpad-Export-Date: 2010-08-08 03:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -26,7 +26,7 @@ msgstr "Faturamento & Pago"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 msgid "Supplier Invoice pre-generated on receptions for control"
-msgstr ""
+msgstr "Fatura do fornecedor pré-gerada nos recebimentos para controle"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -207,7 +207,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Origin"
-msgstr ""
+msgstr "Origem"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
@@ -265,6 +265,12 @@ msgid ""
 "Manual: no invoice will be pre-generated. The accountant will have to encode "
 "manually."
 msgstr ""
+"Da Ordem: Uma fatura provisória será gerada com base na ordem de compra. O "
+"contador só precisa validar esta fatura para controle.\n"
+"Da Seleção da Recepção: Uma fatura provisória será gerada baseada nas "
+"recepções validadas.\n"
+"Manual: Nenhuma fatura será gerada. O contador deverá codificá-la "
+"manualmente."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
@@ -331,6 +337,7 @@ msgstr "Order Lines"
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirm Purchase order from Request for quotation without origin"
 msgstr ""
+"Confirmar Ordem de Compra a partir da Requisição de Cotação sem origem"
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -401,7 +408,7 @@ msgstr "Lista de Preços"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "When controlling invoice from orders"
-msgstr ""
+msgstr "Quando controlada notas fiscais pelas ordens"
 
 #. module: purchase
 #: constraint:ir.ui.view:0
@@ -411,7 +418,7 @@ msgstr "Invalid XML for View Architecture!"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "Pre-generated supplier invoice to control based on order"
-msgstr ""
+msgstr "Notas fiscais de entredas pré-geradas em controle baseado na ordem"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
@@ -561,7 +568,7 @@ msgstr "Requisição de Cotação é proposta pelo sistema."
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 msgid "Packing Invoice"
-msgstr ""
+msgstr "Faturar embalagem"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -765,6 +772,9 @@ msgid ""
 "Module for purchase management\n"
 "    Request for quotation, Create Supplier Invoice, Print Order..."
 msgstr ""
+"Módulo para gerenciamento de compra\n"
+"     Pedido de Cotação, Criação de Fatura de Fornecedor, Impressão de "
+"Ordem..."
 
 #. module: purchase
 #: field:purchase.order.line,product_id:0
@@ -812,7 +822,7 @@ msgstr "Reservation"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "Purchase order is confirmed by the user."
-msgstr ""
+msgstr "Ordem de compra confirmada pelo usuário."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
@@ -848,7 +858,7 @@ msgstr "Controle de Compras"
 #: model:ir.actions.act_window,name:purchase.purchase_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_order_draft
 msgid "Request For Quotations"
-msgstr ""
+msgstr "Requisição para Cotações"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -863,12 +873,12 @@ msgstr "Aprovar"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
 msgid "Approved Purchase"
-msgstr ""
+msgstr "Compra Aprovada"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
 msgid "From Packing list, Create invoice."
-msgstr ""
+msgstr "A partir da Lista de Separação, criar Nota Fiscal"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -883,7 +893,7 @@ msgstr "Are you sure you want to merge these orders ?"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approving Purchase Order"
-msgstr ""
+msgstr "Aprovando Ordem de Compra"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0

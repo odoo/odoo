@@ -232,10 +232,10 @@
              name="Time Tracking"
              parent="base.menu_main_pm" sequence="5"/>
          <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
-             groups="hr.group_hr_manager" sequence="5"/>
+              sequence="5"/>
         <!--<menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>-->
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
-            groups="hr.group_hr_manager" sequence="1"/>
+            groups="base.group_hr_manager" sequence="1"/>
 
         <!--
             Company inheritancy
@@ -338,6 +338,7 @@
                 <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('done')" string="Timesheets">
                     <field name="date_from"/>
                     <field name="user_id"/>
+                    <field name="department_id" invisible="1"/>
                     <field name="name"/>
                     <field name="total_attendance"/>
                     <field name="total_timesheet"/>
@@ -346,8 +347,8 @@
             </field>
         </record>
 
-	<!-- Timesheet Button on Employee Form -->
-	<act_window domain="[('user_id', '=', user_id)]" id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
+  <!-- Timesheet Button on Employee Form -->
+  <act_window domain="[('user_id', '=', user_id)]" id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
 
     </data>
 </openerp>

@@ -60,7 +60,10 @@ class project_work(osv.osv):
 
     def create(self, cr, uid, vals, *args, **kwargs):
         obj_timesheet = self.pool.get('hr.analytic.timesheet')
+        project_obj = self.pool.get('project.project')
         task_obj = self.pool.get('project.task')
+        uom_obj = self.pool.get('product.uom')
+        
         vals_line = {}
         context = kwargs.get('context', {})
         obj_task = task_obj.browse(cr, uid, vals['task_id'])
@@ -69,7 +72,12 @@ class project_work(osv.osv):
         vals_line['user_id'] = vals['user_id']
         vals_line['product_id'] = result['product_id']
         vals_line['date'] = vals['date'][:10]
+        
+        #calculate quantity based on employee's product's uom 
         vals_line['unit_amount'] = vals['hours']
+        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+        if result['product_uom_id'] != default_uom:
+            vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
         acc_id = obj_task.project_id.analytic_account_id.id
         vals_line['account_id'] = acc_id
         res = obj_timesheet.on_change_account_id(cr, uid, False, acc_id)
@@ -88,7 +96,7 @@ class project_work(osv.osv):
         amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
             prod_id, amount, unit, context=context)
         if amount_unit and 'amount' in amount_unit.get('value',{}):
-            updv = { 'amount': amount_unit['value']['amount'] * (-1.0) }
+            updv = { 'amount': amount_unit['value']['amount'] }
             obj_timesheet.write(cr, uid, [timeline_id], updv, context=context)
         vals['hr_analytic_timesheet_id'] = timeline_id
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
@@ -98,6 +106,9 @@ class project_work(osv.osv):
             context = {}
         obj = self.pool.get('hr.analytic.timesheet')
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
+        project_obj = self.pool.get('project.project')
+        uom_obj = self.pool.get('product.uom')
+        
         if isinstance(ids, (long, int)):
             ids = [ids,]
 
@@ -120,15 +131,20 @@ class project_work(osv.osv):
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
+                user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
+
+                if result['product_uom_id'] and (not result['product_uom_id'] == default_uom):
+                    vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
+                    
                 # Compute based on pricetype
                 amount_unit = obj.on_change_unit_amount(cr, uid, line_id.id,
                     prod_id=prod_id,
                     unit_amount=vals_line['unit_amount'], unit=False, context=context)
 
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
-                    vals_line['amount'] = amount_unit['value']['amount'] * (-1.0)
+                    vals_line['amount'] = amount_unit['value']['amount']
 
             obj.write(cr, uid, [line_id.id], vals_line, context=context)
             
@@ -139,7 +155,7 @@ class project_work(osv.osv):
         hat_ids = []
         for task in self.browse(cr, uid, ids):
             if task.hr_analytic_timesheet_id:
-                hat_ids.append(task.hr_analytic_timesheet_id)
+                hat_ids.append(task.hr_analytic_timesheet_id.id)
 #            delete entry from timesheet too while deleting entry to task.
         if hat_ids:
             hat_obj.unlink(cr, uid, hat_ids, *args, **kwargs)

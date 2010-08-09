@@ -942,6 +942,9 @@ class account_invoice(osv.osv):
                     number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
                 else:
                     number = self.pool.get('ir.sequence').get(cr, uid, 'account.invoice.' + invtype)
+
+                if not number:
+                    raise osv.except_osv(_('Warning !'), _('There is no active invoice sequence defined for the journal !'))
                 
                 if invtype in ('in_invoice', 'in_refund'):
                     ref = reference
