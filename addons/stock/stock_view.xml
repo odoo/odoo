@@ -1603,7 +1603,7 @@
                         <filter icon="terp-go-today" string="Today" domain="[('date_planned','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date_planned','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
-                        <filter icon="terp-check" name="received" string="Done" domain="[('state','=','done'))]"/>
+                        <filter icon="terp-check" name="received" string="Done" domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Order" domain="[('backorder_id','!=',False)]" help="Back Order"/>
                         <separator orientation="vertical"/>
