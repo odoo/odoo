@@ -3717,6 +3717,18 @@ class orm(orm_template):
 
     # TODO: ameliorer avec NULL
     def _where_calc(self, cr, user, args, active_test=True, context=None):
+        """Computes the WHERE clause needed to implement an OpenERP domain.
+        :param args: the domain to compute
+        :type args: list
+        :param active_test: whether the default filtering of records with ``active``
+                            field set to ``False`` should be applied. 
+        :return: tuple with 3 elements: (where_clause, where_clause_params, tables) where
+                 ``where_clause`` contains a list of where clause elements (to be joined with 'AND'),
+                 ``where_clause_params`` is a list of parameters to be passed to the db layer
+                 for the where_clause expansion, and ``tables`` is the list of double-quoted
+                 table names that need to be included in the FROM clause. 
+        :rtype: tuple 
+        """
         if not context:
             context = {}
         args = args[:]
@@ -3797,33 +3809,34 @@ class orm(orm_template):
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
-        (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
+        (where_clause, where_clause_params, tables) = self._where_calc(cr, user, args, context=context)
         dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
-        qu1 = qu1 + dom[0]
-        qu2 = qu2 + dom[1]
+        where_clause += dom[0]
+        where_clause_params += dom[1]
         for t in dom[2]:
             if t not in tables:
                 tables.append(t)
 
-        where = qu1
+        where = where_clause
 
         order_by = self._order
-        qu1_join = []
         if order:
             self._check_qorder(order)
             o = order.split(' ')[0]
             if (o in self._columns) and getattr(self._columns[o], '_classic_write'):
                 order_by = order
             elif (o in self._inherit_fields):
-                #Allowing _inherits field for server side sorting
-                table_join,qu1_join = self._inherits_join_calc(o,[],[])
-                order_by = table_join[0] + '.' + order
-                tables += table_join
+                # Allowing inherited field for server side sorting
+                inherited_tables, inherit_join = self._inherits_join_calc(o,[],[]) # dry run to determine parent
+                inherited_sort_table = inherited_tables[0]
+                order_by = inherited_sort_table + '.' + order
+                if inherited_sort_table not in tables:
+                    # add the missing join
+                    self._inherits_join_calc(o, tables, where_clause)
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         
-        where.extend(qu1_join)
         if where:
             where_str = " WHERE %s" % " AND ".join(where)
         else:
@@ -3831,10 +3844,10 @@ class orm(orm_template):
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +
-                    ','.join(tables) + where_str + limit_str + offset_str, qu2)
+                    ','.join(tables) + where_str + limit_str + offset_str, where_clause_params)
             res = cr.fetchall()
             return res[0][0]
-        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str +' order by '+order_by+limit_str+offset_str, qu2)
+        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str +' order by '+order_by+limit_str+offset_str, where_clause_params)
         res = cr.fetchall()
         return [x[0] for x in res]
 
