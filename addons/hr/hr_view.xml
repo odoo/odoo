@@ -59,11 +59,8 @@
                             </group>
                             <group col="2" colspan="2">
                             <separator string="Position" colspan="2"/>
-                            <field name="job_id" widget="selection"/>
+                            <field name="job_id" widget="selection" domain="[('state','!=','old')]"/>
                             <field name="department_id" widget="selection"/>
-                            <!--<separator string="Managers" colspan="2"/>
-                            <field name="parent_id" />
-                            <field name="coach_id" />-->
                             </group>
                         </page>
                         <page string="Categories">
@@ -343,8 +340,8 @@
                     <group col="6" colspan="4">
 	                    <field name="state"/>
 	                    <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
-		                <button name="job_open" string="Open" states="old" type="object" icon="terp-camera_test"/>
-                        <button name="job_old" string="Old" states="open,recruit" type="object" icon="gtk-cancel"/>
+		            <button name="job_open" string="Open" states="old,recruit" type="object" icon="terp-camera_test"/>
+                            <button name="job_old" string="Old" states="open,recruit" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
