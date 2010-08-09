@@ -82,7 +82,7 @@ class account_payment_term(osv.osv):
                 next_date = (datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days))
                 if line.days2 < 0:
                     nyear = next_date.strftime("%Y")
-                    nmonth = str(int(next_date.strftime("%m"))% 12+2)
+                    nmonth = str(int(next_date.strftime("%m"))% 12+1)
                     nday = "1"
 
                     ndate = "%s-%s-%s" % (nyear, nmonth, nday)
@@ -91,7 +91,6 @@ class account_payment_term(osv.osv):
 
                     delta = timedelta(seconds=1)
                     next_date = next_month - delta
-
                     next_date = next_date + relativedelta(days=line.days2)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
