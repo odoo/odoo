@@ -42,11 +42,17 @@ class res_config_configurable(osv.osv_memory):
     _name = 'res.config'
     logger = netsvc.Logger()
 
+    def get_current_progress(self, cr, uid, context=None):
+        '''Return a description the current progress of configuration:
+        a tuple of (non_open_todos:int, total_todos: int)
+        '''
+        return (self.pool.get('ir.actions.todo')\
+                .search_count(cr, uid, [('state','<>','open')], context),
+                self.pool.get('ir.actions.todo')\
+                .search_count(cr, uid, [], context))
+
     def _progress(self, cr, uid, context=None):
-        total = self.pool.get('ir.actions.todo')\
-            .search_count(cr, uid, [], context)
-        closed = self.pool.get('ir.actions.todo')\
-            .search_count(cr, uid, [('state','<>','open')], context)
+        closed, total = self.get_current_progress(cr, uid, context=context)
         if total:
             return round(closed*100./total)
         return 100.
