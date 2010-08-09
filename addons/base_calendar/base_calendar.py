@@ -1212,17 +1212,12 @@ true, it will allow you to hide the event alarm information without removing it.
         """
 
         event_id = base_calendar_id2real_id(event_id)
-        datas = self.read(cr, uid, event_id, context=context)
         defaults.update({
-                        'recurrent_uid': base_calendar_id2real_id(datas['id']),
-                        'recurrent_id': defaults.get('date') or real_date,
+                        'recurrent_uid': base_calendar_id2real_id(event_id),
+                        'recurrent_id': real_date,
                         'rrule_type': 'none',
                         'rrule': ''
                         })
-        exdate = datas['exdate'] and datas['exdate'].split(',') or []
-        if real_date and defaults.get('date'):
-            exdate.append(real_date)
-        self.write(cr, uid, event_id, {'exdate': ','.join(exdate)}, context=context)
         new_id = self.copy(cr, uid, event_id, default=defaults, context=context)
         return new_id
 
