@@ -45,10 +45,10 @@ class res_config_configurable(osv.osv_memory):
     def _progress(self, cr, uid, context=None):
         total = self.pool.get('ir.actions.todo')\
             .search_count(cr, uid, [], context)
-        open = self.pool.get('ir.actions.todo')\
+        closed = self.pool.get('ir.actions.todo')\
             .search_count(cr, uid, [('state','<>','open')], context)
         if total:
-            return round(open*100./total)
+            return round(closed*100./total)
         return 100.
 
     def _get_image(self, cr, uid, context=None):
