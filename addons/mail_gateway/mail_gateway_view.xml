@@ -179,7 +179,7 @@
 
         <menuitem id="base.menu_base_config_mail" name="Mail" parent="base.menu_base_config" sequence="4"/>
         <menuitem id="menu_mailgate_message" name="Emails" action="action_view_mailgate_message"
-           parent="base.menu_base_config_mail" sequence="5"/>
+           parent="base.menu_base_config_mail" sequence="5" groups="base.group_system"/>
 
         <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
             id="act_res_partner_emails" name="Emails"

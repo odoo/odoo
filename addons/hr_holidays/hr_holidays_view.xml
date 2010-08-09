@@ -256,7 +256,6 @@
             <field name="domain">[('type','=','remove')]</field>
             <field name="context">{'search_default_user_id':uid}</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
-            <field name="help">Leaves requests can be recorded by employees and validated by their managers. Once a leave request is validated it appears automatically in the agenda of the employee. You can define several allowance types (paid holidays, sickness, etc) and manage allowances per type.</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_open_ask_holidays_tree">
@@ -317,7 +316,7 @@
             parent="menu_open_ask_holidays"
             id="menu_open_company_allocation"
             action="open_company_allocation"
-            groups="hr.group_hr_manager"
+            groups="base.group_hr_manager"
             sequence="40"/>
 
         <!-- holidays status -->
@@ -358,7 +357,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
+        <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves" groups="base.group_system"/>
         <menuitem name="Leave Status"
             action="open_view_holiday_status"
             id="menu_open_view_holiday_status"

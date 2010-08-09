@@ -3,7 +3,7 @@
     <data>
 
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager" sequence="8"/>
+            groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
@@ -11,6 +11,7 @@
         <menuitem name="Master Data"
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
+                  groups="mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
                   sequence="5" />
 
         <!--
@@ -41,7 +42,7 @@
             id="menu_mrp_configuration"
             name="Configuration"
             parent="base.menu_mrp_root"
-            groups="group_mrp_manager"
+            groups="base.group_system"
             sequence="50" />
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
@@ -109,10 +110,11 @@
             action="mrp_property_action"
             id="menu_mrp_property_action"
             parent="menu_mrp_property"
-            groups="base.group_extended" />
+            groups="base.group_extended,base.group_system" />
         <menuitem
             action="mrp_property_group_action"
             id="menu_mrp_property_group_action"
+            groups="base.group_system"
             parent="menu_mrp_property"/>
 
         <!--
@@ -421,11 +423,12 @@
             action="mrp_bom_form_action"
             id="menu_mrp_bom_form_action"
             parent="menu_mrp_bom"
+            groups="mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
             sequence="10"/>
         <menuitem
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
-            groups="base.group_extended"
+            groups="base.group_extended,mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
             parent="menu_mrp_bom"
             sequence="20"/>
 
@@ -483,7 +486,7 @@
 <!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
 <!--                  parent="mrp.menu_mrp_control" sequence="1" />-->
 
-         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="3"/>
+         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
         <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
 
         <!--
@@ -768,7 +771,7 @@
             <field name="context">{'search_default_Current':1}</field>
             <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, Open ERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="1"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
 
         <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
             <field name="name">Manufacturing Orders Planning</field>
@@ -908,10 +911,10 @@
             src_model="product.product"/>
 
         <!-- Menu for Resource for MRP-->
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="3"/>
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" groups="mrp.group_mrp_user" sequence="3" />
 
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
-            groups="base.group_extended"
+            groups="base.group_extended,mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
             sequence="4"/>
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
