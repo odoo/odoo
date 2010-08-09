@@ -504,7 +504,7 @@ class Calendar(CalDAV, osv.osv):
                     continue
                 if line.name in ('valarm', 'attendee'):
                     continue
-                line_domain = eval(line.domain)
+                line_domain = eval(line.domain or '[]')
                 line_domain += domain
                 if ctx_res_id:
                     line_domain += [('id','=',ctx_res_id)]
@@ -534,7 +534,7 @@ class Calendar(CalDAV, osv.osv):
                     continue
                 if line.name in ('valarm', 'attendee'):
                     continue
-                domain = eval(line.domain)
+                domain = eval(line.domain or '[]')
                 if ctx_res_id:
                     domain += [('id','=',ctx_res_id)]
                 mod_obj = self.pool.get(line.object_id.model)
