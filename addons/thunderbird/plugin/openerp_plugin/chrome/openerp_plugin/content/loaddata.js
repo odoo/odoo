@@ -45,10 +45,10 @@ var myPrefObserver =
 	//set the initial value of name and email field of create contact window
 	createContact: function()
 	{
-        document.getElementById("txtname").value= getSenderName();
-        document.getElementById("txtemail").value= getSenderEmail();
-        document.getElementById("country").value=getAllCountry();
-        document.getElementById("state").value=getAllState();
+        document.getElementById("txtname").value = getSenderName();
+        document.getElementById("txtemail").value = getSenderEmail();
+        document.getElementById("country").value = getAllCountry();
+        document.getElementById("state").value = getAllState();
         setPartnerId(0);
 	},
 
@@ -92,18 +92,18 @@ var myPrefObserver =
 
     createContactAddress: function()
 	{
-	  	document.getElementById("txtname").value= getPartnerName();
-        document.getElementById("txtcontactname").value= getSenderName();
-        document.getElementById("txtstreet").value= getStreet();
-        document.getElementById("txtstreet2").value= getStreet2();
-        document.getElementById("txtzip").value= getZipCode();
-        document.getElementById("txtcity").value= getCity();
-        document.getElementById("txtoffice").value= getOfficenumber();
-        document.getElementById("txtfax").value= getFax();
-        document.getElementById("txtmobile").value= getMobilenumber();
-	    document.getElementById("txtemail").value= getSenderEmail();
-        document.getElementById("country").value=getAllCountry();
-        document.getElementById("state").value=getAllState();
+	  	document.getElementById("txtname").value = getPartnerName();
+        document.getElementById("txtcontactname").value = getSenderName();
+        document.getElementById("txtstreet").value = getStreet();
+        document.getElementById("txtstreet2").value = getStreet2();
+        document.getElementById("txtzip").value = getZipCode();
+        document.getElementById("txtcity").value = getCity();
+        document.getElementById("txtoffice").value = getOfficenumber();
+        document.getElementById("txtfax").value = getFax();
+        document.getElementById("txtmobile").value = getMobilenumber();
+	    document.getElementById("txtemail").value = getSenderEmail();
+        document.getElementById("country").value =getAllCountry();
+        document.getElementById("state").value = getAllState();
 	},
 
 	//unregistering the window observer

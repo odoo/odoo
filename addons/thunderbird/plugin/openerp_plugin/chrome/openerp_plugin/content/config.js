@@ -144,7 +144,7 @@ function deleteDocument(){
 		document.getElementById("listObjectListBox").removeItemAt(document.getElementById("listObjectListBox").selectedIndex)
 	}
 	else{
-		alert("No Object Selected");
+		alert("No Document Selected");
 	}
 }
 
