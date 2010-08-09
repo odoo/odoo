@@ -2,21 +2,12 @@
 <openerp>
 <data noupdate="0">
 
-<!--    <record id="group_crm_manager" model="res.groups">-->
-<!--        <field name="name">CRM / Manager</field>-->
-<!--    </record>-->
-
-<!--    <record id="group_crm_user" model="res.groups">-->
-<!--        <field name="name">CRM / User</field>-->
-<!--    </record>-->
-
     <record id="base.group_sale_manager" model="res.groups">
         <field name="name">Sales / Manager</field>
     </record>
 
     <record id="base.group_sale_salesman" model="res.groups">
         <field name="name">Sales / User</field>
-<!--        <field eval="[(6,0,[ref('menu_crm_case_categ0_act_leads')])]" name="menu_access"/>-->
     </record>
 
     <record model='ir.ui.menu' id='base.menu_base_partner'>
