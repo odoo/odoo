@@ -1500,6 +1500,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: List of Dictionary of form [{‘name_of_the_field’: value, ...}, ...]
         """
+        # FIXME This whole id mangling has to go!
         if not context:
             context = {}
 

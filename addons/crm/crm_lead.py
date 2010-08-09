@@ -40,7 +40,7 @@ class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead"
-    _order = "priority, id desc"
+    _order = "date_action, priority, id desc"
     _inherit = ['mailgate.thread','res.partner.address']
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
@@ -105,6 +105,7 @@ class crm_lead(osv.osv, crm_case):
             select=True, help="Optional linked partner, usually after conversion of the lead"),
         
         # From crm.case
+        'id': fields.integer('ID'),
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),

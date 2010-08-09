@@ -38,6 +38,7 @@ With this module:
     'init_xml': [],
     'update_xml': ['security/ir.model.access.csv', 'mrp_subproduct_view.xml'],
     'demo_xml': [],
+    'test': ['test/mrp_subproduct.yml'],
     'installable': True,
     'active': False,
     'certificate': '0050060616733',

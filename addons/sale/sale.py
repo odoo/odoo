@@ -27,9 +27,7 @@ import netsvc
 from osv import fields, osv
 from tools import config
 from tools.translate import _
-
 import decimal_precision as dp
-
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -47,7 +45,7 @@ sale_shop()
 
 def _incoterm_get(self, cr, uid, context=None):
     if context is None:
-            context = {}
+        context = {}
     cr.execute('select code, code||\', \'||name from stock_incoterms where active')
     return cr.fetchall()
 
@@ -147,7 +145,6 @@ class sale_order(osv.osv):
             for invoice in sale.invoice_ids:
                 if invoice.state not in ('draft', 'cancel'):
                     tot += invoice.amount_untaxed
-
             if tot:
                 res[sale.id] = min(100.0, tot * 100.0 / (sale.amount_untaxed or 1.00))
             else:
@@ -211,7 +208,6 @@ class sale_order(osv.osv):
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source document', size=64, help="Reference of the document that generated this sale order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
-
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
@@ -283,7 +279,7 @@ class sale_order(osv.osv):
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
         'picking_policy': 'direct',
         'date_order': time.strftime('%Y-%m-%d'),
         'order_policy': 'manual',
@@ -328,7 +324,7 @@ class sale_order(osv.osv):
         cr.execute('select id from sale_order_line where order_id IN %s and state=%s',(tuple(ids),'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
-        self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'line_invoice_id': False})
+        self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
         wf_service = netsvc.LocalService("workflow")
         for inv_id in ids:
             # Deleting the existing instance of workflow for SO
@@ -512,10 +508,11 @@ class sale_order(osv.osv):
         for sale in self.browse(cr, uid, ids, context=context):
             for line in sale.order_line:
                 invoiced = False
-                if line.line_invoice_id and line.line_invoice_id.invoice_id.state == 'cancel':
-                    continue
-                else:
-                    invoiced = True
+                for iline in line.invoice_lines:
+                    if iline.invoice_id and iline.invoice_id.state == 'cancel':
+                        continue
+                    else:
+                        invoiced = True
                 self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced})
         self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False})
         return True
@@ -805,8 +802,7 @@ class sale_order_line(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer", readonly=True, states={'draft':[('readonly',False)]}),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
-#        'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
-        'line_invoice_id': fields.many2one('account.invoice.line','Invoice Line',readonly=True),
+        'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
@@ -918,7 +914,8 @@ class sale_order_line(osv.osv):
                     'note': line.notes,
                     'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
                 })
-                self.write(cr, uid, [line.id], {'invoiced': True, 'line_invoice_id':inv_id})
+                cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
+                self.write(cr, uid, [line.id], {'invoiced': True})
                 sales[line.order_id.id] = True
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -981,7 +978,7 @@ class sale_order_line(osv.osv):
             context = {}
         if not default:
             default = {}
-        default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'line_invoice_id': False})
+        default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'invoice_lines': []})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
@@ -1185,7 +1182,6 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
                 group_id = md._get_id(cr, uid, 'base', 'group_no_one')
@@ -1193,10 +1189,10 @@ class sale_config_picking_policy(osv.osv_memory):
                 menu_id = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
                 menu_id = md.browse(cr, uid, menu_id, context=context).res_id
                 self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id': [(6, 0, [group_id])]})
-
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
                 location_id = md.browse(cr, uid, location_id, context=context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
+
 sale_config_picking_policy()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

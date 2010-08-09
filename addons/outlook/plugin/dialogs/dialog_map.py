@@ -626,16 +626,16 @@ def CreateCase(btnProcessor,*args):
 
             #Create new case
             try:
-                with_attachments=True
-                if  mail.Attachments.Count > 0:
-                    msg="The mail contains attachments. Do you want to create case with attachments?"
-                    r=win32ui.MessageBox(msg, "Create Case", win32con.MB_YESNOCANCEL | win32con.MB_ICONQUESTION)
-                    if r == 2:
-                        return
-                    elif r == 7:
-                       with_attachments=False
 
-                NewConn.CreateCase(str(section), mail, partner_ids, with_attachments)
+#                if  mail.Attachments.Count > 0:
+#                    msg="The mail contains attachments. Do you want to create case with attachments?"
+#                    r=win32ui.MessageBox(msg, "Create Case", win32con.MB_YESNOCANCEL | win32con.MB_ICONQUESTION)
+#                    if r == 2:
+#                        return
+#                    elif r == 7:
+#                       with_attachments=False
+
+                NewConn.CreateCase(str(section), mail, partner_ids)
                 msg="New Document created."
                 flag=flag_info
             except Exception,e:
@@ -711,7 +711,7 @@ def SearchObjectsForText(btnProcessor,*args):
 
     search_txt = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
     if not search_txt:
-        win32ui.MessageBox("Enter text to search for", "", flag_info)
+        win32ui.MessageBox("Enter text to search for", "Archive to OpenERP", flag_info)
         return
     # Get titles from list
     obj_titles=[]

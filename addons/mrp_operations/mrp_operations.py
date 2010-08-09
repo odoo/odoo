@@ -34,9 +34,6 @@ from tools.translate import _
 # capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
 # unit_per_cycle : how many units are produced for one cycle
-#
-# TODO: Work Center may be recursive ?
-#
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'

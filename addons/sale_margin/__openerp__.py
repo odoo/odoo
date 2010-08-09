@@ -29,6 +29,7 @@
     "author":"OpenERP SA",
     "depends":["sale"],
     "demo_xml":[],
+    'test': ['test/sale_margin.yml'],
     "update_xml":["security/ir.model.access.csv","sale_margin_view.xml","report/report_margin_view.xml"],
     "active": False,
     "installable": True,

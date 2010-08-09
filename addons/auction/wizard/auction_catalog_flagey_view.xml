@@ -11,11 +11,13 @@
             <field name="arch" type="xml">
                 <form string="Catalog Flagey Report">
                 	<label string="Print Auction Catalog Flagey Report..."/>
-				    <group col="2" colspan="4">
+                	<separator colspan="4" />
+				    <group col="4" colspan="4">
+				        <label string=" " colspan="2"/>
                 		<button icon='gtk-cancel' special="cancel"
                 			string="Cancel" />
-                		<button name="print_report" string="Ok"
-                			colspan="1" type="object" icon="gtk-ok" />
+                		<button name="print_report" string="Print"
+                			colspan="1" type="object" icon="gtk-print" />
                 	</group>
                 </form>
             </field>
@@ -26,7 +28,7 @@
             src_model="auction.dates"
 		    view_mode="form"
 		    target="new"        
-            key2="client_action_multi"    
+            key2="client_print_multi"    
 		    id="action_auction_catalog_flagey_wizard"/>
 	</data>
 </openerp>	

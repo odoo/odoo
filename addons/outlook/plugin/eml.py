@@ -37,7 +37,8 @@ def generateEML(mail):
 
     eml_name= ustr(sub).encode('iso-8859-1')+'-'+str(mail.EntryID)[-9:]
     ls = ['*', '/', '\\', '<', '>', ':', '?', '"', '|', '\t', '\n']
-    attachments_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\attachments\\")
+    mails_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\mails\\")
+    attachments_folder_path = mails_folder_path + "\\attachments\\"
     if not os.path.exists(attachments_folder_path):
         os.makedirs(attachments_folder_path)
     for i in xrange(1, attachments.Count+1):
@@ -62,7 +63,7 @@ def generateEML(mail):
             print mail.lastErrorText()
             sys.exit()
 
-    mails_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\mails\\")
+
     if not os.path.exists(mails_folder_path):
         os.makedirs(mails_folder_path)
     for c in ls:

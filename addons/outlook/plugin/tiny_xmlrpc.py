@@ -27,10 +27,16 @@ import pythoncom
 import time
 from manager import ustr
 
+import smtplib
+from email.mime.text import MIMEText
+from email.parser import*
+import email
+
 waittime = 10
 wait_count = 0
 wait_limit = 12
-
+import binascii
+import base64
 def execute(connector, method, *args):
     global wait_count
     res = False
@@ -119,7 +125,7 @@ class XMLRpcConn(object):
 
     def InsertObj(self, obj_title,obj_name,image_path):
         self._obj_list=list(self._obj_list)
-        self._obj_list.append((obj_title,obj_name,ustr(image_path).encode('iso-8859-1')))
+        self._obj_list.append((obj_title,obj_name,ustr(image_path)))
         self._obj_list.sort(reverse=True)
 
     def DeleteObject(self,sel_text):
@@ -133,46 +139,59 @@ class XMLRpcConn(object):
         import win32ui, win32con
         conn = xmlrpclib.ServerProxy(self._uri + '/xmlrpc/object')
         import eml
-        msg = ""
-        ext_msg = ""
+        new_msg = files = ext_msg =""
         eml_path=eml.generateEML(mail)
         att_name = ustr(eml_path.split('\\')[-1])
-        cnt=1
         flag=False
-        for rec in recs: #[('res.partner', 3, 'Agrolait')]
-            cnt+=1
-            obj = rec[0]
-            obj_id = rec[1]
-            ids=execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.attachment','search',[('res_id','=',obj_id),('name','=',att_name)])
-            object_ids = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=',obj)])
-            object_name = execute( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',object_ids,['name'])[0]['name']
-            sub = ustr(mail.Subject)
-            if ids:
-                name=execute(conn,'execute',self._dbname,int(self._uid),self._pwd,obj,'read',obj_id,['name'])['name']
-                ext_msg+="""  - File "{0}.eml" is already archived to {1} "{2}" .
-""".format(sub,object_name,name)
-                continue
-            if len(sub) > 60:
-                l = 60 - len(sub)
-                sub = sub[0:l]
-            res={}
-            res['res_model'] = obj
-            content = "".join(open(eml_path,"r").readlines()).encode('base64')
-            res['name'] = att_name
-            res['datas_fname'] = sub+".eml"
-            res['datas'] = content
-            res['res_id'] = obj_id
-            execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.attachment','create',res)
-            msg+="""  - File "{0}.eml"  archived to {1} "{2}".
-""".format(sub,object_name,str(rec[2]))
-            flag=True
-        if flag:
-            t = "Mail archived to OpenERP.\nArchive Summary : \n"
-            if ext_msg != "" :
-                t+="\nAlready Attached Documents : \n"+ext_msg +"\n"
-            t+="Newly Attachment Documents:\n"+msg
-            win32ui.MessageBox(t,"Archive To OpenERP",win32con.MB_ICONINFORMATION)
+        attachments=mail.Attachments
 
+        try:
+            fp = open(eml_path, 'rb')
+            msg =fp.read()
+            fp.close()
+            new_mail =  email.message_from_string(str(msg))
+        except Exception,e:
+            win32ui.MessageBox(str(e),"Reading Error Mail")
+
+        for rec in recs: #[('res.partner', 3, 'Agrolait')]
+            model = rec[0]
+            res_id = rec[1]
+            object_ids = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=',model)])
+            object_name  = execute( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',object_ids,['name'])[0]['name']
+
+            #Reading the Object ir.model Name
+
+            ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mailgate.message','search',[('message_id','=',mail.EntryID),('model','=',model),('res_id','=',res_id)])
+            if ext_ids:
+                name = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,model,'read',res_id,['name'])['name']
+                ext_msg += """This mail is already archived to {1} '{2}'.
+""".format(object_name,name)
+                continue
+
+            msg = {
+                'subject':mail.Subject,
+                'date':str(mail.ReceivedTime),
+                'body':mail.Body,
+                'cc':mail.CC,
+                'from':mail.SenderEmailAddress,
+                'to':mail.To,
+                'message-id':str(new_mail.get('Message-Id')),
+                'references':str(new_mail.get('References')),
+            }
+            result = {}
+            if attachments:
+                result = self.MakeAttachment([rec], mail)
+
+            attachment_ids = result.get(model, {}).get(res_id, [])
+            ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
+
+            new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
+            flag = True
+
+        if flag:
+            t = ext_msg
+            t += """Mail archived Successfully with attachments.\n"""+new_msg
+            win32ui.MessageBox(t,"Archived to OpenERP",win32con.MB_ICONINFORMATION)
         return flag
 
     def IsCRMInstalled(self):
@@ -189,7 +208,7 @@ class XMLRpcConn(object):
         obj_list.append((-999, ustr('')))
         for id in ids:
             object = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','read',[id],['id','name'])[0]
-            obj_list.append((object['id'], ustr(object['name']).encode('iso-8859-1')))
+            obj_list.append((object['id'], ustr(object['name'])))
         return obj_list
 
     def GetObjectItems(self, search_list=[], search_text=''):
@@ -203,61 +222,55 @@ class XMLRpcConn(object):
                 ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,obj,'search',['|',('name','ilike',ustr(search_text)),('email','ilike',ustr(search_text))])
                 recs = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,obj,'read',ids,['id','name','street','city'])
                 for rec in recs:
-                    name = ustr(rec['name']).encode('iso-8859-1')
+                    name = ustr(rec['name'])
                     if rec['street']:
-                        name += ', ' + ustr(rec['street']).encode('iso-8859-1')
+                        name += ', ' + ustr(rec['street'])
                     if rec['city']:
-                        name += ', ' + ustr(rec['city']).encode('iso-8859-1')
+                        name += ', ' + ustr(rec['city'])
                     res.append((obj,rec['id'],name,object_name))
             else:
                 ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,obj,'search',[('name','ilike',ustr(search_text))])
                 recs = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,obj,'read',ids,['id','name'])
                 for rec in recs:
-                    name = ustr(rec['name']).encode('iso-8859-1')
+                    name = ustr(rec['name'])
                     res.append((obj,rec['id'],name,object_name))
         return res
 
     def CreateCase(self, section, mail, partner_ids, with_attachments=True):
         res={}
         import win32ui
+        import eml
         section=str(section)
         partner_ids=eval(str(partner_ids))
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        res['name'] = ustr(mail.Subject)
-        res['description'] = ustr(mail.Body)
-        res['partner_name'] = ustr(mail.SenderName)
-        res['email_from'] = ustr(mail.SenderEmailAddress)
-
-        if partner_ids:
-            for partner_id in partner_ids:
-                res['partner_id'] = partner_id
-                partner_addr = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','address_get',[partner_id])
-                res['partner_address_id'] = partner_addr['default']
-                id=execute(conn,'execute',self._dbname,int(self._uid),self._pwd,section,'create',res)
-                if section == 'project.issue':
-                    execute(conn,'execute',self._dbname,int(self._uid),self._pwd,section,'convert_to_bug',[id])
-                recs=[(section,id,'')]
-                if with_attachments:
-                    self.MakeAttachment(recs, mail)
-        else:
-            id=execute(conn,'execute',self._dbname,int(self._uid),self._pwd,section,'create',res)
-            recs=[(section,id,'')]
-            if with_attachments:
-                self.MakeAttachment(recs, mail)
+        try:
+            eml_path=eml.generateEML(mail)
+            fp = open(eml_path, 'rb')
+            msg =fp.read()
+            fp.close()
+            new_mail =  email.message_from_string(str(msg))
+        except Exception,e:
+            win32ui.MessageBox(str(e),"Mail Reading Error")
+        execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(new_mail))
 
     def MakeAttachment(self, recs, mail):
         attachments = mail.Attachments
+        result = {}
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-        att_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\attachments\\")
+        att_folder_path = os.path.abspath(os.path.dirname(__file__)+"\\dialogs\\resources\\mails\\attachments\\")
         if not os.path.exists(att_folder_path):
             os.makedirs(att_folder_path)
         for rec in recs: #[('res.partner', 3, 'Agrolait')]
+
             obj = rec[0]
             obj_id = rec[1]
             res={}
             res['res_model'] = obj
+            attachment_ids = []
+            if obj not in result:
+                result[obj] = {}
             for i in xrange(1, attachments.Count+1):
-                fn = ustr(attachments[i].FileName).encode('iso-8859-1')
+                fn = ustr(attachments[i].FileName)
                 if len(fn) > 64:
                     l = 64 - len(fn)
                     f = fn.split('.')
@@ -271,7 +284,10 @@ class XMLRpcConn(object):
                 res['datas_fname'] = ustr(fn)
                 res['datas'] = content
                 res['res_id'] = obj_id
-                execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.attachment','create',res)
+                id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.attachment','create',res)
+                attachment_ids.append(id)
+            result[obj].update({obj_id: attachment_ids})
+        return result
 
     def CreateContact(self, sel=None, res=None):
         res=eval(str(res))
@@ -345,7 +361,7 @@ class XMLRpcConn(object):
         state_ids = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country.state', 'search', [])
         for state_id in state_ids:
             obj = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country.state', 'read', [state_id],['id','name'])[0]
-            state_list.append((obj['id'], ustr(obj['name']).encode('iso-8859-1')))
+            state_list.append((obj['id'], ustr(obj['name'])))
         return state_list
 
     def GetAllCountry(self):
@@ -356,5 +372,5 @@ class XMLRpcConn(object):
         country_ids = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country', 'search', [])
         for country_id in country_ids:
             obj = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.country','read', [country_id], ['id','name'])[0]
-            country_list.append((obj['id'], ustr(obj['name']).encode('iso-8859-1')))
+            country_list.append((obj['id'], ustr(obj['name'])))
         return country_list

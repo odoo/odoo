@@ -38,6 +38,7 @@
         'sale_mrp_view.xml',
     ],
     'demo_xml': [],
+    'test':['test/sale_mrp.yml'],
     'installable': True,
     'active': False,
     'certificate': '',
