@@ -108,6 +108,7 @@ if not ( tools.config["stop_after_init"] or \
     tools.config["translate_out"] ):
     service.http_server.init_servers()
     service.http_server.init_xmlrpc()
+    service.http_server.init_static_http()
 
     import service.netrpc_server
     service.netrpc_server.init_servers()
