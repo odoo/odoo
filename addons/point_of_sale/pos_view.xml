@@ -25,9 +25,9 @@
                                     <field name="qty"/>
                                     <!--<field name="qty" on_change="onchange_qty(qty,price_unit)"/>-->
                                     <!--field name="qty_rfd" groups="base.group_extended"/-->
-                                    <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
                                     <field name="price_unit" readonly="1"/>
+                                    <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="notice" on_change="onchange_dis(qty,price_subtotal_incl,discount)"/>
                                     <!--field name="serial_number"/-->
                                     <field name="price_subtotal" />
@@ -77,20 +77,20 @@
                         <page string="Order and Payment">
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Order Information" colspan="4"/>
+                                <field name="name"/>
+                                <field name="shop_id" widget="selection"/>
                                 <field name="user_salesman_id" />
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="shop_id" widget="selection"  />
-                                <field name="name"/>
-                                <field name="user_id" string="Salesman"/>
-                                <!--field name="sale_manager" /-->
                                 <field name="price_type" />
+                                <field name="user_id" string="Salesman" groups="base.group_extended"/>
+                                <!--field name="sale_manager" /-->
                             </group>
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Dates" colspan="4"/>
                                 <field name="date_order"/>
                                 <field name="date_validation" />
                                 <field name="date_payment" groups="base.group_extended"/>
-                                <field name="type_rec"  colspan="4"/>
+<!--                                <field name="type_rec" colspan="4"/>-->
                             </group>
                             <group colspan="4">
 <!--                                <separator string="Invoicing" colspan="4"/>-->
