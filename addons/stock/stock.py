@@ -1430,6 +1430,7 @@ class stock_move(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
+        default['move_stock_return_history'] = []
         return super(stock_move, self).copy(cr, uid, id, default, context=context)
 
     def _auto_init(self, cursor, context=None):
