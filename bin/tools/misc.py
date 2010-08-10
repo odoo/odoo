@@ -899,14 +899,32 @@ def logged(f):
             vector.append('  kwarg %10s: %s' % (key, pformat(value)))
 
         timeb4 = time.time()
-        res = f(*args, **kwargs)
-        
-        vector.append('  result: %s' % pformat(res))
-        vector.append('  time delta: %s' % (time.time() - timeb4))
-        netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, '\n'.join(vector))
+        try:
+            res = f(*args, **kwargs)
+
+            vector.append('  result: %s' % pformat(res))
+        except Exception, e:
+            vector.append('  exception: %s' % pformat(e))
+            raise
+        finally:
+            vector.append('  time delta: %s' % (time.time() - timeb4))
+            netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, '\n'.join(vector))
         return res
 
     return wrapper
+
+
+def traceback(f):
+    from tools.func import wraps
+
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        import logging
+        from traceback import format_stack
+        logging.getLogger('debug').debug(''.join(format_stack()))
+        return f(*args, **kwargs)
+    return wrapper
+
 
 class profile(object):
     def __init__(self, fname=None):
