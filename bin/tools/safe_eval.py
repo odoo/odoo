@@ -259,13 +259,11 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'dict': dict,
                 'list': list,
                 'tuple': tuple,
-                'map' : map,
+                'map': map,
+                'abs': abs,
+                'reduce': reduce,
             }
     )
-
-    builtions = globals_dict.get('__builtins__')
-    builtions.update(os.__builtins__)
-
     return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
