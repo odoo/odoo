@@ -35,6 +35,7 @@ condition/math builtins.
 from opcode import HAVE_ARGUMENT, opmap, opname
 from types import CodeType
 import logging
+import os
 
 __all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
 
@@ -261,6 +262,9 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'map' : map,
             }
     )
+
+    builtions = globals_dict.get('__builtins__')
+    builtions.update(os.__builtins__)
 
     return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
 
