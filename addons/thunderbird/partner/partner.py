@@ -59,6 +59,7 @@ class thunderbird_partner(osv.osv_memory):
         partner = address_obj.search(cr, user,[('email','=',vals)])
         res = {}
         res1 = {}
+
         if not partner:
             res1 = {
                 'email': '',
@@ -89,6 +90,12 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         res_id = dictcreate.get('res_id',False)
         result={}
+
+        if not (dictcreate.get('partner_id')):
+            dictcreate.update({'partner_id': False})
+        create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
+        return create_id
+
         if res_id:
             address_obj = self.pool.get('res.partner.address')
             address_data = address_obj.read(cr, user, int(res_id), [])

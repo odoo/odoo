@@ -969,9 +969,9 @@ var listSearchContactHandler = {
                  setMobilenumber(strlSearchResultValue);
                  var t = getMobilenumber();}
 
-            if(strlSearchResult=="email" && strlSearchResultValue!=''){
+           if(strlSearchResult=="email" && strlSearchResultValue!=''){
                  setSenderEmail(sendername);
-                 var t = getSenderEmail();}
+                 var t = getSenderEmail();} 
     
             if(strlSearchResult=="res_id"){
                  setResourceId(strlSearchResultValue);
@@ -1030,6 +1030,10 @@ var listSearchContactdetailHandler = {
             if(strlSearchResult=="email"&& strlSearchResultValue!=''){
                 document.getElementById("txtemail").value =strlSearchResultValue;}
 
+            if(strlSearchResult=="res_id"){
+                 setResourceId(strlSearchResultValue);
+                 var t = getResourceId();}
+
 		}
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1061,7 +1065,6 @@ function searchContactdetail()
 	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strmethod.data = 'search_contact';
 	var strname = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-    var t = document.getElementById("txtemail").value
 	strname.data =document.getElementById("txtemail").value;
 	xmlRpcClient.asyncCall(listSearchContactdetailHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strname ],6);
 }
@@ -1507,7 +1510,7 @@ function UpdateContact(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var a = ['res_id','partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
-	var b = [getResourceId(),getPartnerName(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,getSenderEmail()];
+	var b = [getResourceId(),getPartnerName(),document.getElementById("txtcontactname").value,document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listUpdateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
