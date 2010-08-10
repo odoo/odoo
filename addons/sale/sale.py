@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 import netsvc
@@ -630,7 +630,8 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 proc_id = False
                 date_planned = datetime.now() + relativedelta(days=line.delay or 0.0)
-                date_planned = (date_planned - relativedelta(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+                date_planned = (date_planned - timedelta(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+
                 if line.state == 'done':
                     continue
                 move_id = False
