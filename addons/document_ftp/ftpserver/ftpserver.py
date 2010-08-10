@@ -121,15 +121,8 @@ import tempfile
 import warnings
 import random
 import stat
+from collections import deque
 from tarfile import filemode
-
-try:
-    # TODO: remove, no Unix credentials
-    import pwd
-    import grp
-except ImportError:
-    pwd = grp = None
-
 
 LOG_ACTIVE = True
 
@@ -191,25 +184,6 @@ proto_cmds = {
     'XPWD': 'Syntax: XPWD (obsolete; get current dir).',
     'XRMD': 'Syntax: XRMD <SP> dir-name (obsolete; remove directory).',
     }
-
-
-# hack around format_exc function of traceback module to grant
-# backward compatibility with python < 2.4
-# TODO: remove, we're not 2.4 compatible anyway
-if not hasattr(traceback, 'format_exc'):
-    try:
-        import cStringIO as StringIO
-    except ImportError:
-        import StringIO
-
-    def _format_exc():
-        f = StringIO.StringIO()
-        traceback.print_exc(file=f)
-        data = f.getvalue()
-        f.close()
-        return data
-
-    traceback.format_exc = _format_exc
 
 
 def _strerror(err):
@@ -591,16 +565,6 @@ class ActiveDTP(asyncore.dispatcher):
             logerror(traceback.format_exc())
         self.cmd_channel.respond("425 Can't connect to specified address.")
         self.close()
-
-
-try:
-    from collections import deque
-except ImportError:
-    # backward compatibility with Python < 2.4 by replacing deque with a list
-    class deque(list):
-        def appendleft(self, obj):
-            list.insert(self, 0, obj)
-
 
 class DTPHandler(asyncore.dispatcher):
     """Class handling server-data-transfer-process (server-DTP, see
@@ -1229,21 +1193,9 @@ class AbstractedFS:
             if not nlinks:  # non-posix system, let's use a bogus value
                 nlinks = 1
             size = st.st_size  # file size
-            if pwd and grp:
-                # get user and group name, else just use the raw uid/gid
-                try:
-                    uname = pwd.getpwuid(st.st_uid).pw_name
-                except KeyError:
-                    uname = st.st_uid
-                try:
-                    gname = grp.getgrgid(st.st_gid).gr_name
-                except KeyError:
-                    gname = st.st_gid
-            else:
-                # on non-posix systems the only chance we use default
-                # bogus values for owner and group
-                uname = "owner"
-                gname = "group"
+            uname = st.st_uid or "owner"
+            gname = st.st_gid or "group"
+           
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
@@ -1471,13 +1423,10 @@ class FTPHandler(asynchat.async_chat):
 
         # mlsx facts attributes
         self.current_facts = ['type', 'perm', 'size', 'modify']
-        if os.name == 'posix':
-            self.current_facts.append('unique')
+        self.current_facts.append('unique')
         self.available_facts = self.current_facts[:]
-        if pwd and grp:
-            self.available_facts += ['unix.mode', 'unix.uid', 'unix.gid']
-        if os.name == 'nt':
-            self.available_facts.append('create')
+        self.available_facts += ['unix.mode', 'unix.uid', 'unix.gid']
+        self.available_facts.append('create')
 
         # dtp attributes
         self.data_server = None
