@@ -303,14 +303,14 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                 		 <group>
-                        <field name='order_id'/>
+                        <field name="order_id"/>
                         <field name="product_id"/>
                         </group>
                         <newline/>
                         <group expand="0" string="Group By...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                         <filter string="Product" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by' : 'product_id'}" />
-                        <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[('group_by' : 'order_id')]"/>
+                        <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
                         </group>
                </search>
             </field>

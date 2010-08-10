@@ -39,7 +39,7 @@
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
-module named account_vouchers
+module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

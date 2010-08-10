@@ -30,7 +30,7 @@ class stock_graph(object):
     def __init__(self, io):
         self._datas = {}
         self._canvas = canvas.init(fname=io, format='pdf')
-        self._canvas.set_author("Open ERP")
+        self._canvas.set_author("OpenERP")
         self._names = {}
         self.val_min = ''
         self.val_max = ''

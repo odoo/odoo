@@ -42,7 +42,6 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         "security/ir.model.access.csv",
         "project_data.xml",
         "project_view.xml",
-        "project_report.xml",
         "process/task_process.xml",
         "project_installer.xml",
         "res_partner_view.xml",

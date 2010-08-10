@@ -31,7 +31,7 @@
     "author" : "OpenERP SA",
     "website": "http://www.openerp.com",
     "category" : "Localisation/Account Charts",
-    "description": """This is the module to manage the accounting chart for France in Open ERP.
+    "description": """This is the module to manage the accounting chart for France in OpenERP.
 
 Credits: Sistheo Zeekom CrysaLEAD
 """,

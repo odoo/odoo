@@ -72,7 +72,7 @@ class procurement_order(osv.osv):
         'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
-            "This is automatically completed by Open ERP."),
+            "This is automatically completed by OpenERP."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
         'date_planned': fields.datetime('Scheduled date', required=True),
         'date_close': fields.datetime('Date Closed'),
@@ -367,13 +367,13 @@ class procurement_order(osv.osv):
             if not (procurement.move_id.state in ('done','assigned','cancel')):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
-                if not cr.fetchone()[0]:                    
+                if not cr.fetchone()[0]:
                     cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock and no minimum orderpoint rule defined.'), procurement.id))
                     message = _('Procurement ') + " '" + procurement.name + "' "+ _("has an exception.") + _('Not enough stock and no minimum orderpoint rule defined.')
                     self.log(cr, uid, procurement.id, message)
             if procurement.state=='exception' and procurement.message=='':
-                cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock '), procurement.id))                
-                        
+                cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock '), procurement.id))
+
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
@@ -478,7 +478,7 @@ class stock_warehouse_orderpoint(osv.osv):
     """
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
-    
+
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
@@ -488,10 +488,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','=','product')]),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_min_qty': fields.float('Min Quantity', required=True,
-            help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
+            help="When the virtual stock goes belong the Min Quantity, OpenERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'product_max_qty': fields.float('Max Quantity', required=True,
-            help="When the virtual stock goes belong the Max Quantity, Open ERP generates "\
+            help="When the virtual stock goes belong the Max Quantity, OpenERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),
@@ -508,8 +508,8 @@ class stock_warehouse_orderpoint(osv.osv):
     }
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
-    ]   
-    
+    ]
+
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         """ Finds location id for changed warehouse.
         @param warehouse_id: Changed id of warehouse.

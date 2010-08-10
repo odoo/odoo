@@ -72,7 +72,7 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
     @param recid: ID of the target record under evaluation
     @param message: The expression to be evaluated
     @param template: BrowseRecord object of the current template
-    @param context: Open ERP Context
+    @param context: OpenERP Context
     @return: Computed message (unicode) or u""
     """
     pool = pooler.get_pool(cursor.dbname)
@@ -683,7 +683,7 @@ class email_template_preview(osv.osv_memory):
         Returns the default value for model field
         @param cursor: Database Cursor
         @param user: ID of current user
-        @param context: Open ERP Context
+        @param context: OpenERP Context
         """
         return self.pool.get('email.template').read(
                                                    cursor,
