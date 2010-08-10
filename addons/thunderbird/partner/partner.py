@@ -38,6 +38,7 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate['name'] = header_name and header_name[0] and header_name[0][0]
         address_obj = self.pool.get('res.partner.address')
         case_pool = self.pool.get(dictcreate.get('object','crm.lead'))
+#        case_pool = self.pool.get(dictcreate.get('object','email.server.tools'))
         partner_ids = address_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
         partner = address_obj.read(cr,user,partner_ids,['partner_id','name'])
         if partner and partner[0] and partner[0]['partner_id']:
@@ -57,7 +58,11 @@ class thunderbird_partner(osv.osv_memory):
     def search_contact(self, cr, user, vals):
         address_obj = self.pool.get('res.partner.address')
         partner = address_obj.search(cr, user,[('email','=',vals)])
+        res1 = {}
         res = {}
+        if not partner:
+            return
+
         if partner:
             partner=partner[0]
             data = address_obj.read(cr,user, partner)

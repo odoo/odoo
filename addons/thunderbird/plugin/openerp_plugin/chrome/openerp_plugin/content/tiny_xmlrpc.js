@@ -995,6 +995,7 @@ var listSearchContactdetailHandler = {
 			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
             var strlSearchResult = strlResult.QueryElementAt(0, Components.interfaces.nsISupportsCString);
             var strlSearchResultValue = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
+
             if(strlSearchResult=="partner_name"){
                  document.getElementById("txtname").value =strlSearchResultValue;}
 
@@ -1022,9 +1023,7 @@ var listSearchContactdetailHandler = {
 
             if(strlSearchResult=="email"){
                 document.getElementById("txtemail").value =strlSearchResultValue;}
-            if(strlSearchResult=="email"){
-                document.getElementById("txtemailid").value =strlSearchResultValue;}
-    
+
 		}
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1449,6 +1448,8 @@ var listCreateContactHandler = {
 var listUpdateContactHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+        alert("Contact Update Successfully.");
+        window.close();
 		var partnerId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
 		setResourceId(partnerId);
 		window.close();
