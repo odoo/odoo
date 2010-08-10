@@ -419,6 +419,7 @@ property or property parameter."),
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
         if event_obj.organizer:
+            event_org = event.add('organizer')
             event_org.params['CN'] = [event_obj.organizer]
             event_org.value = 'MAILTO:' + (event_obj.organizer)
         elif event_obj.user_id or event_obj.organizer_id:
@@ -1421,7 +1422,9 @@ true, it will allow you to hide the event alarm information without removing it.
         else:
             select = ids
         new_ids = []
+        res = False
         for event_id in select:
+            real_event_id = event_id
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
@@ -1436,10 +1439,10 @@ true, it will allow you to hide the event alarm information without removing it.
                     new_id = self.copy(cr, uid, real_event_id, default=vals, context=context)
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
-            if not real_event_id in new_ids:
+            if real_event_id and not real_event_id in new_ids:
                 new_ids.append(real_event_id)
-
-        res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
+        if new_ids:
+            res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
                 or (vals.has_key('date') or vals.has_key('duration') or vals.has_key('date_deadline')):
             # change alarm details
