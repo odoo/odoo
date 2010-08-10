@@ -44,21 +44,12 @@ class pos_open_statement(osv.osv_memory):
         journal_obj = self.pool.get('account.journal')
         cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
         j_ids = map(lambda x1: x1[0], cr.fetchall())
-        cr.execute(""" select id from account_journal
-                            where auto_cash='True' and type='cash'
-                            and id in (%s)""" %(','.join(map(lambda x: "'" + str(x) + "'", j_ids))))
-        journal_ids = map(lambda x1: x1[0], cr.fetchall())
+        journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)])
 
         for journal in journal_obj.browse(cr, uid, journal_ids):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             if len(ids):
                 raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s". \n Please close the cashbox related to. ' %(journal.name)))
-            
-#            cr.execute(""" Select id from account_bank_statement
-#                                    where journal_id =%d
-#                                    and company_id =%d
-#                                    order by id desc limit 1""" %(journal.id, company_id))
-#            st_id = cr.fetchone()
             
             number = ''
             if journal.sequence_id:
@@ -75,27 +66,6 @@ class pos_open_statement(osv.osv_memory):
                                                       })
             statement_obj.button_open(cr, uid, [statement_id], context)
 
-    #            period = statement_obj._get_period(cr, uid, context) or None
-    #            cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
-    #            cr.commit()
-    #            cr.execute("select id from account_bank_statement where journal_id=%d and company_id=%d and user_id=%d and state='open' and name='%s'"%(journal.id, company_id, uid, number))
-    #            statement_id = cr.fetchone()[0]
-    #            print "statement_id",statement_id
-    #            if st_id:
-    #                statemt_id = statement_obj.browse(cr, uid, st_id[0])
-    #                list_statement.append(statemt_id.id)
-    #                if statemt_id and statemt_id.ending_details_ids:
-    #                    statement_obj.write(cr, uid, [statement_id], {
-    #                        'balance_start': statemt_id.balance_end,
-    #                        'state': 'open',
-    #                    })
-    #                    if statemt_id.ending_details_ids:
-    #                        for i in statemt_id.ending_details_ids:
-    #                            c = statement_obj.create(cr, uid, {
-    #                                'pieces': i.pieces,
-    #                                'number': i.number,
-    #                                'starting_id': statement_id,
-    #                            })
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
         id3 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
@@ -105,7 +75,6 @@ class pos_open_statement(osv.osv_memory):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         return {
-#           'domain': "[('id','in', ["+','.join(map(str,list_statement))+"])]",
             'domain': "[('state','=','open')]",
             'name': 'Open Statement',
             'view_type': 'form',
