@@ -19,7 +19,7 @@
 #
 ##############################################################################
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
@@ -79,9 +79,19 @@ class account_payment_term(osv.osv):
             elif line.value == 'balance':
                 amt = round(amount, prec)
             if amt:
-                next_date = datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days)
+                next_date = (datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days))
                 if line.days2 < 0:
-                    next_date += relativedelta(day=line.days2)
+                    nyear = next_date.strftime("%Y")
+                    nmonth = str(int(next_date.strftime("%m"))% 12+1)
+                    nday = "1"
+
+                    ndate = "%s-%s-%s" % (nyear, nmonth, nday)
+                    nseconds = time.mktime(time.strptime(ndate, '%Y-%m-%d'))
+                    next_month = datetime.fromtimestamp(nseconds)
+
+                    delta = timedelta(seconds=1)
+                    next_date = next_month - delta
+                    next_date = next_date + relativedelta(days=line.days2)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
@@ -1236,7 +1246,7 @@ class account_move(osv.osv):
         return amount
 
     def _centralise(self, cr, uid, move, mode, context=None):
-        assert(mode in ('debit', 'credit'), 'Invalid Mode') #to prevent sql injection
+        assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
         if context is None:
             context = {}
 

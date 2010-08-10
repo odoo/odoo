@@ -68,7 +68,9 @@ def burndown_chart(cr, uid, tasks_id, date_start, date_stop):
     return result
 
 class report_tasks(report_int):
-    def create(self, cr, uid, ids, datas, context={}):
+    def create(self, cr, uid, ids, datas, context=None):
+        if context is None:
+            context = {}
         io = StringIO.StringIO()
 
         if 'date_start' not in datas:

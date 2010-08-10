@@ -43,10 +43,10 @@ class sale_journal(osv.osv):
     _name = 'sale_journal.sale.journal'
     _description = 'Sale Journal'
     _columns = {
-        'name': fields.char('Journal', size=64, required=True),
-        'code': fields.char('Code', size=16, required=True),
-        'user_id': fields.many2one('res.users', 'Responsible', required=True),
-        'date': fields.date('Journal date', required=True),
+        'name': fields.char('Journal', size=64, required=True, states={'close':[('readonly',True)]}),
+        'code': fields.char('Code', size=16, required=True, states={'close':[('readonly',True)]}),
+        'user_id': fields.many2one('res.users', 'Responsible', required=True, states={'close':[('readonly',True)]}),
+        'date': fields.date('Journal date', required=True, states={'close':[('readonly',True)]}),
         'date_created': fields.date('Creation date', readonly=True, required=True),
         'date_close': fields.date('Close date ', readonly=True),
         'sale_stats_ids': fields.one2many("sale.journal.report", "journal_id", 'Sale stats', readonly=True),
@@ -236,7 +236,7 @@ res_partner()
 class picking(osv.osv):
     _inherit = "stock.picking"
     _columns = {
-        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal',  domain=[('state','!=', 'close')],help="Picking Journal"),
+        'journal_id': fields.many2one('sale_journal.picking.journal', 'Picking Journal',  domain=[('state','!=', 'close')],help="Picking Journal"),
         'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal'),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
     }

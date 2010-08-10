@@ -149,8 +149,8 @@ class hr_sign_in_out(osv.osv_memory):
         if cond:
             return self.sign_out(cr, uid, data, context)
         else:
-            model_data_ids = att_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_hr_attendance_si_ask')], context=context)
-            resource_id = att_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+            model_data_ids = obj_model.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_hr_attendance_si_ask')], context=context)
+            resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
             return {
                 'name': _('Sign in / Sign out'),
                 'view_type': 'form',
