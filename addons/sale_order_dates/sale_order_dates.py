@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from osv import fields, osv
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+from osv import fields, osv
 
 class sale_order_dates(osv.osv):
     _inherit = 'sale.order'
@@ -59,7 +60,7 @@ class sale_order_dates(osv.osv):
         'requested_date': fields.date('Requested Date'),
         'effective_date': fields.function(_get_effective_date, method=True, type='date', store=True,string='Effective Date'),
     }
-sale_order_dates()
 
+sale_order_dates()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

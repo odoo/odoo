@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,22 +14,22 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
-    "name" : "Sale Order Layout Improvement",
+    "name" : "Sale Order Layout",
     "version" : "1.0",
-    "depends" : ["base", "sale"],
+    "depends" : ["sale", "account_invoice_layout"],
     "author" : "OpenERP SA",
     "description": """
-    This module provides some features to improve the layout of the Sale Order.
+    This module provides features to improve the layout of the Sale Order.
 
     It gives you the possibility to
         * order all the lines of an sale order
         * add titles, comment lines, sub total lines
-        * draw horizontal lines and put page breaks    
+        * draw horizontal lines and put page breaks
 
     """,
     "website" : "http://www.openerp.com",
@@ -37,7 +37,6 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
-#        "security/ir.model.access.csv",
         "sale_layout_view.xml",
         "sale_layout_report.xml",
     ],
@@ -45,4 +44,3 @@
     "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

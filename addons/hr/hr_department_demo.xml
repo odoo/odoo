@@ -104,6 +104,14 @@
             <field name="department_id" ref="dep_it"/>
         </record>
 
+        <!-- assign department on employee -->
+        <record id="employee2" model="hr.employee">
+            <field name="department_id" ref="hr.dep_technical"/>
+        </record>
+
+        <record id="employee3" model="hr.employee">
+            <field name="department_id" ref="hr.dep_technical"/>
+        </record>
 
     </data>
 </openerp>

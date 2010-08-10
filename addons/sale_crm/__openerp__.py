@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Creates Sale orders from Opportunity',
     'version': '1.0',
@@ -45,6 +44,7 @@ crm modules.
                    'security/sale_crm_security.xml',
                    ],
     'demo_xml': [],
+    'test': ['test/sale_crm.yml'],
     'installable': True,
     'active': False,
     'certificate': '0064360130141',

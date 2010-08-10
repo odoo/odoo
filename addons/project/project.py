@@ -647,42 +647,35 @@ class project_work(osv.osv):
     def create(self, cr, uid, vals, *args, **kwargs):
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
-
-        if (not 'task_id' in vals) or (not 'hours' in vals):
-            return super(project_work, self).create(cr, uid, vals, *args, **kwargs)
-        if not vals['hours']:
-            vals['hours'] = 0.00
-
-        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-        duration = vals['hours']
-
-        if user_uom != default_uom:
-            duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
-        cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (duration, vals['task_id']))
-        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+        if vals.get('hours', False):
+            user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+            duration = vals['hours']
+            if user_uom != default_uom:
+                duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
+            cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (duration, vals['task_id']))
+        return super(project_work, self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
-
-        if context is None:
-            context = {}
-        if not vals['hours']:
-            vals['hours'] = 0.00
-
-        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-        duration = vals['hours']
-
-        if user_uom == default_uom:
-            for work in self.browse(cr, uid, ids, context):
-                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, work.hours, work.task_id.id))
-        else:
-            for work in self.browse(cr, uid, ids, context):
-                duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
-                del_work =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
-                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, del_work, work.task_id.id))
-
-        return super(project_work,self).write(cr, uid, ids, vals, context)
+        if vals.get('hours', False):
+            old_hours = self.browse(cr, uid, ids, context=context)
+            user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+            duration = vals['hours']
+            for old in old_hours:
+                if vals.get('hours') != old.hours:
+                    # this code is only needed when we update the hours of the project
+                    # TODO: it may still a second calculation if the task.id is changed
+                    # at this task.
+                    if user_uom == default_uom:
+                        for work in self.browse(cr, uid, ids, context=context):
+                            cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, work.hours, work.task_id.id))
+                    else:
+                        for work in self.browse(cr, uid, ids, context=context):
+                            duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
+                            del_work =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
+                            cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, del_work, work.task_id.id))
+        return super(project_work,self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         context = kwargs.get('context', {})

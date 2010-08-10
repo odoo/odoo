@@ -307,7 +307,13 @@
             <field name="model">account.analytic.journal</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="analytic Journals">
+                <search string="Analytic Journals">
+                	<group>
+                		<field name="name"/>
+                    	<field name="code"/>
+                    	<field name="type"/>
+                	</group>
+                	<newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
                     </group>
@@ -334,6 +340,7 @@
             <field name="res_model">account.analytic.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,search</field>
+            <field name="search_view_id" ref="view_analytic_journal_search" />
         </record>
         <menuitem action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting"/>
 

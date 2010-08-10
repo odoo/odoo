@@ -1583,7 +1583,7 @@ class stock_move(osv.osv):
                     'address_id': picking.address_id.id,
                     'invoice_state': 'none',
                     'date': picking.date,
-                    'sale_id': picking.sale_id.id
+                    'sale_id':' sale_id' in picking._columns.keys() and  picking.sale_id.id or False
                     })
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
                     new_id = move_obj.copy(cr, uid, move.id, {

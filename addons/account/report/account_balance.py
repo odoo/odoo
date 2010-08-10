@@ -67,7 +67,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
         return super(account_balance ,self)._get_account(data)
 
-    def lines(self, form, ids=[], done=None, level=1):
+    def lines(self, form, ids=[], done=None):#, level=1):
         obj_account = self.pool.get('account.account')
         if not ids:
             ids = self.ids
@@ -94,7 +94,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         child_ids = obj_account._get_children_and_consol(self.cr, self.uid, ids, ctx)
         if child_ids:
             ids = child_ids
-        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id'], ctx)
+        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id','level'], ctx)
         for account in accounts:
             if account['id'] in done:
                 continue
@@ -104,7 +104,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                     'type': account['type'],
                     'code': account['code'],
                     'name': account['name'],
-                    'level': level,
+                    'level': account['level'],
                     'debit': account['debit'],
                     'credit': account['credit'],
                     'balance': account['balance'],
@@ -124,12 +124,12 @@ class account_balance(report_sxw.rml_parse, common_report_header):
 #                    return False
 #                if not _check_rec(account) :
 #                    continue
-            if account['parent_id']:
+#            if account['parent_id']:
 #                acc = obj_account.read(self.cr, self.uid, [ account['parent_id'][0] ] ,['name'], ctx)
-                for r in result_acc:
-                    if r['id'] == account['parent_id'][0]:
-                        res['level'] = r['level'] + 1
-                        break
+#                for r in result_acc:
+#                    if r['id'] == account['parent_id'][0]:
+#                        res['level'] = r['level'] + 1
+#                        break
             if form['display_account'] == 'bal_movement':
                 if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
                     result_acc.append(res)
