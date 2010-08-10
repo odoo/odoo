@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from caldav import calendar
+from datetime import datetime
 
 class project_task(osv.osv):
     _name = "project.task"
