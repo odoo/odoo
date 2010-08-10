@@ -129,8 +129,8 @@ class SecureMultiHandler2(HttpLogHandler, SecureMultiHTTPHandler):
 
     def getcert_fnames(self):
         tc = tools.config
-        fcert = tc.get_misc('httpsd','sslcert', 'ssl/server.cert')
-        fkey = tc.get_misc('httpsd','sslkey', 'ssl/server.key')
+        fcert = tc.get('secure_cert_file', 'server.cert')
+        fkey = tc.get('secure_pkey_file', 'server.key')
         return (fcert,fkey)
 
 class BaseHttpDaemon(threading.Thread, netsvc.Server):
@@ -304,9 +304,9 @@ class StaticHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
 
     def __init__(self,request, client_address, server):
         HTTPHandler.__init__(self,request,client_address,server)
-        dir_path = tools.config.get_misc('static-http', 'dir_path', False)
-        assert dir_path, "Please specify static-http/dir_path in config, or disable static-httpd!"
-        self.__basepath = dir_path
+        document_root = tools.config.get('static_http_document_root', False)
+        assert document_root, "Please specify static_http_document_root in configuration, or disable static-httpd!"
+        self.__basepath = document_root
 
     def translate_path(self, path):
         """Translate a /-separated PATH to the local filename syntax.
@@ -329,18 +329,18 @@ class StaticHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
         return path
 
 def init_static_http():
-    if not tools.config.get_misc('static-http','enable', False):
+    if not tools.config.get('static_http_enable', False):
         return
     
-    dir_path = tools.config.get_misc('static-http', 'dir_path', False)
-    assert dir_path
+    document_root = tools.config.get('static_http_document_root', False)
+    assert document_root, "Document root must be specified explicitly to enable static HTTP service (option --static-http-document-root)"
     
-    base_path = tools.config.get_misc('static-http', 'base_path', '/')
+    base_path = tools.config.get('static_http_url_prefix', '/')
     
     reg_http_service(HTTPDir(base_path,StaticHTTPHandler))
     
     logging.getLogger("web-services").info("Registered HTTP dir %s for %s" % \
-                        (dir_path, base_path))
+                        (document_root, base_path))
 
 class OerpAuthProxy(AuthProxy):
     """ Require basic authentication..

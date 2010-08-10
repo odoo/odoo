@@ -85,6 +85,9 @@ class configmanager(object):
             'test-file' : False,
             'test-disable' : False,
             'test-commit' : False,
+            'static_http_enable': False,
+            'static_http_document_root': None,
+            'static_http_url_prefix': None,
         }
 
         self.misc = {}
@@ -120,12 +123,20 @@ class configmanager(object):
         group.add_option("--pkey-file", dest="secure_pkey_file", default="server.pkey", help="specify the private key file for the SSL connection")
         parser.add_option_group(group)
 
+        # NET-RPC
         group = optparse.OptionGroup(parser, "NET-RPC Configuration")
         group.add_option("--netrpc-interface", dest="netrpc_interface", help="specify the TCP IP address for the NETRPC protocol")
         group.add_option("--netrpc-port", dest="netrpc_port", help="specify the TCP port for the NETRPC protocol", type="int")
         group.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable the NETRPC protocol")
         parser.add_option_group(group)
-
+        
+        # Static HTTP
+        group = optparse.OptionGroup(parser, "Static HTTP service")
+        group.add_option("--static-http-enable", dest="static_http_enable", action="store_true", default=False, help="enable static HTTP service for serving plain HTML files")
+        group.add_option("--static-http-document-root", dest="static_http_document_root", help="specify the directory containing your static HTML files (e.g '/var/www/')")
+        group.add_option("--static-http-url-prefix", dest="static_http_url_prefix", help="specify the URL root prefix where you want web browsers to access your static HTML files (e.g '/')")
+        parser.add_option_group(group)
+        
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
         parser.add_option("--without-demo", dest="without_demo",
                           help="load demo data for a module (use \"all\" for all modules)", default=False)
@@ -144,10 +155,10 @@ class configmanager(object):
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
-        group.add_option("--test-file", dest="test_file", help="Launch a YML test file.")
-        group.add_option("--test-disable", action="store_true", dest="test_disable",
+        group.add_option("--test-file", dest="test-file", help="Launch a YML test file.")
+        group.add_option("--test-disable", action="store_true", dest="test-disable",
                          default=False, help="Disable loading test files.")
-        group.add_option("--test-commit", action="store_true", dest="test_commit",
+        group.add_option("--test-commit", action="store_true", dest="test-commit",
                          default=False, help="Commit database changes performed by tests.")
         parser.add_option_group(group)
 
@@ -261,7 +272,8 @@ class configmanager(object):
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file'
+                'secure_cert_file', 'secure_pkey_file',
+                'static_http_enable', 'static_http_document_root', 'static_http_url_prefix'
                 ]
 
         for arg in keys:
@@ -270,9 +282,9 @@ class configmanager(object):
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
                 'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
-                'list_db', 'server_actions_allow_code']
-
-        keys.append('xmlrpcs')
+                'list_db', 'server_actions_allow_code', 'xmlrpcs', 
+                'test-file', 'test-disable', 'test-commit'
+                ]
 
         for arg in keys:
             if getattr(opt, arg) is not None:
@@ -295,11 +307,7 @@ class configmanager(object):
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
-        self.options["test-file"] =  opt.test_file
-        self.options["test-disable"] =  opt.test_disable
-        self.options["test-commit"] =  opt.test_commit
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
-
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
 
