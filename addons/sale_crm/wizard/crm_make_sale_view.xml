@@ -58,20 +58,20 @@
                             </field>
                             <newline/>
 
-				
+
                 <separator colspan="4"/>
                 <group col="4" colspan="4">
                     <label string="" colspan="2"/>
                     <button special="cancel" string="_Close" icon="gtk-cancel"/>
-                    <button name="makeOrder" string="_Ok" type="object" icon='gtk-ok'/>
+                    <button name="makeOrder" string="_Create" type="object" icon='gtk-ok'/>
                 </group>
                 </group>
             </form>
           </field>
        </record>
-       
+
        <!-- crm make sale's  action -->
-       
+
        <record id="action_crm_make_sale" model="ir.actions.act_window">
           <field name="name">Make Quotation</field>
           <field name="type">ir.actions.act_window</field>
@@ -80,6 +80,6 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
        </record>
-       
+
    </data>
 </openerp>

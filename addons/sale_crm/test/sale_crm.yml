@@ -1,0 +1,50 @@
+-
+  In order to test the sale_crm module in the Open-ERP,
+  I create an opportunity and create a sale order through 'Convert to Sale' wizard .
+-
+  I create an opportunity
+-
+  !record {model: crm.lead, id: crm_lead_opportunity0}:
+    country_id: base.be
+    name: Opportunity-1
+    planned_revenue: 50000.0
+    probability: 70.0
+    partner_address_id: base.res_partner_address_7
+    partner_id: base.res_partner_4
+    planned_revenue: 0.0
+    probability: 0.0
+    section_id: crm.section_sales_department
+    type: opportunity
+    categ_id: crm.categ_oppor1
+-
+  Then I click on the 'Convert to Sale' wizard
+-
+  I place a sale order for product keyboard having quantity 50
+-
+  !record {model: crm.make.sale, id: crm_make_sale_0}:
+    partner_id: base.res_partner_4
+    sale_order_line:
+      - name: '[KEYA] Keyboard - AZERTY'
+        price_unit: 7.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 50.0
+        delay: 7.0
+        product_id: product.product_product_24
+        type: make_to_stock
+    shop_id: sale.shop
+-
+  Then I click on the 'Ok' button of wizard
+-
+  !python {model: crm.make.sale}: |
+    self.makeOrder(cr, uid, [ref("crm_make_sale_0")], {"lang": "en_US", "tz": False,
+      "active_model": "crm.lead", "section_id": False, "default_type": "opportunity",
+      "search_default_user_id": 1, "search_default_current": 1, "active_ids": [1],
+      "active_id": (1)})
+-
+  I verify that a sale order has been generated from an opportunity
+-
+  !python {model: sale.order}: |
+    crm_obj = self.pool.get('crm.lead')
+    crm = self.browse(cr, uid, ref("crm_lead_opportunity0"))
+    so = self.search(cr, uid, [('origin','=', 'Opportunity: %s' % str(crm.id))])
+    assert so, "Sale order has not been created "
