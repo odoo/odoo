@@ -1165,7 +1165,7 @@ class sale_config_picking_policy(osv.osv_memory):
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
         ], 'Steps To Deliver a Sale Order', required=True,
-           help="By default, Open ERP is able to manage complex routing and paths "\
+           help="By default, OpenERP is able to manage complex routing and paths "\
            "of products in your warehouse and partner locations. This will configure "\
            "the most common and simple methods to deliver products to the customer "\
            "in one or two operations by the worker.")

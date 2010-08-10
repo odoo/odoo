@@ -28,7 +28,7 @@
 This module allows you to create a new module without any development.
 It records all operations on objects during the recording session and
 produce a .ZIP module. So you can create your own module directly from
-the Open ERP client.
+the OpenERP client.
 
 This version works for creating and updating existing records. It recomputes
 dependencies and links for all types of widgets (many2one, many2many, ...).

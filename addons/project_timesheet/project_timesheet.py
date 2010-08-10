@@ -203,7 +203,7 @@ class task(osv.osv):
 task()
 
 class project_project(osv.osv):
-    _inherit = "project.project"
+    _inherit = "project.projesct"
 
     def name_get(self, cr, user, ids, context=None):
         if context is None:

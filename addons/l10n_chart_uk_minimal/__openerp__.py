@@ -21,10 +21,10 @@
 
 #
 # This module provides a minimal UK chart of accounts for building upon further
-# Open ERP's default currency and accounts are remapped to this chart
+# OpenERP's default currency and accounts are remapped to this chart
 #
-# This module works for Open ERP 4.1.0 (and, assumed, onwards).
-# This module does not work for Open ERP 4.0.2 and before.
+# This module works for OpenERP 4.1.0 (and, assumed, onwards).
+# This module does not work for OpenERP 4.0.2 and before.
 #
 # VAT is structured thus:
 #  - the user company is assumed to be non-VAT exempt (easy to modify, however)
@@ -47,13 +47,13 @@
 #    - refunds of invoices are deducted from the output category
 #
 # This forms a basis for accrual tax accounting
-# Cash tax accounting can be accommodated with further processing in Open ERP
+# Cash tax accounting can be accommodated with further processing in OpenERP
 #
-# Status beta 0.92 - tested on Open ERP 4.1.0
-# Status beta 0.93 - tested on Open ERP 4.1.0
+# Status beta 0.92 - tested on OpenERP 4.1.0
+# Status beta 0.93 - tested on OpenERP 4.1.0
 # - trivial change to depend only on 'account'
 #   (seemed to be important for importing with no demo data)
-# Status 1.0 - tested on Open ERP 4.1.0, 4.0.3
+# Status 1.0 - tested on OpenERP 4.1.0, 4.0.3
 # - COGS account type fixed
 #
 
@@ -62,7 +62,7 @@
     'name': 'United Kingdom - minimal',
     'version': '1.1',
     'category': 'Localisation/Account Charts',
-    'description': """This is the base module to manage the accounting chart for United Kingdom in Open ERP.""",
+    'description': """This is the base module to manage the accounting chart for United Kingdom in OpenERP.""",
     'author': 'Seath Solutions Ltd',
     'website': 'http://www.seathsolutions.com',
     'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],

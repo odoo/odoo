@@ -93,7 +93,7 @@ class report_tasks(report_int):
         datas = _burndown.compute_burndown(cr, uid, ids, datas['date_start'], datas['date_stop'])
 
         canv = canvas.init(fname=io, format='pdf')
-        canv.set_author("Open ERP")
+        canv.set_author("OpenERP")
 
         max_hour = reduce(lambda x,y: max(y[1],x), datas, 0)
 
