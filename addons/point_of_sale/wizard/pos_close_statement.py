@@ -53,7 +53,7 @@ class pos_close_statement(osv.osv_memory):
                 raise osv.except_osv(_('Message'), _('Journals are already closed'))
             else:
                 list_statement.append(ids[0])
-                if journal.check_dtls:
+                if not journal.check_dtls:
                     statement_obj.button_confirm_cash(cr, uid, ids, context)
     #        if not list_statement:
     #            return {}
