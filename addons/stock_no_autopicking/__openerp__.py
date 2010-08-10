@@ -37,6 +37,7 @@
     'depends': ['mrp'],
     'update_xml': ['stock_no_autopicking_view.xml'],
     'demo_xml': [],
+    'test': ['test/stock_no_autopicking.yml'],
     'installable': True,
     'active': False,
     'certificate': '0075124168925',

@@ -5,10 +5,10 @@
         <menuitem
             icon="terp-project" id="base.menu_main_pm"
             name="Project" sequence="10"
-            groups="group_project_manager,group_project_user"/>
+            groups="group_project_manager,group_project_user,base.group_system"/>
 
         <menuitem id="menu_project_management" name="Project Management" parent="base.menu_main_pm" sequence="1"/>
-        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60" groups="base.group_system"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -214,7 +214,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Reevaluate Hours">
-                    <separator colspan="4" string="Change Remaining Hours"/>
+                    <separator colspan="4" string="Change Remaining Time"/>
                     <newline/>
                     <field name="remaining_hours" widget="float_time"/>
                     <separator string="" colspan="4"/>
@@ -424,11 +424,6 @@
 	                        groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
-                        <filter name="template" domain="[('active', '=', False)]"
-	                        string="Template"
-	                        icon="terp-project"
-	                        groups="base.group_extended"
-	                        help="Change Type"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="project_id" select="1">
@@ -460,7 +455,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, 'search_default_current': 1}</field>
+            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, "search_default_current": 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">In OpenERP, a project is made of a set of activities (or tasks) for completion.A list view allows the manager to quickly check for task status and make it evolve, delegate task, etc. A search tool allows a multi-criteria sort of activities.
 
@@ -531,7 +526,7 @@ Issues like bugs in a system, client complain, materials breakdown are collected
             <field name="view_id" ref="task_type_tree"/>
         </record>
 
-        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
+        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1" groups="base.group_system"/>
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
 
         <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
@@ -644,7 +639,7 @@ Issues like bugs in a system, client complain, materials breakdown are collected
         </record>
 
         <record id="action_view_project_messages_tree" model="ir.actions.act_window">
-            <field name="name">Messages</field>
+            <field name="name">Project Messages</field>
             <field name="res_model">project.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

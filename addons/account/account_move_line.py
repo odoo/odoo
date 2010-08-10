@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 from datetime import datetime
+
 import netsvc
 from osv import fields, osv
 from tools.translate import _
@@ -35,8 +36,10 @@ class account_move_line(osv.osv):
         fiscalperiod_obj = self.pool.get('account.period')
         fiscalyear_ids = []
         fiscalperiod_ids = []
-        if not context.get('fiscalyear', False):
+        if not context.get('fiscalyear', False) and not context.get('empty_fy_allow', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
+        elif context.get('empty_fy_allow', False):
+            fiscalyear_ids = context['fiscalyear']
         else:
             fiscalyear_ids = [context['fiscalyear']]
 
@@ -53,12 +56,18 @@ class account_move_line(osv.osv):
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
 
-
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
-            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
+            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
             query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
+
+        if context.get('journal_ids', False):
+            query += ' AND '+obj+'.journal_id in (%s)' % ','.join(map(str, context['journal_ids']))
+
+        if context.get('chart_account_id', False):
+            child_ids = self.pool.get('account.account')._get_children_and_consol(cr, uid, [context['chart_account_id']], context=context)
+            query += ' AND '+obj+'.account_id in (%s)' % ','.join(map(str, child_ids))
 
         if context.get('period_manner','') == 'created':
             #the query have to be build with no reference to periods but thanks to the creation date
@@ -452,7 +461,7 @@ class account_move_line(osv.osv):
                         context=context)
                 dt = period.date_start
         return dt
-        
+
     def _get_currency(self, cr, uid, context={}):
         if not context.get('journal_id', False):
             return False
@@ -506,7 +515,7 @@ class account_move_line(osv.osv):
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
-        (_check_company_id, 'Company must be same for its related account and period.', ['company_id']),
+        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -677,7 +686,7 @@ class account_move_line(osv.osv):
             account_id = line['account_id']['id']
             partner_id = (line['partner_id'] and line['partner_id']['id']) or False
         writeoff = debit - credit
-        
+
         # Ifdate_p in context => take this date
         if context.has_key('date_p') and context['date_p']:
             date=context['date_p']
@@ -815,7 +824,7 @@ class account_move_line(osv.osv):
 #        }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
-        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar, submenu=submenu)
+        result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
             return result
 
@@ -1111,7 +1120,7 @@ class account_move_line(osv.osv):
 
         #if not 'currency_id' in vals:
         #    vals['currency_id'] = account.company_id.currency_id.id
-        
+
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
         if vals.get('account_tax_id', False):

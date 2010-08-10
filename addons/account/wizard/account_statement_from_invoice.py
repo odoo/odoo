@@ -92,7 +92,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'ref': line.ref,
                 'reconcile_id': reconcile_id,
                 'date': time.strftime('%Y-%m-%d'), #time.strftime('%Y-%m-%d'), #line.date_maturity or,
-                }, context=context)
+            }, context=context)
         return {}
 
 account_statement_from_invoice_lines()
@@ -107,10 +107,10 @@ class account_statement_from_invoice(osv.osv_memory):
         'date': fields.date('Date payment',required=True),
         'journal_ids': fields.many2many('account.journal', 'account_journal_relation', 'account_id', 'journal_id', 'Journal'),
         'line_ids': fields.many2many('account.move.line', 'account_move_line_relation', 'move_id', 'line_id', 'Invoices'),
-        }
+    }
     _defaults = {
         'date':lambda *a: time.strftime('%Y-%m-%d'),
-        }
+    }
 
     def search_invoices(self, cr, uid, ids, context=None):
 

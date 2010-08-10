@@ -28,7 +28,7 @@
     "category" : "Generic Modules/Production",
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
-    This is the base module to manage the manufacturing process in Open ERP.
+    This is the base module to manage the manufacturing process in OpenERP.
 
     Features:
     * Make to Stock / Make to Order (by line)

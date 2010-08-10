@@ -23,19 +23,19 @@ import time
 from osv import fields, osv
 from tools.translate import _
 
-#class account_move_line_reconcile_prompt(osv.osv_memory):
-#    """
-#    Asks user he wants to reconcile entries or not.
-#    """
-#    _name = 'account.move.line.reconcile.prompt'
-#    _description = 'Account move line reconcile'
-#    _columns = {
-#        }
-#
-#    def ask_reconcilation(self, cr, uid, ids, context):
-#        return self.pool.get('account.move.line.reconcile').partial_check(cr, uid, ids, context)
-#
-#account_move_line_reconcile_prompt()
+class account_move_line_reconcile_prompt(osv.osv_memory):
+    """
+    Asks user he wants to reconcile entries or not.
+    """
+    _name = 'account.move.line.reconcile.prompt'
+    _description = 'Account move line reconcile'
+    _columns = {
+        }
+
+    def ask_reconcilation(self, cr, uid, ids, context):
+        return self.pool.get('account.move.line.reconcile').partial_check(cr, uid, ids, context)
+
+account_move_line_reconcile_prompt()
 
 class account_move_line_reconcile(osv.osv_memory):
     """

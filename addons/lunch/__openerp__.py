@@ -39,6 +39,7 @@
     """,
     "init_xml": [],
     "update_xml": [
+        'security/lunch_security.xml',
         'security/ir.model.access.csv',
         'wizard/lunch_order_cancel_view.xml',
         'wizard/lunch_order_confirm_view.xml',

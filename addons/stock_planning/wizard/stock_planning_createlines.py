@@ -62,7 +62,7 @@ class stock_planning_createlines(osv.osv_memory):
             if f.forecasted_products:
                 cr.execute("SELECT product_id \
                                 FROM stock_sale_forecast \
-                                WHERE (period_id = %s) AND (warehouse_id = %s)", (f.period_id2.id, f.warehouse_id2.id))
+                                WHERE (period_id = %s) AND (warehouse_id = %s)", (f.period_id.id, f.warehouse_id.id))
                 products_id1 = [x for x, in cr.fetchall()]
             else:
                 categ_ids = f.product_categ_id.id and [f.product_categ_id.id] or []
@@ -88,9 +88,7 @@ class stock_planning_createlines(osv.osv_memory):
                                 ORDER BY period.date_stop DESC",
                                     (uid, uid, f.warehouse_id.id, p.id, f.period_id.date_stop) )
                     ret=cr.fetchone()
-#                        forecast_qty = ret and ret[0] or 0.0
                     if ret:
-#                            raise osv.except_osv(_('Error !'), _('ret is %s %s %s %s %s %s')%(ret[0],ret[2],ret[3],ret[4],ret[5],ret[6],))
                         prod_uom = ret[1]
                         planned_out = ret[2]
                         to_procure = ret[3]

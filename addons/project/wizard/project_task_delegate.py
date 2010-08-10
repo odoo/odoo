@@ -43,7 +43,7 @@ class project_task_delegate(osv.osv_memory):
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             if task.name.startswith(_('CHECK: ')):
-                newname = task.name.strip(_('CHECK: '))
+                newname = str(task.name).replace(_('CHECK: '), '')
             else:
                 newname = task.name or ''
             return newname
@@ -63,10 +63,10 @@ class project_task_delegate(osv.osv_memory):
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             if task.name.startswith(_('CHECK: ')):
-                newname = task.name.strip(_('CHECK: '))
+                newname = str(task.name).replace(_('CHECK: '), '')
             else:
                 newname = task.name or ''
-            return _('CHECK: ')+ newname
+            return _('CHECK: ') + newname
         return ''
 
     def _get_new_desc(self, cr, uid, context=None):
@@ -129,7 +129,7 @@ class project_task_delegate(osv.osv_memory):
             'planned_hours': delegate_data['planned_hours'],
             'remaining_hours': delegate_data['planned_hours'],
             'parent_ids': [(6, 0, [task.id])],
-            'state': 'open',
+            'state': 'draft',
             'description': delegate_data['new_task_description'] or '',
             'child_ids': [],
             'work_ids': []

@@ -20,25 +20,8 @@
 ##############################################################################
 
 from document_webdav import webdav
-import tools
-from DAV.propfind import PROPFIND
 import urlparse
 urlparse.uses_netloc.append('caldav')
 urlparse.uses_netloc.append('caldavs')
-super_mk_prop_response = webdav.mk_prop_response
-def mk_prop_response(self,uri,good_props,bad_props,doc):                
-    res = super_mk_prop_response(self, uri,good_props,bad_props,doc)    
-    uris = uri.split('/') 
-    calendar = False    
-    if 'http://calendarserver.org/ns/' in good_props or 'http://calendarserver.org/ns/' in bad_props:
-        calendar = True
-    if calendar:
-        ad = doc.createElement('calendar')
-        ad.setAttribute('xmlns', 'urn:ietf:params:xml:ns:caldav')        
-        cols = res.getElementsByTagName('D:collection')
-        if cols:
-            cols[0].parentNode.appendChild(ad)
-                #cols[0].parentNode.appendChild(vc)
-    return res
 
-PROPFIND.mk_prop_response = mk_prop_response
+#EOF

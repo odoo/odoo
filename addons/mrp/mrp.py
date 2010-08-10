@@ -34,15 +34,12 @@ import time
 # capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
 # unit_per_cycle : how many units are produced for one cycle
-#
-# TODO: Work Center may be recursive ?
-#
+
 class mrp_workcenter(osv.osv):
     _name = 'mrp.workcenter'
     _description = 'Work Center'
     _inherits = {'resource.resource':"resource_id"}
     _columns = {
-#        'name': fields.char('Work Center Name', size=64, required=True),
         'note': fields.text('Description', help="Description of the workcenter. Explain here what's a cycle according to this workcenter."),
         'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this workcenter can do in parallel. If this workcenter represents a team of 5 workers, the capacity per cycle is 5."),
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
@@ -56,7 +53,6 @@ class mrp_workcenter(osv.osv):
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
-#        'company_id': fields.many2one('res.company','Company',required=True),
        'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
     }
     _defaults = {
@@ -255,7 +251,6 @@ class mrp_bom(osv.osv):
         @return: False or BoM id.
         """
         bom_result = False
-        # Why searching on BoM without parent ?
         cr.execute('select id from mrp_bom where product_id=%s and bom_id is null order by sequence', (product_id,))
         ids = map(lambda x: x[0], cr.fetchall())
         max_prop = 0
@@ -607,9 +602,6 @@ class mrp_production(osv.osv):
             if not bom_id:
                 raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
 
-            #if bom_point.routing_id and bom_point.routing_id.location_id:
-            #   self.write(cr, uid, [production.id], {'location_src_id': bom_point.routing_id.location_id.id})
-
             factor = production.product_qty * production.product_uom.factor / bom_point.product_uom.factor
             res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
             results = res[0]
@@ -631,11 +623,9 @@ class mrp_production(osv.osv):
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
-        self.write(cr, uid, ids, {'state': 'cancel'}) #,'move_lines':[(6,0,[])]})
+        self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
-    #XXX: may be a bug here; lot_lines are unreserved for a few seconds;
-    #     between the end of the picking list and the call to this function
     def action_ready(self, cr, uid, ids):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
@@ -981,3 +971,4 @@ class mrp_production_product_line(osv.osv):
     }
 mrp_production_product_line()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

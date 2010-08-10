@@ -17,10 +17,10 @@
 -->
         <!--<menuitem id="next_id_48" name="Timesheet" parent="hr.menu_hr_reporting"/>-->
        <!-- <menuitem action="wizard_hr_timesheet" id="menu_wizard_hr_timesheet" parent="next_id_48" type="wizard"
-            groups="hr.group_hr_manager"/>-->
+            groups="base.group_hr_manager"/>-->
         <!--<menuitem action="wizard_hr_timesheet" id="menu_wizard_hr_timesheet" parent="menu_hr_reporting_timesheet" type="wizard"
 
-            groups="hr.group_hr_manager"
+            groups="base.group_hr_manager"
             />-->
        <!-- <wizard id="wizard_hr_timesheet_my" menu="False" model="hr.employee" name="hr.analytical.timesheet.my" string="Print My Timesheet"/>
         <menuitem
@@ -28,7 +28,7 @@
             id="menu_wizard_hr_timesheet_my"
             parent="menu_hr_reporting_timesheet"
             type="wizard"
-            groups="hr.group_hr_user"
+            groups="base.group_hr_user"
             />-->
 
         <report auto="False" id="report_users_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet_users" string="Employees Timesheet" xsl="hr_timesheet/report/users_timesheet.xsl"/>
@@ -37,7 +37,7 @@
         <!--<menuitem
             action="wizard_hr_timesheet_users"
             id="menu_wizard_hr_timesheet_users"
-            groups="hr.group_hr_manager"
+            groups="base.group_hr_manager"
             parent="menu_hr_reporting_timesheet" type="wizard"/>
 -->
     </data>

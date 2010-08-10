@@ -4,16 +4,16 @@
 # Giedrius Slavinskas <giedrius.slavinskas@gmail.com>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-01-05 05:59+0000\n"
-"PO-Revision-Date: 2010-07-21 10:38+0000\n"
+"PO-Revision-Date: 2010-08-08 04:47+0000\n"
 "Last-Translator: Giedrius Slavinskas <giedrius.slavinskas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-22 03:56+0000\n"
+"X-Launchpad-Export-Date: 2010-08-09 03:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: lt\n"
 
@@ -91,7 +91,9 @@ msgstr ""
 #. module: crm
 #: view:crm.case:0
 #: view:crm.case.history:0
+#: model:ir.actions.act_window,name:crm.crm_case_categ0-act
 #: model:ir.actions.act_window,name:crm.crm_case_section_open_act
+#: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.next_id_51
 msgid "Cases"
 msgstr "Įvykiai"
@@ -140,6 +142,9 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/crm_job_wizard.py:0
+#: code:addons/crm/wizard/crm_lead_wizard.py:0
+#: code:addons/crm/wizard/crm_phonecall_wizard.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Perspėjimas!"
@@ -192,16 +197,30 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: view:crm.case:0
 #: field:crm.case,partner_id:0
+#: model:crm.case.categ,name:crm.categ_lead4
+#: model:crm.case.categ,name:crm.categ_oppor4
+#: wizard_field:crm.case.opportunity.partner_opportunity,init,partner_id:0
 #: field:crm.case.rule,trg_partner_id:0
+#: selection:crm.email.add.cc,name:0
+#: field:crm.email.add.cc,partner_id:0
+#: wizard_field:crm.lead.opportunity_set,create_partner,partner_id:0
+#: wizard_field:crm.lead.opportunity_set,opportunity,partner_id:0
+#: view:crm.opportunity:0
+#: view:crm.phonecall:0
+#: wizard_field:crm.phonecall.opportunity_set,create_partner,partner_id:0
+#: wizard_field:crm.phonecall.opportunity_set,opportunity,partner_id:0
+#: model:process.node,name:crm.process_node_partner0
 msgid "Partner"
 msgstr "Partneris"
 
 #. module: crm
 #: field:crm.case.categ,section_id:0
+#: field:crm.case.category2,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
-#: wizard_field:crm.case.section.menu,init,section_id:0
+#: field:crm.case.stage,section_id:0
 #: model:ir.model,name:crm.model_crm_case_section
 msgid "Case Section"
 msgstr "Įvykio sekcija"
@@ -255,8 +274,7 @@ msgid "Send New Email"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_history_my-act
-#: model:ir.ui.menu,name:crm.menu_crm_case_history_my-act
+#: view:crm.case.history:0
 msgid "My Histories"
 msgstr "Mano įvykių istorija"
 
@@ -315,6 +333,11 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Dates"
 msgstr "Datos"
 
@@ -394,6 +417,7 @@ msgid "Exception Rules"
 msgstr ""
 
 #. module: crm
+#: field:crm.menu.config_wizard,opportunity:0
 #: model:ir.actions.report.xml,name:crm.crm_business_opportunities_report
 msgid "Business Opportunities"
 msgstr "Verslo galimybės"
@@ -446,6 +470,12 @@ msgstr ""
 #. module: crm
 #: field:crm.case,categ_id:0
 #: field:crm.case.rule,trg_categ_id:0
+#: wizard_field:crm.job.reschedule_phone_call,init,category_id:0
+#: view:crm.opportunity:0
+#: wizard_field:crm.opportunity.reschedule_phone_call,init,category_id:0
+#: field:report.crm.case.section.categ.categ2,categ_id:0
+#: field:report.crm.case.section.categ.stage,categ_id:0
+#: field:report.crm.case.section.stage,categ_id:0
 msgid "Category"
 msgstr "Kategorija"
 
@@ -475,6 +505,11 @@ msgstr "%(partner)s = Partnerio pavadinimas"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Action Information"
 msgstr "Veiksmo informacija"
 
@@ -502,12 +537,13 @@ msgstr "Sąlygos"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act_open
-#: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act_open
 msgid "Open Cases"
 msgstr "Atviri įvykiai"
 
 #. module: crm
-#: field:crm.case,state:0
+#: field:crm.case.log,name:0
+#: view:crm.claim:0
+#: view:crm.job:0
 msgid "Status"
 msgstr "Būsena"
 
@@ -539,6 +575,9 @@ msgstr ""
 #: view:crm.case:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#: view:crm.fundraising:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 #, python-format
 msgid "Escalate"
 msgstr "Plėtojama"
@@ -656,6 +695,8 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
+#: code:addons/crm/wizard/wizard_crm_send_email.py:0
 #, python-format
 msgid ""
 "You must define a responsible user for this case in order to use this action!"
@@ -701,6 +742,11 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Communication history"
 msgstr "Komunikavimo istorija"
 
@@ -1123,8 +1169,10 @@ msgid "Next Action"
 msgstr "Kitas veiksmas"
 
 #. module: crm
+#: view:crm.case:0
 #: field:crm.case,date_deadline:0
 #: selection:crm.case.rule,trg_date_type:0
+#: view:crm.opportunity:0
 msgid "Deadline"
 msgstr "Galutinis terminas"
 
@@ -1301,6 +1349,12 @@ msgstr "%(partner_email)s = Partnerio el. paštas"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
+#: view:crm.phonecall:0
 msgid "Reset to Draft"
 msgstr "Atstatyti į juodraštį"
 
@@ -1509,6 +1563,8 @@ msgstr ""
 #: field:crm.case,date:0
 #: field:crm.case.log,date:0
 #: selection:crm.case.rule,trg_date_type:0
+#: view:crm.claim:0
+#: view:crm.phonecall:0
 msgid "Date"
 msgstr "Data"
 
@@ -1555,6 +1611,11 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "History"
 msgstr "Istorija"
 
@@ -1589,18 +1650,40 @@ msgstr "Išsiųsti priminimą"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "References"
 msgstr "Nuorodos"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #: view:crm.case:0
-#: selection:crm.case,state:0
-#: selection:crm.case.rule,act_state:0
-#: selection:crm.case.rule,trg_state_from:0
-#: selection:crm.case.rule,trg_state_to:0
-#: wizard_button:crm.case.section.menu,design_menu,end:0
-#: wizard_button:crm.case.section.menu,init,end:0
+#: wizard_button:crm.case.opportunity.partner_opportunity,init,end:0
+#: view:crm.claim:0
+#: view:crm.claim.assign_wizard:0
+#: view:crm.fundraising:0
+#: view:crm.helpdesk.assign_wizard:0
+#: wizard_button:crm.job.meeting_set,init,end:0
+#: wizard_button:crm.job.partner_create,init,end:0
+#: wizard_button:crm.job.reschedule_phone_call,init,end:0
+#: view:crm.lead:0
+#: wizard_button:crm.lead.opportunity_set,create_partner,end:0
+#: wizard_button:crm.lead.opportunity_set,opportunity,end:0
+#: wizard_button:crm.lead.partner_create,init,end:0
+#: view:crm.meeting.generic_wizard:0
+#: wizard_button:crm.new.send.mail,init,end:0
+#: view:crm.opportunity:0
+#: view:crm.opportunity.assign_wizard:0
+#: wizard_button:crm.opportunity.reschedule_phone_call,init,end:0
+#: view:crm.phonecall:0
+#: view:crm.phonecall.assign_wizard:0
+#: wizard_button:crm.phonecall.meeting_set,init,end:0
+#: wizard_button:crm.phonecall.opportunity_set,create_partner,end:0
+#: wizard_button:crm.phonecall.opportunity_set,opportunity,end:0
+#: wizard_button:crm.phonecall.partner_create,init,end:0
+#: wizard_button:crm.send.mail,init,end:0
 #, python-format
 msgid "Cancel"
 msgstr "Atšaukta"
@@ -1713,6 +1796,9 @@ msgid "="
 msgstr "="
 
 #. module: crm
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: field:crm.menu.config_wizard,name:0
 #: field:crm.segmentation,name:0
 msgid "Name"
 msgstr "Pavadinimas"
@@ -1764,6 +1850,11 @@ msgstr ""
 #. module: crm
 #: view:crm.case:0
 #: view:crm.case.rule:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Actions"
 msgstr "Veiksmai"
 
@@ -2024,12 +2115,17 @@ msgstr "Įvykio būsena"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
+#: code:addons/crm/wizard/wizard_crm_send_email.py:0
 #, python-format
 msgid "Send"
 msgstr "Siųsti"
 
 #. module: crm
 #: field:crm.case,priority:0
+#: view:crm.fundraising:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Priority"
 msgstr "Svarbumas"
 
@@ -2075,6 +2171,11 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/crm_claim.py:0
+#: code:addons/crm/crm_helpdesk.py:0
+#: code:addons/crm/crm_meeting.py:0
+#: code:addons/crm/crm_opportunity.py:0
+#: code:addons/crm/crm_phonecall.py:0
 #, python-format
 msgid "Error !"
 msgstr "Klaida!"
@@ -2318,6 +2419,14 @@ msgstr "Mažas"
 
 #. module: crm
 #: field:crm.case,date_closed:0
+#: selection:crm.case,state:0
+#: selection:crm.case.rule,act_state:0
+#: selection:crm.case.rule,trg_state_from:0
+#: selection:crm.case.rule,trg_state_to:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.stage,state:0
 msgid "Closed"
 msgstr "Užbaigtas"
 
@@ -2499,7 +2608,8 @@ msgid "Are you sure you want to create a partner based on this job request ?"
 msgstr ""
 
 #. module: crm
-#: field:crm.case.log,name:0
+#: wizard_field:crm.lead.opportunity_set,create_partner,action:0
+#: wizard_field:crm.phonecall.opportunity_set,create_partner,action:0
 msgid "Action"
 msgstr "Veiksmas"
 
@@ -2547,6 +2657,7 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.phonecall:0
 msgid "General"
 msgstr "Bendras"
 
@@ -2593,6 +2704,16 @@ msgstr ""
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
+#: view:crm.phonecall:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.stage,state:0
 #, python-format
 msgid "Open"
 msgstr "Atverta"
@@ -2628,6 +2749,16 @@ msgstr ""
 #. module: crm
 #: field:crm.case,user_id:0
 #: field:crm.case.rule,trg_user_id:0
+#: view:crm.claim:0
+#: field:crm.claim.assign_wizard,user_id:0
+#: view:crm.fundraising:0
+#: field:crm.helpdesk.assign_wizard,user_id:0
+#: view:crm.job:0
+#: view:crm.meeting:0
+#: field:crm.meeting.generic_wizard,user_id:0
+#: view:crm.opportunity:0
+#: field:crm.opportunity.assign_wizard,user_id:0
+#: field:crm.phonecall.assign_wizard,user_id:0
 msgid "Responsible"
 msgstr "Atsakingas"
 
@@ -2862,8 +2993,6 @@ msgid "Jobs Hiring Process"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_categ0-act
-#: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.next_id_52
 msgid "All Cases"
 msgstr "Visi įvykiai"
@@ -2983,6 +3112,7 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/wizard_cal_subscribe.py:0
 #, python-format
 msgid "Error!"
 msgstr "Klaida!"
@@ -3071,6 +3201,17 @@ msgstr "%(case_subject)s = Įvykio tema"
 #: field:crm.case,section_id:0
 #: field:crm.case.log,section_id:0
 #: field:crm.case.rule,trg_section_id:0
+#: field:crm.claim.assign_wizard,section_id:0
+#: field:crm.helpdesk.assign_wizard,section_id:0
+#: wizard_field:crm.job.reschedule_phone_call,init,section_id:0
+#: field:crm.meeting.generic_wizard,section_id:0
+#: field:crm.opportunity.assign_wizard,section_id:0
+#: wizard_field:crm.opportunity.reschedule_phone_call,init,section_id:0
+#: field:crm.phonecall.assign_wizard,section_id:0
+#: field:report.crm.case.section.categ.categ2,section_id:0
+#: field:report.crm.case.section.categ.stage,section_id:0
+#: field:report.crm.case.section.categ2,section_id:0
+#: field:report.crm.case.section.stage,section_id:0
 msgid "Section"
 msgstr "Sekcija"
 
@@ -3101,7 +3242,10 @@ msgid "Your action"
 msgstr "Jūsų veiksmas"
 
 #. module: crm
+#: model:crm.case.category2,name:crm.category_lead3
 #: field:crm.case.history,email:0
+#: field:crm.email.add.cc,email:0
+#: view:crm.job:0
 msgid "Email"
 msgstr "El. paštas"
 
@@ -3158,6 +3302,16 @@ msgstr ""
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: selection:crm.new.send.mail,init,state:0
+#: view:crm.opportunity:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.stage,state:0
 #, python-format
 msgid "Pending"
 msgstr "Laukiama"
@@ -3298,23 +3452,9 @@ msgid "All Funds"
 msgstr ""
 
 #. module: crm
-#: selection:crm.case.section.menu,design_menu,menu10_option:0
-#: selection:crm.case.section.menu,design_menu,menu11_option:0
-#: selection:crm.case.section.menu,design_menu,menu12_option:0
-#: selection:crm.case.section.menu,design_menu,menu13_option:0
-#: selection:crm.case.section.menu,design_menu,menu14_option:0
-#: selection:crm.case.section.menu,design_menu,menu15_option:0
-#: selection:crm.case.section.menu,design_menu,menu16_option:0
-#: selection:crm.case.section.menu,design_menu,menu17_option:0
-#: selection:crm.case.section.menu,design_menu,menu1_option:0
-#: selection:crm.case.section.menu,design_menu,menu2_option:0
-#: selection:crm.case.section.menu,design_menu,menu3_option:0
-#: selection:crm.case.section.menu,design_menu,menu4_option:0
-#: selection:crm.case.section.menu,design_menu,menu5_option:0
-#: selection:crm.case.section.menu,design_menu,menu6_option:0
-#: selection:crm.case.section.menu,design_menu,menu7_option:0
-#: selection:crm.case.section.menu,design_menu,menu8_option:0
-#: selection:crm.case.section.menu,design_menu,menu9_option:0
+#: field:crm.case.section,calendar:0
+#: view:crm.meeting:0
+#: model:ir.ui.menu,name:crm.menu_crm_case_category_act_meetings
 msgid "Calendar"
 msgstr "Kalendorius"
 
@@ -3360,7 +3500,6 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm.py:0
-#: view:crm.case:0
 #, python-format
 msgid "Historize"
 msgstr "Archyvuoti"
@@ -3388,6 +3527,11 @@ msgstr ""
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#: view:crm.meeting:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.stage,state:0
 #, python-format
 msgid "Draft"
 msgstr "Juodraštis"
@@ -3417,6 +3561,8 @@ msgstr "Vidutinis"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
+#: code:addons/crm/wizard/wizard_crm_send_email.py:0
 #, python-format
 msgid "You must put a Partner eMail to use this action!"
 msgstr "Jūs turite nurodyti partnerio el. paštą norint naudoti šį veiksmą!"
@@ -3557,6 +3703,8 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.fundraising:0
+#: view:crm.opportunity:0
 msgid "Estimates"
 msgstr "Įverčiai"
 
@@ -3568,10 +3716,6 @@ msgstr "Atsakingas naudotojas"
 #. module: crm
 #: code:addons/crm/crm.py:0
 #: view:crm.case:0
-#: selection:crm.case,state:0
-#: selection:crm.case.rule,act_state:0
-#: selection:crm.case.rule,trg_state_from:0
-#: selection:crm.case.rule,trg_state_to:0
 #, python-format
 msgid "Close"
 msgstr "Užverta"
@@ -3629,9 +3773,14 @@ msgid "% = The '%' Character"
 msgstr ""
 
 #. module: crm
+#: view:crm.case:0
 #: field:crm.case,name:0
 #: field:crm.case.history,description:0
 #: field:crm.case.history,note:0
+#: view:crm.job:0
+#: view:crm.meeting:0
+#: view:crm.opportunity:0
+#: view:crm.phonecall:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Aprašymas"
@@ -3682,6 +3831,14 @@ msgstr ""
 #. module: crm
 #: code:addons/crm/crm.py:0
 #: field:crm.case.log,case_id:0
+#: field:crm.claim,inherit_case_id:0
+#: field:crm.fundraising,inherit_case_id:0
+#: field:crm.helpdesk,inherit_case_id:0
+#: field:crm.job,inherit_case_id:0
+#: field:crm.lead,inherit_case_id:0
+#: field:crm.meeting,inherit_case_id:0
+#: field:crm.opportunity,inherit_case_id:0
+#: field:crm.phonecall,inherit_case_id:0
 #: model:ir.model,name:crm.model_crm_case
 #: model:res.request.link,name:crm.req_link_case
 #, python-format
@@ -3805,6 +3962,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,sequence:0
 #: field:crm.case.section,sequence:0
+#: field:crm.case.stage,sequence:0
 msgid "Sequence"
 msgstr "Seka"
 

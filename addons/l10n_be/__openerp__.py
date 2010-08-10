@@ -22,7 +22,7 @@
     'version': '1.1',
     'category': 'Localisation/Account Charts',
     'description': """
-    This is the base module to manage the accounting chart for Belgium in Open ERP.
+    This is the base module to manage the accounting chart for Belgium in OpenERP.
 
     After Installing this module,The Configuration wizard for accounting is launched.
     * We have the account templates which can be helpful to generate Charts of Accounts.

@@ -90,7 +90,7 @@ class project_close_task(osv.osv_memory):
         
         if 'task_id' in context:
             if context.get('send_manager', False) and not close_task.get('manager_email', False):
-                raise osv.except_osv(_('Error'), _("Please specify the email address of Manager."))
+                raise osv.except_osv(_('Error'), _("Please specify the email address of Project Manager."))
             
             elif context.get('send_partner', False) and not close_task.get('partner_email', False):
                 raise osv.except_osv(_('Error'), _("Please specify the email address of partner."))

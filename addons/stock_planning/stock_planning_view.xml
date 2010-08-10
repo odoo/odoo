@@ -3,7 +3,7 @@
     <data>
         <menuitem id="menu_stock_period_main"
                   name="Stock and Sales Periods"
-                  parent="base.menu_base_config" sequence="20"/>
+                  parent="base.menu_base_config" groups="base.group_system" sequence="20"/>
 
         <!-- Periods tree and form section -->
 
@@ -13,10 +13,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock and Sales Periods">
-                    <field name="name"/>
+                    <field name="name" colspan="2"/>
+                    <newline/>
                     <field name="date_start"/>
-                    <field name="state" select="1"/>
                     <field name="date_stop"/>
+                    <separator string="State" colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="state" select="1" readonly="1"/>
+                        <button name="button_open" string="Open" icon="gtk-ok" states="draft" type="object"/>
+                        <button name="button_close" string="Close" icon="gtk-stop" states="open" type="object"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -26,12 +32,28 @@
             <field name="model">stock.period</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Stock and Sales Period" editable="bottom">
+                <tree string="Stock and Sales Period" editable="bottom" colors="gray:state == 'close';black:state in ('draft','open')">
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="state" select="1"/>
                 </tree>
+            </field>
+        </record>
+        
+        <record id="view_stock_period_search" model="ir.ui.view">
+            <field name="name">stock.period.search</field>
+            <field name="model">stock.period</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Stock and Sales Period">
+                    <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
+                    <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </search>
             </field>
         </record>
 
@@ -40,6 +62,7 @@
             <field name="res_model">stock.period</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_stock_period_search"/>
         </record>
 
         <menuitem
@@ -67,12 +90,12 @@
                             <field name="product_uos_categ"  invisible = "True"/>
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
-                                         on_change = "onchange_uom(product_uom, product_qty, active_uom)"/>
+                                         on_change = "onchange_uom(product_uom, product_qty, active_uom, product_id)"/>
                             <field name="active_uom" invisible = "True" />
                         </group>
                         <group colspan = "2" col="2" >
                             <field name="user_id"/>
-                            <field name="product_amt" on_change="product_amt_change( product_amt, product_uom)" />
+                            <field name="product_amt" on_change="product_amt_change(product_amt, product_uom, product_id)" />
                             <field name="product_qty"  />
                             <field name="state"/>
                             <label string = ""/>
@@ -223,7 +246,7 @@
                             <field name="product_uos_categ"  invisible = "True"/>
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
-                                         on_change = "onchange_uom(product_uom)"/>
+                                         on_change = "onchange_uom(product_uom, product_id, active_uom, planned_outgoing, to_procure)"/>
 <!--                            <field name="state"/>    -->
                             <separator colspan ="2" string = "Forecasts"/>
                             <field name="warehouse_forecast"/>
@@ -302,6 +325,7 @@
                     <field name="warehouse_forecast" string="Forecast"/>
                     <field name="planned_outgoing"/>
                     <field name="to_procure"/>
+                    <field name="line_time" invisible="1"/>
                     <field name="stock_simulation" string="Stock"/>   <!-- previously stock_start -->
                     <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                 </tree>

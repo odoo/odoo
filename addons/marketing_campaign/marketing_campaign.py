@@ -85,7 +85,7 @@ class marketing_campaign(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'object_id': fields.many2one('ir.model', 'Model', required=True,
+        'object_id': fields.many2one('ir.model', 'Resource', required=True,
                                       help="Choose the model on which you want \
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
@@ -159,11 +159,11 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         return True
 
 
-    def signal(self, cr, uid, model, res_id, signal, context=None):
+    def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
         record = self.pool.get(model).browse(cr, uid, res_id, context)
-        return self._signal(cr, uid, record, signal, context)
+        return self._signal(cr, uid, record, signal, run_existing, context)
 
-    def _signal(self, cr, uid, record, signal, context=None):
+    def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
         if not signal:
             raise ValueError('signal cannot be False')
 
@@ -182,7 +182,10 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 wi_domain = [(k, '=', v) for k, v in data.items()]
 
                 wi_ids = Workitems.search(cr, uid, wi_domain, context=context)
-                if not wi_ids:
+                if wi_ids:
+                    if not run_existing:
+                        continue
+                else:
                     partner = self._get_partner_for(campaign, record)
                     if partner:
                         data['partner_id'] = partner.id
@@ -456,10 +459,10 @@ class marketing_campaign_transition(osv.osv):
         'name': fields.function(_get_name, method=True, string='Name',
                                 type='char', size=128),
         'activity_from_id': fields.many2one('marketing.campaign.activity',
-                                            'Source Activity', select=1,
+                                            'Previous Activity', select=1,
                                             required=True),
         'activity_to_id': fields.many2one('marketing.campaign.activity',
-                                          'Destination Activity',
+                                          'Next Activity',
                                           required=True),
         'interval_nbr': fields.integer('Interval Value', required=True),
         'interval_type': fields.selection(_interval_units, 'Interval Unit',

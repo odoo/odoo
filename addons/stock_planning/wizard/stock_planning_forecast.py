@@ -27,20 +27,13 @@ class stock_sale_forecast_createlines(osv.osv_memory):
     _name = "stock.sale.forecast.createlines"
     _description = "stock.sale.forecast.createlines"
 
-# FIXME Add some period sugestion like below
-
-#    def _get_latest_period(self,cr,uid,context={}):
-#        cr.execute("select max(date_stop) from stock_period")
-#        result=cr.fetchone()
-#        return result and result[0] or False
-
 
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
         'warehouse_id': fields.many2one('stock.warehouse' , 'Warehouse', required=True, \
                                 help='Warehouse which forecasts will concern. '\
                                    'If during stock planning you will need sales forecast for all warehouses choose any warehouse now.'),
-        'period_id': fields.many2one('stock.period' , 'Period', required=True, help = 'Period which forecasts will concern.' ),
+        'period_id': fields.many2one('stock.period', 'Period', required=True, help='Period which forecasts will concern.'),
         'product_categ_id': fields.many2one('product.category' , 'Product Category', required=True, \
                                 help ='Product Category of products which created forecasts will concern.'),
         'copy_forecast': fields.boolean('Copy Last Forecast', help="Copy quantities from last Stock and Sale Forecast."),
@@ -71,10 +64,6 @@ class stock_sale_forecast_createlines(osv.osv_memory):
                                                        ('user_id','=',uid), \
                                                        ('warehouse_id','=',f.warehouse_id.id)]))== 0:
                     forecast_qty = 0.0
-# Not sure if it is expected quantity for this feature (copying forecast from previous period)
-# because it can take incidental forecast of this warehouse, this product and this user (creating, writing or validating forecast).
-# It takes only one forecast line (no sum). If user creates only one forecast per period it will be OK. If not I have no idea how to count it.
-
                     prod_uom = False
                     if copy:
                         cr.execute("SELECT period.date_stop, forecast.product_qty, forecast.product_uom \

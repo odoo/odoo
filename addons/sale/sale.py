@@ -20,16 +20,14 @@
 ##############################################################################
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 import netsvc
 from osv import fields, osv
 from tools import config
 from tools.translate import _
-
 import decimal_precision as dp
-
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -47,7 +45,7 @@ sale_shop()
 
 def _incoterm_get(self, cr, uid, context=None):
     if context is None:
-            context = {}
+        context = {}
     cr.execute('select code, code||\', \'||name from stock_incoterms where active')
     return cr.fetchall()
 
@@ -147,7 +145,6 @@ class sale_order(osv.osv):
             for invoice in sale.invoice_ids:
                 if invoice.state not in ('draft', 'cancel'):
                     tot += invoice.amount_untaxed
-
             if tot:
                 res[sale.id] = min(100.0, tot * 100.0 / (sale.amount_untaxed or 1.00))
             else:
@@ -211,7 +208,6 @@ class sale_order(osv.osv):
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source document', size=64, help="Reference of the document that generated this sale order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
-
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
@@ -283,7 +279,7 @@ class sale_order(osv.osv):
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
         'picking_policy': 'direct',
         'date_order': time.strftime('%Y-%m-%d'),
         'order_policy': 'manual',
@@ -634,7 +630,8 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 proc_id = False
                 date_planned = datetime.now() + relativedelta(days=line.delay or 0.0)
-                date_planned = (date_planned - relativedelta(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+                date_planned = (date_planned - timedelta(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+
                 if line.state == 'done':
                     continue
                 move_id = False
@@ -1168,7 +1165,7 @@ class sale_config_picking_policy(osv.osv_memory):
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
         ], 'Steps To Deliver a Sale Order', required=True,
-           help="By default, Open ERP is able to manage complex routing and paths "\
+           help="By default, OpenERP is able to manage complex routing and paths "\
            "of products in your warehouse and partner locations. This will configure "\
            "the most common and simple methods to deliver products to the customer "\
            "in one or two operations by the worker.")
@@ -1186,7 +1183,6 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
                 group_id = md._get_id(cr, uid, 'base', 'group_no_one')
@@ -1194,10 +1190,10 @@ class sale_config_picking_policy(osv.osv_memory):
                 menu_id = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
                 menu_id = md.browse(cr, uid, menu_id, context=context).res_id
                 self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id': [(6, 0, [group_id])]})
-
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
                 location_id = md.browse(cr, uid, location_id, context=context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
+
 sale_config_picking_policy()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

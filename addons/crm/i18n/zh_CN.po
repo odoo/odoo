@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-01-05 05:59+0000\n"
-"PO-Revision-Date: 2010-07-20 10:18+0000\n"
+"PO-Revision-Date: 2010-08-03 04:49+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-21 03:43+0000\n"
+"X-Launchpad-Export-Date: 2010-08-04 03:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -90,7 +90,9 @@ msgstr "阶段名称"
 #. module: crm
 #: view:crm.case:0
 #: view:crm.case.history:0
+#: model:ir.actions.act_window,name:crm.crm_case_categ0-act
 #: model:ir.actions.act_window,name:crm.crm_case_section_open_act
+#: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.next_id_51
 msgid "Cases"
 msgstr "业务个案"
@@ -137,6 +139,9 @@ msgstr "已解决"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/crm_job_wizard.py:0
+#: code:addons/crm/wizard/crm_lead_wizard.py:0
+#: code:addons/crm/wizard/crm_phonecall_wizard.py:0
 #, python-format
 msgid "Warning !"
 msgstr "警告！"
@@ -189,16 +194,30 @@ msgid ""
 msgstr "属于哪个划分的业务个案. 定义责任用户和电子邮件帐号的邮件网关."
 
 #. module: crm
+#: view:crm.case:0
 #: field:crm.case,partner_id:0
+#: model:crm.case.categ,name:crm.categ_lead4
+#: model:crm.case.categ,name:crm.categ_oppor4
+#: wizard_field:crm.case.opportunity.partner_opportunity,init,partner_id:0
 #: field:crm.case.rule,trg_partner_id:0
+#: selection:crm.email.add.cc,name:0
+#: field:crm.email.add.cc,partner_id:0
+#: wizard_field:crm.lead.opportunity_set,create_partner,partner_id:0
+#: wizard_field:crm.lead.opportunity_set,opportunity,partner_id:0
+#: view:crm.opportunity:0
+#: view:crm.phonecall:0
+#: wizard_field:crm.phonecall.opportunity_set,create_partner,partner_id:0
+#: wizard_field:crm.phonecall.opportunity_set,opportunity,partner_id:0
+#: model:process.node,name:crm.process_node_partner0
 msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: crm
 #: field:crm.case.categ,section_id:0
+#: field:crm.case.category2,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
-#: wizard_field:crm.case.section.menu,init,section_id:0
+#: field:crm.case.stage,section_id:0
 #: model:ir.model,name:crm.model_crm_case_section
 msgid "Case Section"
 msgstr "划分的业务个案"
@@ -252,8 +271,7 @@ msgid "Send New Email"
 msgstr "发送新Email"
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_history_my-act
-#: model:ir.ui.menu,name:crm.menu_crm_case_history_my-act
+#: view:crm.case.history:0
 msgid "My Histories"
 msgstr "我的日志"
 
@@ -312,6 +330,11 @@ msgstr "警告!"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Dates"
 msgstr "日期"
 
@@ -391,6 +414,7 @@ msgid "Exception Rules"
 msgstr "例外规则"
 
 #. module: crm
+#: field:crm.menu.config_wizard,opportunity:0
 #: model:ir.actions.report.xml,name:crm.crm_business_opportunities_report
 msgid "Business Opportunities"
 msgstr "商机"
@@ -441,6 +465,12 @@ msgstr ""
 #. module: crm
 #: field:crm.case,categ_id:0
 #: field:crm.case.rule,trg_categ_id:0
+#: wizard_field:crm.job.reschedule_phone_call,init,category_id:0
+#: view:crm.opportunity:0
+#: wizard_field:crm.opportunity.reschedule_phone_call,init,category_id:0
+#: field:report.crm.case.section.categ.categ2,categ_id:0
+#: field:report.crm.case.section.categ.stage,categ_id:0
+#: field:report.crm.case.section.stage,categ_id:0
 msgid "Category"
 msgstr "分类"
 
@@ -470,6 +500,11 @@ msgstr "%(partner)s = 业务伙伴名称"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Action Information"
 msgstr "动作信息"
 
@@ -496,12 +531,13 @@ msgstr "条件"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act_open
-#: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act_open
 msgid "Open Cases"
 msgstr "待处理业务个案"
 
 #. module: crm
-#: field:crm.case,state:0
+#: field:crm.case.log,name:0
+#: view:crm.claim:0
+#: view:crm.job:0
 msgid "Status"
 msgstr "状态"
 
@@ -533,6 +569,9 @@ msgstr "会议树"
 #: view:crm.case:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#: view:crm.fundraising:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 #, python-format
 msgid "Escalate"
 msgstr "提升"
@@ -647,6 +686,8 @@ msgstr "保险索赔"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
+#: code:addons/crm/wizard/wizard_crm_send_email.py:0
 #, python-format
 msgid ""
 "You must define a responsible user for this case in order to use this action!"
@@ -690,6 +731,11 @@ msgstr "9月"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Communication history"
 msgstr "沟通日志"
 
@@ -1105,8 +1151,10 @@ msgid "Next Action"
 msgstr "下一动作"
 
 #. module: crm
+#: view:crm.case:0
 #: field:crm.case,date_deadline:0
 #: selection:crm.case.rule,trg_date_type:0
+#: view:crm.opportunity:0
 msgid "Deadline"
 msgstr "截止日期"
 
@@ -1270,6 +1318,12 @@ msgstr "%(partner_email)s = 业务伙伴电子邮箱"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
+#: view:crm.phonecall:0
 msgid "Reset to Draft"
 msgstr "重置为草稿"
 
@@ -1476,6 +1530,8 @@ msgstr "等待回应"
 #: field:crm.case,date:0
 #: field:crm.case.log,date:0
 #: selection:crm.case.rule,trg_date_type:0
+#: view:crm.claim:0
+#: view:crm.phonecall:0
 msgid "Date"
 msgstr "日期"
 
@@ -1522,6 +1578,11 @@ msgstr "给出会议地点"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "History"
 msgstr "日志"
 
@@ -1556,18 +1617,40 @@ msgstr "发送提醒"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "References"
 msgstr "参照"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #: view:crm.case:0
-#: selection:crm.case,state:0
-#: selection:crm.case.rule,act_state:0
-#: selection:crm.case.rule,trg_state_from:0
-#: selection:crm.case.rule,trg_state_to:0
-#: wizard_button:crm.case.section.menu,design_menu,end:0
-#: wizard_button:crm.case.section.menu,init,end:0
+#: wizard_button:crm.case.opportunity.partner_opportunity,init,end:0
+#: view:crm.claim:0
+#: view:crm.claim.assign_wizard:0
+#: view:crm.fundraising:0
+#: view:crm.helpdesk.assign_wizard:0
+#: wizard_button:crm.job.meeting_set,init,end:0
+#: wizard_button:crm.job.partner_create,init,end:0
+#: wizard_button:crm.job.reschedule_phone_call,init,end:0
+#: view:crm.lead:0
+#: wizard_button:crm.lead.opportunity_set,create_partner,end:0
+#: wizard_button:crm.lead.opportunity_set,opportunity,end:0
+#: wizard_button:crm.lead.partner_create,init,end:0
+#: view:crm.meeting.generic_wizard:0
+#: wizard_button:crm.new.send.mail,init,end:0
+#: view:crm.opportunity:0
+#: view:crm.opportunity.assign_wizard:0
+#: wizard_button:crm.opportunity.reschedule_phone_call,init,end:0
+#: view:crm.phonecall:0
+#: view:crm.phonecall.assign_wizard:0
+#: wizard_button:crm.phonecall.meeting_set,init,end:0
+#: wizard_button:crm.phonecall.opportunity_set,create_partner,end:0
+#: wizard_button:crm.phonecall.opportunity_set,opportunity,end:0
+#: wizard_button:crm.phonecall.partner_create,init,end:0
+#: wizard_button:crm.send.mail,init,end:0
 #, python-format
 msgid "Cancel"
 msgstr "取消"
@@ -1680,6 +1763,9 @@ msgid "="
 msgstr "="
 
 #. module: crm
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: field:crm.menu.config_wizard,name:0
 #: field:crm.segmentation,name:0
 msgid "Name"
 msgstr "名称"
@@ -1731,6 +1817,11 @@ msgstr "缺陷跟踪"
 #. module: crm
 #: view:crm.case:0
 #: view:crm.case.rule:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Actions"
 msgstr "动作"
 
@@ -1991,12 +2082,17 @@ msgstr "业务个案状态"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
+#: code:addons/crm/wizard/wizard_crm_send_email.py:0
 #, python-format
 msgid "Send"
 msgstr "发送"
 
 #. module: crm
 #: field:crm.case,priority:0
+#: view:crm.fundraising:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
 msgid "Priority"
 msgstr "优先级"
 
@@ -2042,6 +2138,11 @@ msgstr "安排正常会议或电话会议"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/crm_claim.py:0
+#: code:addons/crm/crm_helpdesk.py:0
+#: code:addons/crm/crm_meeting.py:0
+#: code:addons/crm/crm_opportunity.py:0
+#: code:addons/crm/crm_phonecall.py:0
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -2285,6 +2386,14 @@ msgstr "低"
 
 #. module: crm
 #: field:crm.case,date_closed:0
+#: selection:crm.case,state:0
+#: selection:crm.case.rule,act_state:0
+#: selection:crm.case.rule,trg_state_from:0
+#: selection:crm.case.rule,trg_state_to:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.stage,state:0
 msgid "Closed"
 msgstr "已关闭"
 
@@ -2464,7 +2573,8 @@ msgid "Are you sure you want to create a partner based on this job request ?"
 msgstr "你确定要创建这业务伙伴的工作请求?"
 
 #. module: crm
-#: field:crm.case.log,name:0
+#: wizard_field:crm.lead.opportunity_set,create_partner,action:0
+#: wizard_field:crm.phonecall.opportunity_set,create_partner,action:0
 msgid "Action"
 msgstr "动作"
 
@@ -2512,6 +2622,7 @@ msgstr "销售"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.phonecall:0
 msgid "General"
 msgstr "一般"
 
@@ -2558,6 +2669,16 @@ msgstr "所有商机"
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: view:crm.opportunity:0
+#: view:crm.phonecall:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.stage,state:0
 #, python-format
 msgid "Open"
 msgstr "待处理"
@@ -2593,6 +2714,16 @@ msgstr "帮助平台"
 #. module: crm
 #: field:crm.case,user_id:0
 #: field:crm.case.rule,trg_user_id:0
+#: view:crm.claim:0
+#: field:crm.claim.assign_wizard,user_id:0
+#: view:crm.fundraising:0
+#: field:crm.helpdesk.assign_wizard,user_id:0
+#: view:crm.job:0
+#: view:crm.meeting:0
+#: field:crm.meeting.generic_wizard,user_id:0
+#: view:crm.opportunity:0
+#: field:crm.opportunity.assign_wizard,user_id:0
+#: field:crm.phonecall.assign_wizard,user_id:0
 msgid "Responsible"
 msgstr "负责人"
 
@@ -2827,8 +2958,6 @@ msgid "Jobs Hiring Process"
 msgstr "招聘流程"
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_categ0-act
-#: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.next_id_52
 msgid "All Cases"
 msgstr "所有业务个案"
@@ -2948,6 +3077,7 @@ msgstr "如果有效字段为真, 它允许你隐藏这业务个案而不删除�
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/wizard_cal_subscribe.py:0
 #, python-format
 msgid "Error!"
 msgstr "错误!"
@@ -3036,6 +3166,17 @@ msgstr "%(case_subject)s = 业务个案主题"
 #: field:crm.case,section_id:0
 #: field:crm.case.log,section_id:0
 #: field:crm.case.rule,trg_section_id:0
+#: field:crm.claim.assign_wizard,section_id:0
+#: field:crm.helpdesk.assign_wizard,section_id:0
+#: wizard_field:crm.job.reschedule_phone_call,init,section_id:0
+#: field:crm.meeting.generic_wizard,section_id:0
+#: field:crm.opportunity.assign_wizard,section_id:0
+#: wizard_field:crm.opportunity.reschedule_phone_call,init,section_id:0
+#: field:crm.phonecall.assign_wizard,section_id:0
+#: field:report.crm.case.section.categ.categ2,section_id:0
+#: field:report.crm.case.section.categ.stage,section_id:0
+#: field:report.crm.case.section.categ2,section_id:0
+#: field:report.crm.case.section.stage,section_id:0
 msgid "Section"
 msgstr "划分的业务个案"
 
@@ -3066,7 +3207,10 @@ msgid "Your action"
 msgstr "你的动作"
 
 #. module: crm
+#: model:crm.case.category2,name:crm.category_lead3
 #: field:crm.case.history,email:0
+#: field:crm.email.add.cc,email:0
+#: view:crm.job:0
 msgid "Email"
 msgstr "Email"
 
@@ -3123,6 +3267,16 @@ msgstr "报表"
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#: view:crm.claim:0
+#: view:crm.fundraising:0
+#: view:crm.job:0
+#: view:crm.lead:0
+#: selection:crm.new.send.mail,init,state:0
+#: view:crm.opportunity:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.stage,state:0
 #, python-format
 msgid "Pending"
 msgstr "悬而未决"
@@ -3265,23 +3419,9 @@ msgid "All Funds"
 msgstr "所有款项"
 
 #. module: crm
-#: selection:crm.case.section.menu,design_menu,menu10_option:0
-#: selection:crm.case.section.menu,design_menu,menu11_option:0
-#: selection:crm.case.section.menu,design_menu,menu12_option:0
-#: selection:crm.case.section.menu,design_menu,menu13_option:0
-#: selection:crm.case.section.menu,design_menu,menu14_option:0
-#: selection:crm.case.section.menu,design_menu,menu15_option:0
-#: selection:crm.case.section.menu,design_menu,menu16_option:0
-#: selection:crm.case.section.menu,design_menu,menu17_option:0
-#: selection:crm.case.section.menu,design_menu,menu1_option:0
-#: selection:crm.case.section.menu,design_menu,menu2_option:0
-#: selection:crm.case.section.menu,design_menu,menu3_option:0
-#: selection:crm.case.section.menu,design_menu,menu4_option:0
-#: selection:crm.case.section.menu,design_menu,menu5_option:0
-#: selection:crm.case.section.menu,design_menu,menu6_option:0
-#: selection:crm.case.section.menu,design_menu,menu7_option:0
-#: selection:crm.case.section.menu,design_menu,menu8_option:0
-#: selection:crm.case.section.menu,design_menu,menu9_option:0
+#: field:crm.case.section,calendar:0
+#: view:crm.meeting:0
+#: model:ir.ui.menu,name:crm.menu_crm_case_category_act_meetings
 msgid "Calendar"
 msgstr "日程表"
 
@@ -3327,7 +3467,6 @@ msgstr "致电"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
-#: view:crm.case:0
 #, python-format
 msgid "Historize"
 msgstr "日志"
@@ -3355,6 +3494,11 @@ msgstr "成功概率"
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#: view:crm.meeting:0
+#: selection:report.crm.case.section.categ.categ2,state:0
+#: selection:report.crm.case.section.categ.stage,state:0
+#: selection:report.crm.case.section.categ2,state:0
+#: selection:report.crm.case.section.stage,state:0
 #, python-format
 msgid "Draft"
 msgstr "草稿"
@@ -3384,6 +3528,8 @@ msgstr "普通"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
+#: code:addons/crm/wizard/wizard_crm_new_send_email.py:0
+#: code:addons/crm/wizard/wizard_crm_send_email.py:0
 #, python-format
 msgid "You must put a Partner eMail to use this action!"
 msgstr "此动作需要业务伙伴的电子邮件地址!"
@@ -3524,6 +3670,8 @@ msgstr "业务个案阶段"
 
 #. module: crm
 #: view:crm.case:0
+#: view:crm.fundraising:0
+#: view:crm.opportunity:0
 msgid "Estimates"
 msgstr "估计"
 
@@ -3535,10 +3683,6 @@ msgstr "负责用户"
 #. module: crm
 #: code:addons/crm/crm.py:0
 #: view:crm.case:0
-#: selection:crm.case,state:0
-#: selection:crm.case.rule,act_state:0
-#: selection:crm.case.rule,trg_state_from:0
-#: selection:crm.case.rule,trg_state_to:0
 #, python-format
 msgid "Close"
 msgstr "关闭"
@@ -3596,9 +3740,14 @@ msgid "% = The '%' Character"
 msgstr ""
 
 #. module: crm
+#: view:crm.case:0
 #: field:crm.case,name:0
 #: field:crm.case.history,description:0
 #: field:crm.case.history,note:0
+#: view:crm.job:0
+#: view:crm.meeting:0
+#: view:crm.opportunity:0
+#: view:crm.phonecall:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "说明"
@@ -3647,6 +3796,14 @@ msgstr "导入(_I)"
 #. module: crm
 #: code:addons/crm/crm.py:0
 #: field:crm.case.log,case_id:0
+#: field:crm.claim,inherit_case_id:0
+#: field:crm.fundraising,inherit_case_id:0
+#: field:crm.helpdesk,inherit_case_id:0
+#: field:crm.job,inherit_case_id:0
+#: field:crm.lead,inherit_case_id:0
+#: field:crm.meeting,inherit_case_id:0
+#: field:crm.opportunity,inherit_case_id:0
+#: field:crm.phonecall,inherit_case_id:0
 #: model:ir.model,name:crm.model_crm_case
 #: model:res.request.link,name:crm.req_link_case
 #, python-format
@@ -3768,6 +3925,7 @@ msgstr "输出ICS文件"
 #. module: crm
 #: field:crm.case.rule,sequence:0
 #: field:crm.case.section,sequence:0
+#: field:crm.case.stage,sequence:0
 msgid "Sequence"
 msgstr "序列"
 

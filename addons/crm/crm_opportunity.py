@@ -64,7 +64,7 @@ class crm_opportunity(osv.osv):
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
         stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 100)]})
         if not stage_id:
-            raise osv.except_osv(_('Warning !'), _('There is no stage for won oppportunities defined for this Sale Team.'))
+            raise osv.except_osv(_('Warning !'), _('There is no stage for won opportunities defined for this Sale Team.'))
         value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
         value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
 
@@ -87,7 +87,7 @@ class crm_opportunity(osv.osv):
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
         stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
         if not stage_id:
-            raise osv.except_osv(_('Warning !'), _('There is no stage for lost oppportunities defined for this Sale Team.'))
+            raise osv.except_osv(_('Warning !'), _('There is no stage for lost opportunities defined for this Sale Team.'))
         value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
         value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
 

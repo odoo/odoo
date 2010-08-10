@@ -20,10 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import netsvc
-import pooler
 import time
 
 class stock_partial_move(osv.osv_memory):
@@ -189,8 +186,7 @@ class stock_partial_move(osv.osv_memory):
                 res['move%s_product_qty'%(m.id)] = m.product_qty
             if 'move%s_product_uom'%(m.id) in fields:
                 res['move%s_product_uom'%(m.id)] = m.product_uom.id
-
-            if (m.picking_id.type == 'out') and (m.product_id.cost_method == 'average'):
+            if (m.picking_id.type == 'out') and (m.product_id.cost_method == 'average') and 'sale_id' in m.picking_id._columns.keys():
                 price = 0
                 if hasattr(m, 'sale_line_id') and m.sale_line_id:
                     price = m.sale_line_id.price_unit
@@ -204,7 +200,7 @@ class stock_partial_move(osv.osv_memory):
                 if 'move%s_product_currency'%(m.id) in fields:
                     res['move%s_product_currency'%(m.id)] = currency
 
-            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
+            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average') and 'purchase_id' in m.picking_id._columns.keys():
                 price = 0
                 if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
                     price = m.purchase_line_id.price_unit
@@ -230,11 +226,6 @@ class stock_partial_move(osv.osv_memory):
         """
 
         rec_id = context and context.get('active_id', False)
-        #tracking_lot = context.get('tracking_lot', False)
-        #if tracking_lot:
-        #    tracking = self.pool.get('stock.tracking')
-        #    tracking_lot = tracking.get_create_tracking_lot(cr, uid,[rec_id], tracking_lot)
-        #    context ['tracking_lot'] = tracking_lot
         move_obj = self.pool.get('stock.move')
         move_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context)

@@ -78,7 +78,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="open_board_associations_manager">
-            <field name="name">Association Dashboard</field>
+            <field name="name">Event Dashboard</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -86,7 +86,7 @@
         </record>
         <menuitem id="board_associations" name="Dashboard" parent="base.menu_report_association" sequence="0"/>
         <menuitem
-            name="Associations" parent="board_associations"
+            name="Events" parent="board_associations"
             action="open_board_associations_manager"
             sequence="1"
             id="menu_board_associations_manager"
