@@ -235,7 +235,7 @@ class CalDAV(object):
         exdates = []
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
-                self.ical_set(cal_data.name.lower(), {'name': cal_data.params.get('CN') and cal_data.params.get('CN')[0]}, 'value')
+                self.ical_set(cal_data.name.lower(), cal_data.params.get('CN') and cal_data.params.get('CN')[0], 'value')
                 continue
             if cal_data.name.lower() == 'attendee':
                 ctx = context.copy()
@@ -334,12 +334,10 @@ class CalDAV(object):
                                 exdates_updated.append(ex_date)
                             exfield.value = map(parser.parse, exdates_updated)
                     elif field == 'organizer' and data[map_field]:
+                        organizer = data[map_field]
                         event_org = vevent.add('organizer')
-                        organizer_id = data[map_field][0]
-                        user_obj = self.pool.get('res.users')
-                        organizer = user_obj.browse(cr, uid, organizer_id, context=context)
-                        event_org.params['CN'] = [organizer.name]
-                        event_org.value = 'MAILTO:' + (organizer.user_email or organizer.name)
+                        event_org.params['CN'] = [organizer]
+                        event_org.value = 'MAILTO:' + (organizer)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             if field in ('exdate'):

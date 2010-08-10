@@ -378,7 +378,6 @@ property or property parameter."),
      }
     _defaults = {
         'state': 'needs-action',
-        'user_id': lambda self, cr, uid, ctx: uid,
         'role': 'req-participant',
         'rsvp':  True,
         'cutype': 'individual',
@@ -419,7 +418,10 @@ property or property parameter."),
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
-        if event_obj.user_id or event_obj.organizer_id:
+        if event_obj.organizer:
+            event_org.params['CN'] = [event_obj.organizer]
+            event_org.value = 'MAILTO:' + (event_obj.organizer)
+        elif event_obj.user_id or event_obj.organizer_id:
             event_org = event.add('organizer')
             organizer = event_obj.organizer_id
             if not organizer:
@@ -1111,6 +1113,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, \
                          string='Timezone', store=True),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
+        'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
         'freq': fields.selection([('None', 'No Repeat'), \
                                 ('secondly', 'Secondly'), \
@@ -1147,6 +1150,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'active': fields.boolean('Active', help="If the active field is set to \
 true, it will allow you to hide the event alarm information without removing it.")
     }
+    def default_organizer(self, cr, uid, context=None):
+        user_pool = self.pool.get('res.users')
+        user = user_pool.browse(cr, uid, uid, context=context)
+        return user.user_email or user.name
+
     _defaults = {
             'state': 'tentative',
             'class': 'public',
@@ -1156,7 +1164,7 @@ true, it will allow you to hide the event alarm information without removing it.
             'interval': 1,
             'active': 1,
             'user_id': lambda self, cr, uid, ctx: uid,
-            'organizer_id': lambda self, cr, uid, ctx: uid,
+            'organizer': default_organizer,
     }
 
     def open_event(self, cr, uid, ids, context=None):
