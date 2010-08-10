@@ -82,9 +82,9 @@ class configmanager(object):
             'login_message': False,
             'list_db' : True,
             'timezone' : False, # to override the default TZ
-            'test-file' : False,
-            'test-disable' : False,
-            'test-commit' : False,
+            'test_file' : False,
+            'test_disable' : False,
+            'test_commit' : False,
             'static_http_enable': False,
             'static_http_document_root': None,
             'static_http_url_prefix': None,
@@ -155,10 +155,10 @@ class configmanager(object):
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
-        group.add_option("--test-file", dest="test-file", help="Launch a YML test file.")
-        group.add_option("--test-disable", action="store_true", dest="test-disable",
+        group.add_option("--test-file", dest="test_file", help="Launch a YML test file.")
+        group.add_option("--test-disable", action="store_true", dest="test_disable",
                          default=False, help="Disable loading test files.")
-        group.add_option("--test-commit", action="store_true", dest="test-commit",
+        group.add_option("--test-commit", action="store_true", dest="test_commit",
                          default=False, help="Commit database changes performed by tests.")
         parser.add_option_group(group)
 
@@ -283,7 +283,7 @@ class configmanager(object):
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
                 'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
                 'list_db', 'server_actions_allow_code', 'xmlrpcs', 
-                'test-file', 'test-disable', 'test-commit'
+                'test_file', 'test_disable', 'test_commit'
                 ]
 
         for arg in keys:
