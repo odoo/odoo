@@ -40,48 +40,40 @@ class pos_open_statement(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         statement_obj = self.pool.get('account.bank.statement')
-        singer_obj = self.pool.get('singer.statement')
         sequence_obj = self.pool.get('ir.sequence')
         journal_obj = self.pool.get('account.journal')
-        user_obj="""select DISTINCT journal_id from pos_journal_users where user_id=%d"""%(uid)
-        cr.execute(user_obj)
-        user_journals1= cr.fetchall()
-        lst1=map(lambda x1:x1[0],user_journals1)
-        journal_ids = journal_obj.browse(cr, uid, lst1)
+        cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
+        j_ids = map(lambda x1: x1[0], cr.fetchall())
+        cr.execute(""" select id from account_journal
+                            where auto_cash='True' and type='cash'
+                            and id in (%s)""" %(','.join(map(lambda x: "'" + str(x) + "'", j_ids))))
+        journal_ids = map(lambda x1: x1[0], cr.fetchall())
 
-        for journal in journal_ids:
+        for journal in journal_obj.browse(cr, uid, journal_ids):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
-            sql = """ select id from account_journal
-                            where auto_cash = 'True'
-                            and company_id =%d and id =%d"""%(company_id,journal.id)
-            cr.execute(sql)
-            user_journals= cr.fetchall()
-            lst=map(lambda x1:x1[0],user_journals)
-            journal_ids1 = journal_obj.browse(cr, uid, lst)
-
-            for journal1 in journal_ids1:
-                ids1 = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
-                if len(ids):
-                    raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s". \n Please close the cashbox related to. ' %(journal.name)))
-                sql = """ Select id from account_bank_statement
-                                        where journal_id =%d
-                                        and company_id =%d
-                                        order by id desc limit 1""" %(journal.id, company_id)
-                cr.execute(sql)
-                st_id = cr.fetchone()
-                number = ''
-                if journal.sequence_id:
-                    number = sequence_obj.get_id(cr, uid, journal.id)
-                else:
-                    number = sequence_obj.get(cr, uid,
-                                    'account.bank.statement')
-                statement_id=statement_obj.create(cr,uid,{'journal_id':journal.id,
-                                                          'company_id':company_id,
-                                                          'user_id':uid,
-                                                          'state':'open',
-                                                          'name':number
-                                                          })
-                statement_obj.button_open(cr,uid,[statement_id],context)
+            if len(ids):
+                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s". \n Please close the cashbox related to. ' %(journal.name)))
+            
+#            cr.execute(""" Select id from account_bank_statement
+#                                    where journal_id =%d
+#                                    and company_id =%d
+#                                    order by id desc limit 1""" %(journal.id, company_id))
+#            st_id = cr.fetchone()
+            
+            number = ''
+            if journal.sequence_id:
+                number = sequence_obj.get_id(cr, uid, journal.sequence_id.id)
+            else:
+                number = sequence_obj.get(cr, uid, 'account.bank.statement')
+            
+            statement_id = statement_obj.create(cr, uid, {'journal_id': journal.id,
+                                                          'company_id': company_id,
+                                                          'user_id': uid,
+                                                          'state': 'open',
+                                                          'name': number,
+                                                          'starting_details_ids': statement_obj._get_cash_close_box_lines(cr, uid, []),
+                                                      })
+            statement_obj.button_open(cr, uid, [statement_id], context)
 
     #            period = statement_obj._get_period(cr, uid, context) or None
     #            cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
