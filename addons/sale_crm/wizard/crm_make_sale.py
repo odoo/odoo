@@ -166,6 +166,13 @@ class crm_make_sale(osv.osv_memory):
                     'res_id': new_ids
                     }
             return value
+        
+    def _get_shop_id(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        cmpny_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        shop = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', cmpny_id)])
+        return shop and shop[0] or False
 
     _columns = {
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
@@ -175,10 +182,11 @@ class crm_make_sale(osv.osv_memory):
         'close': fields.boolean('Close Case', help='Check this to close the case after having created the sale order.'),
     }
     _defaults = {
+         'shop_id': _get_shop_id,
          'partner_id': _selectPartner,
          'close': 1
     }
-
+    
 crm_make_sale()
 
 class sale_order_make_line(osv.osv_memory):
