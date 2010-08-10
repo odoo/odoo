@@ -926,6 +926,7 @@ function module_install()
 var listSearchContactHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+        var sendername = getSenderEmail();
 		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
 		var count = arrIdList.Count();
 		for (i = 0; i < count; i++) {
@@ -968,8 +969,8 @@ var listSearchContactHandler = {
                  setMobilenumber(strlSearchResultValue);
                  var t = getMobilenumber();}
 
-            if(strlSearchResult=="email"){
-                 setSenderEmail(strlSearchResultValue);
+            if(strlSearchResult=="email" && strlSearchResultValue!=''){
+                 setSenderEmail(sendername);
                  var t = getSenderEmail();}
     
             if(strlSearchResult=="res_id"){
@@ -989,13 +990,18 @@ var listSearchContactHandler = {
 var listSearchContactdetailHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+        var sendername = getSenderEmail();
 		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
 		var count = arrIdList.Count();
 		for (i = 0; i < count; i++) {
 			var strlResult = arrIdList.QueryElementAt(i, Components.interfaces.nsISupportsArray);
             var strlSearchResult = strlResult.QueryElementAt(0, Components.interfaces.nsISupportsCString);
             var strlSearchResultValue = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
-
+            if(strlSearchResult=="email" && strlSearchResultValue=='')
+            {
+                alert("Partner is not Available")
+                document.getElementById("txtemail").value = sendername;
+            } 
             if(strlSearchResult=="partner_name"){
                  document.getElementById("txtname").value =strlSearchResultValue;}
 
@@ -1021,7 +1027,7 @@ var listSearchContactdetailHandler = {
             if(strlSearchResult=="mobile"){
                  document.getElementById("txtmobile").value =strlSearchResultValue;}
 
-            if(strlSearchResult=="email"){
+            if(strlSearchResult=="email"&& strlSearchResultValue!=''){
                 document.getElementById("txtemail").value =strlSearchResultValue;}
 
 		}
