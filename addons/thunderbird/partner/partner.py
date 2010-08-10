@@ -93,8 +93,8 @@ class thunderbird_partner(osv.osv_memory):
 
         if not (dictcreate.get('partner_id')):
             dictcreate.update({'partner_id': False})
-        create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
-        return create_id
+            create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
+            return create_id
 
         if res_id:
             address_obj = self.pool.get('res.partner.address')
