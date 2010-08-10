@@ -42,10 +42,7 @@ class pos_close_statement(osv.osv_memory):
         journal_obj = self.pool.get('account.journal')
         cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
         j_ids = map(lambda x1: x1[0], cr.fetchall())
-        cr.execute(""" select id from account_journal
-                            where auto_cash='True' and type='cash'
-                            and id in (%s)""" %(','.join(map(lambda x: "'" + str(x) + "'", j_ids))))
-        journal_ids = map(lambda x1: x1[0], cr.fetchall())
+        journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)])
 
         for journal in journal_obj.browse(cr, uid, journal_ids):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
@@ -55,10 +52,6 @@ class pos_close_statement(osv.osv_memory):
                 list_statement.append(ids[0])
                 if not journal.check_dtls:
                     statement_obj.button_confirm_cash(cr, uid, ids, context)
-    #        if not list_statement:
-    #            return {}
-    #        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
-    #        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
 
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
