@@ -707,33 +707,32 @@ class related(function):
         return [(self._arg[0], 'in', sarg)]
 
     def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
-        if values and field_name:
-            self._field_get2(cr, uid, obj, context)
-            if type(ids) != type([]):
-                ids=[ids]
-            objlst = obj.browse(cr, uid, ids)
-            for data in objlst:
-                t_id = None
-                t_data = data
-                for i in range(len(self.arg)):
-                    field_detail = self._relations[i]
-                    if not t_data[self.arg[i]]:
-                        if self._type not in ('one2many', 'many2many'):
-                            t_id = t_data['id']
-                        t_data = False
-                        break
-                    if field_detail['type'] in ('one2many', 'many2many'):
-                        if self._type != "many2one":
-                            t_id = t_data.id
-                            t_data = t_data[self.arg[i]][0]
-                        else:
-                            t_data = False
-                            break
-                    else:
+        self._field_get2(cr, uid, obj, context)
+        if type(ids) != type([]):
+            ids=[ids]
+        objlst = obj.browse(cr, uid, ids)
+        for data in objlst:
+            t_id = data.id
+            t_data = data
+            for i in range(len(self.arg)):
+                if not t_data: break
+                field_detail = self._relations[i]
+                if not t_data[self.arg[i]]:
+                    if self._type not in ('one2many', 'many2many'):
                         t_id = t_data['id']
-                        t_data = t_data[self.arg[i]]
-                if t_id and t_data:
-                    obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
+                    t_data = False
+                elif field_detail['type'] in ('one2many', 'many2many'):
+                    if self._type != "many2one":
+                        t_id = t_data.id
+                        t_data = t_data[self.arg[i]][0]
+                    else:
+                        t_data = False
+                else:
+                    t_id = t_data['id']
+                    t_data = t_data[self.arg[i]]
+            else:
+                model = obj.pool.get(self._relations[-1]['object'])
+                model.write(cr, uid, [t_id], {args[-1]: values}, context=context)
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
