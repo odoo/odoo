@@ -124,6 +124,7 @@ import stat
 from tarfile import filemode
 
 try:
+    # TODO: remove, no Unix credentials
     import pwd
     import grp
 except ImportError:
@@ -194,6 +195,7 @@ proto_cmds = {
 
 # hack around format_exc function of traceback module to grant
 # backward compatibility with python < 2.4
+# TODO: remove, we're not 2.4 compatible anyway
 if not hasattr(traceback, 'format_exc'):
     try:
         import cStringIO as StringIO
@@ -1438,7 +1440,7 @@ class FTPHandler(asynchat.async_chat):
         """
         try:
             asynchat.async_chat.__init__(self, conn=conn) # python2.5
-        except TypeError, e:
+        except TypeError:
             asynchat.async_chat.__init__(self, sock=conn) # python2.6
         self.server = server
         self.remote_ip, self.remote_port = self.socket.getpeername()[:2]
@@ -1866,7 +1868,7 @@ class FTPHandler(asynchat.async_chat):
             self.respond('%s %s.' % (str(ret_code), why))
         
             raise FTPExceptionSent(why)
-        except Exception, e:
+        except Exception, err:
             cmdname = function.__name__
             try:
                 logerror(traceback.format_exc())
@@ -2003,7 +2005,7 @@ class FTPHandler(asynchat.async_chat):
                     assert len(octs) == 4
                     for x in octs:
                         assert 0 <= x <= 255
-                except (AssertionError, ValueError, OverflowError), err:
+                except (AssertionError, ValueError, OverflowError):
                     self.respond("501 Invalid EPRT format.")
                 else:
                     self._make_eport(ip, port)
