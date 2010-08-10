@@ -1199,28 +1199,6 @@ true, it will allow you to hide the event alarm information without removing it.
 
         return value
 
-    def modify_this(self, cr, uid, event_id, defaults, real_date, context=None, *args):
-        """Modifies only one event record out of virtual recurrent events
-        and creates new event as a specific instance of a Recurring Event",
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param event_id: Id of Recurring Event
-        @param real_date: Date of event recurrence that is being modified
-        @param context: A standard dictionary for contextual values
-        @param *args: Get Tupple Value
-        """
-
-        event_id = base_calendar_id2real_id(event_id)
-        defaults.update({
-                        'recurrent_uid': base_calendar_id2real_id(event_id),
-                        'recurrent_id': real_date,
-                        'rrule_type': 'none',
-                        'rrule': ''
-                        })
-        new_id = self.copy(cr, uid, event_id, default=defaults, context=context)
-        return new_id
-
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
         Modifies the recurring event
@@ -1230,7 +1208,6 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: True
         """
-
         for event_id in event_ids:
             event_id = base_calendar_id2real_id(event_id)
 
@@ -1385,7 +1362,6 @@ true, it will allow you to hide the event alarm information without removing it.
 
         return rrule_string
 
-
     def search(self, cr, uid, args, offset=0, limit=100, order=None,
             context=None, count=False):
         """
@@ -1419,8 +1395,6 @@ true, it will allow you to hide the event alarm information without removing it.
 
         return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
 
-
-
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         """
         Overrides orm write method.
@@ -1443,16 +1417,19 @@ true, it will allow you to hide the event alarm information without removing it.
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
+                real_event_id = base_calendar_id2real_id(event_id)
                 if data.get('rrule'):
-                    real_date = data.get('date')
-                    data.update(vals)
-                    new_id = self.modify_this(cr, uid, event_id, data, \
-                                                real_date, context)
+                    vals.update({
+                        'recurrent_uid': real_event_id,
+                        'recurrent_id': data.get('date'),
+                        'rrule_type': 'none',
+                        'rrule': ''
+                        })
+                    new_id = self.copy(cr, uid, real_event_id, default=vals, context=context)
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
-            event_id = base_calendar_id2real_id(event_id)
-            if not event_id in new_ids:
-                new_ids.append(event_id)
+            if not real_event_id in new_ids:
+                new_ids.append(real_event_id)
 
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
