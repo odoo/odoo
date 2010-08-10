@@ -191,10 +191,11 @@ class osv_memory(orm.orm_memory):
     #       put objects in the pool var
     #
     def createInstance(cls, pool, module, cr):
-        name = hasattr(cls, '_name') and cls._name or cls._inherit
-        parent_name = hasattr(cls, '_inherit') and cls._inherit
+        parent_name = getattr(cls, '_inherit', None)
+        name = getattr(cls, '_name', parent_name)
         if parent_name:
-            raise 'Inherit not supported in osv_memory object !'
+            raise NotImplementedError('Inherit not supported in osv_memory object (%s) !' % (parent_name,))
+
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
