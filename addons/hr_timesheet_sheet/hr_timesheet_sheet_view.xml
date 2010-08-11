@@ -13,9 +13,9 @@
                     <field name="date_to"/>
                     <field name="name"/>
                     <field name="department_id"/>
-                    <field name="total_attendance" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="total_attendance" groups="base.group_hr_attendance"/>
                     <field name="total_timesheet"/>
-                    <field name="total_difference" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="total_difference" groups="base.group_hr_attendance"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -116,19 +116,19 @@
                                 <button icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
                             </group>
 
-                            <field colspan="3" context="name=date_current,user_id=user_id" height="100" name="attendances_ids" nolabel="1" groups="hr_attendance.group_hr_attendance">
+                            <field colspan="3" context="name=date_current,user_id=user_id" height="100" name="attendances_ids" nolabel="1" groups="base.group_hr_attendance">
                                 <tree string="Attendances" editable="bottom">
                                     <field name="name"/>
                                     <field name="action"/>
                                     <field invisible="1" name="employee_id"/>
                                 </tree>
                             </field>
-                            <group col="1" colspan="1" groups="hr_attendance.group_hr_attendance">
+                            <group col="1" colspan="1" groups="base.group_hr_attendance">
                                 <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
                             </group>
-                            <field name="state_attendance" groups="hr_attendance.group_hr_attendance"/>
-                            <field name="total_attendance_day" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
+                            <field name="state_attendance" groups="base.group_hr_attendance"/>
+                            <field name="total_attendance_day" widget="float_time" groups="base.group_hr_attendance"/>
                             <field colspan="4" context="date=date_current,user_id=user_id" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet">
                                     <field invisible="1" name="date"/>
@@ -137,7 +137,7 @@
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
                                     <field name="to_invoice"/>
                                     <field invisible="1" name="journal_id"/>
-                                    <field invisible="1" name="product_id"/>
+                                    <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                                     <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                                     <field invisible="1" name="amount"/>
                                     <field invisible="1" name="general_account_id"/>
@@ -150,7 +150,7 @@
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
                                     <field name="to_invoice"/>
                                     <field name="journal_id"/>
-                                    <field name="product_id"/>
+                                    <field name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
@@ -164,9 +164,9 @@
                             <field colspan="4" name="period_ids" nolabel="1">
                                 <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
-                                    <field name="total_attendance" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
+                                    <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
                                     <field name="total_timesheet" widget="float_time"/>
-                                    <field name="total_difference" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
+                                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                                 </tree>
                             </field>
                             <group colspan="4" col="6">

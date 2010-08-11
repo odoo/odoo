@@ -24,7 +24,7 @@ from osv import fields
 
 class auction_transfer_unsold_object(osv.osv):
         '''
-        Open ERP Model
+        OpenERP Model
         '''
         _name = 'auction.transfer.unsold.object'
         _description = 'To transfer unsold objects'

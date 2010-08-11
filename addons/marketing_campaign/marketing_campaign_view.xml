@@ -84,10 +84,13 @@
                <filter icon="terp-gtk-jump-to-rtl" string="Manual Mode" domain="[('mode','=','manual')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
-               <field name="object_id" select="1"/>
+               <field name="object_id" select="1" string="Resource"/>
                <newline/>
                <group expand="0" string="Group By..." colspan="10" col="12">
-                   <filter string="Object" name="Object" icon="terp-accessories-archiver" context="{'group_by':'object_id'}" />
+                   <filter string="Resource" name="Object" icon="terp-accessories-archiver" context="{'group_by':'object_id'}" />
+                   <separator orientation="vertical"/>
+                   <filter string="Mode" name="Mode" icon="terp-gtk-jump-to-rtl" context="{'group_by':'mode'}" />
+                   <separator orientation="vertical"/>
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
                </group>
            </search>
@@ -171,21 +174,23 @@
        <field name="type">search</field>
        <field name="arch" type="xml">
            <search string="Segments">
-               <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                <filter icon="terp-check" string="Running" name="running" domain="[('state','=','running')]"/>
+               <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                <separator orientation="vertical"/>
-               <filter icon="terp-go-month" string="Create Date" domain="[('sync_mode','=','create_date')]"/>
-               <filter icon="terp-go-month" string="Write Date" domain="[('sync_mode','=','write_date')]"/>
+               <filter icon="terp-go-month" string="Create After Sync" domain="[('sync_mode','=','create_date')]"/>
+               <filter icon="terp-go-month" string="Modified after Sync" domain="[('sync_mode','=','write_date')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
-               <field name="object_id" select="1"/>
                <field name="campaign_id" select="1"/>
+               <field name="object_id" select="1"/>
                <field name="date_run" select="1"/>
                <newline/>
                <group expand="0" string="Group By..." colspan="10" col="12">
                    <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
-                   <filter string="Date Run" name="Date Run" icon="terp-go-month" context="{'group_by':'date_run'}" />
+                   <separator orientation="vertical"/>
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
+                   <separator orientation="vertical"/>
+                   <filter string="Run Date" name="Date Run" icon="terp-go-month" context="{'group_by':'date_run'}" />
                </group>
            </search>
        </field>
@@ -371,8 +376,9 @@
                    <filter string="Segment" name="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}" />
                    <filter string="Activity" name="Activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}" />
                    <separator orientation="vertical"/>
-                   <filter string="Date" name="Date" icon="terp-go-month" context="{'group_by':'date'}" />
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
+                   <separator orientation="vertical"/>
+                   <filter string="Execution Date" name="Date" icon="terp-go-month" context="{'group_by':'date'}" />
                </group>
            </search>
        </field>

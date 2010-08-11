@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-       <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3"/>
+       <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3" groups="base.group_system,group_purchase_manager,group_purchase_user,base.group_extended"/>
        <menuitem id="menu_procurement_management" name="Purchase Management"
             parent="base.menu_purchase_root" sequence="1" />
 
@@ -303,14 +303,14 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                 		 <group>
-                        <field name='order_id'/>
+                        <field name="order_id"/>
                         <field name="product_id"/>
                         </group>
                         <newline/>
                         <group expand="0" string="Group By...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                         <filter string="Product" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by' : 'product_id'}" />
-                        <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[('group_by' : 'order_id')]"/>
+                        <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
                         </group>
                </search>
             </field>

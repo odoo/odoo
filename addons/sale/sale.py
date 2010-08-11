@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 import netsvc
@@ -630,7 +630,8 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 proc_id = False
                 date_planned = datetime.now() + relativedelta(days=line.delay or 0.0)
-                date_planned = (date_planned - relativedelta(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+                date_planned = (date_planned - timedelta(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+
                 if line.state == 'done':
                     continue
                 move_id = False
@@ -1164,7 +1165,7 @@ class sale_config_picking_policy(osv.osv_memory):
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
         ], 'Steps To Deliver a Sale Order', required=True,
-           help="By default, Open ERP is able to manage complex routing and paths "\
+           help="By default, OpenERP is able to manage complex routing and paths "\
            "of products in your warehouse and partner locations. This will configure "\
            "the most common and simple methods to deliver products to the customer "\
            "in one or two operations by the worker.")

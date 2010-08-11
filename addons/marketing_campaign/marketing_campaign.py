@@ -85,7 +85,7 @@ class marketing_campaign(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'object_id': fields.many2one('ir.model', 'Model', required=True,
+        'object_id': fields.many2one('ir.model', 'Resource', required=True,
                                       help="Choose the model on which you want \
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
@@ -459,10 +459,10 @@ class marketing_campaign_transition(osv.osv):
         'name': fields.function(_get_name, method=True, string='Name',
                                 type='char', size=128),
         'activity_from_id': fields.many2one('marketing.campaign.activity',
-                                            'Source Activity', select=1,
+                                            'Previous Activity', select=1,
                                             required=True),
         'activity_to_id': fields.many2one('marketing.campaign.activity',
-                                          'Destination Activity',
+                                          'Next Activity',
                                           required=True),
         'interval_nbr': fields.integer('Interval Value', required=True),
         'interval_type': fields.selection(_interval_units, 'Interval Unit',

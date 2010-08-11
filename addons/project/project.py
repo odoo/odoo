@@ -76,11 +76,11 @@ class project(osv.osv):
 
     def get_all_child_projects(self, cr, uid, ids, context=None):
         # Calculate child project for Given project id => For progress rate + planned time + Time spent
-        cr.execute('''select prpc.id as id from account_analytic_account as p
-                    join account_analytic_account as c  on p.id = c.parent_id
-                    join project_project as prp on prp.analytic_account_id = p.id
-                    join project_project as prpc on prpc.analytic_account_id = c.id
-                    where prp.id in %s''',(tuple(ids),))
+        cr.execute('''SELECT prpc.id AS id from account_analytic_account AS p
+                    JOIN account_analytic_account AS c ON p.id = c.parent_id
+                    JOIN project_project AS prp ON prp.analytic_account_id = p.id
+                    JOIN project_project AS prpc ON prpc.analytic_account_id = c.id
+                    WHERE prp.id IN %s''',(tuple(ids),))
 
         child_ids = cr.fetchall()
         if child_ids:
@@ -247,21 +247,6 @@ class project(osv.osv):
             default['name'] = proj.name+_(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
 
-#        task_ids = task_obj.search(cr, uid, [('project_id','=', res), ('active','=',True)])
-#        tasks = task_obj.browse(cr, uid, task_ids)
-#        for task in tasks:
-#            date_deadline = None
-#            if task.date_start:
-#                ds = date(*time.strptime(task.date_start,'%Y-%m-%d %H:%M:%S')[:3])
-#                if task.date_deadline:
-#                    dd = date(*time.strptime(task.date_deadline,'%Y-%m-%d')[:3])
-#                    diff = dd-ds
-#                    date_deadline = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
-#            task_obj.write(cr, uid, task.id, {'date_start': False,
-#                                              'date_end': False,
-#                                              'date_deadline':date_deadline,
-#                                              })
-
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -386,8 +371,9 @@ class task(osv.osv):
 
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
-        default['work_ids'] = []
-        default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
+        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
+        if not default.get('remaining_hours', False):
+            default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
         return super(task, self).copy_data(cr, uid, id, default, context)
 
@@ -680,8 +666,8 @@ class project_work(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         context = kwargs.get('context', {})
         project_obj = self.pool.get('project.project')
+        uom_obj = self.pool.get('product.uom')
         user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-
         if user_uom == default_uom:
             for work in self.browse(cr, uid, ids, context):
                 cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
@@ -689,7 +675,7 @@ class project_work(osv.osv):
             for work in self.browse(cr, uid, ids, context):
                 duration =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
                 cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (duration, work.task_id.id))
-        return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
+        return super(project_work, self).unlink(cr, uid, ids, *args, **kwargs)
 
 project_work()
 
