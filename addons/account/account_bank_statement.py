@@ -190,7 +190,11 @@ class account_bank_statement(osv.osv):
             'value':res,
             'context':context,
         }
-    
+
+    def button_dummy(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {}, context)
+        return True
+        
     def button_confirm_bank(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
