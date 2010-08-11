@@ -1253,7 +1253,7 @@ true, it will allow you to hide the event alarm information without removing it.
         result = []
         recur_dict = []
         if ids and (base_start_date or base_until_date):
-            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, \
+            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, m.duration, \
                             m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
                             " m where m.id in ("\
                             + ','.join(map(lambda x: str(x), ids))+")")
@@ -1280,6 +1280,10 @@ true, it will allow you to hide the event alarm information without removing it.
                         count += 1
                     else:
                         ex_id = real_id2base_calendar_id(data['recurrent_uid'], data['recurrent_id'])
+                        ls = base_calendar_id2real_id(ex_id, with_date=data and data.get('duration', 0) or 0)
+                        if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
+                            if ls[1] == data['recurrent_id']:
+                                result.append(idval)
                         recur_dict.append(ex_id)
                 else:
                     exdate = data['exdate'] and data['exdate'].split(',') or []
