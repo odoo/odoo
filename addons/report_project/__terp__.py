@@ -22,9 +22,9 @@
 
 
 {
-    'name': 'Sales Management - Reporting',
+    'name': 'Project Management - Reporting',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Generic Modules/Projects & Services',
     'description': """A module that adds some reports on projects.
     Closed Tasks (By User and By Project), Finished Task (By User and By Project)""",
     'author': 'Tiny',
