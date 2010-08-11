@@ -9,19 +9,22 @@
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/static.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
-<groupbox id="gpData">
+<tabpanel id="contact">
+  <groupbox id="contact">
     <hbox>
-		<description>&selectpartner.value;</description>
-		<spacer width="60"/>
-		<textbox id="txtselectpartner" readonly="true" value=""/>
+        <label  align="right" id="partner"  value="&selectpartner.value;" width="97" />
+		<textbox id="txtselectpartner" readonly="true" value="" width="270"/>
 		<button label="&bsearch.label;" oncommand="Select.onMenuItemCommand(event);" image="&imagesearch.value;"/>
 	</hbox>
 	<hbox>
-		<description>&name.value;</description>
-		<spacer width="12"/>
+        <label  align="right" id="name"  value="&name.value;" width="80" />
 		<textbox id="txtname" align="right" width="270"/>
 	</hbox>
-    
+    </groupbox>
+    </tabpanel>    
+
+ <tabpanel id="address">
+  <groupbox id="address">
     <hbox>
         <caption label="&postaladdress.value;" />
         <spacer width="300"/>
@@ -31,55 +34,46 @@
     </hbox>
 
      <hbox>
-		<description>&street.value;</description>
-		<spacer width="63"/>
+        <label  align="right" id="street"  value="&street.value;" width="97" />
 		<textbox id="txtstreet" width="270"/>
         <spacer width="33"/>
-        <vbox>
-            <description>&office.value;</description>
+         <vbox>
+             <label  align="right" id="office"  value="&office.value;" width="50" />
         </vbox>
         <vbox>
-	        <spacer width="68"/>
 	        <textbox id="txtoffice" />
         </vbox>
 	</hbox>
 
-    <hbox>
-		<description>&street2.value;</description>
-		<spacer width="54"/>
+     <hbox>
+        <label  align="right" id="street2"  value="&street2.value;" width="97" />
 		<textbox id="txtstreet2" width="270"/>
-        <spacer width="33"/>
+        <spacer width="35"/>
         <vbox>
-            <description>&fax.value;</description>
-            <spacer width="53"/>
+        <label  align="right" id="fax"  value="&fax.value;" width="48" />
         </vbox>
         <vbox>
 	        <textbox id="txtfax" />
         </vbox>
 	</hbox>
-
-    <hbox>
-		<description>&zip.value;</description>
-		<spacer width="82"/>
+   <hbox>
+        <label  align="right" id="zip"  value="&zip.value;" width="97" />
 		<textbox id="txtzip" />
-        <spacer width="110"/>
+        <spacer width="114"/>
         <vbox>
-             <description>&mobile.value;</description>
-            <spacer width="53"/>
+        <label  align="right" id="mobile"  value="&mobile.value;" width="48" />
         </vbox>
         <vbox>
-	        <textbox id="txtmobile" />
+	        <textbox id="txtmobile"/>
         </vbox>
 	</hbox>
 
      <hbox>
-		<description>&city.value;</description>
-		<spacer width="79"/>
+        <label  align="right" id="city"  value="&city.value;" width="97"/>
 		<textbox id="txtcity" />
-        <spacer width="110"/>
+        <spacer width="112"/>
         <vbox>
-              <description>&email.value;</description>
-            <spacer width="58"/>
+          <label  align="right" id="emailid"  value="&email.value;" width="50" />
         </vbox>
         <vbox>
 	        <textbox id="txtemail" width="260" />
@@ -87,8 +81,7 @@
 	</hbox>
  
     <hbox>
-         <label id="lblex3" value="&country.value;"/>
-         <spacer width="54"/>
+         <label  align="right" id="countryname"  value="&country.value;" width="97" />
          <menulist id="country" width="190">
            <menupopup>
 	     <menuitem label="" value=""/>
@@ -97,8 +90,7 @@
 	</hbox>
 
      <hbox>
-         <label id="lblex4" value="&state.value;"/>
-         <spacer width="68"/>
+         <label  align="right" id="statename"  value="&state.value;" width="97" />
          <menulist id="state" width="190">
            <menupopup>
 	     <menuitem label="" value=""/>
@@ -106,6 +98,7 @@
       	  </menulist>
 	</hbox>
 </groupbox>
+</tabpanel>
 <description></description>
 <hbox>
   <spacer width="580"/>
