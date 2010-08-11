@@ -1,9 +1,8 @@
 # -*- encoding: utf-8 -*-
+
 import os
 import time
 from tarfile import filemode
-import StringIO
-import base64
 import logging
 import errno
 
@@ -12,12 +11,11 @@ import fnmatch
 
 import pooler
 import netsvc
-import os
+
 from service import security
 from osv import osv
 #from document.nodes import node_res_dir, node_res_obj
 from document.nodes import get_node_context
-import stat
 
 def _get_month_name(month):
     month=int(month)
@@ -165,7 +163,7 @@ class abstracted_fs(object):
             return ret
         except EnvironmentError:
             raise
-        except Exception,e:
+        except Exception:
             self._log.exception('Cannot create item %s at node %s', objname, repr(node))
             raise OSError(1, 'Operation not permited.')
 
@@ -177,7 +175,7 @@ class abstracted_fs(object):
         try:
             res = node.open_data(cr, mode)
             cr.commit()
-        except TypeError, e:
+        except TypeError:
             raise IOError(errno.EINVAL, "No data")
         return res
 
@@ -188,12 +186,11 @@ class abstracted_fs(object):
         name.  Unlike mkstemp it returns an object with a file-like
         interface.
         """
-        raise NotImplementedError
+        raise NotImplementedError # TODO
 
         text = not 'b' in mode
         # for unique file , maintain version if duplicate file
         if dir:
-	    # TODO
             cr = dir.cr
             uid = dir.uid
             pool = pooler.get_pool(node.context.dbname)
@@ -234,7 +231,7 @@ class abstracted_fs(object):
             cdir = node.create_child_collection(cr, basename)
             self._log.debug("Created child dir: %r", cdir)
             cr.commit()
-        except Exception,e:
+        except Exception:
             self._log.exception('Cannot create dir "%s" at node %s', basename, repr(node))
             raise OSError(1, 'Operation not permited.')
 
@@ -405,7 +402,7 @@ class abstracted_fs(object):
             cr.commit()
         except EnvironmentError:
             raise
-        except Exception, err:
+        except Exception:
             self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, datacr[2], datacr[1])
             raise OSError(1,'Operation not permited.')
 

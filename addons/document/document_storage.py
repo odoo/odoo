@@ -37,7 +37,6 @@ from osv.orm import except_orm
 import random
 import string
 import pooler
-import netsvc
 import nodes
 from content_index import cntIndex
 
@@ -189,7 +188,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         # we now open a *separate* cursor, to update the data.
         # FIXME: this may be improved, for concurrency handling
         par = self._get_parent()
-        uid = par.context.uid
+        # uid = par.context.uid
         cr = pooler.get_db(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
@@ -227,7 +226,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
                     " WHERE id = %s",
                     (out, len(data), par.file_id))
             cr.commit()
-        except Exception, e:
+        except Exception:
             logging.getLogger('document.storage').exception('Cannot update db file #%d for close:', par.file_id)
             raise
         finally:
@@ -262,7 +261,7 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
         # we now open a *separate* cursor, to update the data.
         # FIXME: this may be improved, for concurrency handling
         par = self._get_parent()
-        uid = par.context.uid
+        # uid = par.context.uid
         cr = pooler.get_db(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
@@ -288,18 +287,18 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
                 cr.execute('UPDATE ir_attachment SET db_datas = %s::bytea, file_size=%s, ' \
                         'index_content = %s, file_type = %s ' \
                         'WHERE id = %s',
-                        (base64.encodestring(out), len(out), icont_u, mime, par.file_id))
+                        (base64.encodestring(data), len(data), icont_u, mime, par.file_id))
             elif self.mode == 'a':
-                out = self.getvalue()
+                data = self.getvalue()
                 # Yes, we're obviously using the wrong representation for storing our
                 # data as base64-in-bytea
                 cr.execute("UPDATE ir_attachment " \
                     "SET db_datas = encode( (COALESCE(decode(encode(db_datas,'escape'),'base64'),'') || decode(%s, 'base64')),'base64')::bytea , " \
                     "    file_size = COALESCE(file_size, 0) + %s " \
                     " WHERE id = %s",
-                    (base64.encodestring(out), len(out), par.file_id))
+                    (base64.encodestring(data), len(data), par.file_id))
             cr.commit()
-        except Exception, e:
+        except Exception:
             logging.getLogger('document.storage').exception('Cannot update db file #%d for close:', par.file_id)
             raise
         finally:
@@ -500,7 +499,7 @@ class document_storage(osv.osv):
                 # try to fix their directory.
                 if ira.file_size:
                     self._doclog.warning("ir.attachment #%d does not have a filename, trying the name." %ira.id)
-                sfname = ira.name
+                # sfname = ira.name
             fpath = os.path.join(boo.path,ira.store_fname or ira.name)
             if os.path.exists(fpath):
                 return file(fpath,'rb').read()
@@ -695,7 +694,7 @@ class document_storage(osv.osv):
             store_fname = os.path.join(*store_path)
             return { 'name': new_name, 'datas_fname': new_name, 'store_fname': store_fname }
         else:
-            raise TypeError("No %s storage" % boo.type)
+            raise TypeError("No %s storage" % sbro.type)
 
     def simple_move(self, cr, uid, file_node, ndir_bro, context=None):
         """ A preparation for a file move.
@@ -734,7 +733,7 @@ class document_storage(osv.osv):
             fname = fil_bo.store_fname
             if not fname:
                 return ValueError("Tried to rename a non-stored file")
-            path = storage_bo.path
+            path = sbro.path
             oldpath = os.path.join(path, fname)
             
             for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?', '..'):
@@ -751,7 +750,7 @@ class document_storage(osv.osv):
             os.rename(oldpath, newpath)
             return { 'name': new_name, 'datas_fname': new_name, 'store_fname': new_name }
         else:
-            raise TypeError("No %s storage" % boo.type)
+            raise TypeError("No %s storage" % sbro.type)
 
 
 document_storage()
