@@ -36,7 +36,7 @@ class pos_open_statement(osv.osv_memory):
              @param context: A standard dictionary
              @return : Blank Directory
         """
-        list_statement = []
+        data = {}
         mod_obj = self.pool.get('ir.model.data')
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         statement_obj = self.pool.get('account.bank.statement')
@@ -51,19 +51,33 @@ class pos_open_statement(osv.osv_memory):
             if len(ids):
                 raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s". \n Please close the cashbox related to. ' %(journal.name)))
             
+            statement_ids = sorted(statement_obj.search(cr, uid, [('state', '=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)]))
+            if statement_ids:
+                res = []
+                statement_ids.reverse()
+                statement = statement_obj.browse(cr, uid, statement_ids[0]) 
+                for end_bal in statement.ending_details_ids:
+                    dct = {
+                            'pieces': end_bal.pieces,
+                            'number': end_bal.number,
+                    }
+                    res.append((0, 0, dct))
+                data['starting_details_ids'] = res
+            else:
+                data['starting_details_ids'] = statement_obj._get_cash_close_box_lines(cr, uid, [])
+
             number = ''
             if journal.sequence_id:
                 number = sequence_obj.get_id(cr, uid, journal.sequence_id.id)
             else:
                 number = sequence_obj.get(cr, uid, 'account.bank.statement')
             
-            statement_id = statement_obj.create(cr, uid, {'journal_id': journal.id,
-                                                          'company_id': company_id,
-                                                          'user_id': uid,
-                                                          'state': 'open',
-                                                          'name': number,
-                                                          'starting_details_ids': statement_obj._get_cash_close_box_lines(cr, uid, []),
-                                                      })
+            data.update({'journal_id': journal.id, 
+                         'company_id': company_id,
+                         'user_id': uid,
+                         'state': 'open',
+                         'name': number })
+            statement_id = statement_obj.create(cr, uid, data)
             statement_obj.button_open(cr, uid, [statement_id], context)
 
         data_obj = self.pool.get('ir.model.data')
