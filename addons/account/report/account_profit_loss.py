@@ -36,7 +36,6 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         self.result_temp = []
         self.localcontext.update( {
             'time': time,
-            'get_abs' : self.get_abs,
             'get_lines' : self.get_lines,
             'get_lines_another' : self.get_lines_another,
             'get_currency': self._get_currency,
@@ -57,8 +56,6 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         })
         self.context = context
 
-    def get_abs(self,amount):
-        return abs(amount)
 
     def final_result(self):
         return self.res_pl
