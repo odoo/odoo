@@ -14,9 +14,5 @@
         <field name="groups_id" eval="[(4,ref('base.group_sale_manager')),(4,ref('base.group_sale_salesman'))]"/>
     </record>
 
-    <record model="ir.ui.menu" id="base.menu_base_config">
-        <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
-    </record>
-
     </data>
 </openerp>

@@ -666,8 +666,8 @@ class project_work(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         context = kwargs.get('context', {})
         project_obj = self.pool.get('project.project')
+        uom_obj = self.pool.get('product.uom')
         user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-
         if user_uom == default_uom:
             for work in self.browse(cr, uid, ids, context):
                 cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
@@ -675,7 +675,7 @@ class project_work(osv.osv):
             for work in self.browse(cr, uid, ids, context):
                 duration =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
                 cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (duration, work.task_id.id))
-        return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
+        return super(project_work, self).unlink(cr, uid, ids, *args, **kwargs)
 
 project_work()
 
