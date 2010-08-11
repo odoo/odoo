@@ -602,7 +602,7 @@ var listDbHandler = {
 			var hbox = document.createElement("hbox");
 			var label1 = document.createElement("label");
 			label1.setAttribute("width","80");
-			label1.setAttribute("value","Database");
+			label1.setAttribute("value","Database:");
 			label1.setAttribute("id","label111");
 			var menu1 = document.createElement("menulist");
 			var menupopup1 = document.createElement("menupopup");
