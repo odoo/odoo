@@ -19,17 +19,14 @@
 #
 ##############################################################################
 
-# import base64
-# import StringIO
-from osv import osv, fields
-from osv.orm import except_orm
 # import urlparse
 import pooler
 from tools.safe_eval import safe_eval
 
 import errno
-import os
+# import os
 import time
+import logging
 
 from StringIO import StringIO
 
@@ -43,6 +40,8 @@ from StringIO import StringIO
 #       file: objct = ir.attachement
 #   root: if we are at the first directory of a ressource
 #
+
+logger = logging.getLogger('doc2.nodes')
 
 def _str2time(cre):
     """ Convert a string with time representation (from db) into time (float)
@@ -902,9 +901,8 @@ class node_res_obj(node_class):
 
     def get_dav_eprop(self, cr, ns, prop):
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            print "Who asked for %s:%s?" % (ns, prop)
+            logger.warning("Who asked for %s:%s?" % (ns, prop))
             return None
-        res = {}
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -1374,11 +1372,11 @@ class nodefd_content(StringIO, node_descriptor):
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()
                 cntobj = par.context._dirobj.pool.get('document.directory.content')
-                cntobj.process_write(cr, uid, parent, data, ctx)
+                cntobj.process_write(cr, uid, par, data, par.context.context)
             elif self.mode == 'a':
                 raise NotImplementedError
             cr.commit()
-        except Exception, e:
+        except Exception:
             logging.getLogger('document.content').exception('Cannot update db content #%d for close:', par.cnt_id)
             raise
         finally:

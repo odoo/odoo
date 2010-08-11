@@ -71,8 +71,8 @@ class node_calendar_collection(nodes.node_dir):
         where = [('collection_id','=',self.dir_id)]
         ext = False
         if name and name.endswith('.ics'):
-            name = name[-4]
-            ext = '.ics'
+            name = name[:-4]
+            ext = True
         if name:
             where.append(('name','=',name))
         if not domain:
@@ -81,11 +81,12 @@ class node_calendar_collection(nodes.node_dir):
         fil_obj = dirobj.pool.get('basic.calendar')
         ids = fil_obj.search(cr,uid,where,context=ctx)
         res = []
-        for calender in fil_obj.browse(cr, uid, ids, context=ctx):
-            if not ext:
-                res.append(node_calendar(calender.name, self, self.context, calender))
-            else:
-                res.append(res_node_calendar(name, self, self.context, calender))
+        for cal in fil_obj.browse(cr, uid, ids, context=ctx):
+            if (not name) or not ext:
+                res.append(node_calendar(cal.name, self, self.context, cal))
+            if (not name) or ext:
+                res.append(res_node_calendar(cal.name+'.ics', self, self.context, cal))
+	    # May be both of them!
         return res
 
     def _get_dav_owner(self, cr):
