@@ -112,7 +112,7 @@ class mailgate_thread(osv.osv):
             if history:
                 for att in attach:
                     attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
-                    
+
                 for param in (email, email_cc, email_bcc):
                     if isinstance(param, list):
                         param = ", ".join(param)
@@ -141,7 +141,7 @@ class mailgate_thread(osv.osv):
 mailgate_thread()
 
 def format_date_tz(date, tz=None):
-    if not date: 
+    if not date:
         return 'n/a'
     format = tools.DEFAULT_SERVER_DATETIME_FORMAT
     return tools.server_to_local_timestamp(date, format, format, tz)
@@ -191,7 +191,7 @@ class mailgate_message(osv.osv):
         'description': fields.text('Description', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
-        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'), 
+        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
     }
 
     def init(self, cr):
@@ -224,7 +224,7 @@ class mailgate_tool(osv.osv_memory):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param model: OpenObject Model
-        @param res_ids: Ids of the record of OpenObject model created 
+        @param res_ids: Ids of the record of OpenObject model created
         @param msg: Email details
         @param attach: Email attachments
         """
@@ -241,7 +241,7 @@ class mailgate_tool(osv.osv_memory):
                         'res_model': model,
                         'email_cc': msg.get('cc'),
                         'email_from': msg.get('from'),
-                        'email_to': msg.get('to'), 
+                        'email_to': msg.get('to'),
                         'message_id': msg.get('message-id'),
                         'references': msg.get('references') or msg.get('in-reply-to'),
                         'res_id': res_id,
@@ -283,6 +283,7 @@ class mailgate_tool(osv.osv_memory):
                     tools.misc._email_send(smtp_from, self.to_email(email_error), msg, openobject_id=res.id)
 
     def process_email(self, cr, uid, model, message, attach=True, context=None):
+        print "processssss_emaillllllllll",model
         """This function Processes email and create record for given OpenERP model
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

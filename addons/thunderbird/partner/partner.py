@@ -25,27 +25,117 @@ from osv import osv,fields
 import base64
 import netsvc
 from tools.translate import _
+import email
+import tools
+import binascii
+class email_server_tools(osv.osv_memory):
+    _inherit = "email.server.tools"
+    def history_message(self, cr, uid, model, res_id, message):
+        #@param message: string of mail which is read from EML File
+        attachment_pool = self.pool.get('ir.attachment')
+        msg = self.parse_message(message)
+        attachments = msg.get('attachments', [])
+        att_ids = []
+        for attachment in attachments:
+            data_attach = {
+                'name': attachment,
+                'datas': binascii.b2a_base64(str(attachments.get(attachment))),
+                'datas_fname': attachment,
+                'description': 'Mail attachment From Thunderbird msg_id: %s' %(msg.get('message_id', '')),
+                'res_model': model,
+                'res_id': res_id,
+            }
+            att_ids.append(attachment_pool.create(cr, uid, data_attach))
+        return self.history(cr, uid, model, res_id, msg, att_ids)
+
+    def parse_message(self, message):
+        #TOCHECK: put this function in mailgateway
+        msg_txt = email.message_from_string(message)
+        message_id = msg_txt.get('message-id', False)
+        msg = {}
+        msg_txt = email.message_from_string(message)
+        fields = msg_txt.keys()
+        msg['id'] = message_id
+        msg['message-id'] = message_id
+
+        if 'Subject' in fields:
+            msg['subject'] = self._decode_header(msg_txt.get('Subject'))
+
+        if 'Content-Type' in fields:
+            msg['content-type'] = msg_txt.get('Content-Type')
+
+        if 'From' in fields:
+            msg['from'] = self._decode_header(msg_txt.get('From'))
+
+        if 'Delivered-To' in fields:
+            msg['to'] = self._decode_header(msg_txt.get('Delivered-To'))
+
+        if 'CC' in fields:
+            msg['cc'] = self._decode_header(msg_txt.get('CC'))
+
+        if 'Reply-to' in fields:
+            msg['reply'] = self._decode_header(msg_txt.get('Reply-To'))
+
+        if 'Date' in fields:
+            msg['date'] = self._decode_header(msg_txt.get('Date'))
+
+        if 'Content-Transfer-Encoding' in fields:
+            msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
+
+        if 'References' in fields:
+            msg['references'] = msg_txt.get('References')
+
+        if 'In-Reply-To' in fields:
+            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
+
+        if 'X-Priority' in fields:
+            msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0]
+
+        if not msg_txt.is_multipart() or 'text/plain' in msg.get('Content-Type', ''):
+            encoding = msg_txt.get_content_charset()
+            body = msg_txt.get_payload(decode=True)
+            msg['body'] = tools.ustr(body, encoding)
+
+        attachments = {}
+        has_plain_text = False
+        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
+            body = ""
+            for part in msg_txt.walk():
+                if part.get_content_maintype() == 'multipart':
+                    continue
+
+                encoding = part.get_content_charset()
+                filename = part.get_filename()
+                if part.get_content_maintype()=='text':
+                    content = part.get_payload(decode=True)
+                    if filename:
+                        attachments[filename] = content
+                    elif not has_plain_text:
+                        # main content parts should have 'text' maintype
+                        # and no filename. we ignore the html part if
+                        # there is already a plaintext part without filename,
+                        # because presumably these are alternatives.
+                        content = tools.ustr(content, encoding)
+                        if part.get_content_subtype() == 'html':
+                            body = tools.ustr(tools.html2plaintext(content))
+                        elif part.get_content_subtype() == 'plain':
+                            body = content
+                            has_plain_text = True
+                elif part.get_content_maintype() in ('application', 'image'):
+                    if filename :
+                        attachments[filename] = part.get_payload(decode=True)
+                    else:
+                        res = part.get_payload(decode=True)
+                        body += tools.ustr(res, encoding)
+
+            msg['body'] = body
+            msg['attachments'] = attachments
+        return msg
+email_server_tools()
 
 class thunderbird_partner(osv.osv_memory):
     _name = "thunderbird.partner"
     _description="Thunderbid mails"
-    _rec_name="sender"
-
-    def mailcreate(self,cr,user,vals):
-        dictcreate = dict(vals)
-        import email
-        header_name = email.Header.decode_header(dictcreate['name'])
-        dictcreate['name'] = header_name and header_name[0] and header_name[0][0]
-        address_obj = self.pool.get('res.partner.address')
-        case_pool = self.pool.get(dictcreate.get('object','crm.lead'))
-        partner_ids = address_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
-        partner = address_obj.read(cr,user,partner_ids,['partner_id','name'])
-        if partner and partner[0] and partner[0]['partner_id']:
-            dictcreate.update({'partner_id':partner[0]['partner_id'][0],'partner_name':partner[0]['name']})
-        create_id = case_pool.create(cr, user, dictcreate)
-        cases = case_pool.browse(cr,user,[create_id])
-        case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)
-        return create_id
 
     def create_contact(self,cr,user,vals):
         dictcreate = dict(vals)
@@ -53,6 +143,21 @@ class thunderbird_partner(osv.osv_memory):
             dictcreate.update({'partner_id': False})
         create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
         return create_id
+
+    def history_message(self,cr,uid,vals):
+        dictcreate = dict(vals)
+        server_tools_pool = self.pool.get('email.server.tools')
+        res_id = int(dictcreate.get('res_id'))
+        model = str(dictcreate.get('model'))
+        message = str(dictcreate.get('message'))
+        server_tools_pool.history_message(cr,uid,model,res_id,message)
+        return True
+
+    def process_email(self,cr,uid,vals):
+        dictcreate = dict(vals)
+        model = str(dictcreate.get('model'))
+        message = str(dictcreate.get('message'))
+        return self.pool.get('email.server.tools').process_email(cr, uid, model, message, attach=True, context=None)
 
     def search_contact(self, cr, user, vals):
         address_obj = self.pool.get('res.partner.address')
@@ -161,21 +266,7 @@ class thunderbird_partner(osv.osv_memory):
             name_get.append(er_val)
         return name_get
 
-    def create_attachment(self,cr,user,vals):
-        dictcreate = dict(vals)
-        datas = [dictcreate['datas']]
-        name = [dictcreate['name']]
-        f_name = [dictcreate['datas_fname']]
-        if(dictcreate['datas'].__contains__(',')):
-            name = dictcreate['name'].split(',')
-            datas = dictcreate['datas'].split(',')
-            f_name = dictcreate['datas_fname'].split(',')
-        for i in range(0,datas.__len__()):
-            dictcreate['name'] = name[i]
-            dictcreate['datas'] = datas[i]
-            dictcreate['datas_fname'] = f_name[i]
-            create_id = self.pool.get('ir.attachment').create(cr,user,dictcreate)
-        return 0
+
 
     def list_alldocument(self,cr,user,vals):
         obj_list= [('crm.lead','Lead'),('project.issue','Project Issue'), ('hr.applicant','HR Recruitment')]
