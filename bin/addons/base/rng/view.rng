@@ -228,6 +228,19 @@
 
     <rng:define name="gantt">
         <rng:element name="gantt">
+            <rng:optional><rng:attribute name="mode">
+              <rng:choice>
+                 <rng:value>day</rng:value>
+                 <rng:value>3days</rng:value>
+                 <rng:value>week</rng:value>
+                 <rng:value>3weeks</rng:value>
+                 <rng:value>month</rng:value>
+                 <rng:value>3months</rng:value>
+                 <rng:value>year</rng:value>
+                 <rng:value>3years</rng:value>
+                 <rng:value>5years</rng:value>
+              </rng:choice></rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:optional><rng:attribute name="date_delay"/></rng:optional>
             <rng:optional><rng:attribute name="date_start"/></rng:optional>
