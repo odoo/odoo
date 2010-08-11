@@ -27,15 +27,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-       <record model="ir.values" id="values_pos_confirm">
-            <field name="model_id" ref="point_of_sale.model_pos_order" />
-            <field name="object" eval="1" />
-            <field name="name">Sale Confirm</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_pos_confirm'))"/>
-            <field name="key">action</field>
-            <field name="model">pos.order</field>
-        </record>        
         
 	</data>
 </openerp>	        

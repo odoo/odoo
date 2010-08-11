@@ -11,7 +11,7 @@
         <menuitem name="Master Data"
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
-                  groups="mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
+                  groups="mrp.group_mrp_manager,base.group_system"
                   sequence="5" />
 
         <!--
@@ -487,7 +487,7 @@
 <!--                  parent="mrp.menu_mrp_control" sequence="1" />-->
 
          <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
-        <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
+        <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager"/>
 
         <!--
         Order Point
@@ -914,7 +914,7 @@
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" groups="mrp.group_mrp_user" sequence="3" />
 
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
-            groups="base.group_extended,mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
+            groups="base.group_extended,mrp.group_mrp_manager,base.group_system"
             sequence="4"/>
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>

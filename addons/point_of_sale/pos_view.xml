@@ -25,9 +25,9 @@
                                     <field name="qty"/>
                                     <!--<field name="qty" on_change="onchange_qty(qty,price_unit)"/>-->
                                     <!--field name="qty_rfd" groups="base.group_extended"/-->
-                                    <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
                                     <field name="price_unit" readonly="1"/>
+                                    <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="notice" on_change="onchange_dis(qty,price_subtotal_incl,discount)"/>
                                     <!--field name="serial_number"/-->
                                     <field name="price_subtotal" />
@@ -77,20 +77,20 @@
                         <page string="Order and Payment">
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Order Information" colspan="4"/>
+                                <field name="name"/>
+                                <field name="shop_id" widget="selection"/>
                                 <field name="user_salesman_id" />
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="shop_id" widget="selection"  />
-                                <field name="name"/>
-                                <field name="user_id" string="Salesman"/>
-                                <!--field name="sale_manager" /-->
                                 <field name="price_type" />
+                                <field name="user_id" string="Salesman" groups="base.group_extended"/>
+                                <!--field name="sale_manager" /-->
                             </group>
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Dates" colspan="4"/>
                                 <field name="date_order"/>
                                 <field name="date_validation" />
                                 <field name="date_payment" groups="base.group_extended"/>
-                                <field name="type_rec"  colspan="4"/>
+<!--                                <field name="type_rec" colspan="4"/>-->
                             </group>
                             <group colspan="4">
 <!--                                <separator string="Invoicing" colspan="4"/>-->
@@ -207,7 +207,7 @@
             <field name="search_view_id" ref="view_pos_order_filter"/>
 
         </record>
-        <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="4" />
+        <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="5" />
         <menuitem name="Sales to Invoice" action="action_pos_order_tobinvoiced" id="menu_point_of_sale_tobinvoiced" parent="menu_point_of_sale_invoicing"/>
         <record model="ir.actions.act_window" id="action_pos_order_accepted">
             <field name="name">Accepted Sales</field>
@@ -866,7 +866,7 @@
 
         <!--  Miscelleanous Operations/Reporting -->
         <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20" groups="group_pos_manager,base.group_system"/>
-        <menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
+<!--         <menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
         <menuitem name="Sales" parent="menu_point_rep" id="menu_point_report_sale" sequence="1" />
 
         <menuitem name="Details Of Operations" parent="menu_point_report_sale" id="menu_details_of_oper" sequence="1" groups="base.group_extended,group_pos_manager,base.group_system"/>
@@ -899,6 +899,7 @@
 
         <menuitem name="Sales by User Monthly Margin" parent="menu_sales_report"
                  action="action_report_sales_by_margin_pos_month" id="menu_report_sales_by_user_pos_month_margin_tree"/>
+-->
         <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
@@ -909,7 +910,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('origin','like','POS')]</field>
         </record>
-        <menuitem name="All Invoices" parent="menu_details_of_oper"
+<!--        <menuitem name="All Invoices" parent="menu_details_of_oper"
                  action="action_pos_invoice" id="menu_pos_invoice_tree"/>
 
         <menuitem name="Payments and Sales" parent="menu_point_report_sale"
@@ -926,11 +927,11 @@
 
         <menuitem icon="STOCK_PRINT" action="action_report_pos_sale_user"
                 id="menu_pos_sales_user" parent="menu_trans_pos_tree" sequence="3" groups="base.group_extended" />
-
+-->
 
         <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
-                id="menu_pos_payment_report_date" parent="menu_trans_pos_tree" sequence="5" groups="base.group_extended"/>
-
+                id="menu_pos_payment_report_date" parent="menu_point_rep" sequence="8" groups="base.group_extended"/>
+<!--
         <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
                 id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
         <menuitem icon="STOCK_PRINT" action="action_pos_sales_user_today"
@@ -943,9 +944,9 @@
                 id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
         <menuitem icon="STOCK_PRINT" action="action_report_pos_sales_user_today_current_user"
                 id="menu_pos_sales_user_today_current_user" parent="menu_cashboxes_by_day"  sequence="7"/>
-
+-->
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
-                id="menu_pos_details" parent="menu_cashboxes_by_day"  />
+                id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
 
     </data>

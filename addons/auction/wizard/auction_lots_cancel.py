@@ -24,21 +24,21 @@ from osv import fields
 
 class auction_lots_cancel(osv.osv):
         '''
-        Open ERP Model
+        OpenERP Model
         '''
         _name = 'auction.lots.cancel'
         _description = 'To cancel auction lots.'
-        
+
         def cancel(self, cr, uid, ids, context=None):
-            """ 
+            """
             To cancel the auction lot
-    
+
             @param self: The object pointer.
             @param cr: A database cursor
             @param uid: ID of the user currently logged in
-            @param ids: List of IDs selected 
-            @param context: A standard dictionary 
-            @return: 
+            @param ids: List of IDs selected
+            @param context: A standard dictionary
+            @return:
             """
             if not context:
                 context={}

@@ -36,6 +36,7 @@ class account_entries_report(osv.osv):
         'debit':fields.float('Debit', readonly=True),
         'credit':fields.float('Credit', readonly=True),
         'balance': fields.float('Balance', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'date': fields.date('Date', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
@@ -62,7 +63,7 @@ class account_entries_report(osv.osv):
             ('other', 'Others'),
             ('closed', 'Closed'),
         ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
-            "special effects in Open ERP: view can not have entries, consolidation are accounts that "\
+            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -82,6 +83,7 @@ class account_entries_report(osv.osv):
                 l.state as state_2,
                 to_char(am.date, 'YYYY') as year,
                 to_char(am.date, 'MM') as month,
+                to_char(am.date, 'YYYY-MM-DD') as day,
                 l.partner_id as partner_id,
                 l.product_id as product_id,
                 am.company_id as company_id,

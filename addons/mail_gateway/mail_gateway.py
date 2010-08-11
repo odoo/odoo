@@ -118,7 +118,7 @@ class mailgate_thread(osv.osv):
                         param = ", ".join(param)
 
                 data = {
-                    'name': subject or 'History',
+                    'name': subject or _('History'),
                     'history': True,
                     'user_id': uid,
                     'model' : case._name,
@@ -158,15 +158,15 @@ class mailgate_message(osv.osv):
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
             if message.history:
-                msg_txt += (message.email_from or '/') + ' wrote on ' + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
                 if message.description:
                     msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
             else:
-                msg_txt = (message.user_id.name or '/') + '  on ' + format_date_tz(message.date, tz) + ':\n\t'
-                if message.name == 'Opportunity':
-                    msg_txt += "Converted to Opportunity"
+                msg_txt = (message.user_id.name or '/') + _('  on ') + format_date_tz(message.date, tz) + ':\n\t'
+                if message.name == _('Opportunity'):
+                    msg_txt += _("Converted to Opportunity")
                 else:
-                    msg_txt += "Changed Status to: " + message.name
+                    msg_txt += _("Changed Status to: ") + message.name
             result[message.id] = msg_txt
         return result
 

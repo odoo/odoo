@@ -33,7 +33,6 @@ class hr_so_project(osv.osv_memory):
         'date': fields.datetime('Closing Date'),
         'analytic_amount': fields.float('Minimum Analytic Amount'),
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
-#        'state': fields.char('Current state', size=32, required=True, readonly=True),
         'state': fields.related('emp_id', 'state', string='Current state', type='char', required=True, readonly=True),
         'server_date': fields.datetime('Current Date', required=True, readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
@@ -122,10 +121,9 @@ class hr_si_project(osv.osv_memory):
     _description = 'Sign In By Project'
     _columns = {
         'name': fields.char('Employees name', size=32,  readonly=True),
-        'state': fields.char('Current state', size=32,  readonly=True),
+        'state': fields.related('emp_id', 'state', string='Current state', type='char', required=True, readonly=True),
         'date': fields.datetime('Starting Date'),
         'server_date': fields.datetime('Current Date',  readonly=True),
-       # 'emp_id': fields.char('Employee ID', size=512, required=False),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
                 }
 
@@ -154,7 +152,7 @@ class hr_si_project(osv.osv_memory):
         # get the latest action (sign_in or out) for this employee
         cr.execute('select action from hr_attendance where employee_id=%s and action in (\'sign_in\',\'sign_out\') order by name desc limit 1', (emp_id,))
         res = (cr.fetchone() or ('sign_out',))[0]
-        in_out = res == 'sign_out' and 'out' or 'in'
+        in_out = (res == 'sign_out') and 'in' or 'out'
         #TODO: invert sign_in et sign_out
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_timesheet_sign_%s' % in_out)], context=context)
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']

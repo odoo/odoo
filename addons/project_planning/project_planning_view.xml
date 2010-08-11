@@ -78,14 +78,14 @@
                                 </tree>
                                 <form string="Planning Lines">
                                     <field name="user_id" domain="[('id','child_of',[parent.user_id])]"/>
-                                    <field name="account_id" />
+                                    <field name="account_id"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
 <!--                                    WIDGET MANY2MANY GIVES ERROR-->
 <!--                                    <field name="task_ids" colspan="4" nolabel="1" widget="many2many"/>-->
                                        <field name="task_ids" colspan="4" nolabel="1" mode="tree,form">
                                         <form string="Tasks">
-                                                <group colspan="4" col="2">
+                                            <group colspan="4" col="2">
                                                 <field name="name" select="1"/>
                                                 <field name="project_id" required="1" select="1" domain="[('analytic_account_id','=',parent.account_id)]"/>
                                             </group>

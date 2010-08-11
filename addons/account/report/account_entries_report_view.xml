@@ -11,24 +11,26 @@
                 <field name="date_created" invisible="1"/>
                 <field name="date_maturity" invisible="1"/>
                 <field name="ref" invisible="1"/>
+                <field name="nbr" sum="# of Entries "/>
+                <field name="quantity" sum="# of Products Qty "/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="balance"/>
                 <field name="state" invisible="1"/>
                 <field name="state_2" invisible="1"/>
-                <field name="year"  invisible="1"/>
-                <field name="day"  invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
+                <field name="year"  invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="account_id" invisible="1"/>
                 <field name="analytic_account_id" invisible="1"/>
+                <field name="fiscalyear_id" invisible="1"/>
                 <field name="period_id" invisible="1"/>
-                <field name="period_id2" invisible="1"/>
+                <field name="user_type" invisible="1"/>
                 <field name="type" invisible="1"/>
-                <field name="nbr" sum="# of Entries "/>
-                <field name="nbl" sum="# of Lines "/>
-                <field name="amount" sum="# of Amount "/>
-                <field name="quantity" sum="# of Products Qty "/>
            </tree>
         </field>
     </record>
@@ -38,8 +40,10 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Entries Analysis" type="bar">
-                 <field name="partner_id"/>
-                 <field name="amount"/>
+                <field name="partner_id"/>
+                <field name="debit" operator="+"/>
+                <field name="credit" operator="+"/>
+                <field name="balance" operator="+"/>
              </graph>
          </field>
     </record>
@@ -79,21 +83,15 @@
                     <separator orientation="vertical"/>
                     <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Analytic" name="analytic_account" icon="terp-folder-orange" context="{'group_by':'analytic_account_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Journal" name="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
                     <filter string="Fiscal Year" icon="terp-go-month" context="{'group_by':'fiscalyear_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Account" name="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Analytic Account" name="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}"/>
                     <filter string="State of Move Line" icon="terp-stock_effects-object-colorize" context="{'group_by':'state_2'}"/>
-                    <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
-                    <filter string="Period of Move Line" icon="terp-go-month" context="{'group_by':'period_id2'}"/>
                     <newline/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
@@ -112,7 +110,6 @@
                     <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <newline/>
-                    <field name="date"/>
                     <field name="date_created"/>
                 	<field name="date"/>
                     <field name="date_maturity"/>

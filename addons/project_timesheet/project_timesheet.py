@@ -203,12 +203,14 @@ class task(osv.osv):
 task()
 
 class project_project(osv.osv):
-    _inherit = "project.project"
+    _inherit = "project.projesct"
 
     def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
         result = []
+        if ids and not isinstance(ids, list):
+            ids = [ids]
         for project in self.browse(cr, user, ids, context):
             name = "[%s] %s" % (project.analytic_account_id and project.analytic_account_id.code or '?', project.name)
             result.append((project.id, name))
