@@ -1433,11 +1433,10 @@ true, it will allow you to hide the event alarm information without removing it.
         new_ids = []
         res = False
         for event_id in select:
-            real_event_id = event_id
+            real_event_id = base_calendar_id2real_id(event_id)
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
-                real_event_id = base_calendar_id2real_id(event_id)
                 if data.get('rrule'):
                     vals.update({
                         'recurrent_uid': real_event_id,
@@ -1448,8 +1447,9 @@ true, it will allow you to hide the event alarm information without removing it.
                     new_id = self.copy(cr, uid, real_event_id, default=vals, context=context)
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
-            if real_event_id and not real_event_id in new_ids:
+            if not real_event_id in new_ids:
                 new_ids.append(real_event_id)
+
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
