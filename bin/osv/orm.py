@@ -3823,16 +3823,21 @@ class orm(orm_template):
         if order:
             self._check_qorder(order)
             o = order.split(' ')[0]
-            if (o in self._columns) and getattr(self._columns[o], '_classic_write'):
-                order_by = order
+            if (o in self._columns):
+                # we can only do efficient sort if the fields is stored in database
+                if getattr(self._columns[o], '_classic_read'):
+                    order_by = order
             elif (o in self._inherit_fields):
-                # Allowing inherited field for server side sorting
-                inherited_tables, inherit_join = self._inherits_join_calc(o,[],[]) # dry run to determine parent
-                inherited_sort_table = inherited_tables[0]
-                order_by = inherited_sort_table + '.' + order
-                if inherited_sort_table not in tables:
-                    # add the missing join
-                    self._inherits_join_calc(o, tables, where_clause)
+                parent_obj = self.pool.get(self._inherit_fields[o][0])
+                if getattr(parent_obj._columns[o], '_classic_read'):
+                    # Allowing inherits'ed field for server side sorting
+                    inherited_tables, inherit_join = self._inherits_join_calc(o,[],[]) # dry run to determine parent
+                    if inherited_tables:
+                        inherited_sort_table = inherited_tables[0]
+                        order_by = inherited_sort_table + '.' + order
+                        if inherited_sort_table not in tables:
+                            # add the missing join
+                            self._inherits_join_calc(o, tables, where_clause)
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
