@@ -327,7 +327,7 @@ class hr_holidays(osv.osv):
                      }
                 self._create_resource_leave(cr, uid, vals)
             elif record.holiday_type == 'category' and record.type == 'remove':
-                emp_ids = obj_emp.search(cr, uid, [('category_id', '=', record.category_id.id)])
+                emp_ids = obj_emp.search(cr, uid, [('category_ids', '=', record.category_id.id)])
                 for emp in obj_emp.browse(cr, uid, emp_ids):
                     vals = {
                        'name': record.name,
