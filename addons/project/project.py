@@ -21,7 +21,7 @@
 
 from lxml import etree
 import time
-from datetime import date, datetime
+from datetime import datetime, date
 
 from tools.translate import _
 from osv import fields, osv
@@ -257,11 +257,19 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id', False) # check me where to pass context for parent id ??
+            parent_id = context.get('parent_id', False)
             context.update({'analytic_project_copy': True})
+            new_date_start = time.strftime('%Y-%m-%d')
+            new_date_end = False
+            if proj.date_start and proj.date:
+                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
+                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
+                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
+                                    'date_start':new_date_start,
+                                    'date':new_date_end,
                                     'parent_id':parent_id}, context=context)
             result.append(new_id)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))

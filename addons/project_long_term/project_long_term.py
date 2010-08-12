@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from lxml import etree
-import mx.DateTime
+
 import time
+from datetime import date, datetime, timedelta
 
 from tools.translate import _
 from osv import fields, osv
@@ -126,13 +126,12 @@ class project_phase(osv.osv):
 
     def onchange_project(self, cr, uid, ids, project, context=None):
         result = {}
+        result['date_start'] = False
         project_obj = self.pool.get('project.project')
         if project:
             project_id = project_obj.browse(cr, uid, project, context=context)
-            if project_id.date_start:
-                result['date_start'] = mx.DateTime.strptime(project_id.date_start, "%Y-%m-%d").strftime('%Y-%m-%d')
-                return {'value': result}
-        return {'value': {'date_start': []}}
+            result['date_start'] = project_id.date_start
+        return {'value': result}
 
     def _check_date_start(self, cr, uid, phase, date_end, context=None):
        if context is None:
@@ -201,18 +200,17 @@ class project_phase(osv.osv):
                     calendar_id = cal_id
         default_uom_id = self._get_default_uom_id(cr, uid)
         avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-
         # Change the date_start and date_end
         # for previous and next phases respectively based on valid condition
         if vals.get('date_start', False) and vals['date_start'] < phase.date_start:
-                dt_start = mx.DateTime.strptime(vals['date_start'], '%Y-%m-%d')
+                dt_start = datetime.strptime(vals['date_start'], '%Y-%m-%d')
                 work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 if work_times:
                     vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d')
                 for prv_phase in phase.previous_phase_ids:
                     self._check_date_start(cr, uid, prv_phase, dt_start, context=context)
         if vals.get('date_end', False) and vals['date_end'] > phase.date_end:
-                dt_end = mx.DateTime.strptime(vals['date_end'],'%Y-%m-%d')
+                dt_end = datetime.strptime(vals['date_end'], '%Y-%m-%d')
                 work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 if work_times:
                     vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d')
