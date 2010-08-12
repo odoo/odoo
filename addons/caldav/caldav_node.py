@@ -86,11 +86,11 @@ class node_calendar_collection(nodes.node_dir):
                 res.append(node_calendar(cal.name, self, self.context, cal))
             if (not name) or ext:
                 res.append(res_node_calendar(cal.name+'.ics', self, self.context, cal))
-	    # May be both of them!
+            # May be both of them!
         return res
 
     def _get_dav_owner(self, cr):
-	# Todo?
+        # Todo?
         return False
 
     def _get_ttag(self, cr):
@@ -206,7 +206,15 @@ class node_calendar(nodes.node_class):
         if name:
             if name.endswith('.ics'):
                 name = name[:-4]
-            where.append(('id','=',int(name)))
+            try:
+                where.append(('id','=',int(name)))
+            except ValueError:
+                # if somebody requests any other name than the ones we
+                # generate (non-numeric), it just won't exist
+                # FIXME: however, this confuses Evolution (at least), which
+                # thinks the .ics node hadn't been saved.
+                return []
+
         if not domain:
             domain = []
         #for opr1, opt, opr2 in domain:
