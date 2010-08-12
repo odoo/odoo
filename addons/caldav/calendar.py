@@ -233,9 +233,13 @@ class CalDAV(object):
 
         att_data = []
         exdates = []
+        _server_tzinfo = pytz.timezone(tools.get_server_timezone())
+        
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
-                self.ical_set(cal_data.name.lower(), cal_data.params.get('CN') and cal_data.params.get('CN')[0], 'value')
+                self.ical_set(cal_data.name.lower(),
+                        {'name': cal_data.params.get('CN', ['',])[0]},
+                        'value')
                 continue
             if cal_data.name.lower() == 'attendee':
                 ctx = context.copy()
@@ -262,9 +266,11 @@ class CalDAV(object):
                 continue
             if cal_data.name.lower() in self.__attribute__:
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
-                    self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
-                    date_utc = cal_data.value.astimezone(pytz.utc)
-                    self.ical_set(cal_data.name.lower(), date_utc, 'value')
+                    # since we do convert, do we also need to save the original tzid?
+                    # self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
+                    
+                    date_local = cal_data.value.astimezone(_server_tzinfo)
+                    self.ical_set(cal_data.name.lower(), date_local, 'value')
                     continue
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self, context=context)
@@ -414,8 +420,8 @@ class CalDAV(object):
                         event_id = model_obj.create(cr, uid, val)
                         recur_pool[u_id] = event_id
                         ids.append(event_id)
-        except Exception, e:
-            raise osv.except_osv(('Error !'), (str(e)))
+        except Exception:
+            raise
         return ids
 
     def export_cal(self, cr, uid, datas, vobj=None, context=None):

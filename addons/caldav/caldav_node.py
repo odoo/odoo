@@ -86,11 +86,11 @@ class node_calendar_collection(nodes.node_dir):
                 res.append(node_calendar(cal.name, self, self.context, cal))
             if (not name) or ext:
                 res.append(res_node_calendar(cal.name+'.ics', self, self.context, cal))
-	    # May be both of them!
+            # May be both of them!
         return res
 
     def _get_dav_owner(self, cr):
-	# Todo?
+        # Todo?
         return False
 
     def _get_ttag(self, cr):
@@ -206,7 +206,15 @@ class node_calendar(nodes.node_class):
         if name:
             if name.endswith('.ics'):
                 name = name[:-4]
-            where.append(('id','=',int(name)))
+            try:
+                where.append(('id','=',int(name)))
+            except ValueError:
+                # if somebody requests any other name than the ones we
+                # generate (non-numeric), it just won't exist
+                # FIXME: however, this confuses Evolution (at least), which
+                # thinks the .ics node hadn't been saved.
+                return []
+
         if not domain:
             domain = []
         #for opr1, opt, opr2 in domain:
@@ -225,9 +233,21 @@ class node_calendar(nodes.node_class):
             Return the node_* created
         """
         # we ignore the path, it will be re-generated automatically
+        fil_obj = self.context._dirobj.pool.get('basic.calendar')
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        uid = self.context.uid
+
         res = self.set_data(cr, data)
-        
-        # TODO: use the res to create at least one node
+
+        if res and len(res):
+            # We arbitrarily construct only the first node of the data
+            # that have been imported. ICS may have had more elements,
+            # but only one node can be returned here.
+            assert isinstance(res[0], (int, long))
+            fnodes = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self, 
+                    domain=[('id','=',res[0])], context=ctx)
+            return fnodes[0]
         return None
 
 
