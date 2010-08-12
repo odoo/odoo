@@ -23,7 +23,6 @@ from osv import fields,osv
 import tools
 
 class hr_department(osv.osv):
-
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -52,15 +51,13 @@ class hr_department(osv.osv):
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
         'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
         'note': fields.text('Note'),
-#        'manager_id': fields.many2one('res.users', 'Manager'),
-#        'member_ids': fields.many2many('res.users', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),
     }
 
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
                 }
 
-    def _get_members(self,cr, uid, context=None):
+    def _get_members(self, cr, uid, context=None):
         if context is None:
             context = {}
         mids = self.search(cr, uid, [('manager_id', '=', uid)], context=context)
@@ -87,7 +84,6 @@ class hr_department(osv.osv):
     ]
 
 hr_department()
-
 
 class ir_action_window(osv.osv):
     _inherit = 'ir.actions.act_window'
