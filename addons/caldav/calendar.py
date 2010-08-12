@@ -420,8 +420,8 @@ class CalDAV(object):
                         event_id = model_obj.create(cr, uid, val)
                         recur_pool[u_id] = event_id
                         ids.append(event_id)
-        except Exception, e:
-            raise osv.except_osv(('Error !'), (str(e)))
+        except Exception:
+            raise
         return ids
 
     def export_cal(self, cr, uid, datas, vobj=None, context=None):
