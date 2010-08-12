@@ -2616,7 +2616,7 @@ class orm(orm_template):
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], _rel_name, 'id1', 'id2', **attrs)
                 else:
                     self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
-
+        self._inherits_check()
         self._inherits_reload()
         if not self._sequence:
             self._sequence = self._table+'_id_seq'
@@ -2733,6 +2733,17 @@ class orm(orm_template):
                 res[col] = (table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2])
         self._inherit_fields = res
         self._inherits_reload_src()
+
+    def _inherits_check(self):
+        for table, field_name in self._inherits.items():
+            if field_name not in self._columns:
+                logging.getLogger('init').info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.' % (field_name, self._name))
+                self._columns[field_name] =  fields.many2one(table, string="Automatically created field to link to parent %s" % table,
+                                                             required=True, ondelete="cascade")
+            elif not self._columns[field_name].required or self._columns[field_name].ondelete.lower() != "cascade":
+                logging.getLogger('init').warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade", forcing it.' % (field_name, self._name))
+                self._columns[field_name].required = True
+                self._columns[field_name].ondelete = "cascade"
 
     #def __getattr__(self, name):
     #    """
