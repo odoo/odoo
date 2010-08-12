@@ -19,17 +19,13 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields,osv
 from tools.translate import _
-import tools
 
 import decimal_precision as dp
 
 # Overloaded stock_picking to manage carriers :
 class stock_picking(osv.osv):
-    _name = "stock.picking"
-    _description = "Packing List"
     _inherit = 'stock.picking'
 
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
@@ -57,6 +53,8 @@ class stock_picking(osv.osv):
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                  }),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
+        'number_of_packages': fields.integer('Number of Packages'),
         }
 
     def action_invoice_create(self, cursor, user, ids, journal_id=False,

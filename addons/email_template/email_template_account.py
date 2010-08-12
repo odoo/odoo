@@ -1,3 +1,25 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2009  Sharoon Thomas
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 from osv import osv, fields
 from html2text import html2text
 import re
@@ -30,56 +52,52 @@ class email_template_account(osv.osv):
                             'text/html'
                             ]
     _columns = {
-        'name': fields.char('Email Account Desc',
+        'name': fields.char('Description',
                         size=64, required=True,
                         readonly=True, select=True,
                         states={'draft':[('readonly', False)]}),
         'user':fields.many2one('res.users',
                         'Related User', required=True,
                         readonly=True, states={'draft':[('readonly', False)]}),
-        'email_id': fields.char('Email ID',
+        'email_id': fields.char('From Email',
                         size=120, required=True,
                         readonly=True, states={'draft':[('readonly', False)]} ,
-                        help=" eg:yourname@yourdomain.com "),
+                        help="eg: yourname@yourdomain.com "),
         'smtpserver': fields.char('Server',
                         size=120, required=True,
                         readonly=True, states={'draft':[('readonly', False)]},
-                        help="Enter name of outgoing server,eg:smtp.gmail.com "),
+                        help="Enter name of outgoing server, eg:smtp.gmail.com "),
         'smtpport': fields.integer('SMTP Port ',
                         size=64, required=True,
                         readonly=True, states={'draft':[('readonly', False)]},
                         help="Enter port number,eg:SMTP-587 "),
         'smtpuname': fields.char('User Name',
                         size=120, required=False,
-                        readonly=True, states={'draft':[('readonly', False)]}),
+                        readonly=True, states={'draft':[('readonly', False)]},
+                        help="Specify the username if your SMTP server requires authentication, "
+                        "otherwise leave it empty."),
         'smtppass': fields.char('Password',
                         size=120, invisible=True,
                         required=False, readonly=True,
                         states={'draft':[('readonly', False)]}),
-        'smtptls':fields.boolean('Use TLS',
+        'smtptls':fields.boolean('TLS',
                         states={'draft':[('readonly', False)]}, readonly=True),
                                 
-        'smtpssl':fields.boolean('Use SSL/TLS (only in python 2.6)',
+        'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)',
                         states={'draft':[('readonly', False)]}, readonly=True),
         'send_pref':fields.selection([
                                       ('html', 'HTML otherwise Text'),
                                       ('text', 'Text otherwise HTML'),
                                       ('both', 'Both HTML & Text')
                                       ], 'Mail Format', required=True),
-        'allowed_groups':fields.many2many(
-                        'res.groups',
-                        'account_group_rel', 'templ_id', 'group_id',
-                        string="Allowed User Groups",
-                        help="Only users from these groups will be" \
-                        "allowed to send mails from this ID"),
         'company':fields.selection([
                         ('yes', 'Yes'),
                         ('no', 'No')
-                        ], 'Company Mail A/c',
+                        ], 'Corporate',
                         readonly=True,
-                        help="Select if this mail account does not belong" \
-                        "to specific user but the organisation as a whole." \
-                        "eg:info@somedomain.com",
+                        help="Select if this mail account does not belong " \
+                        "to specific user but to the organization as a whole. " \
+                        "eg: info@companydomain.com",
                         required=True, states={
                                            'draft':[('readonly', False)]
                                            }),
@@ -89,7 +107,7 @@ class email_template_account(osv.osv):
                                   ('suspended', 'Suspended'),
                                   ('approved', 'Approved')
                                   ],
-                        'Account Status', required=True, readonly=True),
+                        'Status', required=True, readonly=True),
     }
 
     _defaults = {
@@ -102,11 +120,13 @@ class email_template_account(osv.osv):
                                                         ['name'],
                                                         context
                                                         )['name'],
-         'smtpssl':lambda * a:True,
          'state':lambda * a:'draft',
+         'smtpport':lambda *a:25,
+         'smtpserver':lambda *a:'localhost',
+         'company':lambda *a:'yes',
          'user':lambda self, cursor, user, context:user,
-         'send_pref':lambda * a: 'html',
-         'smtptls':lambda * a:True,
+         'send_pref':lambda *a: 'html',
+         'smtptls':lambda *a:True,
      }
     
     _sql_constraints = [
@@ -273,7 +293,7 @@ class email_template_account(osv.osv):
         return result
     
     def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, context=None):
-        #TODO: Replace all this crap with a single email object
+        #TODO: Replace all this with a single email object
         if body is None:
             body = {}
         if payload is None:
@@ -298,8 +318,6 @@ class email_template_account(osv.osv):
                         msg['To'] = u','.join(addresses_l['To'])
                     if addresses_l['CC']:
                         msg['CC'] = u','.join(addresses_l['CC'])
-#                    if addresses_l['BCC']:
-#                        msg['BCC'] = u','.join(addresses_l['BCC'])
                     if body.get('text', False):
                         temp_body_text = body.get('text', '')
                         l = len(temp_body_text.replace(' ', '').replace('\r', '').replace('\n', ''))
@@ -327,19 +345,19 @@ class email_template_account(osv.osv):
                         msg.attach(part)
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
-                    return error
+                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 try:
-                    #print msg['From'],toadds
                     serv.sendmail(msg['From'], addresses_l['all'], msg.as_string())
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Server Send Error\nDescription: %s") % (id, error))
-                    return error
+                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 #The mail sending is complete
                 serv.close()
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_INFO, _("Mail from Account %s successfully Sent.") % (id))
                 return True
             else:
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Account not approved") % id)
+                return {'error_msg':"Mail from Account %s failed. Probable Reason:Account not approved"% id}
                                 
     def extracttime(self, time_as_string):
         """
@@ -348,7 +366,6 @@ class email_template_account(osv.osv):
         logger = netsvc.Logger()
         #The standard email dates are of format similar to:
         #Thu, 8 Oct 2009 09:35:42 +0200
-        #print time_as_string
         date_as_date = False
         convertor = {'+':1, '-':-1}
         try:
@@ -387,7 +404,6 @@ class email_template_account(osv.osv):
                 offset = datetime.timedelta(hours=0)
             dt = dt + offset
             date_as_date = dt.strftime('%Y-%m-%d %H:%M:%S')
-            #print date_as_date
         except Exception, e:
             logger.notifyChannel(
                     _("Email Template"),
@@ -401,7 +417,6 @@ class email_template_account(osv.osv):
         return date_as_date
         
     def send_receive(self, cr, uid, ids, context=None):
-        self.get_mails(cr, uid, ids, context)
         for id in ids:
             ctx = context.copy()
             ctx['filters'] = [('account_id', '=', id)]

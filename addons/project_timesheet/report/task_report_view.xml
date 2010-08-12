@@ -9,7 +9,6 @@
 
         <!-- Tasks by projects and users
 
-
         <record id="view_task_project_form" model="ir.ui.view">
             <field name="name">task.report.form</field>
             <field name="model">task.report</field>
@@ -170,7 +169,8 @@
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_report_timesheet_task_user_search"/>
         </record>
-        <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting" action="action_report_timesheet_task_user"/>
+        <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting" 
+                    action="action_report_timesheet_task_user" sequence="4"/>
 
     </data>
 </openerp>

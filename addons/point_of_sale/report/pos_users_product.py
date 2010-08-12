@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 import time
@@ -43,9 +42,8 @@ class pos_user_product(report_sxw.rml_parse):
         a_l=[]
         for r in data:
             a_l.append(r['id'])
-        a = ','.join(map(str,a_l))
         if len(a):
-            sql2="""SELECT sum(qty) as qty,l.price_unit*sum(l.qty) as amt,t.name as name from product_product p, product_template t, pos_order_line l where order_id in (%s) and p.product_tmpl_id=t.id and l.product_id=p.id group by t.name, l.price_unit"""%(a)
+            sql2="""SELECT sum(qty) as qty,l.price_unit*sum(l.qty) as amt,t.name as name from product_product p, product_template t, pos_order_line l where order_id IN %s and p.product_tmpl_id=t.id and l.product_id=p.id group by t.name, l.price_unit""",(tuple(a_l),)
             self.cr.execute(sql2)
             data = self.cr.dictfetchall()
         for d in data:

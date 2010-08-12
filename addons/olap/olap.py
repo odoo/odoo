@@ -30,6 +30,9 @@ from osv import osv
 from osv import fields, osv
 import netsvc
 import cube
+import os
+import tools
+import base64
 from cube import levels
 
 
@@ -359,24 +362,16 @@ class olap_schema(osv.osv ):
         if not ids:
             raise 'Schema not found !'
         schema = self.browse(cr, uid, ids[0], context)
-        print 'Parsing MDX...'
-        print '        ', request
         mdx_parser = cube.mdx_parser()
         mdx = mdx_parser.parse(request)
 
-        print 'Validating MDX...'
         mdx.preprocess()
         validate, cubex = mdx.validate(schema)
 
-        print 'Running MDX...'
         res_comp = self.pool.get('res.company').search(cr, uid, ([]))
         res_comp = self.pool.get('res.company').browse(cr, uid, res_comp)
         currency = res_comp[0].currency_id.name
-        print " Default Currency", currency
         data = mdx.run(currency)
-
-        print 'Running Done...'
-        print 'Formatting Output...'
 
         if cubex.query_log:
             log = context.get('log')
@@ -1086,7 +1081,7 @@ class olap_query_logs(osv.osv):
     _description = "Olap query logs"
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'Tiny ERP User'),
+        'user_id': fields.many2one('res.users', 'OpenERP SA User'),
         'query': fields.text('Query', required = True),
         'time': fields.datetime('Time', required = True),
         'result_size': fields.integer('Result Size', readonly = True),
@@ -1597,7 +1592,7 @@ class bi_load_db_wizard(osv.osv_memory):
                          from
                              INFORMATION_schema.key_column_usage
                          where
-                             constraint_name in (
+                             constraint_name IN (
                                          select constraint_name from INFORMATION_SCHEMA.table_constraints
                                          where
                                              constraint_type = 'FOREIGN KEY')""")
@@ -1633,7 +1628,7 @@ class bi_load_db_wizard(osv.osv_memory):
                 cols = {}
                 if tables_id:
                     cr.execute('select column_db_name,id,table_id from \
-                        olap_database_columns where table_id in (' + ','.join(tables_id) + ')')
+                        olap_database_columns where table_id IN (' + ','.join(tables_id) + ')')
                 else:
                     cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -1681,10 +1676,10 @@ class bi_load_db_wizard(osv.osv_memory):
                     from
                         INFORMATION_schema.key_column_usage
                     where table_schema= %s and
-                        constraint_name in (
+                        constraint_name IN (
                                     select constraint_name from INFORMATION_SCHEMA .table_constraints
                                     where
-                                        constraint_type in('PRIMARY KEY','FOREIGN KEY'))
+                                        constraint_type IN ('PRIMARY KEY','FOREIGN KEY'))
                                     """, (db_name))
                 for constraint in cr_db.fetchall():
 
@@ -1722,7 +1717,7 @@ class bi_load_db_wizard(osv.osv_memory):
                 cols = {}
                 if tables_id:
                     cr.execute('select column_db_name,id,table_id from \
-                            olap_database_columns where table_id in (' + ','.join(tables_id) + ')')
+                            olap_database_columns where table_id IN (' + ','.join(tables_id) + ')')
                 else:
                     cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -1809,7 +1804,7 @@ class bi_load_db_wizard(osv.osv_memory):
                     from
                         all_cons_columns
                     where
-                        constraint_name in (
+                        constraint_name IN (
                                     select constraint_name from all_constraints
                                     where
                                         constraint_type = 'R' and owner = %s)
@@ -2136,16 +2131,34 @@ class olap_parameters_config_wizard(osv.osv_memory):
                Word(alphanums + "_" + " ").suppress()
         return s_p.parseString(aid.url)[1]
 
+    def _get_image(self, cr, uid, context=None):
+        path = os.path.join('base','res','config_pixmaps/1.png')
+        file_data = tools.file_open(path,'rb').read()
+        return base64.encodestring(file_data)
+
+    def _progress(self, cr, uid, context=None):
+        total = self.pool.get('ir.actions.todo')\
+            .search_count(cr, uid, [], context)
+        open = self.pool.get('ir.actions.todo')\
+            .search_count(cr, uid, [('state','<>','open')], context)
+        if total:
+            return round(open*90./total)
+        return 100.
+
     _columns = {
         'host_name': fields.char('Server Name', size = 64, help = "Put here the server address or IP \
                 Put localhost if its not clear.", required = True),
         'host_port': fields.char('Port', size = 4, help = "Put the port for the server. Put 8080 if \
                 its not clear.", required = True),
+        'config_logo': fields.binary('Image', readonly=True),
+        'progress': fields.float('Configuration Progress', readonly=True),
             }
 
     _defaults = {
         'host_name': _get_host,
         'host_port': _get_port,
+        'progress': _progress,
+        'config_logo': _get_image,
         }
 
     def action_cancel(self, cr, uid, ids, conect = None):

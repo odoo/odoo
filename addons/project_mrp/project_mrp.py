@@ -26,7 +26,7 @@ class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
     _columns = {
-        'procurement_id': fields.many2one('mrp.procurement', 'Procurement', ondelete='set null')
+        'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null')
     }
 
     def do_close(self, cr, uid, ids, *args):
@@ -35,7 +35,7 @@ class project_task(osv.osv):
         for task in tasks:
             if task.procurement_id:
                 wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'mrp.procurement', task.procurement_id.id, 'subflow.done', cr)
+                wf_service.trg_validate(uid, 'procurement.order', task.procurement_id.id, 'subflow.done', cr)
         return res
 
     def do_cancel(self, cr, uid, ids, *args):
@@ -44,9 +44,16 @@ class project_task(osv.osv):
         for task in tasks:
             if task.procurement_id:
                 wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'mrp.procurement', task.procurement_id.id, 'subflow.cancel', cr)
+                wf_service.trg_validate(uid, 'procurement.order', task.procurement_id.id, 'subflow.cancel', cr)
         return True
 
 project_task()
+class product_product(osv.osv):
+    _inherit = "product.product"
+    _columns = {
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null',)
+    }
+product_product()    
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

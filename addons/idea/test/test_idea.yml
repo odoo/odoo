@@ -19,13 +19,13 @@
     user_id: base.user_root
     
 - |
-  I check that idea on draft state.
+  I check that the idea is in draft state.
 -
   !assert {model: idea.idea, id: idea_idea_0}:
     - state == 'draft'  
     
 - |
-  I open this idea by click on "Open" button.
+  I open this idea by clicking on the "Open" button.
 - 
   !workflow {model: idea.idea, action: idea_open, ref: idea_idea_0}
   
@@ -44,9 +44,6 @@
   !record {model: res.users, id: res_users_user1}:
     company_id: base.main_company
     context_lang: en_US
-    groups_id:
-      - base.group_system
-      - base.group_user
     login: user2
     name: user2
     password: user2
@@ -54,16 +51,12 @@
 - |
   In order to post vote I connect as user1 and open the idea page
   I click on  "Submit Vote" wizard  button and vote the idea as "Normal"
--
-  !record {model: idea.post.vote, id: idea_post_vote_0}: 
-    vote: 50
     
-- |
-  Now I click on "Post" button of this wizard.     
 - 
   !python {model: idea.post.vote}: |
-    uid = ref('res_users_user0')    
-    self.do_vote(cr, uid, [ref("idea_post_vote_0")], {'active_ids': [ref('idea_idea_0')]})  
+    uid = ref('res_users_user0')
+    new_id = self.create(cr, uid, {'vote': 50}, {"active_ids": [ref("idea_idea_0")]})
+    self.do_vote(cr, uid, [new_id], {"active_ids": [ref("idea_idea_0")]})
     
 - |
   To add other vote I connect as user2 and open the idea page.
@@ -72,16 +65,11 @@
    
   and put comment "We can learn many things from technical presentation".
   
-- 
-  !record {model: idea.post.vote, id: idea_post_vote_1}: 
-    vote: 100
-    note: 'We can learn many things from technical presentation'
-- |
-  I click on "Post" button of this wizard.    
 -
   !python {model: idea.post.vote}: |
     uid = ref('res_users_user1')
-    self.do_vote(cr, uid, [ref("idea_post_vote_1")], {'active_ids': [ref('idea_idea_0')]})  
+    new_id = self.create(cr, uid, {'vote': 100, 'note': 'We can learn many things from technical presentation'}, {"active_ids": [ref("idea_idea_0")]})
+    self.do_vote(cr, uid, [new_id], {'active_ids': [ref('idea_idea_0')]})  
         
 - |
   I can see that the Average score changed in "Average score" field with value 75
@@ -99,4 +87,3 @@
 -
   !assert {model: idea.idea, id: idea_idea_0}: 
     - state == 'close'  
-    

@@ -37,6 +37,7 @@ class report_stock_picking(osv.osv):
         'product_uos_qty': fields.float('# of Products', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'date': fields.date('Date', readonly=True),
+        'avg_days_late': fields.float('Avg Due Days', digits=(16,2), readonly=True, group_operator="avg"),
         'avg_days_to_deliver': fields.float('Avg Days to Deliver', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of  Avg Days to deliver"),
         'state': fields.selection([('draft', 'Draft'),('auto', 'Waiting'),('confirmed', 'Confirmed'),('assigned', 'Available'),('done', 'Done'),('cancel', 'Cancelled')], 'State'),
@@ -71,8 +72,8 @@ class report_stock_picking(osv.osv):
                     sp.address_id as partner_id,
                     to_date(to_char(sp.create_date, 'MM-dd-YYYY'),'MM-dd-YYYY') as date,
                     count(sm.id) as nbr,
-                    count(distinct sp.id) as nbp,
-                    sum(sm.product_qty) as product_qty,
+                    count(sp.id) as nbp,
+                    sum(sm.product_qty*u.factor) as product_qty,
                     sum(sm.product_uos_qty) as product_uos_qty,
                     sm.product_id as product_id,
                     sm.location_dest_id as location_dest_id,
@@ -83,9 +84,11 @@ class report_stock_picking(osv.osv):
                     sp.invoice_state,
                     sp.company_id as company_id,
                     avg(extract('epoch' from (sp.date_done-sp.create_date)))/(3600*24) as  avg_days_to_deliver,
+                    avg(extract('epoch' from (sp.date_done-sp.min_date)))/(3600*24) as  avg_days_late,
                     sp.state
-                from stock_move as sm
-                left join stock_picking as sp ON (sm.picking_id=sp.id)
+                from stock_picking as sp
+                Inner join stock_move as sm ON (sm.picking_id=sp.id)
+                Inner join product_uom u on (u.id=sm.product_uom)
                 group by sp.type,
                          sp.create_date,
                          sp.address_id,

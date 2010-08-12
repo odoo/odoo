@@ -144,9 +144,9 @@ class lunch_order(osv.osv):
     }
 
     _defaults = {
-        'user_id': lambda self,cr,uid,context: uid,
-        'date': lambda self,cr,uid,context: time.strftime('%Y-%m-%d'),
-        'state': lambda self,cr,uid,context: 'draft',
+        'user_id': lambda self, cr, uid, context: uid,
+        'date': lambda self, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'state': lambda self, cr, uid, context: 'draft',
     }
 
     def confirm(self, cr, uid, ids, box, context):

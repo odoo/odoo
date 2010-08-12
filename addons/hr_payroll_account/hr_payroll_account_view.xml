@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+         <record id="view_hr_payslip_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.form</field>
+            <field name="model">hr.payslip</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <page string="Accounting Details" position="replace">
+                    <page string="Accounting Details">
+                        <group col="4" colspan="3">
+                            <separator colspan="4" string="Accounting Informations"/>
+                            <field name="move_ids" colspan="4" nolabel="1" readonly="1">
+                                <tree string="Accounting Vouchers">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="move_id"/>
+                                </tree>
+                                <form string="Accounting Vouchers">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="move_id"/>
+                                </form>
+                            </field>
+                        </group>
+                        <group col="2" colspan="1">
+                            <separator colspan="2" string="Other Informations"/>
+                            <field name="paid" readonly="1"/>
+                            <field name="company_id"/>
+                            <field name="register_id"/>
+                            <field name="deg_id"/>
+                            <field name="contract_id" domain="[('employee_id','=',employee_id)]"/>
+                        </group>
+                        <separator colspan="4" string="Description"/>
+                        <field name="note" colspan="4" nolabel="1"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+        
+        <record id="view_hr_payslip_form_inherit1" model="ir.ui.view">
+            <field name="name">hr.payslip.form</field>
+            <field name="model">hr.payslip</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="view_hr_payslip_form_inherit"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Account Lines">
+                        <field name="move_line_ids" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Payment Lines">
+                        <field name="move_payment_ids" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

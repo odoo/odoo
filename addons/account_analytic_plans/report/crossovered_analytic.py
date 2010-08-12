@@ -19,20 +19,20 @@
 #
 ##############################################################################
 
-import pooler
 import time
+
 from report import report_sxw
 
 class crossovered_analytic(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(crossovered_analytic, self).__init__(cr, uid, name, context=context)
+        super(crossovered_analytic, self).__init__(cr, uid, name, context = context)
         self.localcontext.update( {
             'time': time,
             'lines': self._lines,
             'ref_lines' : self._ref_lines,
             'find_children':self.find_children,
         })
-        self.base_amount=0.00
+        self.base_amount = 0.00
 
     def find_children(self,ref_ids):
         to_return_ids = []
@@ -70,8 +70,8 @@ class crossovered_analytic(report_sxw.rml_parse):
         line_pool = self.pool.get('account.analytic.line')
 
         self.dict_acc_ref = {}
-        if form['journal_ids'][0][2]:
-            journal = " in (" + ','.join(map(lambda x: str(x), form['journal_ids'][0][2])) + ")"
+        if form['journal_ids']:
+            journal = " in (" + ','.join(map(lambda x: str(x), form['journal_ids'])) + ")"
         else:
             journal = 'is not null'
 
@@ -114,8 +114,8 @@ class crossovered_analytic(report_sxw.rml_parse):
         if not ids:
             ids = self.ids
 
-        if form['journal_ids'][0][2]:
-            journal=" in (" + ','.join(map(lambda x: str(x), form['journal_ids'][0][2])) + ")"
+        if form['journal_ids']:
+            journal=" in (" + ','.join(map(lambda x: str(x), form['journal_ids'])) + ")"
         else:
             journal= 'is not null'
 
@@ -153,23 +153,23 @@ class crossovered_analytic(report_sxw.rml_parse):
                     if not form['empty_line']:
                         res.append(result)
             else:
-                result={}
-                res=[]
-                result['id']=acc_id
+                result = {}
+                res = []
+                result['id'] = acc_id
                 data_account = acc_pool.browse(self.cr,self.uid,acc_id)
-                result['acc_name']=data_account.name
+                result['acc_name'] = data_account.name
                 result['code'] = data_account.code
-                result['amt']=result['qty']=result['perc']=0.00
+                result['amt'] = result['qty'] = result['perc'] = 0.00
                 if not form['empty_line']:
                     res.append(result)
 
             for item in res:
-                obj_acc=acc_pool.name_get(self.cr,self.uid,[item['id']])
-                item['acc_name']=obj_acc[0][1]
+                obj_acc = acc_pool.name_get(self.cr,self.uid,[item['id']])
+                item['acc_name'] = obj_acc[0][1]
                 final.append(item)
         return final
 
-report_sxw.report_sxw('report.account.analytic.account.crossovered.analytic', 'account.analytic.account', 'addons/account_analytic_plans/report/crossovered_analytic.rml',parser=crossovered_analytic, header=False)
+report_sxw.report_sxw('report.account.analytic.account.crossovered.analytic', 'account.analytic.account', 'addons/account_analytic_plans/report/crossovered_analytic.rml',parser = crossovered_analytic, header = False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

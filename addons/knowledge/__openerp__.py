@@ -24,14 +24,16 @@
     "name" : "Knowledge Management System",
     "version" : "1.0",
     "depends" : ["base"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "description": """Installer for knowledge-based tools
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
+        'security/knowledge_security.xml',
         'security/ir.model.access.csv',
         'knowledge_installer.xml',
+        'knowledge_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

@@ -21,20 +21,21 @@
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
-from tools.translate import _
+from os.path import join as opj
 from operator import itemgetter
+from tools.translate import _
 from osv import fields, osv
 import netsvc
 import tools
-from os.path import join as opj
 
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
 
     def _get_default_accounts(self, cr, uid, context=None):
-        accounts = [{'acc_name':'Current','account_type':'cash'},
-                    {'acc_name':'Deposit','account_type':'cash'}]
+        accounts = [{'acc_name':'Current','account_type':'bank'},
+                    {'acc_name':'Deposit','account_type':'bank'},
+                    {'acc_name':'Cash','account_type':'cash'}]
         return accounts
 
     def _get_charts(self, cr, uid, context=None):
@@ -67,6 +68,12 @@ class account_installer(osv.osv_memory):
         'account_asset':fields.boolean('Assets Management',
             help="Enables asset management in the accounting application, "
                  "including asset categories and usage periods."),
+        'account_voucher':fields.boolean('Voucher Management',
+            help="Account Voucher module includes all the basic requirements of "
+                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
+        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
+            help="Extension Account Voucher module includes allows to link payment / receipt "
+                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period':fields.selection([('month','Monthly'), ('3months','3 Monthly')],
@@ -74,7 +81,7 @@ class account_installer(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
         'sale_tax':fields.float('Sale Tax(%)'),
         'purchase_tax':fields.float('Purchase Tax(%)')
-        }
+    }
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
@@ -83,7 +90,7 @@ class account_installer(osv.osv_memory):
         'purchase_tax':lambda *a:0.0,
         #'charts':'configurable',
         'bank_accounts_id':_get_default_accounts
-        }
+    }
 
     def on_change_tax(self, cr, uid, id, tax):
         return{'value':{'purchase_tax':tax}}
@@ -99,7 +106,7 @@ class account_installer(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        obj_multi = self.pool.get('account.chart.template').browse(cr,uid, id)
+        obj_multi = self.pool.get('account.chart.template').browse(cr, uid, id)
 
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
@@ -108,7 +115,8 @@ class account_installer(osv.osv_memory):
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
-        company_id = self.pool.get('res.users').browse(cr,uid,[uid],context)[0].company_id
+        data_pool = self.pool.get('ir.model.data')
+        company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
         seq_journal = True
 
         # Creating Account
@@ -133,7 +141,7 @@ class account_installer(osv.osv_memory):
                 'company_id': company_id.id,
                 'sign': tax_code_template.sign,
             }
-            new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals)
+            new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals)
             #recording the new tax code to do the mapping
             tax_code_template_ref[tax_code_template.id] = new_tax_code
 
@@ -166,7 +174,7 @@ class account_installer(osv.osv_memory):
                 'company_id': company_id.id,
                 'type_tax_use': tax.type_tax_use
             }
-            new_tax = obj_acc_tax.create(cr,uid,vals_tax)
+            new_tax = obj_acc_tax.create(cr, uid, vals_tax)
             #as the accounts have not been created yet, we have to wait before filling these fields
             todo_dict[new_tax] = {
                 'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
@@ -204,11 +212,11 @@ class account_installer(osv.osv_memory):
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id.id,
             }
-            new_account = obj_acc.create(cr,uid,vals)
+            new_account = obj_acc.create(cr, uid, vals)
             acc_template_ref[account_template.id] = new_account
             if account_template.name == 'Bank Current Account':
-                view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Cash Journal View')])[0]
-                view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Multi-Currency Cash Journal View')])[0]
+                view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal View')])[0] #why fixed name here?
+                view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #Why Fixed name here?
                 ref_acc_bank = obj_multi.bank_account_view_id
 
                 cash_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_cash')
@@ -289,9 +297,12 @@ class account_installer(osv.osv_memory):
                     'account_paid_id': acc_template_ref[value['account_paid_id']],
                 })
 
-        # Creating Journals
+        # Creating Journals Sales and Purchase
         vals_journal={}
-        view_id = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Journal View')])[0]
+        data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
+        data = mod_obj.browse(cr, uid, data_id[0])
+        view_id = data.res_id
+        
         seq_id = obj_sequence.search(cr,uid,[('name','=','Account Journal')])[0]
 
         if seq_journal:
@@ -328,8 +339,8 @@ class account_installer(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Bank Journals
-        view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Cash Journal View')])[0]
-        view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Multi-Currency Cash Journal View')])[0]
+        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: Why put fixed name ?
+        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fixed name?
         ref_acc_bank = obj_multi.bank_account_view_id
 
 
@@ -426,7 +437,7 @@ class account_installer(osv.osv_memory):
                         'sign': 1,
                         'parent_id':sal_tax_parent_id
                         }
-                    new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals_tax_code)
+                    new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
                     sales_tax = obj_tax.create(cr, uid,
                                            {'name':'VAT%s%%'%(s_tax*100),
                                             'description':'VAT%s%%'%(s_tax*100),
@@ -445,7 +456,7 @@ class account_installer(osv.osv_memory):
                         'sign': 1,
                         'parent_id':pur_tax_parent_id
                         }
-                    new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals_tax_code)
+                    new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
                     purchase_tax = obj_tax.create(cr, uid,
                                             {'name':'VAT%s%%'%(p_tax*100),
                                              'description':'VAT%s%%'%(p_tax*100),
@@ -457,7 +468,7 @@ class account_installer(osv.osv_memory):
                     tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
                     default_tax.append(('supplier_taxes_id',purchase_tax))
                 if len(tax_val):
-                    product_ids = obj_product.search(cr,uid, [])
+                    product_ids = obj_product.search(cr, uid, [])
                     for product in obj_product.browse(cr, uid, product_ids):
                         obj_product.write(cr, uid, product.id, tax_val)
                     for name, value in default_tax:

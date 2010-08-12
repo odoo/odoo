@@ -113,7 +113,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
         else:
             temp_head = [str(x[0:3]) for x in self.header_name]
             head_dict = dict(zip(temp_head,temp_head))
-        print "head_dict",head_dict
         return [head_dict]
 
     def getarray(self,data,object,array_header=''):

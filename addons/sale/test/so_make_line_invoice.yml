@@ -1,0 +1,242 @@
+-
+  In order to test the invoices based on sale order lines of sales module in OpenERP
+  I create a Sale Order for two products LG Viewty Smart and Slider mobile for qty 100 having order_policy manual.
+-
+  !record {model: sale.order, id: sale_order_so3}:
+    date_order: '2010-07-12'
+    invoice_quantity: order
+    name: Test_SO003
+    order_line:
+      - name: Slider Mobile
+        price_unit: 200.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 100.0
+        state: draft
+        delay: 7.0
+        product_id: sale.product_product_slidermobile0
+        product_uos_qty: 100.0
+        type: make_to_order
+      - name: LG Viewty Smart
+        price_unit: 170.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 100.0
+        state: draft
+        delay: 7.0
+        product_id: sale.product_product_lgviewtysmart0
+        product_uos_qty: 100.0
+        th_weight: 0.0
+        type: make_to_order      
+    order_policy: manual
+    partner_id: sale.res_partner_cleartrail0
+    partner_invoice_id: sale.res_partner_address_2
+    partner_order_id: sale.res_partner_address_1
+    partner_shipping_id: sale.res_partner_address_3
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
+- 
+  I confirm the Sale Order.
+- 
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
+-
+  I click on the "Create Invoice" button of sale order line
+- 
+  !python {model: sale.order.line}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    sol = so.order_line[0] 
+    self.create_sale_order_line_invoice(cr, uid, [sol.id], {"lang": "en_US",
+      "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
+      "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
+      })
+-
+  I verify that "Invoiced" has been set to True.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so3"))
+    sol = sale_id.order_line[0]  
+    assert(sol.invoiced == True), "Invoiced has not been set to true"
+-
+  I verify that an invoice for sale order line has been created.
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so3"))
+    assert so.invoice_ids, "Invoices has not been generated for sale_order_so3"
+-
+  I click on the Create button of invoice
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
+-
+  I verify that an invoice state has transit from draft to open state
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','open')])
+    assert invoice_id, "Invoice is not in the open state"
+-
+  Creating an account invoice pay entry.
+- 
+  !record {model: account.invoice.pay, id: account_invoice_pay_tst0}:
+    amount: 20000.0
+    date: '2010-07-12'
+    journal_id: sale.account_journal_bankjournal0
+    name: test
+    period_id: account.period_5
+- 
+  I pay the invoice.
+-
+  !python {model: account.invoice.pay}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    self.wo_check(cr, uid, [ref("account_invoice_pay_tst0")], {"lang": "en_US", "active_model": "account.invoice", 
+      "tz":False,"record_id": so.invoice_ids[0].id, "active_ids": [so.invoice_ids[0].id], "type":
+      "out_invoice", "active_id": so.invoice_ids[0].id})
+-
+  Creating an account invoice pay writeoff entry.
+- 
+  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
+    analytic_id: account.analytic_customers
+    comment: Write-Off
+    writeoff_acc_id: account.a_sale
+    writeoff_journal_id: sale.account_journal_bankjournal0
+- 
+  Pay and Reconcile the Invoice.
+- 
+  !python {model: account.invoice.pay.writeoff}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))   
+    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
+      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
+      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id, })
+-
+  I verify that an invoice is in done state. 
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','paid')])
+    assert invoice_id, "Invoice for SO is not in done state."
+-
+  I verify that Paid has been set to true.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so3"))
+    assert(sale_id.invoiced == True), "Paid has not been set to true"
+-
+ I click on the "Create Invoice" button of sale order and verify that it gives a warning message
+-
+  !python {model: sale.order}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    try:
+      wf_service.trg_validate(uid, 'sale.order',ref("sale_order_so3"),'manual_invoice', cr)
+    except:
+       pass
+-
+  I create an invoice for another sale order line. 
+-
+  I click on the "Create Invoice" button of sale order line
+- 
+  !python {model: sale.order.line}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    sol = so.order_line[1]    
+    self.create_sale_order_line_invoice(cr, uid, [sol.id], {"lang": "en_US",
+      "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
+      "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
+      })
+-
+  I verify that invoice for sale order line has been created.
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so3"))
+    assert so.invoice_ids[1], "Invoices has not been generated for sale_order_so3"
+-
+  I verify that "Invoiced" has been set to True.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so3"))
+    sol = sale_id.order_line[1]  
+    assert(sol.invoiced == True), "Invoiced has not been set to true"
+-
+  I verify that "Paid" has been set to False.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so3"))
+    assert(sale_id.invoiced == False), "Paid has not been set to true"
+-
+  I open the Invoice for the SO.
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
+-
+  I verify that an invoice state has transit from draft to open state
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','open')])
+    assert invoice_id, "Invoice is not in the open state"
+-
+  Creating a account invoice pay entry.
+- 
+  !record {model: account.invoice.pay, id: account_invoice_pay_tst1}:
+    amount: 17000.0
+    date: '2010-07-12'
+    journal_id: sale.account_journal_bankjournal0
+    name: test
+    period_id: account.period_5
+- 
+  I pay the invoice.
+-
+  !python {model: account.invoice.pay}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    self.wo_check(cr, uid, [ref("account_invoice_pay_tst1")], {"lang": "en_US", "active_model": "account.invoice", 
+      "tz":False,"record_id": so.invoice_ids[1].id, "active_ids": [so.invoice_ids[1].id], "type":
+      "out_invoice", "active_id": so.invoice_ids[1].id})
+-
+  Creating an account invoice pay writeoff entry.
+- 
+  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_1}:
+    analytic_id: account.analytic_customers
+    comment: Write-Off
+    writeoff_acc_id: account.a_sale
+    writeoff_journal_id: sale.account_journal_bankjournal0
+- 
+  Pay and Reconcile the Invoice.
+- 
+  !python {model: account.invoice.pay.writeoff}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))   
+    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_1")],
+      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
+      [so.invoice_ids[1].id], "type": "out_invoice", "active_id": so.invoice_ids[1].id})
+-
+  I verify the invoice is in done state. 
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','paid')])
+    assert invoice_id, "Invoice for SO is not in done state."
+-
+  I verify that Paid has been set to true.
+-
+  !python {model: sale.order}: |
+    sale_id=self.browse(cr, uid, ref("sale_order_so3"))
+    assert(sale_id.invoiced == True), "Paid has not been set to true"

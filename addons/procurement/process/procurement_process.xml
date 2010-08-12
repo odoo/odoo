@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <!--
+           Process Node from where the Procurement flow starts
+        -->
+
+        <record id="process_process_procurementprocess0" model="process.process">
+            <field eval="&quot;&quot;&quot;Procurement&quot;&quot;&quot;" name="name"/>
+            <field name="model_id" ref="procurement.model_procurement_order"/>
+            <field eval="1" name="active"/>
+        </record>
+        
+    </data>
+</openerp>

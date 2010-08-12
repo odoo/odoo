@@ -24,12 +24,16 @@
     "name" : "Marketing",
     "version" : "1.1",
     "depends" : ["base"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
     "description": "Menu for Marketing",
     'website': 'http://www.openerp.com',
     'init_xml': [],
-    'update_xml': ['marketing_view.xml'],
+    'update_xml': [
+        'security/marketing_security.xml',
+        'security/ir.model.access.csv',
+        'marketing_view.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,

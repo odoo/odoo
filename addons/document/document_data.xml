@@ -9,21 +9,15 @@
     </record>
     
     <record model="document.storage" id="storage_default">
-	<field name="name">Default File storage</field>
-	<field name="user_id" ref="base.user_admin"/>
-    </record>
-
-    <record model="document.storage" id="storage_db">
-	<field name="name">DB storage</field>
-	<field name="user_id" ref="base.user_admin"/>
-	<field name="type" eval="'db'" />
-	<field name="path"></field>
+        <field name="name">Database storage</field>
+        <field name="type">db</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
 
     <record model="document.directory" id="dir_root">
         <field name="name">Documents</field>
         <field name="user_id" ref="base.user_admin"/>
-	<field name="storage_id" ref="storage_default"/>
+        <field name="storage_id" ref="storage_default"/>
         <field name="ressource_id">0</field>
     </record>
 
@@ -31,7 +25,6 @@
         <field name="name">My Folder</field>
         <field name="parent_id" ref="dir_root"/>
         <field name="user_id" ref="base.user_admin"/>
-	<field name="storage_id" ref="storage_default"/>
         <field name="ressource_id">0</field>
  
     </record>
@@ -41,7 +34,6 @@
         <field name="parent_id" ref="dir_root"/>
         <field name="type">ressource</field>
         <field name="ressource_tree">1</field>
-	<field name="storage_id" ref="storage_default"/>
         <field name="ressource_id">0</field>
 
         <field name="ressource_type_id" search="[('model','=','res.partner.category')]" />
@@ -60,10 +52,9 @@
     </record>
 
     <record model="document.directory" id="dir_personnal_folder">
-        <field name="name">Personnal Folders</field>
+        <field name="name">Personal Folders</field>
         <field name="parent_id" ref="dir_root"/>
         <field name="type">ressource</field>
-	<field name="storage_id" ref="storage_default"/>
         <field name="ressource_type_id" ref="base.model_res_users" />
         <field name="ressource_id">0</field>
 

@@ -18,16 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 from osv import fields, osv
 
 class account_payment_make_payment(osv.osv_memory):
     _name = 'account.payment.make.payment'
     _description = 'Account make payment'
-    _columns = {
-            }
 
-    def launch_wizard(self, cr, uid, ids, context):
+    def launch_wizard(self, cr, uid, ids, context=None):
         """
         Search for a wizard to launch according to the type.
         If type is manual. just confirm the order.
@@ -35,8 +32,8 @@ class account_payment_make_payment(osv.osv_memory):
         obj_payment_order = self.pool.get('payment.order')
         obj_model = self.pool.get('ir.model.data')
         obj_act = self.pool.get('ir.actions.act_window')
-        order= obj_payment_order.browse(cr,uid,context['active_id'],context)
-        t= order.mode and order.mode.type.code or 'manual'
+        order= obj_payment_order.browse(cr, uid, context['active_id'], context)
+        t = order.mode and order.mode.type.code or 'manual'
         if t == 'manual' :
             obj_payment_order.set_done(cr,uid,context['active_id'],context)
             return {}
@@ -49,12 +46,10 @@ class account_payment_make_payment(osv.osv_memory):
         module, wizard= gw
         result = mod_obj._get_id(cr, uid, module, wizard)
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        result = act_obj.read(cr, uid, [id])[0]
+        return act_obj.read(cr, uid, [id])[0]
         #result['context'] = str({'fiscalyear': data['form']['fiscalyear']})
-        return result
 
 
 account_payment_make_payment()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

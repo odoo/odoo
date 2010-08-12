@@ -26,7 +26,7 @@ class auction_payer(osv.osv_memory):
     _description = "Auction payer"
     
     def payer(self, cr, uid, ids, context):
-        self.pool.get('auction.lots').write(cr, uid, context['active_ids'], {'is_ok':True, 'state':'paid'})
+        self.pool.get('auction.lots').write(cr, uid, context.get('active_ids', []), {'is_ok':True, 'state':'paid'})
         return {}
     
 auction_payer()

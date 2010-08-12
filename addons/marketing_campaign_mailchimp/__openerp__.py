@@ -24,7 +24,7 @@
     "name" : "",
     "version" : "1.1",
     "depends" : ['marketing_campaign'],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
     "description": """
     """,
@@ -32,6 +32,7 @@
     'init_xml': [],
     'update_xml': [
         'marketing_campaign_mailchimp_view.xml',
+        'wizard/create_list_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

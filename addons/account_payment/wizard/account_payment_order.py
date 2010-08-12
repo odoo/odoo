@@ -88,7 +88,7 @@ class payment_order_create(osv.osv_memory):
                 'date': date_to_pay,
                 'currency': line.invoice and line.invoice.currency_id.id or False,
                 }, context=context)
-        return {'nodestroy':True,}
+        return {}
 
     def search_entries(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('payment.order')
@@ -110,8 +110,7 @@ class payment_order_create(osv.osv_memory):
         context.update({'line_ids': line_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_create_payment_order_lines')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {
-                'name': ('Entrie Lines'),
+        return {'name': ('Entrie Lines'),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'form',

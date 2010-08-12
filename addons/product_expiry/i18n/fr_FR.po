@@ -1,0 +1,159 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* product_expiry
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-06-30 15:09:36+0000\n"
+"PO-Revision-Date: 2009-06-30 15:09:36+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_expiry
+#: field:product.product,life_time:0
+msgid "Product lifetime"
+msgstr "Durée limite de consommation"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Jambon"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Lait de vache"
+
+#. module: product_expiry
+#: model:ir.module.module,shortdesc:product_expiry.module_meta_information
+msgid "Products date of expiry"
+msgstr "Dates de péremption des produits"
+
+#. module: product_expiry
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Erreur: l'unité de mesure par défaut et l'unité de mesure d'achat doivent faire partie de la même catégorie"
+
+#. module: product_expiry
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valide pour l'architecture de la vue"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid "The date the lot may become dangerous and should not be consumed."
+msgstr "La date à laquelle le lot peut devenir dangereux et ne doit plus être consommé."
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+msgid "Removal Date"
+msgstr "Date de retrait"
+
+#. module: product_expiry
+#: model:ir.module.module,description:product_expiry.module_meta_information
+msgid "Track different dates on products and production lots:\n"
+" - end of life\n"
+" - best before date\n"
+" - removal date\n"
+" - alert date\n"
+"Used, for example, in food industries."
+msgstr "Suit les différentes dates des produits et des lots de production\n"
+" - Date limite de consommation\n"
+" - DLUO\n"
+" - Date de retrait\n"
+" - Date d'alerte\n"
+"Utilisé par exemple dans les industries alimentaires"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "Pain"
+
+#. module: product_expiry
+#: model:product.uom,name:product_expiry.product_uom_ltr
+#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
+msgid "LTR"
+msgstr "LTR"
+
+#. module: product_expiry
+#: view:product.product:0
+#: view:stock.production.lot:0
+msgid "Dates"
+msgstr "Dates"
+
+#. module: product_expiry
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Erreur: l'unité de vente doit appartenir à une catégorie différente que l'unité de mesure"
+
+#. module: product_expiry
+#: field:stock.production.lot,life_date:0
+msgid "End of Life Date"
+msgstr "Date limite de consommation"
+
+#. module: product_expiry
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "Date limite d'utilisation optimale"
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid "The date the lot starts deteriorating without becoming dangerous."
+msgstr "La date à laquelle le lot commencera à se déteriorer sans devenir dangereux."
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camenbert"
+msgstr "Fromage Camembert Français"
+
+#. module: product_expiry
+#: help:product.product,removal_time:0
+msgid "The number of days before a production lot should be removed."
+msgstr "Le nombre de jours après lesquels un lot de production doit être retiré."
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product usetime"
+msgstr "Durée limite d'utilisation optimale"
+
+#. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Date d'alerte"
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product removal time"
+msgstr "Durée avant retrait"
+
+#. module: product_expiry
+#: help:product.product,use_time:0
+msgid "The number of days before a production lot starts deteriorating without becoming dangerous."
+msgstr "Le nombre de jours après lesquels un lot de production commencera à se déteriorer sans devenir dangereux"
+
+#. module: product_expiry
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erreur: code EAN invalide"
+
+#. module: product_expiry
+#: help:product.product,life_time:0
+msgid "The number of days before a production lot may become dangerous and should not be consumed."
+msgstr "Nombre de jours après lesquels un lot de production peut devenir dangereux et ne doit plus être consommé."
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date the lot should be removed."
+msgstr "La date à laquelle le lot doit être retiré."
+
+#. module: product_expiry
+#: field:product.product,alert_time:0
+msgid "Product alert time"
+msgstr "Durée avant alerte"
+

@@ -68,6 +68,8 @@ class email_template_send_wizard(osv.osv_memory):
         return template
 
     def _get_template_value(self, cr, uid, field, context=None):
+        if context is None:
+            context = {}
         template = self._get_template(cr, uid, context)
         if not template:
             return False
@@ -118,8 +120,10 @@ class email_template_send_wizard(osv.osv_memory):
         'full_success': lambda *a: False
     }
 
-    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
-        result = super(email_template_send_wizard, self).fields_get(cr, uid, fields, context, read_access)
+    def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
+        if context is None:
+            context = {}
+        result = super(email_template_send_wizard, self).fields_get(cr, uid, fields, context, write_access)
         if 'attachment_ids' in result and 'src_model' in context:
             result['attachment_ids']['domain'] = [('res_model','=',context['src_model']),('res_id','=',context['active_id'])]
         return result
@@ -165,10 +169,11 @@ class email_template_send_wizard(osv.osv_memory):
             else:
                 return value
 
+        if context is None:
+            context = {}
         mail_ids = []
         template = self._get_template(cr, uid, context)
         for id in context['src_rec_ids']:
-            print "@22222222222222222222222",ids
             screen_vals = self.read(cr, uid, ids[0], [],context)
             account = self.pool.get('email_template.account').read(cr, uid, screen_vals['from'], context=context)
             vals = {

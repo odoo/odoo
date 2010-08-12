@@ -28,7 +28,10 @@ class mrp_product_produce(osv.osv_memory):
     _columns = {
         'product_qty': fields.float('Quantity', required=True), 
         'mode': fields.selection([('consume_produce', 'Consume & Produce'), 
-                                  ('consume', 'Consume Only')], 'Mode', required=True)
+                                  ('consume', 'Consume Only')], 'Mode', required=True,
+                                  help="'Consume only' mode will only consume the products with the quantity selected.\n"
+                                        "'Consume & Produce' mode will consume as well as produce the products with the quantity selected "
+                                        "and it will finish the production order when total ordered quantities are produced."),
     }
 
     def _get_product_qty(self, cr, uid, context):
@@ -43,6 +46,7 @@ class mrp_product_produce(osv.osv_memory):
                                 context['active_id'], context=context)
         done = 0.0
         for move in prod.move_created_ids2:
+            if not move.scraped:
                 done += move.product_qty
         return (prod.product_qty - done) or prod.product_qty
     
@@ -70,3 +74,4 @@ class mrp_product_produce(osv.osv_memory):
 
 mrp_product_produce()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

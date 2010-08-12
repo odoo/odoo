@@ -22,6 +22,7 @@
 import delivery
 import partner
 import wizard
+import report
 import sale
 import stock
 

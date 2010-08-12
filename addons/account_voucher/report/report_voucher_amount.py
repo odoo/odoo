@@ -31,8 +31,8 @@ class report_voucher_amount(report_sxw.rml_parse):
             'convert':self.convert
         })
 
-    def convert(self,amount, cur):
-        amt_en = amount_to_text_en.amount_to_text(amount,'en',cur);
+    def convert(self, amount, cur):
+        amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur);
         return amt_en
     
     

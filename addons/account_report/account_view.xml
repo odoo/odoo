@@ -90,8 +90,12 @@
             <field name="domain"/>
             <field name="view_id" ref="view_account_report_tree_simple"/>
         </record>
+        <menuitem
+            parent="account.menu_finance_generic_reporting"
+            id="menu_menu_finance_generic_reporting"
+            name="Reporting"/>
 
-        <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="account.menu_finance_configuration" sequence="20"/>
+        <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="menu_menu_finance_generic_reporting" sequence="20"/>
 
         <record id="view_account_report_tree" model="ir.ui.view">
             <field name="name">account.report.report.tree</field>
@@ -110,14 +114,14 @@
         </record>
 
         <record id="action_account_report_tree_view" model="ir.actions.act_window">
-            <field name="name">Custom reporting</field>
+            <field name="name">Custom Reporting</field>
             <field name="res_model">account.fiscalyear</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_report_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="action_account_report_tree_view" id="menu_action_account_report_tree_view" parent="account.menu_finance_generic_reporting" sequence="5"/>
 
+        <menuitem action="action_account_report_tree_view" id="menu_action_account_report_tree_view" parent="menu_menu_finance_generic_reporting" sequence="5"/>
 
         <record id="action_account_report_tree_view_fiscal" model="ir.actions.act_window">
             <field name="name">Fiscal Statements reporting</field>

@@ -25,6 +25,7 @@ from osv import fields, osv
 
 from tools.misc import currency
 from tools.translate import _
+import decimal_precision as dp
 
 class account_bank_statement(osv.osv):
 
@@ -32,7 +33,7 @@ class account_bank_statement(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-        model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
+        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'statement_id': ids[0]})
         return {
@@ -45,12 +46,19 @@ class account_bank_statement(osv.osv):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'nodestroy': True
-                }
+        }
 
     def _default_journal_id(self, cr, uid, context={}):
-        if context.get('journal_id', False):
-            return context['journal_id']
-        return False
+        journal_pool = self.pool.get('account.journal')
+        journal_type = context.get('journal_type', False)
+        journal_id = False
+        
+        if journal_type:
+            ids = journal_pool.search(cr, uid, [('type', '=', journal_type)])
+            if ids:
+                journal_id = ids[0]
+            
+        return journal_id 
 
     def _default_balance_start(self, cr, uid, context={}):
         cr.execute('select id from account_bank_statement where journal_id=%s order by date desc limit 1', (1,))
@@ -118,21 +126,20 @@ class account_bank_statement(osv.osv):
             currency_id = res[statement_id]
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
-
+        
     _order = "date desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
         'name': fields.char('Name', size=64, required=True, states={'confirm': [('readonly', True)]}),
-        'date': fields.date('Date', required=True,
-            states={'confirm': [('readonly', True)]}),
+        'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
-            states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'cash')]),
+            states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'bank')]),
         'period_id': fields.many2one('account.period', 'Period', required=True,
             states={'confirm':[('readonly', True)]}),
-        'balance_start': fields.float('Starting Balance', digits=(16,2),
+        'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly',True)]}),
-        'balance_end_real': fields.float('Ending Balance', digits=(16,2),
+        'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly', True)]}),
         'balance_end': fields.function(_end_balance, method=True, string='Balance'),
         'line_ids': fields.one2many('account.bank.statement.line',
@@ -150,8 +157,7 @@ class account_bank_statement(osv.osv):
     }
 
     _defaults = {
-        'name': lambda self, cr, uid, context=None: \
-                self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement'),
+        'name': lambda *a: "/",
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
         'balance_start': _default_balance_start,
@@ -159,7 +165,37 @@ class account_bank_statement(osv.osv):
         'period_id': _get_period,
     }
 
-    def button_confirm(self, cr, uid, ids, context={}):
+    def onchange_date(self, cr, user, ids, date, context={}):
+        """
+        Returns a dict that contains new values and context
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param date: latest value from user input for field date
+        @param args: other arguments
+        @param context: context arguments, like lang, time zone
+        @return: Returns a dict which contains new values, and context
+        """
+        res = {}
+        period_pool = self.pool.get('account.period')
+        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        if pids:
+            res.update({
+                'period_id':pids[0]
+            })
+            context.update({
+                'period_id':pids[0]
+            })
+        
+        return {
+            'value':res,
+            'context':context,
+        }
+
+    def button_dummy(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {}, context)
+        return True
+        
+    def button_confirm_bank(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -303,6 +339,13 @@ class account_bank_statement(osv.osv):
                                 _('Ledger Posting line "%s" is not valid') % line.name)
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
+                    ## Search if move has already a partial reconciliation
+                    previous_partial = False
+                    for line_reconcile_move in move.reconcile_id.line_ids:
+                        if line_reconcile_move.reconcile_partial_id:
+                            previous_partial = True
+                            break
+                    ##
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
@@ -312,8 +355,14 @@ class account_bank_statement(osv.osv):
                         for entry in move.reconcile_id.line_new_ids:
                             writeoff_acc_id = entry.account_id.id
                             break
-
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
+                        ## If we have already a partial reconciliation
+                        ## We need to make a partial reconciliation
+                        ## To add this amount to previous paid amount
+                        if previous_partial:
+                            account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
+                        ## If it's the first reconciliation, we do a full reconciliation as regular
+                        else:
+                            account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
@@ -321,7 +370,13 @@ class account_bank_statement(osv.osv):
 
                 if st.journal_id.entry_posted:
                     account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
+                    
+            self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
             done.append(st.id)
+
+            next_number = self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement')
+            self.write(cr, uid, [st.id], {'name':next_number}, context)
+
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
         return True
 
@@ -383,7 +438,6 @@ class account_bank_statement(osv.osv):
         return super(account_bank_statement, self).copy(cr, uid, id, default, context)
 
 account_bank_statement()
-
 
 class account_bank_statement_reconcile(osv.osv):
     _name = "account.bank.statement.reconcile"
@@ -556,9 +610,9 @@ account_bank_statement_reconcile_line()
 
 class account_bank_statement_line(osv.osv):
 
-    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id,
-            context={}):
+    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context={}):
         res = {'value': {}}
+        
         if not partner_id:
             return res
         line = self.browse(cursor, user, line_id)
@@ -591,6 +645,10 @@ class account_bank_statement_line(osv.osv):
             balance = res_currency_obj.compute(cursor, user, company_currency_id,
                 currency_id, balance, context=context)
             res['value']['amount'] = balance
+        
+        if context.get('amount', 0) > 0:
+            res['value']['amount'] = context.get('amount')
+            
         return res
 
     def _reconcile_amount(self, cursor, user, ids, name, args, context=None):

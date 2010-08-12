@@ -10,7 +10,7 @@
             <field name="on_create">True</field>
         </record>
 
-        				<!-- Activity -->
+                        <!-- Activity -->
         <record id="act_marketing_campaign_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf_marketing_campaign"/>
             <field name="flow_start">True</field>
@@ -39,7 +39,7 @@
             <field name="action">state_cancel_set()</field>
         </record>
 
-        					<!-- Transition -->
+                            <!-- Transition -->
         <record id="trans_marketing_campaign_draft_running" model="workflow.transition">
             <field name="act_from" ref="act_marketing_campaign_draft"/>
             <field name="act_to" ref="act_marketing_campaign_running"/>
@@ -66,11 +66,13 @@
             <field name="on_create">True</field>
         </record>
 
-        				<!-- Activity -->
+                        <!-- Activity -->
         <record id="act_marketing_campaign_segment_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf_marketing_campaign_segment"/>
             <field name="flow_start">True</field>
             <field name="name">draft</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state': 'draft'})</field>
         </record>
 
         <record id="act_marketing_campaign_segment_running" model="workflow.activity">
@@ -90,12 +92,11 @@
         <record id="act_marketing_campaign_segment_cancel" model="workflow.activity">
             <field name="wkf_id" ref="wkf_marketing_campaign_segment"/>
             <field name="name">cancel</field>
-            <field name="flow_stop">True</field>
             <field name="kind">function</field>
             <field name="action">state_cancel_set()</field>
         </record>
 
-        					<!-- Transition -->
+                            <!-- Transition -->
         <record id="trans_marketing_campaign_segment_draft_running" model="workflow.transition">
             <field name="act_from" ref="act_marketing_campaign_segment_draft"/>
             <field name="act_to" ref="act_marketing_campaign_segment_running"/>
@@ -112,6 +113,12 @@
             <field name="act_from" ref="act_marketing_campaign_segment_running"/>
             <field name="act_to" ref="act_marketing_campaign_segment_cancel"/>
             <field name="signal">state_cancel_set</field>
+        </record>
+
+        <record id="trans_campaign_segment_set_to_draft" model="workflow.transition">
+            <field name="act_from" ref="act_marketing_campaign_segment_cancel"/>
+            <field name="act_to" ref="act_marketing_campaign_segment_draft"/>
+            <field name="signal">state_draft_set</field>
         </record>
     </data>
 </openerp>

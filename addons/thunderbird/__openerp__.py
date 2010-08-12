@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : "Axelor",
     "website" : "http://www.axelor.com/",
-    "depends" : ["base","crm"],
+    "depends" : ["base"],
     "category" : "Generic Modules/Thunderbird interface",
     "description": '''
       This module is required for the thuderbird plug-in to work

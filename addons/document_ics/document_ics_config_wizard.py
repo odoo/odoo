@@ -63,7 +63,7 @@ class document_ics_crm_wizard(osv.osv_memory):
         'jobs': fields.boolean('Jobs Hiring Process', help="Helps you to organise the jobs\
                      hiring process: evaluation, meetings, email integration..."),
         'document_ics':fields.boolean('Shared Calendar', help=" Will allow you to synchronise \
-                        your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
+                        your OpenERP calendars with your phone, outlook, Sunbird, ical, ..."),
         'bugs': fields.boolean('Bug Tracking', help="Used by companies to track bugs and \
                      support requests on software"),
         'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),

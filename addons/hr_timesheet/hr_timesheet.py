@@ -44,10 +44,12 @@ class hr_analytic_timesheet(osv.osv):
     _order = "id desc"
     _columns = {
         'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade'),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id',relation='account.analytic.account',store=True),
+        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='account.analytic.account', store=True),
     }
 
-    def unlink(self, cr, uid, ids, context={}):
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         toremove = {}
         for obj in self.browse(cr, uid, ids, context=context):
             toremove[obj.line_id.id] = True
@@ -55,7 +57,9 @@ class hr_analytic_timesheet(osv.osv):
         return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context=context)
 
 
-    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context={}):
+    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context=None):
+        if context is None:
+            context = {}
         res = {}
         if prod_id and unit_amount:
             # find company
@@ -63,9 +67,11 @@ class hr_analytic_timesheet(osv.osv):
             res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, context=context)
         return res
 
-    def _getEmployeeProduct(self, cr, uid, context={}):
+    def _getEmployeeProduct(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
         if emp_id:
             emp=emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.product_id:
@@ -76,7 +82,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         if context is None:
             context = {}
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
         if emp_id:
             emp=emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.product_id:
@@ -87,7 +93,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         if context is None:
             context = {}
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if bool(emp.product_id):
@@ -102,7 +108,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         if context is None:
             context = {}
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.journal_id:
@@ -123,13 +129,15 @@ class hr_analytic_timesheet(osv.osv):
 
     def on_change_date(self, cr, uid, ids, date):
         if ids:
-            new_date = self.read(cr,uid,ids[0],['date'])['date']
+            new_date = self.read(cr, uid, ids[0], ['date'])['date']
             if date != new_date:
                 warning = {'title':'User Alert!','message':'Changing the date will let this entry appear in the timesheet of the new date.'}
                 return {'value':{},'warning':warning}
         return {'value':{}}
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
         ename = ''

@@ -1,3 +1,25 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2009  Sharoon Thomas  
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 import base64
 import random
 import time
@@ -17,10 +39,10 @@ try:
     TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))
 except:
     LOGGER.notifyChannel(
-                         _("Email Template"),
-                         netsvc.LOG_ERROR,
-                         _("Mako templates not installed")
-                         )
+         _("Email Template"),
+         netsvc.LOG_WARNING,
+         _("Mako templates not installed")
+    )
 try:
     from django.template import Context, Template as DjangoTemplate
     #Workaround for bug:
@@ -31,16 +53,16 @@ try:
     TEMPLATE_ENGINES.append(('django', 'Django Template'))
 except:
     LOGGER.notifyChannel(
-                         _("Email Template"),
-                         netsvc.LOG_ERROR,
-                         _("Django templates not installed")
-                         )
+         _("Email Template"),
+         netsvc.LOG_WARNING,
+         _("Django templates not installed")
+    )
 
 import email_template_engines
 import tools
 import report
 import pooler
-
+import logging
 
 def get_value(cursor, user, recid, message=None, template=None, context=None):
     """
@@ -50,7 +72,7 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
     @param recid: ID of the target record under evaluation
     @param message: The expression to be evaluated
     @param template: BrowseRecord object of the current template
-    @param context: Open ERP Context
+    @param context: OpenERP Context
     @return: Computed message (unicode) or u""
     """
     pool = pooler.get_pool(cursor.dbname)
@@ -78,6 +100,7 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
                 reply = templ.render(Context(env))
             return reply or False
         except Exception:
+            logging.exception("can't render %r", message)
             return u""
     else:
         return message
@@ -102,13 +125,21 @@ class email_template(osv.osv):
                 }
 
     _columns = {
-        'name' : fields.char('Name of Template', size=100, required=True),
+        'name' : fields.char('Name', size=100, required=True),
         'object_name':fields.many2one('ir.model', 'Model'),
         'model_int_name':fields.char('Model Internal Name', size=200,),
+        'enforce_from_account':fields.many2one(
+                   'email_template.account',
+                   string="Enforce From Account",
+                   help="Emails will be sent only from this account(which are approved)."),
+        'from_email' : fields.related('enforce_from_account', 'email_id',
+                                                type='char', string='From',
+                                                help='From Email (select mail account)',
+                                                readonly=True),        
         'def_to':fields.char(
-                 'Recepient (To)',
+                 'Recipient (To)',
                  size=250,
-                 help="The default recepient of email." 
+                 help="The default recipient of email." 
                  "Placeholders can be used here."),
         'def_cc':fields.char(
                  'Default CC',
@@ -141,9 +172,9 @@ class email_template(osv.osv):
                     help="The text version of the mail",
                     translate=True),
         'use_sign':fields.boolean(
-                  'Use Signature',
+                  'Signature',
                   help="the signature from the User details" 
-                  "will be appened to the mail"),
+                  " will be appended to the mail"),
         'file_name':fields.char(
                 'File Name Pattern',
                 size=200,
@@ -168,11 +199,6 @@ class email_template(osv.osv):
                   string="Allowed User Groups",
                   help="Only users from these groups will be"
                   " allowed to send mails from this Template"),
-        'enforce_from_account':fields.many2one(
-                   'email_template.account',
-                   string="Enforce From Account",
-                   help="Emails will be sent only from this account.",
-                   domain="[('company','=','yes')]"),
         'model_object_field':fields.many2one(
                  'ir.model.fields',
                  string="Field",
@@ -218,41 +244,44 @@ class email_template(osv.osv):
     }
 
     _defaults = {
+        'template_language' : lambda *a:'mako',
 
     }
+    
     _sql_constraints = [
         ('name', 'unique (name)', _('The template name must be unique !'))
     ]
 
-    def create(self, cr, uid, vals, context=None):
-        id = super(email_template, self).create(cr, uid, vals, context)
-        src_obj = self.pool.get('ir.model').read(cr, uid, vals['object_name'], ['model'], context)['model']
+    def create_action(self, cr, uid, ids, context):
+        vals = {}
+        template_obj = self.browse(cr, uid, ids)[0]
+        src_obj = template_obj.object_name.model
         vals['ref_ir_act_window'] = self.pool.get('ir.actions.act_window').create(cr, uid, {
-             'name': _("%s Mail Form") % vals['name'],
+             'name': template_obj.name,
              'type': 'ir.actions.act_window',
              'res_model': 'email_template.send.wizard',
              'src_model': src_obj,
              'view_type': 'form',
-             'context': "{'src_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, id),
+             'context': "{'src_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template_obj.id),
              'view_mode':'form,tree',
              'view_id': self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'email_template.send.wizard.form')], context=context)[0],
              'target': 'new',
              'auto_refresh':1
         }, context)
         vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, uid, {
-             'name': _('Send Mail (%s)') % vals['name'],
+             'name': _('Send Mail (%s)') % template_obj.name,
              'model': src_obj,
              'key2': 'client_action_multi',
              'value': "ir.actions.act_window," + str(vals['ref_ir_act_window']),
              'object': True,
          }, context)
-        self.write(cr, uid, id, {
+        self.write(cr, uid, ids, {
             'ref_ir_act_window': vals['ref_ir_act_window'],
             'ref_ir_value': vals['ref_ir_value'],
         }, context)
-        return id
+        return True
 
-    def unlink(self, cr, uid, ids, context=None):
+    def unlink_action(self, cr, uid, ids, context):
         for template in self.browse(cr, uid, ids, context):
             obj = self.pool.get(template.object_name.model)
             try:
@@ -262,6 +291,13 @@ class email_template(osv.osv):
                     self.pool.get('ir.values').unlink(cr, uid, template.ref_ir_value.id, context)
             except:
                 raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
+
+    def delete_action(self, cr, uid, ids, context):
+        self.unlink_action(cr, uid, ids, context)
+        return True
+        
+    def unlink(self, cr, uid, ids, context=None):
+        self.unlink_action(cr, uid, ids, context)
         return super(email_template, self).unlink(cr, uid, ids, context)
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -432,18 +468,18 @@ class email_template(osv.osv):
                                           data,
                                           context)
         attachment_obj = self.pool.get('ir.attachment')
+
+        fname = tools.ustr(get_value(cursor, user, record_id,
+                                     template.file_name, template, context)
+                           or 'Report')
+        ext = '.' + format
+        if not fname.endswith(ext):
+            fname += ext
+
         new_att_vals = {
             'name':mail.subject + ' (Email Attachment)',
             'datas':base64.b64encode(result),
-            'datas_fname':tools.ustr(
-                             get_value(
-                                   cursor,
-                                   user,
-                                   record_id,
-                                   template.file_name,
-                                   template,
-                                   context
-                                   ) or 'Report') + "." + format,
+            'datas_fname': fname,
             'description':mail.subject or "No Description",
             'res_model':'email_template.mailbox',
             'res_id':mail.id
@@ -466,7 +502,7 @@ class email_template(osv.osv):
                                context)
         return True
     
-    def generate_mailbox_item_from_template(self,
+    def _generate_mailbox_item_from_template(self,
                                       cursor,
                                       user,
                                       template,
@@ -511,7 +547,7 @@ class email_template(osv.osv):
         if lang:
             ctx = context.copy()
             ctx.update({'lang':lang})
-            template = self.browse(cursor, user, template_id, context=ctx)
+            template = self.browse(cursor, user, template.id, context=ctx)
         mailbox_values = {
             'email_from': tools.ustr(from_account['name']) + \
                         "<" + tools.ustr(from_account['email_id']) + ">",
@@ -557,6 +593,8 @@ class email_template(osv.osv):
             'folder':'drafts',
             'mail_type':'multipart/alternative' 
         }
+        if not mailbox_values['account_id']:
+            raise Exception("Unable to send the mail. No account linked to the template.")
         #Use signatures if allowed
         if template.use_sign:
             sign = self.pool.get('res.users').read(cursor,
@@ -573,8 +611,10 @@ class email_template(osv.osv):
                                                              user,
                                                              mailbox_values,
                                                              context)
+
         return mailbox_id
         
+
     def generate_mail(self,
                       cursor,
                       user,
@@ -586,6 +626,7 @@ class email_template(osv.osv):
         template = self.browse(cursor, user, template_id, context=context)
         if not template:
             raise Exception("The requested template could not be loaded")
+        result = True
         for record_id in record_ids:
             mailbox_id = self._generate_mailbox_item_from_template(
                                                                 cursor,
@@ -600,7 +641,7 @@ class email_template(osv.osv):
                                                         context=context
                                                               )
             if template.report_template:
-                self._generate_attach_reports(
+                self.generate_attach_reports(
                                               cursor,
                                               user,
                                               template,
@@ -614,8 +655,10 @@ class email_template(osv.osv):
                                                 mailbox_id,
                                                 {'folder':'outbox'},
                                                 context=context
-                                                      )
-        return True
+            )
+            # TODO : manage return value of all the records
+            result = self.pool.get('email_template.mailbox').send_this_mail(cursor, user, [mailbox_id], context)
+        return result
 
 email_template()
 
@@ -626,27 +669,26 @@ class email_template_preview(osv.osv_memory):
     def _get_model_recs(self, cr, uid, context=None):
         if context is None:
             context = {}
-        #Fills up the selection box which allows records from the selected object to be displayed
+            #Fills up the selection box which allows records from the selected object to be displayed
         self.context = context
-        if 'active_id' in context.keys():
-#            context['active_id'] = 5
-            ref_obj_id = self.pool.get('email.template').read(cr, uid, context['active_id'], ['object_name'], context)
-            ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id[0], ['model'], context)['model']
-            ref_obj_ids = self.pool.get(ref_obj_name).search(cr, uid, [], context=context)
+        if 'template_id' in context.keys():
+            ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
+            ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
+            ref_obj_ids = self.pool.get(ref_obj_name).search(cr, uid, [], 0, 20, 'id desc', context=context)
             ref_obj_recs = self.pool.get(ref_obj_name).name_get(cr, uid, ref_obj_ids, context)
-            return ref_obj_recs
-    
+            return ref_obj_recs    
+        
     def _default_model(self, cursor, user, context=None):
         """
         Returns the default value for model field
         @param cursor: Database Cursor
         @param user: ID of current user
-        @param context: Open ERP Context
+        @param context: OpenERP Context
         """
         return self.pool.get('email.template').read(
                                                    cursor,
                                                    user,
-                                                   context['active_id'],
+                                                   context['template_id'],
                                                    ['object_name'],
                                                    context)['object_name']
         
@@ -665,10 +707,9 @@ class email_template_preview(osv.osv_memory):
         'report':fields.char('Report Name', size=100, readonly=True),
     }
     _defaults = {
-        'ref_template': lambda self, cr, uid, ctx:ctx['active_id'],
+        'ref_template': lambda self, cr, uid, ctx:ctx['template_id'],
         'rel_model': _default_model
     }
-
     def on_change_ref(self, cr, uid, ids, rel_model_ref, context=None):
         if context is None:
             context = {}
@@ -677,13 +718,13 @@ class email_template_preview(osv.osv_memory):
         vals = {}
         if context == {}:
             context = self.context
-        template = self.pool.get('email.template').browse(cr, uid, context['active_id'], context)
+        template = self.pool.get('email.template').browse(cr, uid, context['template_id'], context)
         #Search translated template
         lang = get_value(cr, uid, rel_model_ref, template.lang, template, context)
         if lang:
             ctx = context.copy()
             ctx.update({'lang':lang})
-            template = self.pool.get('email.template').browse(cr, uid, context['active_id'], ctx)
+            template = self.pool.get('email.template').browse(cr, uid, context['template_id'], ctx)
         vals['to'] = get_value(cr, uid, rel_model_ref, template.def_to, template, context)
         vals['cc'] = get_value(cr, uid, rel_model_ref, template.def_cc, template, context)
         vals['bcc'] = get_value(cr, uid, rel_model_ref, template.def_bcc, template, context)

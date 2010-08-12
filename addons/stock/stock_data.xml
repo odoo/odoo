@@ -12,16 +12,16 @@
         </record>
 
         <!--
-	Request link
-	-->
+    Request link
+    -->
         <record id="req_link_tracking" model="res.request.link">
             <field name="name">Production Lot</field>
             <field name="object">stock.production.lot</field>
         </record>
         
         <!--
-	Resource: stock.location
-	-->
+    Resource: stock.location
+    -->
         <record id="stock_location_locations" model="stock.location">
             <field name="name">Physical Locations</field>
             <field name="usage">view</field>
@@ -41,6 +41,7 @@
             <field name="name">Scraped</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="scrap_location">True</field>
+            <field name="usage">inventory</field>
         </record>
         
         <record id="location_inventory" model="stock.location">
@@ -85,8 +86,8 @@
         </record>
         
         <!--
-	Properties
-	-->
+    Properties
+    -->
         <record forcecreate="True" id="property_stock_supplier" model="ir.property">
             <field name="name">property_stock_supplier</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_supplier')]"/>
@@ -115,8 +116,8 @@
         </record>
         
         <!--
-	Resource: stock.warehouse
-	-->
+    Resource: stock.warehouse
+    -->
         <record id="warehouse0" model="stock.warehouse">
             <field model="res.company" name="name" search="[]" use="name"/>
             <field name="lot_input_id" ref="stock_location_stock"/>

@@ -43,10 +43,9 @@ class project_gtd_context(osv.osv):
     _columns = {
         'name': fields.char('Context', size=64, required=True, select=1),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of contexts."),
-        'project_default_id': fields.many2one('project.project', 'Default Project', required=True),
     }
     _defaults = {
-        'sequence': lambda *args: 1
+        'sequence': 1
     }
     _order = "sequence, name"
 
@@ -125,15 +124,18 @@ class project_task(osv.osv):
      }
 
     def copy_data(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
         if not default:
             default = {}
-        default['timebox_id']=False
-        default['context_id']=False
+        default['timebox_id'] = False
+        default['context_id'] = False
         return super(project_task,self).copy_data(cr, uid, id, default, context)
 
-    def _get_context(self,cr, uid, ctx):
-        ids = self.pool.get('project.gtd.context').search(cr, uid, [], context=ctx)
+    def _get_context(self,cr, uid, context=None):
+        ids = self.pool.get('project.gtd.context').search(cr, uid, [], context=context)
         return ids and ids[0] or False
+
     _defaults = {
         'context_id': _get_context
     }
@@ -170,15 +172,15 @@ class project_task(osv.osv):
         if res['type'] == 'search':
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
             search_extended ='''<newline/><group col="%d" expand="0" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt)+7,_('Getting Things Done'))
-            search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('Inbox'),)
-            search_extended += '''<filter domain="[('state', 'in', ('draft','open','pending'))]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('All'),)
+            search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True,'gtd_visible':True}" icon="gtk-new" string="%s"/>''' % (_('Inbox'),)
+#            search_extended += '''<filter domain="[('state', 'in', ('draft','open','pending'))]" context="{'set_editable':True,'set_visible':True,'gtd_visible':True}" icon="gtk-new" string="%s"/>''' % (_('Editable'),)
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
                     icon = time.icon
                 else :
                     icon=""
-                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'set_visible':True}"/>'''
+                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'gtd_visible':True}"/>'''
             search_extended += '''
             <separator orientation="vertical"/>
             <field name="context_id" select="1" widget="selection" />
@@ -192,7 +194,7 @@ class project_task(osv.osv):
             context_id_info['context_id']['selection'] = attrs_sel
             res['fields'].update(context_id_info)
         return res
+
 project_task()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

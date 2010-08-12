@@ -45,14 +45,16 @@ This module is useful to be able to invoice services based on tasks
 automatically created via sale orders.
 
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['project', 'mrp_procurement', 'sale', 'mrp_jit'],
+    'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
     'init_xml': [],
     'update_xml': ['project_mrp_workflow.xml', 
                    #'process/project_mrp_process.xml',
+                   'project_mrp_view.xml'
                    ],
     'demo_xml': [],
+    'test': ['test/project_task_procurement.yml'],
     'installable': True,
     'active': False,
     'certificate': '0031976495453',

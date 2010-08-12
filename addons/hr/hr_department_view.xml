@@ -49,9 +49,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Departments">
-                    <group col='4' colspan='2'>
-                        <field name="name" />
-                        <field name="manager_id" widget="selection"/>
+                    <field name="name"/>
+                    <field name="manager_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
                     </group>
                 </search>
              </field>
@@ -73,7 +75,7 @@
         </record>
 
        <menuitem action="open_module_tree_department" id="menu_department_def" parent="hr.menu_department_tree"/>
-       <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="menu_hr_root" sequence="5"/>
+       <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="menu_hr_main" sequence="5"/>
 
         <record model="ir.ui.view" id="view_users_form_inherit">
             <field name="name">res.users.form</field>
@@ -82,7 +84,7 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Departements Informations" groups="base.group_extended">
+                    <page string="Departments" groups="base.group_extended">
                         <field name="context_department_id" completion="1" widget="selection" string="Department"/>
                         <separator string="Managers" colspan="4"/>
                         <field name="parent_id" nolabel="1" colspan="4"/>
@@ -99,7 +101,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <page string="Current Activity" position="inside">
-                    <field name="context_department_id" widget="selection" />
+                    <field name="context_department_id" widget="selection" readonly="0"/>
                 </page>
             </field>
         </record>

@@ -24,10 +24,12 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': "This module allows to implement action rules for any object.",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
+    'init_xml': [
+        'base_action_rule_data.xml'
+    ],
     'update_xml': [
         'base_action_rule_view.xml',        
         'security/ir.model.access.csv',

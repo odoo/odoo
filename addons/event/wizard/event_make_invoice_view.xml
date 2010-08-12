@@ -7,15 +7,17 @@
             <field name="model">event.make.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              	<form string="Make Invoices">
-              		<field name="inv_created" />
-              		<field name="inv_rejected" />
-              		<field name="inv_rej_reason" colspan="4"/>
-              		<group colspan="4" col="6">
-            			<button  icon="gtk-cancel" special="cancel" string="_Ok"/>
-            			<button icon="gtk-ok" name="confirm" string="Open" type="object"/>
-                	</group>
-				</form>
+             <form string="Create invoices">
+                <separator colspan="4" string="Do you really want to create the invoice(s) ?" />
+                <field name="grouped" />
+                <field name="invoice_date"/>
+                <group colspan="4">
+	                <separator string="" colspan="4" />
+	                <label string="" colspan="2"/>
+	                <button special="cancel" string="Close" icon="gtk-close"/>
+	                <button name="make_invoice" string="Done" type="object" icon="gtk-ok"/>
+                </group>
+             </form>
             </field>
 		</record>
 
@@ -26,7 +28,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_event_make_invoice"/>
-	        <field name="context">{'record_id' : active_id}</field>
             <field name="target">new</field>
     	</record>
 

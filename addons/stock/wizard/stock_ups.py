@@ -18,38 +18,35 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-from osv import fields, osv
-from service import web_services
-from tools.translate import _
+
 import netsvc
-import pooler
-import time
-import wizard
+from osv import fields, osv
+from tools.translate import _
 
 class stock_ups(osv.osv_memory):
     _name = "stock.ups"
     _description = "Stock ups"
 
     def ups_save(self, cr, uid, ids, context = {}):
-       
         return {
-                    'name': False, 
-                    'view_type': 'form', 
-                    'view_mode': 'form', 
-                    'res_model': 'stock.ups.final', 
-                    'type': 'ir.actions.act_window', 
-                    'target':'new',
-            }
+                'name': False, 
+                'view_type': 'form', 
+                'view_mode': 'form', 
+                'res_model': 'stock.ups.final', 
+                'type': 'ir.actions.act_window', 
+                'target':'new',
+        }
+        
     def ups_upload(self, cr, uid, ids, context = {}):
-         
         return {
-                    'name': False, 
-                    'view_type': 'form', 
-                    'view_mode': 'form', 
-                    'res_model': 'stock.ups.upload', 
-                    'type': 'ir.actions.act_window', 
-                    'target':'new',
-            }
+                'name': False, 
+                'view_type': 'form', 
+                'view_mode': 'form', 
+                'res_model': 'stock.ups.upload', 
+                'type': 'ir.actions.act_window', 
+                'target':'new',
+        }
+
     _columns = {
         'weight': fields.float('Lot weight', required=True), 
     }
@@ -64,6 +61,10 @@ class stock_ups_final(osv.osv_memory):
     _description = "Stock ups final"
 
     def create_xmlfile(self, cr, uid, ids, context = {}):
+        """ Creates xml report file.
+        @return: xml file
+        """
+        data={}
         report = netsvc._group['report']['report.stock.move.lot.ups_xml']
         data['report_type'] = 'raw'
         return {'xmlfile' : report.create(uid, context['active_id'], ids, {})}
@@ -79,9 +80,12 @@ class stock_ups_upload(osv.osv_memory):
     _description = "Stock ups upload"
 
     def upload_xmlfile(self, cr, uid, ids, context = {}):
+        """ Uploads xml report file.
+        @return: 
+        """
+        data={}
         report = netsvc._group['report']['report.stock.move.lot.ups_xml']
         data['report_type'] = 'raw'
-#FIXME: this seems unfinished   
         fp = file('/tmp/test.xml', 'w').write(report.create(uid, context['active_id'], ids, {}))
         return {}
 

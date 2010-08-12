@@ -39,8 +39,8 @@ class wiki_make_index(osv.osv_memory):
 
         for index_obj in self.browse(cr, uid, ids):
             wiki_pool = self.pool.get('wiki.wiki')
-            cr.execute("Select id, section from wiki_wiki where id = ANY(%s) \
-                            order by section ", (data,))
+            cr.execute("Select id, section from wiki_wiki where id IN %s \
+                            order by section ", (tuple(data),))
             lst0 = cr.fetchall()
             lst = []
             s_ids = {}
