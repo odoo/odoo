@@ -221,14 +221,14 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             # note that we have allowed for > 2 elems
         if location:
             headers['Location'] = location
-
-        try:
-            if not etag:
-                etag = dc.get_prop(location or uri, "DAV:", "getetag")
-            if etag:
-                headers['ETag'] = str(etag)
-        except Exception:
-            pass
+        else:
+            try:
+                if not etag:
+                    etag = dc.get_prop(location or uri, "DAV:", "getetag")
+                if etag:
+                    headers['ETag'] = str(etag)
+            except Exception:
+                pass
 
         self.send_body(None, '201', 'Created', '', headers=headers)
 
