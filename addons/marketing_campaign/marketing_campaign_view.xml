@@ -28,8 +28,8 @@
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
                     <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
-                    <button name="state_done_set" string="Close" states="running" icon="gtk-ok"/>
-                    <button name="state_cancel_set" string="Cancelled" states="running" icon="gtk-cancel"/>
+                    <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
+                    <button name="state_cancel_set" string="Cancelled" states="running" icon="terp-gtk-stop"/>
                 </group>
               </form>
         </field>
@@ -145,9 +145,10 @@
                 <separator string="Status" colspan="4"/>
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
-                    <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
-                    <button name="state_done_set" string="Close" states="running" icon="gtk-ok"/>
-                    <button name="state_cancel_set" string="Cancel" states="running" icon="gtk-cancel"/>
+                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
+                    <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
+                    <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
+                    <button name="state_draft_set" string="Set To Draft" states="cancelled" icon="gtk-convert"/>
                 </group>
             </form>
         </field>
@@ -257,21 +258,33 @@
 
                 <group colspan="4" col="2" expand="1">
                     <separator string="Transitions" colspan="2"/>
-                    <field name="from_ids" nolabel="1" mode="tree" default_get="{'default_activity_to_id': active_id}">
+                    <field name="from_ids" nolabel="1" mode="tree,form" default_get="{'default_activity_to_id': active_id}">
                         <tree string="Incoming Transitions" editable="bottom">
                             <field name="activity_from_id"/>
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
                         </tree>
+                        <form string="Incoming Transitions">
+                            <field name="activity_from_id"/>
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </form>
                     </field>
-                    <field name="to_ids" nolabel="1" mode="tree" default_get="{'default_activity_from_id': active_id}">
+                    <field name="to_ids" nolabel="1" mode="tree,form" default_get="{'default_activity_from_id': active_id}">
                         <tree string="Outgoing Transitions" editable="bottom">
                             <field name="activity_to_id"/>
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
                         </tree>
+                        <form string="Outgoing Transitions">
+                            <field name="activity_to_id"/>
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </form>
                      </field>
                 </group>
             </form>
@@ -313,7 +326,7 @@
                 <field name="state"/>
                 <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
                 <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
-                <button string="Cancel" states="todo" name="button_cancel" type="object" icon="gtk-cancel"/>
+                <button string="Cancel" states="todo" name="button_cancel" type="object" icon="terp-gtk-stop"/>
             </tree>
         </field>
     </record>
@@ -352,7 +365,7 @@
                     <field name="state" nolabel="1" readonly="True" select="1"/>
                     <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
                     <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
-                    <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="gtk-cancel"/>
+                    <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
                 </group>
             </form>
         </field>

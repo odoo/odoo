@@ -44,49 +44,47 @@ class report_custom(report_rml):
         if context is None:
             context = {}
         month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
+        emp_ids = context.get('active_ids', [])
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
-        for employee_id in ids:
-            emp = obj_emp.read(cr, uid, [employee_id], ['name'])[0]
-            stop, days_xml = False, []
-            user_repr = '''
-            <user>
-              <name>%s</name>
-              %%s
-            </user>
-            ''' % (toxml(emp['name']))
-            today, tomor = month, month + one_day
-            while today.month == month.month:
-                #### Work hour calculation
-                sql = '''
-                select action, att.name
-                from hr_employee as emp inner join hr_attendance as att
-                     on emp.id = att.employee_id
-                where att.name between %s and %s and emp.id = %s
-                order by att.name
-                '''
-                cr.execute(sql, (today.strftime('%Y-%m-%d %H:%M:%S'), tomor.strftime('%Y-%m-%d %H:%M:%S'), employee_id))
-                attendences = cr.dictfetchall()
-                wh = 0
-                # Fake sign ins/outs at week ends, to take attendances across week ends into account
-                if attendences and attendences[0]['action'] == 'sign_out':
-                    attendences.insert(0, {'name': today.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_in'})
-                if attendences and attendences[-1]['action'] == 'sign_in':
-                    attendences.append({'name': tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
-                # sum up the attendances' durations
-                for att in attendences:
-                    dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
-                    if att['action'] == 'sign_out':
-                        wh += (dt - ldt).hours
-                    ldt = dt
-
-                # Week xml representation
-                wh = hour2str(wh)
-                today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, wh)
-                days_xml.append(today_xml)
-                today, tomor = tomor, tomor + one_day
-
-            user_xml.append(user_repr % '\n'.join(days_xml))
-
+        if emp_ids:
+            for emp in obj_emp.read(cr, uid, emp_ids, ['name']):
+                stop, days_xml = False, []
+                user_repr = '''
+                <user>
+                  <name>%s</name>
+                  %%s
+                </user>
+                ''' % (toxml(emp['name']))
+                today, tomor = month, month + one_day
+                while today.month == month.month:
+                    #### Work hour calculation
+                    sql = '''
+                    select action, att.name
+                    from hr_employee as emp inner join hr_attendance as att
+                         on emp.id = att.employee_id
+                    where att.name between %s and %s and emp.id = %s
+                    order by att.name
+                    '''
+                    cr.execute(sql, (today.strftime('%Y-%m-%d %H:%M:%S'), tomor.strftime('%Y-%m-%d %H:%M:%S'), emp['id']))
+                    attendences = cr.dictfetchall()
+                    wh = 0
+                    # Fake sign ins/outs at week ends, to take attendances across week ends into account
+                    if attendences and attendences[0]['action'] == 'sign_out':
+                        attendences.insert(0, {'name': today.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_in'})
+                    if attendences and attendences[-1]['action'] == 'sign_in':
+                        attendences.append({'name': tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
+                    # sum up the attendances' durations
+                    for att in attendences:
+                        dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
+                        if att['action'] == 'sign_out':
+                            wh += (dt - ldt).hours
+                        ldt = dt
+                    # Week xml representation
+                    wh = hour2str(wh)
+                    today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, wh)
+                    days_xml.append(today_xml)
+                    today, tomor = tomor, tomor + one_day
+                user_xml.append(user_repr % '\n'.join(days_xml))
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
@@ -97,4 +95,3 @@ class report_custom(report_rml):
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

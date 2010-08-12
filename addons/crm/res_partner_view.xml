@@ -12,7 +12,7 @@
             <field name="arch" type="xml">
                 <page string="History" position="inside">
                     <field name="opportunity_ids" colspan="4" nolabel="1">
-                         <tree string="Opportunities"  colors="blue:state=='pending';gray:state=='cancel')">
+                         <tree string="Opportunities"  colors="blue:state=='pending';gray:state=='cancel'">
                              <field name="create_date"/>
                              <field name="name"/>
                              <field name="type"/>
@@ -45,7 +45,7 @@
                          </tree>
                     </field>
                     <field name="opportunity_assigned_ids" colspan="4" nolabel="1">
-                         <tree string="Assigned Opportunities"  colors="blue:state=='pending';gray:state=='cancel')">
+                         <tree string="Assigned Opportunities"  colors="blue:state=='pending';gray:state=='cancel'">
                              <field name="create_date"/>
                              <field name="name"/>
                              <field name="type"/>

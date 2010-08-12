@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import os
 
 from osv import fields, osv
@@ -175,6 +176,5 @@ class hr_department(osv.osv):
     }
 
 hr_department()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

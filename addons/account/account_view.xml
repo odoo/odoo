@@ -540,9 +540,9 @@
                         <field name="balance_end"/>
                         
                         <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}"/>
+                            string="Import Invoice" type="action" icon="gtk-dnd" attrs="{'invisible':[('state','=','confirm')]}"/>
                         
-                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
                         <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
@@ -2552,9 +2552,9 @@
                     </group>
                     <group col="8" colspan="4">
                         <field name="state" colspan="4"/>
-                        <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-check" type="object"/>
+                        <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-dialog-close" type="object"/>
                         <button name="button_open" states="draft" string="Open CashBox" icon="terp-document-new" type="object"/>
-                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="gtk-cancel" type="object" groups="base.group_extended"/>
+                        <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>
