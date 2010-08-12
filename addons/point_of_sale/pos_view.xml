@@ -202,7 +202,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">[('state','!=', 'invoiced')]</field>
+            <field name="domain">[('state','not in', ('invoiced','done')),('invoice_id','=',False)]</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_pos_order_filter"/>
 
