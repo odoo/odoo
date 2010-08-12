@@ -650,7 +650,7 @@ class orm_template(object):
         This method is used when exporting data via client menu
 
         """
-        if not context:
+        if context is None:
             context = {}
         imp_comp = context.get('import_comp',False)
         cols = self._columns.copy()
