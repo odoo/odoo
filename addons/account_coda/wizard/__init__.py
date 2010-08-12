@@ -20,7 +20,6 @@
 ##############################################################################
 
 import account_coda_import
-import coda_import
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

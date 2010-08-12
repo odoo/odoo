@@ -170,19 +170,6 @@
             </field>
         </record>
 
-        <!-- Case Categories Action -->
-
-        <record id="crm_case_categ-act" model="ir.actions.act_window">
-            <field name="name">Categories</field>
-            <field name="res_model">crm.case.categ</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_case_categ_tree-view"/>
-        </record>
-
-         <menuitem action="crm_case_categ-act"
-            id="menu_crm_case_categ-act" name="Categories"
-            parent="base.menu_crm_config_lead" sequence="1"/>
-
         <!-- Resource Type of case Tree View -->
 
         <record model="ir.ui.view" id="crm_case_resource_type_tree">

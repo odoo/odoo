@@ -137,7 +137,7 @@ class account_voucher(osv.osv):
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
         'amount':fields.float('Amount', readonly=True),
-        'reference': fields.char('Reference', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Bank cheque number or payorder number"),
+        'reference': fields.char('Reference', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type', required=True),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),

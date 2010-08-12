@@ -540,9 +540,9 @@
                         <field name="balance_end"/>
                         
                         <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}"/>
+                            string="Import Invoice" type="action" icon="gtk-dnd" attrs="{'invisible':[('state','=','confirm')]}"/>
                         
-                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
                         <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
