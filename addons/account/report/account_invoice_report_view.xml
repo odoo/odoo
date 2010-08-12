@@ -22,7 +22,6 @@
                 <field name="period_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
-                <field name="date_due" invisible="1"/>
                 <field name="address_contact_id" invisible="1"/>
                 <field name="address_invoice_id" invisible="1"/>
                 <field name="partner_bank_id" invisible="1"/>
@@ -84,18 +83,15 @@
                             help = "Done Invoices"/>
                   <separator orientation="vertical"/>
                   <field name="partner_id"/>
-                    <field name="user_id" >
-                    <filter icon="terp-dolar"
-                            string="My Invoices"
-                            help="My Invoices"
-                            domain="[('user_id','=',uid)]"/>
-                    </field>
+                    <field name="user_id" />
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id','residual_visible':True}"/>
+                    <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True,'residual_invisible':True}"/>
+                    <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id','residual_invisible':True}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
@@ -103,7 +99,6 @@
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id','residual_invisible':True}"/>
                     <filter string="Force Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -136,7 +131,7 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_product':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_partner':1,'group_by_no_leaf':1,'group_by':[],'search_default_user_id':1}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
         <field name="help">A tool search lets you know statistics on invoices that match your needs.</field>
 

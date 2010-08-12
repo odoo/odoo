@@ -64,6 +64,7 @@ class stock_ups_final(osv.osv_memory):
         """ Creates xml report file.
         @return: xml file
         """
+        data={}
         report = netsvc._group['report']['report.stock.move.lot.ups_xml']
         data['report_type'] = 'raw'
         return {'xmlfile' : report.create(uid, context['active_id'], ids, {})}
@@ -82,6 +83,7 @@ class stock_ups_upload(osv.osv_memory):
         """ Uploads xml report file.
         @return: 
         """
+        data={}
         report = netsvc._group['report']['report.stock.move.lot.ups_xml']
         data['report_type'] = 'raw'
         fp = file('/tmp/test.xml', 'w').write(report.create(uid, context['active_id'], ids, {}))

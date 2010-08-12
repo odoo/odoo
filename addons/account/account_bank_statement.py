@@ -132,8 +132,7 @@ class account_bank_statement(osv.osv):
     _description = "Bank Statement"
     _columns = {
         'name': fields.char('Name', size=64, required=True, states={'confirm': [('readonly', True)]}),
-        'date': fields.date('Date', required=True,
-            states={'confirm': [('readonly', True)]}),
+        'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'bank')]),
         'period_id': fields.many2one('account.period', 'Period', required=True,
@@ -191,7 +190,11 @@ class account_bank_statement(osv.osv):
             'value':res,
             'context':context,
         }
-    
+
+    def button_dummy(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {}, context)
+        return True
+        
     def button_confirm_bank(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
