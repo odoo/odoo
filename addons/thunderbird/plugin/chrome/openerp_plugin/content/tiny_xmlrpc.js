@@ -970,7 +970,7 @@ var listSearchContactHandler = {
                  var t = getMobilenumber();}
 
            if(strlSearchResult=="email" && strlSearchResultValue!=''){
-                 setSenderEmail(strlSearchResultValue);
+                 setSenderEmail(sendername);
                  var t = getSenderEmail();} 
     
             if(strlSearchResult=="res_id"){
@@ -1000,7 +1000,7 @@ var listSearchContactdetailHandler = {
             if(strlSearchResult=="email" && strlSearchResultValue=='')
             {
                 alert("Contact is not Available")
-                document.getElementById("txtemail").value = strlSearchResultValue;
+                document.getElementById("txtemail").value = sendername;
             } 
             if(strlSearchResult=="partner_name"){
                  document.getElementById("txtname").value =strlSearchResultValue;}
@@ -1342,33 +1342,6 @@ var listArchiveHandler = {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
 
-		//condition to handle the automatic attachment creation
-		attach =  getAttachment()
-		attachment = "no"
-		var popup = document.getElementById("section").selectedItem.value; // a <menupopup> element
-		if(getPref().getCharPref('attachmentlength')>0){
-			if (getAttachValue() == '1'){
-				//calling the method to create the attachments
-				createAttachment(popup, createId);
-				attachment = "yes"
-			}
-			//condition to handle the manual attachment creation
-			if(attach =="yes"){
-				//calling the method to create the attachments
-				createAttachment(popup, createId);
-				attachment = "yes"
-			}
-			else{
-
-				attachment = "no"
-			}
-		}
-		else{
-				
-			attachment = "no"
-		}
-		createAttachmentEML_CRM(popup, createId, attachment)
-
 	},
 	onFault: function (client, ctxt, fault) {
 
@@ -1413,7 +1386,7 @@ function upload_archivemail()
     list_documents = document.getElementById('listSearchBox')
     var context = []
     var cnt = list_documents.selectedCount
-	for(i=0;i<=cnt;i++)
+	for(i=0;i<cnt;i++)
 	{	
         var object = list_documents.getSelectedItem(i)
 		var eml_string = parse_eml();
@@ -1438,7 +1411,8 @@ function upload_archivemail()
 	    var b = [model, res_id,eml_string];
         var arrofarr = dictcontact(a,b)
         xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-		
+        alert("Mail Archive Successfully");
+		window.close();
 	}
 	
 }
@@ -1469,6 +1443,8 @@ function create_archivemail(){
 		var b = [object, eml_string];
 		var arrofarr = dictcontact(a,b);
 		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
+        alert("Mail Archive Successfully");
+		window.close();
 		}
 	}
 	else
@@ -1477,28 +1453,6 @@ function create_archivemail(){
 	}
 }
 
-
-//function to archive mail content after creating a new contact
-function archivemail2contact(){
-	var branchobj = getPref();
-	setServerService('xmlrpc/object');
-	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-	var xmlRpcClient = getXmlRpc();
-	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strDbName.data = branchobj.getCharPref("serverdbname");
-	var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
-	struids.data = branchobj.getIntPref('userid');
-	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strpass.data = branchobj.getCharPref("password");
-	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strmethod.data = 'mailcreate';
-	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strobj.data = 'thunderbird.partner';
-	var a = ['sender','receiver','date','title','reference','res_user_id','copy_to','description'];
-	var b = [getSenderEmail(),getReceiverEmail(),getReceivedDate(),getSubject(),'res.partner.address'+','+getContactId(),branchobj.getIntPref('userid'),getCCList(),getMessageBody()];
-	var arrofarr = dictcontact(a,b);
-	xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-}
 
 //xmlrpc request handler for creating a new contact
 var listCreateContactHandler = {
@@ -1595,31 +1549,6 @@ var listAttachHandler = {
 	}
 }
 
-//function to create a new attachment record
-function createAttachment(popup, res_id){
-	var branchobj = getPref();
-	setServerService('xmlrpc/object');
-	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-	var xmlRpcClient = getXmlRpc();
-	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strDbName.data = branchobj.getCharPref("serverdbname");
-	var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
-	struids.data = branchobj.getIntPref('userid');
-	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strpass.data = branchobj.getCharPref("password");
-	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strmethod.data = 'create_attachment';
-	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strobj.data = 'thunderbird.partner';
-	var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-
-	object=popup;
-	resobj.data = object;
-	var a = ['name','datas','res_model','res_id','description','datas_fname'];
-	var b = [getPref().getCharPref('displayName'),getPref().getCharPref('attachmentdata'),resobj,res_id,getSubject()+'\n'+getSenderEmail(),getPref().getCharPref('displayName')];
-	var arrofarr = dictcontact(a,b);
-	xmlRpcClient.asyncCall(listAttachHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-}
 
 //function to encode the string into base64
 var base64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split("");
@@ -2058,79 +1987,6 @@ function listSearchDocumentAttachment(){
 
 //function to create a new attachment record
 
-
-//function to create a new attachment record
-function createAttachmentEML_CRM(model, id, attachment)
-{
-		var fpath =""
-		if(navigator.userAgent.indexOf('Linux')!= -1){
-			fpath ="/tmp/"
-		}
-		else if(navigator.userAgent.indexOf('Win')!= -1){
-			fpath ="C:\\"
-		}
-		else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
-			fpath ="/tmp/"
-		} 
-
-		var encoded_string=""
-		name = fpath + getFileName() +".eml"
-
-		var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-		file.initWithPath( name );
-		if ( file.exists() == false ) {
-			return null;
-		} else {
-			var is = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance( Components.interfaces.nsIFileInputStream );
-			is.init( file,0x01, 00004, null);
-			var sis = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance( Components.interfaces.nsIScriptableInputStream );
-			sis.init( is );
-			var output = sis.read( sis.available() );
-			encoded_string += encode64(output)+',';
-			encoded_string = encoded_string.substring(0,encoded_string.length-1);
-			a = ":"
-			
-		}
-		if (attachment == "yes")
-		{
-			alert("Mail Archived Successfully With Attachments");
-            window.close();			
-		}
-		else
-		{
-			alert("Mail Archived Successfully");
-            window.close();
-		}
-		attach_eml="yes";
-		var branchobj = getPref();
-		setServerService('xmlrpc/object');
-		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-		var xmlRpcClient = getXmlRpc();
-		var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strDbName.data = branchobj.getCharPref("serverdbname");
-		var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
-		struids.data = branchobj.getIntPref('userid');
-		var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strpass.data = branchobj.getCharPref("password");
-		var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strmethod.data = 'create_attachment';
-		var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strobj.data = 'thunderbird.partner';
-		var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		filename = getFileName()
-		if (getFileName().length > 60)
-		{
-			filename = filename.substring(0,60) ;
-			
-		}
-		filename = filename + ".eml"
-		var a = ['name','datas','res_model','description','res_id','datas_fname'];
-		var b = [getFileName(),encoded_string, model ,getSubject()+'\n'+getSenderEmail() , id ,filename];
-		var arrofarr = dictcontact(a,b);
-		xmlRpcClient.asyncCall(listAttachHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-}
-
-
 function win_close()
 {
 	var fpath =""
@@ -2161,46 +2017,6 @@ function win_close()
 function attachmentWidnowOpen(msg)
 {
 
-	/* if(getPref().getCharPref('attachmentlength')>0)
-	{
-		
-		if (msg=="create"){
-			var popup = document.getElementById("section").selectedItem; // a <menupopup> element
-
-			if (String(popup) != "null"){
-				object=popup.value;
-				if (object=="" || object == undefined) { alert("select at least one Document !")}
-				else{
-					var answer = confirm("Mail Contain Attachment? \n\t Ok :- Create Document with attachments. \n\t Cancel :- Create Document Only(Attachment not attach).")
-					if (answer)
-						setAttachment('yes')
-					else
-						setAttachment('no')
-					archivemail()
-				}
-			}
-			else
-			{
-				alert("select Document !")
-			}
-		}
-		else{
-			if(document.getElementById('listSearchBox').selectedItem)
-			{	
-				var answer = confirm("Mail Contain Attachment? \n\t Ok :- Attachments attach with selected record. \n\t Cancel :- Attachment not attach with selected record.")
-				if (answer)
-					setAttachment('yes')
-				else
-					setAttachment('no')
-				createAttachmentEML()
-			}
-			else{
-				alert("you must select only one record");
-			}
-		}
-	}
-	else
-	{ */
 		if (msg=="create")
 		{
 			var popup = document.getElementById("section").selectedItem; // a <menupopup> element
@@ -2223,8 +2039,7 @@ function attachmentWidnowOpen(msg)
 				upload_archivemail()
 			}
 			else{
-				alert("you must select only one record");
+				alert("Please select at least one record");
 			}
 		}
-	//}
 }
