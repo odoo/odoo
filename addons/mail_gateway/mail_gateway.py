@@ -283,7 +283,6 @@ class mailgate_tool(osv.osv_memory):
                     tools.misc._email_send(smtp_from, self.to_email(email_error), msg, openobject_id=res.id)
 
     def process_email(self, cr, uid, model, message, attach=True, context=None):
-        print "processssss_emaillllllllll",model
         """This function Processes email and create record for given OpenERP model
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
