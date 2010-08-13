@@ -69,21 +69,36 @@
                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Invoices during last 7 days"/>
                     <separator orientation="vertical"/>
-                    <filter string="Current"
-                            icon="terp-check"
-                            domain="[('state','in',('draft','open'))]"
-                            help = "Draft and Open Invoices"/>
+                    <filter string="Draft"
+                           icon="terp-check"
+                           domain="[('state','=','draft')]"
+                           help = "Draft Invoices"/>
                     <filter string="Pro-forma"
                            icon="terp-check"
                            domain="[('state','=','proforma'),('state','=','proforma2')]"
                            help = "Pro-forma Invoices"/>
-                    <filter string="Done"
-                            icon="terp-dialog-close"
-                            domain="[('state','=','paid')]"
-                            help = "Done Invoices"/>
                   <separator orientation="vertical"/>
+                   	<filter icon="terp-check" string="Customer"
+                            domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"
+                            help="Customer Invoices And Refunds"/>
+                    <filter icon="terp-check"
+                            string="Supplier"
+                            separator="1"
+                            domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
+                            help="Supplier Invoices And Refunds"/>
+ 				  <separator orientation="vertical"/>
+	               <filter icon="terp-check" string="Invoice"
+	                        domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"
+	                        help="Customer And Supplier Invoices"/>
+	               <filter icon="terp-check"
+	                        string="Refund"
+	                        separator="1"
+	                        domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"
+	                        help="Customer And Supplier Refunds"/>
+ 				  <separator orientation="vertical"/>
                   <field name="partner_id"/>
-                    <field name="user_id" />
+                  <field name="user_id" />
+                  <field name="categ_id" />
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
