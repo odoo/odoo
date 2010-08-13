@@ -650,7 +650,7 @@ class orm_template(object):
         This method is used when exporting data via client menu
 
         """
-        if not context:
+        if context is None:
             context = {}
         imp_comp = context.get('import_comp',False)
         cols = self._columns.copy()
@@ -2616,7 +2616,7 @@ class orm(orm_template):
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], _rel_name, 'id1', 'id2', **attrs)
                 else:
                     self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
-
+        self._inherits_check()
         self._inherits_reload()
         if not self._sequence:
             self._sequence = self._table+'_id_seq'
@@ -2733,6 +2733,17 @@ class orm(orm_template):
                 res[col] = (table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2])
         self._inherit_fields = res
         self._inherits_reload_src()
+
+    def _inherits_check(self):
+        for table, field_name in self._inherits.items():
+            if field_name not in self._columns:
+                logging.getLogger('init').info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.' % (field_name, self._name))
+                self._columns[field_name] =  fields.many2one(table, string="Automatically created field to link to parent %s" % table,
+                                                             required=True, ondelete="cascade")
+            elif not self._columns[field_name].required or self._columns[field_name].ondelete.lower() != "cascade":
+                logging.getLogger('init').warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade", forcing it.' % (field_name, self._name))
+                self._columns[field_name].required = True
+                self._columns[field_name].ondelete = "cascade"
 
     #def __getattr__(self, name):
     #    """
@@ -3717,6 +3728,18 @@ class orm(orm_template):
 
     # TODO: ameliorer avec NULL
     def _where_calc(self, cr, user, args, active_test=True, context=None):
+        """Computes the WHERE clause needed to implement an OpenERP domain.
+        :param args: the domain to compute
+        :type args: list
+        :param active_test: whether the default filtering of records with ``active``
+                            field set to ``False`` should be applied. 
+        :return: tuple with 3 elements: (where_clause, where_clause_params, tables) where
+                 ``where_clause`` contains a list of where clause elements (to be joined with 'AND'),
+                 ``where_clause_params`` is a list of parameters to be passed to the db layer
+                 for the where_clause expansion, and ``tables`` is the list of double-quoted
+                 table names that need to be included in the FROM clause. 
+        :rtype: tuple 
+        """
         if not context:
             context = {}
         args = args[:]
@@ -3797,33 +3820,39 @@ class orm(orm_template):
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
-        (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
+        (where_clause, where_clause_params, tables) = self._where_calc(cr, user, args, context=context)
         dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
-        qu1 = qu1 + dom[0]
-        qu2 = qu2 + dom[1]
+        where_clause += dom[0]
+        where_clause_params += dom[1]
         for t in dom[2]:
             if t not in tables:
                 tables.append(t)
 
-        where = qu1
+        where = where_clause
 
         order_by = self._order
-        qu1_join = []
         if order:
             self._check_qorder(order)
             o = order.split(' ')[0]
-            if (o in self._columns) and getattr(self._columns[o], '_classic_write'):
-                order_by = order
+            if (o in self._columns):
+                # we can only do efficient sort if the fields is stored in database
+                if getattr(self._columns[o], '_classic_read'):
+                    order_by = order
             elif (o in self._inherit_fields):
-                #Allowing _inherits field for server side sorting
-                table_join,qu1_join = self._inherits_join_calc(o,[],[])
-                order_by = table_join[0] + '.' + order
-                tables += table_join
+                parent_obj = self.pool.get(self._inherit_fields[o][0])
+                if getattr(parent_obj._columns[o], '_classic_read'):
+                    # Allowing inherits'ed field for server side sorting
+                    inherited_tables, inherit_join = self._inherits_join_calc(o,[],[]) # dry run to determine parent
+                    if inherited_tables:
+                        inherited_sort_table = inherited_tables[0]
+                        order_by = inherited_sort_table + '.' + order
+                        if inherited_sort_table not in tables:
+                            # add the missing join
+                            self._inherits_join_calc(o, tables, where_clause)
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         
-        where.extend(qu1_join)
         if where:
             where_str = " WHERE %s" % " AND ".join(where)
         else:
@@ -3831,10 +3860,10 @@ class orm(orm_template):
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +
-                    ','.join(tables) + where_str + limit_str + offset_str, qu2)
+                    ','.join(tables) + where_str + limit_str + offset_str, where_clause_params)
             res = cr.fetchall()
             return res[0][0]
-        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str +' order by '+order_by+limit_str+offset_str, qu2)
+        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str +' order by '+order_by+limit_str+offset_str, where_clause_params)
         res = cr.fetchall()
         return [x[0] for x in res]
 

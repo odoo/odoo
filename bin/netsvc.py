@@ -323,6 +323,7 @@ class Server:
     """
     __is_started = False
     __servers = []
+    __starter_threads = []
 
     # we don't want blocking server calls (think select()) to
     # wait forever and possibly prevent exiting the process,
@@ -335,12 +336,26 @@ class Server:
     __logger = logging.getLogger('server')
 
     def __init__(self):
-        if Server.__is_started:
-            raise Exception('All instances of servers must be inited before the startAll()')
         Server.__servers.append(self)
+        if Server.__is_started:
+            # raise Exception('All instances of servers must be inited before the startAll()')
+            # Since the startAll() won't be called again, allow this server to
+            # init and then start it after 1sec (hopefully). Register that
+            # timer thread in a list, so that we can abort the start if quitAll
+            # is called in the meantime
+            t = threading.Timer(1.0, self._late_start)
+            t.name = 'Late start timer for %s' % str(self.__class__)
+            Server.__starter_threads.append(t)
+            t.start()
 
     def start(self):
         self.__logger.debug("called stub Server.start")
+        
+    def _late_start(self):
+        self.start()
+        for thr in Server.__starter_threads:
+            if thr.finished.is_set():
+                Server.__starter_threads.remove(thr)
 
     def stop(self):
         self.__logger.debug("called stub Server.stop")
@@ -363,6 +378,11 @@ class Server:
         if not cls.__is_started:
             return
         cls.__logger.info("Stopping %d services" % len(cls.__servers))
+        for thr in cls.__starter_threads:
+            if not thr.finished.is_set():
+                thr.cancel()
+            cls.__starter_threads.remove(thr)
+
         for srv in cls.__servers:
             srv.stop()
         cls.__is_started = False

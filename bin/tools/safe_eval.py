@@ -35,6 +35,7 @@ condition/math builtins.
 from opcode import HAVE_ARGUMENT, opmap, opname
 from types import CodeType
 import logging
+import os
 
 __all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
 
@@ -258,10 +259,11 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'dict': dict,
                 'list': list,
                 'tuple': tuple,
-                'map' : map,
+                'map': map,
+                'abs': abs,
+                'reduce': reduce,
             }
     )
-
     return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

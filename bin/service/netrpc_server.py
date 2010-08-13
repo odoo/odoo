@@ -36,7 +36,9 @@ import tools
 
 class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
     def __init__(self, sock, threads):
-        threading.Thread.__init__(self)
+        spn = sock and sock.getpeername()
+        spn = 'netrpc-client-%s:%s' % spn[0:2]
+        threading.Thread.__init__(self, name=spn)
         self.sock = sock
         # Only at the server side, use a big timeout: close the
         # clients connection when they're idle for 20min.
@@ -48,7 +50,8 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
             try:
                 self.socket.shutdown(
                     getattr(socket, 'SHUT_RDWR', 2))
-            except Exception: pass
+            except Exception:
+                pass
             # That should garbage-collect and close it, too
             self.sock = None
 

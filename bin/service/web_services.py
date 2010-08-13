@@ -305,7 +305,7 @@ class db(netsvc.ExportService):
                 else:
                     cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
                 res = [str(name) for (name,) in cr.fetchall()]
-            except:
+            except Exception:
                 res = []
         finally:
             cr.close()
@@ -385,7 +385,8 @@ class common(_ObjectService):
             logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
             return True
         elif method in ['about', 'timezone_get', 'get_server_environment',
-                        'login_message','get_stats', 'check_connectivity']:
+                        'login_message','get_stats', 'check_connectivity',
+                        'list_http_services']:
             pass
         elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel']:
             passwd = params[0]
@@ -492,7 +493,7 @@ GNU Public Licence.
                 try:
                     try:
                         base64_decoded = base64.decodestring(zips[module])
-                    except:
+                    except Exception:
                         l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to read the module %s' % (module,))
                         raise
 
@@ -501,13 +502,13 @@ GNU Public Licence.
                     try:
                         try:
                             tools.extract_zip_file(zip_contents, tools.config['addons_path'] )
-                        except:
+                        except Exception:
                             l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to extract the module %s' % (module, ))
                             rmtree(module)
                             raise
                     finally:
                         zip_contents.close()
-                except:
+                except Exception:
                     l.notifyChannel('migration', netsvc.LOG_ERROR, 'restore the previous version of the module %s' % (module, ))
                     nmp = os.path.join(backup_directory, module)
                     if os.path.isdir(nmp):
@@ -562,6 +563,10 @@ GNU Public Licence.
         res = "OpenERP server: %d threads\n" % threading.active_count()
         res += netsvc.Server.allStats()
         return res
+
+    def exp_list_http_services(self):
+        from service import http_server
+        return http_server.list_http_services()
 
     def exp_check_connectivity(self):
         return bool(sql_db.db_connect('template1'))
