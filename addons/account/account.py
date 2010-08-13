@@ -1053,10 +1053,12 @@ class account_move(osv.osv):
         if not context:
           context={}
         ids = []
-
+        
         if name:
-          ids += self.search(cr, user, [('id','=',name)], limit=limit)
-          
+            ids += self.search(cr, user, [('name','=',name)], limit=limit)
+        if not ids:
+            ids += self.search(cr, user, [('id','=',name)], limit=limit)
+        
         return self.name_get(cr, user, ids, context=context)
     
     def name_get(self, cursor, user, ids, context=None):
