@@ -55,25 +55,6 @@ class account_installer(osv.osv_memory):
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
                  "country."),
-        'account_analytic_plans':fields.boolean('Multiple Analytic Plans',
-            help="Allows invoice lines to impact multiple analytic accounts "
-                 "simultaneously."),
-        'account_payment':fields.boolean('Suppliers Payment Management',
-            help="Streamlines invoice payment and creates hooks to plug "
-                 "automated payment systems in."),
-        'account_followup':fields.boolean('Followups Management',
-            help="Helps you generate reminder letters for unpaid invoices, "
-                 "including multiple levels of reminding and customized "
-                 "per-partner policies."),
-        'account_asset':fields.boolean('Assets Management',
-            help="Enables asset management in the accounting application, "
-                 "including asset categories and usage periods."),
-        'account_voucher':fields.boolean('Voucher Management',
-            help="Account Voucher module includes all the basic requirements of "
-                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
-        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
-            help="Extension Account Voucher module includes allows to link payment / receipt "
-                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period':fields.selection([('month','Monthly'), ('3months','3 Monthly')],
@@ -302,7 +283,7 @@ class account_installer(osv.osv_memory):
         data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
         data = mod_obj.browse(cr, uid, data_id[0])
         view_id = data.res_id
-        
+
         seq_id = obj_sequence.search(cr,uid,[('name','=','Account Journal')])[0]
 
         if seq_journal:
@@ -518,3 +499,30 @@ class account_bank_accounts_wizard(osv.osv_memory):
         }
 
 account_bank_accounts_wizard()
+
+class account_installer_modules(osv.osv_memory):
+    _name = 'account.installer.modules'
+    _inherit = 'res.config.installer'
+    _columns = {
+        # Accounting
+        'account_analytic_plans':fields.boolean('Multiple Analytic Plans',
+            help="Allows invoice lines to impact multiple analytic accounts "
+                 "simultaneously."),
+        'account_payment':fields.boolean('Suppliers Payment Management',
+            help="Streamlines invoice payment and creates hooks to plug "
+                 "automated payment systems in."),
+        'account_followup':fields.boolean('Followups Management',
+            help="Helps you generate reminder letters for unpaid invoices, "
+                 "including multiple levels of reminding and customized "
+                 "per-partner policies."),
+        'account_voucher':fields.boolean('Voucher Management',
+            help="Account Voucher module includes all the basic requirements of "
+                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
+        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
+            help="Extension Account Voucher module includes allows to link payment / receipt "
+                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
+                 }
+
+account_installer_modules()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
