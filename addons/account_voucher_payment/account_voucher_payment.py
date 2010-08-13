@@ -43,11 +43,11 @@ class account_invoice(osv.osv):
         if not context:
             context = {}
         ttype = context.get('ttype', False)
-        if ttype and ttype in ('rec_voucher', 'bank_rec_voucher'):
+        if ttype and ttype in ('receipt'):
             args += [('type','in', ['out_invoice', 'in_refund'])]
-        elif ttype and ttype in ('pay_voucher', 'bank_pay_voucher'):
+        elif ttype and ttype in ('payment'):
             args += [('type','in', ['in_invoice', 'out_refund'])]
-        elif ttype and ttype in('journal_sale_vou', 'journal_pur_voucher', 'journal_voucher'):
+        elif ttype and ttype in('sale', 'purchase'):
             raise osv.except_osv(_('Invalid action !'), _('You can not reconcile sales, purchase, or journal voucher with invoice !'))
             args += [('type','=', 'do_not_allow_search')]
 
@@ -86,19 +86,13 @@ class account_voucher(osv.osv):
                 continue
             
             journal = journal_pool.browse(cr, uid, inv.journal_id.id)
-            if inv.type in ('journal_pur_voucher', 'journal_sale_vou'):
-                if journal.invoice_sequence_id:
-                    name = sequence_pool.get_id(cr, uid, journal.invoice_sequence_id.id)
-                else:
-                    raise osv.except_osv(_('Error !'), _('Please define invoice sequence on %s journal !' % (journal.name)))
+            if journal.sequence_id:
+                name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
             else:
-                if journal.sequence_id:
-                    name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
-                else:
-                    raise osv.except_osv(_('Error !'), _('Please define sequence on journal !'))
+                raise osv.except_osv(_('Error !'), _('Please define sequence on journal !'))
             
             ref = False
-            if inv.type in ('journal_pur_voucher', 'bank_rec_voucher', 'rec_voucher'):
+            if inv.type in ('purchase', 'receipt'):
                 ref = inv.reference
             else:
                 ref = invoice_pool._convert_ref(cr, uid, name)
@@ -143,7 +137,7 @@ class account_voucher(osv.osv):
                     'currency_id':inv.currency_id.id
                 })
             
-            if inv.type in ('rec_voucher', 'bank_rec_voucher', 'journal_pur_voucher', 'journal_voucher'):
+            if inv.type in ('receipt', 'purchase'):
                 move_line['debit'] = inv.amount
             else:
                 move_line['credit'] = inv.amount
@@ -155,7 +149,7 @@ class account_voucher(osv.osv):
             for line in inv.payment_ids:
                 amount=0.0
 
-                if inv.type in ('bank_pay_voucher', 'pay_voucher', 'journal_voucher'):
+                if inv.type in ('payment'):
                     ref = line.ref
                 
                 move_line = {
@@ -200,7 +194,7 @@ class account_voucher(osv.osv):
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
                 
-                if line.invoice_id and inv.type in ('pay_voucher', 'bank_pay_voucher', 'rec_voucher', 'bank_rec_voucher'):
+                if line.invoice_id and inv.type in ('payment', 'receipt'):
                     rec_ids += [move_line_id]
                     for move_line in line.invoice_id.move_id.line_id:
                         if line.account_id.id == move_line.account_id.id:
@@ -211,7 +205,6 @@ class account_voucher(osv.osv):
             
             rec = {
                 'move_id': move_id,
-                'move_ids':[(6, 0,line_ids)]
             }
             
             message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirm")
@@ -272,19 +265,19 @@ class account_voucher_line(osv.osv):
         obj = self.pool.get('account.account')
         acc_id = False
 
-        if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
+        if type1 in ('receipt'):
             acc_id = obj.browse(cr, uid, account_id)
             balance = acc_id.credit
             type = 'cr'
-        elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') :
+        elif type1 in ('payment') :
             acc_id = obj.browse(cr, uid, account_id)
             balance = acc_id.debit
             type = 'dr'
-        elif type1 in ('journal_sale_vou') :
+        elif type1 in ('sale') :
             acc_id = obj.browse(cr, uid, account_id)
             balance = acc_id.credit
             type = 'dr'
-        elif type1 in ('journal_pur_voucher') :
+        elif type1 in ('purchase') :
             acc_id = obj.browse(cr, uid, account_id)
             balance = acc_id.debit
             type = 'cr'
