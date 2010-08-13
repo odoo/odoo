@@ -407,7 +407,7 @@ class account_move_line(osv.osv):
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
-        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The move of this entry line.", select=2),
+        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2),
         'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Narration'),
         'ref': fields.char('Ref.', size=64),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
@@ -560,7 +560,7 @@ class account_move_line(osv.osv):
                 #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
                 if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id2)
-                elif jt in ('purchase', 'sale_refund', 'expense'):
+                elif jt in ('purchase', 'sale_refund', 'expense', 'bank', 'cash'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id1)
                 
                 if val.get('account_id', False):
@@ -798,30 +798,30 @@ class account_move_line(osv.osv):
             return j+(p and (':'+p) or '')
         return False
 
-#    def onchange_date(self, cr, user, ids, date, context={}):
-#        """
-#        Returns a dict that contains new values and context
-#        @param cr: A database cursor
-#        @param user: ID of the user currently logged in
-#        @param date: latest value from user input for field date
-#        @param args: other arguments
-#        @param context: context arguments, like lang, time zone
-#        @return: Returns a dict which contains new values, and context
-#        """
-#        res = {}
-#        period_pool = self.pool.get('account.period')
-#        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
-#        if pids:
-#            res.update({
-#                'period_id':pids[0]
-#            })
-#            context.update({
-#                'period_id':pids[0]
-#            })
-#        return {
-#            'value':res,
-#            'context':context,
-#        }
+    def onchange_date(self, cr, user, ids, date, context={}):
+        """
+        Returns a dict that contains new values and context
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param date: latest value from user input for field date
+        @param args: other arguments
+        @param context: context arguments, like lang, time zone
+        @return: Returns a dict which contains new values, and context
+        """
+        res = {}
+        period_pool = self.pool.get('account.period')
+        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        if pids:
+            res.update({
+                'period_id':pids[0]
+            })
+            context.update({
+                'period_id':pids[0]
+            })
+        return {
+            'value':res,
+            'context':context,
+        }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
@@ -882,20 +882,29 @@ class account_move_line(osv.osv):
             attrs = []
             if field == 'debit':
                 attrs.append('sum="Total debit"')
+                
             elif field == 'credit':
                 attrs.append('sum="Total credit"')
+                
             elif field == 'account_tax_id':
                 attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
                 attrs.append("context=\"{'journal_id':journal_id}\"")
+                
             elif field == 'account_id' and journal.id:
                 attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
+
             elif field == 'partner_id':
                 attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
+
             elif field == 'journal_id':
                 attrs.append("context=\"{'journal_id':journal_id}\"")
+
             elif field == 'statement_id':
                 attrs.append("domain=\"[('state','!=','confirm'),('journal_id.type','=','bank')]\"")
-                
+
+            elif field == 'date':
+                attrs.append('on_change="onchange_date(date)"')
+
             if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
             

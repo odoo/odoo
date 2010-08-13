@@ -286,7 +286,7 @@ class hr_evaluation_interview(osv.osv):
     _inherits = {'survey.request': 'request_id'}
     _description = 'Evaluation Interview'
     _columns = {
-        'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade'),
+        'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
         'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
         'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluation Type'),
         }

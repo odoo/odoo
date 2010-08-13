@@ -129,7 +129,7 @@ class hr_employee(osv.osv):
         'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel','category_id','emp_id','Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade'),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo')

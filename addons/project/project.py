@@ -163,7 +163,7 @@ class project(osv.osv):
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -283,7 +283,7 @@ class project(osv.osv):
             res_id = result[0]
             form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
             form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
-            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_list')
+            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
             tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
             search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
             search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])

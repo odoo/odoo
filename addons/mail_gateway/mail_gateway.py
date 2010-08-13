@@ -44,6 +44,28 @@ class mailgate_thread(osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', readonly=True),
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Overrides orm copy method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: Id of mailgate thread
+        @param default: Dictionary of default values for copy.
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        default.update({
+                    'message_ids': [], 
+                    'date_closed': False, 
+                    'date_open': False
+                })
+        return super(mailgate_thread, self).copy(cr, uid, id, default, context=context)
+
     def message_new(self, cr, uid, msg, context):
         raise Exception, _('Method is not implemented')
 
@@ -83,7 +105,7 @@ class mailgate_thread(osv.osv):
         @param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
         @param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To addresses if any
         @param email_date: Email Date string if different from now, in server Timezone
-        @param details: Description, Ddtails of case history if any
+        @param details: Description, Details of case history if any
         @param atach: Attachment sent in email
         @param context: A standard dictionary for contextual values"""
         if context is None:

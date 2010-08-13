@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class hr_department(osv.osv):

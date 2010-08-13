@@ -55,7 +55,7 @@ class pos_payment_report_date(report_sxw.rml_parse):
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
                          "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id IN %s " \
                          ,(dt1,dt2,tuple(form['user_id'])))
-        res=self.cr.fetchone()[0]
+        res=self.cr.fetchone()[0] or 0.0
         return res
 
 
