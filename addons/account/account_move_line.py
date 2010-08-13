@@ -842,11 +842,18 @@ class account_move_line(osv.osv):
         }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
+        journal_pool = self.pool.get('account.journal')
+        
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
             #Remove the toolbar from the form view
             if view_type == 'form':
                 result['toolbar']['action'] = []
+
+            #Restrict the list of journal view in search view
+            if view_type == 'search':
+                journal_list = journal_pool.name_search(cr, uid, '', [], context=context)
+                result['fields']['journal_id']['selection'] = journal_list
             return result
 
         fld = []
@@ -854,7 +861,7 @@ class account_move_line(osv.osv):
         flds = []
         title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
-        journal_pool = self.pool.get('account.journal')
+        
 
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)

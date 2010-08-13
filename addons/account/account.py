@@ -716,7 +716,7 @@ class account_journal(osv.osv):
         result = self.write(cr, uid, [journal.id], res)
             
         return result
-        
+    
     def create(self, cr, uid, vals, context={}):
         journal_id = super(account_journal, self).create(cr, uid, vals, context)
         self.create_sequence(cr, uid, [journal_id], context)
@@ -736,10 +736,15 @@ class account_journal(osv.osv):
         if not args:
             args = []
         ids = []
+
+        if context.get('journal_type', False):
+            args += [('type','=',context.get('journal_type'))]
+        
         if name:
             ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit, context=context)
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+
         return self.name_get(cr, user, ids, context=context)
 
     def onchange_type(self, cr, uid, ids, type, currency):
