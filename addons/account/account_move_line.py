@@ -145,6 +145,18 @@ class account_move_line(osv.osv):
         return data
 
     def _default_get(self, cr, uid, fields, context={}):
+    
+        period_obj = self.pool.get('account.period')
+
+        #check if the period_id changed in the context from client side
+        if context.get('period_id', False):
+            period_id = context.get('period_id')
+            if type(period_id) == str:
+                ids = period_obj.search(cr, uid, [('name','ilike',period_id)])
+                context.update({
+                    'period_id':ids[0]
+                })
+        
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
         # Starts: Manual entry from account.move form
@@ -184,8 +196,6 @@ class account_move_line(osv.osv):
 
         if not 'move_id' in fields: #we are not in manual entry
             return data
-
-        period_obj = self.pool.get('account.period')
 
         # Compute the current move
         move_id = False
