@@ -32,8 +32,8 @@ import os
 from os.path import join, isfile, basename
 import glob
 
-from distutils.core import setup, Command
-from distutils.command.install import install
+from setuptools import setup, find_packages
+from setuptools.command.install import install
 from distutils.sysconfig import get_python_lib
 
 has_py2exe = False
@@ -51,54 +51,10 @@ if 'bdist_rpm' in sys.argv:
 # get python short version
 py_short_version = '%s.%s' % sys.version_info[:2]
 
-required_modules = [
-    ('lxml', 'lxml module: pythonic libxml2 and libxslt bindings'),
-    ('mako', 'Mako template engine'),
-    ('dateutil', "Extensions to the standard datetime module"),
-    ('psycopg2', 'PostgreSQL module'),
-    ('pychart', 'pychart module'),
-    ('pydot', 'pydot module'),
-    ('pytz', 'Timezone handling library for Python'),
-    ('reportlab', 'reportlab module'),
-    ('yaml', 'YAML parser and emitter for Python'),
-    ('DAV', 'PyWebDAV is a standards compliant WebDAV server and library written in Python'),
-]
-
-def check_modules():
-    errors = []
-    for modname, desc in required_modules:
-        try:
-            imp.find_module(modname)
-        except ImportError:
-            errors.append(
-                'Error: python module %s (%s) is required' % (modname, desc))
-
-    if errors:
-        print '\n'.join(errors)
-        sys.exit(1)
-
 def find_addons():
-    for root, _, names in os.walk(join('bin', 'addons')):
+    for root, _, names in os.walk(join('bin', 'addons'), followlinks=True):
         if '__openerp__.py' in names or '__terp__.py' in names:
             yield basename(root), root
-    #look for extra modules
-    try:
-        empath = os.getenv('EXTRA_MODULES_PATH', '../addons/')
-        for mname in open(join(empath, 'server_modules.list')):
-            mname = mname.strip()
-            if not mname:
-                continue
-
-            terp = join(empath, mname, '__openerp__.py')
-            if not os.path.exists(terp):
-                terp = join(empath, mname, '__terp__.py')
-
-            if os.path.exists(terp):
-                yield mname, join(empath, mname)
-            else:
-                print "Module %s specified, but no valid path." % mname
-    except:
-        pass
 
 def data_files():
     '''Build list of data files to be installed'''
@@ -145,9 +101,6 @@ def data_files():
 
     return files
 
-if not os.getenv('NO_CHECK_MODULES') :
-    check_modules()
-
 f = file('openerp-server','w')
 f.write("""#!/bin/sh
 echo "Error: the content of this file should have been replaced during "
@@ -172,6 +125,8 @@ class openerp_server_install(install):
         f.write(start_script)
         f.close()
         install.run(self)
+
+
 
 options = {
     "py2exe": {
@@ -201,37 +156,42 @@ setup(name             = name,
       license          = license,
       data_files       = data_files(),
       cmdclass         = {
-            'install' : openerp_server_install,
+          'install' : openerp_server_install,
       },
       scripts          = ['openerp-server'],
-      packages         = ['openerp-server',
-                          'openerp-server.addons',
-                          'openerp-server.ir',
-                          'openerp-server.osv',
-                          'openerp-server.pychart',
-                          'openerp-server.pychart.afm',
-                          'openerp-server.report',
-                          'openerp-server.report.printscreen',
-                          'openerp-server.report.pyPdf',
-                          'openerp-server.report.render',
-                          'openerp-server.report.render.html2html',
-                          'openerp-server.report.render.makohtml2html',
-                          'openerp-server.report.render.odt2odt',
-                          'openerp-server.report.render.rml2html',
-                          'openerp-server.report.render.rml2pdf',
-                          'openerp-server.report.render.rml2txt',
-                          'openerp-server.service',
-                          'openerp-server.tools',
-                          'openerp-server.wizard',
-                          'openerp-server.workflow'] + \
-                          [('openerp-server.addons.' + name)
-                           for name, _ in find_addons()],
+      packages = [
+          '.'.join(['openerp-server'] + package.split('.')[1:]) for package in find_packages()
+      ],
       package_dir      = find_package_dirs(),
-      console = [{"script": join("bin", "openerp-server.py"),
-                  "icon_resources": [(1,join("pixmaps","openerp-icon.ico"))]
-                  }],
+      console = [
+          {
+              "script": join("bin", "openerp-server.py"),
+              "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))]
+          }
+      ],
       options = options,
-      )
+      install_requires = ['lxml',
+                          'mako',
+                          'python-dateutil',
+                          'psycopg2',
+                          'pychart',
+                          'pydot',
+                          'pytz',
+                          'reportlab',
+                          'caldav',
+                          'pyyaml',
+                          'sqlalchemy',
+                          'django',
+                          'pywebdav'
+                          'cx_Oracle',
+                          'mysqldb',
+                          'feedparser',
+                          'bsddb3',
+                          'egenix-mx-base'],
+      extras_require={
+          'SSL' : ['pyopenssl'],
+      }
+)
 
 if has_py2exe:
   # Sometime between pytz-2008a and pytz-2008i common_timezones started to
