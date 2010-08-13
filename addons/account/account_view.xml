@@ -1059,9 +1059,8 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_symbol-selection" string="Unreconciled" domain="[('reconcile_id','=',False), ('account_id.type','in',['receivable', 'payable'])]" help="Unreconciled Entry Lines"/>
                         <separator orientation="vertical"/>
-                        <field name="ref" select="1" string="Reference"/>
                         <field name="move_id" select="1" string="Number (Move)"/>
-                        <field name="name" select="1"/>
+                        <field name="date" select='1'/>
                         <field name="account_id" select='1'/>
                         <field name="partner_id" select='1'>
                             <filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-partner" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
@@ -1070,10 +1069,20 @@
                     <newline/>
                     <group col="10" colspan="4">
                         <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self or 0, 'normal_view':False}"/>
-                        <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
-                        <separator orientation="vertical"/>
+                        <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>                        
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                        <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Extended options...">
+                        <field name="ref" select="1" string="Reference"/>
+                        <field name="name" select="1"/>
                         <field name="narration" select="1"/>
-                        <field name="date" select='1'/>
+                        
                         <field name="balance" string="Debit/Credit" select='1'/>
                     </group>
                 </search>

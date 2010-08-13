@@ -155,10 +155,10 @@ class account_move_journal(osv.osv_memory):
 #            'domain': str([('journal_id', '=', journal_id), ('period_id', '=', period_id)]),
             'name': name,
             'view_type': 'form',
-            'view_mode': 'tree,form,graph',
+            'view_mode': 'tree,graph,form',
             'res_model': 'account.move.line',
             'view_id': False,
-            'context': "{'journal_id': %d, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, period_id),
+            'context': "{'visible_id':%s, 'journal_id': %d, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, journal_id, period_id),
             'type': 'ir.actions.act_window',
             'search_view_id': res_id
         }
