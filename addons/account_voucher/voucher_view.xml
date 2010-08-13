@@ -58,7 +58,7 @@
                                 <field name="currency_id" select="1"/>
                             </group>
                         </page>
-                        <page string="Accounting Entries">
+                        <page string="Journal Items">
                             <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                             <field name="period_id"/>
                             <separator string="General Entries" colspan="4"/>
@@ -212,7 +212,7 @@
         <menuitem action="action_voucher_list" id="menu_encode_entries_by_voucher" parent="account.menu_finance_entries" sequence="6"/>
 
         <record id="action_cheque_register" model="ir.actions.act_window">
-            <field name="name">Cheque Register</field>
+            <field name="name">Vouchers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
