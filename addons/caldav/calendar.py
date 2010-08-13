@@ -266,11 +266,9 @@ class CalDAV(object):
                 continue
             if cal_data.name.lower() in self.__attribute__:
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
-                    # since we do convert, do we also need to save the original tzid?
-                    # self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
-                    
-                    date_local = cal_data.value.astimezone(_server_tzinfo)
-                    self.ical_set(cal_data.name.lower(), date_local, 'value')
+                    self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
+                    date_utc = cal_data.value.astimezone(pytz.utc)
+                    self.ical_set(cal_data.name.lower(), date_utc, 'value')
                     continue
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self, context=context)
