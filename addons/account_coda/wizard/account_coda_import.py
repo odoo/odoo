@@ -214,12 +214,13 @@ class account_coda_import(osv.osv_memory):
                             reconcile_id = statement_reconcile_obj.create(cr, uid, {
                                 'line_ids': [(6, 0, rec_id)]
                                 }, context=context)
-                        if mv.partner_id:
-                            line['partner_id'] = mv.partner_id.id
-                            if line['amount'] < 0 :
-                                line['account_id'] = mv.partner_id.property_account_payable.id
-                            else :
-                                line['account_id'] = mv.partner_id.property_account_receivable.id
+                            mv = pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
+                            if mv.partner_id:
+                                line['partner_id'] = mv.partner_id.id
+                                if line['amount'] < 0 :
+                                    line['account_id'] = mv.partner_id.property_account_payable.id
+                                else :
+                                    line['account_id'] = mv.partner_id.property_account_receivable.id
                     str_not1 = ''
                     if line.has_key('contry_name') and line.has_key('cntry_number'):
                         str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"], line["cntry_number"], line["free_comm"]+line['extra_note'], line["val_date"][0], line["entry_date"][0])

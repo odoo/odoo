@@ -22,15 +22,16 @@
             </field>
         </record>
 
-        <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_cash_register" sequence="4"/>
+        <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_cash_register" 
+                sequence="4" groups="group_pos_manager"/>
 
-        <menuitem
+        <!--<menuitem
             name="All Cash Registers"
             parent="menu_cash_register"
             action="account.action_view_bank_statement_tree"
             id="menu_all_menu_cash_register"
             sequence="4"
-        />
+        />-->
 
         <record id="action_new_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Cash Register</field>
