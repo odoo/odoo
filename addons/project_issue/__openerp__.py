@@ -49,7 +49,7 @@
     'test': [
       'test/convert_issue_to_task.yml',
       'test/test_project_issue_states.yml'
-            ],
+    ],
     'installable': True,
     'active': False,
 }

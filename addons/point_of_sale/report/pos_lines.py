@@ -29,9 +29,9 @@ class pos_lines(report_sxw.rml_parse):
         super(pos_lines, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'total_quantity': self.__total_quantity__,
-                'taxes':self.__taxes__,
+            'time': time,
+            'total_quantity': self.__total_quantity__,
+            'taxes':self.__taxes__,
 
         })
 

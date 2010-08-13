@@ -70,7 +70,6 @@
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
         'wizard/mrp_change_standard_price_view.xml',
-#        'wizard/mrp_track_prod_view.xml',
         'mrp_view.xml',
         'mrp_report.xml',
         'company_view.xml',
@@ -84,7 +83,10 @@
 
 
     ],
-    'demo_xml': ['mrp_demo.xml', 'board_manufacturing_demo.xml'],
+    'demo_xml': [
+         'mrp_demo.xml',
+         'board_manufacturing_demo.xml'
+    ],
     'test': [
          'test/mrp_packs.yml',
          'test/mrp_phantom_bom.yml',

@@ -28,14 +28,14 @@
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Membership products">                    
+                <form string="Membership products">
                     <field name="name"/>
                     <field name="default_code"/>
                     <field name="type"/>
                     <field name="categ_id"/>
                     <field name="membership_date_from" required="1"/>
                     <field name="membership_date_to" required="1"/>
-                    <field name="list_price" string="Membership Fee"/>                    
+                    <field name="list_price" string="Membership Fee"/>
                     <separator colspan="4" string="Customer Taxes:"/>
                     <field name="taxes_id" colspan="4" nolabel="1"/>
                 </form>
@@ -84,9 +84,9 @@
         <menuitem name="Memberships" parent="menu_membership"
             id="menu_membership_products"
             action="action_membership_products" sequence="1"/>
-        
-        
-        
+
+
+
 
 
 
@@ -167,16 +167,6 @@
         <menuitem name="Members" parent="menu_membership" id="menu_members" sequence="2" action="action_membership_members"/>
 
         <!-- PARTNERS -->
-<!--
-        <wizard
-            string="Invoice Membership"
-            model="res.partner"
-            name="wizard_invoice_membership"
-            id="wizard_invoice_membership"
-            />
- -->
-
-
 
         <record model="ir.ui.view" id="view_partner_tree">
             <field name="name">res.partner.tree.form.inherit</field>
@@ -203,13 +193,13 @@
                             <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" icon="gtk-apply"/>
                             <field colspan="4" name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')], 'readonly':[('free_member','=',True)]}"/>
                             <field colspan="4" name="membership_state"/>
-                            </group>               
+                            </group>
                         </group>
                         <group colspan="2" col="2">
                             <field name="membership_start"/>
                             <field name="membership_stop"/>
                             <field name="membership_cancel"/>
-                        </group>                        
+                        </group>
                         <field name="member_lines" nolabel="1" colspan="4" readonly="1">
                             <tree string="Memberships">
                                 <field name="date"/>
@@ -219,14 +209,14 @@
                                 <field name="state"/>
                             </tree>
                             <form string="Memberships">
-                                <field name="date"/>                                
+                                <field name="date"/>
                                 <field name="member_price"/>
                                 <field name="membership_id"/>
                                 <field name="account_invoice_id"/>
                                 <field name="state" colspan="4"/>
                             </form>
-                        </field>                       
-                        
+                        </field>
+
                     </page>
                 </notebook>
             </field>
@@ -234,7 +224,7 @@
 
         <!-- MEMBERSHIP/REPORTING -->
         <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
-        
+
 <!-- View for product.product object inherited from product module................ -->
         <record model="ir.ui.view" id="view_product_form_inherit1">
             <field name="name">product.normal.form</field>

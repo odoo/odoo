@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -37,7 +37,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
                 'get_user':self._get_user,
                 'get_sub_total':self._get_sub_total,
                 'get_net_total_starting':self._get_net_total_starting,
-                })
+        })
     def _get_user(self,line_ids):
         sql = "select name from res_users where id = %d"%(line_ids['create_uid'])
         self.cr.execute(sql)
@@ -109,7 +109,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         total_starting_bal = 0.0
         sql = """ SELECT abs.id,abs.balance_end_real as net_total FROM account_bank_statement as abs
                     WHERE to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date
-                    and abs.state IN ('confirm','open') 
+                    and abs.state IN ('confirm','open')
                     and abs.user_id = %d"""%(user.id)
         self.cr.execute(sql)
         res = self.cr.dictfetchall()

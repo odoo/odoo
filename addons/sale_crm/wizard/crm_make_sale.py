@@ -48,7 +48,7 @@ class crm_make_sale(osv.osv_memory):
             return False
         lead = lead_obj.read(cr, uid, active_id, ['partner_id'])
         return lead['partner_id']
-    
+
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}
@@ -58,8 +58,8 @@ class crm_make_sale(osv.osv_memory):
                 if not line.section_id:
                     raise osv.except_osv(_('Warning !'), _(' Sales Team is not specified.'))
         return super(crm_make_sale, self).view_init(cr, uid, fields_list, context=context)
-        
-                
+
+
 
     def makeOrder(self, cr, uid, ids, context=None):
         """
@@ -176,9 +176,9 @@ class crm_make_sale(osv.osv_memory):
                     'view_id': False,
                     'type': 'ir.actions.act_window',
                     'res_id': new_ids
-                    }
+                }
             return value
-        
+
     def _get_shop_id(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -198,7 +198,7 @@ class crm_make_sale(osv.osv_memory):
          'partner_id': _selectPartner,
          'close': 1
     }
-    
+
 crm_make_sale()
 
 class sale_order_make_line(osv.osv_memory):

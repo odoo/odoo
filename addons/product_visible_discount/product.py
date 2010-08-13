@@ -81,19 +81,12 @@ class sale_order_line(osv.osv):
                 return res
 
             product = product_obj.browse(cr, uid, product, context)
-#            product_tmpl_id = product.product_tmpl_id.id
-#            pricetype_id = pricelist_obj.browse(cr, uid, pricelist).version_id[0].items_id[0].base
-#            field_name = 'list_price'
-#            product_read = self.pool.get('product.template').read(cr, uid, product_tmpl_id, [field_name], context)
-#            list_price = product_read[field_name]
             list_price = pricelist_obj.price_get(cr, uid, [pricelist],
                     product.id, qty or 1.0, partner_id, {'uom': uom,'date': date_order })
 
             pricelists = pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
 
             old_uom = product.uos_id or product.uom_id
-#            new_list_price = product_uom_obj._compute_price(cr,
-#                        uid, old_uom.id, list_price, uom)
             new_list_price = get_real_price(list_price, product.id, pricelist)
             if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0):
                 discount = (new_list_price - price) / new_list_price * 100

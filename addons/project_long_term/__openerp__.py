@@ -40,10 +40,10 @@
     "init_xml": [],
     "demo_xml": ["project_long_term_demo.xml"],
     "test": [
-              'test/schedule_project_phases.yml',
-              'test/schedule_project_tasks.yml',
-              'test/schedule_phase_tasks.yml'
-              ],
+          'test/schedule_project_phases.yml',
+          'test/schedule_project_tasks.yml',
+          'test/schedule_phase_tasks.yml'
+    ],
     "update_xml": [
         "security/ir.model.access.csv",
         "wizard/project_schedule_tasks_view.xml",
@@ -51,7 +51,6 @@
         "project_long_term_workflow.xml",
         "wizard/project_compute_phases_view.xml",
         "wizard/project_compute_tasks_view.xml",
-
     ],
     'installable': True,
     'active': False,

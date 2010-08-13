@@ -7,7 +7,6 @@
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
-<!--        <menuitem name="Control" id="menu_mrp_control" parent="base.menu_mrp_root"  sequence="3" />-->
         <menuitem name="Master Data"
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
@@ -72,7 +71,7 @@
                 </form>
             </field>
         </record>
-     
+
         <record id="view_mrp_property_search" model="ir.ui.view">
             <field name="name">mrp.property.search</field>
             <field name="model">mrp.property</field>
@@ -91,8 +90,8 @@
                </search>
             </field>
         </record>
-           
-        
+
+
         <record id="mrp_property_action" model="ir.actions.act_window">
             <field name="name">Properties</field>
             <field name="type">ir.actions.act_window</field>
@@ -175,7 +174,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Search Views -->
 
         <record id="view_mrp_workcenter_search" model="ir.ui.view">
@@ -283,8 +282,6 @@
             <field name="view_id" ref="mrp_routing_tree_view"/>
             <field name="help">Routings define the assembly operations to be done in work centers for manufacturing a certain product. They are usually attached to bills of materials which will define the assembly of products required for manufacture or for finished products.</field>
         </record>
- <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
-                  sequence="100" />-->
         <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="40" />
         <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="30"/>
 
@@ -368,7 +365,7 @@
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-                        
+
                    </group>
                 </search>
             </field>
@@ -415,10 +412,6 @@
 
         <!-- BOM menus -->
 
-  <!--      <menuitem name="Bill of Materials"
-                  id="menu_mrp_bom"
-                  parent="menu_mrp_bom"
-                  sequence="50" />-->
         <menuitem
             action="mrp_bom_form_action"
             id="menu_mrp_bom_form_action"
@@ -483,10 +476,7 @@
 
         <menuitem action="procurement.procurement_action" id="menu_mrp_procurement_action"
                   parent="mrp.menu_mrp_manufacturing" sequence="3" />
-<!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
-<!--                  parent="mrp.menu_mrp_control" sequence="1" />-->
-
-         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
+        <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
         <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager"/>
 
         <!--
@@ -656,7 +646,7 @@
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc."/>
-                                    <field name="state" invisible="1"/>                                    
+                                    <field name="state" invisible="1"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"

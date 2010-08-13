@@ -18,8 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 {
     'name': 'Sales Management',
     'version': '1.0',
@@ -66,7 +64,6 @@
         'sale_report.xml',
         'stock_view.xml',
         'board_sale_view.xml',
-#        'process/sale_process.xml',
     ],
     'demo_xml': ['sale_demo.xml','board_sale_demo.xml'],
     'test': [

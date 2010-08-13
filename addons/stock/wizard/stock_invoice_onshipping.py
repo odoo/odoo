@@ -27,13 +27,13 @@ class stock_invoice_onshipping(osv.osv_memory):
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
     _columns = {
-            'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True),
-            'group': fields.boolean("Group by partner"),
-            'type': fields.selection([('out_invoice', 'Customer Invoice'),
-                        ('in_invoice', 'Supplier Invoice'),
-                        ('out_refund', 'Customer Refund'),
-                        ('in_refund', 'Supplier Refund')] , 'Type', required=True),
-            'invoice_date': fields.date('Invoiced date'),
+        'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True),
+        'group': fields.boolean("Group by partner"),
+        'type': fields.selection([('out_invoice', 'Customer Invoice'),
+                    ('in_invoice', 'Supplier Invoice'),
+                    ('out_refund', 'Customer Refund'),
+                    ('in_refund', 'Supplier Refund')] , 'Type', required=True),
+        'invoice_date': fields.date('Invoiced date'),
     }
 
     def _get_type(self, cr, uid, context=None):
@@ -41,12 +41,12 @@ class stock_invoice_onshipping(osv.osv_memory):
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: The ID or list of IDs if we want more than one 
-        @param context: A standard dictionary 
+        @param ids: The ID or list of IDs if we want more than one
+        @param context: A standard dictionary
         @return: Invoice type
         """
         if context is None:
-            context = {}     
+            context = {}
         picking_obj = self.pool.get('stock.picking')
         usage = 'customer'
         pick = picking_obj.browse(cr, uid, context['active_id'], context=context)
@@ -70,7 +70,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         return type
 
     _defaults = {
-            'type': _get_type,
+        'type': _get_type,
     }
 
     def create_invoice(self, cr, uid, ids, context):
@@ -78,10 +78,10 @@ class stock_invoice_onshipping(osv.osv_memory):
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: the ID or list of IDs if we want more than one 
-        @param context: A standard dictionary 
-        @return: Invoice ids 
-        """        
+        @param ids: the ID or list of IDs if we want more than one
+        @param context: A standard dictionary
+        @return: Invoice ids
+        """
         result = []
         picking_obj = self.pool.get('stock.picking')
         mod_obj = self.pool.get('ir.model.data')

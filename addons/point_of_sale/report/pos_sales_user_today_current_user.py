@@ -29,12 +29,12 @@ class pos_sales_user_today_current_user(report_sxw.rml_parse):
         self.total = 0.0
         self.qty = 0.0
         self.localcontext.update({
-                'time': time,
-                'get_user':self._get_user,
-                'get_data_current_user':self._get_data_current_user,
-                'get_data_current_user_tot':self._get_data_current_user_tot,
-                'get_data_current_user_qty':self._get_data_current_user_qty,
-                })
+            'time': time,
+            'get_user':self._get_user,
+            'get_data_current_user':self._get_data_current_user,
+            'get_data_current_user_tot':self._get_data_current_user_tot,
+            'get_data_current_user_qty':self._get_data_current_user_qty,
+        })
 
     def _get_user(self, user):
         pos_user={}
@@ -58,15 +58,6 @@ class pos_sales_user_today_current_user(report_sxw.rml_parse):
         return data
 
     def _get_data_current_user_tot(self, user):
-#        res={}
-#        self.cr.execute("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) " \
-#                        "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt ,res_users as ru,res_company as rc  " \
-#                        "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
-#                        "and po.date_order = current_date and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
-#                         ,(str(self.uid),str(user.company_id.id)))
-#
-#        res=self.cr.dictfetchone()
-#        return res['sum']
         return self.total
 
     def _get_data_current_user_qty(self, user):

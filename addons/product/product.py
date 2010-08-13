@@ -289,7 +289,6 @@ class product_template(osv.osv):
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
-#        'company_id': lambda self, cr, uid, context: False, # Visible by all
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
         'cost_method': lambda *a: 'standard',
@@ -476,8 +475,6 @@ class product_product(osv.osv):
         if not len(ids):
             return []
         def _name_get(d):
-            #name = self._product_partner_ref(cr, user, [d['id']], '', '', context)[d['id']]
-            #code = self._product_code(cr, user, [d['id']], '', '', context)[d['id']]
             name = d.get('name','')
             code = d.get('default_code',False)
             if code:

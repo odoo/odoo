@@ -876,7 +876,7 @@ class stock_picking(osv.osv):
                     'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'comment': (comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                     'date_invoice':context.get('date_inv',False),
-                    'user_id':uid 
+                    'user_id':uid
                 }
                 invoice_obj.write(cr, uid, [invoice_id], invoice_vals, context=context)
             else:
@@ -894,7 +894,7 @@ class stock_picking(osv.osv):
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
                     'user_id':uid
-                    }
+                }
                 cur_id = self.get_currency_id(cr, uid, picking)
                 if cur_id:
                     invoice_vals['currency_id'] = cur_id
@@ -957,7 +957,7 @@ class stock_picking(osv.osv):
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
                     'account_analytic_id': account_analytic_id,
                     'note': notes,
-                    }, context=context)
+                }, context=context)
                 self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
             invoice_obj.button_compute(cr, uid, [invoice_id], context=context,
@@ -1170,10 +1170,10 @@ class stock_picking(osv.osv):
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or 'n/a') + "' "
             state_list = {
-                          'confirmed': "is scheduled for the '" + datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d') + "'.", 
-                          'assigned': 'is ready to process.', 
-                          'cancel': 'is Cancelled.', 
-                          'done': 'is processed.', 
+                          'confirmed': "is scheduled for the '" + datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d') + "'.",
+                          'assigned': 'is ready to process.',
+                          'cancel': 'is Cancelled.',
+                          'done': 'is processed.',
                           }
             message += state_list[pick.state]
             self.log(cr, uid, pick.id, message)
@@ -1374,7 +1374,7 @@ class stock_move(osv.osv):
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin",store=True),
         'scraped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scraped'),
-        'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),        
+        'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
     }
     _constraints = [
         (_check_tracking,
@@ -1586,7 +1586,7 @@ class stock_move(osv.osv):
                     'invoice_state': 'none',
                     'date': picking.date,
                     'sale_id':' sale_id' in picking._columns.keys() and  picking.sale_id.id or False
-                    })
+                })
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
                     new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,
@@ -1830,8 +1830,8 @@ class stock_move(osv.osv):
                         'type':'cont_voucher',
                         'line_id': line,
                         'ref': move.picking_id and move.picking_id.name,
-                        })
-            
+                    })
+
         self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -1850,25 +1850,25 @@ class stock_move(osv.osv):
             context = {}
         partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
         lines=[(0, 0, {
-                                    'name': move.name,
-                                    'quantity': move.product_qty,
-                                    'product_id': move.product_id and move.product_id.id or False,
-                                    'credit': amount,
-                                    'account_id': account_id,
-                                    'ref': move.picking_id and move.picking_id.name or False,
-                                    'date': time.strftime('%Y-%m-%d')   ,
-                                    'partner_id': partner_id,
-                                    }),
-                                (0, 0, {
-                                    'name': move.name,
-                                    'product_id': move.product_id and move.product_id.id or False,
-                                    'quantity': move.product_qty,
-                                    'debit': amount,
-                                    'account_id': account_variation,
-                                    'ref': move.picking_id and move.picking_id.name or False,
-                                    'date': time.strftime('%Y-%m-%d')   ,
-                                    'partner_id': partner_id,
-                                    })]
+                'name': move.name,
+                'quantity': move.product_qty,
+                'product_id': move.product_id and move.product_id.id or False,
+                'credit': amount,
+                'account_id': account_id,
+                'ref': move.picking_id and move.picking_id.name or False,
+                'date': time.strftime('%Y-%m-%d')   ,
+                'partner_id': partner_id,
+                }),
+            (0, 0, {
+                'name': move.name,
+                'product_id': move.product_id and move.product_id.id or False,
+                'quantity': move.product_qty,
+                'debit': amount,
+                'account_id': account_variation,
+                'ref': move.picking_id and move.picking_id.name or False,
+                'date': time.strftime('%Y-%m-%d')   ,
+                'partner_id': partner_id,
+        })]
         return lines
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1906,12 +1906,12 @@ class stock_move(osv.osv):
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {
-                    'product_qty': quantity,
-                    'product_uos_qty': uos_qty,
-                    'state': move.state,
-                    'scraped' : True,
-                    'location_dest_id': location_id
-                }
+                'product_qty': quantity,
+                'product_uos_qty': uos_qty,
+                'state': move.state,
+                'scraped' : True,
+                'location_dest_id': location_id
+            }
             new_move = self.copy(cr, uid, move.id, default_val)
             res += [new_move]
             product_obj = self.pool.get('product.product')
