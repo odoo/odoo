@@ -1441,13 +1441,13 @@ true, it will allow you to hide the event alarm information without removing it.
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
                 if data.get('rrule'):
-                    data.update(vals)
                     data.update({
                         'recurrent_uid': real_event_id,
                         'recurrent_id': data.get('date'),
                         'rrule_type': 'none',
                         'rrule': ''
                         })
+                    data.update(vals)
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
