@@ -493,13 +493,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank Statement">
-                    <group col="6" colspan="4">
+                    <group col="7" colspan="4">
                         <field name="name" select="1"/>
                         <field name="date" select="1" on_change="onchange_date(date)"/>
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1"/>
+                        <newline/>
                         <field name="period_id"/>
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
+                        <button name="%(action_view_account_statement_from_invoice_lines)d"
+                            string="Import Invoices" type="action" icon="gtk-dnd"
+                            attrs="{'invisible':[('state','=','confirm')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Transaction">
@@ -538,10 +542,6 @@
                     <group col="8" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
-                        
-                        <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoice" type="action" icon="gtk-dnd" attrs="{'invisible':[('state','=','confirm')]}"/>
-                        
                         <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
                         <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
