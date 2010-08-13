@@ -657,7 +657,9 @@ class function(_column):
             self.selectable = False
 
         if store:
-            self._classic_read = True
+            if self._type != 'many2one':
+                # m2o fields need to return tuples with name_get, not just foreign keys
+                self._classic_read = True
             self._classic_write = True
             if type=='binary':
                 self._symbol_get=lambda x:x and str(x)
