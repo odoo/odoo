@@ -129,6 +129,7 @@ class openerp_dav_handler(dav_interface):
             raise default_exc(err.strerror)
         except Exception,e:
             import traceback
+            if cr: cr.close()
             self.parent.log_error("Cannot %s: %s", opname, str(e))
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc("Operation failed")

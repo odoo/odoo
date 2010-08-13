@@ -83,6 +83,60 @@ def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
 
+def mailto2str(arg):
+    """Take a dict of mail and convert to string.
+    """
+    ret = []
+    if isinstance(arg, dict):
+        args = [arg,]
+    else:
+        args = arg
+    
+    for ard in args:
+        rstr = ard.get('name','')
+        if ard.get('company',False):
+            rstr += ' (%s)' % ard.get('company')
+        if ard.get('email'):
+            rstr += ' <%s>' % ard.get('email')
+        ret.append(rstr)
+    return ', '.join(ret)
+
+def str2mailto(emailstr, multi=False):
+    """Split one email string to a dict of name, company, mail parts
+
+       @param multi Return an array, recognize comma-sep
+    """
+    # TODO: move to tools or sth.
+    mege = re.compile(r'([^\(\<]+) *(\((.*?)\))? *(\< ?(.*?) ?\>)? ?(\((.*?)\))? *$')
+    
+    mailz= [emailstr,]
+    retz = []
+    if multi:
+        mailz = emailstr.split(',')
+    
+    for mas in mailz:
+        m = mege.match(mas.strip())
+        if not m:
+            # one of the rare non-matching strings is "sad" :(
+            # retz.append({ 'name': mas.strip() })
+            # continue
+            raise ValueError("Invalid email address %r" % mas)
+        rd = {  'name': m.group(1).strip(), 
+                'email': m.group(5), }
+        if m.group(2):
+            rd['company'] = m.group(3).strip()
+        elif m.group(6):
+            rd['company'] = m.group(7).strip()
+        
+        if rd['name'].startswith('"') and rd['name'].endswith('"'):
+            rd['name'] = rd['name'][1:-1]
+        retz.append(rd)
+        
+    if multi:
+        return retz
+    else:
+        return retz[0]
+
 def get_attribute_mapping(cr, uid, calname, context=None):
     """ Attribute Mapping with Basic calendar fields and lines
         @param cr: the current row, from the database cursor,
@@ -237,9 +291,11 @@ class CalDAV(object):
         
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
-                self.ical_set(cal_data.name.lower(),
-                        {'name': cal_data.params.get('CN', ['',])[0]},
-                        'value')
+                dmail = { 'name': cal_data.params.get('CN', ['',])[0],
+                            'email': cal_data.value.replace('MAILTO:',''),
+                            # TODO: company? 
+                            }
+                self.ical_set(cal_data.name.lower(), mailto2str(dmail), 'value')
                 continue
             if cal_data.name.lower() == 'attendee':
                 ctx = context.copy()
@@ -338,10 +394,11 @@ class CalDAV(object):
                                 exdates_updated.append(ex_date)
                             exfield.value = map(parser.parse, exdates_updated)
                     elif field == 'organizer' and data[map_field]:
-                        organizer = data[map_field]
+                        organizer = str2mailto(data[map_field])
                         event_org = vevent.add('organizer')
-                        event_org.params['CN'] = [organizer]
-                        event_org.value = 'MAILTO:' + (organizer)
+                        event_org.params['CN'] = [organizer['name']]
+                        event_org.value = 'MAILTO:' + (organizer.get('email') or '')
+                        # TODO: company?
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             if field in ('exdate'):

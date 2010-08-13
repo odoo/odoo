@@ -1154,7 +1154,10 @@ true, it will allow you to hide the event alarm information without removing it.
     def default_organizer(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, uid, context=context)
-        return user.user_email or user.name
+        res = user.name
+        if user.user_email:
+            res += " <%s>" %(user.user_email)
+        return res
 
     _defaults = {
             'state': 'tentative',
