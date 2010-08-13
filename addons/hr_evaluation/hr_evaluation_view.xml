@@ -62,7 +62,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="6" groups="base.group_hr_manager"/>
+        <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="6"/>
         <menuitem name="Periodic Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4" groups="base.group_system"/>
         <menuitem parent="menu_eval_hr_config" id="menu_open_view_hr_evaluation_plan_tree"
             action="open_view_hr_evaluation_plan_tree"/>
@@ -349,9 +349,9 @@
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
         </record>
 
-        <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests" groups="base.group_hr_manager" 
+        <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests" 
             action="action_hr_evaluation_interview_tree"/>
-        <menuitem name="Evaluation Reminders" parent="menu_eval_hr" id="menu_eval_send_mail" groups="base.group_hr_manager"
+        <menuitem name="Evaluation Reminders" parent="menu_eval_hr" id="menu_eval_send_mail"
            action="action_hr_evaluation_send_mail" sequence="45"/>
 
       <!-- Evaluation Interviews Button on Employee Form -->

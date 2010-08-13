@@ -161,8 +161,8 @@
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 
-        <menuitem id="next_id_49" name="Expenses" sequence="4" parent="hr.menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="next_id_49" groups="base.group_hr_manager,base.group_hr_user"/>
+        <menuitem id="next_id_49" name="Expenses" sequence="4" parent="hr.menu_hr_root"/>
+        <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="next_id_49"/>
 
         <record id="view_product_hr_expense_form" model="ir.ui.view">
             <field name="name">product.product.expense.form</field>
