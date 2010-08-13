@@ -1063,12 +1063,12 @@ class orm_template(object):
             context = {}
         defaults = {}
 
-        # get the default defaults for the inherited fields
+        # get the default values for the inherited fields
         for t in self._inherits.keys():
             defaults.update(self.pool.get(t).default_get(cr, uid, fields_list,
                 context))
 
-        # get the default defaults defined in the object
+        # get the default values defined in the object
         for f in fields_list:
             if f in self._defaults:
                 if callable(self._defaults[f]):
@@ -1092,9 +1092,9 @@ class orm_template(object):
                     if f not in defaults:
                         defaults[f] = False
 
-        # get the default defaults set by the user and override the default
-        # defaults defined in the object
-        ir_values_obj = self.pool.get('ir.defaults')
+        # get the default values set by the user and override the default
+        # values defined in the object
+        ir_values_obj = self.pool.get('ir.values')
         res = ir_values_obj.get(cr, uid, 'default', False, [self._name])
         for id, field, field_value in res:
             if field in fields_list:
@@ -1133,7 +1133,7 @@ class orm_template(object):
                     field_value = field_value2
                 defaults[field] = field_value
 
-        # get the default defaults from the context
+        # get the default values from the context
         for key in context or {}:
             if key.startswith('default_') and (key[8:] in fields_list):
                 defaults[key[8:]] = context[key]
