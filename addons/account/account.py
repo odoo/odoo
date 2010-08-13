@@ -138,7 +138,6 @@ class account_payment_term_line(osv.osv):
 
 account_payment_term_line()
 
-
 class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
@@ -2783,9 +2782,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if data_id:
             data = data_pool.browse(cr, uid, data_id[0])
             account_id = data.res_id
+            acc_ids = obj_acc._get_children_and_consol(cr, uid, [account_id])
             if account_id:
-                cr.execute("update account_account set active='f' where id=%s" % (account_id))
-        
+                cr.execute("update account_account set active='f' where id in " + str(tuple(acc_ids)))
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):
