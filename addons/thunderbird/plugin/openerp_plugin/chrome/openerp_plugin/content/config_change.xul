@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/config_change.dtd">
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:html="http://www.w3.org/1999/xhtml"  onload="config_change_load()"
+	title="Openerp Connection" height="140" width="280">
+<script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
+<script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
+<script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
+<script type="text/javascript" src="chrome://openerp_plugin/content/static.js"></script>
+<script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
+	<hbox>
+    <spacer width="70"/>
+	<description>Openerp Connection</description>
+    </hbox>
+<groupbox id="gpData" width="200">
+	<hbox >
+		<label id="lblurl" control="txtcurl" value="&lblurl.label;" width="80"/>
+		<textbox id="txtcurl" width="100" />
+	</hbox>
+	<hbox>	
+		<label id="lblport" control="txtcport" value="&lblport.label;" width="80"/>
+		<textbox id="txtcport" width="100" />
+	</hbox>
+    
+</groupbox>
+<hbox align="right">
+	<spacer width="50"/>
+  <button label="Cancel" image="&imagecancel.value;" oncommand="config_close();" />
+  <button label="OK" image="&imageok.value;" oncommand="config_ok()"/>
+</hbox>
+
+</window>
