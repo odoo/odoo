@@ -404,6 +404,13 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
+def generate_tracking_message_id(openobject_id):
+    """Returns a string that can be used in the Message-ID RFC822 header field so we
+       can track the replies related to a given object thanks to the "In-Reply-To" or
+       "References" fields that Mail User Agents will set.
+    """
+    return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+
 def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False):
     """Low-level method to send directly a Message through the configured smtp server.
         :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
@@ -415,7 +422,7 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
                  else False (+ exception logged)
     """
     if openobject_id:
-        message['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+        message['Message-Id'] = generate_tracking_message_id(openobject_id)
 
     try:
         smtp_server = config['smtp_server']
