@@ -49,7 +49,6 @@ class account_invoice_report(osv.osv):
         'price_total':fields.float('Total Price', readonly=True),
         'price_average':fields.float('Average Price', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
-        'reconciled':fields.integer('# reconciled lines', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -84,7 +83,6 @@ class account_invoice_report(osv.osv):
                     to_char(ai.date_invoice, 'YYYY-MM-DD') as day,
                     ail.product_id,
                     ai.partner_id as partner_id,
-                    ai.reconciled::integer,
                     ai.payment_term as payment_term,
                     ai.period_id as period_id,
                     u.name as uom_name,
@@ -136,7 +134,6 @@ class account_invoice_report(osv.osv):
                     to_char(ai.date_invoice, 'MM'),
                     to_char(ai.date_invoice, 'YYYY-MM-DD'),
                     ai.partner_id,
-                    ai.reconciled,
                     ai.payment_term,
                     ai.period_id,
                     u.name,
