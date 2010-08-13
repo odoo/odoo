@@ -136,7 +136,8 @@ class account_voucher(osv.osv):
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Real Entry'),
         #'move_ids':fields.many2many('account.move.line', 'voucher_id', 'account_id', 'rel_account_move', 'Real Entry', readonly=True, states={'draft':[('readonly',False)]}),
-        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]})
+        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
+        'audit':fields.boolean('Audit Complete ?', required=False),
     }
 
     _defaults = {
@@ -147,6 +148,7 @@ class account_voucher(osv.osv):
         'state': lambda *a: 'draft',
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'reference_type': lambda *a: "none",
+        'audit': lambda *a: False,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
     }
 
