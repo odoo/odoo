@@ -150,6 +150,31 @@ class account_voucher(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
     }
 
+    def onchange_date(self, cr, user, ids, date, context={}):
+        """
+        Returns a dict that contains new values and context
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param date: latest value from user input for field date
+        @param args: other arguments
+        @param context: context arguments, like lang, time zone
+        @return: Returns a dict which contains new values, and context
+        """
+        res = {}
+        period_pool = self.pool.get('account.period')
+        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        if pids:
+            res.update({
+                'period_id':pids[0]
+            })
+            context.update({
+                'period_id':pids[0]
+            })
+        return {
+            'value':res,
+            'context':context,
+        }
+
     def onchange_account(self, cr, uid, ids, account_id):
         if not account_id:
             return {
