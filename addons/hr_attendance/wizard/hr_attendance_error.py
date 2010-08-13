@@ -31,12 +31,12 @@ class hr_attendance_error(osv.osv_memory):
         'init_date': fields.date('Starting Date', required=True),
         'end_date': fields.date('Ending Date', required=True),
         'max_delay': fields.integer('Max. Delay (Min)', required=True)
-        }
+    }
     _defaults = {
          'init_date': time.strftime('%Y-%m-%d'),
          'end_date': time.strftime('%Y-%m-%d'),
          'max_delay': 120,
-        }
+    }
 
     def print_report(self, cr, uid, ids, context=None):
         if context is None:
@@ -59,12 +59,12 @@ class hr_attendance_error(osv.osv_memory):
              'ids': [],
              'model': 'hr.employee',
              'form': data_error
-                 }
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'hr.attendance.error',
             'datas': datas,
-            }
+        }
 
 hr_attendance_error()
 
