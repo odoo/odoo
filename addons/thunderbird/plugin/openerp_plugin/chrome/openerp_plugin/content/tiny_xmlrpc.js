@@ -970,7 +970,7 @@ var listSearchContactHandler = {
                  var t = getMobilenumber();}
 
            if(strlSearchResult=="email" && strlSearchResultValue!=''){
-                 setSenderEmail(sendername);
+                 setSenderEmail(strlSearchResultValue);
                  var t = getSenderEmail();} 
     
             if(strlSearchResult=="res_id"){
@@ -990,7 +990,8 @@ var listSearchContactHandler = {
 var listSearchContactdetailHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-        var sendername = getSenderEmail();
+     //  var sendername = getSenderEmail();
+        var sendername = document.getElementById("txtemail").value
 		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
 		var count = arrIdList.Count();
 		for (i = 0; i < count; i++) {
@@ -1388,7 +1389,7 @@ function upload_archivemail()
     var cnt = list_documents.selectedCount
 	for(i=0;i<cnt;i++)
 	{	
-        var object = list_documents.getSelectedItem(i)
+        var object = list_documents.getSelectedItem(i);
 		var eml_string = parse_eml();
         var model = object.label;
         var res_id = object.value;
@@ -1412,9 +1413,9 @@ function upload_archivemail()
         var arrofarr = dictcontact(a,b)
         xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
         alert("Mail Archive Successfully");
+      }
 		window.close();
-	}
-	
+    
 }
 
 function create_archivemail(){
@@ -1444,8 +1445,8 @@ function create_archivemail(){
 		var arrofarr = dictcontact(a,b);
 		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
         alert("Mail Archive Successfully");
-		window.close();
 		}
+    	window.close();
 	}
 	else
 	{
@@ -1507,7 +1508,7 @@ function createContact(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var a = ['partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
-	var b = [getPartnerId(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,getSenderEmail()];
+	var b = [getPartnerId(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listCreateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
