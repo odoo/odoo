@@ -337,7 +337,7 @@ class account_move_line(osv.osv):
             invoice_id = res[line_id]
             res[line_id] = (invoice_id, invoice_names[invoice_id])
         return res
-
+   
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []

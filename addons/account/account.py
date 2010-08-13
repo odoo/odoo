@@ -1050,8 +1050,8 @@ class account_move(osv.osv):
         ids = []
 
         if name:
-          ids += self.search(cr, user, [('state','=','draft'), ('id','=',name)], limit=limit)
-
+          ids += self.search(cr, user, [('id','=',name)], limit=limit)
+          
         return self.name_get(cr, user, ids, context=context)
     
     def name_get(self, cursor, user, ids, context=None):
