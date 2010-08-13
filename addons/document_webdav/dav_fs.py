@@ -129,6 +129,7 @@ class openerp_dav_handler(dav_interface):
             raise default_exc(err.strerror)
         except Exception,e:
             import traceback
+            if cr: cr.close()
             self.parent.log_error("Cannot %s: %s", opname, str(e))
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc("Operation failed")
@@ -522,7 +523,6 @@ class openerp_dav_handler(dav_interface):
     def put(self, uri, data, content_type=None):
         """ put the object into the filesystem """
         self.parent.log_message('Putting %s (%d), %s'%( misc.ustr(uri), data and len(data) or 0, content_type))
-        parent='/'.join(uri.split('/')[:-1])
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
@@ -535,20 +535,44 @@ class openerp_dav_handler(dav_interface):
         objname = uri2[-1]
         ext = objname.find('.') >0 and objname.split('.')[1] or False
 
+        ret = None
         if not node:
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
             if not dir_node:
                 cr.close()
                 raise DAV_NotFound('Parent folder not found')
 
-            self._try_function(dir_node.create_child, (cr, objname, data),
+            newchild = self._try_function(dir_node.create_child, (cr, objname, data),
                     "create %s" % objname, cr=cr)
+            if not newchild:
+                cr.commit()
+                cr.close()
+                raise DAV_Error(400, "Failed to create resource")
+            
+            uparts=urlparse.urlparse(uri)
+            fileloc = '/'.join(newchild.full_path())
+            if isinstance(fileloc, unicode):
+                fileloc = fileloc.encode('utf-8')
+            # the uri we get is a mangled one, where the davpath has been removed
+            davpath = self.parent.get_davpath()
+            
+            surl = '%s://%s' % (uparts[0], uparts[1])
+            uloc = urllib.quote(fileloc)
+            hurl = False
+            if uri != ('/'+uloc) and uri != (surl + '/' + uloc):
+                hurl = '%s%s/%s/%s' %(surl, davpath, dbname, uloc)
+            etag = False
+            try:
+                etag = str(newchild.get_etag(cr))
+            except Exception, e:
+                self.parent.log_error("Cannot get etag for node: %s" % e)
+            ret = (hurl, etag)
         else:
             self._try_function(node.set_data, (cr, data), "save %s" % objname, cr=cr)
             
         cr.commit()
         cr.close()
-        return 201
+        return ret
 
     def rmcol(self,uri):
         """ delete a collection """
