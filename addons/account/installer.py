@@ -340,8 +340,10 @@ class account_installer(osv.osv_memory):
             ('property_account_expense_categ','product.category','account.account'),
             ('property_account_income_categ','product.category','account.account'),
             ('property_account_expense','product.template','account.account'),
-            ('property_account_income','product.template','account.account')
+            ('property_account_income','product.template','account.account'),
+            ('property_reserve_and_surplus_account','res.company','account.account'),
         ]
+
         for record in todo_list:
             r = []
             r = property_obj.search(cr, uid, [('name','=', record[0] ),('company_id','=',company_id.id)])
@@ -353,6 +355,7 @@ class account_installer(osv.osv_memory):
                 'fields_id': field[0],
                 'value': account and 'account.account,'+str(acc_template_ref[account.id]) or False,
             }
+
             if r:
                 #the property exist: modify it
                 property_obj.write(cr, uid, r, vals)

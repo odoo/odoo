@@ -25,6 +25,15 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'overdue_msg' : fields.text('Overdue Payments Message', translate=True),
+        'property_reserve_and_surplus_account': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Reserve and Surplus Account",
+            method=True,
+            view_load=True,
+            domain="[('type', '=', 'payable')]",
+            help="This Account is used for trasfering Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report"),
     }
 
     _defaults = {

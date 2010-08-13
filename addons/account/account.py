@@ -2342,6 +2342,7 @@ class account_chart_template(osv.osv):
         'property_account_income_categ': fields.many2one('account.account.template','Income Category Account'),
         'property_account_expense': fields.many2one('account.account.template','Expense Account on Product Template'),
         'property_account_income': fields.many2one('account.account.template','Income Account on Product Template'),
+        'property_reserve_and_surplus_account': fields.many2one('account.account.template', 'Reserve and Surplus Account', domain=[('type', '=', 'payable')] , help='This Account is used for trasfering Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report'),
     }
 
 account_chart_template()
@@ -2725,7 +2726,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             ('property_account_expense_categ','product.category','account.account'),
             ('property_account_income_categ','product.category','account.account'),
             ('property_account_expense','product.template','account.account'),
-            ('property_account_income','product.template','account.account')
+            ('property_account_income','product.template','account.account'),
+            ('property_reserve_and_surplus_account','res.company','account.account')
         ]
         for record in todo_list:
             r = []
@@ -2738,6 +2740,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'fields_id': field[0],
                 'value': account and 'account.account,'+str(acc_template_ref[account.id]) or False,
             }
+            
             if r:
                 #the property exist: modify it
                 property_obj.write(cr, uid, r, vals)
