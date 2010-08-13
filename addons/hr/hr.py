@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import os
 
 from osv import fields, osv
@@ -128,7 +129,7 @@ class hr_employee(osv.osv):
         'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel','category_id','emp_id','Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade'),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo')
@@ -147,11 +148,9 @@ class hr_employee(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee where id IN %s',(tuple(ids),))
+            cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -175,6 +174,5 @@ class hr_department(osv.osv):
     }
 
 hr_department()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

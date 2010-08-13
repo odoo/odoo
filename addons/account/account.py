@@ -1027,6 +1027,33 @@ class account_move(osv.osv):
     _description = "Account Entry"
     _order = 'id desc'
 
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        """
+        Returns a list of tupples containing id, name, as internally it is called {def name_get}
+        result format : {[(id, name), (id, name), ...]}
+        
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param name: name to search 
+        @param args: other arguments
+        @param operator: default operator is 'ilike', it can be changed
+        @param context: context arguments, like lang, time zone
+        @param limit: Returns first 'n' ids of complete result, default is 80.
+        
+        @return: Returns a list of tupples containing id and name
+        """
+        
+        if not args:
+          args=[]
+        if not context:
+          context={}
+        ids = []
+
+        if name:
+          ids += self.search(cr, user, [('state','=','draft'), ('id','=',name)], limit=limit)
+
+        return self.name_get(cr, user, ids, context=context)
+    
     def name_get(self, cursor, user, ids, context=None):
         if not len(ids):
             return []
@@ -2205,7 +2232,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
     def _get_def_cparent(self, cr, uid, context):
         acc_obj=self.pool.get('account.account')
         tmpl_obj=self.pool.get('account.account.template')
-        #print "Searching for ",context
         tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
         if not tids or not tids[0]['parent_id']:
             return False
@@ -2247,7 +2273,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
             # 'tax_ids': [(6,0,tax_ids)], todo!!
             'company_id': company_id,
             }
-        # print "Creating:", vals
         new_account = acc_obj.create(cr, uid, vals)
         return {'type':'state', 'state': 'end' }
 

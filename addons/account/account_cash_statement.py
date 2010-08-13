@@ -198,7 +198,7 @@ class account_cash_statement(osv.osv):
         
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True, domain=[('type', '=', 'cash')]),
+        'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'cash')]),
         'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),

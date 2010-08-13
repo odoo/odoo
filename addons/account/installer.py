@@ -18,11 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
 from os.path import join as opj
 from operator import itemgetter
+
 from tools.translate import _
 from osv import fields, osv
 import netsvc
@@ -55,25 +57,6 @@ class account_installer(osv.osv_memory):
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
                  "country."),
-        'account_analytic_plans':fields.boolean('Multiple Analytic Plans',
-            help="Allows invoice lines to impact multiple analytic accounts "
-                 "simultaneously."),
-        'account_payment':fields.boolean('Suppliers Payment Management',
-            help="Streamlines invoice payment and creates hooks to plug "
-                 "automated payment systems in."),
-        'account_followup':fields.boolean('Followups Management',
-            help="Helps you generate reminder letters for unpaid invoices, "
-                 "including multiple levels of reminding and customized "
-                 "per-partner policies."),
-        'account_asset':fields.boolean('Assets Management',
-            help="Enables asset management in the accounting application, "
-                 "including asset categories and usage periods."),
-        'account_voucher':fields.boolean('Voucher Management',
-            help="Account Voucher module includes all the basic requirements of "
-                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
-        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
-            help="Extension Account Voucher module includes allows to link payment / receipt "
-                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period':fields.selection([('month','Monthly'), ('3months','3 Monthly')],
@@ -103,11 +86,6 @@ class account_installer(osv.osv_memory):
         return {}
 
     def generate_configurable_chart(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
-        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        obj_multi = self.pool.get('account.chart.template').browse(cr, uid, id)
-
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
         obj_journal = self.pool.get('account.journal')
@@ -116,6 +94,14 @@ class account_installer(osv.osv_memory):
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
         data_pool = self.pool.get('ir.model.data')
+        mod_obj = self.pool.get('ir.model.data')
+
+        result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
+        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+        obj_multi = self.pool.get('account.chart.template').browse(cr, uid, id)
+
+        if context is None:
+            context = {}
         company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
         seq_journal = True
 
@@ -302,7 +288,7 @@ class account_installer(osv.osv_memory):
         data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
         data = mod_obj.browse(cr, uid, data_id[0])
         view_id = data.res_id
-        
+
         seq_id = obj_sequence.search(cr,uid,[('name','=','Account Journal')])[0]
 
         if seq_journal:
@@ -405,10 +391,12 @@ class account_installer(osv.osv_memory):
                     obj_ac_fp.create(cr, uid, vals_acc)
 
     def execute(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         super(account_installer, self).execute(cr, uid, ids, context=context)
         record = self.browse(cr, uid, ids, context=context)[0]
-        company_id = self.pool.get('res.users').browse(cr,uid,[uid],context)[0].company_id
-        for res in self.read(cr,uid,ids):
+        company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
+        for res in self.read(cr, uid, ids):
             if record.charts == 'configurable':
                 mod_obj = self.pool.get('ir.model.data')
                 fp = tools.file_open(opj('account','configurable_account_chart.xml'))
@@ -501,20 +489,46 @@ class account_installer(osv.osv_memory):
             'Installing chart of accounts %s'%chart)
         return modules | set([chart])
 
-
 account_installer()
 
 class account_bank_accounts_wizard(osv.osv_memory):
     _name='account.bank.accounts.wizard'
 
     _columns = {
-        'acc_name':fields.char('Account Name.', size=64, required=True),
-        'bank_account_id':fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
-        'currency_id':fields.many2one('res.currency', 'Currency'),
-        'account_type':fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
+        'acc_name': fields.char('Account Name.', size=64, required=True),
+        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency'),
+        'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
     }
     _defaults = {
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
         }
 
 account_bank_accounts_wizard()
+
+class account_installer_modules(osv.osv_memory):
+    _name = 'account.installer.modules'
+    _inherit = 'res.config.installer'
+    _columns = {
+        # Accounting
+        'account_analytic_plans':fields.boolean('Multiple Analytic Plans',
+            help="Allows invoice lines to impact multiple analytic accounts "
+                 "simultaneously."),
+        'account_payment':fields.boolean('Suppliers Payment Management',
+            help="Streamlines invoice payment and creates hooks to plug "
+                 "automated payment systems in."),
+        'account_followup':fields.boolean('Followups Management',
+            help="Helps you generate reminder letters for unpaid invoices, "
+                 "including multiple levels of reminding and customized "
+                 "per-partner policies."),
+        'account_voucher':fields.boolean('Voucher Management',
+            help="Account Voucher module includes all the basic requirements of "
+                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
+        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
+            help="Extension Account Voucher module includes allows to link payment / receipt "
+                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
+                 }
+
+account_installer_modules()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

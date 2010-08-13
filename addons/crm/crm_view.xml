@@ -170,19 +170,6 @@
             </field>
         </record>
 
-        <!-- Case Categories Action -->
-
-        <record id="crm_case_categ-act" model="ir.actions.act_window">
-            <field name="name">Categories</field>
-            <field name="res_model">crm.case.categ</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_case_categ_tree-view"/>
-        </record>
-
-         <menuitem action="crm_case_categ-act"
-            id="menu_crm_case_categ-act" name="Categories"
-            parent="base.menu_crm_config_lead" sequence="1"/>
-
         <!-- Resource Type of case Tree View -->
 
         <record model="ir.ui.view" id="crm_case_resource_type_tree">
@@ -554,7 +541,7 @@
 		                        <tree string="Communication history">
 		                            <field name="display_text" string="History Information"/>
 		                            <button
-		                                string="Reply"
+		                                string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
 		                                name="%(crm.action_crm_send_mail)d"
 		                                context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
 		                                icon="terp-mail-replied" type="action" />
@@ -566,20 +553,26 @@
 		                                <field name="email_to" widget="char" size="512"/>
 		                                <field name="email_cc" widget="char" size="512"/>
 		                                <field name="name" colspan="4" widget="char" size="512"/>
+		                                <field name="history" invisible="1"/>
 		                            </group>
 		                            <notebook colspan="4">
 		                                <page string="Details">
-		                                    <field name="description" colspan="4" nolabel="1"/>
+		                                    <group attrs="{'invisible': [('history', '!=', True)]}">
+		                                        <field name="description" colspan="4" nolabel="1" height="250"/>
+		                                        <button colspan="4"
+		                                            string="Reply"
+		                                            name="%(crm.action_crm_send_mail)d"
+		                                            context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
+		                                            icon="terp-mail-replied" type="action" />
+		                                    </group>
+		                                    <group attrs="{'invisible': [('history', '=', True)]}">
+                                                <field name="display_text" colspan="4" nolabel="1" height="250"/>
+                                            </group>
 		                                </page>
 		                                <page string="Attachments">
 		                                    <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
 		                                </page>
 		                            </notebook>
-		                            <button colspan="4"
-		                                string="Reply"
-		                                name="%(crm.action_crm_send_mail)d"
-		                                context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
-		                                icon="terp-mail-replied" type="action" />
 		                        </form>
 		                    </field>
                             <button colspan="2" string="Send New Email"

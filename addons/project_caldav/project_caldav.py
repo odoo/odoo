@@ -21,13 +21,19 @@
 
 from osv import fields, osv
 from caldav import calendar
+from datetime import datetime
+
+from project.project import task as base_project_task
 
 class project_task(osv.osv):
     _name = "project.task"
     _inherit = ["calendar.todo", "project.task"]
     _columns = {
+        # force inherit from project.project_task so that 
+        # calendar.todo.active is masked oute
+        'active': base_project_task._columns['active'],
         'write_date': fields.datetime('Write Date'),
-        'create_date': fields.datetime('Create Date'),
+        'create_date': fields.datetime('Create Date', readonly=True),
         'attendee_ids': fields.many2many('calendar.attendee', \
                                          'task_attendee_rel', 'task_id', 'attendee_id', 'Attendees'),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,

@@ -383,7 +383,7 @@
     <menuitem name="Idea" parent="base.menu_lunch_reporting" id="menu_idea_reporting" sequence="3"/>
 
     <menuitem name="Vote Statistics" parent="menu_idea_reporting"
-        id="menu_idea_vote_stat" action="action_idea_vote_stat" />
+        id="menu_idea_vote_stat" action="action_idea_vote_stat" groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
 
     <!-- Vote For Idea Action  -->
     <record model="ir.actions.act_window" id="action_idea_vote">

@@ -53,7 +53,7 @@ class mrp_workcenter(osv.osv):
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
-       'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
+        'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
