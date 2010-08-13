@@ -1038,22 +1038,11 @@ class account_invoice(osv.osv):
         for line in lines:
             del line['id']
             del line['invoice_id']
-            if 'account_id' in line:
-                line['account_id'] = line.get('account_id', False) and line['account_id'][0]
-            if 'product_id' in line:
-                line['product_id'] = line.get('product_id', False) and line['product_id'][0]
-            if 'uos_id' in line:
-                line['uos_id'] = line.get('uos_id', False) and line['uos_id'][0]
+            for field in ('company_id', 'partner_id', 'account_id', 'product_id', 
+                          'uos_id', 'account_analytic_id', 'tax_code_id', 'base_code_id'):
+                line[field] = line.get(field, False) and line[field][0]
             if 'invoice_line_tax_id' in line:
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
-            if 'account_analytic_id' in line:
-                line['account_analytic_id'] = line.get('account_analytic_id', False) and line['account_analytic_id'][0]
-            if 'tax_code_id' in line :
-                if isinstance(line['tax_code_id'],tuple)  and len(line['tax_code_id']) >0 :
-                    line['tax_code_id'] = line['tax_code_id'][0]
-            if 'base_code_id' in line :
-                if isinstance(line['base_code_id'],tuple)  and len(line['base_code_id']) >0 :
-                    line['base_code_id'] = line['base_code_id'][0]
         return map(lambda x: (0,0,x), lines)
 
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
