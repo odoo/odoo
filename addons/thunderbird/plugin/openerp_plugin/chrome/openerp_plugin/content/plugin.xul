@@ -26,7 +26,8 @@
 	  </vbox> 
 	  <hbox align="center">
 	   <image src='chrome://tiny_plugin/skin/perform.gif'/>
-	    <checkbox id="cbxselectall" oncommand="selectAllCheckbox();" label="&cbxselectall.label;" checked="false"/>
+	    <checkbox id="cbxselectall" oncommand="selectAllCheckbox();" checked="false"/>
+        <caption label="&cbxselectall.label;" />
 	    <spacer width="10"/>
       
 	  </hbox>
@@ -44,7 +45,7 @@
 	</listbox>
 	<hbox>
 	<spacer width="360"/>
-	<button label="&attach.label;" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('upload');"/>
+	<button label="&attach.label;" accesskey="u" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('upload');"/>
 	</hbox>
       </groupbox>
 
@@ -68,21 +69,19 @@
 	<label id="lblsection" value=" "/>	
 	<separator class="groove-thin" orient="horizontal" width="180"/>
 
-    <tabpanels>
-    <tabpanel id="contact">
+    
     <hbox>
 	<label id="lblsection" control="section" value="&partner.label;"/>
         <vbox>
-	    <button label="&create.label;" accesskey="r" image="&imagecreate.value;" oncommand="Create.onMenuItemCommand(event);"/>
+	    <button label="&create.label;" image="&imagecreate.value;" oncommand="Create.onMenuItemCommand(event);"/>
         </vbox>
     </hbox>
-    </tabpanel>
-    </tabpanels>
+  
  </groupbox>
   <label id="lblex" value=" "/>
   <label id="lblex" value=" "/>
   <hbox align="right">
-  <spacer width="360"/>
+  <spacer width="330"/>
 	    <button label="&close.label;" accesskey="l" image="&imagecancel.value;" oncommand="win_close();"/>
     </hbox>
     
