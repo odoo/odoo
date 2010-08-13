@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,18 +15,32 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-import product_stock
-import lot_location
-import ups
-import picking
-import lot_overview
-import lot_overview_all
-import report_stock
-import report_stock_picking
-import report_stock_move
-import stock_inventory_move_report
+import time
+from report import report_sxw
 
+class stock_inventory_move(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(stock_inventory_move, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+             'time': time,
+             'qty_total':self._qty_total
+        })
+        
+    def _qty_total(self,objects):
+        total = 0.0
+        uom = objects[0].product_uom.name
+        for obj in objects:
+            total += obj.product_qty
+        return {'quantity':str(total),'uom':uom}
+
+report_sxw.report_sxw(
+    'report.stock.inventory.move',
+    'stock.inventory',
+    'addons/stock/report/stock_inventory_move.rml',
+    parser=stock_inventory_move
+)
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
