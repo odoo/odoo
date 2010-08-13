@@ -19,28 +19,30 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import pooler
-from tools import config
 import time
+
+from osv import fields, osv
 
 class product_product(osv.osv):
     _inherit = "product.product"
+
     def _product_margin(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
         for val in self.browse(cr, uid, ids,context=context):
             res[val.id] = {}
-            date_from=context.get('date_from', time.strftime('%Y-01-01'))
-            date_to=context.get('date_to', time.strftime('%Y-12-31'))
-            invoice_state=context.get('invoice_state', 'open_paid')
+            date_from = context.get('date_from', time.strftime('%Y-01-01'))
+            date_to = context.get('date_to', time.strftime('%Y-12-31'))
+            invoice_state = context.get('invoice_state', 'open_paid')
             if 'date_from' in field_names:
             	res[val.id]['date_from']=date_from
             if 'date_to' in field_names:
                 res[val.id]['date_to']=date_to
             if 'invoice_state' in field_names:
             	res[val.id]['invoice_state']=invoice_state
-            invoice_types=()
-            states=()
+            invoice_types = ()
+            states = ()
             if invoice_state=='paid':
                 states=('paid',)
             elif invoice_state=='open_paid':
@@ -109,8 +111,7 @@ class product_product(osv.osv):
         'total_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Total Margin (%)', multi='margin',help="Total margin * 100 / Turnover"),
         'expected_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Expected Margin (%)', multi='margin',help="Expected margin * 100 / Expected Sale"),
     }
+
 product_product()
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
