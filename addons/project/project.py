@@ -21,7 +21,7 @@
 
 from lxml import etree
 import time
-from datetime import date, datetime
+from datetime import datetime, date
 
 from tools.translate import _
 from osv import fields, osv
@@ -163,7 +163,7 @@ class project(osv.osv):
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -257,11 +257,19 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id', False) # check me where to pass context for parent id ??
+            parent_id = context.get('parent_id', False)
             context.update({'analytic_project_copy': True})
+            new_date_start = time.strftime('%Y-%m-%d')
+            new_date_end = False
+            if proj.date_start and proj.date:
+                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
+                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
+                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
+                                    'date_start':new_date_start,
+                                    'date':new_date_end,
                                     'parent_id':parent_id}, context=context)
             result.append(new_id)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
@@ -275,7 +283,7 @@ class project(osv.osv):
             res_id = result[0]
             form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
             form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
-            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_list')
+            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
             tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
             search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
             search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
