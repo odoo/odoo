@@ -638,8 +638,8 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
-            help="The sequence used for invoice numbers in this journal."),
+#        'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
+#            help="The sequence used for invoice numbers in this journal."),
         'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
@@ -1162,16 +1162,22 @@ class account_move(osv.osv):
     ]
 
     def post(self, cr, uid, ids, context=None):
+        invoice = context.get('invoice')
         if self.validate(cr, uid, ids, context) and len(ids):
             for move in self.browse(cr, uid, ids):
                 if move.name =='/':
                     new_name = False
                     journal = move.journal_id
-                    if journal.sequence_id:
-                        c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-                        new_name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id, context=c)
+                    
+                    if invoice.internal_number:
+                        new_name = invoice.internal_number
                     else:
-                        raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
+                        if journal.sequence_id:
+                            c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
+                            new_name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id, context=c)
+                        else:
+                            raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
+
                     if new_name:
                         self.write(cr, uid, [move.id], {'name':new_name})
 

@@ -231,8 +231,8 @@ class account_invoice(osv.osv):
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=True, select=True, change_default=True),
 
-#        'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
-        'number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
+        'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
+        'internal_number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -326,6 +326,7 @@ class account_invoice(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', context=c),
         'reference_type': 'none',
         'check_total': 0.0,
+        'internal_number': False,
         'user_id': lambda s, cr, u, c: u,
     }
 
@@ -595,15 +596,22 @@ class account_invoice(osv.osv):
         res = map(itemgetter(0), cr.fetchall())
         return res
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update({'state':'draft', 'number':False, 'move_id':False, 'move_name':False,})
+    def copy(self, cr, uid, id, default={}, context=None):
+        default.update({
+            'state':'draft', 
+            'number':False, 
+            'move_id':False, 
+            'move_name':False,
+            'internal_number': False,
+        })
         if 'date_invoice' not in default:
-            default['date_invoice'] = False
+            default.update({
+                'date_invoice':False
+            })
         if 'date_due' not in default:
-            default['date_due'] = False
+            default.update({
+                'date_due':False
+            })
         return super(account_invoice, self).copy(cr, uid, id, default, context)
 
     def test_paid(self, cr, uid, ids, *args):
@@ -773,7 +781,7 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         context = {}
         for inv in self.browse(cr, uid, ids):
-            if not inv.journal_id.invoice_sequence_id:
+            if not inv.journal_id.sequence_id:
                 raise osv.except_osv(_('Error !'), _('Please define sequence on invoice journal'))
             if not inv.invoice_line:
                 raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
@@ -931,44 +939,35 @@ class account_invoice(osv.osv):
         }
 
     def action_number(self, cr, uid, ids, *args):
-#        #TODO: not correct fix but required a frech values before reading it.
-#        self.write(cr, uid, ids, {})
-#
-        cr.execute('SELECT id, type, number, move_id, reference ' \
-                'FROM account_invoice ' \
-                'WHERE id IN ('+','.join(map(str,ids))+')')
-        obj_inv = self.browse(cr, uid, ids)[0]
+        #TODO: not correct fix but required a frech values before reading it.
+        self.write(cr, uid, ids, {})
+        
+        for obj_inv in self.browse(cr, uid, ids):
+            id = obj_inv.id
+            invtype = obj_inv.type
+            number = obj_inv.number
+            move_id = obj_inv.move_id and obj_inv.move_id.id or False
+            reference = obj_inv.reference or ''
 
-        for (id, invtype, number, move_id, reference) in cr.fetchall():
-            if not number:
-                if obj_inv.journal_id.invoice_sequence_id:
-                    sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
-                else:
-                    number = self.pool.get('ir.sequence').get(cr, uid, 'account.invoice.' + invtype)
+            self.write(cr, uid, ids, {'internal_number':number})
+            
+            if invtype in ('in_invoice', 'in_refund'):
+                ref = reference
+            else:
+                ref = self._convert_ref(cr, uid, number)
 
-                if not number:
-                    raise osv.except_osv(_('Warning !'), _('There is no active invoice sequence defined for the journal !'))
-
-                if invtype in ('in_invoice', 'in_refund'):
-                    ref = reference
-                else:
-                    ref = self._convert_ref(cr, uid, number)
-
-                cr.execute('UPDATE account_invoice SET number=%s ' \
-                        'WHERE id=%s', (number, id))
-                cr.execute('UPDATE account_move SET ref=%s ' \
-                        'WHERE id=%s AND (ref is null OR ref = \'\')',
+            cr.execute('UPDATE account_move SET ref=%s ' \
+                    'WHERE id=%s AND (ref is null OR ref = \'\')',
+                    (ref, move_id))
+            cr.execute('UPDATE account_move_line SET ref=%s ' \
+                    'WHERE move_id=%s AND (ref is null OR ref = \'\')',
+                    (ref, move_id))
+            cr.execute('UPDATE account_analytic_line SET ref=%s ' \
+                    'FROM account_move_line ' \
+                    'WHERE account_move_line.move_id = %s ' \
+                        'AND account_analytic_line.move_id = account_move_line.id',
                         (ref, move_id))
-                cr.execute('UPDATE account_move_line SET ref=%s ' \
-                        'WHERE move_id=%s AND (ref is null OR ref = \'\')',
-                        (ref, move_id))
-                cr.execute('UPDATE account_analytic_line SET ref=%s ' \
-                        'FROM account_move_line ' \
-                        'WHERE account_move_line.move_id = %s ' \
-                            'AND account_analytic_line.move_id = account_move_line.id',
-                            (ref, move_id))
-
+            
             for inv_id, name in self.name_get(cr, uid, [id]):
                 message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
                 self.log(cr, uid, inv_id, message)
