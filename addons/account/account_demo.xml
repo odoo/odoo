@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
         
         <!--
         Fiscal year
@@ -19,6 +19,7 @@
         -->    
         
         <record id="period_1" model="account.period">
+            <field eval="'01/'+time.strftime('%Y')" name="code"/>
             <field eval="'01/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -27,6 +28,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_2" model="account.period">
+            <field eval="'02/'+time.strftime('%Y')" name="code"/>
             <field eval="'02/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -35,6 +37,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_3" model="account.period">
+            <field eval="'03/'+time.strftime('%Y')" name="code"/>
             <field eval="'03/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -43,6 +46,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_4" model="account.period">
+            <field eval="'04/'+time.strftime('%Y')" name="code"/>
             <field eval="'04/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -51,6 +55,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_5" model="account.period">
+            <field eval="'05/'+time.strftime('%Y')" name="code"/>
             <field eval="'05/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -59,6 +64,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_6" model="account.period">
+            <field eval="'06/'+time.strftime('%Y')" name="code"/>
             <field eval="'06/'+time.strftime('%Y')" name="name"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="True" name="special"/>
@@ -67,6 +73,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_7" model="account.period">
+            <field eval="'07/'+time.strftime('%Y')" name="code"/>
             <field eval="'07/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -75,6 +82,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_8" model="account.period">
+            <field eval="'08/'+time.strftime('%Y')" name="code"/>
             <field eval="'08/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -83,6 +91,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_9" model="account.period">
+            <field eval="'09/'+time.strftime('%Y')" name="code"/>
             <field eval="'09/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -91,6 +100,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_10" model="account.period">
+            <field eval="'10/'+time.strftime('%Y')" name="code"/>
             <field eval="'10/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -99,6 +109,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_11" model="account.period">
+            <field eval="'11/'+time.strftime('%Y')" name="code"/>
             <field eval="'11/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
@@ -107,6 +118,7 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_12" model="account.period">
+            <field eval="'12/'+time.strftime('%Y')" name="code"/>
             <field eval="'12/'+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>

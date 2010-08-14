@@ -490,7 +490,7 @@ class account_installer(osv.osv_memory):
             data = data_pool.browse(cr, uid, data_id[0])
             account_id = data.res_id
             acc_ids = obj_acc._get_children_and_consol(cr, uid, [account_id])
-            if account_id:
+            if acc_ids:
                 cr.execute("update account_account set active='f' where id in " + str(tuple(acc_ids)))
 
 
