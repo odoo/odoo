@@ -16,7 +16,7 @@
                 </calendar>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_invoice_graph">
             <field name="name">account.invoice.graph</field>
             <field name="model">account.invoice</field>
@@ -28,7 +28,7 @@
                 </graph>
             </field>
         </record>
-        
+
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>
@@ -45,7 +45,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_invoice_line_form" model="ir.ui.view">
             <field name="name">account.invoice.line.form</field>
             <field name="model">account.invoice.line</field>
@@ -62,7 +62,7 @@
                             <field colspan="4" name="name"/>
                             <field colspan="4" name="origin" groups="base.group_extended"/>
                             <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)" groups="base.group_user"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="base.group_user,base.group_extended"/>
+                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="account.group_account_user"/>
                             <newline/>
                             <field name="price_subtotal"/>
 
@@ -76,7 +76,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_invoice_tax_tree" model="ir.ui.view">
             <field name="name">account.invoice.tax.tree</field>
             <field name="model">account.invoice.tax</field>
@@ -92,7 +92,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_invoice_tax_form" model="ir.ui.view">
             <field name="name">account.invoice.tax.form</field>
             <field name="model">account.invoice.tax</field>
@@ -119,13 +119,13 @@
             <field name="model">account.invoice</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('paid','cancel')" string="Invoice">
+                <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
                     <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="name"/>
                     <field name="journal_id" invisible="1"/>
-                    <field name="period_id" invisible="1"/>
+                    <field name="period_id" invisible="1" groups="account.group_account_user"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="user_id"/>
                     <field name="date_due"/>
@@ -140,7 +140,7 @@
                     <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-ok"/>
                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
-                    <button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='open,paid' icon="gtk-execute"/>
+                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
                 </tree>
             </field>
         </record>
@@ -164,14 +164,14 @@
                         <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                         <newline/>
                         <field name="date_invoice"/>
-                        <field name="period_id" groups="base.group_user"/>
-                        <group colspan="2" col="1" groups="base.group_user">
+                        <field name="period_id" groups="account.group_account_user"/>
+                        <group colspan="2" col="1" groups="account.group_account_user">
                             <label align="0.0" string="(keep empty to use the current period)"/>
                         </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                           <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
+                           <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="account.group_account_user"/>
                             <field name="reference_type" nolabel="1" size="0"/>
                             <field name="reference" nolabel="1"/>
                             <field name="date_due"/>
@@ -213,9 +213,9 @@
                                 <field name="residual"/>
                                 <group col="6" colspan="4">
                                     <button name="invoice_open" states="draft,proforma2" string="Approve" icon="terp-camera_test"/>
-                                    <button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='open,paid' icon="gtk-execute"/>
+                                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
                                     <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-ok"/>
-                                    <button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
+                                    <button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                                 </group>
@@ -232,7 +232,7 @@
                             <field name="origin" groups="base.group_extended"/>
                             <field domain="[('partner_id','=',partner_id)]" name="address_contact_id" groups="base.group_extended"/>
                             <field name="user_id"/>
-                            <field name="move_id"/>
+                            <field name="move_id" groups="account.group_account_user"/>
                             <separator colspan="4" string="Additional Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
@@ -273,14 +273,14 @@
                     <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                     <newline/>
                     <field name="date_invoice"/>
-                    <field name="period_id" groups="base.group_user"/>
-                    <group colspan="2" col="1" groups="base.group_user">
+                    <field name="period_id" groups="account.group_account_user"/>
+                    <group colspan="2" col="1" groups="account.group_account_user">
                         <label align="0.0" string="(keep empty to use the current period)"/>
                     </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
+                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="account.group_account_user"/>
                             <field name="name"/>
                             <field name="payment_term" widget="selection"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
@@ -307,9 +307,9 @@
                                 <group col="7" colspan="4" groups="base.group_user">
                                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-check"/>
                                     <button name="invoice_open" states="draft,proforma2" string="Create" icon="terp-document-new"/>
-                                    <button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='open,paid' icon="gtk-execute"/>
+                                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
                                     <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-ok"/>
-                                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
+                                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                                 </group>
@@ -326,8 +326,8 @@
                             <field name="origin"/>
                             <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id"
                                 groups="base.group_extended"/>
-                            <field name="move_id" groups="base.group_user"/>
-                            <separator colspan="4" string="Additionnal Information"/>
+                            <field name="move_id" groups="account.group_account_user"/>
+                            <separator colspan="4" string="Additional Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                         <page string="Payments">
@@ -417,7 +417,7 @@
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_invoice_tree"/>
         </record>
-        
+
         <record id="action_invoice_tree_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
@@ -437,13 +437,13 @@
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help">Most of customer invoices are automatically generated in draft mode by OpenERP flows, following a purchase order for instance. Review, confirm or cancel, pay or refund your customers' invoices here. A manual invoice can be created here.</field>
         </record>
-        
+
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
-        
+
         <record id="action_invoice_tree1_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
@@ -474,7 +474,7 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">A customer refund is a credit note to your customer that cancel  invoice or a part of it.</field>
+            <field name="help">A customer refund is a credit note to your customer that cancel invoice or a part of it.</field>
         </record>
 
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">

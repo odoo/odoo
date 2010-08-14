@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-11 05:36+0000\n"
+"PO-Revision-Date: 2010-08-13 07:39+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:58+0000\n"
+"X-Launchpad-Export-Date: 2010-08-14 06:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
 #: field:payment.order,date_planned:0
 msgid "Scheduled date if fixed"
-msgstr ""
+msgstr "Төлөвлөсөн огноо"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -40,7 +40,7 @@ msgstr "Хэрэглэх төлбөрийн горимыг сонгох"
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: account_payment
 #: view:payment.line:0
@@ -55,6 +55,8 @@ msgid ""
 "The amount which should be paid at the current date\n"
 "minus the amount which is already in payment order"
 msgstr ""
+"Одоо төлбөл зохих дүнгээс төлбөрийн даалгаварт \n"
+"бичигдсэн дүнг хассан дүн"
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -62,16 +64,17 @@ msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
 msgstr ""
+"Төлбөрийн огноо заагаагүй бол банк уг төлбөрийг шууд гүйцэтгэнэ гэж үзнэ"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred date"
-msgstr ""
+msgstr "Сонгосон огноо"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr ""
+msgstr "Сул"
 
 #. module: account_payment
 #: wizard_field:populate_payment,search,entries:0
@@ -91,7 +94,7 @@ msgstr "Дансны бичилт"
 #. module: account_payment
 #: wizard_button:populate_payment,search,create:0
 msgid "_Add to payment order"
-msgstr ""
+msgstr "_Төлбөрийн даалгавар руу нэмэх"
 
 #. module: account_payment
 #: rml:payment.order:0
@@ -102,7 +105,7 @@ msgstr "Дүн"
 #. module: account_payment
 #: rml:payment.order:0
 msgid "Execution date:"
-msgstr ""
+msgstr "Гүйцэтгэх огноо:"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -158,12 +161,12 @@ msgstr "Бүгд дүн"
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Баталсан"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
-msgstr ""
+msgstr "Нэхэмжлэлийн ашигтай огноо"
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -173,12 +176,12 @@ msgstr "Төлбөрийн мөрүүд"
 #. module: account_payment
 #: help:payment.order,date_planned:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
+msgstr "Сонгох огноо тогтмол байх бол огноог заана."
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
-msgstr ""
+msgstr "Бүтэцтэй"
 
 #. module: account_payment
 #: field:payment.order,state:0
@@ -201,12 +204,12 @@ msgstr "Төлбөрийн горим"
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
 msgid "Effective Date"
-msgstr ""
+msgstr "Ашигтай огноо"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
 msgid "Invoice Ref."
-msgstr ""
+msgstr "Нэх. ишлэл"
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -215,6 +218,9 @@ msgid ""
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
 msgstr ""
+"Төлбөрийн даалгаварыг тохируулах: 'Тогтсон' гэдэг нь таны заасан огноо. "
+"'Шууд' гэдэг нь шууд гүйцэтгэнэ. 'Товлосон огноо' гэдэг нь гүйцэтгэх өдрийг "
+"төлөвлөхийг илэрхийлнэ."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -224,12 +230,12 @@ msgstr "Нийт дебит"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution date"
-msgstr ""
+msgstr "Гүйцэтгэх огноо"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr ""
+msgstr "Тогтсон огноо"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
@@ -262,17 +268,17 @@ msgstr "Үүссэн"
 #. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
-msgstr ""
+msgstr "Валютын дүн"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Make Payments"
-msgstr ""
+msgstr "Төлбөр хийх"
 
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr ""
+msgstr "Харилцах төрөл"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
@@ -287,7 +293,7 @@ msgstr "Харилцаа"
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr ""
+msgstr "Товлосон огноо"
 
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
@@ -297,7 +303,7 @@ msgstr "Төлөх дүн"
 #. module: account_payment
 #: help:payment.line,info_owner:0
 msgid "Address of the Main Partner"
-msgstr ""
+msgstr "Үндсэн харилцагчийн хаяг"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -313,7 +319,7 @@ msgstr "Төлбөрийн төрөл"
 #. module: account_payment
 #: help:payment.line,amount_currency:0
 msgid "Payment amount in the partner currency"
-msgstr ""
+msgstr "Төлбөрийн дүн, харилцагчийн валютаар"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -329,12 +335,12 @@ msgstr "Харилцагч"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr ""
+msgstr "Өмнөх харилцсан мессеж"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
-msgstr ""
+msgstr "Худалдан авагчийн хаяг"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -344,7 +350,7 @@ msgstr "Нийт кредит"
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_payment
 msgid "Populate payment"
-msgstr ""
+msgstr "Төлбөрийг дүүргэх"
 
 #. module: account_payment
 #: field:payment.order,user_id:0
@@ -355,7 +361,7 @@ msgstr "Хэрэглэгч"
 #: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 #: wizard_field:populate_statement,init,lines:0
 msgid "Payment Lines"
-msgstr ""
+msgstr "Төлбөрийн мөрүүд"
 
 #. module: account_payment
 #: rml:payment.order:0
@@ -372,7 +378,7 @@ msgstr "Ишлэл"
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr ""
+msgstr "Энэ бичлэг худалдан авагчийн мэдээлэлд тусгагдана."
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -387,7 +393,7 @@ msgstr "Үүссэн огноо"
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
 msgid "Maturity Date"
-msgstr ""
+msgstr "Биежих огноо"
 
 #. module: account_payment
 #: view:account.bank.statement:0
@@ -397,7 +403,7 @@ msgstr "Төлөлтүүдийг импортлох"
 #. module: account_payment
 #: help:payment.type,code:0
 msgid "Specify the Code for Payment Type"
-msgstr ""
+msgstr "Төлбөрийн төрлийн кодыг заах"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -412,7 +418,7 @@ msgstr "Компанийн валютаархи дүн"
 #. module: account_payment
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
-msgstr ""
+msgstr "Худалдан авагч"
 
 #. module: account_payment
 #: field:payment.type,code:0
@@ -422,7 +428,7 @@ msgstr "Код"
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Таны ишлэл"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -489,7 +495,7 @@ msgstr "Компанийн валютаархи төлбөрийн дүн"
 #. module: account_payment
 #: wizard_view:populate_payment,init:0
 msgid "Search Payment lines"
-msgstr ""
+msgstr "Төлөлт хайх"
 
 #. module: account_payment
 #: field:payment.line,amount_currency:0
@@ -499,7 +505,7 @@ msgstr "Харилцагчийн валютаархи дүн"
 #. module: account_payment
 #: field:payment.line,communication2:0
 msgid "Communication 2"
-msgstr ""
+msgstr "Харилцах 2"
 
 #. module: account_payment
 #: field:payment.line,bank_id:0
@@ -509,7 +515,7 @@ msgstr "Хүлээн авах банкны данс"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Төлбөрийн горимын касс журнал"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -520,7 +526,7 @@ msgstr "Банкны данс"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr ""
+msgstr "Төлбөрийг бататгах"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -538,7 +544,7 @@ msgstr "Төлбөр"
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr ""
+msgstr "Бичлэг"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -546,6 +552,8 @@ msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
 msgstr ""
+"Компаниас худалдан авагчид хүргэх мессеж. 'Энэ захиалгын талаар худалдан "
+"авагчид  юу хэлэх вэ?' гэсэн үг."
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -567,7 +575,7 @@ msgstr "Бичлэгийн мэдээлэл"
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
 msgid "Populate Statement with Payment lines"
-msgstr ""
+msgstr "Тайланг төлөлтөөр дүүргэх"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -578,7 +586,7 @@ msgstr "Даалгавар"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_open
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
 msgid "Payment Orders to Validate"
-msgstr ""
+msgstr "Нягтлах төлбөрийн даалгаварууд"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_type
@@ -599,7 +607,7 @@ msgstr "_Нэмэх"
 #. module: account_payment
 #: help:payment.mode,type:0
 msgid "Select the Payment Type for the Payment Mode."
-msgstr ""
+msgstr "Төлбөрийн горимд тохирох төлбөрийн төрлийг сонго."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_mode
@@ -610,7 +618,7 @@ msgstr "Төлбөрийн горим"
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
+msgstr "Төлбөрийн горимд тохирох банкны данс"
 
 #. module: account_payment
 #: field:payment.mode,journal:0

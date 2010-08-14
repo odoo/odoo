@@ -2,23 +2,23 @@
 <openerp>
      <data>
 
-		<record id="account_bs_report_view" model="ir.ui.view">
+        <record id="account_bs_report_view" model="ir.ui.view">
             <field name="name">Account Balance Sheet</field>
             <field name="model">account.bs.report</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view" />
             <field name="arch" type="xml">
                <field name="fiscalyear_id" position="after">
-               		<field name="reserve_account_id"/>
-               		<newline/>
-                   <field name="display_account"/>
-                   <field name="display_type"/>
-                   <newline/>
+<!--                <field name="reserve_account_id"/>-->
+<!--                <newline/>-->
+                    <field name="display_account"/>
+                    <field name="display_type"/>
+                    <newline/>
                </field>
             </field>
         </record>
 
- 		<record id="action_account_bs_report" model="ir.actions.act_window">
+        <record id="action_account_bs_report" model="ir.actions.act_window">
              <field name="name">Balance Sheet</field>
              <field name="res_model">account.bs.report</field>
              <field name="type">ir.actions.act_window</field>
@@ -28,11 +28,11 @@
              <field name="target">new</field>
        </record>
 
- 	   <menuitem icon="STOCK_PRINT"
- 	   		name="Balance Sheet"
- 	   		action="action_account_bs_report"
- 			id="menu_account_bs_report"
- 			parent="final_accounting_reports"/>
+       <menuitem icon="STOCK_PRINT"
+            name="Balance Sheet"
+            action="action_account_bs_report"
+            id="menu_account_bs_report"
+            parent="final_accounting_reports"/>
 
-	</data>
+    </data>
 </openerp>

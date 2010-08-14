@@ -22,6 +22,7 @@
 from lxml import etree
 
 from osv import osv, fields
+from tools.translate import _
 
 class account_bs_report(osv.osv_memory):
     """
@@ -57,7 +58,11 @@ class account_bs_report(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['display_type', 'reserve_account_id'])[0])
+        account = self.pool.get('account.account').browse(cr, uid, data['form']['chart_account_id'])
+        if not account.company_id.property_reserve_and_surplus_account:
+            raise osv.except_osv(_('Warning'),_('Please define the Reserve and Surplus account for current user company !'))
+        data['form']['reserve_account_id'] = account.company_id.property_reserve_and_surplus_account.id
+        data['form'].update(self.read(cr, uid, ids, ['display_type'])[0])
         if data['form']['display_type']:
             return {
                 'type': 'ir.actions.report.xml',

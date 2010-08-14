@@ -87,7 +87,7 @@ class account_move_journal(osv.osv_memory):
 
         view = """<?xml version="1.0" encoding="utf-8"?>
         <form string="Standard entries">
-            <separator string="Open a Journal Items !" colspan="4"/>
+            <separator string="Open Journal Items !" colspan="4"/>
             <group colspan="4" >
                 <label width="300" string="Journal : %s"/>
                 <newline/>

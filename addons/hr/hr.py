@@ -35,8 +35,6 @@ class hr_employee_category(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from hr_employee_category where id IN %s', (tuple(ids), ))
@@ -65,8 +63,6 @@ hr_employee_marital_status()
 class hr_job(osv.osv):
 
     def _no_of_employee(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         res = {}
         for emp in self.browse(cr, uid, ids):
             res[emp.id] = len(emp.employee_ids or [])
@@ -136,8 +132,6 @@ class hr_employee(osv.osv):
     }
 
     def _get_photo(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         return open(os.path.join(
             tools.config['addons_path'], 'hr/image', 'photo.png'),
                     'rb') .read().encode('base64')
@@ -157,8 +151,15 @@ class hr_employee(osv.osv):
             level -= 1
         return True
 
+    def _check_department_id(self, cr, uid, ids, context=None):
+        for emp in self.browse(cr, uid, ids, context=context):
+            if emp.department_id.manager_id and emp.id == emp.department_id.manager_id.id:
+                return False
+        return True
+
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
+        (_check_department_id, 'Error ! You cannot select a department for which the employee is the manager.', ['department_id']),
     ]
 
 hr_employee()
@@ -168,9 +169,7 @@ class hr_department(osv.osv):
     _inherit = 'hr.department'
     _columns = {
         'manager_id': fields.many2one('hr.employee', 'Manager'),
-#        'member_ids': fields.many2many('hr.employee', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members'),
-#       finding problem to implement one2many field as "hr_departmen_user_rel" is used in another module query
     }
 
 hr_department()
