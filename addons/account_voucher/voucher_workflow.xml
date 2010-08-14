@@ -78,11 +78,11 @@
             <field name="signal">recheck_voucher</field>
         </record>
         
-        <record id="t10" model="workflow.transition">
-            <field name="act_from" ref="act_done"/>
-            <field name="act_to" ref="act_audit"/>
-            <field name="signal">audit_complete</field>
-        </record>
+<!--        <record id="t10" model="workflow.transition">-->
+<!--            <field name="act_from" ref="act_done"/>-->
+<!--            <field name="act_to" ref="act_audit"/>-->
+<!--            <field name="signal">audit_complete</field>-->
+<!--        </record>-->
         
         <record id="t5" model="workflow.transition">
             <field name="act_from" ref="act_recheck"/>

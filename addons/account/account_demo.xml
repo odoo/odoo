@@ -3,8 +3,8 @@
     <data noupdate="1">
         
         <!--
-    Fiscal year
-    -->    
+        Fiscal year
+        -->    
         
         <record id="data_fiscalyear" model="account.fiscalyear">
             <field eval="'Fiscal Year '+time.strftime('%Y')" name="name"/>
@@ -15,8 +15,8 @@
         </record>
         
         <!--
-    Fiscal Periods
-    -->    
+        Fiscal Periods
+        -->    
         
         <record id="period_1" model="account.period">
             <field eval="'01/'+time.strftime('%Y')" name="name"/>

@@ -320,26 +320,26 @@ class account_cash_statement(osv.osv):
                 'name':number
             })
 
-#        if len(statement.starting_details_ids) > 0:
-#            sid = []
-#            for line in statement.starting_details_ids:
-#                sid.append(line.id)
-#            cash_pool.unlink(cr, uid, sid)
-#
-#        cr.execute("select id from account_bank_statement where journal_id=%s and user_id=%s and state=%s order by id desc limit 1", (statement.journal_id.id, uid, 'confirm'))
-#        rs = cr.fetchone()
-#        rs = rs and rs[0] or None
-#        if rs:
-#            statement = statement_pool.browse(cr, uid, rs)
-#            balance_start = statement.balance_end_real or 0.0
-#            open_ids = cash_pool.search(cr, uid, [('ending_id','=',statement.id)])
-#            for sid in open_ids:
-#                default = {
-#                    'ending_id': False,
-#                    'starting_id':ids[0]
-#                }
-#                cash_pool.copy(cr, uid, sid, default)
-#
+        cr.execute("select id from account_bank_statement where journal_id=%s and user_id=%s and state=%s order by id desc limit 1", (statement.journal_id.id, uid, 'confirm'))
+        rs = cr.fetchone()
+        rs = rs and rs[0] or None
+        if rs:
+            if len(statement.starting_details_ids) > 0:
+                sid = []
+                for line in statement.starting_details_ids:
+                    sid.append(line.id)
+                cash_pool.unlink(cr, uid, sid)
+
+            statement = statement_pool.browse(cr, uid, rs)
+            balance_start = statement.balance_end_real or 0.0
+            open_ids = cash_pool.search(cr, uid, [('ending_id','=',statement.id)])
+            for sid in open_ids:
+                default = {
+                    'ending_id': False,
+                    'starting_id':ids[0]
+                }
+                cash_pool.copy(cr, uid, sid, default)
+
         vals.update({
             'date':time.strftime("%Y-%m-%d %H:%M:%S"),
             'state':'open',

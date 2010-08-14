@@ -18,7 +18,7 @@
             <field name="res_model">account.move.journal</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_move_journal_form"/>
-            <field name="context">{'journal_type':'sale'}</field>
+            <field name="context">{'journal_type':'sale','view_mode':True}</field>
             <field name="target">new</field>
         </record>
         <menuitem action="action_account_moves_sale" sequence="4" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL"/>
@@ -38,7 +38,7 @@
             <field name="res_model">account.move.journal</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_move_journal_form"/>
-            <field name="context">{'journal_type':'purchase'}</field>
+            <field name="context">{'journal_type':'purchase','view_mode':True}</field>
             <field name="target">new</field>
         </record>
         <menuitem action="action_account_moves_purchase" sequence="4" id="menu_eaction_account_moves_purchase" parent="menu_finance_payables" icon="STOCK_JUSTIFY_FILL"/>
@@ -58,7 +58,7 @@
             <field name="res_model">account.move.journal</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_move_journal_form"/>
-            <field name="context">{'journal_type':'bank'}</field>
+            <field name="context">{'journal_type':'bank','view_mode':True}</field>
             <field name="target">new</field>
         </record>
 

@@ -37,7 +37,7 @@
             </group>
              <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
                 <separator col="4" colspan="4" string="Bank and Cost Account"/>
-                 <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+                 <field colspan="4" mode="tree" height="200" name="bank_accounts_id" nolabel="1" widget="one2many_list">
                      <form string="">
                       <field name="acc_name"/>
                       <field name="account_type"/>
@@ -70,7 +70,7 @@
           <form position="attributes">
             <attribute name="string">Extra Accounting Modules Installation</attribute>
           </form>
-			<separator string="title" position="attributes">
+            <separator string="title" position="attributes">
             <attribute name="string"
                        >Install Extra Accounting Modules In Your Accounting System</attribute>
           </separator>
@@ -129,17 +129,17 @@
       <field name="restart">always</field>
     </record>
 
-    <record id="account_ir_actions_todo_tree" model="ir.ui.view">
-        <field name="model">ir.actions.todo</field>
-        <field name="name">account_installer_action_replace</field>
-        <field name="type">tree</field>
-        <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-          <field name="arch" type="xml">
-            <xpath expr="//button[@string='Launch']" position="replace">
-            <button name="%(action_account_configuration_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-      </xpath>
-        </field>
-    </record>
+        <record id="account_ir_actions_todo_tree" model="ir.ui.view">
+            <field name="model">ir.actions.todo</field>
+            <field name="name">account_installer_action_replace</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@string='Launch']" position="replace">
+                <button name="%(action_account_configuration_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+            </xpath>
+            </field>
+        </record>
 
-  </data>
+    </data>
 </openerp>

@@ -856,12 +856,14 @@ class account_move_line(osv.osv):
                 result['fields']['journal_id']['selection'] = journal_list
             return result
 
+        if not context.get('view_mode', False):
+            return result
+            
         fld = []
         fields = {}
         flds = []
         title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
-        
 
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
