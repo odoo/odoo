@@ -898,9 +898,9 @@
                     <field name="analytic_account_id"/>
                     <field name="amount_currency" groups="base.group_extended"/>
                     <field name="currency_id" groups="base.group_extended"/>
-                    <field name="state"/>
-                    <field name="reconcile_id"/>
                     <field name="reconcile_partial_id" groups="base.group_extended"/>
+                    <field name="reconcile_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -1094,7 +1094,6 @@
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
         </record>
 
@@ -1518,15 +1517,16 @@
   <!--        <wizard id="action_account_bank_reconcile_tree" menu="False" model="account.move.line" name="account.move.bank.reconcile" string="Bank reconciliation"/> -->
     <!--     <menuitem action="action_account_bank_reconcile_tree" id="menu_action_account_bank_reconcile_check_tree" parent="account.next_id_30" type="wizard"/>   -->
 
-<!--  bank reconsilation  -->
-        <menuitem action="action_account_bank_reconcile_tree"
-            id="menu_action_account_bank_reconcile_check_tree"
-            parent="periodical_processing_reconciliation" groups="group_account_user" />
+<!--  bank reconciliation  -->
+<!--        <menuitem action="action_account_bank_reconcile_tree"-->
+<!--            id="menu_action_account_bank_reconcile_check_tree"-->
+<!--            parent="periodical_processing_reconciliation" groups="group_account_user" />-->
 
         <act_window
-            context="{'search_default_next_partner':1}"
+            context="{'search_default_next_partner':1,'view_mode':True}"
             id="action_account_manual_reconcile" name="Entry Lines"
             res_model="account.move.line"
+            view_id="view_move_line_tree"/>
             />
 
         <menuitem
@@ -1581,7 +1581,7 @@
             <field name="view_type">tree</field>
             <field name="help">You can look up individual account entries by searching for useful information. To search for account entries, open a journal, then select a record line.</field>
         </record>
-        <menuitem action="action_account_journal_period_tree" id="menu_action_account_journal_period_tree" parent="account.menu_finance_generic_reporting" sequence="2"/>
+<!--        <menuitem action="action_account_journal_period_tree" id="menu_action_account_journal_period_tree" parent="account.menu_finance_generic_reporting" sequence="2"/>-->
 
 
         <!--
@@ -1833,7 +1833,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_subscription_form" id="menu_action_subscription_form" sequence="5" parent="account.menu_configuration_misc"/>
+        <menuitem name="Define Recurring Entries" action="action_subscription_form" id="menu_action_subscription_form" sequence="1" parent="account.menu_finance_recurrent_entries"/>
 
         <record id="action_subscription_form_running" model="ir.actions.act_window">
             <field name="name">Running Subscriptions</field>

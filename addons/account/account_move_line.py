@@ -855,8 +855,8 @@ class account_move_line(osv.osv):
                 journal_list = journal_pool.name_search(cr, uid, '', [], context=context)
                 result['fields']['journal_id']['selection'] = journal_list
             return result
-
-        if not context.get('view_mode', False):
+        
+        if context.get('view_mode', False):
             return result
             
         fld = []
