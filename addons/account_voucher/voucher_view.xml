@@ -70,7 +70,7 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="open_voucher" string="Compute" states="draft" type="object" icon="terp-stock_format-scientific"/>
+                        <button name="open_voucher" attrs="{'invisible':[('type','not in',['sale', 'purchase'])]}" string="Compute" states="draft" type="object" icon="terp-stock_format-scientific"/>
                         <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
                         <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
 <!--                        <button name="audit_complete" string="Audit Pass" states="posted" icon="terp-check"/>-->
