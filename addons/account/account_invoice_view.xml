@@ -16,7 +16,7 @@
                 </calendar>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_invoice_graph">
             <field name="name">account.invoice.graph</field>
             <field name="model">account.invoice</field>
@@ -28,7 +28,7 @@
                 </graph>
             </field>
         </record>
-        
+
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>
@@ -45,7 +45,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_invoice_line_form" model="ir.ui.view">
             <field name="name">account.invoice.line.form</field>
             <field name="model">account.invoice.line</field>
@@ -76,7 +76,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_invoice_tax_tree" model="ir.ui.view">
             <field name="name">account.invoice.tax.tree</field>
             <field name="model">account.invoice.tax</field>
@@ -92,7 +92,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_invoice_tax_form" model="ir.ui.view">
             <field name="name">account.invoice.tax.form</field>
             <field name="model">account.invoice.tax</field>
@@ -119,7 +119,7 @@
             <field name="model">account.invoice</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('paid','cancel')" string="Invoice">
+                <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
                     <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="partner_id" groups="base.group_user"/>
@@ -417,7 +417,7 @@
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_invoice_tree"/>
         </record>
-        
+
         <record id="action_invoice_tree_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
@@ -437,13 +437,13 @@
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help">Most of customer invoices are automatically generated in draft mode by OpenERP flows, following a purchase order for instance. Review, confirm or cancel, pay or refund your customers' invoices here. A manual invoice can be created here.</field>
         </record>
-        
+
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
-        
+
         <record id="action_invoice_tree1_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
