@@ -53,7 +53,7 @@ class account_installer(osv.osv_memory):
     _columns = {
         # Accounting
         'charts':fields.selection(_get_charts, 'Chart of Accounts',
-            required=True,
+            required=False,
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
                  "country."),
@@ -484,15 +484,14 @@ class account_installer(osv.osv_memory):
                 elif res['period'] == '3months':
                     res_obj.create_period3(cr, uid, [period_id])
         
-        #fially inactive the demo chart of accounts
-        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
-        if data_id:
-            data = data_pool.browse(cr, uid, data_id[0])
-            account_id = data.res_id
-            acc_ids = obj_acc._get_children_and_consol(cr, uid, [account_id])
-            if acc_ids:
-                cr.execute("update account_account set active='f' where id in " + str(tuple(acc_ids)))
-
+#        #fially inactive the demo chart of accounts
+#        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
+#        if data_id:
+#            data = data_pool.browse(cr, uid, data_id[0])
+#            account_id = data.res_id
+#            acc_ids = obj_acc._get_children_and_consol(cr, uid, [account_id])
+#            if acc_ids:
+#                cr.execute("update account_account set active='f' where id in " + str(tuple(acc_ids)))
 
     def modules_to_install(self, cr, uid, ids, context=None):
         modules = super(account_installer, self).modules_to_install(
