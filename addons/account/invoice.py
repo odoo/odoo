@@ -464,7 +464,7 @@ class account_invoice(osv.osv):
             date_invoice = time.strftime('%Y-%m-%d')
 
         pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
-    
+
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
             pterm_list.sort()
@@ -881,10 +881,10 @@ class account_invoice(osv.osv):
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
             move = {
-                'ref': inv.number, 
-                'line_id': line, 
-                'journal_id': journal_id, 
-                'date': date, 
+                'ref': inv.number,
+                'line_id': line,
+                'journal_id': journal_id,
+                'date': date,
                 'type': entry_type,
                 'narration':inv.comment
             }
@@ -933,12 +933,12 @@ class account_invoice(osv.osv):
     def action_number(self, cr, uid, ids, *args):
 #        #TODO: not correct fix but required a frech values before reading it.
 #        self.write(cr, uid, ids, {})
-#        
+#
         cr.execute('SELECT id, type, number, move_id, reference ' \
                 'FROM account_invoice ' \
                 'WHERE id IN ('+','.join(map(str,ids))+')')
         obj_inv = self.browse(cr, uid, ids)[0]
-        
+
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
                 if obj_inv.journal_id.invoice_sequence_id:
@@ -949,12 +949,12 @@ class account_invoice(osv.osv):
 
                 if not number:
                     raise osv.except_osv(_('Warning !'), _('There is no active invoice sequence defined for the journal !'))
-                
+
                 if invtype in ('in_invoice', 'in_refund'):
                     ref = reference
                 else:
                     ref = self._convert_ref(cr, uid, number)
-                
+
                 cr.execute('UPDATE account_invoice SET number=%s ' \
                         'WHERE id=%s', (number, id))
                 cr.execute('UPDATE account_move SET ref=%s ' \
@@ -968,11 +968,11 @@ class account_invoice(osv.osv):
                         'WHERE account_move_line.move_id = %s ' \
                             'AND account_analytic_line.move_id = account_move_line.id',
                             (ref, move_id))
-                            
+
             for inv_id, name in self.name_get(cr, uid, [id]):
                 message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
                 self.log(cr, uid, inv_id, message)
-                
+
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1038,14 +1038,14 @@ class account_invoice(osv.osv):
         for line in lines:
             del line['id']
             del line['invoice_id']
-            for field in ('company_id', 'partner_id', 'account_id', 'product_id', 
+            for field in ('company_id', 'partner_id', 'account_id', 'product_id',
                           'uos_id', 'account_analytic_id', 'tax_code_id', 'base_code_id'):
                 line[field] = line.get(field, False) and line[field][0]
             if 'invoice_line_tax_id' in line:
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
         return map(lambda x: (0,0,x), lines)
 
-    def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
+    def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
 
         new_ids = []
@@ -1059,17 +1059,19 @@ class account_invoice(osv.osv):
                 'in_refund': 'in_invoice',   # Supplier Refund
             }
 
-
             invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
             invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines)
 
             tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
             tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
-            if invoice['type'] == 'in_invoice':
+            if journal_id:
+                refund_journal_ids = [journal_id]
+            elif invoice['type'] == 'in_invoice':
                 refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase_refund')])
             else:
                 refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','sale_refund')])
+
             if not date :
                 date = time.strftime('%Y-%m-%d')
             invoice.update({
@@ -1281,7 +1283,7 @@ class account_invoice_line(osv.osv):
             context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        
+
         if company_id:
             property_obj = self.pool.get('ir.property')
             account_obj = self.pool.get('account.account')
