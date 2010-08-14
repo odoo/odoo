@@ -301,7 +301,7 @@ class account_invoice(osv.osv):
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
-            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Parner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
+            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={
@@ -405,7 +405,7 @@ class account_invoice(osv.osv):
                     rec_res_id = rec_line_data and int(rec_line_data[0]['value'].split(',')[1]) or False
                     pay_res_id = pay_line_data and int(pay_line_data[0]['value'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
-                        raise osv.except_osv(_('Configration Error !'),
+                        raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
                     account_obj = self.pool.get('account.account')
                     rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
@@ -451,7 +451,7 @@ class account_invoice(osv.osv):
         if curr_id and company_id:
             currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
             if currency.company_id.id != company_id:
-                raise osv.except_osv(_('Configration Error !'),
+                raise osv.except_osv(_('Configuration Error !'),
                         _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
 
@@ -501,7 +501,7 @@ class account_invoice(osv.osv):
                     rec_res_id = rec_line_data and int(rec_line_data[0]['value'].split(',')[1]) or False
                     pay_res_id = pay_line_data and int(pay_line_data[0]['value'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
-                        raise osv.except_osv(_('Configration Error !'),
+                        raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
                     if type in ('out_invoice', 'out_refund'):
                         acc_id = rec_res_id
@@ -517,7 +517,7 @@ class account_invoice(osv.osv):
                             if line.account_id.company_id.id != company_id:
                                 result_id = account_obj.search(cr, uid, [('name','=',line.account_id.name),('company_id','=',company_id)])
                                 if not result_id:
-                                    raise osv.except_osv(_('Configration Error !'),
+                                    raise osv.except_osv(_('Configuration Error !'),
                                         _('Can not find account chart for this company in invoice line account, Please Create account.'))
                                 r_id = self.pool.get('account.invoice.line').write(cr, uid, [line.id], {'account_id': result_id[0]})
             else:
@@ -525,7 +525,7 @@ class account_invoice(osv.osv):
                     for inv_line in invoice_line:
                         obj_l = account_obj.browse(cr, uid, inv_line[2]['account_id'])
                         if obj_l.company_id.id != company_id:
-                            raise osv.except_osv(_('Configration Error !'),
+                            raise osv.except_osv(_('Configuration Error !'),
                                 _('invoice line account company is not match with invoice company.'))
                         else:
                             continue
@@ -538,7 +538,7 @@ class account_invoice(osv.osv):
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
             else:
-                raise osv.except_osv(_('Configration Error !'),
+                raise osv.except_osv(_('Configuration Error !'),
                                 _('Can not find account journal for this company in invoice, Please Create journal.'))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
@@ -1330,7 +1330,7 @@ class account_invoice_line(osv.osv):
                 in_res_id = account_obj.search(cr, uid, [('name','=',app_acc_in.name),('company_id','=',company_id)])
                 exp_res_id = account_obj.search(cr, uid, [('name','=',app_acc_exp.name),('company_id','=',company_id)])
                 if not in_res_id and not exp_res_id:
-                    raise osv.except_osv(_('Configration Error !'),
+                    raise osv.except_osv(_('Configuration Error !'),
                         _('Can not find account chart for this company, Please Create account.'))
                 in_obj_acc = account_obj.browse(cr, uid, in_res_id)
                 exp_obj_acc = account_obj.browse(cr, uid, exp_res_id)
@@ -1388,7 +1388,7 @@ class account_invoice_line(osv.osv):
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
 
         if not currency.company_id.id == company.id:
-            raise osv.except_osv(_('Configration Error !'),
+            raise osv.except_osv(_('Configuration Error !'),
                         _('Can not select currency that is not related to any company.\nPlease select accordingly !.'))
 
         if company.currency_id.id != currency.id:
