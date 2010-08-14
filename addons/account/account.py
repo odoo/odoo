@@ -704,13 +704,13 @@ class account_journal(osv.osv):
                 'sequence_id':seq_id
             })
 
-        if journal.type in journal_type and not journal.invoice_sequence_id:
-            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
-            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
-            inv_seq_id
-            res.update({
-                'invoice_sequence_id':inv_seq_id
-            })
+#        if journal.type in journal_type and not journal.invoice_sequence_id:
+#            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
+#            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
+#            inv_seq_id
+#            res.update({
+#                'invoice_sequence_id':inv_seq_id
+#            })
 
         result = self.write(cr, uid, [journal.id], res)
 
@@ -1162,14 +1162,14 @@ class account_move(osv.osv):
     ]
 
     def post(self, cr, uid, ids, context=None):
-        invoice = context.get('invoice')
+        invoice = context.get('invoice', False)
         if self.validate(cr, uid, ids, context) and len(ids):
             for move in self.browse(cr, uid, ids):
                 if move.name =='/':
                     new_name = False
                     journal = move.journal_id
                     
-                    if invoice.internal_number:
+                    if invoice and invoice.internal_number:
                         new_name = invoice.internal_number
                     else:
                         if journal.sequence_id:
