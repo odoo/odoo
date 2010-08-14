@@ -30,7 +30,8 @@
                 <field name="product_qty" sum="Qty"/>
                 <!-- <field name="reconciled"  sum="# Reconciled"/> -->
                 <field name="price_average" sum="Average Price"/>
-                <field name="price_total" sum="Total Price"/>
+                <field name="price_total" sum="Total Without Tax"/>
+                <field name="price_total_tax" sum="Total With Tax"/>
                 <field name="residual"  sum="Total Residual" invisible="context.get('residual_invisible',False)"/>
                 <field name="delay_to_pay"  sum="Avg. Delay To Pay" invisible="context.get('residual_invisible',False)"/>
             </tree>
@@ -75,7 +76,7 @@
                            help = "Draft Invoices"/>
                     <filter string="Pro-forma"
                            icon="terp-check"
-                           domain="[('state','=','proforma'),('state','=','proforma2')]"
+                           domain="['|', ('state','=','proforma'),('state','=','proforma2')]"
                            help = "Pro-forma Invoices"/>
                   <separator orientation="vertical"/>
                    	<filter icon="terp-check" string="Customer"
