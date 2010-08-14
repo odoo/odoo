@@ -70,11 +70,11 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="open_voucher" string="Pro-forma" states="draft" icon="terp-check"/>
-                        <button name="proforma_voucher" string="Create" states="proforma" icon="terp-document-new"/>
+                        <button name="open_voucher" string="Compute" states="draft" type="object" icon="terp-stock_format-scientific"/>
+                        <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
                         <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
-                        <button name="audit_complete" string="Audit Pass" states="posted" icon="terp-check"/>
-                        <button name="cancel_voucher" string="Cancel" states="proforma,recheck,posted"  icon="gtk-cancel"/>
+<!--                        <button name="audit_complete" string="Audit Pass" states="posted" icon="terp-check"/>-->
+                        <button name="cancel_voucher" string="Cancel" states="draft,proforma,recheck"  icon="gtk-cancel"/>
                         <button name="cancel_to_draft" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>

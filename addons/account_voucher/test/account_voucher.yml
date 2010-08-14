@@ -23,7 +23,7 @@
   !assert {model: account.voucher, id: account_voucher_voucherforaxelor0}:
     - state == 'draft'
 -
-  I change the state of voucher to "proforma" by clicking PRO-FORMA button
+  I compute the voucher to calculate the taxes by clicking Cpmpute button
 -
   !workflow {model: account.voucher, action: open_voucher, ref: account_voucher_voucherforaxelor0}
 -

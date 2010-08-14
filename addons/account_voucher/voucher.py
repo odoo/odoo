@@ -137,7 +137,7 @@ class account_voucher(osv.osv):
         'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Real Entry'),
         #'move_ids':fields.many2many('account.move.line', 'voucher_id', 'account_id', 'rel_account_move', 'Real Entry', readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
-        'audit':fields.boolean('Audit Complete ?', required=False),
+        'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
     }
 
     _defaults = {
@@ -292,14 +292,18 @@ class account_voucher(osv.osv):
         
         if total != 0:
             res = {
-                'amount':total, 
-                'state':'proforma'
+                'amount':total
             }
             self.write(dbcr, uid, ids, res)
         else:
             raise osv.except_osv(_('Invalid amount !'), _('You can not create Pro-Forma voucher with Total amount <= 0 !'))
         return True
 
+    def voucher_recheck(self, cr, uid, ids, context={}):
+        self.open_voucher(cr, uid, ids, context)
+        self.write(cr, uid, ids, {'state':'recheck'}, context)
+        return True
+    
     def proforma_voucher(self, cr, uid, ids, context={}):
         self.action_move_line_create(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'posted'})
