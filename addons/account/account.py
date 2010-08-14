@@ -735,14 +735,13 @@ class account_journal(osv.osv):
         if not args:
             args = []
         ids = []
-
         if context.get('journal_type', False):
             args += [('type','=',context.get('journal_type'))]
 
         if name:
-            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit, context=context)
 
         return self.name_get(cr, user, ids, context=context)
 
@@ -854,9 +853,9 @@ class account_fiscalyear(osv.osv):
             context = {}
         ids = []
         if name:
-            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
 account_fiscalyear()
