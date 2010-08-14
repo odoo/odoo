@@ -155,7 +155,7 @@
         <record id="ivatr" model="account.tax.template">
        		<field name="chart_template_id" ref="l10n_uk_chart_template"/>
             <field name="name">IVAT R</field>
-            <field eval="0.005" name="amount"/>
+            <field eval="0.05" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="l10n_chart_uk_minimal.iva"/>
             <field name="account_paid_id" ref="l10n_chart_uk_minimal.iva"/>
@@ -215,7 +215,7 @@
         <record id="ovatr" model="account.tax.template">
         	<field name="chart_template_id" ref="l10n_uk_chart_template"/>
             <field name="name">OVAT R</field>
-            <field eval="0.005" name="amount"/>
+            <field eval="0.05" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="l10n_chart_uk_minimal.ova"/>
             <field name="account_paid_id" ref="l10n_chart_uk_minimal.ova"/>
