@@ -132,7 +132,7 @@
         res_model="account.analytic.plan.instance"
         src_model="account.analytic.plan"
         id="account_analytic_instance_model_open"/>
-        
+
     <record model="ir.ui.view" id="account_analytic_plan_instance_line_form">
         <field name="name">account.analytic.plan.instance.line.form</field>
         <field name="model">account.analytic.plan.instance.line</field>
@@ -241,7 +241,7 @@
             <field name="model">account.analytic.default</field>
             <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form"/>
             <field name="arch" type="xml">
-                <field name="analytic_id" select="1" required="1" position="replace">
+                <field name="analytic_id" required="1" position="replace">
                     <field name="analytics_id" select="1" required="1"/>
                 </field>
             </field>
@@ -252,7 +252,7 @@
             <field name="model">account.analytic.default</field>
             <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree"/>
             <field name="arch" type="xml">
-                <field name="analytic_id" select="1" required="1" position="replace">
+                <field name="analytic_id" required="1" position="replace">
                     <field name="analytics_id" select="1" required="1"/>
                 </field>
             </field>
