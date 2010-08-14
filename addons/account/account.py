@@ -731,17 +731,19 @@ class account_journal(osv.osv):
 #           })
         return journal_id
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context={}, limit=100):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
+        if context is None:
+            context = {}
         ids = []
         if context.get('journal_type', False):
             args += [('type','=',context.get('journal_type'))]
-
         if name:
             ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit, context=context)
+#            ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
 
         return self.name_get(cr, user, ids, context=context)
 
