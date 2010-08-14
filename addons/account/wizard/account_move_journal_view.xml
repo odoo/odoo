@@ -21,7 +21,7 @@
             <field name="context">{'journal_type':'sale','view_mode':False}</field>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_account_moves_sale" sequence="4" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL"/>
+        <menuitem action="action_account_moves_sale" sequence="10" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
 
 <!--        <record id="action_account_moves_purchase_refund" model="ir.actions.act_window">-->
 <!--            <field name="name">Journal Refund Items</field>-->
@@ -41,7 +41,8 @@
             <field name="context">{'journal_type':'purchase','view_mode':False}</field>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_account_moves_purchase" sequence="4" id="menu_eaction_account_moves_purchase" parent="menu_finance_payables" icon="STOCK_JUSTIFY_FILL"/>
+        <menuitem action="action_account_moves_purchase" sequence="10"
+            id="menu_eaction_account_moves_purchase" parent="menu_finance_payables"/>
 
 <!--        <record id="action_account_moves_sale_refund" model="ir.actions.act_window">-->
 <!--            <field name="name">Journal Refund Items</field>-->
