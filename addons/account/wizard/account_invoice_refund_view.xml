@@ -7,7 +7,7 @@
             <field name="model">account.invoice.refund</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Credit Note">
+                <form string="Refund">
                     <separator string="This wizard is used to refund the invoice" colspan="4"/>
                     <group colspan="4" >
                          <label string="Are you sure you want to refund this invoice ?" colspan="2"/>
@@ -35,7 +35,7 @@
         </record>
 
         <record id="action_account_invoice_refund" model="ir.actions.act_window">
-            <field name="name">Credit Note</field>
+            <field name="name">Refund</field>
             <field name="res_model">account.invoice.refund</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
