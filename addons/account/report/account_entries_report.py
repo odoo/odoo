@@ -70,6 +70,42 @@ class account_entries_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
     _order = 'date desc'
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        for arg in args:
+            if arg[0] == 'period_id' and arg[2] == 'current_period':
+                current_period = self.pool.get('account.period').find(cr, uid)[0]
+                args.append(['period_id','in',[current_period]])
+                break
+            elif arg[0] == 'period_id' and arg[2] == 'current_year':
+                current_year = self.pool.get('account.fiscalyear').find(cr, uid)
+                ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                args.append(['period_id','in',ids])
+        for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
+            if a in args:
+                args.remove(a)
+        return super(account_entries_report, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
+            context=context, count=count)
+    
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
+        todel=[]
+        for arg in domain:
+            if arg[0] == 'period_id' and arg[2] == 'current_period':
+                current_period = self.pool.get('account.period').find(cr, uid)[0]
+                domain.append(['period_id','in',[current_period]])
+                todel.append(arg)
+                break
+            elif arg[0] == 'period_id' and arg[2] == 'current_year':
+                current_year = self.pool.get('account.fiscalyear').find(cr, uid)
+                ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+                domain.append(['period_id','in',ids])
+                todel.append(arg)
+        for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
+            if a in domain:
+                domain.remove(a)
+        return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context)
+    
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')
         cr.execute("""
