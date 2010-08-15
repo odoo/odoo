@@ -134,7 +134,7 @@ class account_voucher(osv.osv):
         'reference_type': fields.selection(_get_reference_type, 'Reference Type', required=True),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
-        'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Real Entry'),
+        'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Journal Items', readonly=True, states={'draft':[('readonly',False)]}),
         #'move_ids':fields.many2many('account.move.line', 'voucher_id', 'account_id', 'rel_account_move', 'Real Entry', readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
         'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
@@ -303,6 +303,7 @@ class account_voucher(osv.osv):
     def write(self, cr, uid, ids, vals, context={}):
         res = super(account_voucher, self).write(cr, uid, ids, vals, context)
         
+        #If there is state says that method called from the work flow signals
         if not 'state' in vals.keys():
             self.open_voucher(cr, uid, ids, context)
         
