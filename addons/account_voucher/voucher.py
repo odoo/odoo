@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+import netsvc
 from osv import fields
 from osv import osv
 from tools.translate import _
@@ -101,8 +102,10 @@ class account_voucher(osv.osv):
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "id desc"
+    _rec_name = 'number'
+    
     _columns = {
-        'name':fields.char('Name', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name':fields.char('Name', size=256, required=False, readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([
             ('payment', 'Payment'),
             ('receipt', 'Receipt'),
@@ -146,6 +149,7 @@ class account_voucher(osv.osv):
         'journal_id':_get_journal,
         'currency_id': _get_currency,
         'state': lambda *a: 'draft',
+        'name': lambda *a: '/',
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'reference_type': lambda *a: "none",
         'audit': lambda *a: False,
@@ -273,7 +277,6 @@ class account_voucher(osv.osv):
                         })
                         new_line += [tax_line]
 
-
         if new_line:
             for line in new_line:
                 voucher_line_pool.create(dbcr, uid, line)
@@ -296,36 +299,39 @@ class account_voucher(osv.osv):
                 'state':voucher.state
             }
             self.write(dbcr, uid, ids, res)
-        else:
-            raise osv.except_osv(_('Invalid amount !'), _('You can not create Pro-Forma voucher with Total amount <= 0 !'))
+
         return True
     
-    def write(self, cr, uid, ids, vals, context={}):
-        res = super(account_voucher, self).write(cr, uid, ids, vals, context)
-        
-        #If there is state says that method called from the work flow signals
-        if not 'state' in vals.keys():
-            self.open_voucher(cr, uid, ids, context)
-        
-        return res
+#    def write(self, cr, uid, ids, vals, context={}):
+#        res = super(account_voucher, self).write(cr, uid, ids, vals, context)
+#        
+#        #If there is state says that method called from the work flow signals
+#        if not 'state' in vals.keys():
+#            self.open_voucher(cr, uid, ids, context)
+#        
+#        return res
         
     def voucher_recheck(self, cr, uid, ids, context={}):
-        #self.open_voucher(cr, uid, ids, context)
+#        self.open_voucher(cr, uid, ids, context)
         self.write(cr, uid, ids, {'state':'recheck'}, context)
         return True
 
     def proforma_voucher(self, cr, uid, ids, context={}):
-        #self.open_voucher(cr, uid, ids, context)
+#        self.open_voucher(cr, uid, ids, context)
         self.action_move_line_create(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'posted'})
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context={}):
+        wf_service = netsvc.LocalService("workflow")
+        for voucher_id in ids:
+            wf_service.trg_create(uid, 'account.voucher', voucher_id, cr)
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 
     def audit_pass(self, cr, uid, ids, context={}):
         move_pool = self.pool.get('account.move')
+        
         result = True
         audit_pass = []
         for voucher in self.browse(cr, uid, ids):
@@ -381,6 +387,9 @@ class account_voucher(osv.osv):
             if inv.move_id:
                 continue
 
+            if not inv.payment_ids:
+                raise osv.except_osv(_('Error !'), _('Please define lines on voucher !'))
+                
             journal = journal_pool.browse(cr, uid, inv.journal_id.id)
             if journal.sequence_id:
                 name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
@@ -492,14 +501,14 @@ class account_voucher(osv.osv):
 
             rec = {
                 'move_id': move_id,
-                'move_ids':[(6, 0,line_ids)]
             }
-
+            
             message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirmed")
             self.log(cr, uid, inv.id, message)
 
             self.write(cr, uid, [inv.id], rec)
-
+            move_pool.post(cr, uid, [move_id], context={})
+            
         return True
 
     def _convert_ref(self, cr, uid, ref):
@@ -553,7 +562,8 @@ class account_voucher_line(osv.osv):
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
         'name':fields.char('Memo', size=256, required=True),
         'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
-        'partner_id': fields.many2one('res.partner', 'Partner', change_default=True),
+#        'partner_id': fields.many2one('res.partner', 'Partner', change_default=True),
+        'partner_id': fields.related('voucher_id','partner_id', type='many2one', relation='res.partner', string='Partner'),
         'amount':fields.float('Amount'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Type'),
         'ref':fields.char('Reference', size=32),
@@ -598,9 +608,6 @@ class account_voucher_line(osv.osv):
 
         elif ttype == 'cr' and type1 in ('purchase'):
             account_id = partner.property_account_payable.id
-
-        else:
-            raise osv.except_osv(_('Invalid Configuration !'), _('You can not encode unbalanced entry !'))
 
         if company.currency_id != currency:
             balance = currency_pool.compute(cr, uid, company.currency_id.id, currency, balance)
