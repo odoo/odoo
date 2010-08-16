@@ -218,11 +218,6 @@ class pos_make_payment(osv.osv_memory):
         'num_sale':fields.char('Num.File', size=32),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice'),
-        'state': fields.selection([('draft', 'Draft'), ('payment', 'Payment'),
-                                    ('advance','Advance'),
-                                   ('paid', 'Paid'), ('done', 'Done'), ('invoiced', 'Invoiced'), ('cancel', 'Cancel')],
-                                  'State', readonly=True, ),
     }
 
 pos_make_payment()
