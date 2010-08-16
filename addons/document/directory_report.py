@@ -20,13 +20,7 @@
 #
 ##############################################################################
 
-import base64
-
 from osv import osv, fields
-from osv.orm import except_orm
-import urlparse
-
-import os
 
 class ir_action_report_xml(osv.osv):
     _name="ir.actions.report.xml"

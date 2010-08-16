@@ -77,7 +77,7 @@
              'test/postpaid_order_policy.yml',
              'test/advance_invoice.yml',
              'test/so_make_line_invoice.yml',
-             'test/so_make_invoice.yml',
+#             'test/so_make_invoice.yml',
              'test/sale_procurement.yml',
              'test/invoice_on_ordered_qty.yml',
              'test/invoice_on_shipped_qty.yml',

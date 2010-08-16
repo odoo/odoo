@@ -36,6 +36,18 @@
         </record>
 
         <!-- Holidays: Leave Request -->
+        
+        <record id="view_holiday_new_calendar" model="ir.ui.view">
+            <field name="name">Leave Request</field>
+            <field name="model">hr.holidays</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Leave Request" color="name" date_start="date_from" date_stop="date_to">
+                	<field name="holiday_status_id"/>
+                </calendar>
+            </field>
+        </record>
+    
         <record model="ir.ui.view" id="edit_holiday_new">
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
@@ -272,6 +284,13 @@
             <field name="act_window_id" ref="open_ask_holidays"/>
         </record>
 
+        <record model="ir.actions.act_window.view" id="action_open_ask_holidays_calendar">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_holiday_new_calendar"/>
+            <field name="act_window_id" ref="open_ask_holidays"/>
+        </record>
+
         <menuitem name="Leave Requests" parent="menu_open_ask_holidays" id="menu_open_ask_holidays_new"
              action="open_ask_holidays"/>
 
@@ -316,7 +335,6 @@
             parent="menu_open_ask_holidays"
             id="menu_open_company_allocation"
             action="open_company_allocation"
-            groups="base.group_hr_manager"
             sequence="40"/>
 
         <!-- holidays status -->
@@ -358,7 +376,7 @@
         </record>
 
         <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves" groups="base.group_system"/>
-        <menuitem name="Leave Status"
+        <menuitem name="Leave Type"
             action="open_view_holiday_status"
             id="menu_open_view_holiday_status"
             parent="hr.menu_open_view_attendance_reason_config"/>

@@ -2,40 +2,73 @@
 <openerp>
     <data>
 
-  		<record id="view_account_move_journal_form" model="ir.ui.view">
+        <record id="view_account_move_journal_form" model="ir.ui.view">
             <field name="name">account.move.journal.form</field>
             <field name="model">account.move.journal</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Standard entries">
-                	<group colspan="4" >
-                    	<field name="journal_id"/>
-                    	<newline/>
-                    	<field name="period_id" />
-                    </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                       	<label string ="" colspan="2"/>
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="terp-gtk-go-back-rtl" string="Open Journal" name="action_open_window" type="object"/>
-                   	</group>
+                    
                </form>
             </field>
         </record>
 
-        <record id="action_account_move_journal_line_form" model="ir.actions.act_window">
-            <field name="name">Entries by Line</field>
+        <record id="action_account_moves_sale" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
             <field name="res_model">account.move.journal</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_account_move_journal_form"/>
-           <field name="target">new</field>
+            <field name="view_id" ref="view_account_move_journal_form"/>
+            <field name="context">{'journal_type':'sale','view_mode':False}</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_account_moves_sale" sequence="10" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL"/>
+
+<!--        <record id="action_account_moves_purchase_refund" model="ir.actions.act_window">-->
+<!--            <field name="name">Journal Refund Items</field>-->
+<!--            <field name="res_model">account.move.journal</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_id" ref="view_account_move_journal_form"/>-->
+<!--            <field name="context">{'journal_type':'purchase_refund'}</field>-->
+<!--            <field name="target">new</field>-->
+<!--        </record>-->
+<!--        <menuitem action="action_account_moves_purchase_refund" sequence="5" id="menu_eaction_account_moves_purchase_refund" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL"/>-->
+
+        <record id="action_account_moves_purchase" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_account_move_journal_form"/>
+            <field name="context">{'journal_type':'purchase','view_mode':False}</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_account_moves_purchase" sequence="10"
+            id="menu_eaction_account_moves_purchase" parent="menu_finance_payables" icon="STOCK_JUSTIFY_FILL"/>
+
+<!--        <record id="action_account_moves_sale_refund" model="ir.actions.act_window">-->
+<!--            <field name="name">Journal Refund Items</field>-->
+<!--            <field name="res_model">account.move.journal</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_id" ref="view_account_move_journal_form"/>-->
+<!--            <field name="context">{'journal_type':'sale_refund'}</field>-->
+<!--            <field name="target">new</field>-->
+<!--        </record>-->
+<!--        <menuitem action="action_account_moves_sale_refund" sequence="5" id="menu_eaction_account_moves_sale_refund" parent="menu_finance_payables" icon="STOCK_JUSTIFY_FILL"/>-->
+
+        <record id="action_account_moves_all" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_account_move_journal_form"/>
+            <field name="context">{'journal_type':'bank','view_mode':False}</field>
+            <field name="target">new</field>
         </record>
 
-<!--        <menuitem icon="STOCK_JUSTIFY_FILL"-->
-<!--        	action="action_account_move_journal_line_form"-->
-<!--        	id="menu_action_move_journal_line_form"-->
-<!--        	parent="account.menu_finance_entries" sequence="5" />-->
-
+        <menuitem
+            action="action_account_moves_all"
+            icon="STOCK_JUSTIFY_FILL"
+            id="menu_eaction_account_moves_all"
+            parent="account.menu_finance_entries"
+            sequence="4"
+        />
     </data>
 </openerp>

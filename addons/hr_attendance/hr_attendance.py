@@ -34,6 +34,7 @@ class hr_action_reason(osv.osv):
     _defaults = {
         'action_type': 'sign_in',
     }
+
 hr_action_reason()
 
 def _employee_get(obj, cr, uid, context=None):
@@ -59,7 +60,7 @@ class hr_attendance(osv.osv):
     _columns = {
         'name': fields.datetime('Date', required=True, select=1),
         'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
-        'action_desc': fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
+        'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
         'day': fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
     }
@@ -86,6 +87,7 @@ class hr_attendance(osv.osv):
 
     _constraints = [(_altern_si_so, 'Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
     _order = 'name desc'
+
 hr_attendance()
 
 class hr_employee(osv.osv):
@@ -144,14 +146,12 @@ class hr_employee(osv.osv):
                 raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
 
             res = {'action': type, 'employee_id': emp['id']}
-
             if dt:
                 res['name'] = dt
             id = obj_attendance.create(cr, uid, res, context=context)
 
         if type != 'action':
             return id
-
         return True
 
 hr_employee()

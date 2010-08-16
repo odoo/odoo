@@ -61,8 +61,8 @@
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
-      					<button name="button_postpone" string="Post Pone" type="object"
-						help="Post Pone backlog" colspan="2"
+      					<button name="button_postpone" string="Postpone" type="object"
+							help="Postpone backlog" colspan="2"
                          icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>

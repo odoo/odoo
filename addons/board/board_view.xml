@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-graph" id="base.reporting_menu"
+        <menuitem id="base.reporting_menu"
+            parent="base.menu_custom"
             name="Reporting" sequence="30" />
-        <menuitem id="menu_dasboard"
-            name="Dashboard" sequence="30" />     
 <!--Board Note Search View  -->
         <record id="view_board_note_search" model="ir.ui.view">
             <field name="name">board.note.search</field>

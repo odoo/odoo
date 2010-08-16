@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,15 +14,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 
 class product_product(osv.osv):
     _inherit = 'product.product'
-    _name = 'product.product'
     _columns = {
         'manufacturer' : fields.many2one('res.partner', 'Manufacturer'),
         'manufacturer_pname' : fields.char('Manufacturer Product Name', size=64),
@@ -41,6 +40,4 @@ class product_attribute(osv.osv):
     }
 product_attribute()
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

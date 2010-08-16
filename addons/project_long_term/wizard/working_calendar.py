@@ -120,4 +120,5 @@ def compute_working_calendar(cr, uid, calendar_id, context=None):
         if non_working:
             wktime_cal.append((non_working[:-1], time_range))
         return wktime_cal
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

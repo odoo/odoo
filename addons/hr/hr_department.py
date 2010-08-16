@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class hr_department(osv.osv):
@@ -120,8 +120,10 @@ class res_users(osv.osv):
         obj_dept = self.pool.get('hr.department')
         for user_id in ids:
             emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', user_id)])
-            cr.execute('SELECT emp.department_id FROM hr_employee AS emp JOIN resource_resource AS res ON res.id = emp.resource_id \
-                        WHERE res.user_id = %s AND emp.department_id IS NOT NULL', (user_id,))
+            cr.execute('SELECT emp.department_id FROM hr_employee AS emp \
+                        JOIN resource_resource AS res ON res.id = emp.resource_id \
+                        JOIN hr_department as dept ON dept.id = emp.department_id \
+                        WHERE res.user_id = %s AND emp.department_id IS NOT NULL AND dept.manager_id IS NOT NULL', (user_id,))
             ids_dept = [x[0] for x in cr.fetchall()]
 #            ids_dept = obj_dept.search(cr, uid, [('member_ids', 'in', [user_id])], context=context)
             parent_ids = []
