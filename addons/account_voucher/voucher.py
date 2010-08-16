@@ -551,7 +551,7 @@ class account_voucher_line(osv.osv):
     _description = 'Voucher Line'
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
-        'name':fields.char('Description', size=256, required=True),
+        'name':fields.char('Memo', size=256, required=True),
         'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
         'partner_id': fields.many2one('res.partner', 'Partner', change_default=True),
         'amount':fields.float('Amount'),
