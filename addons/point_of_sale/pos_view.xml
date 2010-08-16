@@ -22,7 +22,7 @@
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
-                                    <field name="qty"/>
+                                    <field name="qty" on_change="onchange_qty(price_subtotal_incl, discount, qty, price_unit)"/>
                                     <!--<field name="qty" on_change="onchange_qty(qty,price_unit)"/>-->
                                     <!--field name="qty_rfd" groups="base.group_extended"/-->
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>

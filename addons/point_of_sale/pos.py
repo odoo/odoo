@@ -1154,6 +1154,15 @@ class pos_order_line(osv.osv):
                 return {'value': {'notice':'Minimum Discount','price_ded':price*discount*0.01 or 0.0  }}
         else :
             return {'value': {'notice':'No Discount', 'price_ded':price*discount*0.01 or 0.0}}
+        
+    def onchange_qty(self, cr, uid, ids, price_subtotal_incl, discount, qty, price, context=None):
+        price_sub = price_subtotal_incl
+        if discount:
+            subtotal = price_sub-(price_subtotal_incl*(discount*0.01))
+        else:
+            subtotal = qty * price
+        return {'value': {'price_subtotal_incl': subtotal}}
+    
     _columns = {
         'name': fields.char('Line Description', size=512),
         'company_id':fields.many2one('res.company', 'Company', required=True),
