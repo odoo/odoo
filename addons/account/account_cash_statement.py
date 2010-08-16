@@ -210,7 +210,7 @@ class account_cash_statement(osv.osv):
         'balance_end_cash': fields.function(_balance_end_cash, method=True, store=True, string='Balance', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
-        'name': fields.char('Name', size=64, required=True, readonly=True),
+        'name': fields.char('Name', size=64, required=True, readonly=False),
         'user_id':fields.many2one('res.users', 'Responsible', required=False),
     }
     _defaults = {
