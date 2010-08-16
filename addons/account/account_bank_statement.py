@@ -131,7 +131,7 @@ class account_bank_statement(osv.osv):
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, states={'confirm': [('readonly', True)]}),
+        'name': fields.char('Name', size=64, required=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself', states={'confirm': [('readonly', True)]}),
         'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'bank')]),
@@ -195,15 +195,17 @@ class account_bank_statement(osv.osv):
         self.write(cr, uid, ids, {}, context)
         return True
 
-    def button_confirm_bank(self, cr, uid, ids, context={}):
+    def button_confirm_bank(self, cr, uid, ids, context=None):
         done = []
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
-        account_bank_statement_line_obj = \
-                self.pool.get('account.bank.statement.line')
+        account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
+        obj_seq = self.pool.get('ir.sequence')
 
+        if context is None:
+            context = {}
         company_currency_id = res_users_obj.browse(cr, uid, uid,
                 context=context).company_id.currency_id.id
 
@@ -369,13 +371,16 @@ class account_bank_statement(osv.osv):
                     #    raise osv.except_osv(_('Error !'), _('Unable to reconcile entry "%s": %.2f') % (move.name, move.amount))
 
                 if st.journal_id.entry_posted:
-                    account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
+                    account_move_obj.write(cr, uid, [move_id], {'state': 'posted'})
 
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
             done.append(st.id)
 
-            next_number = self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement')
-            self.write(cr, uid, [st.id], {'name':next_number}, context)
+            next_number = obj_seq.get(cr, uid, 'account.bank.statement')
+            if not st.name == '/':
+                next_number = st.name + '/' + next_number[-1:]
+                account_move_obj.write(cr, uid, [move_id], {'state': 'posted', 'name': next_number})
+            self.write(cr, uid, [st.id], {'name': next_number}, context=context)
 
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
         return True
