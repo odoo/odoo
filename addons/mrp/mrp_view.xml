@@ -4,6 +4,7 @@
 
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"/>
+            <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
@@ -481,13 +482,13 @@
         Procurement
         -->
 
-        <menuitem action="procurement.procurement_action" id="menu_mrp_procurement_action"
+        <menuitem action="procurement.procurement_action" id="base.menu_mrp_procurement_action"
                   parent="mrp.menu_mrp_manufacturing" sequence="3" />
 <!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
 <!--                  parent="mrp.menu_mrp_control" sequence="1" />-->
 
          <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
-        <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager"/>
+        <menuitem action="procurement.action_compute_schedulers" id="base.mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager"/>
 
         <!--
         Order Point
@@ -889,9 +890,17 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
+            <data>
                 <xpath expr="/form/notebook/page/field[@name='move_id']" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                 </xpath>
+                <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
+					<group colspan="4"  groups="base.group_extended">
+					<separator colspan="4" string="Properties" />
+					<field colspan="4" name="property_ids" nolabel="1"/>
+	                 </group>
+                </xpath>
+               </data>
             </field>
         </record>
         <act_window
