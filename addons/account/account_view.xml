@@ -582,25 +582,6 @@
 <!--            <field name="view_mode">form,tree</field>-->
 <!--        </record>-->
 
-        <record id="view_bank_statement_line_tree" model="ir.ui.view">
-            <field name="name">account.bank.statement.line.tree</field>
-            <field name="model">account.bank.statement.line</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Statement lines">
-                	<field name="sequence" invisible="1"/>
-                    <field name="date"/>
-                    <field name="ref"/>
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="partner_id"/>
-                    <field name="account_id"/>
-                    <field name="amount"/>
-                    <field name="reconcile_id"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="view_bank_statement_reconcile" model="ir.ui.view">
             <field name="name">account.bank.statement.reconcile.form</field>
             <field name="model">account.bank.statement.reconcile</field>
