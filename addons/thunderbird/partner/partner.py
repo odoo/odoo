@@ -139,6 +139,10 @@ class thunderbird_partner(osv.osv_memory):
 
     def create_contact(self,cr,user,vals):
         dictcreate = dict(vals)
+        # Set False value if 'undefined'. Thunerbird set 'undefined' if user did not set any value.
+        for key in dictcreate:
+            if dictcreate[key] == 'undefined':
+                dictcreate[key] = False
         if not eval(dictcreate.get('partner_id')):
             dictcreate.update({'partner_id': False})
         create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
