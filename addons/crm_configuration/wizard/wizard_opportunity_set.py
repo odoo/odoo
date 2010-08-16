@@ -62,7 +62,7 @@ class make_opportunity(wizard.interface):
         id = section_obj.search(cr, uid, [('code','=','oppor')], context=context)
         if not id:
             raise wizard.except_wizard(_('Error !'),
-                _('You did not installed the opportunities tracking when you configured the crm_configuration module.' \
+                _('You did not install the opportunities tracking when you configured the crm_configuration module.' \
                   '\nI can not convert the lead to an opportunity, you must create a section with the code \'oppor\'.'
                   ))
         id = id[0]
@@ -71,7 +71,7 @@ class make_opportunity(wizard.interface):
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
 
-
+        stage_ids = pool.get('crm.case.stage').search(cr, uid, [('name','=','Prospecting')], context=context)
         case_obj = pool.get('crm.case')
         case_obj._history(cr, uid, case_obj.browse(cr, uid, [data['id']]), 'convert')
         case_obj.write(cr, uid, data['ids'], {
@@ -79,6 +79,7 @@ class make_opportunity(wizard.interface):
             'name': data['form']['name'],
             'planned_revenue': data['form']['planned_revenue'],
             'probability': data['form']['probability'],
+            'stage_id' : stage_ids and stage_ids[0] or False,
         })
         value = {
             'domain': "[]",
