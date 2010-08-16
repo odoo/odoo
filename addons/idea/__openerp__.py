@@ -42,7 +42,6 @@
         'idea_view.xml',
         'idea_workflow.xml',
         'report/report_vote_view.xml',
-
     ],
     'demo_xml': [
         "idea_data.xml"

@@ -231,8 +231,8 @@ class account_invoice(osv.osv):
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=True, select=True, change_default=True),
 
-#        'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
-        'number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
+        'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
+        'internal_number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -301,7 +301,7 @@ class account_invoice(osv.osv):
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
-            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Parner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
+            help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={
@@ -326,6 +326,7 @@ class account_invoice(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', context=c),
         'reference_type': 'none',
         'check_total': 0.0,
+        'internal_number': False,
         'user_id': lambda s, cr, u, c: u,
     }
 
@@ -405,7 +406,7 @@ class account_invoice(osv.osv):
                     rec_res_id = rec_line_data and int(rec_line_data[0]['value'].split(',')[1]) or False
                     pay_res_id = pay_line_data and int(pay_line_data[0]['value'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
-                        raise osv.except_osv(_('Configration Error !'),
+                        raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
                     account_obj = self.pool.get('account.account')
                     rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
@@ -451,7 +452,7 @@ class account_invoice(osv.osv):
         if curr_id and company_id:
             currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
             if currency.company_id.id != company_id:
-                raise osv.except_osv(_('Configration Error !'),
+                raise osv.except_osv(_('Configuration Error !'),
                         _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
 
@@ -464,7 +465,7 @@ class account_invoice(osv.osv):
             date_invoice = time.strftime('%Y-%m-%d')
 
         pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
-    
+
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
             pterm_list.sort()
@@ -501,7 +502,7 @@ class account_invoice(osv.osv):
                     rec_res_id = rec_line_data and int(rec_line_data[0]['value'].split(',')[1]) or False
                     pay_res_id = pay_line_data and int(pay_line_data[0]['value'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
-                        raise osv.except_osv(_('Configration Error !'),
+                        raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
                     if type in ('out_invoice', 'out_refund'):
                         acc_id = rec_res_id
@@ -517,7 +518,7 @@ class account_invoice(osv.osv):
                             if line.account_id.company_id.id != company_id:
                                 result_id = account_obj.search(cr, uid, [('name','=',line.account_id.name),('company_id','=',company_id)])
                                 if not result_id:
-                                    raise osv.except_osv(_('Configration Error !'),
+                                    raise osv.except_osv(_('Configuration Error !'),
                                         _('Can not find account chart for this company in invoice line account, Please Create account.'))
                                 r_id = self.pool.get('account.invoice.line').write(cr, uid, [line.id], {'account_id': result_id[0]})
             else:
@@ -525,7 +526,7 @@ class account_invoice(osv.osv):
                     for inv_line in invoice_line:
                         obj_l = account_obj.browse(cr, uid, inv_line[2]['account_id'])
                         if obj_l.company_id.id != company_id:
-                            raise osv.except_osv(_('Configration Error !'),
+                            raise osv.except_osv(_('Configuration Error !'),
                                 _('invoice line account company is not match with invoice company.'))
                         else:
                             continue
@@ -538,7 +539,7 @@ class account_invoice(osv.osv):
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
             else:
-                raise osv.except_osv(_('Configration Error !'),
+                raise osv.except_osv(_('Configuration Error !'),
                                 _('Can not find account journal for this company in invoice, Please Create journal.'))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
@@ -595,15 +596,22 @@ class account_invoice(osv.osv):
         res = map(itemgetter(0), cr.fetchall())
         return res
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default.update({'state':'draft', 'number':False, 'move_id':False, 'move_name':False,})
+    def copy(self, cr, uid, id, default={}, context=None):
+        default.update({
+            'state':'draft', 
+            'number':False, 
+            'move_id':False, 
+            'move_name':False,
+            'internal_number': False,
+        })
         if 'date_invoice' not in default:
-            default['date_invoice'] = False
+            default.update({
+                'date_invoice':False
+            })
         if 'date_due' not in default:
-            default['date_due'] = False
+            default.update({
+                'date_due':False
+            })
         return super(account_invoice, self).copy(cr, uid, id, default, context)
 
     def test_paid(self, cr, uid, ids, *args):
@@ -773,7 +781,7 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         context = {}
         for inv in self.browse(cr, uid, ids):
-            if not inv.journal_id.invoice_sequence_id:
+            if not inv.journal_id.sequence_id:
                 raise osv.except_osv(_('Error !'), _('Please define sequence on invoice journal'))
             if not inv.invoice_line:
                 raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
@@ -881,10 +889,10 @@ class account_invoice(osv.osv):
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
             move = {
-                'ref': inv.number, 
-                'line_id': line, 
-                'journal_id': journal_id, 
-                'date': date, 
+                'ref': inv.number,
+                'line_id': line,
+                'journal_id': journal_id,
+                'date': date,
                 'type': entry_type,
                 'narration':inv.comment
             }
@@ -931,48 +939,39 @@ class account_invoice(osv.osv):
         }
 
     def action_number(self, cr, uid, ids, *args):
-#        #TODO: not correct fix but required a frech values before reading it.
-#        self.write(cr, uid, ids, {})
-#        
-        cr.execute('SELECT id, type, number, move_id, reference ' \
-                'FROM account_invoice ' \
-                'WHERE id IN ('+','.join(map(str,ids))+')')
-        obj_inv = self.browse(cr, uid, ids)[0]
+        #TODO: not correct fix but required a frech values before reading it.
+        self.write(cr, uid, ids, {})
         
-        for (id, invtype, number, move_id, reference) in cr.fetchall():
-            if not number:
-                if obj_inv.journal_id.invoice_sequence_id:
-                    sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
-                else:
-                    number = self.pool.get('ir.sequence').get(cr, uid, 'account.invoice.' + invtype)
+        for obj_inv in self.browse(cr, uid, ids):
+            id = obj_inv.id
+            invtype = obj_inv.type
+            number = obj_inv.number
+            move_id = obj_inv.move_id and obj_inv.move_id.id or False
+            reference = obj_inv.reference or ''
 
-                if not number:
-                    raise osv.except_osv(_('Warning !'), _('There is no active invoice sequence defined for the journal !'))
-                
-                if invtype in ('in_invoice', 'in_refund'):
-                    ref = reference
-                else:
-                    ref = self._convert_ref(cr, uid, number)
-                
-                cr.execute('UPDATE account_invoice SET number=%s ' \
-                        'WHERE id=%s', (number, id))
-                cr.execute('UPDATE account_move SET ref=%s ' \
-                        'WHERE id=%s AND (ref is null OR ref = \'\')',
+            self.write(cr, uid, ids, {'internal_number':number})
+            
+            if invtype in ('in_invoice', 'in_refund'):
+                ref = reference
+            else:
+                ref = self._convert_ref(cr, uid, number)
+
+            cr.execute('UPDATE account_move SET ref=%s ' \
+                    'WHERE id=%s AND (ref is null OR ref = \'\')',
+                    (ref, move_id))
+            cr.execute('UPDATE account_move_line SET ref=%s ' \
+                    'WHERE move_id=%s AND (ref is null OR ref = \'\')',
+                    (ref, move_id))
+            cr.execute('UPDATE account_analytic_line SET ref=%s ' \
+                    'FROM account_move_line ' \
+                    'WHERE account_move_line.move_id = %s ' \
+                        'AND account_analytic_line.move_id = account_move_line.id',
                         (ref, move_id))
-                cr.execute('UPDATE account_move_line SET ref=%s ' \
-                        'WHERE move_id=%s AND (ref is null OR ref = \'\')',
-                        (ref, move_id))
-                cr.execute('UPDATE account_analytic_line SET ref=%s ' \
-                        'FROM account_move_line ' \
-                        'WHERE account_move_line.move_id = %s ' \
-                            'AND account_analytic_line.move_id = account_move_line.id',
-                            (ref, move_id))
-                            
+            
             for inv_id, name in self.name_get(cr, uid, [id]):
                 message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
                 self.log(cr, uid, inv_id, message)
-                
+
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1038,25 +1037,14 @@ class account_invoice(osv.osv):
         for line in lines:
             del line['id']
             del line['invoice_id']
-            if 'account_id' in line:
-                line['account_id'] = line.get('account_id', False) and line['account_id'][0]
-            if 'product_id' in line:
-                line['product_id'] = line.get('product_id', False) and line['product_id'][0]
-            if 'uos_id' in line:
-                line['uos_id'] = line.get('uos_id', False) and line['uos_id'][0]
+            for field in ('company_id', 'partner_id', 'account_id', 'product_id',
+                          'uos_id', 'account_analytic_id', 'tax_code_id', 'base_code_id'):
+                line[field] = line.get(field, False) and line[field][0]
             if 'invoice_line_tax_id' in line:
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
-            if 'account_analytic_id' in line:
-                line['account_analytic_id'] = line.get('account_analytic_id', False) and line['account_analytic_id'][0]
-            if 'tax_code_id' in line :
-                if isinstance(line['tax_code_id'],tuple)  and len(line['tax_code_id']) >0 :
-                    line['tax_code_id'] = line['tax_code_id'][0]
-            if 'base_code_id' in line :
-                if isinstance(line['base_code_id'],tuple)  and len(line['base_code_id']) >0 :
-                    line['base_code_id'] = line['base_code_id'][0]
         return map(lambda x: (0,0,x), lines)
 
-    def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
+    def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
 
         new_ids = []
@@ -1070,17 +1058,19 @@ class account_invoice(osv.osv):
                 'in_refund': 'in_invoice',   # Supplier Refund
             }
 
-
             invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
             invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines)
 
             tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
             tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
-            if invoice['type'] == 'in_invoice':
+            if journal_id:
+                refund_journal_ids = [journal_id]
+            elif invoice['type'] == 'in_invoice':
                 refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase_refund')])
             else:
                 refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','sale_refund')])
+
             if not date :
                 date = time.strftime('%Y-%m-%d')
             invoice.update({
@@ -1254,7 +1244,7 @@ class account_invoice_line(osv.osv):
         'quantity': fields.float('Quantity', required=True),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Account')),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
-        'note': fields.text('Notes', translate=True),
+        'note': fields.text('Notes'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
@@ -1292,7 +1282,7 @@ class account_invoice_line(osv.osv):
             context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        
+
         if company_id:
             property_obj = self.pool.get('ir.property')
             account_obj = self.pool.get('account.account')
@@ -1339,7 +1329,7 @@ class account_invoice_line(osv.osv):
                 in_res_id = account_obj.search(cr, uid, [('name','=',app_acc_in.name),('company_id','=',company_id)])
                 exp_res_id = account_obj.search(cr, uid, [('name','=',app_acc_exp.name),('company_id','=',company_id)])
                 if not in_res_id and not exp_res_id:
-                    raise osv.except_osv(_('Configration Error !'),
+                    raise osv.except_osv(_('Configuration Error !'),
                         _('Can not find account chart for this company, Please Create account.'))
                 in_obj_acc = account_obj.browse(cr, uid, in_res_id)
                 exp_obj_acc = account_obj.browse(cr, uid, exp_res_id)
@@ -1397,7 +1387,7 @@ class account_invoice_line(osv.osv):
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
 
         if not currency.company_id.id == company.id:
-            raise osv.except_osv(_('Configration Error !'),
+            raise osv.except_osv(_('Configuration Error !'),
                         _('Can not select currency that is not related to any company.\nPlease select accordingly !.'))
 
         if company.currency_id.id != currency.id:

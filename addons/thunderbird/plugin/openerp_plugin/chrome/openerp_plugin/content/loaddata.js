@@ -56,7 +56,7 @@ var myPrefObserver =
 	register: function()
   	{
 	    appendDbList()
-    	    preferenceBranch.addObserver("", myPrefObserver, false);
+    	preferenceBranch.addObserver("", myPrefObserver, false);
 	    document.getElementById("txturl").value = getServer();
     	    var s = document.getElementById('txturl').value;
 	    var a =s.split(':');

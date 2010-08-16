@@ -21,7 +21,7 @@ function searchmail()
 	setTimeout("module_install()", 10000)
 	if (getmodule_install() == "no")
 	{
-		alert("Please install the thunderbird module on your '" + getDbName() +"' database Or try again !");
+		alert("Please install the thunderbird module on your '" + getDbName() +"' database and try again !");
 		return false
 	}
 	var prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
@@ -159,7 +159,7 @@ function searchmail()
 		att =getAttachValue()
 		if (getmodule_install() == "no")
 		{
-			alert("Please install the thunderbird module on your '" + getDbName() +"' database  Or try again !");
+			alert("Please install the thunderbird module on your '" + getDbName() +"' database  and try again !");
 			return false
 		}
 		window.open("chrome://openerp_plugin/content/plugin.xul", "", "chrome, resizable=yes");
@@ -170,7 +170,7 @@ function searchmail()
 	{
 			if (getmodule_install() == "no")
 			{
-				alert("Please install the thunderbird module on your '" + getDbName() +"' database  Or try again !");
+				alert("Please install the thunderbird module on your '" + getDbName() +"' database  and try again !");
 				return false
 			}
 		window.open("chrome://openerp_plugin/content/plugin.xul", "", "chrome, resizable=yes");
@@ -188,7 +188,7 @@ function open_contact()
 	setTimeout("module_install()", 10000)
 	if (getmodule_install() == "no")
 	{
-		alert("Please install the thunderbird module on your '" + getDbName() +"' database Or try again !");
+		alert("Please install the thunderbird module on your '" + getDbName() +"' database and try again !");
 		return false
 	}
 	if(GetNumSelectedMessages() < 1 || GetNumSelectedMessages() > 1){
@@ -235,7 +235,7 @@ function open_contact()
 
     if (getmodule_install() == "no")
 	{
-		alert("Please install the thunderbird module on your '" + getDbName() +"' database  Or try again !");
+		alert("Please install the thunderbird module on your '" + getDbName() +"' database  and try again !");
 		return false
 	}
 	window.open("chrome://openerp_plugin/content/address.xul", "", "chrome, resizable=yes");

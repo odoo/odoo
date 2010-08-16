@@ -19,27 +19,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
-import pooler
-from tools import config
 from osv.osv import except_osv
 from tools.translate import _
 
 class product_pricelist(osv.osv):
-    _name = 'product.pricelist'
     _inherit = 'product.pricelist'
 
     _columns ={
-        'visible_discount':fields.boolean('Visible Discount'),
+        'visible_discount': fields.boolean('Visible Discount'),
     }
     _defaults = {
          'visible_discount': True,
-   }
+    }
 
 product_pricelist()
 
 class sale_order_line(osv.osv):
-    _name = "sale.order.line"
     _inherit = "sale.order.line"
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
@@ -106,7 +103,6 @@ class sale_order_line(osv.osv):
 sale_order_line()
 
 class account_invoice_line(osv.osv):
-    _name = "account.invoice.line"
     _inherit = "account.invoice.line"
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context={}):

@@ -32,7 +32,7 @@
     """,
     "depends": ["sale"],
     "demo_xml": [],
-    "update_xml": ['product_view.xml'],
+    "update_xml": ['product_visible_discount_view.xml'],
     "active": False,
     "installable": True,
 }
