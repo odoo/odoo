@@ -19,14 +19,8 @@
 #
 ##############################################################################
 
-import base64
-
 from osv import osv, fields
-from osv.orm import except_orm
 from tools import config
-import urlparse
-
-import os
 
 class document_ftp_configuration(osv.osv_memory):
 
@@ -46,10 +40,10 @@ class document_ftp_configuration(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         conf = self.browse(cr, uid, ids[0], context)
-        dir_pool = self.pool.get('document.directory')
-        data_pool = self.pool.get('ir.model.data')        
+        data_pool = self.pool.get('ir.model.data')
         # Update the action for FTP browse.
         aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
         aid = data_pool.browse(cr, uid, aid, context=context).res_id
         self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/'})
+
 document_ftp_configuration()

@@ -96,8 +96,8 @@
                     <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
                     <newline/>
-					<field name="date_action"/>
-					<field name="title_action"/>
+          <field name="date_action"/>
+          <field name="title_action"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
@@ -106,7 +106,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
                             <button string="Create Partner"
                                     name="%(action_hr_recruitment_partner_create)d"
-                                    icon="terp-mail-replied" type="action"/>
+                                    icon="terp-mail-replied" type="action" attrs="{'readonly':[('partner_id','!=',False)]}"/>
                             <newline/>
                             <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3"/>
                             <field name="email_from" colspan="3"/>

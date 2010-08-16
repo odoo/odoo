@@ -24,8 +24,15 @@ import xml.dom.minidom
 domimpl = xml.dom.minidom.getDOMImplementation()
 import urlparse
 import urllib
-from DAV import utils
-from DAV.propfind import PROPFIND
+from osv import osv
+
+try:
+    from DAV import utils
+    from DAV.propfind import PROPFIND
+except ImportError:
+    raise osv.except_osv('PyWebDAV Import Error!','Please install PyWebDAV \
+from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/')
+
 import tools
 
 

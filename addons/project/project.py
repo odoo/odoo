@@ -283,7 +283,7 @@ class project(osv.osv):
             res_id = result[0]
             form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
             form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
-            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_list')
+            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
             tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
             search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
             search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])

@@ -53,7 +53,7 @@ class account_installer(osv.osv_memory):
     _columns = {
         # Accounting
         'charts':fields.selection(_get_charts, 'Chart of Accounts',
-            required=True,
+            required=False,
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
                  "country."),
@@ -340,8 +340,10 @@ class account_installer(osv.osv_memory):
             ('property_account_expense_categ','product.category','account.account'),
             ('property_account_income_categ','product.category','account.account'),
             ('property_account_expense','product.template','account.account'),
-            ('property_account_income','product.template','account.account')
+            ('property_account_income','product.template','account.account'),
+            ('property_reserve_and_surplus_account','res.company','account.account'),
         ]
+
         for record in todo_list:
             r = []
             r = property_obj.search(cr, uid, [('name','=', record[0] ),('company_id','=',company_id.id)])
@@ -353,6 +355,7 @@ class account_installer(osv.osv_memory):
                 'fields_id': field[0],
                 'value': account and 'account.account,'+str(acc_template_ref[account.id]) or False,
             }
+
             if r:
                 #the property exist: modify it
                 property_obj.write(cr, uid, r, vals)
@@ -393,6 +396,8 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        data_pool = self.pool.get('ir.model.data')
+        obj_acc = self.pool.get('account.account')
         super(account_installer, self).execute(cr, uid, ids, context=context)
         record = self.browse(cr, uid, ids, context=context)[0]
         company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
@@ -411,24 +416,24 @@ class account_installer(osv.osv_memory):
                 tax_val = {}
                 default_tax = []
 
-                pur_tax_parent = mod_obj._get_id(cr, uid, 'account', 'vat_code_base_purchases')
+                pur_tax_parent = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_purchases')
                 pur_tax_parent_id = mod_obj.read(cr, uid, [pur_tax_parent], ['res_id'])[0]['res_id']
 
-                sal_tax_parent = mod_obj._get_id(cr, uid, 'account', 'vat_code_base_sales')
+                sal_tax_parent = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_sales')
                 sal_tax_parent_id = mod_obj.read(cr, uid, [sal_tax_parent], ['res_id'])[0]['res_id']
 
                 if s_tax*100 > 0.0:
                     vals_tax_code = {
-                        'name': 'VAT%s%%'%(s_tax*100),
-                        'code': 'VAT%s%%'%(s_tax*100),
+                        'name': 'TAX%s%%'%(s_tax*100),
+                        'code': 'TAX%s%%'%(s_tax*100),
                         'company_id': company_id.id,
                         'sign': 1,
                         'parent_id':sal_tax_parent_id
                         }
                     new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
                     sales_tax = obj_tax.create(cr, uid,
-                                           {'name':'VAT%s%%'%(s_tax*100),
-                                            'description':'VAT%s%%'%(s_tax*100),
+                                           {'name':'TAX%s%%'%(s_tax*100),
+                                            'description':'TAX%s%%'%(s_tax*100),
                                             'amount':s_tax,
                                             'base_code_id':new_tax_code,
                                             'tax_code_id':new_tax_code,
@@ -438,16 +443,16 @@ class account_installer(osv.osv_memory):
                     default_tax.append(('taxes_id',sales_tax))
                 if p_tax*100 > 0.0:
                     vals_tax_code = {
-                        'name': 'VAT%s%%'%(p_tax*100),
-                        'code': 'VAT%s%%'%(p_tax*100),
+                        'name': 'TAX%s%%'%(p_tax*100),
+                        'code': 'TAX%s%%'%(p_tax*100),
                         'company_id': company_id.id,
                         'sign': 1,
                         'parent_id':pur_tax_parent_id
                         }
                     new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
                     purchase_tax = obj_tax.create(cr, uid,
-                                            {'name':'VAT%s%%'%(p_tax*100),
-                                             'description':'VAT%s%%'%(p_tax*100),
+                                            {'name':'TAX%s%%'%(p_tax*100),
+                                             'description':'TAX%s%%'%(p_tax*100),
                                              'amount':p_tax,
                                              'base_code_id':new_tax_code,
                                             'tax_code_id':new_tax_code,
@@ -478,6 +483,15 @@ class account_installer(osv.osv_memory):
                     res_obj.create_period(cr, uid, [period_id])
                 elif res['period'] == '3months':
                     res_obj.create_period3(cr, uid, [period_id])
+        
+#        #fially inactive the demo chart of accounts
+#        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
+#        if data_id:
+#            data = data_pool.browse(cr, uid, data_id[0])
+#            account_id = data.res_id
+#            acc_ids = obj_acc._get_children_and_consol(cr, uid, [account_id])
+#            if acc_ids:
+#                cr.execute("update account_account set active='f' where id in " + str(tuple(acc_ids)))
 
     def modules_to_install(self, cr, uid, ids, context=None):
         modules = super(account_installer, self).modules_to_install(

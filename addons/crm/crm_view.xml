@@ -7,7 +7,10 @@
         <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_system,base.group_extended,base.group_sale_manager,base.group_sale_salesman"/>
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
-            parent="base.menu_base_config" sequence="2" groups="base.group_extended,base.group_system"/>
+            parent="base.menu_base_config" sequence="1" groups="base.group_extended,base.group_system"/>
+
+        <menuitem id="base.menu_sale_config_sales" name="Sales"
+            parent="base.menu_base_config" sequence="0" groups="base.group_system,base.group_extended"/>
 
         <!--menuitem id="menu_crm_config_meeting" name="Meeting"
             parent="base.menu_base_config" sequence="4"/-->
@@ -91,7 +94,7 @@
 
         <menuitem action="crm_case_section_act"
             id="menu_crm_case_section_act" sequence="4"
-            parent="base.menu_crm_config_lead" />
+            parent="base.menu_sale_config_sales" />
 
 
         <!-- CRM Stage Tree View -->
