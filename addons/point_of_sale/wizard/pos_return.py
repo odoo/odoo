@@ -317,7 +317,7 @@ class add_product(osv.osv_memory):
         invoice_obj=self.pool.get('account.invoice')
         picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', active_ids), ('state', '=', 'done')])
         clone_list = []
-        date_cur=time.strftime('%Y-%m-%d')
+        date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
         uom_obj = self.pool.get('product.uom')
         return_boj=self.pool.get('pos.return')
         return_id=return_boj.search(cr,uid,[])
