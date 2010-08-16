@@ -71,7 +71,7 @@ class account_common_report(osv.osv_memory):
                                 (SELECT max(date_start) from account_period WHERE p.fiscalyear_id = f.id)\
                             OR p.date_stop IN \
                                 (SELECT min(date_stop) from account_period WHERE p.fiscalyear_id = f.id)) \
-                            AND f.id = ' + str(fiscalyear_id) + ' ')
+                            AND f.id = ' + str(fiscalyear_id) + ' order by p.date_start')
             periods =  [i[0] for i in cr.fetchall()]
             if periods:
                 start_period = periods[0]
