@@ -1511,6 +1511,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="config_wizard_step_view_form" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
             <field name="name">Config Wizard Steps</field>
@@ -1529,6 +1530,20 @@
                 </form>
             </field>
         </record>
+
+        <record id="config_wizard_step_view_search" model="ir.ui.view">
+            <field name="model">ir.actions.todo</field>
+            <field name="name">ir.actions.todo.select</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Actions">
+                	<filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','onskip')]" help="Todo State Or (Skip State And Onskip Restart)"/>
+                    <field name="state"/>
+                    <field name="restart"/>
+                </search>
+            </field>
+        </record>
+
         <record id="act_ir_actions_todo_form" model="ir.actions.act_window">
             <field name="name">Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
