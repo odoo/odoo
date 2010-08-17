@@ -480,6 +480,20 @@ class crm_case(object):
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
+    def message_followers(self, cr, uid, ids, context=None):
+        """ Get a list of emails of the people following this thread
+        """
+        res = {}
+        for case in self.browse(cr, uid, ids, context=context):
+            l=[]
+            if case.email_cc:
+                l.append(case.email_cc)
+            if case.user_id:
+                l.append(case.user_id.email)
+            res[case.id] = l
+        return res
+
+
 class crm_case_section(osv.osv):
     """Sales Team"""
 
