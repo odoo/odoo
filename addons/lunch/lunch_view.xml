@@ -29,8 +29,9 @@
                         <field name="user_id" select="1"/>
                         <field name="date" select="1"/>
                         <field name="product" select="1" on_change="onchange_product(product)"/>
-                        <field name="price"/>
+                        <field name="category"/>
                         <field name="descript"/>
+                        <field name="price"/>
                         <field name="cashmove"/>
                         <field name="state"/>
                     </group>
@@ -48,6 +49,7 @@
                 <tree colors="blue:state in ('draft');black:state in ('confirmed')" string="Order">
                     <field name="user_id"/>
                     <field name="product"/>
+                    <field name="category"/>
                     <field name="date"/>
                     <field name="cashmove"/>
                     <field name="state"/>
@@ -85,7 +87,9 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter string="Cashbox" icon="terp-dolar" domain="[]"  context="{'group_by':'cashmove'}"/>
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product'}"/>
+                        <separator orientation="vertical"/>
+<!--                        <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product'}"/>-->
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'category'}"/>
                     </group>
                 </search>
             </field>
