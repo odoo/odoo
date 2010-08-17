@@ -53,7 +53,7 @@ class purchase_order(osv.osv):
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
                 'amount_total': 0.0,
-                            }
+            }
             val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
@@ -294,14 +294,14 @@ class purchase_order(osv.osv):
                 if manager and not (manager.id in managers):
                     managers.append(manager.id)
             for manager_id in managers:
-                request.create(cr, uid,
-                      {'name' : "Purchase amount over the limit",
+                request.create(cr, uid,{
+                       'name' : "Purchase amount over the limit",
                        'act_from' : uid,
                        'act_to' : manager_id,
                        'body': 'Somebody has just confirmed a purchase with an amount over the defined limit',
                        'ref_partner_id': po.partner_id.id,
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
-                       })
+                })
     def inv_line_create(self, cr, uid, a, ol):
         return (0, False, {
             'name': ol.name,
@@ -521,18 +521,18 @@ class purchase_order(osv.osv):
             order_infos = new_order[0]
             if not order_infos:
                 order_infos.update({
-                'origin': porder.origin,
-                'date_order': time.strftime('%Y-%m-%d'),
-                'partner_id': porder.partner_id.id,
-                'partner_address_id': porder.partner_address_id.id,
-                'dest_address_id': porder.dest_address_id.id,
-                'warehouse_id': porder.warehouse_id.id,
-                'location_id': porder.location_id.id,
-                'pricelist_id': porder.pricelist_id.id,
-                'state': 'draft',
-                'order_line': {},
-                'notes': '%s' % (porder.notes or '',),
-                'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
+                    'origin': porder.origin,
+                    'date_order': time.strftime('%Y-%m-%d'),
+                    'partner_id': porder.partner_id.id,
+                    'partner_address_id': porder.partner_address_id.id,
+                    'dest_address_id': porder.dest_address_id.id,
+                    'warehouse_id': porder.warehouse_id.id,
+                    'location_id': porder.location_id.id,
+                    'pricelist_id': porder.pricelist_id.id,
+                    'state': 'draft',
+                    'order_line': {},
+                    'notes': '%s' % (porder.notes or '',),
+                    'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
                 })
             else:
                 if porder.notes:

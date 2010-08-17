@@ -692,10 +692,6 @@
              <field name="search_view_id" ref="survey_question_search"/>
         </record>
 
-<!--        <menuitem name="Survey Question" id="menu_survey_question_form1"-->
-<!--            action="action_survey_question_form" parent='menu_define_survey'-->
-<!--            groups="group_survey_manager"/>-->
-
         <record model="ir.ui.view" id="survey_question_wizard_test">
             <field name="name">survey_question_wizard_test</field>
             <field name="model">survey.question</field>
@@ -1057,7 +1053,6 @@
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
                     <field name="user_id" on_change="on_change_user(user_id)"/>
-<!--                    <field name="email"/>-->
                      <field name="response" readonly="1"/>
                     <group colspan="4" col="6">
                      <field name="state"/>
@@ -1154,10 +1149,6 @@
             <field name="view_id" ref="survey_type_tree"></field>
         </record>
 
-        <!--menuitem name="Survey Types" id="menu_survey_type_form1"
-            action="action_survey_type_form" parent='menu_survey_config'
-            groups="group_survey_manager"/-->
-
         <act_window domain="[('survey_id', '=', active_id)]"
             id="act_survey_pages"
             name="Survey Pages"
@@ -1182,12 +1173,6 @@
             name="Survey Answers"
             res_model="survey.answer"
             src_model="survey.question"/>
-
-        <!--act_window domain="[('survey_id', '=', active_id)]"
-            id="act_survey_response"
-            name="Survey Answer"
-            res_model="survey.response"
-            src_model="survey"/-->
 
         <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
             action="action_view_survey_name" parent="menu_answer_surveys"

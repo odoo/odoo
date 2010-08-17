@@ -208,19 +208,20 @@ class thunderbird_partner(osv.osv_memory):
         if res_id:
             address_obj = self.pool.get('res.partner.address')
             address_data = address_obj.read(cr, user, int(res_id), [])
-            result={           'partner_id': address_data['partner_id'] and address_data['partner_id'][0] or False,
-                               'country_id': dictcreate['country_id'] and int(dictcreate['country_id'][0]) or False,
-                               'state_id': dictcreate['state_id'] and int(dictcreate['state_id'][0]) or False,
-                               'name': dictcreate['name'],
-                               'street': dictcreate['street'],
-                               'street2': dictcreate['street2'],
-                               'zip': dictcreate['zip'],
-                               'city': dictcreate['city'],
-                               'phone': dictcreate['phone'],
-                               'fax': dictcreate['fax'],
-                               'mobile': dictcreate['mobile'],
-                               'email': dictcreate['email'],
-                               }
+            result = {
+               'partner_id': address_data['partner_id'] and address_data['partner_id'][0] or False,
+               'country_id': dictcreate['country_id'] and int(dictcreate['country_id'][0]) or False,
+               'state_id': dictcreate['state_id'] and int(dictcreate['state_id'][0]) or False,
+               'name': dictcreate['name'],
+               'street': dictcreate['street'],
+               'street2': dictcreate['street2'],
+               'zip': dictcreate['zip'],
+               'city': dictcreate['city'],
+               'phone': dictcreate['phone'],
+               'fax': dictcreate['fax'],
+               'mobile': dictcreate['mobile'],
+               'email': dictcreate['email'],
+            }
         address_obj.write(cr, user,int(res_id),result )
         return True
 

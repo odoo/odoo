@@ -28,11 +28,11 @@ class backlog_sprint_assign(osv.osv_memory):
         'sprint_id': fields.many2one('project.scrum.sprint', 'Sprint Name', required=True),
         'state_open': fields.boolean('Set Open', help="Change the state of product backlogs to open if its in draft state"),
         'convert_to_task': fields.boolean('Convert To Task', help="Create Task for Product Backlog")
-               }
+    }
     _defaults = {
          'state_open': True,
          'convert_to_task': True,
-                 }
+    }
 
     def assign_sprint(self, cr, uid, ids, context=None):
         backlog_obj = self.pool.get('project.scrum.product.backlog')

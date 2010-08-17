@@ -37,7 +37,7 @@ class report_lunch_order(osv.osv):
         'user_id': fields.many2one('res.users', 'User Name'),
         'box_name': fields.char('Name', size=30),
         'price_total':fields.float('Total Price', readonly=True),
-        }
+    }
     _order = 'date desc'
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_lunch_order')

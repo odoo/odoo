@@ -60,9 +60,9 @@ class pos_get_sale(osv.osv_memory):
                 })
 
             order = proxy_pick.write(cr, uid, [this.picking_id.id], {
-                'invoice_state': 'none',
-                'pos_order': record_id
-            })
+                                        'invoice_state': 'none',
+                                        'pos_order': record_id
+                                    })
 
             for line in pick.move_lines:
                 proxy_order_line.create(cr, uid, {

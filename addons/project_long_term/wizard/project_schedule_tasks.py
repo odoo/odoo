@@ -35,10 +35,10 @@ class project_schedule_task(osv.osv_memory):
     _description = 'project.schedule.tasks'
     _columns = {
         'msg': fields.char('Message', size=64)
-                }
+    }
     _defaults = {
          'msg': 'Task Scheduling Completed Successfully'
-                }
+    }
 
     def default_get(self, cr, uid, fields_list, context=None):
         if context is None:
@@ -64,11 +64,11 @@ class project_schedule_task(osv.osv_memory):
             if resource_cal:
                 cal_id  = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
                 leaves = wkcal.compute_leaves(cr, uid, cal_id, res.id, resource_cal, context=context)
-            resource_objs.append(classobj(res.user_id.name.encode('utf8'), (Resource,),
-                                         {'__doc__': res.user_id.name,
-                                          '__name__': res.user_id.name,
-                                          'vacation': tuple(leaves),
-                                          'efficiency': resource_eff,
+            resource_objs.append(classobj(res.user_id.name.encode('utf8'), (Resource,),{
+                                             '__doc__': res.user_id.name,
+                                             '__name__': res.user_id.name,
+                                             'vacation': tuple(leaves),
+                                             'efficiency': resource_eff,
                                           }))
         return resource_objs
 
@@ -153,10 +153,12 @@ class project_schedule_task(osv.osv_memory):
                     ctx = context.copy()
                     ctx.update({'scheduler': True})
                     user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
-                    task_obj.write(cr, uid, [tasks[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                                                    'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                                                    'user_id': user_id[0]},
-                                                                    context=ctx)
+                    task_obj.write(cr, uid, [tasks[loop_no-1].id], {
+                                                        'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                        'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                        'user_id': user_id[0]
+                                                    }, context=ctx)
+
                 loop_no += 1
         return {}
 

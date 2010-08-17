@@ -117,7 +117,7 @@ class purchase_requisition_line(osv.osv):
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition.line', context=c),
-                }
+    }
 purchase_requisition_line()
 
 class purchase_order(osv.osv):
@@ -179,7 +179,7 @@ class procurement_order(osv.osv):
                     })],
                     'purchase_ids': [(6,0,[po_id])]
                 })
-            self.write(cr,uid,proc_id,{'requisition_id':requisition_id})    
+            self.write(cr,uid,proc_id,{'requisition_id':requisition_id})
         return res
 
 procurement_order()

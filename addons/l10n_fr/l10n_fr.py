@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,8 +35,8 @@ class l10n_fr_report(osv.osv):
         'line_ids': fields.one2many('l10n.fr.line', 'report_id', 'Lines'),
     }
     _sql_constraints = [
-                ('code_uniq', 'unique (code)','The code report must be unique !')
-        ]
+        ('code_uniq', 'unique (code)','The code report must be unique !')
+    ]
 l10n_fr_report()
 
 class l10n_fr_line(osv.osv):
@@ -49,7 +49,7 @@ class l10n_fr_line(osv.osv):
         'report_id': fields.many2one('l10n.fr.report', 'Report'),
     }
     _sql_constraints = [
-            ('code_uniq', 'unique (code)', 'The variable name must be unique !')
+        ('code_uniq', 'unique (code)', 'The variable name must be unique !')
     ]
 l10n_fr_line()
 

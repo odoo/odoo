@@ -51,10 +51,6 @@
         </assert>
 
         <assert model="purchase.order" id="test_purchase_1" string="Test purchase's invoice has the same amount and is currently a draft">
-            <!--
-            <test expr="invoice_id.amount_untaxed == amount_untaxed" />
-            <test expr="invoice_id.amount_total == amount_total" />
-            -->
             <test expr="invoice_id.state">draft</test>
         </assert>
 

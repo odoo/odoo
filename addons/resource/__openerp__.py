@@ -39,7 +39,6 @@
     'depends': ['base', 'process'],
     'init_xml': [],
     'update_xml': [
-        #'security/resource_security.xml',
         'security/ir.model.access.csv',
         'resource_view.xml',
     ],

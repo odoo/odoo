@@ -57,19 +57,20 @@ class sale_order_line(osv.osv):
             if (not type):
                 return {}
             if type != 'article':
-                temp = {'value': {
-                        'product_id': False,
-                        'uos_id': False,
-                        'account_id': False,
-                        'price_unit': 0.0,
-                        'price_subtotal': 0.0,
-                        'quantity': 0,
-                        'discount': 0.0,
-                        'invoice_line_tax_id': False,
-                        'account_analytic_id': False,
-                        'product_uom_qty':0.0,
-                        },
-                    }
+                temp = {
+                    'value': {
+                    'product_id': False,
+                    'uos_id': False,
+                    'account_id': False,
+                    'price_unit': 0.0,
+                    'price_subtotal': 0.0,
+                    'quantity': 0,
+                    'discount': 0.0,
+                    'invoice_line_tax_id': False,
+                    'account_analytic_id': False,
+                    'product_uom_qty':0.0,
+                    },
+                }
                 if type == 'line':
                     temp['value']['name'] = ' '
                 if type == 'break':

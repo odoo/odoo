@@ -259,7 +259,7 @@ class procurement_order(osv.osv):
                 'act_from': user_id,
                 'act_to': user_id,
                 'body': '\n'.join(report)
-                })
+            })
         if use_new_cursor:
             cr.commit()
             cr.close()

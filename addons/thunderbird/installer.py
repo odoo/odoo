@@ -45,7 +45,7 @@ class thunderbird_installer(osv.osv_memory):
         'plugin_file':fields.binary('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."),
         'pdf_file':fields.binary('Installation Manual', help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
         'description':fields.text('Description', readonly=True)
-        }
+    }
 
     _defaults = {
         'thunderbird' : True,
@@ -59,10 +59,10 @@ class thunderbird_installer(osv.osv_memory):
     4. Software installation window appears and within a short time “Install Now” button will be enabled.
     5. Click "Install Now".
     6. Restart Thunderbird.
-* Follow the steps to configure OpenERP in Thunderbird. 
-    1. Go to Tools > OpenERP Synchronization. 
+* Follow the steps to configure OpenERP in Thunderbird.
+    1. Go to Tools > OpenERP Synchronization.
     2. Check  data (configured by default).
-    3. Click "Connect". 
+    3. Click "Connect".
     4. A message appears with state of your connection.
     5. If your connection failed, check if your database is open, and check your data.
     6. If you have a good connection, you can start to archive mail in OpenERP. """

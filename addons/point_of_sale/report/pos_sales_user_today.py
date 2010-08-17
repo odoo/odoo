@@ -28,10 +28,10 @@ class pos_sales_user_today(report_sxw.rml_parse):
         super(pos_sales_user_today, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'get_data':self._get_data,
+            'time': time,
+            'get_data':self._get_data,
 
-                })
+        })
 
     def _get_data(self,form):
         data={}
