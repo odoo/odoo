@@ -2086,13 +2086,21 @@ class orm(orm_template):
         if not fields:
             fields = self._columns.keys()
 
-        (where_clause, where_params, tables) = self._where_calc(cr, uid, domain, context=context)
-        dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, 'read', context=context)
-        where_clause = where_clause + dom[0]
-        where_params = where_params + dom[1]
-        for t in dom[2]:
-            if t not in tables:
-                tables.append(t)
+        # compute the where, order by, limit and offset clauses
+        (where_clause, where_clause_params, tables) = self._where_calc(cr, uid, domain, context=context)
+
+        # apply direct ir.rules from current model
+        self._apply_ir_rules(cr, uid, where_clause, where_clause_params, tables, 'read', context=context)
+
+        # then apply the ir.rules from the parents (through _inherits), adding the appropriate JOINs if needed
+        for inherited_model in self._inherits:
+            previous_tables = list(tables)
+            if self._apply_ir_rules(cr, uid, where_clause, where_clause_params, tables, 'read', model_name=inherited_model, context=context):
+                # if some rules were applied, need to add the missing JOIN for them to make sense, passing the previous
+                # list of table in case the inherited table was not in the list before (as that means the corresponding 
+                # JOIN(s) was(were) not present)
+                self._inherits_join_add(inherited_model, previous_tables, where_clause)
+                tables = list(set(tables).union(set(previous_tables)))
 
         # Take care of adding join(s) if groupby is an '_inherits'ed field
         groupby_list = groupby
@@ -2136,7 +2144,7 @@ class orm(orm_template):
             gb = ' group by '+groupby
         else:
             gb = ''
-        cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + gb + limit_str + offset_str, where_params)
+        cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + gb + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
@@ -2145,7 +2153,6 @@ class orm(orm_template):
             alldata[r['id']] = r
             del r['id']
         data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or ['id'], context=context)
-        today = datetime.date.today()
         for d in data:
             if groupby:
                 d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
@@ -2154,33 +2161,49 @@ class orm(orm_template):
                         d['__context'] = {'group_by':groupby_list[1:]}
             if groupby and fget.has_key(groupby):
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
-                   dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
-                   days = calendar.monthrange(dt.year, dt.month)[1]
+                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
+                    days = calendar.monthrange(dt.year, dt.month)[1]
 
-                   d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
-                   d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
-                                    (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
+                    d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
+                    d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
+                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
         return data
 
+    def _inherits_join_add(self, parent_model_name, tables, where_clause):
+        """
+        Add missing table SELECT and JOIN clause for reaching the parent table (no duplicates)
+
+        :param parent_model_name: name of the parent model for which the clauses should be added
+        :param tables: list of table._table names enclosed in double quotes as returned
+                       by _where_calc()
+        :param where_clause: current list of WHERE clause params
+        """
+        inherits_field = self._inherits[parent_model_name]
+        parent_model = self.pool.get(parent_model_name)
+        parent_table_name = parent_model._table
+        quoted_parent_table_name = '"%s"' % parent_table_name
+        if quoted_parent_table_name not in tables:
+            tables.append(quoted_parent_table_name)
+            where_clause.append('("%s".%s = %s.id)' % (self._table, inherits_field, parent_table_name))
+        return (tables, where_clause)
+
     def _inherits_join_calc(self, field, tables, where_clause):
         """
-            Adds missing table select and join clause(s) for reaching
-            the field coming from an '_inherits' parent table.
+        Adds missing table select and join clause(s) for reaching
+        the field coming from an '_inherits' parent table (no duplicates).
 
-            :param tables: list of table._table names enclosed in double quotes as returned
-                           by _where_calc()
-
+        :param tables: list of table._table names enclosed in double quotes as returned
+                        by _where_calc()
+        :param where_clause: current list of WHERE clause params
         """
         current_table = self
         while field in current_table._inherit_fields and not field in current_table._columns:
-            parent_table = self.pool.get(current_table._inherit_fields[field][0])
-            parent_table_name = parent_table._table
-            if '"%s"'%parent_table_name not in tables:
-                tables.append('"%s"'%parent_table_name)
-                where_clause.append('(%s.%s = %s.id)' % (current_table._table, current_table._inherits[parent_table._name], parent_table_name))
+            parent_model_name = current_table._inherit_fields[field][0]
+            parent_table = self.pool.get(parent_model_name)
+            self._inherits_join_add(parent_model_name, tables, where_clause)
             current_table = parent_table
         return (tables, where_clause)
 
@@ -3707,6 +3730,29 @@ class orm(orm_template):
             raise except_orm(_('AccessError'), _('Bad query.'))
         return True
 
+    def _apply_ir_rules(self, cr, uid, where_clause, where_clause_params, tables, mode='read', model_name=None, context=None):
+        """Add what's missing in ``where_clause``, ``where_params``, ``tables`` to implement
+           all appropriate ir.rules (on the current object but also from it's _inherits parents)
+
+           :param where_clause: list with current elements of the WHERE clause (strings)
+           :param where_clause_params: list with parameters for ``where_clause``
+           :param tables: list with double-quoted names of the tables that are joined
+                          in ``where_clause``
+           :param model_name: optional name of the model whose ir.rules should be applied (default:``self._name``)
+                              This could be useful for inheritance for example, but there is no provision to include
+                              the appropriate JOIN for linking the current model to the one referenced in model_name. 
+           :return: True if additional clauses where applied.
+        """
+        added_clause, added_params, added_tables  = self.pool.get('ir.rule').domain_get(cr, uid, model_name or self._name, mode, context=context)
+        if added_clause:
+            where_clause += added_clause
+            where_clause_params += added_params
+            for table in added_tables:
+                if table not in tables:
+                    tables.append(table)
+            return True
+        return False
+
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
         """
@@ -3755,12 +3801,19 @@ class orm(orm_template):
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
         (where_clause, where_clause_params, tables) = self._where_calc(cr, user, args, context=context)
-        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
-        where_clause += dom[0]
-        where_clause_params += dom[1]
-        for t in dom[2]:
-            if t not in tables:
-                tables.append(t)
+
+        # apply direct ir.rules from current model
+        self._apply_ir_rules(cr, user, where_clause, where_clause_params, tables, 'read', context=context)
+
+        # then apply the ir.rules from the parents (through _inherits), adding the appropriate JOINs if needed
+        for inherited_model in self._inherits:
+            previous_tables = list(tables)
+            if self._apply_ir_rules(cr, user, where_clause, where_clause_params, tables, 'read', model_name=inherited_model, context=context):
+                # if some rules were applied, need to add the missing JOIN for them to make sense, passing the previous
+                # list of table in case the inherited table was not in the list before (as that means the corresponding
+                # JOIN(s) was(were) not present)
+                self._inherits_join_add(inherited_model, previous_tables, where_clause)
+                tables = list(set(tables).union(set(previous_tables)))
 
         where = where_clause
 
@@ -3776,13 +3829,10 @@ class orm(orm_template):
                 parent_obj = self.pool.get(self._inherit_fields[o][0])
                 if getattr(parent_obj._columns[o], '_classic_read'):
                     # Allowing inherits'ed field for server side sorting
-                    inherited_tables, inherit_join = self._inherits_join_calc(o,[],[]) # dry run to determine parent
+                    inherited_tables, inherit_join = self._inherits_join_calc(o, tables, where_clause)
                     if inherited_tables:
                         inherited_sort_table = inherited_tables[0]
                         order_by = inherited_sort_table + '.' + order
-                        if inherited_sort_table not in tables:
-                            # add the missing join
-                            self._inherits_join_calc(o, tables, where_clause)
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
