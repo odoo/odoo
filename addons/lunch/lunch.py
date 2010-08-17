@@ -141,6 +141,7 @@ class lunch_order(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ], \
             'State', readonly=True, select=True),
         'price': fields.function(_price_get, method=True, string="Price"),
+        'category': fields.many2one('lunch.category','Category'),
     }
 
     _defaults = {
@@ -198,7 +199,8 @@ class lunch_order(osv.osv):
         if not product:
             return {'value': {'price': 0.0}}
         price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']
-        return {'value': {'price': price}}
+        categ_id = self.pool.get('lunch.product').browse(cr, uid, product).category_id.id
+        return {'value': {'price': price,'category':categ_id}}
 
 lunch_order()
 

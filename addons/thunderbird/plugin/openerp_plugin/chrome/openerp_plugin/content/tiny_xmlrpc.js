@@ -1,6 +1,20 @@
-/**
-* Global instance stored here
-*/
+/************************************************************
+*    OpenERP, Open Source Management Solution
+*    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Affero General Public License as
+*    published by the Free Software Foundation, either version 3 of the
+*    License, or (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the GNU Affero General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+***************************************************************/
 
 var xmlRpcClient;
 
@@ -1387,37 +1401,38 @@ function upload_archivemail()
     list_documents = document.getElementById('listSearchBox')
     var context = []
     var cnt = list_documents.selectedCount
-    var res_id = [];
-    var model = [];
+    var ref_ids = "";
+    var branchobj = getPref();
+	setServerService('xmlrpc/object');
+	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+	var xmlRpcClient = getXmlRpc();
+	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strDbName.data = branchobj.getCharPref("serverdbname");
+	var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
+	struids.data = branchobj.getIntPref('userid');
+	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strpass.data = branchobj.getCharPref("password");
+	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strmethod.data = 'history_message';
+	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strobj.data = 'thunderbird.partner';
+	var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+
 	for(i=0;i<cnt;i++)
 	{	
         var object = list_documents.getSelectedItem(i);
 		var eml_string = parse_eml();
-
-        model[i] = object.label;
-        res_id[i] = object.value;
-		var branchobj = getPref();
-		setServerService('xmlrpc/object');
-		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-		var xmlRpcClient = getXmlRpc();
-		var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strDbName.data = branchobj.getCharPref("serverdbname");
-		var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
-		struids.data = branchobj.getIntPref('userid');
-		var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strpass.data = branchobj.getCharPref("password");
-		var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strmethod.data = 'history_message';
-		var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strobj.data = 'thunderbird.partner';
-		var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-       }
-        var a = ['model','res_id','message'];
-	    var b = [[model],[res_id],eml_string];
-        var arrofarr = dictcontact(a,b);
-        xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Mail Archived Successfully");
-		window.close();
+        ref_ids += object.label;
+        ref_ids += ",";
+        ref_ids += object.value;
+        if (i < cnt-1){ref_ids += ";";}
+    }
+    var a = ['ref_ids','message'];
+	var b = [ref_ids, eml_string];
+    var arrofarr = dictcontact(a,b);
+    xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
+    alert("Mail Archived Successfully");
+	window.close();
     
 }
 

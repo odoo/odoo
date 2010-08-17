@@ -53,7 +53,7 @@ class account_analytic_plan(osv.osv):
         'name': fields.char('Analytic Plan', size=64, required=True, select=True,),
         'plan_ids': fields.one2many('account.analytic.plan.line','plan_id','Analytic Plans'),
     }
-    
+
 account_analytic_plan()
 
 class account_analytic_plan_line(osv.osv):
@@ -72,7 +72,7 @@ class account_analytic_plan_line(osv.osv):
         'min_required': 100.0,
         'max_required': 100.0,
     }
-    
+
 account_analytic_plan_line()
 
 class account_analytic_plan_instance(osv.osv):
@@ -168,7 +168,7 @@ class account_analytic_plan_instance(osv.osv):
                     <field name="account%d_ids" string="%s" colspan="4">
                     <tree string="%s" editable="bottom">
                         <field name="rate"/>
-                        <field name="analytic_account_id" domain="[('parent_id','child_of',[%d])]"/>
+                        <field name="analytic_account_id" domain="[('parent_id','child_of',[%d])]" groups="base.group_extended"/>
                     </tree>
                 </field>
                 <newline/>"""%(i,tools.to_xml(line.name),tools.to_xml(line.name),line.root_analytic_id and line.root_analytic_id.id or 0)
@@ -189,7 +189,7 @@ class account_analytic_plan_instance(osv.osv):
             pids = self.pool.get('account.analytic.plan.instance').search(cr, uid, [('name','=',vals['name']),('code','=',vals['code']),('plan_id','<>',False)])
             if pids:
                 raise osv.except_osv(_('Error'), _('A model having this name and code already exists !'))
-            
+
             acct_anal_acct = self.pool.get('account.analytic.account')
             acct_anal_plan_line_obj = self.pool.get('account.analytic.plan.line')
             res = acct_anal_plan_line_obj.search(cr, uid, [('plan_id','=',journal.plan_id.id)])
@@ -256,7 +256,7 @@ class account_journal(osv.osv):
     _columns = {
         'plan_id':fields.many2one('account.analytic.plan', 'Analytic Plans'),
     }
-    
+
 account_journal()
 
 class account_invoice_line(osv.osv):
@@ -282,7 +282,7 @@ class account_invoice_line(osv.osv):
         if rec and rec.analytics_id:
             res_prod['value'].update({'analytics_id':rec.analytics_id.id})
         return res_prod
-    
+
 account_invoice_line()
 
 class account_move_line(osv.osv):
@@ -396,7 +396,7 @@ class analytic_default(osv.osv):
     _columns = {
         'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
-    
+
 analytic_default()
 
 class sale_order_line(osv.osv):
@@ -409,7 +409,7 @@ class sale_order_line(osv.osv):
             sale_line = self.browse(cr, uid, ids[0], context)
             inv_line_obj = self.pool.get('account.invoice.line')
             acct_anal_def_obj = self.pool.get('account.analytic.default')
-            
+
             for line in inv_line_obj.browse(cr, uid, create_ids, context):
                 rec = acct_anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
 

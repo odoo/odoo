@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from base_calendar import base_calendar
 from crm import crm
 from caldav import calendar
 from datetime import datetime
