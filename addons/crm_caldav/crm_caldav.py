@@ -23,6 +23,7 @@ from osv import fields, osv
 from crm import crm
 from caldav import calendar
 from datetime import datetime
+import re
 
 class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
@@ -74,9 +75,16 @@ class crm_meeting(osv.osv):
         recur_pool = {}
         try:
             for val in vals:
+                # Compute value of duration
+                if 'date_deadline' in val and 'duration' not in val:
+                    start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
+                    end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
+                    diff = end - start
+                    val['duration'] = (diff.seconds/float(86400) + diff.days) * 24
                 exists, r_id = calendar.uid2openobjectid(cr, val['id'], context.get('model'), \
                                                                  val.get('recurrent_id'))
-                if val.has_key('create_date'): val.pop('create_date')
+                if val.has_key('create_date'):
+                    val.pop('create_date')
                 u_id = val.get('id', None)
                 val.pop('id')
                 if exists and r_id:
@@ -84,12 +92,6 @@ class crm_meeting(osv.osv):
                     model_obj.write(cr, uid, [r_id], val)
                     ids.append(r_id)
                 elif exists:
-                    # Compute value of duration
-                    if 'date_deadline' in val and 'duration' not in val:
-                        start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
-                        end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
-                        diff = end - start
-                        val['duration'] = (diff.seconds/float(86400) + diff.days) * 24
                     model_obj.write(cr, uid, [exists], val)
                     ids.append(exists)
                 else:
@@ -98,6 +100,11 @@ class crm_meeting(osv.osv):
                         revent_id = model_obj.create(cr, uid, val)
                         ids.append(revent_id)
                     else:
+                        __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
+                        wematch = __rege.match(u_id.encode('utf8'))
+                        if wematch:
+                            model, recur_id, dbname = wematch.groups()
+                        val.update({'recurrent_uid': recur_id})
                         event_id = model_obj.create(cr, uid, val)
                         recur_pool[u_id] = event_id
                         ids.append(event_id)
