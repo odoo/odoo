@@ -50,7 +50,7 @@ automatically created via sale orders.
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
     'init_xml': [],
     'update_xml': ['project_mrp_workflow.xml', 
-                   #'process/project_mrp_process.xml',
+                   'process/project_mrp_process.xml',
                    'project_mrp_view.xml'
                    ],
     'demo_xml': [],
