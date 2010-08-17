@@ -38,8 +38,7 @@ This module installs:
         'account.tax.code.template.csv',
         'l10n_lu_data.xml',
         'account.tax.template.csv',
-        'l10n_lu_wizard.xml',
-        'l10n_lu_report.xml'
+        'wizard/print_vat_view.xml'
     ],
     'demo_xml': ['account.report.report.csv'],
     'installable': True,
