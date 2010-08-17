@@ -56,7 +56,7 @@
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','open')])
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     assert invoice_id, "Invoice is not in the open state"
 -
   I verify that its Journal Entries has been created
@@ -64,7 +64,7 @@
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','open')])
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     inv_brw = self.browse(cr, uid, invoice_id)[0]
     assert inv_brw.move_id, "Journal Entries has not been created"
 -
@@ -108,7 +108,7 @@
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','paid')])
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','paid')])
     assert invoice_id, "Invoice for SO is not in done state."
 -
   I verify that Paid has been set to true.
@@ -161,7 +161,7 @@
     if (mod_brw.state == 'installed'):
         sale_order_obj = self.pool.get('sale.order')
         so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-        proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
+        proc_ids = self.search(cr, uid, [('origin','=',so.name),('state','=','running')])
         assert proc_ids, _('Procurement is not in the running state!')
 -
   I verify that a purchase order has been generated
@@ -259,7 +259,7 @@
         pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
         po = pur_obj.browse(cr, uid, pur_id)[0]
         picking_obj = self.pool.get('stock.picking')
-        ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ) and ('state', '=', 'done')])
+        ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ),('state', '=', 'done')])
         assert ids, _('Picking is not in the done state!')
 -
   Then I done the picking

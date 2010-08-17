@@ -114,8 +114,6 @@ module named account_voucher.
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
         'report/account_report_view.xml',
-        'report/account_analytic_report_view.xml',
-        'report/account_account_report_view.xml',
         'report/account_analytic_entries_report_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",

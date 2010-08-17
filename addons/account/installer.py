@@ -219,10 +219,12 @@ class account_installer(osv.osv_memory):
                 vals_seq = {
                         'name': _('Bank Journal '),
                         'code': 'account.journal',
+                        'prefix': 'BAN/',
+                        'padding': 5
                         }
                 seq_id = obj_sequence.create(cr,uid,vals_seq)
 
-                #create the bank journal
+                #create the bank journals
                 vals_journal = {}
                 vals_journal['name']= _('Bank Journal ')
                 vals_journal['code']= _('BNK')
@@ -238,9 +240,21 @@ class account_installer(osv.osv_memory):
                 obj_journal.create(cr,uid,vals_journal)
 
                 for val in record.bank_accounts_id:
-                    if val.account_type == 'cash':type = cash_type_id
-                    elif val.account_type == 'bank':type = bank_type_id
-                    else:type = check_type_id
+                    seq_prefix = None
+                    seq_padding = 5
+                    if val.account_type == 'cash':
+                        type = cash_type_id
+                        seq_prefix = "CSH/"
+                    elif val.account_type == 'bank':
+                        type = bank_type_id
+                        seq_prefix = "BAN/"
+                    elif val.account_type == 'check':
+                        type = check_type_id
+                        seq_prefix = "CHK/"
+                    else: 
+                        type = check_type_id
+                        seq_padding = None
+                        
                     vals_bnk = {'name': val.acc_name or '',
                         'currency_id': val.currency_id.id or False,
                         'code': str(110400 + code_cnt),
@@ -252,6 +266,8 @@ class account_installer(osv.osv_memory):
                     vals_seq_child = {
                         'name': _(vals_bnk['name']),
                         'code': 'account.journal',
+                        'prefix': seq_prefix,
+                        'padding': seq_padding
                         }
                     seq_id = obj_sequence.create(cr, uid, vals_seq_child)
 
@@ -272,7 +288,7 @@ class account_installer(osv.osv_memory):
                     code_cnt += 1
 
 
-        #reactivate the parent_store functionnality on account_account
+        #reactivate the parent_store functionality on account_account
         self.pool._init = False
         self.pool.get('account.account')._parent_store_compute(cr)
 
@@ -292,8 +308,20 @@ class account_installer(osv.osv_memory):
         seq_id = obj_sequence.search(cr,uid,[('name','=','Account Journal')])[0]
 
         if seq_journal:
-            seq_id_sale = obj_sequence.search(cr,uid,[('name','=','Sale Journal')])[0]
-            seq_id_purchase = obj_sequence.search(cr,uid,[('name','=','Purchase Journal')])[0]
+            seq_sale = {
+                        'name': 'Sale Journal',
+                        'code': 'account.journal',
+                        'prefix': 'INV/',
+                        'padding': 4
+                        }
+            seq_id_sale = obj_sequence.create(cr, uid, seq_sale)
+            seq_purchase = {
+                        'name': 'Purchase Journal',
+                        'code': 'account.journal',
+                        'prefix': 'VEN/',
+                        'padding': 4
+                        }
+            seq_id_purchase = obj_sequence.create(cr, uid, seq_purchase)
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
@@ -323,7 +351,42 @@ class account_installer(osv.osv_memory):
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.property_account_expense_categ.id]
 
         obj_journal.create(cr,uid,vals_journal)
+        
+        # Creating Journals Sales Refund and Purchase Refund
+        vals_journal={}
+        data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_refund_journal_view')])
+        data = mod_obj.browse(cr, uid, data_id[0])
+        view_id = data.res_id
 
+        seq_id_sale_refund = seq_id_sale
+        seq_id_purchase_refund = seq_id_purchase
+
+        vals_journal['view_id'] = view_id
+
+        #Sales Refund Journal
+        vals_journal['name'] = _('Sales Refund Journal')
+        vals_journal['type'] = 'sale_refund'
+        vals_journal['code'] = _('SCNJ')
+        vals_journal['sequence_id'] = seq_id_sale_refund
+
+        if obj_multi.property_account_receivable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.property_account_income_categ.id]
+
+        obj_journal.create(cr,uid,vals_journal)
+
+        # Purchase Refund Journal
+        vals_journal['name'] = _('Purchase Refund Journal')
+        vals_journal['type'] = 'purchase_refund'
+        vals_journal['code'] = _('ECNJ')
+        vals_journal['sequence_id'] = seq_id_purchase_refund
+
+        if obj_multi.property_account_payable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.property_account_expense_categ.id]
+
+        obj_journal.create(cr,uid,vals_journal)
+        
         # Bank Journals
         view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: Why put fixed name ?
         view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fixed name?

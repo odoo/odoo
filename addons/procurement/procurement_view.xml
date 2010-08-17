@@ -4,6 +4,7 @@
 		<!--
         Procurement
         -->
+		
 
         <record id="procurement_tree_view" model="ir.ui.view">
             <field name="name">procurement.order.tree</field>
@@ -67,10 +68,6 @@
                         <field name="move_id" groups="base.group_extended"/>
                         <field name="date_close"/>
                         <field name="close_move" groups="base.group_extended"/>
-                    	<group colspan="4"  groups="base.group_extended">
-                    		<separator colspan="4" string="Properties" />
-                        	<field colspan="4" name="property_ids" nolabel="1"/>
-	                 </group>
                     </page>
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
@@ -263,12 +260,10 @@
             res_model="stock.warehouse.orderpoint"
             src_model="procurement.order"/>
 
-<!--        <act_window-->
-<!--            domain="[('id', '=', product_id)]"-->
-<!--            id="act_product_product_2_stock_warehouse_orderpoint"-->
-<!--            name="Product"-->
-<!--            res_model="product.product"-->
-<!--            src_model="procurement.order"/>-->
+		<menuitem id="base.menu_mrp_scheduler" name="Schedulers" parent="stock.menu_stock_root" groups="base.group_system" sequence="10"/>
+		<menuitem action="action_compute_schedulers" id="base.mrp_Sched_all" parent="base.menu_mrp_scheduler" sequence="50" groups="base.group_system"/>
+		<menuitem action="procurement.procurement_action" id="base.menu_mrp_procurement_action" parent="stock.menu_stock_warehouse_mgmt" sequence="9" groups="base.group_system"/>		
+		
 
     </data>
 </openerp>

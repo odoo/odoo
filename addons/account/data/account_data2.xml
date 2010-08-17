@@ -86,6 +86,12 @@
             <field name="field">state</field>
             <field eval="14" name="sequence"/>
         </record>
+        <record id="bank_col20" model="account.journal.column">
+            <field name="view_id" ref="account_journal_bank_view"/>
+            <field name="name">Reconcile</field>
+            <field name="field">reconcile_id</field>
+            <field eval="20" name="sequence"/>
+        </record>
 
         <record id="account_journal_bank_view_multi" model="account.journal.view">
             <field name="name">Bank/Cash Journal (Multi-Currency) View</field>
@@ -165,6 +171,12 @@
             <field name="name">State</field>
             <field name="field">state</field>
             <field eval="16" name="sequence"/>
+        </record>
+        <record id="bank_col20_multi" model="account.journal.column">
+            <field name="view_id" ref="account_journal_bank_view_multi"/>
+            <field name="name">Reconcile</field>
+            <field name="field">reconcile_id</field>
+            <field eval="20" name="sequence"/>
         </record>
 
 
@@ -328,6 +340,12 @@
             <field name="field">state</field>
             <field eval="14" name="sequence"/>
         </record>
+        <record id="sp_journal_col20" model="account.journal.column">
+            <field name="view_id" ref="account_sp_journal_view"/>
+            <field name="name">Reconcile</field>
+            <field name="field">reconcile_id</field>
+            <field eval="20" name="sequence"/>
+        </record>
         
         <record id="account_sp_refund_journal_view" model="account.journal.view">
             <field name="name">Sale/Purchase Refund Journal View</field>
@@ -420,6 +438,13 @@
             <field name="field">state</field>
             <field eval="14" name="sequence"/>
         </record>
+        <record id="sp_refund_journal_col20" model="account.journal.column">
+            <field name="view_id" ref="account_sp_refund_journal_view"/>
+            <field name="name">Reconcile</field>
+            <field name="field">reconcile_id</field>
+            <field eval="20" name="sequence"/>
+        </record>
+        
         <!--
         Account Journal Sequences
         -->

@@ -79,7 +79,7 @@
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','open')])
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     assert invoice_id, "Invoice is not in the open state"
 -
   Creating an account invoice pay entry.
@@ -122,7 +122,7 @@
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','paid')])
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','paid')])
     assert invoice_id, "Invoice for SO is not in done state."
 -
   I verify that Paid has been set to true.
@@ -189,7 +189,7 @@
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','open')])
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     assert invoice_id, "Invoice is not in the open state"
 -
   Creating a account invoice pay entry.
@@ -232,7 +232,7 @@
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name) and ('state','=','paid')])
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','paid')])
     assert invoice_id, "Invoice for SO is not in done state."
 -
   I verify that Paid has been set to true.
