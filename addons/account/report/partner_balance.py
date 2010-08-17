@@ -115,16 +115,21 @@ class partner_balance(report_sxw.rml_parse):
         self.date_lst = final_date_array
         self.date_lst.sort()
 
-    def transform_none_into_date_array(self,data):
+    def transform_none_into_date_array(self, data):
 
-        sql = "SELECT min(date) as start_date from account_move_line"
-        self.cr.execute(sql)
-        start_date = self.cr.fetchone()[0]
-
-        sql = "SELECT max(date) as start_date from account_move_line"
-        self.cr.execute(sql)
-        stop_date = self.cr.fetchone()[0]
-
+        if not data['form']['fiscalyear']:
+            sql = "SELECT min(date) as start_date from account_move_line"
+            self.cr.execute(sql)
+            start_date = self.cr.fetchone()[0]
+    
+            sql = "SELECT max(date) as start_date from account_move_line"
+            self.cr.execute(sql)
+            stop_date = self.cr.fetchone()[0]
+        else:
+            fiscalyear_obj = self.pool.get('account.fiscalyear')
+            fiscalyear_dict = fiscalyear_obj.read(self.cr, self.uid, data['form']['fiscalyear'], ['date_start','date_stop'])
+            start_date = fiscalyear_dict['date_start']
+            stop_date = fiscalyear_dict['date_stop']
 
         array = []
         array = array + self.date_range(start_date,stop_date)
