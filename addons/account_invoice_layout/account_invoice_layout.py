@@ -19,22 +19,21 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-
+from osv import fields, osv
 
 class notify_message(osv.osv):
     _name = 'notify.message'
     _description = 'Notify By Messages'
     _columns = {
-        'name' :  fields.char('Title', size=64, required=True),
-        'msg' : fields.text('Special Message', size=125, required=True, help='This notification will appear at the bottom of the Invoices when printed.', translate=True)
+        'name':  fields.char('Title', size=64, required=True),
+        'msg': fields.text('Special Message', size=128, required=True, help='This notification will appear at the bottom of the Invoices when printed.', translate=True)
     }
 
 notify_message()
 
 class account_invoice_line(osv.osv):
 
-    def move_line_get_item(self, cr, uid, line, context={}):
+    def move_line_get_item(self, cr, uid, line, context=None):
         if line.state != 'article':
             return None
         return super(account_invoice_line, self).move_line_get_item(cr, uid, line, context)
@@ -70,7 +69,7 @@ class account_invoice_line(osv.osv):
                     res[field]['states'][key] = value
         return res
 
-    def onchange_invoice_line_view(self, cr, uid, id, type, context={}, *args):
+    def onchange_invoice_line_view(self, cr, uid, id, type, context=None, *args):
 
         if (not type):
             return {}
@@ -131,7 +130,7 @@ class account_invoice_line(osv.osv):
         default['state'] = self.browse(cr, uid, id).state
         return super(account_invoice_line, self).copy_data(cr, uid, id, default, context)
 
-    def _fnct(self, cr, uid, id, name, args, context):
+    def _fnct(self, cr, uid, id, name, args, context=None):
         res = {}
         for m in self.browse(cr, uid, id):
             if m.state != 'article':
@@ -165,18 +164,19 @@ class account_invoice_line(osv.osv):
 
     def _default_account(self, cr, uid, context=None):
         cr.execute("select id from account_account where parent_id IS NULL LIMIT 1")
-        res=cr.fetchone()
+        res = cr.fetchone()
         return res[0]
 
     _defaults = {
-        'state': lambda *a: 'article',
-        'sequence': lambda *a : 0,
+        'state': 'article',
+        'sequence': 0,
 #       'account_id': _default_account
     }
+
 account_invoice_line()
 
-
 class one2many_mod2(fields.one2many):
+
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
@@ -210,6 +210,7 @@ class account_invoice(osv.osv):
         'abstract_line_ids': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines',readonly=True, states={'draft':[('readonly',False)]}),
         'invoice_line': one2many_mod2('account.invoice.line', 'invoice_id', 'Invoice Lines',readonly=True, states={'draft':[('readonly',False)]}),
     }
-account_invoice()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+account_invoice()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
