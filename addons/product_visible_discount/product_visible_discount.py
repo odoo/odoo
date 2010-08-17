@@ -19,27 +19,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
-import pooler
-from tools import config
 from osv.osv import except_osv
 from tools.translate import _
 
 class product_pricelist(osv.osv):
-    _name = 'product.pricelist'
     _inherit = 'product.pricelist'
 
     _columns ={
-        'visible_discount':fields.boolean('Visible Discount'),
+        'visible_discount': fields.boolean('Visible Discount'),
     }
     _defaults = {
          'visible_discount': True,
-   }
+    }
 
 product_pricelist()
 
 class sale_order_line(osv.osv):
-    _name = "sale.order.line"
     _inherit = "sale.order.line"
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
@@ -81,19 +78,12 @@ class sale_order_line(osv.osv):
                 return res
 
             product = product_obj.browse(cr, uid, product, context)
-#            product_tmpl_id = product.product_tmpl_id.id
-#            pricetype_id = pricelist_obj.browse(cr, uid, pricelist).version_id[0].items_id[0].base
-#            field_name = 'list_price'
-#            product_read = self.pool.get('product.template').read(cr, uid, product_tmpl_id, [field_name], context)
-#            list_price = product_read[field_name]
             list_price = pricelist_obj.price_get(cr, uid, [pricelist],
                     product.id, qty or 1.0, partner_id, {'uom': uom,'date': date_order })
 
             pricelists = pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
 
             old_uom = product.uos_id or product.uom_id
-#            new_list_price = product_uom_obj._compute_price(cr,
-#                        uid, old_uom.id, list_price, uom)
             new_list_price = get_real_price(list_price, product.id, pricelist)
             if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0):
                 discount = (new_list_price - price) / new_list_price * 100
@@ -106,7 +96,6 @@ class sale_order_line(osv.osv):
 sale_order_line()
 
 class account_invoice_line(osv.osv):
-    _name = "account.invoice.line"
     _inherit = "account.invoice.line"
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context={}):

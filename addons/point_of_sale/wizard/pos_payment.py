@@ -137,22 +137,18 @@ class pos_make_payment(osv.osv_memory):
         invoice_wanted = data['invoice_wanted']
         # Todo need to check ...
 
-#        if amount <= 0.0:
-#            context.update({'flag':True})
-#            order_obj.action_paid(cr, uid, [active_id], context)
-#            return self.print_report(cr, uid, ids, context)
-
-        if amount != 0.0: 
+        if amount != 0.0:
             order_obj.write(cr, uid, [active_id], {'invoice_wanted': invoice_wanted, 'partner_id': data['partner_id']})
             order_obj.add_payment(cr, uid, active_id, data, context=context)
-        
+
         if order_obj.test_paid(cr, uid, [active_id]):
             if data['partner_id'] and invoice_wanted:
                 order_obj.action_invoice(cr, uid, [active_id], context)
+                order_obj.create_picking(cr, uid, [active_id], context)
                 if context.get('return'):
                     order_obj.write(cr, uid, [active_id],{'state':'done'})
                 else:
-                     order_obj.write(cr, uid, [active_id],{'state':'paid'})
+                    order_obj.write(cr, uid, [active_id],{'state':'paid'})
                 return self.create_invoice(cr, uid, ids, context)
             else:
                 context.update({'flag': True})
@@ -160,9 +156,9 @@ class pos_make_payment(osv.osv_memory):
                 if context.get('return'):
                     order_obj.write(cr, uid, [active_id],{'state':'done'})
                 else:
-                     order_obj.write(cr, uid, [active_id],{'state':'paid'})
+                    order_obj.write(cr, uid, [active_id],{'state':'paid'})
                 return self.print_report(cr, uid, ids, context)
-        
+
         if order.amount_paid > 0.0:
             context.update({'flag': True})
             # Todo need to check
@@ -180,9 +176,9 @@ class pos_make_payment(osv.osv_memory):
         datas = {'ids': active_ids}
         datas['form'] = {}
         return {
-                'type' : 'ir.actions.report.xml',
-                'report_name':'pos.invoice',
-                'datas' : datas,
+            'type' : 'ir.actions.report.xml',
+            'report_name':'pos.invoice',
+            'datas' : datas,
         }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -218,11 +214,6 @@ class pos_make_payment(osv.osv_memory):
         'num_sale':fields.char('Num.File', size=32),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice'),
-        'state': fields.selection([('draft', 'Draft'), ('payment', 'Payment'),
-                                    ('advance','Advance'),
-                                   ('paid', 'Paid'), ('done', 'Done'), ('invoiced', 'Invoiced'), ('cancel', 'Cancel')],
-                                  'State', readonly=True, ),
     }
 
 pos_make_payment()

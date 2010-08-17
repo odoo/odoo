@@ -30,11 +30,12 @@ and other interesting indicators based on invoices. The wizard to launch
 the report has several options to help you get the data you need.
 """,
     'author': 'OpenERP SA',
-    'depends': ['base', 'product', 'account'],
+    'depends': ['account'],
     'update_xml': [
                    'security/ir.model.access.csv',
                    'wizard/product_margin_view.xml',
-                   'product_margin_view.xml'],
+                   'product_margin_view.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,

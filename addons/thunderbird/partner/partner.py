@@ -139,6 +139,10 @@ class thunderbird_partner(osv.osv_memory):
 
     def create_contact(self,cr,user,vals):
         dictcreate = dict(vals)
+        # Set False value if 'undefined'. Thunerbird set 'undefined' if user did not set any value.
+        for key in dictcreate:
+            if dictcreate[key] == 'undefined':
+                dictcreate[key] = False
         if not eval(dictcreate.get('partner_id')):
             dictcreate.update({'partner_id': False})
         create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
@@ -147,16 +151,16 @@ class thunderbird_partner(osv.osv_memory):
     def history_message(self,cr,uid,vals):
         dictcreate = dict(vals)
         server_tools_pool = self.pool.get('email.server.tools')
-        res_id = int(dictcreate.get('res_id'))
-        model = str(dictcreate.get('model'))
-        message = str(dictcreate.get('message'))
-        server_tools_pool.history_message(cr,uid,model,res_id,message)
+        res_ids = map(lambda x: int(x), dictcreate.get('res_id').split(','))
+        models = dictcreate.get('model').split(',')
+        for i in range(len(res_ids)):
+            server_tools_pool.history_message(cr, uid, models[i], res_ids[i], dictcreate.get('message'))
         return True
 
     def process_email(self,cr,uid,vals):
         dictcreate = dict(vals)
         model = str(dictcreate.get('model'))
-        message = str(dictcreate.get('message'))
+        message = dictcreate.get('message')
         return self.pool.get('email.server.tools').process_email(cr, uid, model, message, attach=True, context=None)
 
     def search_contact(self, cr, user, vals):
@@ -204,19 +208,20 @@ class thunderbird_partner(osv.osv_memory):
         if res_id:
             address_obj = self.pool.get('res.partner.address')
             address_data = address_obj.read(cr, user, int(res_id), [])
-            result={           'partner_id': address_data['partner_id'] and address_data['partner_id'][0] or False,
-                               'country_id': dictcreate['country_id'] and int(dictcreate['country_id'][0]) or False,
-                               'state_id': dictcreate['state_id'] and int(dictcreate['state_id'][0]) or False,
-                               'name': dictcreate['name'],
-                               'street': dictcreate['street'],
-                               'street2': dictcreate['street2'],
-                               'zip': dictcreate['zip'],
-                               'city': dictcreate['city'],
-                               'phone': dictcreate['phone'],
-                               'fax': dictcreate['fax'],
-                               'mobile': dictcreate['mobile'],
-                               'email': dictcreate['email'],
-                               }
+            result = {
+               'partner_id': address_data['partner_id'] and address_data['partner_id'][0] or False,
+               'country_id': dictcreate['country_id'] and int(dictcreate['country_id'][0]) or False,
+               'state_id': dictcreate['state_id'] and int(dictcreate['state_id'][0]) or False,
+               'name': dictcreate['name'],
+               'street': dictcreate['street'],
+               'street2': dictcreate['street2'],
+               'zip': dictcreate['zip'],
+               'city': dictcreate['city'],
+               'phone': dictcreate['phone'],
+               'fax': dictcreate['fax'],
+               'mobile': dictcreate['mobile'],
+               'email': dictcreate['email'],
+            }
         address_obj.write(cr, user,int(res_id),result )
         return True
 

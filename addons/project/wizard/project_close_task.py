@@ -35,7 +35,7 @@ class project_close_task(osv.osv_memory):
         'manager_email': fields.char('Manager E-Mail ID', size=64, help="Email Address of Project's Manager"),
         'partner_email': fields.char('Partner E-Mail ID', size=64, help="Email Address of Partner"),
         'description': fields.text('Description'),
-        }
+    }
 
     def _get_manager_email(self, cr, uid, context=None):
         if context is None:
@@ -48,7 +48,7 @@ class project_close_task(osv.osv_memory):
             if manager_id and manager_id.user_email:
                 email = manager_id.user_email
         return email
-    
+
     def _get_partner_email(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -72,8 +72,8 @@ class project_close_task(osv.osv_memory):
        'manager_email': _get_manager_email,
        'partner_email': _get_partner_email,
        'description': _get_desc,
-               }
-    
+    }
+
     def close(self, cr, uid, ids, context=None):
         if 'task_id' in context:
             self.pool.get('project.task').write(cr, uid, [context['task_id']], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
@@ -87,14 +87,14 @@ class project_close_task(osv.osv_memory):
         close_task = self.read(cr, uid, ids[0], [])
         to_adr = []
         description = close_task['description']
-        
+
         if 'task_id' in context:
             if context.get('send_manager', False) and not close_task.get('manager_email', False):
                 raise osv.except_osv(_('Error'), _("Please specify the email address of Project Manager."))
-            
+
             elif context.get('send_partner', False) and not close_task.get('partner_email', False):
                 raise osv.except_osv(_('Error'), _("Please specify the email address of partner."))
-            
+
             else:
                 task_obj = self.pool.get('project.task')
                 task = task_obj.browse(cr, uid, context['task_id'], context=context)
@@ -112,8 +112,8 @@ class project_close_task(osv.osv_memory):
                         'date_start': task.date_start,
                         'date_end': task.date_end,
                         'state': task.state
-                    }
-                
+                }
+
                 header = (project.warn_header or '') % val
                 footer = (project.warn_footer or '') % val
                 body = u'%s\n%s\n%s\n\n-- \n%s' % (header, description, footer, signature)
@@ -123,7 +123,7 @@ class project_close_task(osv.osv_memory):
                 task_obj.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
                 message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
                 self.log(cr, uid, task.id, message)
-            
+
         return {}
 
 project_close_task()

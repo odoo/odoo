@@ -249,9 +249,6 @@
                             <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
                         </group>
                         <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]" />
-                        <!--
-                         <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')], 'invisible':[('type','!=','subcampaign')]}" />
-                        -->
                     </group>
                 </group>
                 <newline/>

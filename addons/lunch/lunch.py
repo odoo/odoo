@@ -52,7 +52,7 @@ class lunch_product(osv.osv):
 
     _defaults = {
         'active': lambda *a : True,
-        }
+    }
 
 lunch_product()
 
@@ -82,7 +82,7 @@ class lunch_cashbox(osv.osv):
         'manager': fields.many2one('res.users', 'Manager'),
         'name': fields.char('Name', size=30, required=True, unique = True),
         'sum_remain': fields.function(amount_available, method=True, string='Remained Total'),
-        }
+    }
 
 lunch_cashbox()
 
@@ -94,16 +94,16 @@ class lunch_cashmove(osv.osv):
     _description = "Cash Move"
 
     _columns = {
-        'name': fields.char('Name', size=128),
+        'name': fields.char('Description', size=128),
         'user_cashmove': fields.many2one('res.users', 'User Name', required=True),
         'amount': fields.float('Amount', digits=(16, 2)),
         'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, required=True),
         'active': fields.boolean('Active'),
         'create_date': fields.datetime('Created date', readonly=True),
-        }
+    }
 
     _defaults = {
-    'active': lambda *a: True,
+        'active': lambda *a: True,
     }
 
 lunch_cashmove()
@@ -215,7 +215,7 @@ class report_lunch_amount(osv.osv):
         'user_id': fields.many2one('res.users', 'User Name', readonly=True),
         'amount': fields.float('Amount', readonly=True, digits=(16, 2)),
         'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, readonly=True),
-        }
+    }
 
     def init(self, cr):
 

@@ -32,7 +32,7 @@ from report import report_sxw
 class base_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(base_report, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             '_load': self._load,
             '_get_variable': self._get_variable,
@@ -62,7 +62,6 @@ class base_report(report_sxw.rml_parse):
         return self.localcontext[variable]
 
     def _load_accounts(self,form,code,definition,fiscalyear,period_query_cond):
-        #self.context.copy()
         accounts={}
         for x in definition['load']:
             p=x.split(":")

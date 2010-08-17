@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import osv, fields
 
 class account_invoice_special_msg(osv.osv_memory):
@@ -32,17 +33,19 @@ class account_invoice_special_msg(osv.osv_memory):
         datas = {}
         if context is None:
             context = {}
+
         data = self.read(cr, uid, ids, [])[0]
         datas = {
              'ids': context.get('active_ids',[]),
              'model': 'account.invoice',
              'form': data
-                 }
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'notify_account.invoice',
             'datas': datas,
-            }
+        }
 
 account_invoice_special_msg()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

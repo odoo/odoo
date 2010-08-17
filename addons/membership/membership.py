@@ -37,14 +37,14 @@ STATE = [
 ]
 
 STATE_PRIOR = {
-        'none' : 0,
-        'canceled' : 1,
-        'old' : 2,
-        'waiting' : 3,
-        'invoiced' : 4,
-        'free' : 6,
-        'paid' : 7
-        }
+    'none' : 0,
+    'canceled' : 1,
+    'old' : 2,
+    'waiting' : 3,
+    'invoiced' : 4,
+    'free' : 6,
+    'paid' : 7
+}
 
 class membership_line(osv.osv):
     '''Member line'''
@@ -81,7 +81,7 @@ class membership_line(osv.osv):
         @param ids: List of Membership Line IDs
         @param name: Field Name
         @param context: A standard dictionary for contextual values
-        @param return: Dictionary of state Value 
+        @param return: Dictionary of state Value
         """
         res = {}
         for line in self.browse(cr, uid, ids):
@@ -124,21 +124,21 @@ class membership_line(osv.osv):
     _description = __doc__
     _name = 'membership.membership_line'
     _columns = {
-            'partner': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=1),
-            'membership_id': fields.many2one('product.product', string="Membership", required=True),
-            'date_from': fields.date('From', readonly=True),
-            'date_to': fields.date('To', readonly=True),
-            'date_cancel' : fields.date('Cancel date'),
-            'date': fields.date('Join Date'),
-            'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
-            'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
-            'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
-            'state': fields.function(_state, method=True, string='State', type='selection', selection=STATE),
+        'partner': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=1),
+        'membership_id': fields.many2one('product.product', string="Membership", required=True),
+        'date_from': fields.date('From', readonly=True),
+        'date_to': fields.date('To', readonly=True),
+        'date_cancel' : fields.date('Cancel date'),
+        'date': fields.date('Join Date'),
+        'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
+        'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
+        'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
+        'state': fields.function(_state, method=True, string='State', type='selection', selection=STATE),
     }
     _rec_name = 'partner'
     _order = 'id desc'
     _constraints = [
-            (_check_membership_date, 'Error, this membership product is out of date', [])
+        (_check_membership_date, 'Error, this membership product is out of date', [])
     ]
 
 membership_line()
@@ -182,7 +182,7 @@ class Partner(osv.osv):
         @param ids: List of Partner IDs
         @param name: Field Name
         @param context: A standard dictionary for contextual values
-        @param return: Dictionary of Membership state Value 
+        @param return: Dictionary of Membership state Value
         """
         res = {}
         for id in ids:
@@ -239,28 +239,28 @@ class Partner(osv.osv):
                 res_state = self._membership_state(cr, uid, [partner_data.associate_member.id], name, args, context)
                 res[id] = res_state[partner_data.associate_member.id]
         return res
-    
+
     def _membership_date(self, cr, uid, ids, name, args, context=None):
-        
+
         """Return  date of membership"""
-        
+
         name = name[0]
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
-        
+
         for partner in self.browse(cr, uid, ids):
-            
+
             if partner.associate_member:
                  partner_id = partner.associate_member.id
             else:
                  partner_id = partner.id
-                    
-            res[partner.id]={
-                             'membership_start': False,
-                             'membership_stop': False,
-                             'membership_cancel': False
-                             }        
-            
+
+            res[partner.id] = {
+                 'membership_start': False,
+                 'membership_stop': False,
+                 'membership_cancel': False
+            }
+
             if name == 'membership_start':
                 line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
                             limit=1, order='date_from')
@@ -268,13 +268,13 @@ class Partner(osv.osv):
                         res[partner.id]['membership_start'] = member_line_obj.read(cr, uid, line_id[0],
                                 ['date_from'])['date_from']
 
-            if name == 'membership_stop':        
+            if name == 'membership_stop':
                 line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
                             limit=1, order='date_to desc')
                 if line_id1:
                       res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, line_id1[0],
                                 ['date_to'])['date_to']
-            if name == 'membership_cancel':     
+            if name == 'membership_cancel':
                 if partner.membership_state == 'canceled':
                     line_id2 = member_line_obj.search(cr, uid, [('partner', '=', partner.id)],limit=1, order='date_cancel')
                     if line_id2:
@@ -366,7 +366,7 @@ class Partner(osv.osv):
         default = default.copy()
         default['member_lines'] = []
         return super(Partner, self).copy(cr, uid, id, default, context)
-    
+
     def create_membership_invoice(self, cr, uid, ids, product_id=None, datas=None, context=None):
         """ Create Customer Invoice of Membership for partners.
         @param datas: datas has dictionary value which consist Id of Membership product and Cost Amount of Membership.
@@ -397,8 +397,8 @@ class Partner(osv.osv):
             line_value =  {
                 'product_id' : product_id,
             }
-            
-            line_dict = invoice_line_obj.product_id_change(cr, uid, {}, 
+
+            line_dict = invoice_line_obj.product_id_change(cr, uid, {},
                             product_id, False, quantity, '', 'out_invoice', partner.id, fpos_id, price_unit=amount, context=context)
             line_value.update(line_dict['value'])
             if line_value.get('invoice_line_tax_id', False):
@@ -427,7 +427,7 @@ Partner()
 class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
-            'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
+        'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
     }
 product_template()
 
@@ -435,7 +435,7 @@ class Product(osv.osv):
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         model_obj = self.pool.get('ir.model.data')
-        
+
         if ('product' in context) and (context['product']=='membership_product'):
             model_data_ids_form = model_obj.search(cr,user,[('model','=','ir.ui.view'),('name','in',['membership_products_form','membership_products_tree'])])
             resource_id_form = model_obj.read(cr, user, model_data_ids_form, fields=['res_id','name'])
@@ -451,15 +451,14 @@ class Product(osv.osv):
     '''Product'''
     _inherit = 'product.product'
     _columns = {
-            'membership': fields.boolean('Membership', help='Specify if this product is a membership product'),
-            'membership_date_from': fields.date('Date from', help='Active Membership since this date'),
-            'membership_date_to': fields.date('Date to', help='Expired date of Membership'),
-#           'member_price':fields.float('Member Price'),
-            }
+        'membership': fields.boolean('Membership', help='Specify if this product is a membership product'),
+        'membership_date_from': fields.date('Date from', help='Active Membership since this date'),
+        'membership_date_to': fields.date('Date to', help='Expired date of Membership'),
+    }
 
     _defaults = {
-            'membership': lambda *args: False
-            }
+        'membership': lambda *args: False
+    }
 Product()
 
 
@@ -533,7 +532,7 @@ class account_invoice_line(osv.osv):
         line = self.browse(cr, uid, result)
         member_line_obj = self.pool.get('membership.membership_line')
         if line.invoice_id.type == 'out_invoice':
-            
+
             ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',line.id)])
             if line.product_id and line.product_id.membership and not ml_ids:
                 # Product line is a membership product
@@ -542,14 +541,14 @@ class account_invoice_line(osv.osv):
                 if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                     date_from = line.invoice_id.date_invoice
                 line_id = member_line_obj.create(cr, uid, {
-                    'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
-                    'membership_id': line.product_id.id,
-                    'member_price': line.price_unit,
-                    'date': time.strftime('%Y-%m-%d'),
-                    'date_from': date_from,
-                    'date_to': date_to,
-                    'account_invoice_line': line.id,
-                    })
+                            'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
+                            'membership_id': line.product_id.id,
+                            'member_price': line.price_unit,
+                            'date': time.strftime('%Y-%m-%d'),
+                            'date_from': date_from,
+                            'date_to': date_to,
+                            'account_invoice_line': line.id,
+                        })
         return result
 
 account_invoice_line()

@@ -87,9 +87,11 @@ class account_move_journal(osv.osv_memory):
 
         view = """<?xml version="1.0" encoding="utf-8"?>
         <form string="Standard entries">
-            <separator string="Open a Journal Items" colspan="4"/>
+            <separator string="Open Journal Items !" colspan="4"/>
             <group colspan="4" >
-                <label width="300" string="Going to open a %s Journal(s) for %s Period"/>
+                <label width="300" string="Journal : %s"/>
+                <newline/>
+                <label width="300" string="Period :  %s"/>
             </group>
             <group colspan="4" col="4">
                 <label string ="" colspan="2"/>
@@ -155,10 +157,10 @@ class account_move_journal(osv.osv_memory):
 #            'domain': str([('journal_id', '=', journal_id), ('period_id', '=', period_id)]),
             'name': name,
             'view_type': 'form',
-            'view_mode': 'tree,form,graph',
+            'view_mode': 'tree,graph,form',
             'res_model': 'account.move.line',
             'view_id': False,
-            'context': "{'journal_id': %d, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, period_id),
+            'context': "{'visible_id':%s, 'journal_id': %d, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, journal_id, period_id),
             'type': 'ir.actions.act_window',
             'search_view_id': res_id
         }

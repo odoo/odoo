@@ -26,7 +26,7 @@ class report_pos_order(osv.osv):
     _name = "report.pos.order"
     _description = "Point of Sale Orders Statistics"
     _auto = False
-    _columns ={
+    _columns = {
         'date': fields.date('Date Order', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
@@ -39,8 +39,6 @@ class report_pos_order(osv.osv):
                                     ('advance','Advance'),
                                    ('paid', 'Paid'), ('done', 'Done'), ('invoiced', 'Invoiced'), ('cancel', 'Cancel')],
                                   'State'),
-#        'state_2': fields.function([('to_verify', 'To Verify'), ('accepted', 'Accepted'),
-#            ('refused', 'Refused')], string='State'),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
         'total_discount':fields.float('Total Discount', readonly=True),

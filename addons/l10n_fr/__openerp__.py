@@ -36,8 +36,7 @@
 Credits: Sistheo Zeekom CrysaLEAD
 """,
     "depends" : ['base', 'account', 'account_chart', 'account_report', 'base_vat'],
-    "init_xml" : [
-    ],
+    "init_xml" : [],
     "update_xml" : [
         "report.xml",
         "pcg.xml",

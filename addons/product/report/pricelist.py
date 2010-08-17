@@ -96,14 +96,11 @@ class report_custom(report_rml):
                         else:
                             res = pool.get('product.product').read(cr, uid, [x['id']])
                             price =  res[0]['list_price']
-#                        temp.append('<price name="%s %s" />'%(price_list[i][x['id']]*q[2]['name'],currency['currency_id'][1]))
 
                         temp.append('<price name="%.2f" />'%(price))
                     i+=1
                     pro.extend(temp)
                     pro.append('</pro>')
-#                categ.extend(pro)
-#                categ.append('</categ>')
                 product_xml.extend(pro)
 
         product_xml.append('</product>')

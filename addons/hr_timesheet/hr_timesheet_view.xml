@@ -49,6 +49,10 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group col='8' colspan='4'>
+                        <filter icon="terp-personal+"
+                                domain="[('user_id','=',uid)]"
+                                string="My Working Hours" name="my" default="1"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
@@ -70,7 +74,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
             <field name="filter" eval="True"/>
-            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="context">{"search_default_user_id":uid, "search_default_my": 1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
         </record>
 

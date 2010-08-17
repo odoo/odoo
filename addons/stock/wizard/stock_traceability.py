@@ -53,9 +53,9 @@ class action_traceability(osv.osv_memory):
             'field_parent': type1,
             'view_id': (view_id,'View'),
             'type': 'ir.actions.act_window'
-            }
+        }
         return value
-   
+
 action_traceability()
 
 class stock_traceability_downstream(osv.osv_memory):
@@ -66,7 +66,7 @@ class stock_traceability_downstream(osv.osv_memory):
     _name = "stock.traceability.downstream"
     _inherit = "action.traceability"
     _description = "Stock traceability downstream"
-   
+
 stock_traceability_downstream()
 
 class stock_traceability_upstream(osv.osv_memory):
@@ -77,7 +77,7 @@ class stock_traceability_upstream(osv.osv_memory):
     _name = "stock.traceability.upstream"
     _inherit = "action.traceability"
     _description = "Stock traceability upstream"
-   
+
 stock_traceability_upstream()
 
 class stock_traceability_lot_upstream(osv.osv_memory):

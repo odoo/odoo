@@ -310,7 +310,6 @@ class pos_order(osv.osv):
         'pickings': fields.one2many('stock.picking', 'pos_order', 'Picking', readonly=True),
         'picking_id': fields.many2one('stock.picking', 'Last Output Picking', readonly=True),
         'first_name': fields.char('First Name', size=64),
-#        'state_2': fields.function(_get_v,type='selection',selection=[('to_verify', 'To Verify'), ('accepted', 'Accepted'),('refused', 'Refused')], string='State', readonly=True, method=True, store=True),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
         'sale_journal': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True, ),
@@ -353,7 +352,6 @@ class pos_order(osv.osv):
         'sale_manager': lambda self, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'price_type': lambda *a: 'tax_excluded',
-#        'state_2': lambda *a: 'to_verify',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_validity': lambda *a: (DateTime.now() + DateTime.RelativeDateTime(months=+6)).strftime('%Y-%m-%d'),
@@ -479,7 +477,7 @@ class pos_order(osv.osv):
                     'invoice_state': 'none',
                     'auto_picking': True,
                     'pos_order': order.id,
-                    })
+                })
                 self.write(cr, uid, [order.id], {'picking_id': picking_id})
             else:
                 picking_id = order.picking_id.id
@@ -501,7 +499,6 @@ class pos_order(osv.osv):
                     cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order.shop_id.warehouse_id.id))
                     res=cr.fetchone()
                     location_id=res and res[0] or None
-#                    location_id = order and order.shop_id and order.shop_id.warehouse_id and order.shop_id.warehouse_id.lot_stock_id.id or None
                     stock_dest_id = val.id
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
@@ -556,28 +553,6 @@ class pos_order(osv.osv):
             raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
         return True
 
-#    def button_validate(self, cr, uid, ids, *args):
-#
-#        """ Check the access for the sale order  and update the date_validation
-#        @return: True
-#        """
-#        res_obj = self.pool.get('res.company')
-#        try:
-#            part_company=res_obj.browse(cr,uid,uid) and res_obj.browse(cr,uid,uid).parent_id and res_obj.browse######(cr,uid,uid).parent_id.id or None
-#        except Exception, e:
-#            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
-#        if part_company:
-#            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
-#        for order in self.browse(cr, uid, ids):
-#            if not order.date_validation:
-#                cr.execute("select max(date) from account_bank_statement_line where pos_statement_id=%d"%(order.id))
-#                val=cr.fetchone()
-#                val=val and val[0] or None
-#                if val:
-#                   cr.execute("Update pos_order set date_validation='%s', state_2 ='%s' where id = %d"%(val, 'accepted', order.id))
-#        return True
-
-
     def cancel_order(self, cr, uid, ids, context=None):
 
         """ Changes order state to cancel
@@ -601,11 +576,9 @@ class pos_order(osv.osv):
         if not order.num_sale and data['num_sale']:
             self.write(cr,uid,order_id,{'num_sale': data['num_sale']})
         ids_new=[]
-#        if order.invoice_wanted and not order.partner_id:
-#            raise osv.except_osv(_('Error'), _('Cannot create invoice without a partner.'))
         args = {
             'amount': data['amount'],
-            }
+        }
         if 'payment_date' in data.keys():
             args['date'] = data['payment_date']
         if 'payment_name' in data.keys():
@@ -660,7 +633,7 @@ class pos_order(osv.osv):
             'product_id': product_id,
             'qty': qty,
             'price_unit': price,
-            })
+        })
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_write(uid, 'pos.order', order_id, cr)
 
@@ -954,13 +927,15 @@ class pos_order(osv.osv):
                     for st in stat_l.move_ids:
                         for s in st.line_id:
                             if s.credit:
-                                account_move_line_obj.copy(cr, uid, s.id, { 'debit': s.credit,
-                                                                            'statement_id': False,
-                                                                            'credit': s.debit})
                                 account_move_line_obj.copy(cr, uid, s.id, {
-                                                                        'statement_id': False,
-                                                                        'account_id':order_account
-                                                                     })
+                                                        'debit': s.credit,
+                                                        'statement_id': False,
+                                                        'credit': s.debit
+                                                    })
+                                account_move_line_obj.copy(cr, uid, s.id, {
+                                                        'statement_id': False,
+                                                        'account_id':order_account
+                                                     })
 
             self.write(cr,uid,order.id,{'state':'done'})
         return True
@@ -1019,7 +994,7 @@ pos_order()
 
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
-    _columns={
+    _columns= {
         'user_id': fields.many2one('res.users',ondelete='cascade',string='User', readonly=True),
     }
     _defaults = {
@@ -1034,7 +1009,7 @@ class account_bank_statement_line(osv.osv):
         for line in self.browse(cr, uid, ids):
             res[line.id] = line.statement_id and line.statement_id.journal_id and line.statement_id.journal_id.name or None
         return res
-    _columns={
+    _columns= {
         'journal_id': fields.function(_get_statement_journal, method=True,store=True, string='Journal', type='char', size=64),
         'am_out':fields.boolean("To count"),
         'is_acc':fields.boolean("Is accompte"),
@@ -1123,7 +1098,7 @@ class pos_order_line(osv.osv):
     def onchange_dis(self, cr, uid,ids,  qty, price_subtotal_incl, discount,*a):
         price_sub = price_subtotal_incl
         sub_total_discount = price_sub-(price_subtotal_incl*(discount*0.01))
-        return {'value': {'price_subtotal_incl':sub_total_discount}}    
+        return {'value': {'price_subtotal_incl':sub_total_discount}}
 
     def onchange_ded(self, cr, uid,ids, val_ded,price_u,*a):
         pos_order = self.pool.get('pos.order.line')
@@ -1154,6 +1129,13 @@ class pos_order_line(osv.osv):
                 return {'value': {'notice':'Minimum Discount','price_ded':price*discount*0.01 or 0.0  }}
         else :
             return {'value': {'notice':'No Discount', 'price_ded':price*discount*0.01 or 0.0}}
+        
+    def onchange_qty(self, cr, uid, ids, discount, qty, price, context=None):
+        subtotal = qty * price
+        if discount:
+            subtotal = subtotal - (subtotal * discount / 100)
+        return {'value': {'price_subtotal_incl': subtotal}}
+    
     _columns = {
         'name': fields.char('Line Description', size=512),
         'company_id':fields.many2one('res.company', 'Company', required=True),
@@ -1169,7 +1151,7 @@ class pos_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits=(16, 2)),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        }
+    }
 
     _defaults = {
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order.line'),
@@ -1179,17 +1161,6 @@ class pos_order_line(osv.osv):
         'notice': lambda *a: 'No Discount',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         }
-
-#    def _check_qty(self, cr, uid, ids):
-#        lines = self.browse(cr, uid, ids)
-#        for line in lines:
-#            if line.qty <= 0:
-#                return False
-#        return True
-
-#    _constraints = [
-#        (_check_qty, 'Order quantity cannot be negative or zero !', ['qty']),
-#    ]
 
     def create(self, cr, user, vals, context={}):
         if vals.get('product_id'):
@@ -1230,7 +1201,7 @@ class pos_order_line(osv.osv):
                     'qty': qty,
                     'name': product_name,
                     'order_id': order,
-                   }
+            }
             line_id = self.create(cr, uid, vals)
             if not line_id:
                 raise osv.except_osv(_('Error'), _('Create line failed !'))
@@ -1245,7 +1216,13 @@ class pos_order_line(osv.osv):
             line_id = order_line_id
 
         price_line = float(qty)*float(price)
-        return {'name': product_name, 'product_id': product_id[0], 'price': price, 'price_line': price_line ,'qty': qty }
+        return {
+            'name': product_name,
+            'product_id': product_id[0],
+            'price': price,
+            'price_line': price_line ,
+            'qty': qty
+        }
 
 pos_order_line()
 
@@ -1346,10 +1323,10 @@ class product_product(osv.osv):
         'expense_pdt': fields.boolean('Product for expenses'),
         'am_out': fields.boolean('Controle for Outgoing Operations'),
         'disc_controle': fields.boolean('Discount Controle '),
-}
+    }
     _defaults = {
         'disc_controle': lambda *a: True,
-}
+    }
 product_product()
 
 class stock_picking(osv.osv):

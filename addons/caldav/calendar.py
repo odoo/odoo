@@ -75,9 +75,9 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
         return (False, None)
 
 def openobjectid2uid(cr, uidval, oomodel):
-    """ Open Object Id To UId
+    """ Gives the value of UID for VEVENT
         @param cr: the current row, from the database cursor,
-        @param uidval: Get USerId vale
+        @param uidval: Id value of the Event
         @oomodel: Open Object ModelName """
 
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
@@ -322,11 +322,9 @@ class CalDAV(object):
                 continue
             if cal_data.name.lower() in self.__attribute__:
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
-                    # since we do convert, do we also need to save the original tzid?
-                    # self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
-                    
-                    date_local = cal_data.value.astimezone(_server_tzinfo)
-                    self.ical_set(cal_data.name.lower(), date_local, 'value')
+                    self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
+                    date_utc = cal_data.value.astimezone(pytz.utc)
+                    self.ical_set(cal_data.name.lower(), date_utc, 'value')
                     continue
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self, context=context)
@@ -456,9 +454,16 @@ class CalDAV(object):
         recur_pool = {}
         try:
             for val in vals:
-                exists, r_id = uid2openobjectid(cr, val['id'], context.get('model'), \
+                # Compute value of duration
+                if 'date_deadline' in val and 'duration' not in val:
+                    start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
+                    end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
+                    diff = end - start
+                    val['duration'] = (diff.seconds/float(86400) + diff.days) * 24
+                exists, r_id = calendar.uid2openobjectid(cr, val['id'], context.get('model'), \
                                                                  val.get('recurrent_id'))
-                if val.has_key('create_date'): val.pop('create_date')
+                if val.has_key('create_date'):
+                    val.pop('create_date')
                 u_id = val.get('id', None)
                 val.pop('id')
                 if exists and r_id:
@@ -474,6 +479,11 @@ class CalDAV(object):
                         revent_id = model_obj.create(cr, uid, val)
                         ids.append(revent_id)
                     else:
+                        __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
+                        wematch = __rege.match(u_id.encode('utf8'))
+                        if wematch:
+                            model, recur_id, dbname = wematch.groups()
+                        val.update({'recurrent_uid': recur_id})
                         event_id = model_obj.create(cr, uid, val)
                         recur_pool[u_id] = event_id
                         ids.append(event_id)

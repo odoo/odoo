@@ -27,10 +27,10 @@ class pos_payment_report_user(report_sxw.rml_parse):
         super(pos_payment_report_user, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'pos_payment_user': self.__pos_payment_user__,
-                'pos_payment_user_total':self.__pos_payment_user__total__,
-                })
+            'time': time,
+            'pos_payment_user': self.__pos_payment_user__,
+            'pos_payment_user_total':self.__pos_payment_user__total__,
+        })
 
     def __pos_payment_user__(self,form):
         data={}

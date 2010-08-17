@@ -400,11 +400,11 @@
             <field name="arch" type="xml">
                 <search string="Stock Locations">
                     <filter icon="terp-go-home" name="in_location"
-                        string="Internal" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" />
+                        string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations" />
                     <filter icon="terp-go-home" name="customer"
-                        string="Customer" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
+                        string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations" />
                     <filter icon="terp-go-home" name="supplier"
-                        string="Supplier" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
+                        string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations" />
                     <separator orientation="vertical"/>
                     <field name="name"/>
                 </search>
@@ -433,6 +433,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_location_tree2"/>
+            <field name="search_view_id" ref="view_location_search"/>
             <field name="context">{'full':1, 'search_default_in_location':1}</field>
         </record>
         <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config" groups="base.group_system"/>
@@ -1636,7 +1637,7 @@
                         <filter string="Order" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" />
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" />
                     </group>
                     <newline/>
                     <group expand="0" string="Extended options..." groups="base.group_extended">
@@ -1670,8 +1671,6 @@
             <field name="view_id" ref="view_move_form_reception_picking"/>
             <field name="act_window_id" ref="action_reception_picking_move"/>
         </record>
-<!--        <menuitem action="action_reception_picking_move" id="menu_action_reception_picking_move" parent="menu_stock_warehouse_mgmt" sequence="4"/>-->
-
 
         # -------------------------------------------------------------
         # Stock incoterms
@@ -1706,7 +1705,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_warehouse_config"/>-->
 
         <act_window
             context="{'location': active_id}"

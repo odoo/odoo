@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import datetime
 import time
 
@@ -76,7 +77,7 @@ class account_followup_print_all(osv.osv_memory):
         'partner_ids': fields.many2many('account_followup.stat', 'partner_stat_rel', 'followup_id', 'stat_id', 'Partners', required=True),
         'email_conf': fields.boolean('Send email confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
-        'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configre from company'),
+        'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email body'),
         'summary': fields.text('Summary', required=True, readonly=True)
                 }

@@ -144,7 +144,26 @@ class account_move_line(osv.osv):
             del(data['account_tax_id'])
         return data
 
+    def convert_to_period(self, cr, uid, context={}):
+        period_obj = self.pool.get('account.period')
+
+        #check if the period_id changed in the context from client side
+        if context.get('period_id', False):
+            period_id = context.get('period_id')
+            if type(period_id) == str:
+                ids = period_obj.search(cr, uid, [('name','ilike',period_id)])
+                context.update({
+                    'period_id':ids[0]
+                })
+
+        return context
+
     def _default_get(self, cr, uid, fields, context={}):
+
+        period_obj = self.pool.get('account.period')
+
+        context = self.convert_to_period(cr, uid, context)
+
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
         # Starts: Manual entry from account.move form
@@ -184,8 +203,6 @@ class account_move_line(osv.osv):
 
         if not 'move_id' in fields: #we are not in manual entry
             return data
-
-        period_obj = self.pool.get('account.period')
 
         # Compute the current move
         move_id = False
@@ -555,18 +572,18 @@ class account_move_line(osv.osv):
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
                 #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
-                # Bank and cash journal can have a payment or receipt transection, and in both type partner account 
+                # Bank and cash journal can have a payment or receipt transection, and in both type partner account
                 # will not be same id payment then payable, and if receipt then receivable
                 #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
                 if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id2)
                 elif jt in ('purchase', 'sale_refund', 'expense', 'bank', 'cash'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id1)
-                
+
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
-                
+
         return {'value':val}
 
     def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False):
@@ -783,6 +800,7 @@ class account_move_line(osv.osv):
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context):
+        context = self.convert_to_period(cr, user, context)
         if context.get('account_id', False):
             cr.execute('select code from account_account where id=%s', (context['account_id'],))
             res = cr.fetchone()
@@ -824,8 +842,22 @@ class account_move_line(osv.osv):
         }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
+        journal_pool = self.pool.get('account.journal')
+
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
+            #Remove the toolbar from the form view
+            if view_type == 'form':
+                if result.get('toolbar', False):
+                    result['toolbar']['action'] = []
+
+            #Restrict the list of journal view in search view
+            if view_type == 'search':
+                journal_list = journal_pool.name_search(cr, uid, '', [], context=context)
+                result['fields']['journal_id']['selection'] = journal_list
+            return result
+
+        if context.get('view_mode', False):
             return result
 
         fld = []
@@ -833,7 +865,6 @@ class account_move_line(osv.osv):
         flds = []
         title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
-        journal_pool = self.pool.get('account.journal')
 
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
@@ -882,14 +913,14 @@ class account_move_line(osv.osv):
             attrs = []
             if field == 'debit':
                 attrs.append('sum="Total debit"')
-                
+
             elif field == 'credit':
                 attrs.append('sum="Total credit"')
-                
+
             elif field == 'account_tax_id':
                 attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
                 attrs.append("context=\"{'journal_id':journal_id}\"")
-                
+
             elif field == 'account_id' and journal.id:
                 attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
 
@@ -907,7 +938,7 @@ class account_move_line(osv.osv):
 
             if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
-            
+
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
 
