@@ -94,7 +94,7 @@ class lunch_cashmove(osv.osv):
     _description = "Cash Move"
 
     _columns = {
-        'name': fields.char('Name', size=128),
+        'name': fields.char('Description', size=128),
         'user_cashmove': fields.many2one('res.users', 'User Name', required=True),
         'amount': fields.float('Amount', digits=(16, 2)),
         'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, required=True),
