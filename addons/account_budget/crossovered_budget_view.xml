@@ -78,14 +78,14 @@
                         <page string="Budget Lines">
                             <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
                                 <graph type="bar" string="Lines">
-                                    <field name="analytic_account_id" />
+                                    <field name="analytic_account_id" groups="base.group_extended"/>
                                     <!--<field name="general_budget_id" operator="+" />-->
                                     <field name="planned_amount" operator="+"/>
                                     <field group="True" name="general_budget_id"/>
                                 </graph>
                                 <tree string="Budget Lines"  editable="top">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
@@ -96,7 +96,7 @@
                                 </tree>
                                 <form string="Budget Lines">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
@@ -126,7 +126,7 @@
                             <field name="date_to"/>
                             <field name="crossovered_budget_line" colspan="4" nolabel="1">
                                 <tree string="Budget Lines">
-                                    <field name="analytic_account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended"/>
                                     <field name="general_budget_id"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
@@ -137,7 +137,7 @@
                                     <field name="percentage"/>
                                 </tree>
                                 <form string="Budget Lines">
-                                    <field name="analytic_account_id" select="1"/>
+                                    <field name="analytic_account_id" select="1" groups="base.group_extended"/>
                                     <field name="general_budget_id" select="1"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
@@ -163,7 +163,7 @@
             <field name="model">crossovered.budget</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	 <tree colors="blue:state in ('draft');gray:state in ('done','cancel');black:state in ('confirm','validate')" string="Budget">
+               <tree colors="blue:state in ('draft');gray:state in ('done','cancel');black:state in ('confirm','validate')" string="Budget">
                     <field name="name" colspan="1" select="1"/>
                     <field name="code" colspan="1" select="1" />
                     <field name="state"/>
@@ -211,7 +211,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budget Lines">
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="base.group_extended"/>
                     <field name="general_budget_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -230,7 +230,7 @@
             <field name="arch" type="xml">
                 <form string="Budget Lines">
                     <field name="crossovered_budget_id"/>
-                    <field name="analytic_account_id" select="1"/>
+                    <field name="analytic_account_id" select="1" groups="base.group_extended"/>
                     <field name="general_budget_id" select="1"/>
                     <field name="date_from"/>
                     <field name="date_to"/>

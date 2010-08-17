@@ -7,7 +7,7 @@
         <menuitem id="menu_finance_payables" name="Payables" parent="menu_finance" sequence="2" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="menu_finance_bank_and_cash" name="Bank and Cash" parent="menu_finance" sequence="3"/>
 <!--        <menuitem id="menu_accounting" name="Accounting" parent="menu_finance" sequence="5"/>-->
-        <menuitem id="menu_finance_periodical_processing" name="Periodical Processing" parent="menu_finance" sequence="8"/>
+        <menuitem id="menu_finance_periodical_processing" name="Periodical Processing" parent="menu_finance" sequence="8" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="periodical_processing_journal_entries_validation" name="Draft Entries" parent="menu_finance_periodical_processing" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="periodical_processing_reconciliation" name="Reconciliation" parent="menu_finance_periodical_processing"/>
 <!--            <menuitem id="periodical_processing_recurrent_entries" name="Recurrent Entries" parent="menu_finance_periodical_processing"/>-->
@@ -20,8 +20,8 @@
         <menuitem id="menu_finance_management_belgian_reports" name="Belgian Reports" parent="menu_finance_reporting"/>
         <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="13" groups="base.group_system"/>
         <menuitem id="menu_finance_accounting" name="Financial Accounting" parent="menu_finance_configuration"/>
-        <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration"/>
-        <menuitem id="menu_analytic" parent="menu_analytic_accounting" name="Accounts"/>
+        <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="base.group_extended"/>
+        <menuitem id="menu_analytic" parent="menu_analytic_accounting" name="Accounts" groups="base.group_extended"/>
         <menuitem id="menu_low_level" name="Low Level" parent="menu_finance_accounting" groups="base.group_extended"/>
         <menuitem id="menu_configuration_misc" name="Miscellaneous" parent="menu_finance_configuration"/>
         <menuitem id="base.menu_action_currency_form" parent="menu_configuration_misc" sequence="20"/>
