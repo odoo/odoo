@@ -16,7 +16,7 @@
 <hbox id="root">
    <vbox width="400">
       <groupbox height="30" id="existsobjectgroup" width="400">
-         <caption label="&gptinyobj.label;" />
+         <caption label="&gptinyobj.label;"/>
 	   <hbox>
 	   <label id="lblsearch" control="txtvalueobj" value="&search.label;"/>
 	   <textbox id="txtvalueobj" size="30"/>
@@ -26,8 +26,7 @@
 	  </vbox> 
 	  <hbox align="center">
 	   <image src='chrome://tiny_plugin/skin/perform.gif'/>
-	    <checkbox id="cbxselectall" oncommand="selectAllCheckbox();" checked="false"/>
-        <caption label="&cbxselectall.label;" />
+	    <checkbox id="cbxselectall" oncommand="selectAllCheckbox();" label="&cbxselectall.label;" checked="false"/>
 	    <spacer width="10"/>
       
 	  </hbox>
@@ -54,7 +53,6 @@
       <groupbox id="newobjectgroup" align="center" width="170" height="375">
 	<caption label="&newobject.label;" />
 	<hbox>
-	<label id="lblex" value=" "/>
          <label id="lblex3" control="section" value="&object.label;"/>
          <menulist id="section" width="150">
            <menupopup>
@@ -81,7 +79,7 @@
   <label id="lblex" value=" "/>
   <label id="lblex" value=" "/>
   <hbox align="right">
-  <spacer width="330"/>
+  <spacer width="300"/>
 	    <button label="&close.label;" accesskey="l" image="&imagecancel.value;" oncommand="win_close();"/>
     </hbox>
     
