@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import fields, osv
@@ -34,15 +35,15 @@ class account_invoice_pay_writeoff(osv.osv_memory):
         'writeoff_acc_id': fields.many2one('account.account', 'Write-Off account', required=True),
         'writeoff_journal_id': fields.many2one('account.journal', 'Write-Off journal', required=True),
         'comment': fields.char('Comment', size=64, required=True),
-        'analytic_id': fields.many2one('account.analytic.account','Analytic Account'),
+        'analytic_id': fields.many2one('account.analytic.account','Analytic Account')
         }
     _defaults = {
         'comment': 'Write-Off',
-        }
+    }
 
     def pay_and_reconcile_writeoff(self, cr, uid, ids, context=None):
-        data =  self.read(cr, uid, ids,context=context)[0]
-        context.update({'write_off':data})
+        data = self.read(cr, uid, ids, context=context)[0]
+        context.update({'write_off': data})
         self.pool.get('account.invoice.pay').pay_and_reconcile(cr, uid, ids, context=context)
         return {}
 
@@ -60,26 +61,33 @@ class account_invoice_pay(osv.osv_memory):
         'date': fields.date('Date payment', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal/Payment Mode', required=True, domain=[('type','=','cash')]),
         'period_id': fields.many2one('account.period', 'Period', required=True),
-        }
+    }
 
     def view_init(self, cr, uid, ids, context=None):
-        invoice = self.pool.get('account.invoice').browse(cr, uid, context['active_id'], context=context)
-        if invoice.state in ['draft', 'proforma2', 'cancel']:
-            raise osv.except_osv(_('Error !'), _('Can not pay draft/proforma/cancel invoice.'))
+        if context is None:
+            context = {}
+        if context.get('active_id', False):
+            invoice = self.pool.get('account.invoice').browse(cr, uid, context['active_id'], context=context)
+            if invoice.state in ['draft', 'proforma2', 'cancel']:
+                raise osv.except_osv(_('Error !'), _('Can not pay draft/proforma/cancel invoice.'))
         pass
 
     def _get_period(self, cr, uid, context=None):
-        ids = self.pool.get('account.period').find(cr, uid, context=context)
         period_id = False
+        ids = self.pool.get('account.period').find(cr, uid, context=context)
         if len(ids):
             period_id = ids[0]
         return period_id
 
     def _get_amount(self, cr, uid, context=None):
-        return self.pool.get('account.invoice').browse(cr, uid, context['active_id'], context=context).residual
+        if context is None:
+            context = {}
+        if context.get('active_id', False):
+            return self.pool.get('account.invoice').browse(cr, uid, context['active_id'], context=context).residual
+        return 0.0
 
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
         'period_id': _get_period,
         'amount': _get_amount,
         }
@@ -87,10 +95,11 @@ class account_invoice_pay(osv.osv_memory):
     def wo_check(self, cr, uid, ids, context=None):
         cur_obj = self.pool.get('res.currency')
         mod_obj = self.pool.get('ir.model.data')
+        inv_obj = self.pool.get('account.invoice')
         if context is None:
             context = {}
         data =  self.read(cr, uid, ids,context=context)[0]
-        invoice = self.pool.get('account.invoice').browse(cr, uid, context['active_id'], context)
+        invoice = inv_obj.browse(cr, uid, context['active_id'], context)
         journal = self.pool.get('account.journal').browse(cr, uid, data['journal_id'], context)
 
        # Here we need that:
@@ -114,11 +123,11 @@ class account_invoice_pay(osv.osv_memory):
             amount_paid = data['amount']
         # Get the old payment if there are some
         if invoice.payment_ids:
-            debit=credit=0.0
+            debit = credit = 0.0
             for payment in invoice.payment_ids:
-                debit+=payment.debit
-                credit+=payment.credit
-            amount_paid+=abs(debit-credit)
+                debit += payment.debit
+                credit += payment.credit
+            amount_paid += abs(debit-credit)
 
         # Test if there is a difference according to currency rouding setting
         if self.pool.get('res.currency').is_zero(cr, uid, invoice.company_id.currency_id,
@@ -136,10 +145,11 @@ class account_invoice_pay(osv.osv_memory):
                 'views': [(resource_id,'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-            }
+        }
 
     def pay_and_reconcile(self, cr, uid, ids, context=None):
         cur_obj = self.pool.get('res.currency')
+        inv_obj = self.pool.get('account.invoice')
         if context is None:
             context = {}
         data =  self.read(cr, uid, ids, context=context)[0]
@@ -154,8 +164,8 @@ class account_invoice_pay(osv.osv_memory):
 
         amount = data['amount']
 
-        invoice = self.pool.get('account.invoice').browse(cr, uid, context['active_id'], context)
-        journal = self.pool.get('account.journal').browse(cr, uid, data['journal_id'], context)
+        invoice = inv_obj.browse(cr, uid, context['active_id'], context=context)
+        journal = self.pool.get('account.journal').browse(cr, uid, data['journal_id'], context=context)
         # Compute the amount in company's currency, with the journal currency (which is equal to payment currency)
         # when it is needed :  If payment currency (according to selected journal.currency) is <> from company currency
         if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
@@ -181,7 +191,7 @@ class account_invoice_pay(osv.osv_memory):
         acc_id = journal.default_credit_account_id and journal.default_credit_account_id.id
         if not acc_id:
             raise osv.except_osv(_('Error !'), _('Your journal must have a default credit and debit account.'))
-        self.pool.get('account.invoice').pay_and_reconcile(cr, uid, [context['active_id']],
+        inv_obj.pay_and_reconcile(cr, uid, [context['active_id']],
                 amount, acc_id, data['period_id'], data['journal_id'], writeoff_account_id,
                 data['period_id'], writeoff_journal_id, context, data['name'])
         return {}
