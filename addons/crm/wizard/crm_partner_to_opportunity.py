@@ -58,12 +58,6 @@ class crm_partner2opportunity(osv.osv_memory):
                 res.update({'partner_id': data and data[0] or False})
         return res
 
-    def _select_data(self, cr, uid, data, context):
-        part_obj = self.pool.get('res.partner')
-        part = part_obj.read(cr, uid, data['id' ], ['name'])
-        return {'partner_id' : data['id'], 'name' : part['name'] }
-
-
     def make_opportunity(self, cr, uid, ids, context):
         """
         @param self: The object pointer
