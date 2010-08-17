@@ -73,6 +73,35 @@ class crm_case(object):
             return False
         return user.address_id.partner_id.id
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Overrides orm copy method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: Id of mailgate thread
+        @param default: Dictionary of default values for copy.
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        default.update({
+                    'message_ids': [], 
+                })
+        if hasattr(self, '_columns'):
+            if self._columns.get('date_closed'):
+                default.update({
+                    'date_closed': False, 
+                })
+            if self._columns.get('date_open'):
+                default.update({
+                    'date_open': False
+                })
+        return super(osv.osv, self).copy(cr, uid, id, default, context=context)
+    
     def _get_default_email(self, cr, uid, context):
         """Gives default email address for current user
         @param self: The object pointer

@@ -36,7 +36,7 @@ CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_lead(osv.osv, crm_case):
+class crm_lead(crm_case, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead"
