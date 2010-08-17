@@ -1356,6 +1356,10 @@
             res_model="account.move.line"
             src_model="account.move"/>
 
+	    <record id="account.act_account_move_to_account_move_line_open" model="ir.actions.act_window">
+	        <field eval="[(6,0,[ref('account.group_accounting_accountant')])]" name="groups_id"/>
+	    </record>
+
 <!--        <record id="action_move_to_review" model="ir.actions.act_window">-->
 <!--            <field name="name">Journal Entries</field>-->
 <!--            <field name="type">ir.actions.act_window</field>-->
