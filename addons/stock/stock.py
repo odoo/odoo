@@ -1391,7 +1391,7 @@ class stock_move(osv.osv):
         if context.get('move_line', []):
             if context['move_line'][0]:
                 if isinstance(context['move_line'][0], (tuple, list)):
-                    return context['move_line'][0][2] and context['move_line'][0][2]['location_dest_id'] or False
+                    return context['move_line'][0][2] and context['move_line'][0][2].get('location_dest_id',False) 
                 else:
                     move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0], ['location_dest_id'])
                     return move_list and move_list['location_dest_id'][0] or False
