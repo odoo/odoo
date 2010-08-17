@@ -1050,9 +1050,10 @@ class orm_template(object):
     def default_get(self, cr, uid, fields_list, context=None):
         """
         Returns default values for the fields in fields_list.
+
         :param fields_list: list of fields to get the default values for (example ['field1', 'field2',])
         :type fields_list: list
-        :param context: usual context dictionary - it may contains keys in the form ``default_XXX`` 
+        :param context: usual context dictionary - it may contains keys in the form ``default_XXX``,
                         where XXX is a field name to set or override a default value.
         :return: dictionary of the default values (set on the object model class, through user preferences, or in the context)
         """
