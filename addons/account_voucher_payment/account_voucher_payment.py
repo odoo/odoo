@@ -70,7 +70,7 @@ account_move_line()
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
     _columns = {
-        'voucher_line_ids':fields.one2many('account.voucher.line', 'voucher_id', 'Voucher Lines', readonly=True, states={'draft':[('readonly',False)]}),
+        'payment_ids':fields.one2many('account.voucher.line', 'voucher_id', 'Voucher Lines', readonly=True, states={'draft':[('readonly',False)]}),
     }
 
     def action_move_line_create(self, cr, uid, ids, *args):
@@ -233,8 +233,7 @@ class account_voucher_line(osv.osv):
         return data
 
     _columns = {
-#        'invoice_id' : fields.many2one('account.invoice','Invoice'),
-        'move_id' : fields.many2one('account.move','Journal Entry'),
+        'move_id' : fields.many2one('account.move','Bill / Invoice'),
     }
 
     def move_line_get_item(self, cr, uid, line, context={}):

@@ -8,14 +8,14 @@
             <field name="inherit_id" ref="account_voucher.view_voucher_form"/>
             <field name="arch" type="xml">
                 <field name="payment_ids" position="replace">
-                    <field name="voucher_line_ids" colspan="4" nolabel="1" height="200">
+                    <field name="payment_ids" colspan="4" nolabel="1" height="200">
                         <tree string="Voucher Lines" editable="top">
-                            <field name="name" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
-                            <field name="account_id"/>
-                            <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
+<!--                            <field name="name"/>-->
+                            <field name="ref" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
                             <field name="move_id" context="{'ttype':parent.type, 'partner_id':parent.partner_id, 'voucher':True}" on_change="onchange_invoice_id(move_id, parent.currency_id)" domain="[('state','=','posted'), ('partner_id','=',parent.partner_id)]"/>
                             <field name="amount"/>
-                            <field name="ref"/>
+                            <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
+                            <field name="account_id"/>
                             <field name="account_analytic_id"/>
                         </tree>
                     </field>
