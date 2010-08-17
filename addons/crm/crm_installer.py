@@ -40,7 +40,7 @@ class crm_installer(osv.osv_memory):
         'sale_crm': fields.boolean('Opportunity to Quotation', help="This module relates sale to opportunity cases in the CRM."),
         'fetchmail': fields.boolean('Fetch Emails', help="Fetchmail Server."),
         'thunderbird': fields.boolean('Thunderbird', help="Thunderbird Interface."),
-        'outlook': fields.boolean('MS-Outlook', help="MS-Outlook Interface."),
+        'outlook': fields.boolean('MS-Outlook', help="Microsoft Office Outlook Interface."),
         'wiki_sale_faq': fields.boolean('Sale FAQ', help="Sale FAQ."),
     }
 
