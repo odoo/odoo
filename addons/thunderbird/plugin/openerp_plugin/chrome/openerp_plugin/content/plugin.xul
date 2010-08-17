@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
-<?xml-stylesheet href="chrome://openerp_plugin/skin/line.css" type="text/css"?>
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/plugin.dtd">
 <window id="pluginwindows" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.loaddata()" height="480" width="1000">
+	title="&title.label;" onload="myPrefObserver.loaddata()" height="500" width="1000">
 
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
@@ -14,74 +13,77 @@
 <script type="text/javascript" src="chrome://openerp_plugin/content/exportTools.js"></script>
 <description></description>
 <hbox id="root">
-   <vbox width="400">
-      <groupbox height="30" id="existsobjectgroup" width="400">
-         <caption label="&gptinyobj.label;"/>
-	   <hbox>
-	   <label id="lblsearch" control="txtvalueobj" value="&search.label;"/>
-	   <textbox id="txtvalueobj" size="30"/>
-	   <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s"/> 
-	   </hbox>
-	   <vbox align="left" id="checkbox-dynamic"> 
-	  </vbox> 
-	  <hbox align="center">
-	   <image src='chrome://tiny_plugin/skin/perform.gif'/>
-	    <checkbox id="cbxselectall" oncommand="selectAllCheckbox();" label="&cbxselectall.label;" checked="false"/>
-	    <spacer width="10"/>
+   <vbox width="50%" >
+      <groupbox height="30" id="existsobjectgroup" width="100%" style="border:1;">
+            <caption label="&gptinyobj.label;" />
+	        <hbox>
+	            <label id="lblsearch" control="txtvalueobj" value="&search.label;"/>
+	            <textbox id="txtvalueobj" size="30"/>
+	            <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s"/> 
+	        </hbox>
+	        <vbox align="left" id="checkbox-dynamic"> 
+	        </vbox> 
+	        <hbox align="left">
+	            <image src='chrome://openerp_plugin/skin/perform.gif'/>
+	            <checkbox id="cbxselectall" oncommand="selectAllCheckbox();" label="&cbxselectall.label;" checked="false"/>
       
-	  </hbox>
-    <label id="lblex" value=" "/>
-    <hbox>
-    <description>Documents</description>
-    </hbox>
-	<listbox height="250" id="listSearchBox" seltype="multiple">
-	    <listhead >
-	    	<listheader label="&listSearchBox.header;"/>
-	    </listhead>
-	    <listcols>
-	    	<listcol  flex="1"/>
-	    </listcols>
-	</listbox>
-	<hbox>
-	<spacer width="360"/>
-	<button label="&attach.label;" accesskey="u" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('upload');"/>
-	</hbox>
+	        </hbox>
+            <hbox>
+                <description>Documents</description>
+            </hbox>
+            <vbox>
+            <hbox style="border:1;overflow: auto;" height="250" width="100%">
+	        <listbox height="250" width="510" id="listSearchBox" seltype="multiple">
+	            <listhead >
+	    	        <listheader label="&listSearchBox.header;"/>
+	            </listhead>
+	            <listcols>
+	    	        <listcol  flex="1"/>
+	            </listcols>
+	        </listbox>
+            </hbox>
+	        <hbox align="right">
+	            <button label="&attach.label;" accesskey="u" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('upload');"/>
+	        </hbox>
+            </vbox>
       </groupbox>
-
    </vbox>
-   <vbox>
-      <groupbox id="newobjectgroup" align="center" width="170" height="375">
-	<caption label="&newobject.label;" />
-	<hbox>
-         <label id="lblex3" control="section" value="&object.label;"/>
-         <menulist id="section" width="150">
-           <menupopup>
-	     <menuitem label="" value=""/>
-   	    </menupopup>
-      	  </menulist>
-        <vbox>
-      	  <button width="50" label="&archive.label;" accesskey="c" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('create');"/>
-        </vbox>
-	</hbox>
+   <vbox width="50%"  align="left">
+        <groupbox id="newobjectgroup" align="left" width="100%" height="375" style="border:3x solid #666666;">
+	        <caption label="&newobject.label;" />
+	        <hbox align="left">
+                <vbox>
+                    <label id="lblex3" align="right" width="135" control="section" value="&object.label;"/>
+                </vbox>
+                <vbox>
+                    <menulist id="section" width="150">
+                    <menupopup>
+	                    <menuitem label="" value=""/>
+   	                </menupopup>
+      	            </menulist>
+                </vbox>
+                <vbox>
+      	            <button width="50" label="&archive.label;" accesskey="c" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('create');"/>
+                </vbox>
+	        </hbox>
 
-	<label id="lblsection" value=" "/>	
-	<separator class="groove-thin" orient="horizontal" width="180"/>
-
-    
-    <hbox>
-	<label id="lblsection" control="section" value="&partner.label;"/>
-        <vbox>
-	    <button label="&create.label;" image="&imagecreate.value;" oncommand="Create.onMenuItemCommand(event);"/>
-        </vbox>
-    </hbox>
+	        <!-- <label id="lblsection" value=" "/>	-->
+	        <separator class="groove-thin" orient="horizontal" width="180"/>
+   
+            <hbox align="left">
+                <vbox>
+	                <label align="right" width="135" id="lblsection" control="section" value="&partner.label;"/>
+                </vbox>
+                <vbox>
+	                <button label="&create.label;" image="&imagecreate.value;" oncommand="Create.onMenuItemCommand(event);"/>
+                </vbox>
+            </hbox>
   
  </groupbox>
-  <label id="lblex" value=" "/>
-  <label id="lblex" value=" "/>
-  <hbox align="right">
-  <spacer width="300"/>
+  <separator class="groove-thin" orient="horizontal" width="1000"/> 
+  <hbox align="right" width="1000">
 	    <button label="&close.label;" accesskey="l" image="&imagecancel.value;" oncommand="win_close();"/>
-    </hbox>
+   </hbox>
     
   
   </vbox>
