@@ -575,14 +575,17 @@ class marketing_campaign_workitem(osv.osv):
 
             if result:
                 # process _chain
+                workitem = workitem.browse(context)[0] # reload
+                date = datetime.strptime(workitem.date, DT_FMT)
+
                 for transition in activity.to_ids:
                     if transition.trigger == 'cosmetic':
                         continue
                     launch_date = False
                     if transition.trigger == 'auto':
-                        launch_date = datetime.now()
+                        launch_date = date
                     elif transition.trigger == 'time':
-                        launch_date = datetime.now() + transition._delta()
+                        launch_date = date + transition._delta()
 
                     if launch_date:
                         launch_date = launch_date.strftime(DT_FMT)
