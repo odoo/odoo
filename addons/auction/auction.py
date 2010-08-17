@@ -618,7 +618,7 @@ class auction_lots(osv.osv):
                     'price_unit': lot.obj_price, 
                 }
                 inv_line_obj.create(cr, uid, inv_line, context)
-            inv_ref.button_compute(cr, uid, invoice.values())
+            inv_ref.button_compute(cr, uid, invoices.values())
             wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_proforma2', cr)
         return invoices.values()
 

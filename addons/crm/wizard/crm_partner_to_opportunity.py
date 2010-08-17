@@ -59,8 +59,7 @@ class crm_partner2opportunity(osv.osv_memory):
         return res
 
     def _select_data(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        part_obj = pool.get('res.partner')
+        part_obj = self.pool.get('res.partner')
         part = part_obj.read(cr, uid, data['id' ], ['name'])
         return {'partner_id' : data['id'], 'name' : part['name'] }
 
