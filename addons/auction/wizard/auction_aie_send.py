@@ -22,12 +22,13 @@
 #
 # Does not properly work concurrently !!!
 #
-import base64
-import mimetypes
-import httplib
-import threading
-from tools.translate import _
 from osv import fields,osv
+from tools.translate import _
+import base64
+import httplib
+import mimetypes
+import netsvc
+import threading
 
 class auction_lots_send_aie(osv.osv_memory):
     _name = 'auction.lots.send.aie'
@@ -146,7 +147,7 @@ class auction_lots_send_aie(osv.osv_memory):
             if len(datas):
                 bin = base64.decodestring(datas[0]['image'])
                 fname = datas[0]['name']
-                _photo_bin_send(uname, passwd, ref, did, fname, bin)
+                self._photo_bin_send(uname, passwd, ref, did, fname, bin)
     
     def get_dates(self, cr, uid, ids, context={}):
         import httplib

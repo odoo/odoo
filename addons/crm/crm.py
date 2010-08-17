@@ -73,6 +73,35 @@ class crm_case(object):
             return False
         return user.address_id.partner_id.id
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Overrides orm copy method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: Id of mailgate thread
+        @param default: Dictionary of default values for copy.
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        default.update({
+                    'message_ids': [], 
+                })
+        if hasattr(self, '_columns'):
+            if self._columns.get('date_closed'):
+                default.update({
+                    'date_closed': False, 
+                })
+            if self._columns.get('date_open'):
+                default.update({
+                    'date_open': False
+                })
+        return super(osv.osv, self).copy(cr, uid, id, default, context=context)
+    
     def _get_default_email(self, cr, uid, context):
         """Gives default email address for current user
         @param self: The object pointer
@@ -450,6 +479,20 @@ class crm_case(object):
 
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
+
+    def message_followers(self, cr, uid, ids, context=None):
+        """ Get a list of emails of the people following this thread
+        """
+        res = {}
+        for case in self.browse(cr, uid, ids, context=context):
+            l=[]
+            if case.email_cc:
+                l.append(case.email_cc)
+            if case.user_id:
+                l.append(case.user_id.email)
+            res[case.id] = l
+        return res
+
 
 class crm_case_section(osv.osv):
     """Sales Team"""

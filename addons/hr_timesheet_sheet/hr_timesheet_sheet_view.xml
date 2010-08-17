@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by Accounts">
                     <field name="sheet_id" select="1"/>
-                    <field name="name" select="1"/>
+                    <field name="name" select="1" groups="base.group_extended"/>
                     <field name="total" sum="Total"/>
                     <field name="invoice_rate"/>
                 </form>
@@ -53,7 +53,7 @@
             <field name="arch" type="xml">
                 <tree string="Timesheet by Accounts">
                     <field name="sheet_id"/>
-                    <field name="name"/>
+                    <field name="name" groups="base.group_extended"/>
                     <field name="total" sum="Total"/>
                     <field name="invoice_rate"/>
                 </tree>

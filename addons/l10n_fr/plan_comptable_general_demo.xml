@@ -14,7 +14,6 @@
         <record id="account_type_dettes" model="account.account.type">
             <field name="name">Dettes long terme</field>
             <field name="code">dettes</field>
-            <!-- <field name="report_type">?</field> -->
             <field name="close_method">balance</field>
         </record>
 
@@ -35,7 +34,6 @@
         <record id="account_type_cloture" model="account.account.type">
             <field name="name">Cloture</field>
             <field name="code">cloture</field>
-            <!-- <field name="report_type">?</field> -->
             <field name="close_method">balance</field>
         </record>
 
@@ -76,7 +74,6 @@
         <record model="account.account.type" id="account_type_tax">
           <field name="name">Tax</field>
           <field name="code">tax</field>
-          <!-- <field name="report_type">?</field> -->
           <field name="close_method">unreconciled</field>
         </record>
 
@@ -104,14 +101,12 @@
         <record model="account.account.type" id="account_type_provision">
           <field name="name">Provisions</field>
           <field name="code">provision</field>
-          <!-- <field name="report_type">?</field> -->
           <field name="close_method">balance</field>
         </record>
 
         <record model="account.account.type" id="account_type_commitment">
           <field name="name">Engagements</field>
           <field name="code">commitment</field>
-          <!-- <field name="report_type">?</field> -->
           <field name="close_method">balance</field>
         </record>
 
@@ -125,7 +120,6 @@
         <record model="account.account.type" id="account_type_special">
           <field name="name">Comptes spéciaux</field>
           <field name="code">special</field>
-          <!-- <field name="report_type">?</field> -->
           <field name="close_method">none</field>
         </record>
 
@@ -9255,49 +9249,5 @@
       <field name="parent_id" ref="pcg_89"/>
     </record>
 
-
-    <!-- <record model="ir.property" id="account.property_account_receivable">
-      <field name="value" eval="'account.account,'+str(ref('account.a_recv'))"/>
-    </record>
-
-    <record model="ir.property" id="account.property_account_payable">
-      <field name="value" eval="'account.account,'+str(ref('account.a_pay'))"/>
-    </record>
-
-    <record model="ir.property" id="account.property_account_expense_categ">
-      <field name="value" eval="'account.account,'+str(ref('account.a_expense'))"/>
-    </record>
-
-    <record model="ir.property" id="account.property_account_income_categ">
-      <field name="value" eval="'account.account,'+str(ref('account.a_sale'))"/>
-    </record>
-
-    <record model="account.journal" id="l10n_fr.opening_journal">
-      <field name="default_debit_account_id" ref="pcg_890"/>
-      <field name="default_credit_account_id" ref="pcg_890"/>
-    </record>
-
-    <record model="account.journal" id="l10n_fr.closing_journal">
-      <field name="default_debit_account_id" ref="pcg_891"/>
-      <field name="default_credit_account_id" ref="pcg_891"/>
-    </record>
-
-    <record model="ir.values" id="l10n_fr.pl_credit">
-      <field name="name">pl_credit</field>
-      <field name="key">default</field>
-      <field name="key2" eval="None"/>
-      <field name="object" eval="False"/>
-      <field name="model">wizard.l10n.fr.fiscalyear.close</field>
-      <field name="value" eval="'I'+str(ref('pcg_120'))+chr(10)+'.'"/>
-    </record>
-
-    <record model="ir.values" id="l10n_fr.pl_debit">
-      <field name="name">pl_debit</field>
-      <field name="key">default</field>
-      <field name="key2" eval="None"/>
-      <field name="object" eval="False"/>
-      <field name="model">wizard.l10n.fr.fiscalyear.close</field>
-      <field name="value" eval="'I'+str(ref('pcg_129'))+chr(10)+'.'"/>
-    </record> -->
   </data>
 </openerp>

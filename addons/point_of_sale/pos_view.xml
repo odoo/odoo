@@ -12,7 +12,6 @@
             <field name="arch" type="xml">
                 <form string="Sales Order POS">
                     <group col="6" colspan="4">
-                        <!--field name="user_salesman_id" />
                         <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
                         <field name="contract_number" groups="base.group_extended"/> -->
 
@@ -23,13 +22,10 @@
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
                                     <field name="qty" on_change="onchange_qty(discount, qty, price_unit)"/>
-                                    <!--<field name="qty" on_change="onchange_qty(qty,price_unit)"/>-->
-                                    <!--field name="qty_rfd" groups="base.group_extended"/-->
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
                                     <field name="price_unit" readonly="1"/>
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="notice" on_change="onchange_dis(qty,price_subtotal_incl,discount)"/>
-                                    <!--field name="serial_number"/-->
                                     <field name="price_subtotal" />
                                     <field name="price_subtotal_incl" sum="Subtotal"/>
                                 </tree>
@@ -48,21 +44,8 @@
                             <group colspan="4" col="7">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <!--button name="%(action_pos_discount)d" string="D_iscount" type="action" states="draft"/>
-                                <button name="dummy_button" string="Compute" type="object" /-->
                             </group>
 
-<!--                            <group colspan="4" col="9" groups="base.group_extended">-->
-<!--                            <separator colspan="4" string="Validation of the Sale"/>-->
-<!--                                <newline/>-->
-<!--                                <field name="state_2" />-->
-<!--                                <button name="button_validate"-->
-<!--                                        string="Accept"-->
-<!--                                        type="object"-->
-<!--                                     icon="gtk-ok"-->
-<!--                                    states="paid, draft"-->
-<!--                                        attrs="{'invisible':[('state_2','=','accepted')]}"/>-->
-<!--                              </group>-->
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
                                 <field name="state" />
@@ -83,24 +66,17 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="price_type" />
                                 <field name="user_id" string="Salesman" groups="base.group_extended"/>
-                                <!--field name="sale_manager" /-->
                             </group>
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Dates" colspan="4"/>
                                 <field name="date_order"/>
                                 <field name="date_validation" />
                                 <field name="date_payment" groups="base.group_extended"/>
-<!--                                <field name="type_rec" colspan="4"/>-->
                             </group>
                             <group colspan="4">
-<!--                                <separator string="Invoicing" colspan="4"/>-->
                                 <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)" invisible="1"/>
                                 <field name="sale_journal" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
                                 <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
-<!--                                <field name="invoice_id"/>-->
-<!--                                <group colspan="2" col="4">-->
-<!--                                    <button name="invoice" icon="gtk-execute" string="Create _Invoice" states="paid"/>-->
-<!--                                </group>-->
                             </group>
 
                             <field name="statement_ids" colspan="4" nolabel="1">
@@ -800,8 +776,6 @@
                     id="products_for_output_operations"
                     groups="base.group_system"/>
 
-<!--        <menuitem name="Register Management" parent="menu_point_root"-->
-<!--            id="menu_point_config" sequence="4"/>-->
         <menuitem
             name="Input Operations" parent="menu_point_of_sale"
             string="Refloat"
@@ -866,40 +840,6 @@
 
         <!--  Miscelleanous Operations/Reporting -->
         <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20" groups="group_pos_manager,base.group_system"/>
-<!--         <menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
-        <menuitem name="Sales" parent="menu_point_rep" id="menu_point_report_sale" sequence="1" />
-
-        <menuitem name="Details Of Operations" parent="menu_point_report_sale" id="menu_details_of_oper" sequence="1" groups="base.group_extended,group_pos_manager,base.group_system"/>
-        <menuitem name="All Sales" parent="menu_details_of_oper"
-                        id="menu_action_all_sales_tree3" action="action_pos_order_tree3" sequence="1"  groups="base.group_extended,base.group_system,group_pos_manager"/>
-        <menuitem name="Sales of the day" parent="menu_action_all_sales_tree3"
-                        id="menu_action_sale_of_day_tree2" action="action_trans_pos_tree_today"/>
-        <menuitem name="Accepted Sales" parent="menu_action_all_sales_tree3"
-                        id="menu_action_sale_of_day_accept" action="action_pos_order_accepted"/>
-
-        <menuitem name="Sales Reports" parent="menu_point_report_sale" id="menu_sales_report" sequence="2"/>
-
-        <menuitem name="Sales of the day" parent="menu_sales_report"
-                action="action_trans_pos_tree_today" id="menu_trans_pos_tree_today"/>
-
-        <menuitem name="Sales of the month" parent="menu_sales_report"
-                action="action_trans_pos_tree_month" id="menu_trans_pos_tree_month"/>
-
-        <menuitem name="All the sales" parent="menu_sales_report"
-                 action="action_trans_pos_tree" id="menu_trans_pos_tree"/>
-
-         <menuitem name="Sales by User" parent="menu_sales_report"
-                 action="action_report_sales_by_user_pos_today" id="menu_report_sales_by_user_pos_tree"/>
-
-        <menuitem name="Sales by User Monthly" parent="menu_sales_report"
-                 action="action_report_sales_by_user_pos_month" id="menu_report_sales_by_user_pos_month_tree"/>
-
-         <menuitem name="Sales by User Daily Margin" parent="menu_sales_report"
-                 action="action_report_sales_by_margin_pos_today" id="menu_report_sales_by_user_margin_daily_pos_tree"/>
-
-        <menuitem name="Sales by User Monthly Margin" parent="menu_sales_report"
-                 action="action_report_sales_by_margin_pos_month" id="menu_report_sales_by_user_pos_month_margin_tree"/>
--->
         <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
@@ -910,41 +850,9 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('origin','like','POS')]</field>
         </record>
-<!--        <menuitem name="All Invoices" parent="menu_details_of_oper"
-                 action="action_pos_invoice" id="menu_pos_invoice_tree"/>
-
-        <menuitem name="Payments and Sales" parent="menu_point_report_sale"
-                  id="menu_cashboxes_closing_tree" sequence="1"/>
-        <menuitem name="Today" parent="menu_cashboxes_closing_tree"
-                  id="menu_cashboxes_by_day" sequence="1"/>
-
-        <menuitem name="All Sales Lines" parent="menu_details_of_oper"
-                        id="menu_action_pos_order_line" action="action_pos_order_line" sequence="2"/>
-
-        <menuitem name="Sales Lines of the day" parent="menu_action_pos_order_line"
-                    id="menu_action_pos_order_line_day" action="action_pos_order_line_day"/>
-
-
-        <menuitem icon="STOCK_PRINT" action="action_report_pos_sale_user"
-                id="menu_pos_sales_user" parent="menu_trans_pos_tree" sequence="3" groups="base.group_extended" />
--->
 
         <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
                 id="menu_pos_payment_report_date" parent="menu_point_rep" sequence="8" groups="base.group_extended"/>
-<!--
-        <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
-                id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
-        <menuitem icon="STOCK_PRINT" action="action_pos_sales_user_today"
-                id="menu_pos_sales_user_today" parent="menu_trans_pos_tree_today" sequence="2" groups="base.group_extended"/>
-
-        <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
-                id="menu_pos_payment_report_date" parent="menu_trans_pos_tree"  sequence="5" groups="base.group_extended"/>
-
-        <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
-                id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
-        <menuitem icon="STOCK_PRINT" action="action_report_pos_sales_user_today_current_user"
-                id="menu_pos_sales_user_today_current_user" parent="menu_cashboxes_by_day"  sequence="7"/>
--->
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
                 id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 

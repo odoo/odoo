@@ -32,13 +32,11 @@
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id"/>
-                        <field name="name"/>
-                        <field name="number"/>
-                        <field name="journal_id" select="1" on_change="onchange_journal(journal_id,type)"/>
-                        <field name="account_id" on_change="onchange_account(account_id)"/>
+                        <field name="name" colspan="4"/>
+                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
+                        <field name="account_id" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
                         <field name="type" on_change="onchange_journal(journal_id,type)"/>
                     </group>
-                    
                     <notebook colspan="4">
                         <page string="Voucher Entry">
                             <field name="payment_ids" colspan="4" nolabel="1" height="180">
@@ -48,7 +46,7 @@
                                     <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="amount"/>
                                     <field name="ref"/>
-                                    <field name="account_analytic_id"/>
+                                    <field name="account_analytic_id" groups="base.group_extended"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
@@ -57,6 +55,7 @@
                             </group>
                             <group col="2" colspan="1">
                                 <separator string="Other Information" colspan="2"/>
+                                <field name="number"/>
                                 <field name="reference" select="1"/>
                                 <field name="date" select="1" on_change="onchange_date(date)"/>
                                 <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
@@ -74,7 +73,7 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="open_voucher" states="draft" attrs="{'readonly':[('type','not in',['sale', 'purchase'])]}" string="Compute" type="object" icon="terp-stock_format-scientific"/>
+<!--                        <button name="open_voucher" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>-->
                         <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
                         <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
 <!--                        <button name="audit_complete" string="Audit Pass" states="posted" icon="terp-check"/>-->
@@ -101,13 +100,13 @@
                         <separator orientation="vertical"/>
                         <field name="number" select='1'/>
                         <field name="account_id" select="1"/>
-                        <field name="partner_id" select='1'/>                       
+                        <field name="partner_id" select='1'/>
                         <field name="date" select='1'/>
                     </group>
                     <newline/>
                     <group col='8' colspan='4'>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                        <field name="period_id" context="{'period_id': self}" groups="base.group_extended"/>                        
+                        <field name="period_id" context="{'period_id': self}" groups="base.group_extended"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." col='8' colspan='4'>
@@ -148,7 +147,7 @@
                     <newline/>
                     <group col='8' colspan='4'>
                         <field name="journal_id" widget="selection" select="1"/>
-                        <field name="period_id" select="1"/>                        
+                        <field name="period_id" select="1"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
@@ -179,10 +178,10 @@
                 </graph>
             </field>
          </record>
-        
+
         <!--  Receipt Vouchers -->
         <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list">
-            <field name="name">Receivable Vouchers</field>
+            <field name="name">Sales Vouchers</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
@@ -196,7 +195,7 @@
 
         <!--  Purchase Vouchers -->
         <record model="ir.actions.act_window" id="action_pay_vou_voucher_list">
-            <field name="name">Payable Vouchers</field>
+            <field name="name">Purchase Vouchers</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
@@ -221,18 +220,34 @@
         <menuitem action="action_voucher_list" id="menu_encode_entries_by_voucher" parent="account.menu_finance_entries" sequence="6"/>
 
         <record id="action_cheque_register" model="ir.actions.act_window">
-            <field name="name">Vouchers</field>
+            <field name="name">Receive Payments</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="domain">[('journal_id.type', '=', 'bank'), ('type','=','receipt')]</field>
             <field name="context">{'type':'bank'}</field>
             <field name="view_id" ref="view_voucher_tree"/>
             <field name="search_view_id" ref="view_voucher_filter_new"/>
         </record>
-        
-        <menuitem action="action_cheque_register" id="menu_action_cheque_register" parent="account.menu_finance_bank_and_cash"/>
+        <menuitem action="action_cheque_register"
+            id="menu_action_cheque_register"
+            parent="account.menu_finance_bank_and_cash"/>
+
+        <record id="action_cheque_pay" model="ir.actions.act_window">
+            <field name="name">Pay Bills</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('journal_id.type', '=', 'bank'), ('type','=','payment')]</field>
+            <field name="context">{'type':'bank'}</field>
+            <field name="view_id" ref="view_voucher_tree"/>
+            <field name="search_view_id" ref="view_voucher_filter_new"/>
+        </record>
+        <menuitem action="action_cheque_pay"
+            id="menu_action_cheque_pay"
+            parent="account.menu_finance_bank_and_cash"/>
 
         <record model="ir.ui.view" id="view_account_journal_form_inherit">
             <field name="name">account.journal.form.inherit</field>
@@ -253,7 +268,7 @@
             context="{'journal_id': active_id, 'type':type}"
             res_model="account.voucher"
             src_model="account.journal"/>
-        
+
         <record model="ir.actions.act_window" id="action_review_voucher_list">
             <field name="name">Vouchers Entries</field>
             <field name="res_model">account.voucher</field>

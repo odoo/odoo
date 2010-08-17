@@ -61,13 +61,14 @@ class pos_close_statement(osv.osv_memory):
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {
-                'domain': "[('id','in'," + str(list_statement) + ")]",
-                'name': 'Close Statements',
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.bank.statement',
-                'views': [(id2, 'tree'),(id3, 'form')],
-                'type': 'ir.actions.act_window'}
+            'domain': "[('id','in'," + str(list_statement) + ")]",
+            'name': 'Close Statements',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.bank.statement',
+            'views': [(id2, 'tree'),(id3, 'form')],
+            'type': 'ir.actions.act_window'
+        }
 
 pos_close_statement()
 

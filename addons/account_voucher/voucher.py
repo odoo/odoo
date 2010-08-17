@@ -105,7 +105,7 @@ class account_voucher(osv.osv):
     _rec_name = 'number'
     
     _columns = {
-        'name':fields.char('Name', size=256, required=False, readonly=True, states={'draft':[('readonly',False)]}),
+        'name':fields.char('Memo', size=256, required=False, readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([
             ('payment', 'Payment'),
             ('receipt', 'Receipt'),
@@ -133,7 +133,7 @@ class account_voucher(osv.osv):
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
         'amount':fields.float('Amount', readonly=True),
-        'reference': fields.char('Reference', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
+        'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type', required=True),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
@@ -244,42 +244,44 @@ class account_voucher(osv.osv):
             voucher_line_pool.unlink(dbcr, uid, line_ids)
 
         voucher = voucher_pool.browse(dbcr, uid, ids[0])
-        if voucher.account_id.tax_ids:
+        if voucher.type in ('sale', 'purchase'):
             if voucher.account_id.tax_ids:
-                for line in voucher.payment_ids:
+                if voucher.account_id.tax_ids:
+                    for line in voucher.payment_ids:
 
-                    if line.amount <= 0:
-                        raise osv.except_osv(_('Invalid amount !'), _('You can not create Pro-Forma voucher with Total amount <= 0 !'))
+                        if line.amount <= 0:
+                            raise osv.except_osv(_('Invalid amount !'), _('You can not create Pro-Forma voucher with Total amount <= 0 !'))
 
-                    part = line.partner_id and partner_pool.browse(dbcr, uid, line.partner_id.id) or False
-                    taxes = position_pool.map_tax(dbcr, uid, part and part.property_account_position or False, voucher.account_id.tax_ids)
-                    taxes = tax_pool.browse(dbcr, uid, taxes)
-                    new_price = line.amount
-                    for tax in tax_pool.compute_all(dbcr, uid, taxes, line.amount, 1).get('taxes'):
-                        tax_line = {
-                            'name':"%s / %s" % (line.name, tax.get('name')),
-                            'amount':tax.get('amount'),
-                            'voucher_id': voucher.id,
-                            'is_tax':True
-                        }
-                        crdr = False
-                        account = False
-                        if voucher.type == 'purchase':
-                            crdr = 'dr'
-                            account = tax.get('account_paid_id')
-                        elif voucher.type == 'sale':
-                            crdr = 'cr'
-                            account = tax.get('account_collected_id', account)
+                        part = line.partner_id and partner_pool.browse(dbcr, uid, line.partner_id.id) or False
+                        taxes = position_pool.map_tax(dbcr, uid, part and part.property_account_position or False, voucher.account_id.tax_ids)
+                        taxes = tax_pool.browse(dbcr, uid, taxes)
+                        new_price = line.amount
+                        for tax in tax_pool.compute_all(dbcr, uid, taxes, line.amount, 1).get('taxes'):
+                            tax_line = {
+                                'name':"%s / %s" % (line.name, tax.get('name')),
+                                'amount':tax.get('amount'),
+                                'voucher_id': voucher.id,
+                                'is_tax':True,
+                                'ref':tax.get('name')
+                            }
+                            crdr = False
+                            account = False
+                            if voucher.type == 'purchase':
+                                crdr = 'dr'
+                                account = tax.get('account_paid_id')
+                            elif voucher.type == 'sale':
+                                crdr = 'cr'
+                                account = tax.get('account_collected_id', account)
 
-                        tax_line.update({
-                            'account_id':account or voucher.account_id.id,
-                            'type':crdr
-                        })
-                        new_line += [tax_line]
+                            tax_line.update({
+                                'account_id':account or voucher.account_id.id,
+                                'type':crdr
+                            })
+                            new_line += [tax_line]
 
-        if new_line:
-            for line in new_line:
-                voucher_line_pool.create(dbcr, uid, line)
+            if new_line:
+                for line in new_line:
+                    voucher_line_pool.create(dbcr, uid, line)
 
         voucher = voucher_pool.browse(dbcr, uid, ids[0])
         for line in voucher.payment_ids:
@@ -312,12 +314,12 @@ class account_voucher(osv.osv):
 #        return res
         
     def voucher_recheck(self, cr, uid, ids, context={}):
-#        self.open_voucher(cr, uid, ids, context)
+        self.open_voucher(cr, uid, ids, context)
         self.write(cr, uid, ids, {'state':'recheck'}, context)
         return True
 
     def proforma_voucher(self, cr, uid, ids, context={}):
-#        self.open_voucher(cr, uid, ids, context)
+        self.open_voucher(cr, uid, ids, context)
         self.action_move_line_create(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'posted'})
         return True
@@ -560,10 +562,9 @@ class account_voucher_line(osv.osv):
     _description = 'Voucher Line'
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
-        'name':fields.char('Memo', size=256, required=True),
+        'name':fields.related('voucher_id', 'name', size=256, type='char', string='Memo'),
         'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
-#        'partner_id': fields.many2one('res.partner', 'Partner', change_default=True),
-        'partner_id': fields.related('voucher_id','partner_id', type='many2one', relation='res.partner', string='Partner'),
+        'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'amount':fields.float('Amount'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Type'),
         'ref':fields.char('Reference', size=32),

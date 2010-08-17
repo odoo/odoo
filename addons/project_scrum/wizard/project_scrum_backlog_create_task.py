@@ -25,7 +25,7 @@ class backlog_create_task(osv.osv_memory):
     _description = 'Create Tasks from Product Backlogs'
     _columns = {
         'user_id': fields.many2one('res.users', 'Assign To')
-               }
+    }
 
     def do_create(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')

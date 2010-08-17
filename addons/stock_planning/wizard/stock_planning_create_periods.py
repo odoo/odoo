@@ -90,11 +90,11 @@ class stock_period_createlines(osv.osv_memory):
                     ds = ds + RelativeDateTime(months=interval)
                 lines.append(new_id)
         return {
-                'domain': "[('id','in', ["+','.join(map(str, lines))+"])]",
-                'view_type': 'form',
-                "view_mode": 'tree, form',
-                'res_model': 'stock.period',
-                'type': 'ir.actions.act_window',
+            'domain': "[('id','in', ["+','.join(map(str, lines))+"])]",
+            'view_type': 'form',
+            "view_mode": 'tree, form',
+            'res_model': 'stock.period',
+            'type': 'ir.actions.act_window',
         }
 
 stock_period_createlines()

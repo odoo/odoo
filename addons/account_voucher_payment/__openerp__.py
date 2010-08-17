@@ -25,8 +25,8 @@
     "description": """Extension Account Voucher module includes allows to link payment / receipt 
     entries with voucher, also automatically reconcile during the payment and receipt entries
     """,
-    "category" : "Generic Modules/Indian Accounting",
-    "website" : "http://tinyerpindia.com",
+    "category" : "Generic Modules/Accounting",
+    "website" : "http://www.openerp.com",
     "depends" : [
         "base",
         "account",
@@ -43,7 +43,6 @@
 
     ],
     "test" : [
-#        "test/account_voucher.yml",
         "test/account_voucher_payment.yml",
     ],
 

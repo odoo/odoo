@@ -290,7 +290,6 @@ class sale_order(osv.osv):
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
-#        'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist.id,
     }
     _order = 'name desc'
 
@@ -315,7 +314,6 @@ class sale_order(osv.osv):
             # Que faire si le client a une pricelist a lui ?
             if shop.pricelist_id.id:
                 v['pricelist_id'] = shop.pricelist_id.id
-            #v['payment_default_id']=shop.payment_default_id.id
         return {'value': v}
 
     def action_cancel_draft(self, cr, uid, ids, *args):

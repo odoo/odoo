@@ -48,12 +48,13 @@ class lunch_cashbox_clean(osv.osv_memory):
              and box IN %s" , (tuple(data),))
 
          for (user_id, box_id, amount) in res:
-            cashmove_ref.create(cr, uid, {'name': 'Summary for user' + str(user_id),
-                        'amount': amount,
-                        'user_cashmove': user_id,
-                        'box': box_id,
-                        'active': True,
-                        })
+            cashmove_ref.create(cr, uid, {
+                'name': 'Summary for user' + str(user_id),
+                'amount': amount,
+                'user_cashmove': user_id,
+                'box': box_id,
+                'active': True,
+            })
          return {}
 
 lunch_cashbox_clean()
