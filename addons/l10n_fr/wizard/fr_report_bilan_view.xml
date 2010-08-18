@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data>
+
         <record id="bilan_report_view" model="ir.ui.view">
             <field name="name">Bilan Report</field>
             <field name="model">account.bilan.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form>
+            	<form string="Bilan Report">
 	               <field name="fiscalyear_id"/>
 	               <separator colspan="4"/>
                     <group colspan="4" col="6">
@@ -36,5 +38,6 @@
             <field name="key">action</field>
             <field name="model">account.move.line</field>
         </record>
+
     </data>
 </openerp>

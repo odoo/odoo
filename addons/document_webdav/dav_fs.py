@@ -395,7 +395,11 @@ class openerp_dav_handler(dav_interface):
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
-            return COLLECTION
+            # at root, dbname, just return the last component
+            # of the path.
+            if uri2 and len(uri2) < 2:
+                return uri2[-1]
+            return ''
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
             if cr: cr.close()
