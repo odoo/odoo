@@ -23,7 +23,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Accounting',
-    "description": """Account Accountant: This module make the account an Invoicing system but not an
+    "description": """Account Accountant: This module makes the account as an Invoicing system but not an
 accounting one.
     """,
     'website': 'http://www.openerp.com',

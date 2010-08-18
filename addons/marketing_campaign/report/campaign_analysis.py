@@ -21,7 +21,7 @@
 import tools
 from osv import fields, osv
 
-class campaign_analysis(osv.osv): #{{{
+class campaign_analysis(osv.osv):
     _name = "campaign.analysis"
     _description = "Campaign Analysis"
     _auto = False
@@ -43,22 +43,22 @@ class campaign_analysis(osv.osv): #{{{
         return result
     _columns = {
         'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), 
-                    ('03','March'), ('04','April'),('05','May'), ('06','June'), 
+        'month':fields.selection([('01','January'), ('02','February'),
+                    ('03','March'), ('04','April'),('05','May'), ('06','June'),
                     ('07','July'), ('08','August'), ('09','September'),
-                    ('10','October'), ('11','November'), ('12','December')], 
+                    ('10','October'), ('11','November'), ('12','December')],
                     'Month', readonly=True),
         'date': fields.date('Date', readonly=True),
-        'campaign_id': fields.many2one('marketing.campaign', 'Campaign', 
+        'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
                                                                 readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',
                                                                  readonly=True),
-        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment', 
+        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment',
                                                                 readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'country_id': fields.related('partner_id','address', 'country_id',
                     type='many2one', relation='res.country',string='Country'),
-        'total_cost' : fields.function(_total_cost, string='Cost', method=True, 
+        'total_cost' : fields.function(_total_cost, string='Cost', method=True,
                                     type="float" ),
         'revenue': fields.float('Revenue',digits=(16,2),readonly=True),
         'count' : fields.integer('# of Actions', readonly=True),
@@ -89,4 +89,4 @@ class campaign_analysis(osv.osv): #{{{
                 wi.date::date
             )
         """)
-campaign_analysis() #}}}
+campaign_analysis()

@@ -40,6 +40,7 @@
         <record id="act_cancel" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">cancel</field>
+            <field name="flow_stop">True</field>
             <field name="action">cancel_voucher()</field>
             <field name="kind">function</field>
         </record>

@@ -31,7 +31,7 @@ class purchase_requisition_partner(osv.osv_memory):
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', required=True,domain=[('supplier', '=', True)]),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True),
-                }
+    }
 
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(purchase_requisition_partner, self).view_init(cr, uid, fields_list, context=context)
@@ -102,7 +102,7 @@ class purchase_requisition_partner(osv.osv_memory):
                             'price_unit': price,
                             'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                             'notes': product.description_purchase,
-                        }
+                    }
                     taxes_ids = line.product_id.product_tmpl_id.supplier_taxes_id
                     taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
                     purchase_order_line.update({
@@ -118,7 +118,7 @@ class purchase_requisition_partner(osv.osv_memory):
                             'company_id': tender.company_id.id,
                             'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
                             'requisition_id':tender.id,
-                        })
+                })
                 order_ids=[]
                 for order_line in list_line:
                     order_line.update({

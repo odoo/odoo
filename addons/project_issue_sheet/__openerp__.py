@@ -24,7 +24,7 @@
     'name': 'Add the Timesheet support for Issue Management in Project Management',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
-    'description': """ 
+    'description': """
                     This module adds the Timesheet support for the Issues/Bugs Management in Project
                 """,
     'author': 'OpenERP SA',
@@ -32,14 +32,14 @@
     'depends': [
         'project_issue',
         'hr_timesheet_sheet',
-        ],
+    ],
     'init_xml': [
-        ],
+    ],
     'update_xml': [
         'project_issue_sheet_view.xml',
-        ],
+    ],
     'demo_xml': [
-        ],
+    ],
     'installable': True,
     'active': False,
 }

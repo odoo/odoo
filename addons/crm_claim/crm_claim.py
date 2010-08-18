@@ -23,7 +23,7 @@ from osv import fields, osv
 from crm import crm
 import time
 
-class crm_claim(osv.osv, crm.crm_case):
+class crm_claim(crm.crm_case, osv.osv):
     """
     Crm claim
     """

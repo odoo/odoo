@@ -36,15 +36,15 @@
   Then I click on the 'Ok' button of wizard
 -
   !python {model: crm.make.sale}: |
+    crm_obj = self.pool.get('crm.lead')
+    crm = crm_obj.browse(cr, uid, ref("crm_lead_opportunity0"))
     self.makeOrder(cr, uid, [ref("crm_make_sale_0")], {"lang": "en_US", "tz": False,
-      "active_model": "crm.lead", "section_id": False, "default_type": "opportunity",
-      "search_default_user_id": 1, "search_default_current": 1, "active_ids": [1],
-      "active_id": (1)})
+      "active_model": "crm.lead", "section_id": "crm.section_sales_department", "default_type": "opportunity",
+      "search_default_user_id": 1, "search_default_current": 1, "active_ids": [crm.id],
+      "active_id": crm.id})
 -
   I verify that a sale order has been generated from an opportunity
 -
-  !python {model: sale.order}: |
-    crm_obj = self.pool.get('crm.lead')
+  !python {model: crm.lead}: |
     crm = self.browse(cr, uid, ref("crm_lead_opportunity0"))
-    so = self.search(cr, uid, [('origin','=', 'Opportunity: %s' % str(crm.id))])
-    assert so, "Sale order has not been created "
+    assert (crm.ref),("sale order has not been created")

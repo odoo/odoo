@@ -75,7 +75,7 @@ class hr_recruitment_degree(osv.osv):
     }
 hr_recruitment_degree()
 
-class hr_applicant(osv.osv, crm.crm_case):
+class hr_applicant(crm.crm_case, osv.osv):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"

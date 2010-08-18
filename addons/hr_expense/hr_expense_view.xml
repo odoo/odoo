@@ -13,7 +13,7 @@
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field domain="[('type','=','normal')]" name="analytic_account"/>
+                    <field domain="[('type','=','normal')]" name="analytic_account" groups="base.group_extended"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
                     <field name="total_amount"/>
@@ -67,6 +67,7 @@
             <field name="arch" type="xml">
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
+                        <field name="employee_id"/>
                         <field name="name" select="1"/>
                         <field name="ref" groups="base.group_extended"/>
                         <field name="date" select="1"/>
@@ -104,13 +105,17 @@
                             </group>
                         </page>
                         <page string="Other Info" groups="base.group_extended">
-                            <separator colspan="4" string="Accounting data"/>
+                            <group col="2" colspan="2">
+                            <separator colspan="2" string="Accounting data"/>
                             <field name="journal_id"/>
-                            <separator colspan="4" string="Validation"/>
+                            <field name="invoice_id"/>
+                            </group>
+                            <group col="2" colspan="2">
+                            <separator colspan="2" string="Validation"/>
                             <field name="date_confirm" readonly = "1"/>
                             <field name="date_valid" readonly = "1"/>
                             <field name="user_valid"/>
-                            <field name="invoice_id"/>
+                            </group>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>

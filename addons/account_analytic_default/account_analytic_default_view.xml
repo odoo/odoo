@@ -52,7 +52,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="action_analytic_default_form" model="ir.actions.act_window">
             <field name="name">Analytic Defaults</field>
             <field name="res_model">account.analytic.default</field>
@@ -81,7 +81,8 @@
             id="analytic_rule_action_user"
             res_model="account.analytic.default"
             src_model="res.users"
-            domain="[('user_id','=',active_id)]"/>
+            domain="[('user_id','=',active_id)]"
+            groups="base.group_extended"/>
 
         <act_window
             name="Analytic Rules"

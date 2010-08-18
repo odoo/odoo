@@ -109,7 +109,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for the campaign (used for campaign analysis), see also variable cost on activities"),
     }
-    
+
     _defaults = {
         'state': lambda *a: 'draft',
         'mode': lambda *a: 'test',
@@ -349,8 +349,6 @@ class marketing_campaign_activity(osv.osv):
         'from_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_to_id',
                                             'Previous Activities'),
-        #'subcampaign_id': fields.many2one('marketing.campaign', 'Sub-Campaign',
-        #                                  domain="[('object_id', '=', object_id)]"),
         'variable_cost': fields.float('Variable Cost'),
         'revenue': fields.float('Revenue'),
         'signal': fields.char('Signal', size=128,
@@ -382,14 +380,14 @@ class marketing_campaign_activity(osv.osv):
         service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
         (report_data, format) = service.create(cr, uid, [], {}, {})
         attach_vals = {
-                'name': '%s_%s_%s'%(activity.report_id.report_name,
-                                    activity.name,workitem.partner_id.name),
-                'datas_fname': '%s.%s'%(activity.report_id.report_name,
-                                            activity.report_id.report_type),
-                'parent_id': activity.report_directory_id.id,
-                'datas': base64.encodestring(report_data),
-                'file_type': format
-                }
+            'name': '%s_%s_%s'%(activity.report_id.report_name,
+                                activity.name,workitem.partner_id.name),
+            'datas_fname': '%s.%s'%(activity.report_id.report_name,
+                                        activity.report_id.report_type),
+            'parent_id': activity.report_directory_id.id,
+            'datas': base64.encodestring(report_data),
+            'file_type': format
+        }
         self.pool.get('ir.attachment').create(cr, uid, attach_vals)
         return True
 
@@ -430,9 +428,10 @@ class marketing_campaign_transition(osv.osv):
     _name = "marketing.campaign.transition"
     _description = "Campaign Transition"
 
-    _interval_units = [('hours', 'Hour(s)'), ('days', 'Day(s)'),
-                       ('months', 'Month(s)'), ('years','Year(s)')]
-
+    _interval_units = [
+        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
+        ('months', 'Month(s)'), ('years','Year(s)')
+    ]
 
     def _get_name(self, cr, uid, ids, fn, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -576,14 +575,17 @@ class marketing_campaign_workitem(osv.osv):
 
             if result:
                 # process _chain
+                workitem = workitem.browse(context)[0] # reload
+                date = datetime.strptime(workitem.date, DT_FMT)
+
                 for transition in activity.to_ids:
                     if transition.trigger == 'cosmetic':
                         continue
                     launch_date = False
                     if transition.trigger == 'auto':
-                        launch_date = datetime.now()
+                        launch_date = date
                     elif transition.trigger == 'time':
-                        launch_date = datetime.now() + transition._delta()
+                        launch_date = date + transition._delta()
 
                     if launch_date:
                         launch_date = launch_date.strftime(DT_FMT)
@@ -597,7 +599,7 @@ class marketing_campaign_workitem(osv.osv):
                     }
                     wi_id = self.create(cr, uid, values, context=context)
 
-                    # Now, depending of the trigger and the campaign mode 
+                    # Now, depending of the trigger and the campaign mode
                     # we know if must run the newly created workitem.
                     #
                     # rows = transition trigger \ colums = campaign mode
@@ -606,7 +608,7 @@ class marketing_campaign_workitem(osv.osv):
                     # time       Y            N             N           N
                     # cosmetic   N            N             N           N
                     # auto       Y            Y             Y           Y
-                    # 
+                    #
 
                     run = transition.trigger == 'auto' \
                           or (transition.trigger == 'time' \
@@ -671,8 +673,10 @@ class marketing_campaign_workitem(osv.osv):
             }
 
         elif wi_obj.activity_id.type == 'paper':
-            datas = {'ids': [wi_obj.res_id],
-                     'model': wi_obj.object_id.model}
+            datas = {
+                'ids': [wi_obj.res_id],
+                'model': wi_obj.object_id.model
+            }
             res = {
                 'type' : 'ir.actions.report.xml',
                 'report_name': wi_obj.activity_id.report_id.report_name,
@@ -689,9 +693,9 @@ class email_template(osv.osv):
     _defaults = {
         'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
-    
+
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
-     
+
 email_template()
 
 class report_xml(osv.osv):

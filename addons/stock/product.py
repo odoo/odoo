@@ -149,16 +149,16 @@ class product_product(osv.osv):
                                                 product.id,))
                         amount_diff = qty * -diff
                         move_line_obj.create(cr, uid, {
-                                    'name': product.name,
-                                    'account_id': stock_output_acc,
-                                    'credit': amount_diff,
-                                    'move_id': move_id
+                                        'name': product.name,
+                                        'account_id': stock_output_acc,
+                                        'credit': amount_diff,
+                                        'move_id': move_id
                                     })
                         move_line_obj.create(cr, uid, {
-                                    'name': product.categ_id.name,
-                                    'account_id': account_variation_id,
-                                    'debit': amount_diff,
-                                    'move_id': move_id
+                                        'name': product.categ_id.name,
+                                        'account_id': account_variation_id,
+                                        'debit': amount_diff,
+                                        'move_id': move_id
                                     })
 
             self.write(cr, uid, rec_id, {'standard_price': new_price})

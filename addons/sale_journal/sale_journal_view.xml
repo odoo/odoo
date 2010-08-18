@@ -43,7 +43,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-     <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="menu_sale_journal_config" action="action_definition_journal_invoice_type"/> 
+     <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="menu_sale_journal_config" action="action_definition_journal_invoice_type"/>
 
     <!-- sale journal Form view  -->
 
@@ -479,21 +479,6 @@
             <field name="object" eval="True"/>
         </record>
 
-
-        <!--record id="view_sale_journal_search_form" model="ir.ui.view">
-            <field name="name">sale.order.journal.search</field>
-            <field name="model">sale.order</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']/filter[@string='Salesman']" position="after">
-                   	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                    <separator orientation="vertical"/>
-                </xpath>
-            </field>
-        </record-->
-
-        
         <record id="view_picking_delivery_jorunal_search_form" model="ir.ui.view">
             <field name="name">stock.picking.journal.search</field>
             <field name="model">stock.picking</field>
@@ -504,8 +489,8 @@
                    	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                 </xpath>
             </field>
-        </record>                 
-        
+        </record>
+
         <record id="view_picking_out_jorunal_search_form" model="ir.ui.view">
             <field name="name">stock.picking.journal.search</field>
             <field name="model">stock.picking</field>
@@ -517,7 +502,7 @@
                 </xpath>
             </field>
         </record>
-                                 
+
         <record id="view_picking_in_jorunal_search_form" model="ir.ui.view">
             <field name="name">stock.picking.journal.search</field>
             <field name="model">stock.picking</field>
@@ -528,8 +513,8 @@
                    	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                 </xpath>
             </field>
-        </record>    
-                                 
+        </record>
+
         <record id="view_picking_internal_jorunal_search_form" model="ir.ui.view">
             <field name="name">stock.picking.journal.search</field>
             <field name="model">stock.picking</field>
@@ -540,8 +525,8 @@
                    	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                 </xpath>
             </field>
-        </record>    
-                        
-                
+        </record>
+
+
    </data>
 </openerp>

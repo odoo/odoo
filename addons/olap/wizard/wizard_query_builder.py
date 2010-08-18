@@ -136,15 +136,13 @@ query_builder_form = """<?xml version="1.0"?>
  <field name="mdx_query_output" colspan="4" height="100" width="800"/>
 </form>"""
 query_builder_fields={
-
-
-                      'dimension':{'string':'Dimension','type':'text'},
-                      'hierarchy':{'string':'Hiearchy','type':'text'},
-                      'level':{'string':'Level','type':'text'},
-                      'measure':{'string':'Measure','type':'text'},
-                      'mdx_query':{'string':'MDX Query','type':'text'},
-                      'mdx_query_output':{'string':'MDX Query Output','type':'text'},
-                      }
+      'dimension':{'string':'Dimension','type':'text'},
+      'hierarchy':{'string':'Hiearchy','type':'text'},
+      'level':{'string':'Level','type':'text'},
+      'measure':{'string':'Measure','type':'text'},
+      'mdx_query':{'string':'MDX Query','type':'text'},
+      'mdx_query_output':{'string':'MDX Query Output','type':'text'},
+}
 
 query_builder_fetch_form = """<?xml version="1.0"?>
 <form string="Cube Fetcher">
@@ -185,10 +183,8 @@ def _execute_mdx(self, cr, uid, data, context):
                     ok = True
             if not ok:
                    continue
-            #print ' '*COLSPAN,
             output =' '*COLSPAN
             log.add(output)
-           # print (('%-'+str(ROWSPAN)+'s ' ) * len(axis[1])) % tuple(map(lambda x: str(len(x[0])==i and x[1] or ''),axis[1]))
             output=(('%-'+str(ROWSPAN)+'s ' ) * len(axis[1])) % tuple(map(lambda x: str(len(x[0])==i and x[1] or ''),axis[1]))
             log.add(output)
 
@@ -197,23 +193,18 @@ def _execute_mdx(self, cr, uid, data, context):
             print "--------------------------------------",x
             temp=(axis[0].pop(0)[1])
             print "--------------------------------------",temp
-          #  print ('%-'+str(COLSPAN)+'s')% (' '*(len(axis[0][0][0])-1)*2 + (temp),),
             output =('%-'+str(COLSPAN)+'s')% (str(x)+str(temp))
             log.add("\n")
             log.add(output)
-            #output=(temp)
 
             for row in col:
                 if row==[False]:
-          #          print ('%-'+str(ROWSPAN)+'s')%('',),
                     output=('%-'+str(ROWSPAN)+'s')%('')
                     log.add(output)
 
                 else:
-         #            print ('%-'+str(ROWSPAN)+'s')%(row,),
                      output=('%-'+str(ROWSPAN)+'s')%(row)
                      log.add(output)
-        #print
         log.add("\n")
     return {'mdx_query_output':log()}
 
