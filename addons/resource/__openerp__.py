@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     "name" : "Resource",
     "version" : "1.1",
@@ -36,7 +35,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process'],
+    'depends': ['process'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
@@ -48,4 +47,5 @@
     'active': False,
     'certificate': None,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
