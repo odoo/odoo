@@ -354,6 +354,8 @@ class CalDAV(object):
                         if not model:
                             continue
                         uidval = openobjectid2uid(cr, data[map_field], model)
+                        #Computation for getting events with the same UID (RFC4791 Section4.1)
+                        #START
                         model_obj = self.pool.get(model)
                         r_ids = []
                         if model_obj._columns.get('recurrent_uid', None):
@@ -365,7 +367,9 @@ class CalDAV(object):
                             rcal = CalDAV.export_cal(self, cr, uid, r_datas, 'vevent', context=context)
                             for revents in rcal.contents.get('vevent', []):
                                 ical.contents['vevent'].append(revents)
+                        #END
                         if data.get('recurrent_uid', None):
+                            # Change the UID value in case of modified event from any recurrent event 
                             uidval = openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval
                     elif field == 'attendee' and data[map_field]:
@@ -388,6 +392,9 @@ class CalDAV(object):
                                          data[map_field], ical, context=context)
                             timezones.append(data[map_field])
                         if exfield:
+                            # Set exdates according to timezone value
+                            # This is the case when timezone mapping comes after the exdate mapping
+                            # and we have exdate value available 
                             exfield.params['TZID'] = [tzval.title()]
                             exdates_updated = []
                             for exdate in exdates:
@@ -408,6 +415,9 @@ class CalDAV(object):
                                 exfield = vevent.add(field)
                                 exdates = (data[map_field]).split(',')
                                 if tzval:
+                                    # Set exdates according to timezone value
+                                    # This is the case when timezone mapping comes before the exdate mapping
+                                    # and we have timezone value available 
                                     exfield.params['TZID'] = [tzval.title()]
                                     exdates_updated = []
                                     for exdate in exdates:
@@ -422,6 +432,7 @@ class CalDAV(object):
                         elif map_type in ('datetime', 'date') and data[map_field]:
                             dtfield = vevent.add(field)
                             if tzval:
+                                # Export the date according to the event timezone value
                                 dest_date = self.format_date_tz(data[map_field], tzval.title())
                                 dtfield.params['TZID'] = [tzval.title()]
                                 dtfield.value = parser.parse(dest_date)
