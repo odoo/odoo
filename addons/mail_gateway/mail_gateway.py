@@ -283,7 +283,7 @@ class mailgate_tool(osv.osv_memory):
 
         for res in model_pool.browse(cr, uid, res_ids, context=context):
             message_followers = model_pool.message_followers(cr, uid, [res.id])[res.id]
-            message_followers_emails = self.to_email(','.join(message_followers))
+            message_followers_emails = self.to_email(','.join(filter(None, message_followers)))
             message_recipients = self.to_email(','.join(filter(None,
                                                          [self._decode_header(msg['from']),
                                                          self._decode_header(msg['to']),

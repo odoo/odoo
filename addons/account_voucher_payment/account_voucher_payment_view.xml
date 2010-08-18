@@ -12,17 +12,17 @@
                         <tree string="Voucher Lines" editable="top">
 <!--                            <field name="name"/>-->
                             <field name="ref" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
-                            <field name="move_id" context="{'ttype':parent.type, 'partner_id':parent.partner_id, 'voucher':True}" on_change="onchange_invoice_id(move_id, parent.currency_id)" domain="[('state','=','posted'), ('partner_id','=',parent.partner_id)]"/>
+                            <field name="move_id" context="{'ttype':parent.type, 'partner_id':parent.partner_id, 'voucher':True}" on_change="onchange_invoice_id(move_id, parent.currency_id)" domain="[('state','=','posted'), ('partner_id','=',parent.partner_id), ('reconcile_id','=', False)]"/>
                             <field name="amount"/>
                             <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
                             <field name="account_id"/>
-                            <field name="account_analytic_id"/>
+                            <field name="account_analytic_id"  groups="base.group_extended"/>
                         </tree>
                     </field>
                 </field>
             </field>
         </record>
-        
+
         <record id="view_move_line_form" model="ir.ui.view">
             <field name="name">account.move.line.form.inherit</field>
             <field name="model">account.move.line</field>
@@ -34,7 +34,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.form.inherit</field>
             <field name="model">account.move.line</field>
@@ -46,7 +46,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_voucher_form_one">
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
@@ -57,6 +57,6 @@
                     <button name="%(action_view_account_voucher_unreconcile)d" string="Unreconcile" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                 </button>
             </field>
-        </record>    
+        </record>
     </data>
 </openerp>

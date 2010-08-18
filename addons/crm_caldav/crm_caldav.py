@@ -105,7 +105,7 @@ class crm_meeting(osv.osv):
                         wematch = __rege.match(u_id.encode('utf8'))
                         if wematch:
                             model, recur_id, dbname = wematch.groups()
-                        val.update({'recurrent_uid': recur_id})
+                            val.update({'recurrent_uid': recur_id})
                         event_id = model_obj.create(cr, uid, val)
                         recur_pool[u_id] = event_id
                         ids.append(event_id)

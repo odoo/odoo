@@ -19,12 +19,7 @@
 #
 ##############################################################################
 
-from mx import DateTime
-import time
-
 from osv import fields, osv
-import pooler
-
 
 class l10n_fr_report(osv.osv):
     _name = 'l10n.fr.report'

@@ -54,11 +54,20 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
-                                <separator string="Other Information" colspan="2"/>
-                                <field name="number"/>
-                                <field name="reference" select="1"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                <group col="2" colspan="1" attrs="{'invisible': [('type','!=','sale')]}">
+                                    <separator string="Payment Options" colspan="2"/>
+                                    <field name="pay_now"/>
+                                    <field name="pay_journal_id" on_change="onchange_pay_journal(pay_journal_id,type)" attrs="{'readonly': [('pay_now','=',False)], 'required': [('pay_now','=',True)]}"/>
+                                    <field name="pay_account_id" attrs="{'readonly': [('pay_now','=',False)], 'required': [('pay_now','=',True)]}"/>
+                                    <field name="pay_amount"/>
+                                </group>
+                                <group col="2" colspan="1">
+                                    <separator string="Other Information" colspan="2"/>
+                                    <field name="number"/>
+                                    <field name="reference" select="1"/>
+                                    <field name="date" select="1" on_change="onchange_date(date)"/>
+                                    <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items">
@@ -181,7 +190,7 @@
         
         <!--  Receipt Vouchers -->
         <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list">
-            <field name="name">Sales Vouchers</field>
+            <field name="name">Sales Receipt</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
@@ -192,10 +201,24 @@
         </record>
         <menuitem id="menu_action_receipt_vou_voucher_list"
         action="action_receipt_vou_voucher_list" parent="account.menu_finance_receivables" sequence="12"/>
+        
+        <!--  Sale Receipt Vouchers -->
+<!--        <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list_pay_now">-->
+<!--            <field name="name">Sales Receipt Payment</field>-->
+<!--            <field name="res_model">account.voucher</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form,graph</field>-->
+<!--            <field name="view_id" eval="view_voucher_tree"/>-->
+<!--            <field name="domain">[('journal_id.type','=','sale')]</field>-->
+<!--            <field name="context">{'type':'sale', 'pay_new':True}</field>-->
+<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
+<!--        </record>-->
+<!--        <menuitem id="menu_action_receipt_vou_voucher_list_pay_now"-->
+<!--        action="action_receipt_vou_voucher_list_pay_now" parent="account.menu_finance_receivables" sequence="12"/>-->
 
         <!--  Purchase Vouchers -->
         <record model="ir.actions.act_window" id="action_pay_vou_voucher_list">
-            <field name="name">Purchase Vouchers</field>
+            <field name="name">Vendor Bills</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
@@ -220,35 +243,50 @@
         <menuitem action="action_voucher_list" id="menu_encode_entries_by_voucher" parent="account.menu_finance_entries" sequence="6"/>
 
         <record id="action_cheque_register" model="ir.actions.act_window">
-            <field name="name">Receive Payments</field>
+            <field name="name">Sales Payments</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id.type', '=', 'bank'), ('type','=','receipt')]</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>
             <field name="context">{'type':'bank'}</field>
             <field name="view_id" ref="view_voucher_tree"/>
             <field name="search_view_id" ref="view_voucher_filter_new"/>
         </record>
         <menuitem action="action_cheque_register" 
             id="menu_action_cheque_register" 
-            parent="account.menu_finance_bank_and_cash"/>
+            parent="account.menu_finance_receivables"/>
         
         <record id="action_cheque_pay" model="ir.actions.act_window">
-            <field name="name">Pay Bills</field>
+            <field name="name">Vendor Payment</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id.type', '=', 'bank'), ('type','=','payment')]</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>
             <field name="context">{'type':'bank'}</field>
             <field name="view_id" ref="view_voucher_tree"/>
             <field name="search_view_id" ref="view_voucher_filter_new"/>
         </record>
         <menuitem action="action_cheque_pay" 
             id="menu_action_cheque_pay" 
+            parent="account.menu_finance_payables"/>
+        
+        <record id="action_cheque_pay_voucher" model="ir.actions.act_window">
+            <field name="name">Cheques</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank']), ('type','=','payment')]</field>
+            <field name="context">{'type':'bank'}</field>
+            <field name="view_id" ref="view_voucher_tree"/>
+            <field name="search_view_id" ref="view_voucher_filter_new"/>
+        </record>
+        <menuitem action="action_cheque_pay_voucher" 
+            id="menu_action_cheque_pay_voucher" 
             parent="account.menu_finance_bank_and_cash"/>
-            
+        
         <record model="ir.ui.view" id="view_account_journal_form_inherit">
             <field name="name">account.journal.form.inherit</field>
             <field name="model">account.journal</field>
