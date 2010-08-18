@@ -37,6 +37,7 @@ This module installs:
     'update_xml': [
         'account.tax.code.template.csv',
         'l10n_lu_data.xml',
+        'l10n_lu_wizard.xml',
         'account.tax.template.csv',
         'wizard/print_vat_view.xml'
     ],
