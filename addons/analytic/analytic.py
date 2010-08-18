@@ -25,19 +25,15 @@ import operator
 from osv import fields, osv
 import decimal_precision as dp
 
-#
-# Object definition
-#
-
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    def _compute_currency_for_level_tree(self, cr, uid, ids, ids2, res, context={}):
+    def _compute_currency_for_level_tree(self, cr, uid, ids, ids2, res, context=None):
         # Handle multi-currency on each level of analytic account
         # This is a refactoring of _balance_calc computation
         cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id IN %s" , (tuple(ids2),))
-        currency= dict(cr.fetchall())
+        currency = dict(cr.fetchall())
         res_currency= self.pool.get('res.currency')
         for id in ids:
             if id not in ids2:
@@ -50,7 +46,7 @@ class account_analytic_account(osv.osv):
                     else:
                         res[id] += res.get(child, 0.0)
 
-        cur_obj = res_currency.browse(cr, uid, currency.values(), context)
+        cur_obj = res_currency.browse(cr, uid, currency.values(), context=context)
         cur_obj = dict([(o.id, o) for o in cur_obj])
         for id in ids:
             if id in ids2:
@@ -58,9 +54,10 @@ class account_analytic_account(osv.osv):
 
         return dict([(i, res[i]) for i in ids ])
 
-
-    def _credit_calc(self, cr, uid, ids, name, arg, context={}):
+    def _credit_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         for i in ids:
             res.setdefault(i,0.0)
@@ -69,16 +66,18 @@ class account_analytic_account(osv.osv):
             return res
 
         where_date = ''
-        if context.get('from_date',False):
+        if context.get('from_date', False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
+        if context.get('to_date', False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency<0 and a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
         r = dict(cr.fetchall())
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context)
 
-    def _debit_calc(self, cr, uid, ids, name, arg, context={}):
+    def _debit_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         for i in ids:
             res.setdefault(i,0.0)
@@ -92,11 +91,14 @@ class account_analytic_account(osv.osv):
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency>0 and a.id IN %s GROUP BY a.id" ,(tuple(parent_ids),))
-        r= dict(cr.fetchall())
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context)
+        r = dict(cr.fetchall())
+        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context=context)
 
-    def _balance_calc(self, cr, uid, ids, name, arg, context={}):
+    def _balance_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
+
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         for i in ids:
             res.setdefault(i,0.0)
@@ -114,11 +116,14 @@ class account_analytic_account(osv.osv):
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
+        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context=context)
 
-    def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
+    def _quantity_calc(self, cr, uid, ids, name, arg, context=None):
         #XXX must convert into one uom
         res = {}
+        if context is None:
+            context = {}
+
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
 
         for i in ids:
@@ -150,7 +155,7 @@ class account_analytic_account(osv.osv):
                     res[id] += res.get(child, 0.0)
         return dict([(i, res[i]) for i in ids])
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         res = []
@@ -168,13 +173,13 @@ class account_analytic_account(osv.osv):
         res = self.name_get(cr, uid, ids)
         return dict(res)
 
-    def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
+    def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context):
             result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code) or False
         return result
 
-    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
+    def _get_account_currency(self, cr, uid, ids, field_name, arg, context=None):
         result=self._get_company_currency(cr, uid, ids, field_name, arg, context={})
         return result
 
@@ -209,19 +214,20 @@ class account_analytic_account(osv.osv):
        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency', store=True),
     }
 
-    def _default_company(self, cr, uid, context={}):
+    def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+
     _defaults = {
-        'type' : lambda *a : 'normal',
+        'type' : 'normal',
         'company_id': _default_company,
-        'state' : lambda *a : 'open',
+        'state' : 'open',
         'user_id' : lambda self, cr, uid, ctx : uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
         'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
-		'date_start': lambda *a: time.strftime('%Y-%m-%d')
+		'date_start': time.strftime('%Y-%m-%d')
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):
@@ -238,13 +244,12 @@ class account_analytic_account(osv.osv):
             vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account')
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         default['code'] = False
         default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
-
 
     def on_change_parent(self, cr, uid, id, parent_id):
         if not parent_id:
@@ -281,9 +286,9 @@ account_analytic_account()
 class account_analytic_line(osv.osv):
     _name = 'account.analytic.line'
     _description = 'Analytic Line'
-    def _amount_currency(self, cr, uid, ids, field_name, arg, context={}):
+    def _amount_currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
-        for rec in self.browse(cr, uid, ids, context):
+        for rec in self.browse(cr, uid, ids, context=context):
             cmp_cur_id=rec.company_id.currency_id.id
             aa_cur_id=rec.account_id.currency_id.id
             # Always provide the amount in currency
@@ -298,14 +303,14 @@ class account_analytic_line(osv.osv):
             else:
                 result[rec.id]=rec.amount
         return result
-        
-    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
+
+    def _get_account_currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context):
             # Always provide second currency
             result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
         return result
-    def _get_account_line(self, cr, uid, ids, context={}):
+    def _get_account_line(self, cr, uid, ids, context=None):
         aac_ids = {}
         for acc in self.pool.get('account.analytic.account').browse(cr, uid, ids):
             aac_ids[acc.id] = True
@@ -337,10 +342,12 @@ class account_analytic_line(osv.osv):
 
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
+
     _order = 'date'
+
 account_analytic_line()
 
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -4,39 +4,13 @@
 #Ingenieur fondateur
 #Tranquil IT Systems
 
+from osv import osv, fields
 
-import wizard
-import time
-import datetime
 import pooler
-import sys
-from mx.DateTime import *
 import tools
+from tools.translate import _
 from report.render import render
 from report.interface import report_int
-import os
-
-
-_tax_form = """<?xml version="1.0"?>
-<form string="VAT Legal Declaration">
-    <field name="tax_code_id"/>
-    <field name="period_id"/>
-</form>"""
-
-_tax_fields = {
-    'tax_code_id': {
-        'string': 'Company',
-        'type': 'many2one',
-        'relation': 'account.tax.code',
-        'required': True,
-        'domain': [('parent_id','=',False)]},
-    'period_id': {
-        'string':'Period',
-        'type': 'many2one',
-        'relation': 'account.period',
-        'required':True
-    }
-}
 
 class external_pdf(render):
     def __init__(self, pdf):
@@ -56,9 +30,8 @@ class report_custom(report_int):
         code_ids = taxobj.search(cr, uid, [('parent_id','child_of',[datas['form']['tax_code_id']])])
         result = {}
         for t in taxobj.browse(cr, uid, code_ids, {'period_id': datas['form']['period_id']}):
-            if t.code:
+            if str(t.code):
                 result['case_'+str(t.code)] = '%.2f' % (t.sum_period or 0.0, )
-
         user = pool.get('res.users').browse(cr, uid, uid, context)
 
         # Not Clean, to be changed
@@ -68,26 +41,34 @@ class report_custom(report_int):
         if partner.address:
             result['info_address'] = partner.address[0].street
             result['info_address2'] = (partner.address[0].zip or '') + ' ' + (partner.address[0].city or '')
-
-        tools.pdf_utils.fill_pdf(tools.config['addons_path']+'/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
-        self.obj = external_pdf(file('/tmp/output.pdf').read())
-        self.obj.render()
-        return (self.obj.pdf, 'pdf')
+        try:
+            tools.pdf_utils.fill_pdf(tools.config['addons_path']+'/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
+            self.obj = external_pdf(file('/tmp/output.pdf').read())
+            self.obj.render()
+            return (self.obj.pdf, 'pdf')
+        except Exception, e:
+            raise osv.except_osv(_('pdf not created !'), _('Please check if package pdftk is installed!'))
 
 report_custom('report.l10n_lu.tax.report.print')
 
+class vat_declaration_report(osv.osv_memory):
+    _name = 'vat.declaration.report'
+    _description = 'VAT Declaration Report'
+    
+    _columns = {
+         'tax_code_id': fields.many2one('account.tax.code', 'Company', required=True, domain=[('parent_id','=',False)]),
+         'period_id' : fields.many2one('account.period', 'Period', required=True)
+        }
+    
+    def print_vat_declaration_report(self, cr, uid, ids, context=None):
+        active_ids = context.get('active_ids',[])
+        data = {}
+        data['form'] = {}
+        data['ids'] = active_ids
+        data['form']['tax_code_id'] = self.browse(cr, uid, ids)[0].tax_code_id.id
+        data['form']['period_id'] = self.browse(cr, uid, ids)[0].period_id.id
+        return { 'type': 'ir.actions.report.xml', 'report_name': 'l10n_lu.tax.report.print', 'datas': data}
 
-class wizard_report(wizard.interface):
-    states = {
-        'init': {
-             'actions': [],
-             'result': {'type':'form', 'arch':_tax_form, 'fields':_tax_fields, 'state':[('end','Cancel'),('pdf','Print Taxes Statement')]},
-        },
-        'pdf': {
-            'actions': [],
-            'result': {'type':'print', 'report': 'l10n_lu.tax.report.print', 'state':'end'},
-        },
-    }
-wizard_report('l10n_lu.tax.report.wizard')
+vat_declaration_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

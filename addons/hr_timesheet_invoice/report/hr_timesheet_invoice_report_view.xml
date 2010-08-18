@@ -47,26 +47,26 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group col="10" colspan="4">
-                    	<filter icon="terp-go-year" string="This Year"
-	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-	                    	    help="Timesheet lines in this year"/>
-	                    <filter icon="terp-go-month" string="This Month"
-	                    		name="month"
-	                    		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                    		help="Timesheet lines in this month"/>
-		                <filter icon="terp-go-week"
-	                            string="    7 Days    "
-	                            separator="1"
-	                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                            help="Timesheet lines during last 7 days"/>
-	                    <separator orientation="vertical"/>
-	  					<field name="user_id" widget="selection">
-	                        <filter icon="terp-personal"
-	                        		string="Non Assigned timesheets to users"
-	                        		help="Non Assigned timesheets to users"
-	                        		domain="[('user_id','=',False)]"/>
-	                    </field>
-	                    <field name="account_id"/>
+                      <filter icon="terp-go-year" string="This Year"
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                            help="Timesheet lines in this year"/>
+                      <filter icon="terp-go-month" string="This Month"
+                          name="month"
+                          domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                          help="Timesheet lines in this month"/>
+                    <filter icon="terp-go-week"
+                              string="    7 Days    "
+                              separator="1"
+                              domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                              help="Timesheet lines during last 7 days"/>
+                      <separator orientation="vertical"/>
+              <field name="user_id" widget="selection">
+                          <filter icon="terp-personal"
+                              string="Non Assigned timesheets to users"
+                              help="Non Assigned timesheets to users"
+                              domain="[('user_id','=',False)]"/>
+                      </field>
+                      <field name="account_id"/>
                         <field name="product_id"/>
                     </group>
                     <group expand="0" string="Group By...">
@@ -417,7 +417,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Random Timesheets">
-                    <field name="analytic_account_id" select="1"/>
+                    <field name="analytic_account_id" select="1" groups="base.group_extended"/>
                     <field name="name" select="1"/>
                     <field name="quantity" select="2" />
                     <field name="date" select="1"/>
@@ -435,7 +435,7 @@
 
         <!-- Random Timesheet Lines of random activities -->
 
-		<record id="view_random_timesheet_lines_search" model="ir.ui.view">
+    <record id="view_random_timesheet_lines_search" model="ir.ui.view">
             <field name="name">random.timesheet.lines.search</field>
             <field name="model">random.timesheet.lines</field>
             <field name="type">search</field>
@@ -444,8 +444,8 @@
                    <group col='15' colspan='4'>
                         <filter icon="terp-check" string="Current" default="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
-                    	<field name="user_id" widget="selection"/>
-                    	<field name="product_id" widget="selection"/>
+                      <field name="user_id" widget="selection"/>
+                      <field name="product_id" widget="selection"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By...">
@@ -453,7 +453,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Analytic Account" icon="terp-folder-green" domain="[]" context="{'group_by':'analytic_account_id'}"/>
-                   		<filter string="General Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'general_account_id'}"/>
+                       <filter string="General Account" icon="terp-folder-orange" domain="[]" context="{'group_by':'general_account_id'}"/>
                    </group>
                </search>
             </field>
@@ -470,7 +470,7 @@
                     <field name="name" select="1"/>
                     <field name="quantity" />
                     <field name="product_id" select="1"/>
-                    <field name="analytic_account_id" select="1"/>
+                    <field name="analytic_account_id" select="1" groups="base.group_extended"/>
                     <field name="uom_id" />
                     <field name="amount" />
                     <field name="to_invoice" select="1"/>

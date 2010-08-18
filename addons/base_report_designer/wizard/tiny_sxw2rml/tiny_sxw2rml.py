@@ -44,6 +44,7 @@ import zipfile
 import xml.dom.minidom
 from reportlab.lib.units import toLength
 import base64
+import copy
 
 class DomApiGeneral:
     """General DOM API utilities."""

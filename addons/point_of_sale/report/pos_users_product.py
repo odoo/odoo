@@ -28,12 +28,12 @@ class pos_user_product(report_sxw.rml_parse):
         super(pos_user_product, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'get_data':self._get_data,
-                'get_user':self._get_user,
-                'get_total':self._get_total,
+            'time': time,
+            'get_data':self._get_data,
+            'get_user':self._get_user,
+            'get_total':self._get_total,
 
-                })
+        })
     def _get_data(self,o):
         data={}
         sql1=""" SELECT distinct(o.id) from account_bank_statement s, account_bank_statement_line l,pos_order o,pos_order_line i where  i.order_id=o.id and o.state='paid' and l.statement_id=s.id and l.pos_statement_id=o.id and s.id=%d"""%(o.id)

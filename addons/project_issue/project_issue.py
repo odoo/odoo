@@ -34,7 +34,7 @@ from osv.orm import except_orm
 from tools.translate import _
 import tools
 
-class project_issue(osv.osv, crm.crm_case):
+class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"

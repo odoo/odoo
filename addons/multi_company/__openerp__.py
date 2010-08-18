@@ -38,7 +38,6 @@
     'init_xml': [],
     'update_xml': [
         'res_company_view.xml'
-        #'security/ir.model.access.csv',
     ],
     'demo_xml': [
         'multi_company_demo.xml'

@@ -298,7 +298,7 @@ class project(osv.osv):
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view['res_id'],
                 'nodestroy': True
-                }
+            }
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context=None):
@@ -372,10 +372,6 @@ class task(osv.osv):
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
         return False
-
-    #_sql_constraints = [
-    #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
-    #]
 
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
@@ -532,7 +528,7 @@ class task(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy': True
-                    }
+            }
         else:
             self.write(cr, uid, [task_id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         return False
@@ -755,8 +751,8 @@ class config_compute_remaining(osv.osv_memory):
                     })
                 task_obj.write(cr, uid, [task.id], {'state': 'open'})
         return {
-                'type': 'ir.actions.act_window_close',
-         }
+            'type': 'ir.actions.act_window_close',
+        }
 
 config_compute_remaining()
 

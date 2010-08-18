@@ -28,10 +28,10 @@ class pos_payment_report_date(report_sxw.rml_parse):
         super(pos_payment_report_date, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'pos_payment_date': self.__pos_payment_date__,
-                'pos_payment_date_total':self.__pos_payment_date__total__,
-                })
+            'time': time,
+            'pos_payment_date': self.__pos_payment_date__,
+            'pos_payment_date_total':self.__pos_payment_date__total__,
+        })
 
     def __pos_payment_date__(self,form):
         dt1 = form['date_start'] + ' 00:00:00'

@@ -36,13 +36,11 @@
                 <field name="type">form</field>
                 <field name="arch" type="xml">
                     <form string="Upstream traceability">
-
                         <label string="It will give information about the stock of a product as per the pack" colspan="2" />
-                <separator string="" colspan="4" />
+                        <separator string="" colspan="4" />
                         <button icon='gtk-cancel' special="cancel"
                             string="Cancel" />
                         <button name="action_traceability" string="Upstream traceability" type="object" context="{'type': '','field': ''}"/>
-
                     </form>
                 </field>
             </record>
@@ -63,13 +61,11 @@
                 <field name="type">form</field>
                 <field name="arch" type="xml">
                     <form string="Stock traceability lot upstream">
-
                         <label string="It will give information about the stock of a product as per the Production Lot" colspan="2" />
-                <separator string="" colspan="4" />
+                        <separator string="" colspan="4" />
                         <button icon='gtk-cancel' special="cancel"
                             string="Cancel" />
                         <button name="action_traceability" string="Upstream traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}"/>
-
                     </form>
                 </field>
             </record>
@@ -90,13 +86,11 @@
                 <field name="type">form</field>
                 <field name="arch" type="xml">
                     <form string="Stock traceability lot downstream">
-
                         <label string="It will give information about the stock of a product as per the Production Lot" colspan="2" />
-                <separator string="" colspan="4" />
+                        <separator string="" colspan="4" />
                         <button icon='gtk-cancel' special="cancel"
                             string="Cancel" />
                         <button name="action_traceability" string="Downstream traceability" type="object" context="{'type': 'move_history_ids2', 'field': 'prodlot_id'}"/>
-
                     </form>
                 </field>
             </record>

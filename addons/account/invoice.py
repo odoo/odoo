@@ -598,9 +598,9 @@ class account_invoice(osv.osv):
 
     def copy(self, cr, uid, id, default={}, context=None):
         default.update({
-            'state':'draft', 
-            'number':False, 
-            'move_id':False, 
+            'state':'draft',
+            'number':False,
+            'move_id':False,
             'move_name':False,
             'internal_number': False,
         })
@@ -941,7 +941,7 @@ class account_invoice(osv.osv):
     def action_number(self, cr, uid, ids, *args):
         #TODO: not correct fix but required a frech values before reading it.
         self.write(cr, uid, ids, {})
-        
+
         for obj_inv in self.browse(cr, uid, ids):
             id = obj_inv.id
             invtype = obj_inv.type
@@ -950,7 +950,7 @@ class account_invoice(osv.osv):
             reference = obj_inv.reference or ''
 
             self.write(cr, uid, ids, {'internal_number':number})
-            
+
             if invtype in ('in_invoice', 'in_refund'):
                 ref = reference
             else:
@@ -967,7 +967,7 @@ class account_invoice(osv.osv):
                     'WHERE account_move_line.move_id = %s ' \
                         'AND account_analytic_line.move_id = account_move_line.id',
                         (ref, move_id))
-            
+
             for inv_id, name in self.name_get(cr, uid, [id]):
                 message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
                 self.log(cr, uid, inv_id, message)
@@ -1367,8 +1367,8 @@ class account_invoice_line(osv.osv):
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
 
-        if not name:
-            result['name'] = res.partner_ref
+#        if not name:
+        result['name'] = res.partner_ref
 
         domain = {}
         result['uos_id'] = res.uom_id.id or uom or False

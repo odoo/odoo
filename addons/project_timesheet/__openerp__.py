@@ -35,8 +35,8 @@
     'update_xml': ["process/project_timesheet_process.xml", "report/task_report_view.xml"],
     'demo_xml': [],
     'test': [
-             'test/worktask_entry_to_timesheetline_entry.yml',
-             ],
+        'test/worktask_entry_to_timesheetline_entry.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0075123647453',

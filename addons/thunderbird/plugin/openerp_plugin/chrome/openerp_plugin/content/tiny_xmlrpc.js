@@ -1,6 +1,20 @@
-/**
-* Global instance stored here
-*/
+/************************************************************
+*    OpenERP, Open Source Management Solution
+*    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Affero General Public License as
+*    published by the Free Software Foundation, either version 3 of the
+*    License, or (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the GNU Affero General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+***************************************************************/
 
 var xmlRpcClient;
 
@@ -151,7 +165,7 @@ var rpc= {
 function handler_function( result ) {
 	if ( rpc.onfault( result ) ) { alert( result[0] + "\n" + result[1] ); return; }
 	else{
-		alert("got result>>>>"+result)	
+		alert("got result"+result)	
 	}
 }
 
@@ -1079,7 +1093,7 @@ var listSearchCheckboxHandler = {
 		var count = arrMethodList.Count();
 		var close=0;
 		if(count == 0  && popup_display != "no"){
-			alert("No records Found");
+			alert("No Records Found");
 			return false;
 		}
 		else if(count ==2 )
@@ -1124,10 +1138,10 @@ var listSearchCheckboxHandler = {
 				arrDataPair[0] = er_val[0].QueryElementAt(j, Components.interfaces.nsISupportsCString)
 				arrSearchList1[j]=arrDataPair;
 			}
-			alert( arrSearchList1 + "  model not exists")
+			alert( arrSearchList1 + "  Model not exists")
 			if (close == 1)
 			{
-				alert("No records Found");
+				alert("No Records Found");
 				return false;
 			}
 		}
@@ -1197,7 +1211,7 @@ function searchCheckbox()
 {
 	var checkboxlist = getnamesearch();
 	if(checkboxlist.length == 0){
-		alert("Select One or More Document");
+		alert("Please Select One or More Document");
 		return false;
 	}
 	var branchobj = getPref();
@@ -1337,6 +1351,23 @@ function dictcontact(a,b){
 	return temp;
 }
 
+//function to create the xmlrpc supported variables for xmlrpc request
+function dictcontact(a,b){
+	var temp = xmlRpcClient.createType(xmlRpcClient.ARRAY,{});
+	for(i=0;i<a.length;i++){
+		var strkey = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+		strkey.data = a[i]
+		var strvalue = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+		strvalue.data = b[i]
+		var test = xmlRpcClient.createType(xmlRpcClient.ARRAY,{});
+		test.AppendElement(strkey);
+		test.AppendElement(strvalue);
+		temp.AppendElement(test);
+	}
+	return temp;
+}
+
+
 //xmlrpc request handler for creating the record of mail
 var listArchiveHandler = {
 	onResult: function(client, context, result) {
@@ -1387,34 +1418,36 @@ function upload_archivemail()
     list_documents = document.getElementById('listSearchBox')
     var context = []
     var cnt = list_documents.selectedCount
+    var ref_ids = [];
+    var branchobj = getPref();
+	setServerService('xmlrpc/object');
+	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+	var xmlRpcClient = getXmlRpc();
+	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strDbName.data = branchobj.getCharPref("serverdbname");
+	var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
+	struids.data = branchobj.getIntPref('userid');
+	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strpass.data = branchobj.getCharPref("password");
+	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strmethod.data = 'history_message';
+	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strobj.data = 'thunderbird.partner';
+	var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+
 	for(i=0;i<cnt;i++)
 	{	
         var object = list_documents.getSelectedItem(i);
 		var eml_string = parse_eml();
-        var model = object.label;
-        var res_id = object.value;
-		var branchobj = getPref();
-		setServerService('xmlrpc/object');
-		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-		var xmlRpcClient = getXmlRpc();
-		var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strDbName.data = branchobj.getCharPref("serverdbname");
-		var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
-		struids.data = branchobj.getIntPref('userid');
-		var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strpass.data = branchobj.getCharPref("password");
-		var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strmethod.data = 'history_message';
-		var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strobj.data = 'thunderbird.partner';
-		var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-        var a = ['model', 'res_id','message'];
-	    var b = [model, res_id,eml_string];
-        var arrofarr = dictcontact(a,b)
-        xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Mail Archive Successfully");
-      }
-		window.close();
+        ref_ids[i] = object.label + ',' + object.value;
+		
+    }
+    var a = ['ref_ids','message'];
+	var b = [ref_ids, eml_string];
+    var arrofarr = dictcontact(a,b);
+    xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
+    alert("Mail Archived Successfully");
+	window.close();
     
 }
 
@@ -1444,7 +1477,7 @@ function create_archivemail(){
 		var b = [object, eml_string];
 		var arrofarr = dictcontact(a,b);
 		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Mail Archive Successfully");
+        alert("Document Created Successfully");
 		}
     	window.close();
 	}
@@ -1660,7 +1693,7 @@ var listLoginHandler = {
 		if(login.type == 12){
 			login = result.QueryInterface(Components.interfaces.nsISupportsPRInt32)
 			setUserId(login.data);
-			alert('Successful Login To OpenERP');
+			alert('Successfully Login To OpenERP');
             window.close();
 		}
 		else{
@@ -1680,7 +1713,7 @@ var listLoginHandler = {
 function testConnection(){
 	if (getconnect_server() == "false")
 	{
-		alert("No Server Running..."+" "+getServer())
+		alert("Server is Not Running...Please check it!!"+" "+getServer())
 		return false;
 	}
 	if (getDBList()=="false")
@@ -1764,7 +1797,6 @@ var listCreatePartnerHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
-		
 		if(typeof(createId.data) == 'number' && createId!=0){
 			window.close();
 		}

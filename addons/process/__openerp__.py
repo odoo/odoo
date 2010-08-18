@@ -37,7 +37,10 @@
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'process_view.xml'],
+    'update_xml': [
+       'security/ir.model.access.csv',
+       'process_view.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,

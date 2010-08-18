@@ -129,7 +129,7 @@ class event_event(osv.osv):
                 'target': 'new',
                 'context': context,
                 'nodestroy': True
-            }        
+            }
         return res
 
 
@@ -336,7 +336,7 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': 1,
         'tobe_invoiced':  True,
-        'state': lambda *a: 'draft', 
+        'state': lambda *a: 'draft',
         'active': lambda *a: 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
@@ -526,7 +526,7 @@ class event_registration(osv.osv):
         registrations = self.browse(cr, uid, ids)
         self.history(cr, uid, registrations, _('Cancel'))
         self.write(cr, uid, ids, {'state': 'cancel'})
-        return True    
+        return True
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
@@ -543,7 +543,7 @@ class event_registration(osv.osv):
                 email_to = regestration.email_from
             if regestration.email_cc:
                 email_cc += [regestration.email_cc]
-            if not (email_to and email_cc):
+            if not (email_to or email_cc):
                 continue
             subject = ""
             body = ""
@@ -617,10 +617,10 @@ class event_registration(osv.osv):
 
         event_obj = self.pool.get('event.event')
         prod_obj = self.pool.get('product.product')
-        res_obj = self.pool.get('res.partner') 
+        res_obj = self.pool.get('res.partner')
 
         data_event =  event_obj.browse(cr, uid, event_id)
-        res = {'value': {'unit_price': False, 'event_product': False, 'user_id': False, 
+        res = {'value': {'unit_price': False, 'event_product': False, 'user_id': False,
                         'date': data_event.date_begin, 'date_deadline': data_event.date_end, 'description': data_event.note, 'name': data_event.name,
                         'section_id': data_event.section_id and data_event.section_id.id or False,
                         }}

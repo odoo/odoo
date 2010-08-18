@@ -26,35 +26,31 @@
 #
 ##############################################################################
 
-import wizard
-import pooler
+from osv import osv, fields
 
-dates_form = '''<?xml version="1.0"?>
-<form string="Select period">
-    <field name="fiscalyear" colspan="4"/>
-</form>'''
+class account_bilan_report(osv.osv_memory):
+    _name = 'account.bilan.report'
+    _description = 'Account Bilan Report'
 
-dates_fields = {
-    'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True}
-}
+    def _get_default_fiscalyear(self, cr, uid, context):
+        fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid)
+        return fiscalyear_id
 
-class wizard_report(wizard.interface):
-    def _get_defaults(self, cr, uid, data, context):
-        fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
-        return data['form']
-
-    states = {
-        'init': {
-            'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
-        },
-        'report': {
-            'actions': [],
-            'result': {'type':'print', 'report':'l10n.fr.cdr', 'state':'end'}
+    _columns = {
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         }
-    }
-wizard_report('l10n.fr.cdr.report')
+    _defaults = {
+        'fiscalyear_id':_get_default_fiscalyear
+        }
+
+    def print_bilan_report(self, cr, uid, ids, context=None):
+        active_ids = context.get('active_ids',[])
+        data = {}
+        data['form'] = {}
+        data['ids'] = active_ids
+        data['form']['fiscalyear'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
+        return {'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.bilan', 'datas': data }
+
+account_bilan_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Standard entries">
-                    
+
                </form>
             </field>
         </record>
@@ -21,7 +21,7 @@
             <field name="context">{'journal_type':'sale','view_mode':False}</field>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_account_moves_sale" sequence="10" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL"/>
+        <menuitem action="action_account_moves_sale" sequence="10" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL" groups="group_account_user,group_account_manager,base.group_system"/>
 
 <!--        <record id="action_account_moves_purchase_refund" model="ir.actions.act_window">-->
 <!--            <field name="name">Journal Refund Items</field>-->
@@ -42,7 +42,10 @@
             <field name="target">new</field>
         </record>
         <menuitem action="action_account_moves_purchase" sequence="10"
-            id="menu_eaction_account_moves_purchase" parent="menu_finance_payables" icon="STOCK_JUSTIFY_FILL"/>
+            id="menu_eaction_account_moves_purchase"
+            parent="menu_finance_payables"
+            icon="STOCK_JUSTIFY_FILL"
+            groups="group_account_user,group_account_manager,base.group_system"/>
 
 <!--        <record id="action_account_moves_sale_refund" model="ir.actions.act_window">-->
 <!--            <field name="name">Journal Refund Items</field>-->
@@ -69,6 +72,7 @@
             id="menu_eaction_account_moves_all"
             parent="account.menu_finance_entries"
             sequence="4"
+            groups="group_account_user,group_account_manager,base.group_system"
         />
     </data>
 </openerp>
