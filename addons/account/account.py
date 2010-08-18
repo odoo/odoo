@@ -418,16 +418,16 @@ class account_account(osv.osv):
         'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
     }
 
-    def _default_company(self, cr, uid, context={}):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+#    def _default_company(self, cr, uid, context={}):
+#        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+#        if user.company_id:
+#            return user.company_id.id
+#        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
         'type': lambda *a : 'view',
         'reconcile': lambda *a: False,
-        'company_id': _default_company,
+        #'company_id': _default_company,
         'active': lambda *a: True,
         'check_history': lambda *a: True,
         'currency_mode': lambda *a: 'current',
