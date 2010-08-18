@@ -438,6 +438,7 @@ class task(osv.osv):
         'sequence': 10,
         'active': True,
         'project_id': _default_project,
+        'user_id': lambda obj, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
