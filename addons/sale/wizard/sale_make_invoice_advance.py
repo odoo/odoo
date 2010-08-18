@@ -19,7 +19,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
 import ir
 
@@ -31,9 +30,10 @@ class sale_advance_payment_inv(osv.osv_memory):
         'amount': fields.float('Unit Price', size=(16, 2), required=True),
         'qtty': fields.float('Quantity', size=(16, 2), required=True),
     }
-    _default = {
-        'qtty' : lambda *a: 1
+    _defaults = {
+        'qtty': 1.0
     }
+
     def create_invoices(self, cr, uid, ids, context={}):
         """
              To create invoices.
@@ -65,7 +65,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                              that is defined as 'Automatic Invoice after delivery'."))
                 val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
                         uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
-                line_id =obj_lines.create(cr, uid, {
+                line_id = obj_lines.create(cr, uid, {
                     'name': val['value']['name'],
                     'account_id': val['value']['account_id'],
                     'price_unit': sale_adv_obj.amount,

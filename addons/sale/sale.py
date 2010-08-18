@@ -771,6 +771,7 @@ sale_order()
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
+    
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -1170,9 +1171,9 @@ class sale_config_picking_policy(osv.osv_memory):
            "in one or two operations by the worker.")
     }
     _defaults = {
-        'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'manual',
-        'step': lambda *a: 'one'
+        'picking_policy': 'direct',
+        'order_policy': 'manual',
+        'step': 'one'
     }
 
     def execute(self, cr, uid, ids, context=None):
