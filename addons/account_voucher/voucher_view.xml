@@ -31,7 +31,7 @@
             <field name="arch" type="xml">
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
-                        <field name="partner_id"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, type)"/>
                         <field name="name" colspan="4"/>
                         <field name="journal_id" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
                         <field name="account_id" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
@@ -189,19 +189,19 @@
          </record>
         
         <!--  Receipt Vouchers -->
-        <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list">
-            <field name="name">Sales Receipt</field>
-            <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
-            <field name="view_id" eval="view_voucher_tree"/>
-            <field name="domain">[('journal_id.type','=','sale')]</field>
-            <field name="context">{'type':'sale'}</field>
-            <field name="search_view_id" ref="view_voucher_filter_new"/>
-        </record>
-        <menuitem id="menu_action_receipt_vou_voucher_list"
-        action="action_receipt_vou_voucher_list" parent="account.menu_finance_receivables" sequence="12"/>
-        
+<!--        <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list">-->
+<!--            <field name="name">Sales Receipt</field>-->
+<!--            <field name="res_model">account.voucher</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form,graph</field>-->
+<!--            <field name="view_id" eval="view_voucher_tree"/>-->
+<!--            <field name="domain">[('journal_id.type','=','sale')]</field>-->
+<!--            <field name="context">{'type':'sale'}</field>-->
+<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
+<!--        </record>-->
+<!--        <menuitem id="menu_action_receipt_vou_voucher_list"-->
+<!--        action="action_receipt_vou_voucher_list" parent="account.menu_finance_receivables" sequence="12"/>-->
+<!--        -->
         <!--  Sale Receipt Vouchers -->
 <!--        <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list_pay_now">-->
 <!--            <field name="name">Sales Receipt Payment</field>-->
@@ -217,18 +217,18 @@
 <!--        action="action_receipt_vou_voucher_list_pay_now" parent="account.menu_finance_receivables" sequence="12"/>-->
 
         <!--  Purchase Vouchers -->
-        <record model="ir.actions.act_window" id="action_pay_vou_voucher_list">
-            <field name="name">Vendor Bills</field>
-            <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
-            <field name="view_id" eval="view_voucher_tree"/>
-            <field name="domain">[('journal_id.type','=','purchase')]</field>
-            <field name="context">{'type':'purchase'}</field>
-            <field name="search_view_id" ref="view_voucher_filter_new"/>
-        </record>
-        <menuitem id="menu_action_pay_vou_voucher_list"
-        action="action_pay_vou_voucher_list" parent="account.menu_finance_payables" sequence="12"/>
+<!--        <record model="ir.actions.act_window" id="action_pay_vou_voucher_list">-->
+<!--            <field name="name">Vendor Bills</field>-->
+<!--            <field name="res_model">account.voucher</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form,graph</field>-->
+<!--            <field name="view_id" eval="view_voucher_tree"/>-->
+<!--            <field name="domain">[('journal_id.type','=','purchase')]</field>-->
+<!--            <field name="context">{'type':'purchase'}</field>-->
+<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
+<!--        </record>-->
+<!--        <menuitem id="menu_action_pay_vou_voucher_list"-->
+<!--        action="action_pay_vou_voucher_list" parent="account.menu_finance_payables" sequence="12"/>-->
 
         <!-- Journal Vouchers -->
         <record model="ir.actions.act_window" id="action_voucher_list">
@@ -242,35 +242,35 @@
         </record>
         <menuitem action="action_voucher_list" id="menu_encode_entries_by_voucher" parent="account.menu_finance_entries" sequence="6"/>
 
-        <record id="action_cheque_register" model="ir.actions.act_window">
-            <field name="name">Sales Payments</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>
-            <field name="context">{'type':'bank'}</field>
-            <field name="view_id" ref="view_voucher_tree"/>
-            <field name="search_view_id" ref="view_voucher_filter_new"/>
-        </record>
-        <menuitem action="action_cheque_register" 
-            id="menu_action_cheque_register" 
-            parent="account.menu_finance_receivables"/>
+<!--        <record id="action_cheque_register" model="ir.actions.act_window">-->
+<!--            <field name="name">Sales Payments</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">account.voucher</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>-->
+<!--            <field name="context">{'type':'bank'}</field>-->
+<!--            <field name="view_id" ref="view_voucher_tree"/>-->
+<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
+<!--        </record>-->
+<!--        <menuitem action="action_cheque_register" -->
+<!--            id="menu_action_cheque_register" -->
+<!--            parent="account.menu_finance_receivables"/>-->
         
-        <record id="action_cheque_pay" model="ir.actions.act_window">
-            <field name="name">Vendor Payment</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>
-            <field name="context">{'type':'bank'}</field>
-            <field name="view_id" ref="view_voucher_tree"/>
-            <field name="search_view_id" ref="view_voucher_filter_new"/>
-        </record>
-        <menuitem action="action_cheque_pay" 
-            id="menu_action_cheque_pay" 
-            parent="account.menu_finance_payables"/>
+<!--        <record id="action_cheque_pay" model="ir.actions.act_window">-->
+<!--            <field name="name">Vendor Payment</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">account.voucher</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>-->
+<!--            <field name="context">{'type':'bank'}</field>-->
+<!--            <field name="view_id" ref="view_voucher_tree"/>-->
+<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
+<!--        </record>-->
+<!--        <menuitem action="action_cheque_pay" -->
+<!--            id="menu_action_cheque_pay" -->
+<!--            parent="account.menu_finance_payables"/>-->
         
         <record id="action_cheque_pay_voucher" model="ir.actions.act_window">
             <field name="name">Cheques</field>
