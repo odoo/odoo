@@ -186,18 +186,18 @@ class browse_record(object):
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
             if col._prefetch:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                ffields = filter(lambda x: x[1]._classic_write, self._table._columns.items())
+                fields_to_fetch = filter(lambda x: x[1]._classic_write, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
                 # complete the field list with the inherited fields which are classic or many2one
-                ffields += filter(lambda x: x[1]._classic_write, inherits)
+                fields_to_fetch += filter(lambda x: x[1]._classic_write, inherits)
             # otherwise we fetch only that field
             else:
-                ffields = [(name, col)]
+                fields_to_fetch = [(name, col)]
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
-            # read the data
-            fffields = map(lambda x: x[0], ffields)
-            datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
+            # read the results
+            field_names = map(lambda x: x[0], fields_to_fetch)
+            field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
             if self._fields_process:
                 lang = self._context.get('lang', 'en_US') or 'en_US'
                 lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])
@@ -205,74 +205,70 @@ class browse_record(object):
                     raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
                 lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,lang_obj_ids[0])
 
-                for n, f in ffields:
-                    if f._type in self._fields_process:
-                        for d in datas:
-                            d[n] = self._fields_process[f._type](d[n])
-                            if d[n]:
-                                d[n].set_value(self._cr, self._uid, d[n], self, f, lang_obj)
+                for field_name, field_column in fields_to_fetch:
+                    if field_column._type in self._fields_process:
+                        for result_line in field_values:
+                            result_line[field_name] = self._fields_process[field_column._type](result_line[field_name])
+                            if result_line[field_name]:
+                                result_line[field_name].set_value(self._cr, self._uid, result_line[field_name], self, field_column, lang_obj)
 
-
-            if not datas:
+            if not field_values:
                 # Where did those ids come from? Perhaps old entries in ir_model_dat?
-                self.__logger.warn("No datas found for ids %s in %s",
-                                   ids, self)
+                self.__logger.warn("No field_values found for ids %s in %s", ids, self)
                 raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
-            for data in datas:
-                if len(str(data['id']).split('-')) > 1:
-                    data['id'] = int(str(data['id']).split('-')[0])
+            for result_line in field_values:
+                if len(str(result_line['id']).split('-')) > 1:
+                    result_line['id'] = int(str(result_line['id']).split('-')[0])
                 new_data = {}
-                for n, f in ffields:
-                    if f._type in ('many2one', 'one2one'):
-                        if data[n]:
-                            obj = self._table.pool.get(f._obj)
-                            compids = False
-                            if type(data[n]) in (type([]),type( (1,) )):
-                                ids2 = data[n][0]
+                for field_name, field_column in fields_to_fetch:
+                    if field_column._type in ('many2one', 'one2one'):
+                        if result_line[field_name]:
+                            obj = self._table.pool.get(field_column._obj)
+                            if isinstance(result_line[field_name], (list,tuple)):
+                                value = result_line[field_name][0]
                             else:
-                                ids2 = data[n]
-                            if ids2:
+                                value = result_line[field_name]
+                            if value:
                                 # FIXME: this happen when a _inherits object
                                 #        overwrite a field of it parent. Need
                                 #        testing to be sure we got the right
                                 #        object and not the parent one.
-                                if not isinstance(ids2, browse_record):
-                                    new_data[n] = browse_record(self._cr,
-                                        self._uid, ids2, obj, self._cache,
+                                if not isinstance(value, browse_record):
+                                    new_data[field_name] = browse_record(self._cr,
+                                        self._uid, value, obj, self._cache,
                                         context=self._context,
                                         list_class=self._list_class,
                                         fields_process=self._fields_process)
                                 else:
-                                    new_data[n] = ids2
+                                    new_data[field_name] = value
                             else:
-                                new_data[n] = browse_null()
+                                new_data[field_name] = browse_null()
                         else:
-                            new_data[n] = browse_null()
-                    elif f._type in ('one2many', 'many2many') and len(data[n]):
-                        new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
-                    elif f._type in ('reference'):
-                        if data[n]:
-                            if isinstance(data[n], browse_record):
-                                new_data[n] = data[n]
+                            new_data[field_name] = browse_null()
+                    elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
+                        new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(field_column._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
+                    elif field_column._type in ('reference'):
+                        if result_line[field_name]:
+                            if isinstance(result_line[field_name], browse_record):
+                                new_data[field_name] = result_line[field_name]
                             else:
-                                ref_obj, ref_id = data[n].split(',')
+                                ref_obj, ref_id = result_line[field_name].split(',')
                                 ref_id = long(ref_id)
                                 obj = self._table.pool.get(ref_obj)
-                                compids = False
-                                new_data[n] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                new_data[field_name] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
                         else:
-                            new_data[n] = browse_null()
+                            new_data[field_name] = browse_null()
                     else:
-                        new_data[n] = data[n]
-                self._data[data['id']].update(new_data)
+                        new_data[field_name] = result_line[field_name]
+                self._data[result_line['id']].update(new_data)
 
         if not name in self._data[self._id]:
             #how did this happen?
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
-                    "Ffields: %s, datas: %s"%(fffields, datas))
+                    "Fields to fetch: %s, Field values: %s"%(field_names, field_values))
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
-                    "Data: %s, Table: %s"%(self._data[self._id], self._table))
+                    "Cached: %s, Table: %s"%(self._data[self._id], self._table))
             raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
         return self._data[self._id][name]
 
