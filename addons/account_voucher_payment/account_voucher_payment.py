@@ -133,6 +133,7 @@ class account_voucher(osv.osv):
                 line_ids += [move_line_pool.create(cr, uid, move_line)]
             else:
                 for line in inv.payment_ids:
+                    
                     amount=0.0
 
                     if inv.type in ('payment'):
@@ -169,13 +170,11 @@ class account_voucher(osv.osv):
                         move_line.update({
                             'debit': line.amount or False
                         })
-                        amount = line.amount
                     
                     elif line.type == 'cr':
                         move_line.update({
                             'credit': line.amount or False
                         })
-                        amount = line.amount
                     
                     move_line_id = move_line_pool.create(cr, uid, move_line)
                     line_ids += [move_line_id]
@@ -185,10 +184,10 @@ class account_voucher(osv.osv):
                         for move_line in line.move_id.line_id:
                             if line.account_id.id == move_line.account_id.id:
                                 rec_ids += [move_line.id]
-
+            
             if rec_ids:
                 move_line_pool.reconcile_partial(cr, uid, rec_ids)
-            
+
             rec = {
                 'move_id': move_id
             }

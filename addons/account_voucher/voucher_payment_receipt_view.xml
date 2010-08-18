@@ -10,8 +10,8 @@
                     <group col="6" colspan="4">
                         <field name="partner_id" on_change="onchange_partner_id(partner_id, type)"/>
                         <field name="name" colspan="4"/>
-                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
-                        <field name="account_id" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
+                        <field name="journal_id" domain="[('type','in',['bank', 'cash'])]" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
+                        <field name="account_id" domain="[('type','=','other')]" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
                         <field name="number"/>
                     </group>
                     <notebook colspan="4">
@@ -79,8 +79,8 @@
                     <group col="6" colspan="4">
                         <field name="partner_id" on_change="onchange_partner_id(partner_id, type)"/>
                         <field name="name" colspan="4"/>
-                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
-                        <field name="account_id" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
+                        <field name="journal_id" domain="[('type','in',['bank', 'cash'])]" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
+                        <field name="account_id" domain="[('type','=','other')]" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
                         <field name="number"/>
                     </group>
                     <notebook colspan="4">

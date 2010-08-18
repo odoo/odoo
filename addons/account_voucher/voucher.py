@@ -60,14 +60,13 @@ class account_move(osv.osv):
                     rs.update({
                         'reconcile_id': line.reconcile_id.id
                     })
+                    break
             res[move.id] = rs
         return res
     
     _columns = {
-        'reconcile_id': fields.function(_amount_all, method=True, type="many2one", relation="account.move.line", string='Reconcile',
-            store={
-                'account.move.line': (_get_line_ids, [], 20),
-            },
+        'reconcile_id': fields.function(_amount_all, method=True, type="many2one", relation="account.move.reconcile", select=True, string='Reconcile',
+            store=True,
             multi='all'),
     }
     
@@ -101,7 +100,7 @@ class account_move(osv.osv):
         elif ttype and ttype in('sale', 'purchase'):
             raise osv.except_osv(_('Invalid action !'), _('You can not reconcile sales, purchase, or journal voucher with invoice !'))
             args += [('journal_id.type','=', 'do_not_allow_search')]
-        res = super(account_move, self).search(cr, user, args, offset, limit, order, context, count)
+        res = super(account_move, self).search(cr, user, args, offset, limit, order, {}, count)
         return res
     
 account_move()
@@ -239,7 +238,7 @@ class account_voucher(osv.osv):
         res = []
         
         context.update({
-            'ttype':ttype, 
+            'type':ttype, 
             'partner_id':partner_id, 
             'voucher':True,
         })
@@ -249,6 +248,10 @@ class account_voucher(osv.osv):
             'context':context,
         }
         if not partner_id or not ttype:
+            if ids:
+                line_ids = line_pool.search(cr, uid, [('voucher_id','=',ids[0])])
+                if line_ids:
+                    line_pool.unlink(cr, uid, line_ids)
             return default
         
         if ttype not in ('payment', 'receipt'):
@@ -262,7 +265,7 @@ class account_voucher(osv.osv):
             line_pool.unlink(cr, uid, line_ids)
         
         voucher_id = ids[0]
-        ids = move_pool.search(cr, uid, [('state','=','posted'), ('partner_id','=',partner_id), ('reconcile_id','=', False)], context=context)
+        ids = move_pool.search(cr, uid, [('reconcile_id','=', False), ('state','=','posted'), ('partner_id','=',partner_id)], context=context)
         for move in move_pool.browse(cr, uid, ids):
             rs = {
                 'ref':move.ref or '/',
