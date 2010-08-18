@@ -11,7 +11,7 @@
                     <field name="payment_ids" colspan="4" nolabel="1" height="200">
                         <tree string="Payment Lines" editable="top">
                             <field name="ref" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
-                            <field name="move_id" string="Vendor Bill" context="{'ttype':parent.type, 'partner_id':parent.partner_id, 'voucher':True}" on_change="onchange_invoice_id(move_id, parent.currency_id)" domain="[('state','=','posted'), ('partner_id','=',parent.partner_id), ('reconcile_id','=', False)]"/>
+                            <field name="move_id" string="Vendor Bill" context="{'type':parent.type, 'partner_id':parent.partner_id, 'voucher':True}" on_change="onchange_invoice_id(move_id, parent.currency_id)" domain="[('state','=','posted'), ('partner_id','=',parent.partner_id), ('reconcile_id','=', False)]"/>
                             <field name="amount"/>
                             <field name="account_id"/>
                             <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>

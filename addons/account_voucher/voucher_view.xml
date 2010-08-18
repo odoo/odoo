@@ -272,20 +272,20 @@
 <!--            id="menu_action_cheque_pay" -->
 <!--            parent="account.menu_finance_payables"/>-->
         
-        <record id="action_cheque_pay_voucher" model="ir.actions.act_window">
-            <field name="name">Cheques</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.voucher</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id.type', 'in', ['bank']), ('type','=','payment')]</field>
-            <field name="context">{'type':'bank'}</field>
-            <field name="view_id" ref="view_voucher_tree"/>
-            <field name="search_view_id" ref="view_voucher_filter_new"/>
-        </record>
-        <menuitem action="action_cheque_pay_voucher" 
-            id="menu_action_cheque_pay_voucher" 
-            parent="account.menu_finance_bank_and_cash"/>
+<!--        <record id="action_cheque_pay_voucher" model="ir.actions.act_window">-->
+<!--            <field name="name">Cheques</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">account.voucher</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="domain">[('journal_id.type', 'in', ['bank']), ('type','=','payment')]</field>-->
+<!--            <field name="context">{'type':'bank'}</field>-->
+<!--            <field name="view_id" ref="view_voucher_tree"/>-->
+<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
+<!--        </record>-->
+<!--        <menuitem action="action_cheque_pay_voucher" -->
+<!--            id="menu_action_cheque_pay_voucher" -->
+<!--            parent="account.menu_finance_bank_and_cash"/>-->
         
         <record model="ir.ui.view" id="view_account_journal_form_inherit">
             <field name="name">account.journal.form.inherit</field>

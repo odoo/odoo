@@ -138,5 +138,18 @@
         </record>
         <menuitem action="action_vendor_receipt" icon="STOCK_JUSTIFY_FILL"
             id="menu_action_vendor_receipt"  parent="account.menu_finance_receivables"/>
+        
+        <record id="action_cheque_pay" model="ir.actions.act_window">
+            <field name="name">Cheques</field>
+            <field name="res_model">account.voucher.open</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank']), ('type','=','payment')]</field>
+            <field name="context">{'journal_type':'bank', 'type':'payment'}</field>
+            <field name="view_id" ref="account_open_vouchers_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_cheque_pay" icon="STOCK_JUSTIFY_FILL"
+            id="menu_action_cheque_pay" parent="account.menu_finance_bank_and_cash"/>
     </data>
 </openerp>

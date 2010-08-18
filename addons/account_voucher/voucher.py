@@ -25,24 +25,6 @@ from osv import fields
 from osv import osv
 from tools.translate import _
 
-journal2type = {
-    'bank':'receipt',
-    'cash':'receipt',
-    'sale':'sale',
-    'purchase':'purchase'
-}
-
-type2journal = {
-    'rec_voucher': 'cash',
-    'bank_rec_voucher': 'bank',
-    'pay_voucher': 'cash',
-    'bank_pay_voucher': 'bank',
-    'cont_voucher': 'cash',
-    'journal_sale_vou': 'sale',
-    'journal_pur_voucher': 'purchase',
-    'journal_voucher':'general'
-}
-
 class ir_sequence_type(osv.osv):
     _inherit = "ir.sequence.type"
     _columns = {
@@ -106,7 +88,7 @@ class account_move(osv.osv):
         """
         if not context:
             context = {}
-        ttype = context.get('ttype', False)
+        ttype = context.get('type', False)
         partner = context.get('partner_id', False)
         voucher = context.get('voucher', False)
         if voucher and not partner:
