@@ -34,10 +34,6 @@
         <field eval="[(6,0,[ref('group_account_invoice'), ref('group_account_user'),ref('group_account_manager')])]" name="groups_id"/>
     </record>
 
-    <record id="menu_automatic_reconcile" model="ir.ui.menu">
-        <field eval="[(6,0,[ref('group_account_user')])]" name="groups_id"/>
-    </record>
-
     <record id="menu_finance_charts" model="ir.ui.menu">
         <field eval="[(6,0,[ref('group_account_user'), ref('group_account_manager')])]" name="groups_id"/>
     </record>
@@ -102,10 +98,6 @@
         <field eval="[(6,0,[ref('group_account_user'),ref('group_account_manager'),ref('base.group_system')])]" name="groups_id"/>
     </record>
 
-    <record id="menu_action_analytic_account_tree2" model="ir.ui.menu">
-        <field eval="[(6,0,[ref('group_account_user')])]" name="groups_id"/>
-    </record>
-
     <record id="menu_finance_periodical_processing" model="ir.ui.menu">
         <field eval="[(6,0,[ref('group_account_user')])]" name="groups_id"/>
     </record>
@@ -131,10 +123,6 @@
     </record>
 
     <record id="next_id_22" model="ir.ui.menu">
-        <field eval="[(6,0,[ref('group_account_manager'),ref('base.group_system')])]" name="groups_id"/>
-    </record>
-
-    <record id="next_id_40" model="ir.ui.menu">
         <field eval="[(6,0,[ref('group_account_manager'),ref('base.group_system')])]" name="groups_id"/>
     </record>
 
