@@ -39,7 +39,7 @@ class sale_prepare(report_sxw.rml_parse):
             allotments[line.address_allotment_id.id][1].append(line)
         return allotments.values()
 
-report_sxw.report_sxw('report.sale.order.prepare.allot', 'sale.order', 'addons/sale/report/prepare_allot.rml',parser=sale_prepare)
+report_sxw.report_sxw('report.sale.order.prepare.allot', 'sale.order', 'addons/sale/report/sale_prepare_allot.rml',parser=sale_prepare)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
