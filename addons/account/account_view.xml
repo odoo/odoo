@@ -2142,7 +2142,7 @@
             <field name="view_mode">tree,form,search</field>
         </record>
 
-        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_accounts"/>
+        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_accounts" sequence="1"/>
 
         <!-- Account Tax Templates -->
 
@@ -2326,8 +2326,7 @@
                           <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                  <field name="company_id"  widget="selection"
-                         />
+                  <field name="company_id" widget="selection"/>
                   <field name ="code_digits" />
                   <field name="chart_template_id"/>
                   <field name ="seq_journal" />
@@ -2428,7 +2427,7 @@
         <menuitem
             action="action_account_fiscal_position_template_form"
             id="menu_action_account_fiscal_position_form_template"
-            parent="account_template_folder" sequence="20"/>
+            parent="account_template_taxes" sequence="20"/>
 
         <!-- Cash Statement -->
         <record id="view_cash_statement_tree" model="ir.ui.view">

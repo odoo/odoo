@@ -795,10 +795,8 @@ class account_fiscalyear(osv.osv):
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
-                                  help='When fiscal year is created. The state is \'Draft\'. At the end of the year it is in \'Done\' state.'),
+        'state': fields.selection([('draft','Open'), ('done','Closed')], 'State', readonly=True),
     }
-
     _defaults = {
         'state': lambda *a: 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
@@ -875,11 +873,10 @@ class account_period(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
                                   help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
-        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
+        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start"
 
@@ -1010,7 +1007,6 @@ class account_journal_period(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
         'active': lambda *a: True,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "period_id"
 
