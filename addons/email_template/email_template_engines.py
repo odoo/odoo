@@ -2,29 +2,25 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2009  Sharoon Thomas  
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2009 Sharoon Thomas
+#    Copyright (C) 2004-2010 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-from osv import fields,osv
-import pooler
-import netsvc
+from osv import osv
 import re
 
 class email_template_engines(osv.osv):
@@ -35,7 +31,7 @@ class email_template_engines(osv.osv):
         pass
         
     def strip_html(self,text):
-        #Removes HTML, Have to check if still relevent
+        #Removes HTML, Have to check if still relevant
         if text:
             def fixup(m):
                 text = m.group(0)
@@ -69,7 +65,6 @@ class email_template_engines(osv.osv):
         #templateid: the template id of the template
         #context: TODO
         if message:
-            logger = netsvc.Logger()
             def merge(match):
                 template = self.pool.get("email.template").browse(cr,uid,templateid,context)
                 obj_pool = self.pool.get(template.object_name.model)
