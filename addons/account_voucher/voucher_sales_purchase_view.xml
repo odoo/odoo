@@ -80,7 +80,7 @@
             <field name="target">new</field>
         </record>
         <menuitem id="menu_action_sale_receipt" icon="STOCK_JUSTIFY_FILL"
-        action="action_sale_receipt" parent="account.menu_finance_receivables" sequence="12"/>
+        action="action_sale_receipt" parent="account.menu_finance_receivables" sequence="14"/>
         
         <!--  Purchase Vouchers -->
         <record model="ir.ui.view" id="view_purchase_receipt_form">
@@ -148,8 +148,8 @@
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
         </record>
-        <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL"
-        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="12"/>        
+        <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL" 
+        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="14"/>        
         
     </data>
 </openerp>

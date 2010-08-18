@@ -67,7 +67,7 @@
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL"
+        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="16"
             id="menu_action_vendor_payment"  parent="account.menu_finance_payables"/>
 
         <record model="ir.ui.view" id="view_vendor_receipt_form">
@@ -136,7 +136,7 @@
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_vendor_receipt" icon="STOCK_JUSTIFY_FILL"
+        <menuitem action="action_vendor_receipt" icon="STOCK_JUSTIFY_FILL" sequence="16"
             id="menu_action_vendor_receipt"  parent="account.menu_finance_receivables"/>
         
         <record id="action_cheque_pay" model="ir.actions.act_window">
@@ -149,7 +149,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem action="action_cheque_pay" icon="STOCK_JUSTIFY_FILL"
+        <menuitem action="action_cheque_pay" icon="STOCK_JUSTIFY_FILL" sequence="16"
             id="menu_action_cheque_pay" parent="account.menu_finance_bank_and_cash"/>
     </data>
 </openerp>
