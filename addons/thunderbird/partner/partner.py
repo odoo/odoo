@@ -153,11 +153,17 @@ class thunderbird_partner(osv.osv_memory):
         ref_ids = str(dictcreate.get('ref_ids')).split(';')
         msg = dictcreate.get('message')
         server_tools_pool = self.pool.get('email.server.tools')
+
+        address_obj = self.pool.get('res.partner.address')
+
         for ref_id in ref_ids:
             ref = ref_id.split(',')
-            model = ref[0]
-            res_id = int(ref[1])
-            server_tools_pool.history_message(cr, uid, model, res_id, msg)
+            for i in range(0,len(ref),2):
+                b = []
+                b.append(ref[i:i+2])
+                model = b[0][0]
+                res_id = int(b[0][1])
+                server_tools_pool.history_message(cr, uid, model, res_id, msg)
         return True
 
     def process_email(self,cr,uid,vals):
