@@ -361,7 +361,10 @@ class CalDAV(object):
                                            % (model_obj._table, data[map_field]))
                             r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids:
-                            rcal = self.export_cal(cr, uid, r_ids, 'vevent', context=context)
+                            r_datas = model_obj.read(cr, uid, r_ids, context=context)
+                            rcal = CalDAV.export_cal(self, cr, uid, r_datas, 'vevent', context=context)
+                            for revents in rcal.contents.get('vevent', []):
+                                ical.contents['vevent'].append(revents)
                         if data.get('recurrent_uid', None):
                             uidval = openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval
@@ -499,7 +502,6 @@ class CalDAV(object):
             @param datas: Get Data's for caldav
             @param context: A standard dictionary for contextual values
         """
-
         try:
             self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
             ical = vobject.iCalendar()
@@ -581,9 +583,12 @@ class Calendar(CalDAV, osv.osv):
                 if ctx_res_id:
                     line_domain += [('id','=',ctx_res_id)]
                 mod_obj = self.pool.get(line.object_id.model)
-                data_ids = mod_obj.search(cr, uid, line_domain, context=context)
+                data_ids = mod_obj.search(cr, uid, line_domain, order="id", context=context)
                 for data in mod_obj.browse(cr, uid, data_ids, context):
                     ctx = parent and parent.context or None
+                    if data.recurrent_uid:
+                        # Skip for event which is child of other event
+                        continue
                     node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)
                     res.append(node)
         return res
@@ -592,7 +597,6 @@ class Calendar(CalDAV, osv.osv):
         """ Export Calendar
             @param ids: List of calendar’s IDs
             @param vobj: the type of object to export
-            
             @return the ical data.
         """
         if not context:
@@ -627,7 +631,6 @@ class Calendar(CalDAV, osv.osv):
             @param data_id: Get Data’s ID or False
             @param context: A standard dictionary for contextual values
         """
-
         if not context:
             context = {}
         vals = []
@@ -664,6 +667,7 @@ class Calendar(CalDAV, osv.osv):
             r = self.check_import(cr, uid, vals, context=context)
             res.extend(r)
         return res
+
 Calendar()
 
 
