@@ -42,12 +42,17 @@ class journal_print(report_sxw.rml_parse):
 
     def set_context(self, objects, data, ids, report_type = None):
         super(journal_print, self).set_context(objects, data, ids, report_type)
-        self.cr.execute('SELECT period_id, journal_id '
-                        'FROM account_journal_period '
-                        'WHERE id IN %s',
-                        (tuple(ids),))
-        res = self.cr.fetchall()
-        self.period_ids, self.journal_ids = zip(*res)
+
+        if data['model'] == 'ir.ui.menu':
+            self.period_ids = data['form']['period_id'][0][2]
+            self.journal_ids = data['form']['journal_id'][0][2]
+        else:
+            self.cr.execute('SELECT period_id, journal_id '
+                            'FROM account_journal_period '
+                            'WHERE id IN %s',
+                            (tuple(ids),))
+            res = self.cr.fetchall()
+            self.period_ids, self.journal_ids = zip(*res)
 
     # returns a list of period objs
     def periods(self, journal_period_objs):
@@ -98,7 +103,7 @@ class journal_print(report_sxw.rml_parse):
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
                         'WHERE period_id=%s AND journal_id IN %s '
                         'AND l.state<>\'draft\' '
-                        'GROUP BY j.id, j.code, j.name'
+                        'GROUP BY j.id, j.code, j.name',
                         (period_id,tuple(self.journal_ids)))
         res = self.cr.dictfetchall()
         return res
