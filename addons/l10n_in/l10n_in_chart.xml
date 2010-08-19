@@ -446,6 +446,16 @@
 
                     <field name="parent_id" ref="IA_AC11"/>
                 </record>
+                <record model="account.account.template" id="IA_AC115">
+                    <field name="name">Salary Expenses</field>
+                    <field name="code">IA_AC115</field>
+                    <field name="type">other</field>
+                    <field name="user_type" ref="account_type_expense1"/>
+
+                    <field name="reconcile" eval="False"/>
+
+                    <field name="parent_id" ref="IA_AC11"/>
+                </record>
 
 
             <record model="account.account.template" id="IA_AC12">
