@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <record id="cdr_report_view" model="ir.ui.view">
             <field name="name">Compte de resultat Report</field>
             <field name="model">account.cdr.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form>
+            	<form string='Compte de resultant'>
 	               <field name="fiscalyear_id"/>
 	               <separator colspan="4"/>
                     <group colspan="4" col="6">
@@ -36,5 +37,6 @@
             <field name="key">action</field>
             <field name="model">account.move.line</field>
         </record>
+
     </data>
 </openerp>

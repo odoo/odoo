@@ -16,7 +16,9 @@
                         <field name="to" />
                         <field name="cc" />
                         <field name="bcc" />
-                        <field name="subject" />
+                        <field name="reply_to" />
+                        <field name="message_id" attrs="{'invisible':[('message_id','=',False)]}" groups="base.group_extended"/>
+                        <field name="subject" colspan="8"/>
                     </group>
                     <group col="4" colspan="4">
                         <separator string= "Body(Text)" colspan="2"/>   
@@ -58,17 +60,18 @@
                         <page string="Mail Details">
                             <group col="2" colspan="2">
                                 <separator string="Addresses" colspan="2"/>
-                                <field name="from_email"/>
+                                <field name="from_account" required="1"/>
                                 <field name="def_to" required="1"/>
                                 <field name="def_cc"/>
                                 <field name="def_bcc"/>
+                                <field name="reply_to"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="Email Data" colspan="2"/>
-                                <field name="enforce_from_account" required= "1"/>
                                 <field name="def_subject" colspan="4" required="1" />
                                 <field name="use_sign" colspan="4" />
                                 <field name="lang" colspan="4" />
+                                <field name="track_campaign_item" colspan="4"/>
                             </group>
                             <separator colspan="3" string="Standard Body" />
                             <separator colspan="1" string="Expression Builder" />
@@ -116,10 +119,17 @@
                                 <button name="delete_action" string="Delete Action" type="object" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
                             </group>
                             <group colspan="2" col="2">
-                                <separator string="Attachments (Report to attach)" colspan="4"/>
-                                <field name="file_name" colspan="2" />
-                                <field name="report_template" colspan="2"
-                                    domain="[('model','=',model_int_name)]" />
+                                <separator string="Attachments" colspan="2"/>
+                                <notebook>
+                                    <page string="Existing files">
+                                        <field name="attachment_ids" colspan="4" nolabel="1"/>
+                                    </page>
+                                    <page string="Report">
+                                        <field name="file_name" colspan="4" />
+                                        <field name="report_template" colspan="4"
+                                            domain="[('model','=',model_int_name)]" />
+                                    </page>
+                                </notebook>
                             </group>
                         </page>
                     </notebook>
@@ -141,7 +151,7 @@
                     <field name="def_subject" colspan="4" select="2" />
                     <field name="use_sign" colspan="4" select="2" />
                     <field name="file_name" colspan="4" />
-                    <field name="enforce_from_account" />
+                    <field name="from_account" />
                 </tree>
             </field>
         </record>

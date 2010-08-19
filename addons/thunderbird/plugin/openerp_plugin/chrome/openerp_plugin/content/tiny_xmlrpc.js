@@ -1351,23 +1351,6 @@ function dictcontact(a,b){
 	return temp;
 }
 
-//function to create the xmlrpc supported variables for xmlrpc request
-function dictcontact(a,b){
-	var temp = xmlRpcClient.createType(xmlRpcClient.ARRAY,{});
-	for(i=0;i<a.length;i++){
-		var strkey = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strkey.data = a[i]
-		var strvalue = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strvalue.data = b[i]
-		var test = xmlRpcClient.createType(xmlRpcClient.ARRAY,{});
-		test.AppendElement(strkey);
-		test.AppendElement(strvalue);
-		temp.AppendElement(test);
-	}
-	return temp;
-}
-
-
 //xmlrpc request handler for creating the record of mail
 var listArchiveHandler = {
 	onResult: function(client, context, result) {
@@ -1418,7 +1401,7 @@ function upload_archivemail()
     list_documents = document.getElementById('listSearchBox')
     var context = []
     var cnt = list_documents.selectedCount
-    var ref_ids = [];
+    var ref_ids = "";
     var branchobj = getPref();
 	setServerService('xmlrpc/object');
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -1439,7 +1422,10 @@ function upload_archivemail()
 	{	
         var object = list_documents.getSelectedItem(i);
 		var eml_string = parse_eml();
-        ref_ids[i] = object.label + ',' + object.value;
+        ref_ids += object.label;
+        ref_ids += ",";
+        ref_ids += object.value;
+        if (i < cnt-1){ref_ids += ";";}
 		
     }
     var a = ['ref_ids','message'];
