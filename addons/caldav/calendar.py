@@ -298,7 +298,7 @@ class CalDAV(object):
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
                 dmail = { 'name': cal_data.params.get('CN', ['',])[0],
-                            'email': cal_data.value.replace('MAILTO:',''),
+                            'email': cal_data.value.lower().replace('mailto:',''),
                             # TODO: company? 
                             }
                 self.ical_set(cal_data.name.lower(), mailto2str(dmail), 'value')
