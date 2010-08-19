@@ -41,7 +41,7 @@ class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
-            ondelete='set null', select=True, readonly=True),
+            ondelete='set null', select=True),
     }
     _defaults = {
         'purchase_id': lambda *a: False,
