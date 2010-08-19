@@ -175,10 +175,6 @@
 			            <field name="user_type" ref="conf_account_type_asset"/>
 			        </record>
 				
-			        <!-- <record id="account.property_account_receivable" model="ir.property">
-			            <field eval="'account.account,'+str(a_recv)" name="value"/>
-			        </record> -->
-			
 			        <record id="conf_ova" model="account.account.template">
 			            <field name="code">1103</field>
 			            <field name="name">Output VAT</field>
@@ -194,14 +190,6 @@
 			            <field name="type">other</field>
 			            <field name="user_type" ref="conf_account_type_bnk"/>
 			        </record>
-			
-		<!--        <record id="conf_cash" model="account.account.template">-->
-		<!--            <field name="code">1105</field>-->
-		<!--            <field name="name">Cash</field>-->
-		<!--            <field ref="conf_cas" name="parent_id"/>-->
-		<!--            <field name="type">view</field>-->
-		<!--            <field name="user_type" ref="conf_account_type_cash"/>-->
-		<!--        </record>-->
 			
 		        <record id="conf_cli" model="account.account.template">
 		            <field name="code">111</field>
@@ -219,10 +207,6 @@
 			            <field eval="True" name="reconcile"/>
 			            <field name="user_type" ref="conf_account_type_liability"/>
 			        </record>
-			
-			        <!-- <record id="account.property_account_payable" model="ir.property">
-			            <field eval="'account.account,'+str(a_pay)" name="value"/>
-			        </record>-->
 			
 			        <record id="conf_iva" model="account.account.template">
 			            <field name="code">1112</field>
@@ -268,10 +252,6 @@
 		            <field name="user_type" ref="conf_account_type_income"/>
 		        </record>
 	
-	        <!-- <record id="account.property_account_income_categ" model="ir.property">
-	            <field eval="'account.account,'+str(a_sale)" name="value"/>
-	        </record> -->
-	
 	        <record id="conf_cos" model="account.account.template">
 	            <field name="code">21</field>
 	            <field name="name">Cost of Sales</field>
@@ -304,12 +284,8 @@
 		            <field name="user_type" ref="conf_account_type_expense"/>
 		        </record>
 
-        <!-- <record id="account.property_account_expense_categ" model="ir.property">
-            <field eval="'account.account,'+str(a_expense)" name="value"/>
-        </record> -->
-
         <!-- Taxes -->
-          <!-- TAX Code Definitions -->
+        <!-- TAX Code Definitions -->
 
         <!-- Invoiced TAX -->
 

@@ -95,7 +95,6 @@ class abstract_quality_check(object):
                 x_file = getattr(x_module, item)
                 x_obj = getattr(x_file, item)
                 self.tests.append(x_obj)
-#        raise 'Not Implemented'
 
     def run_test(self, cr, uid, module_path=""):
         '''
@@ -211,7 +210,6 @@ class module_quality_check(osv.osv):
                          ..........]}
         So here the detail result is in html format and summary will be in text_wiki format.
         '''
-        #list_folders = os.listdir(config['addons_path']+'/base_module_quality/')
         pool = pooler.get_pool(cr.dbname)
         obj_module = pool.get('ir.module.module')
         if not module_state:

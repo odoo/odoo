@@ -572,7 +572,7 @@ class account_move_line(osv.osv):
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
                 #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
-                # Bank and cash journal can have a payment or receipt transection, and in both type partner account
+                # Bank and cash journal can have a payment or receipt transaction, and in both type partner account
                 # will not be same id payment then payable, and if receipt then receivable
                 #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
                 if jt in ('sale', 'purchase_refund'):
@@ -1155,11 +1155,6 @@ class account_move_line(osv.osv):
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals.get('ref', False),
                     })]
-            #else:
-            #    raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
-
-        #if not 'currency_id' in vals:
-        #    vals['currency_id'] = account.company_id.currency_id.id
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
@@ -1228,11 +1223,6 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        # No needed, related to the job
-        #if not is_new_move and 'date' in vals:
-        #    if context and ('__last_update' in context):
-        #        del context['__last_update']
-        #    self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
         if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:

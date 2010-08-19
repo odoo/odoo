@@ -35,10 +35,10 @@ import tools
 class auction_artists(osv.osv):
     _name = "auction.artists"
     _columns = {
-        'name': fields.char('Artist/Author Name', size=64, required=True), 
-        'pseudo': fields.char('Pseudo', size=64), 
-        'birth_death_dates':fields.char('Birth / Death dates', size=64), 
-        'biography': fields.text('Biography'), 
+        'name': fields.char('Artist/Author Name', size=64, required=True),
+        'pseudo': fields.char('Pseudo', size=64),
+        'birth_death_dates':fields.char('Birth / Death dates', size=64),
+        'biography': fields.text('Biography'),
     }
 auction_artists()
 
@@ -49,10 +49,10 @@ class auction_dates(osv.osv):
     """Auction Dates"""
     _name = "auction.dates"
     _description=__doc__
-    
+
     def _adjudication_get(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res={}
-        total = 0.0        
+        total = 0.0
         lots_obj = self.pool.get('auction.lots')
         for auction in self.browse(cr, uid, ids):
             lots_ids = lots_obj.search(cr, uid, [('auction_id', '=', auction.id)])
@@ -71,27 +71,27 @@ class auction_dates(osv.osv):
         return name
 
     _columns = {
-        'name': fields.char('Auction Name', size=64, required=True), 
-        'expo1': fields.date('First Exposition Day', required=True, help="Beginning Exposition Date For Auction"), 
-        'expo2': fields.date('Last Exposition Day', required=True, help="Last Exposition Date For Auction"), 
-        'auction1': fields.date('First Auction Day', required=True, help="Start Date Of Auction"), 
-        'auction2': fields.date('Last Auction Day', required=True, help="End Date Of Auction"), 
-        'journal_id': fields.many2one('account.journal', 'Buyer Journal', required=True, help="Account Journal For Buyer"), 
-        'journal_seller_id': fields.many2one('account.journal', 'Seller Journal', required=True, help="Account Journal For Seller"), 
-        'buyer_costs': fields.many2many('account.tax', 'auction_buyer_taxes_rel', 'auction_id', 'tax_id', 'Buyer Costs', help="Account Tax For Buyer"), 
-        'seller_costs': fields.many2many('account.tax', 'auction_seller_taxes_rel', 'auction_id', 'tax_id', 'Seller Costs', help="Account Tax For Seller"), 
-        'acc_income': fields.many2one('account.account', 'Income Account', required=True), 
-        'acc_expense': fields.many2one('account.account', 'Expense Account', required=True), 
-        'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication', store=True), 
-        'state': fields.selection((('draft', 'Draft'), ('closed', 'Closed')), 'State', select=1, readonly=True, 
-                                  help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'), 
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True), 
+        'name': fields.char('Auction Name', size=64, required=True),
+        'expo1': fields.date('First Exposition Day', required=True, help="Beginning Exposition Date For Auction"),
+        'expo2': fields.date('Last Exposition Day', required=True, help="Last Exposition Date For Auction"),
+        'auction1': fields.date('First Auction Day', required=True, help="Start Date Of Auction"),
+        'auction2': fields.date('Last Auction Day', required=True, help="End Date Of Auction"),
+        'journal_id': fields.many2one('account.journal', 'Buyer Journal', required=True, help="Account Journal For Buyer"),
+        'journal_seller_id': fields.many2one('account.journal', 'Seller Journal', required=True, help="Account Journal For Seller"),
+        'buyer_costs': fields.many2many('account.tax', 'auction_buyer_taxes_rel', 'auction_id', 'tax_id', 'Buyer Costs', help="Account Tax For Buyer"),
+        'seller_costs': fields.many2many('account.tax', 'auction_seller_taxes_rel', 'auction_id', 'tax_id', 'Seller Costs', help="Account Tax For Seller"),
+        'acc_income': fields.many2one('account.account', 'Income Account', required=True),
+        'acc_expense': fields.many2one('account.account', 'Expense Account', required=True),
+        'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication', store=True),
+        'state': fields.selection((('draft', 'Draft'), ('closed', 'Closed')), 'State', select=1, readonly=True,
+                                  help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
     }
-    
+
     _defaults = {
-        'state': lambda *a: 'draft', 
+        'state': lambda *a: 'draft',
     }
-    
+
     _order = "auction1 desc"
 
     def close(self, cr, uid, ids, context=None):
@@ -112,7 +112,7 @@ class auction_dates(osv.osv):
         new_seller_invoice = lots_obj.seller_trans_create(cr, uid, lots_ids2, {})
         self.write(cr, uid, ids, {'state': 'closed'}) #close the auction
         return True
-    
+
 auction_dates()
 
 #----------------------------------------------------------
@@ -120,27 +120,27 @@ auction_dates()
 #----------------------------------------------------------
 class auction_deposit(osv.osv):
     """Auction Deposit Border"""
-    
+
     _name = "auction.deposit"
     _description=__doc__
     _order = "id desc"
     _columns = {
-        'transfer' : fields.boolean('Transfer'), 
-        'name': fields.char('Depositer Inventory', size=64, required=True), 
-        'partner_id': fields.many2one('res.partner', 'Seller', required=True, change_default=True), 
-        'date_dep': fields.date('Deposit date', required=True), 
-        'method': fields.selection((('keep', 'Keep until sold'), ('decease', 'Decrease limit of 10%'), ('contact', 'Contact the Seller')), 'Withdrawned method', required=True), 
-        'tax_id': fields.many2one('account.tax', 'Expenses'), 
-        'create_uid': fields.many2one('res.users', 'Created by', readonly=True), 
-        'info': fields.char('Description', size=64), 
-        'lot_id': fields.one2many('auction.lots', 'bord_vnd_id', 'Objects'), 
-        'specific_cost_ids': fields.one2many('auction.deposit.cost', 'deposit_id', 'Specific Costs'), 
-        'total_neg': fields.boolean('Allow Negative Amount'), 
+        'transfer' : fields.boolean('Transfer'),
+        'name': fields.char('Depositer Inventory', size=64, required=True),
+        'partner_id': fields.many2one('res.partner', 'Seller', required=True, change_default=True),
+        'date_dep': fields.date('Deposit date', required=True),
+        'method': fields.selection((('keep', 'Keep until sold'), ('decease', 'Decrease limit of 10%'), ('contact', 'Contact the Seller')), 'Withdrawned method', required=True),
+        'tax_id': fields.many2one('account.tax', 'Expenses'),
+        'create_uid': fields.many2one('res.users', 'Created by', readonly=True),
+        'info': fields.char('Description', size=64),
+        'lot_id': fields.one2many('auction.lots', 'bord_vnd_id', 'Objects'),
+        'specific_cost_ids': fields.one2many('auction.deposit.cost', 'deposit_id', 'Specific Costs'),
+        'total_neg': fields.boolean('Allow Negative Amount'),
     }
     _defaults = {
-        'method': lambda *a: 'keep', 
-        'total_neg': lambda *a: False, 
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'auction.deposit'), 
+        'method': lambda *a: 'keep',
+        'total_neg': lambda *a: False,
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'auction.deposit'),
     }
 
 auction_deposit()
@@ -149,16 +149,16 @@ auction_deposit()
 # (Specific) Deposit Costs
 #----------------------------------------------------------
 class auction_deposit_cost(osv.osv):
-    
+
     """Auction Deposit Cost"""
-    
+
     _name = 'auction.deposit.cost'
     _description=__doc__
     _columns = {
-        'name': fields.char('Cost Name', required=True, size=64), 
-        'amount': fields.float('Amount'), 
-        'account': fields.many2one('account.account', 'Destination Account', required=True), 
-        'deposit_id': fields.many2one('auction.deposit', 'Deposit'), 
+        'name': fields.char('Cost Name', required=True, size=64),
+        'amount': fields.float('Amount'),
+        'account': fields.many2one('account.account', 'Destination Account', required=True),
+        'deposit_id': fields.many2one('auction.deposit', 'Deposit'),
     }
 auction_deposit_cost()
 
@@ -166,16 +166,16 @@ auction_deposit_cost()
 # Lots Categories
 #----------------------------------------------------------
 class aie_category(osv.osv):
-    
+
     _name="aie.category"
     _order = "name"
     _columns={
-       'name': fields.char('Name', size=64, required=True), 
-       'code':fields.char('Code', size=64), 
-       'parent_id': fields.many2one('aie.category', 'Parent aie Category', ondelete='cascade'), 
-       'child_ids': fields.one2many('aie.category', 'parent_id', help="Childs aie category")       
+       'name': fields.char('Name', size=64, required=True),
+       'code':fields.char('Code', size=64),
+       'parent_id': fields.many2one('aie.category', 'Parent aie Category', ondelete='cascade'),
+       'child_ids': fields.one2many('aie.category', 'parent_id', help="Childs aie category")
     }
-    
+
     def name_get(self, cr, uid, ids, context=None):
         if not context:
             context = {}
@@ -189,22 +189,22 @@ class aie_category(osv.osv):
                 name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
-    
-aie_category()   
-    
+
+aie_category()
+
 class auction_lot_category(osv.osv):
     """Auction Lots Category"""
-    
+
     _name = 'auction.lot.category'
     _description=__doc__
     _columns = {
-        'name': fields.char('Category Name', required=True, size=64), 
-        'priority': fields.float('Priority'), 
-        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."), 
-        'aie_categ': fields.many2one('aie.category', 'Category', ondelete='cascade'), 
+        'name': fields.char('Category Name', required=True, size=64),
+        'priority': fields.float('Priority'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."),
+        'aie_categ': fields.many2one('aie.category', 'Category', ondelete='cascade'),
     }
     _defaults = {
-        'active' : lambda *a: 1, 
+        'active' : lambda *a: 1,
     }
 auction_lot_category()
 
@@ -217,11 +217,11 @@ def _type_get(self, cr, uid, context=None):
     obj = self.pool.get('auction.lot.category')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['name'], context)
-    res = [(r['name'], r['name']) for r in res]   
-    return res 
+    res = [(r['name'], r['name']) for r in res]
+    return res
 
 class auction_lots(osv.osv):
-    
+
     """Auction Object"""
     _name = "auction.lots"
     _order = "obj_num,lot_num,id"
@@ -231,7 +231,7 @@ class auction_lots(osv.osv):
         if not context:
             context={}
         return self.write(cr, uid, ids, {'state':'unsold'})
-    
+
     def button_taken_away(self, cr, uid, ids, context=None):
         if not context:
             context={}
@@ -256,7 +256,7 @@ class auction_lots(osv.osv):
         """
         if not context:
             context = {}
-        
+
         res = {}
         account_analytic_line_obj = self.pool.get('account.analytic.line')
         lots = self.browse(cr, uid, ids, context)
@@ -289,24 +289,24 @@ class auction_lots(osv.osv):
                 elif name == "gross_revenue":
                     if lot.auction_id:
                         result = lot.buyer_price - lot.seller_price
-                        
+
                 elif name == "net_revenue":
                     if lot.auction_id:
                         result = lot.buyer_price - lot.seller_price - lot.costs
-                        
+
                 elif name == "gross_margin":
                    if ((lot.obj_price==0) and (lot.state=='draft')):
                      amount = lot.lot_est1
-                   else: 
+                   else:
                      amount = lot.obj_price
                    if amount > 0:
                      result = (lot.gross_revenue * 100) / amount
                      result = round(result,2)
-                     
+
                 elif name == "net_margin":
                     if ((lot.obj_price==0) and (lot.state=='draft')):
                         amount = lot.lot_est1
-                    else: 
+                    else:
                         amount = lot.obj_price
                     if amount > 0:
                         result = (lot.net_revenue * 100) / amount
@@ -320,8 +320,8 @@ class auction_lots(osv.osv):
                         auct_id = lot.auction_id.id
                         lot_count = self.search(cr, uid, [('auction_id', '=', auct_id)], count=True)
                         line_ids = account_analytic_line_obj.search(cr, uid, [
-                                    ('account_id', '=', lot.auction_id.account_analytic_id.id), 
-                                    ('journal_id', '<>', lot.auction_id.journal_id.id), 
+                                    ('account_id', '=', lot.auction_id.account_analytic_id.id),
+                                    ('journal_id', '<>', lot.auction_id.journal_id.id),
                                     ('journal_id', '<>', lot.auction_id.journal_seller_id.id)])
                         indir_cost = lot.bord_vnd_id.specific_cost_ids
                         for r in lot.bord_vnd_id.specific_cost_ids:
@@ -330,20 +330,20 @@ class auction_lots(osv.osv):
                             if line.amount:
                                 som -= line.amount
                         result = som/lot_count
-                    
+
                 elif name=="paid_ach":
                     result = False
                     if lot.ach_inv_id and lot.ach_inv_id.state == 'paid':
                         result = True
-                                        
+
                 elif name=="paid_vnd":
                     result = False
                     if lot.sel_inv_id and lot.sel_inv_id.state == 'paid':
-                        result = True  
-    
+                        result = True
+
                 res[lot.id][name] = result
-                
-            
+
+
         return res
 
     def onchange_obj_ret(self, cr, uid, ids, obj_ret, context=None):
@@ -354,66 +354,66 @@ class auction_lots(osv.osv):
         return {}
 
     _columns = {
-        'bid_lines':fields.one2many('auction.bid_line', 'lot_id', 'Bids'), 
-        'auction_id': fields.many2one('auction.dates', 'Auction', select=1, help="Auction For Object"), 
-        'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True, help="Provide Deposit Information: seller, Withdrawned Method, Object, Deposit Costs"), 
-        'name': fields.char('Title', size=64, required=True, help='Auction Object Name'), 
-        'name2': fields.char('Short Description (2)', size=64), 
-        'lot_type': fields.selection(_type_get, 'Object category', size=64), 
-        'author_right': fields.many2one('account.tax', 'Author rights', help="Account Tax For Author Commission"), 
-        'lot_est1': fields.float('Minimum Estimation', help="Minimum Estimate Price"), 
-        'lot_est2': fields.float('Maximum Estimation', help="Maximum Estimate Price"), 
-        'lot_num': fields.integer('List Number', required=True, select=1, help="List Number In Depositer Inventory"), 
-        'create_uid': fields.many2one('res.users', 'Created by', readonly=True), 
-        'history_ids':fields.one2many('auction.lot.history', 'lot_id', 'Auction history'), 
-        'lot_local':fields.char('Location', size=64, help="Auction Location"), 
-        'artist_id':fields.many2one('auction.artists', 'Artist/Author'), 
-        'artist2_id':fields.many2one('auction.artists', 'Artist/Author2'), 
-        'important':fields.boolean('To be Emphatized'), 
-        'product_id':fields.many2one('product.product', 'Product', required=True), 
-        'obj_desc': fields.text('Object Description'), 
-        'obj_num': fields.integer('Catalog Number'), 
-        'obj_ret': fields.float('Price retired', help="Object Ret"), 
-        'obj_comm': fields.boolean('Commission'), 
-        'obj_price': fields.float('Adjudication price', help="Object Price"), 
-        'ach_avance': fields.float('Buyer Advance'), 
-        'ach_login': fields.char('Buyer Username', size=64), 
+        'bid_lines':fields.one2many('auction.bid_line', 'lot_id', 'Bids'),
+        'auction_id': fields.many2one('auction.dates', 'Auction', select=1, help="Auction For Object"),
+        'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True, help="Provide Deposit Information: seller, Withdrawned Method, Object, Deposit Costs"),
+        'name': fields.char('Title', size=64, required=True, help='Auction Object Name'),
+        'name2': fields.char('Short Description (2)', size=64),
+        'lot_type': fields.selection(_type_get, 'Object category', size=64),
+        'author_right': fields.many2one('account.tax', 'Author rights', help="Account Tax For Author Commission"),
+        'lot_est1': fields.float('Minimum Estimation', help="Minimum Estimate Price"),
+        'lot_est2': fields.float('Maximum Estimation', help="Maximum Estimate Price"),
+        'lot_num': fields.integer('List Number', required=True, select=1, help="List Number In Depositer Inventory"),
+        'create_uid': fields.many2one('res.users', 'Created by', readonly=True),
+        'history_ids':fields.one2many('auction.lot.history', 'lot_id', 'Auction history'),
+        'lot_local':fields.char('Location', size=64, help="Auction Location"),
+        'artist_id':fields.many2one('auction.artists', 'Artist/Author'),
+        'artist2_id':fields.many2one('auction.artists', 'Artist/Author2'),
+        'important':fields.boolean('To be Emphatized'),
+        'product_id':fields.many2one('product.product', 'Product', required=True),
+        'obj_desc': fields.text('Object Description'),
+        'obj_num': fields.integer('Catalog Number'),
+        'obj_ret': fields.float('Price retired', help="Object Ret"),
+        'obj_comm': fields.boolean('Commission'),
+        'obj_price': fields.float('Adjudication price', help="Object Price"),
+        'ach_avance': fields.float('Buyer Advance'),
+        'ach_login': fields.char('Buyer Username', size=64),
         'ach_uid': fields.many2one('res.partner', 'Buyer'),
-        'seller_id': fields.related('bord_vnd_id','partner_id', type='many2one', relation='res.partner', string='Seller', readonly=True), 
-        'ach_emp': fields.boolean('Taken Away', readonly=True, help="When state is Taken Away, This field is Marked as True"), 
-        'is_ok': fields.boolean('Buyer\'s payment', help="When Buyer Pay For Bank statement', This field is Marked"), 
-        'ach_inv_id': fields.many2one('account.invoice', 'Buyer Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
-        'sel_inv_id': fields.many2one('account.invoice', 'Seller Invoice', readonly=True, states={'draft':[('readonly', False)]}), 
-        'vnd_lim': fields.float('Seller limit'), 
-        'vnd_lim_net': fields.boolean('Net limit ?', readonly=True), 
-        'image': fields.binary('Image', help="Object Image"), 
-        'paid_vnd':fields.function(_getprice, string='Seller Paid', method=True, type='boolean', store=True, multi="paid_vnd", help="When state of Seller Invoice is 'Paid', This field is selected as True."), 
-        'paid_ach':fields.function(_getprice, string='Buyer Invoice Reconciled', method=True, type='boolean', store=True, multi="paid_ach", help="When state of Buyer Invoice is 'Paid', This field is selected as True."), 
+        'seller_id': fields.related('bord_vnd_id','partner_id', type='many2one', relation='res.partner', string='Seller', readonly=True),
+        'ach_emp': fields.boolean('Taken Away', readonly=True, help="When state is Taken Away, This field is Marked as True"),
+        'is_ok': fields.boolean('Buyer\'s payment', help="When Buyer Pay For Bank statement', This field is Marked"),
+        'ach_inv_id': fields.many2one('account.invoice', 'Buyer Invoice', readonly=True, states={'draft':[('readonly', False)]}),
+        'sel_inv_id': fields.many2one('account.invoice', 'Seller Invoice', readonly=True, states={'draft':[('readonly', False)]}),
+        'vnd_lim': fields.float('Seller limit'),
+        'vnd_lim_net': fields.boolean('Net limit ?', readonly=True),
+        'image': fields.binary('Image', help="Object Image"),
+        'paid_vnd':fields.function(_getprice, string='Seller Paid', method=True, type='boolean', store=True, multi="paid_vnd", help="When state of Seller Invoice is 'Paid', This field is selected as True."),
+        'paid_ach':fields.function(_getprice, string='Buyer Invoice Reconciled', method=True, type='boolean', store=True, multi="paid_ach", help="When state of Buyer Invoice is 'Paid', This field is selected as True."),
         'state': fields.selection((
-            ('draft', 'Draft'), 
-            ('unsold', 'Unsold'), 
-            ('paid', 'Paid'), 
-            ('sold', 'Sold'), 
-            ('taken_away', 'Taken away')), 'State', required=True, readonly=True, 
+            ('draft', 'Draft'),
+            ('unsold', 'Unsold'),
+            ('paid', 'Paid'),
+            ('sold', 'Sold'),
+            ('taken_away', 'Taken away')), 'State', required=True, readonly=True,
             help=' * The \'Draft\' state is used when a object is encoding as a new object. \
                 \n* The \'Unsold\' state is used when object does not sold for long time, user can also set it as draft state after unsold. \
                 \n* The \'Paid\' state is used when user pay for the object \
-                \n* The \'Sold\' state is used when user buy the object.'), 
-        'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price", help="Buyer Price"), 
-        'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price", help="Seller Price"), 
-        'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue", help="Buyer Price - Seller Price"), 
-        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin", help="(Gross Revenue*100.0)/ Object Price"), 
-        'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs", help="Deposit cost"), 
-        'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment', help="Bank statement Line For Given Buyer"), 
-        'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue", help="Buyer Price - Seller Price - Indirect Cost"), 
-        'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin", help="(Net Revenue * 100)/ Object Price"), 
+                \n* The \'Sold\' state is used when user buy the object.'),
+        'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price", help="Buyer Price"),
+        'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price", help="Seller Price"),
+        'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue", help="Buyer Price - Seller Price"),
+        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin", help="(Gross Revenue*100.0)/ Object Price"),
+        'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs", help="Deposit cost"),
+        'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment', help="Bank statement Line For Given Buyer"),
+        'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue", help="Buyer Price - Seller Price - Indirect Cost"),
+        'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin", help="(Net Revenue * 100)/ Object Price"),
     }
     _defaults = {
-        'state':lambda *a: 'draft', 
-        'lot_num':lambda *a:1, 
-        'is_ok': lambda *a: False, 
+        'state':lambda *a: 'draft',
+        'lot_num':lambda *a:1,
+        'is_ok': lambda *a: False,
     }
-    
+
     def name_get(self, cr, user, ids, context=None):
         if not context:
             context={}
@@ -467,7 +467,7 @@ class auction_lots(osv.osv):
                 amount+=t['amount']
         amount_total['value']= amount
         amount_total['amount']= amount
-        
+
         return amount_total
 
 
@@ -481,7 +481,7 @@ class auction_lots(osv.osv):
                 tax_cost_ids.append(border_id.tax_id)
             elif lot.auction_id and lot.auction_id.seller_costs:
                 tax_cost_ids += lot.auction_id.seller_costs
-                
+
         tax_costs = self.pool.get('account.tax').compute_all(cr, uid, tax_cost_ids, lot.obj_price, 1)['taxes']
         # delete useless keys from the costs computed by the tax object... this is useless but cleaner...
         for cost in tax_costs:
@@ -497,13 +497,13 @@ class auction_lots(osv.osv):
             #FIXME:the string passes have lot 'should go through the system translations.
             obj_price_wh_costs = reduce(lambda x, y: x + y['amount'], tax_costs, lot.obj_price)
             if obj_price_wh_costs < lot.vnd_lim:
-                costs.append({  'type': 1, 
-                                'id': lot.obj_num, 
-                                'name': 'Remise lot '+ str(lot.obj_num), 
+                costs.append({  'type': 1,
+                                'id': lot.obj_num,
+                                'name': 'Remise lot '+ str(lot.obj_num),
                                 'amount': lot.vnd_lim - obj_price_wh_costs}
                             )
         return costs
-    
+
     def compute_seller_costs(self, cr, uid, ids, manual_only=False):
         lots = self.browse(cr, uid, ids)
         costs = []
@@ -543,9 +543,9 @@ class auction_lots(osv.osv):
 
     # sum remise limite net and ristourne
     def compute_seller_costs_summed(self, cr, uid, ids): #ach_pay_id
-        
+
         """This Fuction  sum Net remittance limit and refund"""
-        
+
         taxes = self.compute_seller_costs(cr, uid, ids)
         taxes_summed = {}
         for tax in taxes:
@@ -567,7 +567,7 @@ class auction_lots(osv.osv):
         return taxes_summed.values()
 
     def buyer_proforma(self, cr, uid, ids, context=None):
-        
+
         if not context:
             context={}
         invoices = {}
@@ -589,11 +589,10 @@ class auction_lots(osv.osv):
                 if not invoice_addr_id:
                     raise orm.except_orm(_('No Invoice Address'), _('The Buyer "%s" has no Invoice Address.') % (contact_addr_id,))
                 inv = {
-                    'name': 'Auction proforma:' +lot.name, 
-                    'journal_id': lot.auction_id.journal_id.id, 
-                    'partner_id': partner_ref, 
-                    'type': 'out_invoice', 
-                #   'state':'proforma',
+                    'name': 'Auction proforma:' +lot.name,
+                    'journal_id': lot.auction_id.journal_id.id,
+                    'partner_id': partner_ref,
+                    'type': 'out_invoice',
                 }
                 inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', partner_ref)['value'])
                 inv['account_id'] = inv['account_id'] and inv['account_id'][0]
@@ -648,10 +647,10 @@ class auction_lots(osv.osv):
                 contact_addr_id = res['contact']
                 invoice_addr_id = res['invoice']
                 inv = {
-                    'name': 'Auction:' +lot.name, 
-                    'journal_id': lot.auction_id.journal_seller_id.id, 
-                    'partner_id': lot.bord_vnd_id.partner_id.id, 
-                    'type': 'in_invoice', 
+                    'name': 'Auction:' +lot.name,
+                    'journal_id': lot.auction_id.journal_seller_id.id,
+                    'partner_id': lot.bord_vnd_id.partner_id.id,
+                    'type': 'in_invoice',
                 }
                 inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'in_invoice', lot.bord_vnd_id.partner_id.id)['value'])
                 inv_id = inv_ref.create(cr, uid, inv, context)
@@ -666,14 +665,14 @@ class auction_lots(osv.osv):
                 taxes += map(lambda x: x.id, lot.auction_id.seller_costs)
 
             inv_line= {
-                'invoice_id': inv_id, 
-                'quantity': 1, 
-                'product_id': lot.product_id.id, 
-                'name': '['+str(lot.obj_num)+'] '+lot.auction_id.name, 
-                'invoice_line_tax_id': [(6, 0, taxes)], 
-                'account_analytic_id': lot.auction_id.account_analytic_id.id, 
-                'account_id': lot.auction_id.acc_expense.id, 
-                'price_unit': lot.obj_price, 
+                'invoice_id': inv_id,
+                'quantity': 1,
+                'product_id': lot.product_id.id,
+                'name': '['+str(lot.obj_num)+'] '+lot.auction_id.name,
+                'invoice_line_tax_id': [(6, 0, taxes)],
+                'account_analytic_id': lot.auction_id.account_analytic_id.id,
+                'account_id': lot.auction_id.acc_expense.id,
+                'price_unit': lot.obj_price,
             }
             inv_line_obj.create(cr, uid, inv_line, context)
             inv_ref.button_compute(cr, uid, invoices.values())
@@ -715,11 +714,11 @@ class auction_lots(osv.osv):
                 price = lot.obj_price or 0.0
                 lot_name =lot.obj_num
                 inv = {
-                    'name':lot.auction_id.name or '', 
-                    'reference': lot.ach_login, 
-                    'journal_id': lot.auction_id.journal_id.id, 
-                    'partner_id': lot.ach_uid.id, 
-                    'type': 'out_invoice', 
+                    'name':lot.auction_id.name or '',
+                    'reference': lot.ach_login,
+                    'journal_id': lot.auction_id.journal_id.id,
+                    'partner_id': lot.ach_uid.id,
+                    'type': 'out_invoice',
                 }
                 if invoice_number:
                     inv['number'] = invoice_number
@@ -734,14 +733,14 @@ class auction_lots(osv.osv):
                 taxes.append(lot.author_right.id)
 
             inv_line= {
-                'invoice_id': inv_id, 
-                'quantity': 1, 
-                'product_id': lot.product_id.id, 
-                'name': '['+str(lot.obj_num)+'] '+ lot.name, 
-                'invoice_line_tax_id': [(6, 0, taxes)], 
-                'account_analytic_id': lot.auction_id.account_analytic_id.id, 
-                'account_id': lot.auction_id.acc_income.id, 
-                'price_unit': lot.obj_price, 
+                'invoice_id': inv_id,
+                'quantity': 1,
+                'product_id': lot.product_id.id,
+                'name': '['+str(lot.obj_num)+'] '+ lot.name,
+                'invoice_line_tax_id': [(6, 0, taxes)],
+                'account_analytic_id': lot.auction_id.account_analytic_id.id,
+                'account_id': lot.auction_id.acc_income.id,
+                'price_unit': lot.obj_price,
             }
             inv_line_obj.create(cr, uid, inv_line, context)
             inv_ref.button_compute(cr, uid, [inv_id])
@@ -756,21 +755,21 @@ auction_lots()
 #----------------------------------------------------------
 class auction_bid(osv.osv):
     """Bid Auctions"""
-    
+
     _name = "auction.bid"
     _description=__doc__
     _order = 'id desc'
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Buyer Name', required=True), 
-        'contact_tel':fields.char('Contact', size=64), 
-        'name': fields.char('Bid ID', size=64, required=True), 
-        'auction_id': fields.many2one('auction.dates', 'Auction Date', required=True), 
-        'bid_lines': fields.one2many('auction.bid_line', 'bid_id', 'Bid'), 
+        'partner_id': fields.many2one('res.partner', 'Buyer Name', required=True),
+        'contact_tel':fields.char('Contact', size=64),
+        'name': fields.char('Bid ID', size=64, required=True),
+        'auction_id': fields.many2one('auction.dates', 'Auction Date', required=True),
+        'bid_lines': fields.one2many('auction.bid_line', 'bid_id', 'Bid'),
     }
     _defaults = {
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'auction.bid'), 
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'auction.bid'),
     }
-    
+
     def onchange_contact(self, cr, uid, ids, partner_id):
         if not partner_id:
             return {'value': {'contact_tel':False}}
@@ -785,13 +784,13 @@ auction_bid()
 
 class auction_lot_history(osv.osv):
     """Lot History"""
-    
+
     _name = "auction.lot.history"
     _description=__doc__
     _columns = {
-        'name': fields.date('Date', size=64), 
-        'lot_id': fields.many2one('auction.lots', 'Object', required=True, ondelete='cascade'), 
-        'auction_id': fields.many2one('auction.dates', 'Auction date', required=True, ondelete='cascade'), 
+        'name': fields.date('Date', size=64),
+        'lot_id': fields.many2one('auction.lots', 'Object', required=True, ondelete='cascade'),
+        'auction_id': fields.many2one('auction.dates', 'Auction date', required=True, ondelete='cascade'),
         'price': fields.float('Withdrawn price', digits=(16, 2))
     }
     _defaults = {
@@ -804,11 +803,11 @@ class auction_bid_lines(osv.osv):
     _description="Bid"
 
     _columns = {
-        'name': fields.char('Bid date', size=64), 
-        'bid_id': fields.many2one('auction.bid', 'Bid ID', required=True, ondelete='cascade'), 
-        'lot_id': fields.many2one('auction.lots', 'Object', required=True, ondelete='cascade'), 
-        'call': fields.boolean('To be Called'), 
-        'price': fields.float('Maximum Price'), 
+        'name': fields.char('Bid date', size=64),
+        'bid_id': fields.many2one('auction.bid', 'Bid ID', required=True, ondelete='cascade'),
+        'lot_id': fields.many2one('auction.lots', 'Object', required=True, ondelete='cascade'),
+        'call': fields.boolean('To be Called'),
+        'price': fields.float('Maximum Price'),
         'auction': fields.char(string='Auction Name', size=64)
     }
     _defaults = {

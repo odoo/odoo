@@ -117,7 +117,6 @@ class record:
                 value = self.post[field[0]]
             else :
                 pass
-                #raise Exception(field[0]+' not found !')
             try:
                 res = res + c_ljust(value, field[1])
             except :
@@ -459,7 +458,7 @@ def _create_dta(obj, cr, uid, data, context):
             v['partner_name'] = pline.bank_id.owner_name
         else:
             v['partner_name'] = pline.partner_id and pline.partner_id.name or ''
-        
+
         if pline.partner_id and pline.partner_id.address \
                 and pline.partner_id.address[0]:
             v['partner_street'] = pline.partner_id.address[0].street
@@ -494,7 +493,7 @@ def _create_dta(obj, cr, uid, data, context):
 
         # si compte iban -> iban (836)
         # si payment structure  -> bvr (826)
-        # si non -> (827) 
+        # si non -> (827)
 
         if elec_pay == 'dta_iban':
             # If iban => country=country code for space reason
@@ -541,7 +540,7 @@ def _create_dta(obj, cr, uid, data, context):
         elif elec_pay == 'bvbank':
             if not v['partner_bank_number'] :
                 if v['partner_bank_iban'] :
-                    v['partner_bank_number']= v['partner_bank_iban'] 
+                    v['partner_bank_number']= v['partner_bank_iban']
                 else:
                     raise wizard.except_wizard(_('Error'), _('You must provide ' \
                             'a bank number \n' \
@@ -576,7 +575,7 @@ def _create_dta(obj, cr, uid, data, context):
 
     # segment total
     v['amount_total'] = str(amount_currency_tot).replace('.',',')
-    v['sequence'] = str(seq).rjust(5).replace(' ','0')  
+    v['sequence'] = str(seq).rjust(5).replace(' ','0')
     if dta :
         dta = dta + record_gt890(v).generate()
 

@@ -97,7 +97,6 @@ class hr_expense_expense(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     def expense_confirm(self, cr, uid, ids, *args):
-        #for exp in self.browse(cr, uid, ids):
         self.write(cr, uid, ids, {
             'state':'confirm',
             'date_confirm': time.strftime('%Y-%m-%d')

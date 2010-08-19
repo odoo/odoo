@@ -1268,8 +1268,6 @@ true, it will allow you to hide the event alarm information without removing it.
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 #                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
-#                if start_date and start_date <= event_date:
-#                        start_date = event_date
                 start_date = event_date
                 if not data['rrule']:
                     if start_date and (event_date < start_date):
@@ -1821,7 +1819,6 @@ class res_users(osv.osv):
                     ('state', '=', 'accepted'), ('user_id', 'in', ids)
                     ])
 
-       # result = cr.dictfetchall()
         for attendee_data in attendee_obj.read(cr, uid, attendee_ids, ['user_id']):
             user_id = attendee_data['user_id']
             status = 'busy'

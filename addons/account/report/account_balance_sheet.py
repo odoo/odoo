@@ -91,7 +91,6 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         ]
 
         ctx = self.context.copy()
-#        ctx['state'] = form['context'].get('state','filter_no')
         ctx['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
         if data['form']['filter'] == 'filter_period' :

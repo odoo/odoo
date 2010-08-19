@@ -41,7 +41,7 @@ class account_analytic_account(osv.osv):
                     group by account_analytic_line.account_id" ,(parent_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
-                
+
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
 
     def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
@@ -154,7 +154,7 @@ class account_analytic_account(osv.osv):
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
- 
+
     # TODO Take care of pricelist and purchase !
     def _ca_theorical_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -185,7 +185,7 @@ class account_analytic_account(osv.osv):
                 GROUP BY account_analytic_line.account_id""",(parent_ids,))
             for account_id, sum in cr.fetchall():
                 res2[account_id] = round(sum,2)
-                
+
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
             res2.setdefault(obj_id, 0.0)
@@ -194,7 +194,7 @@ class account_analytic_account(osv.osv):
                 if child_id != obj_id:
                     res[obj_id] += res.get(child_id, 0.0)
                     res[obj_id] += res2.get(child_id, 0.0)
-        
+
         # sum both result on account_id
         for id in ids:
             res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
@@ -384,7 +384,7 @@ class account_analytic_account(osv.osv):
         'month_ids': fields.function(_month, method=True, type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_user, method=True, type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
     }
-    
+
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
@@ -425,7 +425,7 @@ class account_analytic_account_summary_user(osv.osv):
             string='Total Time'),
         'user' : fields.many2one('res.users', 'User'),
     }
-    
+
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
         cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
@@ -560,7 +560,6 @@ class account_analytic_account_summary_month(osv.osv):
     _description = "Hours summary by month"
     _auto = False
     _rec_name = 'month'
-#    _order = 'month'
 
     def _unit_amount(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -684,7 +683,7 @@ class account_analytic_account_summary_month(osv.osv):
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
-            
+
         res_trans_obj = self.pool.get('ir.translation')
         for f in fields_pre:
             if self._columns[f].translate:

@@ -82,10 +82,8 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-<!--                        <button name="open_voucher" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>-->
                         <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
                         <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
-<!--                        <button name="audit_complete" string="Audit Pass" states="posted" icon="terp-check"/>-->
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma,recheck"  icon="gtk-cancel"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
@@ -188,48 +186,6 @@
             </field>
          </record>
         
-        <!--  Receipt Vouchers -->
-<!--        <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list">-->
-<!--            <field name="name">Sales Receipt</field>-->
-<!--            <field name="res_model">account.voucher</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_mode">tree,form,graph</field>-->
-<!--            <field name="view_id" eval="view_voucher_tree"/>-->
-<!--            <field name="domain">[('journal_id.type','=','sale')]</field>-->
-<!--            <field name="context">{'type':'sale'}</field>-->
-<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
-<!--        </record>-->
-<!--        <menuitem id="menu_action_receipt_vou_voucher_list"-->
-<!--        action="action_receipt_vou_voucher_list" parent="account.menu_finance_receivables" sequence="12"/>-->
-<!--        -->
-        <!--  Sale Receipt Vouchers -->
-<!--        <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list_pay_now">-->
-<!--            <field name="name">Sales Receipt Payment</field>-->
-<!--            <field name="res_model">account.voucher</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_mode">tree,form,graph</field>-->
-<!--            <field name="view_id" eval="view_voucher_tree"/>-->
-<!--            <field name="domain">[('journal_id.type','=','sale')]</field>-->
-<!--            <field name="context">{'type':'sale', 'pay_new':True}</field>-->
-<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
-<!--        </record>-->
-<!--        <menuitem id="menu_action_receipt_vou_voucher_list_pay_now"-->
-<!--        action="action_receipt_vou_voucher_list_pay_now" parent="account.menu_finance_receivables" sequence="12"/>-->
-
-        <!--  Purchase Vouchers -->
-<!--        <record model="ir.actions.act_window" id="action_pay_vou_voucher_list">-->
-<!--            <field name="name">Vendor Bills</field>-->
-<!--            <field name="res_model">account.voucher</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_mode">tree,form,graph</field>-->
-<!--            <field name="view_id" eval="view_voucher_tree"/>-->
-<!--            <field name="domain">[('journal_id.type','=','purchase')]</field>-->
-<!--            <field name="context">{'type':'purchase'}</field>-->
-<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
-<!--        </record>-->
-<!--        <menuitem id="menu_action_pay_vou_voucher_list"-->
-<!--        action="action_pay_vou_voucher_list" parent="account.menu_finance_payables" sequence="12"/>-->
-
         <!-- Journal Vouchers -->
         <record model="ir.actions.act_window" id="action_voucher_list">
             <field name="name">Journal Vouchers</field>
@@ -242,51 +198,6 @@
         </record>
         <menuitem action="action_voucher_list" id="menu_encode_entries_by_voucher" parent="account.menu_finance_entries" sequence="6"/>
 
-<!--        <record id="action_cheque_register" model="ir.actions.act_window">-->
-<!--            <field name="name">Sales Payments</field>-->
-<!--            <field name="type">ir.actions.act_window</field>-->
-<!--            <field name="res_model">account.voucher</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_mode">tree,form</field>-->
-<!--            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>-->
-<!--            <field name="context">{'type':'bank'}</field>-->
-<!--            <field name="view_id" ref="view_voucher_tree"/>-->
-<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
-<!--        </record>-->
-<!--        <menuitem action="action_cheque_register" -->
-<!--            id="menu_action_cheque_register" -->
-<!--            parent="account.menu_finance_receivables"/>-->
-        
-<!--        <record id="action_cheque_pay" model="ir.actions.act_window">-->
-<!--            <field name="name">Vendor Payment</field>-->
-<!--            <field name="type">ir.actions.act_window</field>-->
-<!--            <field name="res_model">account.voucher</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_mode">tree,form</field>-->
-<!--            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>-->
-<!--            <field name="context">{'type':'bank'}</field>-->
-<!--            <field name="view_id" ref="view_voucher_tree"/>-->
-<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
-<!--        </record>-->
-<!--        <menuitem action="action_cheque_pay" -->
-<!--            id="menu_action_cheque_pay" -->
-<!--            parent="account.menu_finance_payables"/>-->
-        
-<!--        <record id="action_cheque_pay_voucher" model="ir.actions.act_window">-->
-<!--            <field name="name">Cheques</field>-->
-<!--            <field name="type">ir.actions.act_window</field>-->
-<!--            <field name="res_model">account.voucher</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_mode">tree,form</field>-->
-<!--            <field name="domain">[('journal_id.type', 'in', ['bank']), ('type','=','payment')]</field>-->
-<!--            <field name="context">{'type':'bank'}</field>-->
-<!--            <field name="view_id" ref="view_voucher_tree"/>-->
-<!--            <field name="search_view_id" ref="view_voucher_filter_new"/>-->
-<!--        </record>-->
-<!--        <menuitem action="action_cheque_pay_voucher" -->
-<!--            id="menu_action_cheque_pay_voucher" -->
-<!--            parent="account.menu_finance_bank_and_cash"/>-->
-        
         <record model="ir.ui.view" id="view_account_journal_form_inherit">
             <field name="name">account.journal.form.inherit</field>
             <field name="model">account.journal</field>
@@ -318,10 +229,5 @@
             <field name="search_view_id" ref="view_voucher_filter_new"/>
         </record>
 
-<!--        <menuitem -->
-<!--            id="menu_action_review_voucher_list"-->
-<!--            action="action_review_voucher_list" -->
-<!--            parent="account.periodical_processing_journal_entries_validation" sequence="2"/>-->
-<!--        -->
-        </data>
+    </data>
 </openerp>

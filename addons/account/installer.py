@@ -71,7 +71,6 @@ class account_installer(osv.osv_memory):
         'period':lambda *a:'month',
         'sale_tax':lambda *a:0.0,
         'purchase_tax':lambda *a:0.0,
-        #'charts':'configurable',
         'bank_accounts_id':_get_default_accounts
     }
 

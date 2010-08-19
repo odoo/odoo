@@ -157,7 +157,6 @@
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
                             <field name="pan_no" select="1"/>
-<!--                            <field name="bank_account"/>-->
                             <field name="bank_account_id"/>
                             <field name="place_of_birth"/>
                             <field name="children"/>
@@ -655,8 +654,6 @@
                         <separator colspan="2" string="Other Information"/>
                         <field name="company_id" select="1"/>
                         <field name="active" select="1"/>
-<!--                        <field name="include_in_salary" />-->
-<!--                        <field name="account_id" attrs="{'required': [('include_in_salary','=',True)]}"/>-->
                     </group>
                     <notebook colspan="4">
                         <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
@@ -730,52 +727,6 @@
             parent="payroll_configure"
         />
         <!-- End Company Contribution -->
-
-        <!-- Contract Form-->
-<!--        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">-->
-<!--            <field name="name">hr.contract.view.form</field>-->
-<!--            <field name="model">hr.contract</field>-->
-<!--            <field name="type">form</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <form string="Contract">-->
-<!--                    <field name="employee_id"/>-->
-<!--                    <separator colspan="4" string="General Information"/>-->
-<!--                    <field colspan="4" name="name" select="1"/>-->
-<!--                    <newline/>-->
-<!--                    <separator colspan="4" string="Contract Duration"/>-->
-<!--                    <field name="function"/>-->
-<!--                    <field name="working_hours_per_day"/>-->
-<!--                    <field name="working_days_per_week"/>-->
-<!--                    <field name="date_start" select="1"/>-->
-<!--                    <field name="date_end" select="1"/>-->
-<!--                    -->
-<!--                    <separator colspan="4" string="Salary"/>-->
-<!--                    <field name="wage_type_id"/>-->
-<!--                    <field name="wage"/>-->
-<!--                    -->
-<!--                    <separator colspan="4" string="Notes"/>-->
-<!--                    <field colspan="4" name="notes" nolabel="1"/>-->
-<!--                    -->
-<!--                    <separator colspan="4" string="Passport and Visa"/>-->
-<!--                    <field name="permit_no"/>-->
-<!--                    <field name="passport_id"/>-->
-<!--                    <field name="visa_no"/>-->
-<!--                    <field name="visa_expire"/>-->
-<!--                </form>-->
-<!--            </field>-->
-<!--        </record>-->
-<!--        <record id="action_hr_contract" model="ir.actions.act_window">-->
-<!--            <field name="name">Employee Contract</field>-->
-<!--            <field name="res_model">hr.contract</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_mode">form,tree</field>-->
-<!--        </record>-->
-<!--        <menuitem -->
-<!--            action="action_hr_contract" -->
-<!--            name="Employee Contract" -->
-<!--            id="hr_menu_contract" -->
-<!--            parent="payroll_configure"-->
-<!--        />-->
 
         <record id="view_hr_bank_advice_tree" model="ir.ui.view">
             <field name="name">hr.payroll.advice.tree</field>

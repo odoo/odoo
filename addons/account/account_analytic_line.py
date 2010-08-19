@@ -42,7 +42,7 @@ class account_analytic_line(osv.osv):
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
-                }
+    }
     _order = 'date'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -65,7 +65,6 @@ class account_analytic_line(osv.osv):
                 return False
         return True
     _constraints = [
-#        (_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
     ]
 
     # Compute the cost based on the price type define into company

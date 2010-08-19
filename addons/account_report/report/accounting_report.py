@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,8 +42,6 @@ class accounting_report(report_sxw.rml_parse):
             'amount':res[0]['amount'],
             'note':res[0]['note'],
             'level': level,
-#            'color_font':res[0]['color_font'],
-#            'color_back':res[0]['color_back'],
         }
 
         self.ret_list.append(ret_dict)

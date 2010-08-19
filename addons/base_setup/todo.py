@@ -160,8 +160,6 @@ class res_currency(osv.osv):
             context = {}
 #        We can use the following line,if we want to restrict this name_get for company setup only
 #        But, its better to show currencies as name(Code).
-#        if not (context.get('active_model','') == 'ir.actions.todo'):
-#            return super(res_currency,self).name_get(cr, uid, ids, context=context)
         if not len(ids):
             return []
         if isinstance(ids, (int, long)):

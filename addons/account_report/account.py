@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -33,25 +33,6 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 class account_report(osv.osv):
     _name = "account.report.report"
     _description = "Account Reporting"
-#    _color = [
-#            ('', ''),
-#            ('green','Green'),
-#            ('red','Red'),
-#            ('pink','Pink'),
-#            ('blue','Blue'),
-#            ('yellow','Yellow'),
-#            ('cyan','Cyan'),
-#            ('lightblue','Light Blue'),
-#            ('orange','Orange'),
-#            ]
-#    _style = [
-#            ('1','Header 1'),
-#            ('2','Header 2'),
-#            ('3','Header 3'),
-#            ('4','Header 4'),
-#            ('5','Normal'),
-#            ('6', 'Small'),
-#            ]
 
     def _amount_get(self, cr, uid, ids, field_name, arg, context={}):
         obj_fy=self.pool.get('account.fiscalyear')
@@ -118,10 +99,6 @@ class account_report(osv.osv):
                 'report': _calc_report,
                 'tax_code': _calc_tax_code,
             }
-#            if field_name=='status':
-#                fld_name = 'expression_status'
-#            else:
-#                fld_name = 'expression'
             try:
                 val = eval(getattr(rep,'expression'), objdict)
             except:
@@ -147,8 +124,6 @@ class account_report(osv.osv):
         if parent_id:
             acc=self.pool.get('account.report.report').browse(cr, uid, parent_id)
             v['type']=acc.type
-#            if int(acc.style) < 6:
-#                v['style'] = str(int(acc.style)+1)
         return {'value': v}
 
     _columns = {
@@ -182,12 +157,8 @@ class account_report(osv.osv):
             string='Status'),
          'disp_tree':fields.boolean('Display Tree', help='When the indicators are printed, if one indicator is set with this field to True, then it will display one more graphs with all its children in tree'),
          'disp_graph':fields.boolean('Display As Graph', help='If the field is set to True, information will be printed as a Graph, otherwise as an array.'),
-#        'style': fields.selection(_style, 'Style', required=True),
-#        'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
-#        'color_back' : fields.selection(_color, 'Back Color')
     }
     _defaults = {
-#        'style': lambda *args: '5',
         'active': lambda *args: True,
         'type': lambda *args: 'indicator',
     }
@@ -207,7 +178,7 @@ class account_report(osv.osv):
         return self.name_get(cr, user, ids, context=context)
 
     _constraints = [
-    #TODO Put an expression to valid expression 
+    #TODO Put an expression to valid expression
     ]
 
 account_report()

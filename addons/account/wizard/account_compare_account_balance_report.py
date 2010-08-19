@@ -46,13 +46,13 @@ class account_compare_account_balance_report(osv.osv_memory):
         'periods': fields.many2many('account.period', 'period_account_balance_rel',
                                     'report_id', 'period_id', 'Periods',
                                     help='Keep empty for all open fiscal year'),
-        }
+    }
 
     _defaults={
         'compare_pattern': 'none',
         'account_choice': 'moves',
         'period_manner': 'actual',
-        }
+    }
 
     def check(self, cr, uid, ids, context=None):
         data={}

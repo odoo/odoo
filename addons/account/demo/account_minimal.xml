@@ -411,18 +411,6 @@
         Product income and expense accounts, default parameters
         -->
 
-<!--        <record id="property_account_expense_prd" model="ir.property">-->
-<!--            <field name="name">property_account_expense</field>-->
-<!--            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_expense')]"/>-->
-<!--            <field eval="'account.account,'+str(ref('account.a_expense'))" name="value"/>-->
-<!--            <field name="company_id" ref="base.main_company"/>-->
-<!--        </record>-->
-<!--        <record id="property_account_income_prd" model="ir.property">-->
-<!--            <field name="name">property_account_income</field>-->
-<!--            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_income')]"/>-->
-<!--            <field eval="'account.account,'+str(ref('account.a_sale'))" name="value"/>-->
-<!--            <field name="company_id" ref="base.main_company"/>-->
-<!--        </record>-->
         <record id="property_account_expense_categ" model="ir.property">
             <field name="name">property_account_expense_categ</field>
             <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_expense_categ')]"/>

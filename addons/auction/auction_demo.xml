@@ -34,12 +34,12 @@
 	<record model="account.account" id="auction_income">
 		<field name="name">Auction Adjudications</field>
 		<field name="code">7x*</field>
-		 <field name="user_type" ref="account.account_type_income"/> 
+		 <field name="user_type" ref="account.account_type_income"/>
 		<field name="type">receivable</field>
 		<field name="currency_id" search="[('name','=','EUR')]"/>
 		<field name="parent_id" eval="auction_income_view"/>
 	</record>
-	
+
 	<record model="account.account" id="auction_expense">
 		<field name="name">Auction Adjudication Expenses</field>
 		<field name="code">6x*</field>
@@ -128,7 +128,7 @@
 	    <field name="type">default</field>
 	    <field name="partner_id" ref="partner_record1"/>
 	</record>
-	
+
 	<record id="res_partner_unknown_address_3" model="res.partner.address">
 	    <field name="city">Louvain-la-Neuve</field>
 	    <field name="name">Thomas Passot</field>
@@ -141,12 +141,12 @@
 	</record>
 
         <!-- demo data for the auction_artist object-->
-        
+
     <record model="auction.artists" id="auction_art_1">
         <field name="name">Philippe Lavilier</field>
         <field name="birth_death_dates">1345-1450</field>
     </record>
-    
+
     <record model="auction.artists" id="auction_art_2">
         <field name="name">POREAU OSWALD</field>
         <field name="birth_death_dates">1877-1955</field>
@@ -195,7 +195,7 @@
         <field name="base_code_id" ref="account_tax_code_id5"/>
         <field name="tax_code_id" ref="account_tax_code_id5"/>
     </record>
-    
+
     <record id="auction_tax1" model="account.tax">
         <field name="name">TVA</field>
         <field name="amount">0.12</field>
@@ -211,7 +211,7 @@
         <field name="base_code_id" ref="account_tax_code_id2"/>
         <field name="tax_code_id" ref="account_tax_code_id2"/>
     </record>
-    
+
     <record id="auction_tax3" model="account.tax">
         <field name="name">Buyer Costs</field>
         <field name="amount">0.21</field>
@@ -219,7 +219,7 @@
         <field name="base_code_id" ref="account_tax_code_id1"/>
         <field name="tax_code_id" ref="account_tax_code_id1"/>
     </record>
-    
+
     <record id="auction_tax4" model="account.tax">
          <field name="name">Seller Costs1</field>
          <field name="amount">-0.10</field>
@@ -227,7 +227,7 @@
          <field name="base_code_id" ref="account_tax_code_id1"/>
          <field name="tax_code_id" ref="account_tax_code_id1"/>
     </record>
-    
+
     <record id="auction_tax5" model="account.tax">
          <field name="name">Seller Costs</field>
          <field name="amount">-0.10</field>
@@ -253,7 +253,7 @@
        <field name="base_code_id" ref="account_tax_code_id2"/>
        <field name="tax_code_id" ref="account_tax_code_id2"/>
     </record>
-    
+
     <record id="monproduit" model="product.product">
         <field name="name">Oeuvres a 21%</field>
         <field name="categ_id" ref="product.product_category_pc"/>
@@ -267,7 +267,7 @@
         <field name="priority">1</field>
         <field name="aie_categ" ref="aie_category_paint_view"/>
     </record>
-    
+
     <record model="auction.lot.category" id="auction_cat_2">
         <field name="name">Furniture</field>
         <field name="priority">2</field>
@@ -279,7 +279,7 @@
         <field name="priority">2</field>
          <field name="aie_categ"  ref="aie_category_pcg_view"/>
     </record>
-    
+
     <record model="auction.lot.category" id="auction_cat_4">
         <field name="name">Sculpture</field>
         <field name="priority">10</field>
@@ -389,7 +389,6 @@
         <!--field name="product_id" ref="monproduit"/-->
         <field name="author_right" ref="auction_tax"/>
         <field name="product_id" model="product.product" search="[]"/>
-        <!--<field name="tva" model="account.tax" search="[]"/>-->
     </record>
 
     <record model="auction.lots" id="auction_deposit_2_lot_1">
@@ -403,10 +402,8 @@
         <field name="obj_num">4</field>
         <field name="obj_price">0.00</field>
         <field name="bord_vnd_id" ref="auction_deposit_2" />
-        <!--field name="product_id" ref="monproduit"/-->
         <field name="author_right" ref="auction_tax"/>
         <field name="product_id" model="product.product" search="[]"/>
-        <!--<field name="tva" model="account.tax" search="[]"/>-->
     </record>
 
     <record model="auction.lots" id="auction_deposit_2_lot_2">
@@ -420,17 +417,14 @@
         <field name="obj_num">4</field>
         <field name="obj_price">375</field>
         <field name="bord_vnd_id" ref="auction_deposit_2" />
-        <!--field name="product_id" ref="monproduit"/-->
         <field name="author_right" ref="auction_tax"/>
         <field name="product_id" model="product.product" search="[]"/>
-        <!--<field name="tva" model="account.tax" search="[]"/>-->
     </record>
 
     <record model="auction.lots" id="auction_deposit_3_lot_1">
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">Plastic glass</field>
         <field name="lot_num">5</field>
-        <!--field name="lot_type">glass</field-->
         <field name="lot_est1">300</field>
         <field name="lot_est2">500</field>
         <field name="obj_desc">show pices</field>
@@ -462,7 +456,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">bresslet</field>
         <field name="lot_num">7</field>
-        <!--field name="lot_type">Jewellery</field-->
         <field name="lot_est1">150</field>
         <field name="lot_est2">400</field>
         <field name="obj_desc">show pices</field>
@@ -478,7 +471,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">gold chain</field>
         <field name="lot_num">11</field>
-        <!--field name="lot_type">Jawellery</field-->
         <field name="lot_est1">400</field>
         <field name="lot_est2">700</field>
         <field name="obj_desc">show pices</field>
@@ -494,7 +486,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">fiber glass</field>
         <field name="lot_num">8</field>
-        <!--field name="lot_type">glass</field-->
         <field name="lot_est1">300</field>
         <field name="lot_est2">500</field>
         <field name="obj_desc">show pices</field>
@@ -510,7 +501,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">lake photos</field>
         <field name="lot_num">9</field>
-        <!--field name="lot_type">painting</field-->
         <field name="lot_est1">100</field>
         <field name="lot_est2">200</field>
         <field name="obj_desc">show pices</field>
@@ -526,7 +516,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">mobile photos</field>
         <field name="lot_num">10</field>
-        <!--field name="lot_type">mobile</field-->
         <field name="lot_est1">4500</field>
         <field name="lot_est2">4700</field>
         <field name="obj_desc">show models</field>
@@ -542,7 +531,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">Antique photos</field>
         <field name="lot_num">11</field>
-        <!--field name="lot_type">common</field-->
         <field name="lot_est1">1600</field>
         <field name="lot_est2">2200</field>
         <field name="obj_desc">show map Items</field>
@@ -558,7 +546,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">Hardware  photos</field>
         <field name="lot_num">12</field>
-        <!--field name="lot_type">common</field-->
         <field name="lot_est1">2600</field>
         <field name="lot_est2">2800</field>
         <field name="obj_desc">show map Items</field>
@@ -590,7 +577,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">mobile accesories photos</field>
         <field name="lot_num">13</field>
-        <!--field name="lot_type">common</field-->
         <field name="lot_est1">1600</field>
         <field name="lot_est2">2200</field>
         <field name="obj_desc">show map Items</field>
@@ -606,7 +592,6 @@
         <field name="auction_id" ref="auction_date_2" />
         <field name="name">pikes-candles</field>
         <field name="lot_num">14</field>
-        <!--field name="lot_type">common</field-->
         <field name="lot_est1">30</field>
         <field name="lot_est2">50</field>
         <field name="obj_desc">show map Items</field>
@@ -622,7 +607,6 @@
         <field name="auction_id" ref="auction_date_1" />
         <field name="name">Coffee Service</field>
         <field name="lot_num">15</field>
-        <!--field name="lot_type">common</field-->
         <field name="lot_est1">10</field>
         <field name="lot_est2">20</field>
         <field name="obj_desc">show map Items</field>
@@ -823,9 +807,7 @@
 
     <record model="hr.employee" id="employee2">
        <field name="name">Demo</field>
-<!--            <field name="regime">45</field>-->
        <field name="user_id" search="[('login','=','admin')]" model="res.users"/>
-<!--            <field name="holiday_max">25</field>
          <field name="workgroups" ref="timesheet_group1" />-->
     </record>
 
@@ -836,43 +818,43 @@
         <field name="action">sign_in</field>
         <field name="employee_id" ref="hr.employee1" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown1_emp2">
        <field name="name" eval="time.strftime('%Y-%m-25 9:21')"/>
        <field name="action">sign_out</field>
        <field name="employee_id" ref="hr.employee1" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown1_emp3">
        <field name="name" eval="time.strftime('%Y-%m-25 09:25')"/>
        <field name="action">sign_in</field>
        <field name="employee_id" ref="hr.employee1" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown1_emp4">
        <field name="name" eval="time.strftime('%Y-%m-25 11:54')"/>
        <field name="action">sign_out</field>
        <field name="employee_id" ref="hr.employee1" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown1_emp5">
        <field name="name" eval="time.strftime('%Y-%m-25 11:59')"/>
        <field name="action">sign_in</field>
        <field name="employee_id" ref="hr.employee1" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown1_emp6">
        <field name="name" eval="time.strftime('%Y-%m-25 13:31')"/>
        <field name="action">sign_out</field>
        <field name="employee_id" ref="hr.employee1"/>
     </record>
-     
+
     <record model="hr.attendance" id="unknown1_emp7">
        <field name="name" eval="time.strftime('%Y-%m-25 20:10')"/>
        <field name="action">sign_in</field>
        <field name="employee_id" ref="hr.employee1" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown1_emp8">
        <field name="name" eval="time.strftime('%Y-%m-25 21:34')"/>
        <field name="action">sign_out</field>
@@ -886,43 +868,43 @@
        <field name="action">sign_in</field>
        <field name="employee_id" ref="employee2" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown2_emp2">
        <field name="name" eval="time.strftime('%Y-%m-26 9:21')"/>
        <field name="action">sign_out</field>
        <field name="employee_id" ref="employee2" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown2_emp3">
        <field name="name" eval="time.strftime('%Y-%m-26 10:21')"/>
        <field name="action">sign_in</field>
        <field name="employee_id" ref="employee2" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown2_emp4">
        <field name="name" eval="time.strftime('%Y-%m-26 12:54')"/>
        <field name="action">sign_out</field>
        <field name="employee_id" ref="employee2" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown2_emp5">
        <field name="name" eval="time.strftime('%Y-%m-26 13:32')"/>
        <field name="action">sign_in</field>
        <field name="employee_id" ref="employee2" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown2_emp6">
        <field name="name" eval="time.strftime('%Y-%m-26 16:31')"/>
        <field name="action">sign_out</field>
        <field name="employee_id" ref="employee2"/>
     </record>
-     
+
     <record model="hr.attendance" id="unknown2_emp7">
        <field name="name" eval="time.strftime('%Y-%m-26 17:10')"/>
        <field name="action">sign_in</field>
        <field name="employee_id" ref="employee2" />
     </record>
-     
+
     <record model="hr.attendance" id="unknown2_emp8">
        <field name="name" eval="time.strftime('%Y-%m-26 22:34')"/>
        <field name="action">sign_out</field>

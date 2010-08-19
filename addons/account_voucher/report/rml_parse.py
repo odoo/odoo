@@ -107,7 +107,6 @@ class rml_parse(report_sxw.rml_parse):
         return Stringer
 
     def explode_this(self,chaine,length):
-        #chaine = self.repair_string(chaine)
         chaine = rstrip(chaine)
         ast = list(chaine)
         i = length

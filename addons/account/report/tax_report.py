@@ -78,7 +78,6 @@ class tax_report(rml_parse.rml_parse):
 				top_result.append(res_general[ind_general])
 				ind_general+=1
 			i+=1
-		#array_result = self.sort_result(top_result)
 		return top_result
 		#return array_result
 
@@ -132,8 +131,6 @@ class tax_report(rml_parse.rml_parse):
 					GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
 						company_id, periods_ids,))
 		res = self.cr.dictfetchall()
-
-						#AND line.period_id IN ('+ period_sql_list +') \
 
 		i = 0
 		while i<len(res):
