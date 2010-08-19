@@ -37,7 +37,7 @@ class payment_order(osv.osv):
 
     def get_wizard(self,mode):
         if mode == 'dta':
-            return 'l10n_ch', 'action_account_dtr_create_values'
+            return 'l10n_ch', 'action_dta_create'
 
         return super(payment_order,self).get_wizard(mode)
 
