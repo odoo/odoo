@@ -116,7 +116,7 @@
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
-                                groups="base.group_extended"/>
+                                groups="base.group_extended" domain="[('parent_id','!=',False)]" />
                             <newline/>
                             <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">

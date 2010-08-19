@@ -37,7 +37,7 @@ class sale_shop(osv.osv):
         'payment_default_id': fields.many2one('account.payment.term', 'Default Payment Term', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
-        'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'project_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
