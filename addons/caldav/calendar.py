@@ -391,6 +391,13 @@ class CalDAV(object):
                             ical = tz_obj.export_cal(cr, uid, None, \
                                          data[map_field], ical, context=context)
                             timezones.append(data[map_field])
+                        if vevent.contents.get('recurrence-id'):
+                            # Convert recurrence-id field value accroding to timezone value
+                            recurid_val = vevent.contents.get('recurrence-id')[0].value
+                            rtz_str = self.format_date_tz(recurid_val.strftime('%Y-%m-%d %H:%M:%S'), tzval.title())
+                            rtz_date = datetime.strptime(rtz_str, "%Y-%m-%d %H:%M:%S")
+                            vevent.contents.get('recurrence-id')[0].params['TZID'] = [tzval.title()]
+                            vevent.contents.get('recurrence-id')[0].value = rtz_date
                         if exfield:
                             # Set exdates according to timezone value
                             # This is the case when timezone mapping comes after the exdate mapping
