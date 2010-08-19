@@ -189,7 +189,8 @@ class account_voucher(osv.osv):
                         \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
-        'amount':fields.float('Amount', readonly=True),
+        'amount':fields.float('Amount', readonly=True), # don't forget to put right digits, computed field ?
+        'tax_amount':fields.float('Tax Amount'), # don't forget to put right digits
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type', required=True),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
@@ -198,12 +199,9 @@ class account_voucher(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
         'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
         'pay_now':fields.selection([
-            ('pay_now','Pay Now'),
-            ('pay_later','Pay Later'),
+            ('pay_now','Pay Directly'),
+            ('pay_later','Pay Later or Group Funds'),
         ],'Payment', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'pay_journal_id':fields.many2one('account.journal', 'Payment Journal', readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','in',['bank','cash'])]),
-        'pay_account_id':fields.many2one('account.account', 'Payment Account', readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','<>','view')]),
-        'pay_amount':fields.float('Payment Amount', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_id':fields.many2one('account.tax', 'Tax', required=False),
     }
     
@@ -213,7 +211,7 @@ class account_voucher(osv.osv):
         'journal_id':_get_journal,
         'currency_id': _get_currency,
         'state': lambda *a: 'draft',
-        'pay_now':lambda *a: 'pay_now',
+        'pay_now':lambda *a: 'pay_later',
         'name': lambda *a: '/',
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'reference_type': lambda *a: "none",
@@ -771,7 +769,7 @@ class account_voucher_line(osv.osv):
 
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
-        'name':fields.related('voucher_id', 'name', size=256, type='char', string='Memo'),
+        'name':fields.related('voucher_id', 'name', size=256, type='char', string='Description'),
         'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'amount':fields.float('Amount'),
@@ -780,6 +778,11 @@ class account_voucher_line(osv.osv):
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'is_tax':fields.boolean('Tax ?', required=False),
         'stype':fields.selection([('service','Service'),('other','Other')], 'Product Type'),
+        'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
+        'date_original': fields.date('Date', readonly="1"), #fields.related account.move.line
+        'date_due': fields.date('Due Date', readonly="1"), #fields.related account.move.line
+        'amount_original': fields.float('Originial Amount', readonly="1"), #fields.related account.move.line
+        'amount_unreconciled': fields.float('Open Balance', readonly="1"), #fields.related account.move.line
     }
     _defaults = {
         'type': lambda *a: 'cr'
