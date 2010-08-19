@@ -209,7 +209,7 @@ class view_sc(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
     }
     _sql_constraints = [
-        ('shortcut_unique', 'unique(res_id, user_id)', 'Shortcut for this menu already exists!'),
+        ('shortcut_unique', 'unique(res_id, resource, user_id)', 'Shortcut for this menu already exists!'),
     ]
         
 view_sc()
