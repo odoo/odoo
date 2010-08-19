@@ -284,6 +284,14 @@
 		            <field name="user_type" ref="conf_account_type_expense"/>
 		        </record>
 
+                <record id="conf_a_salary_expense" model="account.account.template">
+                    <field name="code">221</field>
+                    <field name="name">Salary Expenses</field>
+                    <field ref="conf_ovr" name="parent_id"/>
+                    <field name="type">other</field>
+                    <field name="user_type" ref="conf_account_type_expense"/>
+                </record>
+
         <!-- Taxes -->
         <!-- TAX Code Definitions -->
 

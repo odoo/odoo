@@ -300,6 +300,14 @@
             <field name="parent_id" ref="ovr"/>
         </record>
 
+        <record id="a_salary_expense" model="account.account">
+            <field name="code">X2112</field>
+            <field name="name">Salary Expenses - (test)</field>
+            <field ref="ovr" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="account_type_expense"/>
+        </record>
+
         <!-- Properties -->
         <record forcecreate="True" id="property_account_receivable" model="ir.property">
             <field name="name">property_account_receivable</field>
