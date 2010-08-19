@@ -35,7 +35,7 @@ class account_invoice_pay_writeoff(osv.osv_memory):
         'writeoff_acc_id': fields.many2one('account.account', 'Write-Off account', required=True),
         'writeoff_journal_id': fields.many2one('account.journal', 'Write-Off journal', required=True),
         'comment': fields.char('Comment', size=64, required=True),
-        'analytic_id': fields.many2one('account.analytic.account','Analytic Account')
+        'analytic_id': fields.many2one('account.analytic.account','Analytic Account', domain=[('parent_id', '!=', False)])
     }
     _defaults = {
         'comment': 'Write-Off',

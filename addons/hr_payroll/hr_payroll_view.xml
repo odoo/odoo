@@ -98,7 +98,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
+                <page string="Notes" position="before">
                     <page string="Contracts">
                         <field colspan="4" mode="form,tree" name="contract_ids" nolabel="1">
                             <tree string="Contracts">
@@ -110,7 +110,7 @@
                                 <field name="wage_type_id"/>
                                 <field name="wage"/>
                             </tree>
-                            <form string="Contract">
+                            <form string="Contracts">
                                 <group colspan="4" col="6">
                                     <field name="name" select="1"/>
                                     <field name="job_id"/>
@@ -153,7 +153,7 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Miscelleanous">
+                    <page string="Miscellaneous">
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
                             <field name="pan_no" select="1"/>
@@ -166,7 +166,6 @@
                             <field name="manager" select="1"/>
                             <field name="vehicle" select="1"/>
                             <field name="vehicle_distance" select="1"/>
-                            <field name="medic_exam" select="1"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="2" string="ESI Information"/>
@@ -200,10 +199,10 @@
                         <field name="property_bank_account"/>
                         <field name="salary_account"/>
                         <field name="employee_account"/>
-                        <field name="analytic_account"/>
+                        <field name="analytic_account" groups="base.group_extended"/>
                         <field name="slip_ids" colspan="4" nolabel="1"/>
                     </page>
-                </notebook>
+                </page>
             </field>
         </record>
 
@@ -522,7 +521,8 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Slip"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-account" string="Paid" domain="[('state','=','done'),('paid','=',True)]" help="Paid Slip"/>
+                        <filter icon="terp-dolar_ok!" string="Paid" domain="[('state','=','done'),('paid','=',True)]" help="Paid Slip"/>
+                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="employee_id"/>
                         <field name="number"/>
@@ -530,9 +530,12 @@
                     </group>
                     <newline/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'group_by':'register_id'}"/>
-                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'group_by':'employee_id'}"/>
-                        <filter string="Companies" name="company_id" icon="terp-go-month" context="{'group_by':'company_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Companies" name="company_id"  icon="terp-go-home" context="{'group_by':'company_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     </group>
                 </search>

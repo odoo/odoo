@@ -603,10 +603,10 @@ class account_bank_statement_reconcile_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', required=True),
         'line_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile'),
         'amount': fields.float('Amount', required=True),
-        'analytic_id': fields.many2one('account.analytic.account',"Analytic Account")
+        'analytic_id': fields.many2one('account.analytic.account',"Analytic Account", domain=[('parent_id', '!=', False)])
     }
     _defaults = {
-        'name': lambda *a: 'Write-Off',
+        'name': 'Write-Off',
     }
 account_bank_statement_reconcile_line()
 

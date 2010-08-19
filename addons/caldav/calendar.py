@@ -272,9 +272,15 @@ class CalDAV(object):
                 self.__attribute__[name][type] = None
         return True
 
-    def format_date_tz(self, date, tz=None):
+    def format_date_tz(self, src_date, tz=None):
+        """ This function converts date into specifice timezone value
+        @param src_date: Date to be converted (datetime.datetime)
+        @return: Converted datetime.datetime object for the date
+        """
         format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-        return tools.server_to_local_timestamp(date, format, format, tz)
+        date_str = src_date.strftime('%Y-%m-%d %H:%M:%S')
+        res_date = tools.server_to_local_timestamp(date_str, format, format, tz)
+        return datetime.strptime(res_date, "%Y-%m-%d %H:%M:%S")
 
     def parse_ics(self, cr, uid, child, cal_children=None, context=None):
         """ parse calendaring and scheduling information
@@ -389,6 +395,11 @@ class CalDAV(object):
                             ical = tz_obj.export_cal(cr, uid, None, \
                                          data[map_field], ical, context=context)
                             timezones.append(data[map_field])
+                        if vevent.contents.get('recurrence-id'):
+                            # Convert recurrence-id field value accroding to timezone value
+                            recurid_val = vevent.contents.get('recurrence-id')[0].value
+                            vevent.contents.get('recurrence-id')[0].params['TZID'] = [tzval.title()]
+                            vevent.contents.get('recurrence-id')[0].value =  self.format_date_tz(recurid_val, tzval.title())
                         if exfield:
                             # Set exdates according to timezone value
                             # This is the case when timezone mapping comes after the exdate mapping
@@ -396,11 +407,8 @@ class CalDAV(object):
                             exfield.params['TZID'] = [tzval.title()]
                             exdates_updated = []
                             for exdate in exdates:
-                                date1 = (datetime.strptime(exdate, "%Y%m%dT%H%M%S")).strftime('%Y-%m-%d %H:%M:%S')
-                                dest_date = self.format_date_tz(date1, tzval.title())
-                                ex_date = (datetime.strptime(dest_date, "%Y-%m-%d %H:%M:%S")).strftime('%Y%m%dT%H%M%S')
-                                exdates_updated.append(ex_date)
-                            exfield.value = map(parser.parse, exdates_updated)
+                                exdates_updated.append(self.format_date_tz(parser.parse(exdate), tzval.title()))
+                            exfield.value = exdates_updated
                     elif field == 'organizer' and data[map_field]:
                         organizer = str2mailto(data[map_field])
                         event_org = vevent.add('organizer')
@@ -419,21 +427,16 @@ class CalDAV(object):
                                     exfield.params['TZID'] = [tzval.title()]
                                     exdates_updated = []
                                     for exdate in exdates:
-                                        date1 = (datetime.strptime(exdate, "%Y%m%dT%H%M%S")).strftime('%Y-%m-%d %H:%M:%S')
-                                        dest_date = self.format_date_tz(date1, tzval.title())
-                                        ex_date = (datetime.strptime(dest_date, "%Y-%m-%d %H:%M:%S")).strftime('%Y%m%dT%H%M%S')
-                                        exdates_updated.append(ex_date)
-                                    exdates = exdates_updated
-                                exfield.value = map(parser.parse, exdates)
+                                        exdates_updated.append(self.format_date_tz(parser.parse(exdate), tzval.title()))
+                                    exfield.value = exdates_updated
                             else:
                                 vevent.add(field).value = tools.ustr(data[map_field])
                         elif map_type in ('datetime', 'date') and data[map_field]:
                             dtfield = vevent.add(field)
                             if tzval:
                                 # Export the date according to the event timezone value
-                                dest_date = self.format_date_tz(data[map_field], tzval.title())
                                 dtfield.params['TZID'] = [tzval.title()]
-                                dtfield.value = parser.parse(dest_date)
+                                dtfield.value = self.format_date_tz(parser.parse(data[map_field]), tzval.title())
                             else:
                                 dtfield.value = parser.parse(data[map_field])
                         elif map_type == "timedelta":

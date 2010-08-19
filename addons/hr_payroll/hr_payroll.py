@@ -876,7 +876,6 @@ class hr_payslip(osv.osv):
         contract = cr.dictfetchone()
 
         contract = contract and contract or {}
-
         return contract
 
     def _get_leaves(self, cr, user, slip, employee, context=None):
@@ -1307,10 +1306,10 @@ class hr_employee(osv.osv):
 
     _columns = {
         'pan_no':fields.char('PAN No', size=64, required=False, readonly=False),
-        'esp_account':fields.char('EPS Account', size=64, required=False, readonly=False),
-        'pf_account':fields.char('PF Account', size=64, required=False, readonly=False),
+        'esp_account':fields.char('EPS Account', size=64, required=False, readonly=False, help="EPS Account"),
+        'pf_account':fields.char('PF Account', size=64, required=False, readonly=False, help="Providend Fund Account"),
         'pg_joining': fields.date('PF Join Date'),
-        'esi_account':fields.char('ESI Account', size=64, required=False, readonly=False),
+        'esi_account':fields.char('ESI Account', size=64, required=False, readonly=False, help="ESI Account"),
         'hospital_id':fields.many2one('res.partner.address', 'ESI Hospital', required=False),
         'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
         'otherid':fields.char('Other Id', size=64, required=False),

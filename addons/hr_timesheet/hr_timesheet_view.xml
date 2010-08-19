@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-
     <data>
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
+        <menuitem id="base.menu_project_management_time_tracking" name="Time Tracking"
+                  parent="base.menu_main_pm" sequence="3"/>
+
+
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
@@ -94,12 +98,12 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
+                <page string="Notes" position="before">
                     <page string="Timesheets">
                         <field name="product_id" domain="[('type','=','service')]"/>
                         <field name="journal_id"/>
                     </page>
-                </notebook>
+                </page>
             </field>
         </record>
 

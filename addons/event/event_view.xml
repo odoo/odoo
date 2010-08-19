@@ -33,8 +33,8 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="base.menu_event_config" parent="base.marketing_menu" sequence="30" groups="base.group_extended,base.group_system"/>
-        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_event_config" groups="base.group_extended,base.group_sale_manager,base.group_system"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_extended"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 

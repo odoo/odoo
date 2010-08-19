@@ -494,6 +494,7 @@
                         <field name="period_id"/>
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
+                        <field name="currency" invisible="1"/>
                         <button name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoices" type="action" icon="gtk-dnd"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
@@ -886,7 +887,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id" groups="base.group_extended"/>
-                    <field name="analytic_account_id" groups="base.group_extended"/>
+                    <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]"/>
                     <field name="amount_currency" groups="base.group_extended"/>
                     <field name="currency_id" groups="base.group_extended"/>
                     <field name="reconcile_partial_id" groups="base.group_extended"/>
@@ -963,7 +964,7 @@
 
                             <group col="2" colspan="2"  groups="base.group_extended">
                                 <separator colspan="2" string="Analytic"/>
-                                <field name="analytic_account_id" groups="base.group_extended"/>
+                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                             </group>
                             <separator string="Narration" colspan="4"/>
                             <field name="narration" colspan="4" nolabel="1"/>
@@ -1008,7 +1009,7 @@
                             <field name="blocked" select="3"/>
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                            <field name="analytic_account_id" groups="base.group_extended"/>
+                            <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                             <separator colspan="4" string="State"/>
                             <newline/>
                             <field name="reconcile_id"/>
@@ -1236,7 +1237,7 @@
 
                                             <group col="2" colspan="2" groups="base.group_extended">
                                                 <separator colspan="2" string="Analytic"/>
-                                                <field name="analytic_account_id" groups="base.group_extended"/>
+                                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                                             </group>
                                             <separator string="Narration" colspan="4"/>
                                             <field name="narration" colspan="4" nolabel="1"/>
@@ -1255,7 +1256,7 @@
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
-                                    <field name="analytic_account_id" groups="base.group_extended"/>
+                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                                     <field name="amount_currency" groups="base.group_extended"/>
                                     <field name="currency_id" groups="base.group_extended"/>
                                     <field name="tax_code_id"/>
@@ -1785,7 +1786,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
-                    <field name="analytic_account_id" groups="base.group_extended"/>
+                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -2338,6 +2339,7 @@
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" />
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
+                        <field name="currency" invisible="1"/>
                     </group>
 
                     <notebook colspan="4">

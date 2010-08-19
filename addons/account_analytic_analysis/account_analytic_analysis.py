@@ -401,12 +401,12 @@ class account_analytic_account_summary_user(osv.osv):
         max_user = cr.fetchone()[0]
         account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
         user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
+        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
         if parent_ids:
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_user ' \
                     'WHERE account_id IN %s ' \
-                        'AND "user" IN %s',(parent_ids, user_ids,))
+                        'AND "user" IN %s',(parent_ids, tuple(user_ids),))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
         for obj_id in ids:
@@ -472,7 +472,7 @@ class account_analytic_account_summary_user(osv.osv):
             fields = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
@@ -566,12 +566,12 @@ class account_analytic_account_summary_month(osv.osv):
         account_obj = self.pool.get('account.analytic.account')
         account_ids = [int(str(int(x))[:-6]) for x in ids]
         month_ids = [int(str(int(x))[-6:]) for x in ids]
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
+        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
         if parent_ids:
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_month ' \
                     'WHERE account_id IN %s ' \
-                        'AND month_id IN %s ',(parent_ids, month_ids,))
+                        'AND month_id IN %s ',(parent_ids, tuple(month_ids),))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
         for obj_id in ids:
@@ -649,7 +649,7 @@ class account_analytic_account_summary_month(osv.osv):
             fields = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()

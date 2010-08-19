@@ -30,7 +30,6 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields, osv
 
 class res_partner(osv.osv):
@@ -41,11 +40,7 @@ class res_partner(osv.osv):
         'Companies that refers to partner'),
     }
 
-
-
 res_partner()
-
-
 
 class res_partner_bank(osv.osv):
     _inherit = "res.partner.bank"
@@ -75,5 +70,7 @@ class res_partner_bank(osv.osv):
     _sql_constraints = [
         ('bvr_adherent_uniq', 'unique (bvr_adherent_num)', 'The BVR adherent number must be unique !')
     ]
+
 res_partner_bank()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

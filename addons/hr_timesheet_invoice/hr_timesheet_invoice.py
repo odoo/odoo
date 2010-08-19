@@ -28,8 +28,8 @@ class hr_timesheet_invoice_factor(osv.osv):
     _description = "Invoice Rate"
     _columns = {
         'name': fields.char('Internal name', size=128, required=True),
-        'customer_name': fields.char('Name', size=128),
-        'factor': fields.float('Discount (%)', required=True),
+        'customer_name': fields.char('Name', size=128, help="Name of the customer"),
+        'factor': fields.float('Discount (%)', required=True, help="Discount in percentage"),
     }
     _defaults = {
         'factor': lambda *a: 0.0,

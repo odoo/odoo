@@ -189,7 +189,8 @@ class account_voucher(osv.osv):
                         \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
-        'amount':fields.float('Amount', readonly=True),
+        'amount':fields.float('Amount', readonly=True), # don't forget to put right digits, computed field ?
+        'tax_amount':fields.float('Tax Amount'), # don't forget to put right digits
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type', required=True),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
@@ -198,12 +199,9 @@ class account_voucher(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
         'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
         'pay_now':fields.selection([
-            ('pay_now','Pay Now'),
-            ('pay_later','Pay Later'),
+            ('pay_now','Pay Directly'),
+            ('pay_later','Pay Later or Group Funds'),
         ],'Payment', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'pay_journal_id':fields.many2one('account.journal', 'Payment Journal', readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','in',['bank','cash'])]),
-        'pay_account_id':fields.many2one('account.account', 'Payment Account', readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','<>','view')]),
-        'pay_amount':fields.float('Payment Amount', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_id':fields.many2one('account.tax', 'Tax', required=False),
     }
     
@@ -213,13 +211,60 @@ class account_voucher(osv.osv):
         'journal_id':_get_journal,
         'currency_id': _get_currency,
         'state': lambda *a: 'draft',
-        'pay_now':lambda *a: 'pay_now',
+        'pay_now':lambda *a: 'pay_later',
         'name': lambda *a: '/',
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'reference_type': lambda *a: "none",
         'audit': lambda *a: False,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
     }
+
+    def create(self, cr, uid, vals, context={}):
+        """
+        Create a new record for a model account_voucher
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param vals: provides data for new record
+        @param context: context arguments, like lang, time zone
+        
+        @return: Returns an id of the new record
+        """
+
+        old_line = []
+        new_lines = []
+        
+        payment_ids = vals.get('payment_ids')
+        vals.update({
+            'payment_ids':False
+        })
+        for line in payment_ids:
+            id1 = line[0]
+            id2 = line[1]
+            res = line[2]
+            if id1 == 0 and id2 == 0:
+                new_lines += [(id1, id2, res)]
+            else:
+                old_line += [(id1, id2, res)]
+
+        if new_lines:
+            vals.update({
+                'payment_ids':new_lines
+            })
+        res_id = super(account_voucher, self).create(cr, uid, vals, context)
+        
+        if old_line:
+            new_payment_ids = []
+            for line in old_line:
+                id1 = line[0]
+                id2 = line[1]
+                res = line[2]
+                res.update({
+                    'voucher_id':res_id
+                })
+                new_payment_ids += [(id1, id2, res)]
+                
+            self.write(cr, uid, [res_id], {'payment_ids':new_payment_ids})
+        return res_id
     
     def onchange_partner_id(self, cr, uid, ids, partner_id, ttype, context={}):
         """
@@ -257,14 +302,7 @@ class account_voucher(osv.osv):
         if ttype not in ('payment', 'receipt'):
             return default
         
-        if not ids:
-            raise osv.except_osv(_('Invalid !'), _('Please save voucher before selection partner !'))
-        
-        line_ids = line_pool.search(cr, uid, [('voucher_id','=',ids[0])])
-        if line_ids:
-            line_pool.unlink(cr, uid, line_ids)
-        
-        voucher_id = ids[0]
+        voucher_id = ids and ids[0] or False
         ids = move_pool.search(cr, uid, [('reconcile_id','=', False), ('state','=','posted'), ('partner_id','=',partner_id)], context=context)
         for move in move_pool.browse(cr, uid, ids):
             rs = {
@@ -771,7 +809,7 @@ class account_voucher_line(osv.osv):
 
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
-        'name':fields.related('voucher_id', 'name', size=256, type='char', string='Memo'),
+        'name':fields.related('voucher_id', 'name', size=256, type='char', string='Description'),
         'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'amount':fields.float('Amount'),
@@ -780,6 +818,11 @@ class account_voucher_line(osv.osv):
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'is_tax':fields.boolean('Tax ?', required=False),
         'stype':fields.selection([('service','Service'),('other','Other')], 'Product Type'),
+        'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
+        'date_original': fields.date('Date', readonly="1"), #fields.related account.move.line
+        'date_due': fields.date('Due Date', readonly="1"), #fields.related account.move.line
+        'amount_original': fields.float('Originial Amount', readonly="1"), #fields.related account.move.line
+        'amount_unreconciled': fields.float('Open Balance', readonly="1"), #fields.related account.move.line
     }
     _defaults = {
         'type': lambda *a: 'cr'
