@@ -107,6 +107,13 @@
     progress: 0.0
     state: draft
 -
+  I create an Interview Request record
+- 
+  !record {model: hr.evaluation.interview, id: hr_evaluation_interview_0}:
+    date_deadline: '2010-06-28'
+    evaluation_id: 'hr_evaluation_evaluation_0'
+    survey_id:  hr_evaluation.survey_0
+-
   I check that evaluation is in "Draft" state.
 -
   !assert {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0}:
@@ -121,7 +128,7 @@
   I close this servey request by giving answer of survey question.
 -
   !python {model: hr.evaluation.interview}: |
-      self.survey_req_done(cr, uid, [ref('hr_evaluation_evaluation_0')])
+    self.survey_req_done(cr, uid, [ref('hr_evaluation_interview_0')])
 -
   I click on "Final Validation" button to finalise evaluation.
 -

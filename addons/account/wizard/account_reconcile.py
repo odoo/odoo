@@ -148,7 +148,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         'writeoff_acc_id': fields.many2one('account.account','Write-Off account', required=True),
         'date_p': fields.date('Date'),
         'comment': fields.char('Comment', size= 64, required=True),
-        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
         }
     _defaults = {
         'date_p': time.strftime('%Y-%m-%d'),

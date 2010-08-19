@@ -197,19 +197,6 @@ class account_account(osv.osv):
     _parent_store = True
     logger = netsvc.Logger()
 
-    def _get_children_and_consol(self, cr, uid, ids, context={}):
-        ids2=[]
-        temp=[]
-        read_data= self.read(cr, uid, ids,['id','child_id'], context)
-        for data in read_data:
-            ids2.append(data['id'])
-            if data['child_id']:
-                temp=[]
-                for x in data['child_id']:
-                    temp.append(x)
-                ids2 += self._get_children_and_consol(cr, uid, temp, context)
-        return ids2
-
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if context is None:
@@ -244,7 +231,9 @@ class account_account(osv.osv):
         return super(account_account, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
-    def _get_children_and_consol(self, cr, uid, ids, context={}):
+    def _get_children_and_consol(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         #this function search for all the children and all consolidated children (recursively) of the given account ids
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context)
         ids3 = []
@@ -418,16 +407,9 @@ class account_account(osv.osv):
         'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
     }
 
-    def _default_company(self, cr, uid, context={}):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-
     _defaults = {
         'type': lambda *a : 'view',
         'reconcile': lambda *a: False,
-        'company_id': _default_company,
         'active': lambda *a: True,
         'check_history': lambda *a: True,
         'currency_mode': lambda *a: 'current',
@@ -795,10 +777,8 @@ class account_fiscalyear(osv.osv):
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
-                                  help='When fiscal year is created. The state is \'Draft\'. At the end of the year it is in \'Done\' state.'),
+        'state': fields.selection([('draft','Open'), ('done','Closed')], 'State', readonly=True),
     }
-
     _defaults = {
         'state': lambda *a: 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
@@ -875,11 +855,10 @@ class account_period(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
                                   help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
-        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
+        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start"
 
@@ -1010,7 +989,6 @@ class account_journal_period(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
         'active': lambda *a: True,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "period_id"
 
@@ -1055,13 +1033,13 @@ class account_move(osv.osv):
         ids = []
         if name:
             ids += self.search(cr, user, [('name','ilike',name)]+args, limit=limit, context=context)
-        
+
         if not ids and name and type(name) == int:
             ids += self.search(cr, user, [('id','=',name)]+args, limit=limit, context=context)
 
         if not ids:
             ids += self.search(cr, user, args, limit=limit, context=context)
-        
+
         return self.name_get(cr, user, ids, context=context)
 
     def name_get(self, cursor, user, ids, context=None):
@@ -1171,7 +1149,7 @@ class account_move(osv.osv):
                 if move.name =='/':
                     new_name = False
                     journal = move.journal_id
-                    
+
                     if invoice and invoice.internal_number:
                         new_name = invoice.internal_number
                     else:

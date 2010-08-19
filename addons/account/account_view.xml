@@ -496,6 +496,7 @@
                         <field name="period_id"/>
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
+                        <field name="currency" invisible="1"/>
                         <button name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoices" type="action" icon="gtk-dnd"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
@@ -660,7 +661,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_type_form" groups="base.group_extended,base.group_system" id="menu_action_account_type_form" parent="menu_low_level"/>
+        <menuitem action="action_account_type_form" groups="base.group_extended" id="menu_action_account_type_form" parent="menu_low_level"/>
         <!--
     Entries
     -->
@@ -676,6 +677,7 @@
                     <field name="period_id"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
+                    <field name="reconcile_id"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                 </tree>
@@ -895,7 +897,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id" groups="base.group_extended"/>
-                    <field name="analytic_account_id" groups="base.group_extended"/>
+                    <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]"/>
                     <field name="amount_currency" groups="base.group_extended"/>
                     <field name="currency_id" groups="base.group_extended"/>
                     <field name="reconcile_partial_id" groups="base.group_extended"/>
@@ -972,7 +974,7 @@
 
                             <group col="2" colspan="2"  groups="base.group_extended">
                                 <separator colspan="2" string="Analytic"/>
-                                <field name="analytic_account_id" groups="base.group_extended"/>
+                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                             </group>
                             <separator string="Narration" colspan="4"/>
                             <field name="narration" colspan="4" nolabel="1"/>
@@ -1017,7 +1019,7 @@
                             <field name="blocked" select="3"/>
                             <newline/>
                             <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                            <field name="analytic_account_id" groups="base.group_extended"/>
+                            <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                             <separator colspan="4" string="State"/>
                             <newline/>
                             <field name="reconcile_id"/>
@@ -1245,7 +1247,7 @@
 
                                             <group col="2" colspan="2" groups="base.group_extended">
                                                 <separator colspan="2" string="Analytic"/>
-                                                <field name="analytic_account_id" groups="base.group_extended"/>
+                                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                                             </group>
                                             <separator string="Narration" colspan="4"/>
                                             <field name="narration" colspan="4" nolabel="1"/>
@@ -1264,7 +1266,7 @@
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
-                                    <field name="analytic_account_id" groups="base.group_extended"/>
+                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                                     <field name="amount_currency" groups="base.group_extended"/>
                                     <field name="currency_id" groups="base.group_extended"/>
                                     <field name="tax_code_id"/>
@@ -1910,7 +1912,7 @@
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
-                    <field name="analytic_account_id" groups="base.group_extended"/>
+                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -2142,7 +2144,7 @@
             <field name="view_mode">tree,form,search</field>
         </record>
 
-        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_accounts"/>
+        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_accounts" sequence="1"/>
 
         <!-- Account Tax Templates -->
 
@@ -2326,8 +2328,7 @@
                           <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                  <field name="company_id"  widget="selection"
-                         />
+                  <field name="company_id" widget="selection"/>
                   <field name ="code_digits" />
                   <field name="chart_template_id"/>
                   <field name ="seq_journal" />
@@ -2428,7 +2429,7 @@
         <menuitem
             action="action_account_fiscal_position_template_form"
             id="menu_action_account_fiscal_position_form_template"
-            parent="account_template_folder" sequence="20"/>
+            parent="account_template_taxes" sequence="20"/>
 
         <!-- Cash Statement -->
         <record id="view_cash_statement_tree" model="ir.ui.view">
@@ -2464,6 +2465,7 @@
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" />
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
+                        <field name="currency" invisible="1"/>
                     </group>
 
                     <notebook colspan="4">

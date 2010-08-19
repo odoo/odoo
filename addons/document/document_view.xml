@@ -61,7 +61,7 @@
         name="Storage Media"
         action="action_document_storage_form"
         id="menu_document_storage_media"
-        groups="base.group_extended,base.group_system"
+        groups="base.group_extended"
         parent="menu_document_management_configuration"/>
 
     <record model="ir.ui.view" id="view_document_directory_form">
@@ -335,6 +335,7 @@
         <field name="name">Document</field>
         <field name="view_type">form</field>
         <field name="search_view_id" ref="view_attach_filter"/>
+        <field name="help">Documents give your access to all attached documents; it's a repository of all attached documents (mails, documents attached to a project, etc.)</field>
     </record>
     <menuitem name="Documents" id="menu_document_doc" parent="knowledge.menu_document" sequence="0"/>
     <menuitem

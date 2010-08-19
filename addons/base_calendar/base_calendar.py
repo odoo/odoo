@@ -1111,8 +1111,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
         'recurrent_uid': fields.integer('Recurrent ID'),
         'recurrent_id': fields.datetime('Recurrent ID date'),
-        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, \
-                         string='Timezone', store=True),
+        'vtimezone': fields.selection(_tz_get, size=64, string='Timezone'),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
@@ -1560,7 +1559,8 @@ true, it will allow you to hide the event alarm information without removing it.
                     # Remove one of the recurrent event
                     date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
-                    res = self.write(cr, uid, event_id, {'exdate': date_new})
+                    exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + date_new
+                    res = self.write(cr, uid, event_id, {'exdate': exdate})
                 else:
                     res = super(calendar_event, self).unlink(cr, uid, event_id)
                     self.pool.get('res.alarm').do_alarm_unlink(cr, uid, event_id, self._name)

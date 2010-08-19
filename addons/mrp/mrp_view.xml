@@ -422,7 +422,7 @@
         <menuitem
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
-            groups="base.group_extended,mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
+            groups="base.group_extended"
             parent="menu_mrp_bom"
             sequence="20"/>
 
@@ -913,7 +913,7 @@
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" groups="mrp.group_mrp_user" sequence="3" />
 
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
-            groups="base.group_extended,mrp.group_mrp_manager,base.group_system"
+            groups="base.group_extended"
             sequence="4"/>
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>

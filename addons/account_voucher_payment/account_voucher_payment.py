@@ -22,53 +22,16 @@
 from osv import fields, osv
 from tools.translate import _
 
-class account_move(osv.osv):
-    _inherit = 'account.move'
-    
-    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        """
-        Returns a list of ids based on search domain {args}
-    
-        @param cr: A database cursor
-        @param user: ID of the user currently logged in
-        @param args: list of conditions to be applied in search opertion
-        @param offset: default from first record, you can start from nth record
-        @param limit: number of records to be obtained as a result of search opertion
-        @param order: ordering on any field(s)
-        @param context: context arguments, like lang, time zone
-        @param count: 
-        
-        @return: Returns a list of ids based on search domain
-        """
-        if not context:
-            context = {}
-        ttype = context.get('ttype', False)
-        partner = context.get('partner_id', False)
-        voucher = context.get('voucher', False)
-        if voucher and not partner:
-            raise osv.except_osv(_('Invalid Partner !'), _('Please select the partner !'))
-            
-        if ttype and ttype in ('receipt'):
-            args += [('journal_id.type','in', ['sale', 'purchase_refund'])]
-        elif ttype and ttype in ('payment'):
-            args += [('journal_id.type','in', ['purchase', 'sale_refund'])]
-        elif ttype and ttype in('sale', 'purchase'):
-            raise osv.except_osv(_('Invalid action !'), _('You can not reconcile sales, purchase, or journal voucher with invoice !'))
-            args += [('journal_id.type','=', 'do_not_allow_search')]
-        res = super(account_move, self).search(cr, user, args, offset, limit, order, context, count)
-        return res
-    
-account_move()
-
-class account_move_line(osv.osv):
-    _inherit = "account.move.line"
-    _columns = {
-        'voucher_invoice': fields.many2one('account.invoice', 'Invoice', readonly=True),
-    }
-account_move_line()
+#class account_move_line(osv.osv):
+#    _inherit = "account.move.line"
+#    _columns = {
+#        'voucher_invoice': fields.many2one('account.invoice', 'Invoice', readonly=True),
+#    }
+#account_move_line()
 
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
+    
     _columns = {
         'payment_ids':fields.one2many('account.voucher.line', 'voucher_id', 'Voucher Lines', readonly=True, states={'draft':[('readonly',False)]}),
     }
@@ -85,7 +48,7 @@ class account_voucher(osv.osv):
         invoice_pool = self.pool.get('account.invoice')
         
         for inv in self.browse(cr, uid, ids):
-            
+        
             if inv.move_id:
                 continue
 
@@ -153,63 +116,78 @@ class account_voucher(osv.osv):
             line_ids += [move_line_pool.create(cr, uid, move_line)]
             rec_ids = []
             
-            for line in inv.payment_ids:
-                amount=0.0
-
-                if inv.type in ('payment'):
-                    ref = line.ref
-                
+            if inv.type == 'sale' and inv.pay_now == 'pay_now':
+                #create the payment line manually
                 move_line = {
-                     'name':line.name,
-                     'debit':False,
-                     'credit':False,
-                     'account_id':line.account_id.id or False,
-                     'move_id':move_id ,
-                     'journal_id':inv.journal_id.id,
-                     'period_id':inv.period_id.id,
-                     'partner_id':line.partner_id.id or False,
-                     'ref':ref,
-                     'date':inv.date,
-                     'analytic_account_id':False
+                    'name':inv.name,
+                    'debit':inv.pay_amount,
+                    'credit':False,
+                    'account_id':inv.pay_account_id.id or False,
+                    'move_id':move_id ,
+                    'journal_id':inv.pay_journal_id.id,
+                    'period_id':inv.period_id.id,
+                    'partner_id':inv.partner_id.id,
+                    'ref':ref,
+                    'date':inv.date
                 }
-                
-                if diff_currency_p:
-                    amount_currency = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, line.amount)
-                    line.amount = amount_currency
-                    move_line.update({
-                        'amount_currency':amount_currency,
-                        'currency_id':inv.currency_id.id
-                    })
-                
-                if line.account_analytic_id:
-                    move_line.update({
-                        'analytic_account_id':line.account_analytic_id.id
-                    })
-                
-                if line.type == 'dr':
-                    move_line.update({
-                        'debit': line.amount or False
-                    })
-                    amount = line.amount
-                
-                elif line.type == 'cr':
-                    move_line.update({
-                        'credit': line.amount or False
-                    })
-                    amount = line.amount
-                
-                move_line_id = move_line_pool.create(cr, uid, move_line)
-                line_ids += [move_line_id]
-                
-                if line.move_id and inv.type in ('payment', 'receipt'):
-                    rec_ids += [move_line_id]
-                    for move_line in line.move_id.line_id:
-                        if line.account_id.id == move_line.account_id.id:
-                            rec_ids += [move_line.id]
+                line_ids += [move_line_pool.create(cr, uid, move_line)]
+            else:
+                for line in inv.payment_ids:
+                    
+                    amount=0.0
 
+                    if inv.type in ('payment'):
+                        ref = line.ref
+                    
+                    move_line = {
+                         'name':line.name,
+                         'debit':False,
+                         'credit':False,
+                         'account_id':line.account_id.id or False,
+                         'move_id':move_id ,
+                         'journal_id':inv.journal_id.id,
+                         'period_id':inv.period_id.id,
+                         'partner_id':line.partner_id.id or False,
+                         'ref':ref,
+                         'date':inv.date,
+                         'analytic_account_id':False
+                    }
+                    
+                    if diff_currency_p:
+                        amount_currency = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, line.amount)
+                        line.amount = amount_currency
+                        move_line.update({
+                            'amount_currency':amount_currency,
+                            'currency_id':inv.currency_id.id
+                        })
+                    
+                    if line.account_analytic_id:
+                        move_line.update({
+                            'analytic_account_id':line.account_analytic_id.id
+                        })
+                    
+                    if line.type == 'dr':
+                        move_line.update({
+                            'debit': line.amount or False
+                        })
+                    
+                    elif line.type == 'cr':
+                        move_line.update({
+                            'credit': line.amount or False
+                        })
+                    
+                    move_line_id = move_line_pool.create(cr, uid, move_line)
+                    line_ids += [move_line_id]
+                    
+                    if line.move_id and inv.type in ('payment', 'receipt'):
+                        rec_ids += [move_line_id]
+                        for move_line in line.move_id.line_id:
+                            if line.account_id.id == move_line.account_id.id:
+                                rec_ids += [move_line.id]
+            
             if rec_ids:
                 move_line_pool.reconcile_partial(cr, uid, rec_ids)
-            
+
             rec = {
                 'move_id': move_id
             }
@@ -226,12 +204,12 @@ account_voucher()
 
 class account_voucher_line(osv.osv):
     _inherit = 'account.voucher.line'
-
+    
     def default_get(self, cr, uid, fields, context={}):
         data = super(account_voucher_line, self).default_get(cr, uid, fields, context)
         self.voucher_context = context
         return data
-
+    
     _columns = {
         'move_id' : fields.many2one('account.move','Bill / Invoice'),
     }

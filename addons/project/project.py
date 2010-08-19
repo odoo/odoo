@@ -316,6 +316,13 @@ class project(osv.osv):
 
 project()
 
+class users(osv.osv):
+    _inherit = 'res.users'
+    _columns = {
+        'context_project_id': fields.many2one('project.project', 'Project')
+    }
+users()
+
 class task(osv.osv):
     _name = "project.task"
     _description = "Task"
@@ -438,6 +445,7 @@ class task(osv.osv):
         'sequence': 10,
         'active': True,
         'project_id': _default_project,
+        'user_id': lambda obj, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
@@ -782,16 +790,6 @@ class message(osv.osv):
     }
 
 message()
-
-class users(osv.osv):
-    _inherit = 'res.users'
-    _description = "Users"
-    _columns = {
-        'context_project_id': fields.many2one('project.project', 'Project')
-     }
-
-users()
-
 class account_analytic_account(osv.osv):
 
     _inherit = 'account.analytic.account'

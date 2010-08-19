@@ -488,8 +488,8 @@ class crm_case(object):
             l=[]
             if case.email_cc:
                 l.append(case.email_cc)
-            if case.user_id:
-                l.append(case.user_id.email)
+            if case.user_id and case.user_id.user_email:
+                l.append(case.user_id.user_email)
             res[case.id] = l
         return res
 
