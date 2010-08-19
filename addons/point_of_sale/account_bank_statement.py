@@ -37,7 +37,7 @@ class account_journal(osv.osv):
         'journal_users': fields.many2many('res.users','pos_journal_users','journal_id','user_id','Users'),
     }
     _defaults = {
-        'check_dtls': lambda *a:True,
+        'check_dtls': lambda *a:False,
         'auto_cash': lambda *a:True,
     }
 account_journal()
