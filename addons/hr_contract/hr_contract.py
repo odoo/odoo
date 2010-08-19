@@ -26,6 +26,18 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherit = "hr.employee"
+
+    def _get_latest_contract(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        obj_contract = self.pool.get('hr.contract')
+        for emp in self.browse(cr, uid, ids, context=context):
+            contract_ids = obj_contract.search(cr, uid, [('employee_id','=',emp.id),], order='date_start', context=context)
+            if contract_ids:
+                res[emp.id] = contract_ids[-1:][0]
+            else:
+                res[emp.id] = False
+        return res
+
     _columns = {
         'manager': fields.boolean('Is a Manager'),
         'medic_exam': fields.date('Medical Examination Date'),
@@ -34,7 +46,9 @@ class hr_employee(osv.osv):
         'vehicle': fields.char('Company Vehicle', size=64),
         'vehicle_distance': fields.integer('Home-Work Distance', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
-        }
+        'contract_id':fields.function(_get_latest_contract, method=True, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+    }
+
 hr_employee()
 
 #Contract wage type period name
