@@ -40,16 +40,16 @@ def _check_data(self, cr, uid, data, *args):
     period_id = data['form']['period_id'][0][2]
     journal_id=data['form']['journal_id'][0][2]
 
-    if type(period_id)==type([]):
-        
+    if type(period_id)==type([]):  
         ids_final = []
-
+        journal_period_obj = pooler.get_pool(cr.dbname).get('account.journal.period')
+        acct_move_line_obj = pooler.get_pool(cr.dbname).get('account.move.line')
         for journal in journal_id:
             for period in period_id:
-                ids_journal_period = pooler.get_pool(cr.dbname).get('account.journal.period').search(cr,uid, [('journal_id','=',journal),('period_id','=',period)])
+                ids_journal_period = journal_period_obj.search(cr,uid, [('journal_id','=',journal),('period_id','=',period)])
 
-                if ids_journal_period:
-                    ids_final.append(ids_journal_period)
+                if ids_journal_period and acct_move_line_obj.search(cr,uid, [('journal_id','=',journal),('period_id','=',period),('state','!=','draft')]):
+                    ids_final += ids_journal_period
 
             if not ids_final:
                 raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))

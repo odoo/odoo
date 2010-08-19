@@ -69,19 +69,21 @@ class journal_print(report_sxw.rml_parse):
     def lines(self, period_id, journal_id=[]):
         if type(period_id)==type([]):
             ids_final = []
+            journal_peroid_obj = self.pool.get('account.journal.period')
+            period_obj = self.pool.get('account.period')
             for journal in journal_id:
                     for period in period_id:
-                        ids_journal_period = self.pool.get('account.journal.period').search(self.cr,self.uid, [('journal_id','=',journal),('period_id','=',period)])
+                        ids_journal_period = journal_peroid_obj.search(self.cr,self.uid, [('journal_id','=',journal),('period_id','=',period)])
                         if ids_journal_period:
                             ids_final.append(ids_journal_period[0])
-            data_jour_period = self.pool.get('account.journal.period').browse(self.cr, self.uid, ids_final)
+            data_jour_period = journal_peroid_obj.browse(self.cr, self.uid, ids_final)
             lines_data = []
             periods = []
             for data in data_jour_period:
                 if not data.period_id.id in periods:
                     periods.append(data.period_id.id)
             for period in periods:
-                period_data = self.pool.get('account.period').browse(self.cr, self.uid, period)
+                period_data = period_obj.browse(self.cr, self.uid, period)
                 self.cr.execute(
                     'SELECT j.code, j.name, '
                     'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
@@ -91,9 +93,9 @@ class journal_print(report_sxw.rml_parse):
                     'AND l.state<>\'draft\' '
                     'GROUP BY j.id, j.code, j.name', (period, tuple(journal_id)))
                 res = self.cr.dictfetchall()
-                res[0].update({'period_name':period_data.name})
-                res[0].update({'pid':period})
-                lines_data.append(res)
+                if res:
+                    res[0].update({'period_name':period_data.name,'pid':period})
+                    lines_data.append(res) 
             return lines_data
         if not self.journal_ids:
             return []
