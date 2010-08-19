@@ -13,7 +13,7 @@
                         <field name="number"/>
                         <field name="name" colspan="4"/>
                         <field name="date" select="1" on_change="onchange_date(date)"/>
-                        <field name="type" on_change="onchange_journal(journal_id,type)" invisible="True"/> <!-- Type is given by menu, not by journal ? -->
+                        <field name="type" on_change="onchange_journal(journal_id,type)" invisible="True"/> <!-- Type is given by menu, not by journal ? yes-->
                         <field name="period_id" invisible="True"/>
                     </group>
                     <notebook colspan="4">
@@ -33,11 +33,10 @@
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
-                                    <field name="pay_now" required="1"/>
+                                    <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id, type)" required="1"/>
                                     <field name="account_id" 
-                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                         domain="[('type','in',('other'))]"
-                                         on_change="onchange_account(account_id)"/>
+                                         attrs="{'invisible':[('type','!=','view'),('pay_now','!=','pay_now')]}"
+                                         domain="[('type','in',['other'])]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
                                     <field name="reference"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
@@ -45,7 +44,7 @@
                                 </group>
                                 <group col="3" colspan="1">
                                     <separator string="Total" colspan="3"/>
-                                    <field name="tax_id" widget="selection" domain="[('type_tax_use','=','sale')]"/><field name="tax_amount" nolabel="1"/>
+                                    <field name="tax_id" widget="selection" domain="[('type_tax_use','=','sale')]" on_change="onchange_tax_id(amount, tax_id)"/><field name="tax_amount" nolabel="1"/>
                                     <label string="" colspan="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
