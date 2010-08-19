@@ -71,12 +71,6 @@ class payment_order(report_sxw.rml_parse):
         user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
         return user.company_id and user.company_id.currency_id and user.company_id.currency_id.name or False 
 
-    def _get_company_currency(self):
-        pool = pooler.get_pool(self.cr.dbname)
-        user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
-        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.name or False 
-        
-        
 report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order,header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
