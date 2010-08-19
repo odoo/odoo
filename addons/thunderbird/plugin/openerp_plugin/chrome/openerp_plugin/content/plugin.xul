@@ -3,7 +3,7 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/plugin.dtd">
 <window id="pluginwindows" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.loaddata()" height="540" width="1000">
+	title="&title.label;" onload="myPrefObserver.loaddata()" height="600" width="1000">
 
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
@@ -13,15 +13,16 @@
 <script type="text/javascript" src="chrome://openerp_plugin/content/exportTools.js"></script>
 <description></description>
 <hbox id="root">
-   <vbox width="50%" >
+   <vbox width="50%" style="padding:12px;">
         <caption label="&gptinyobj.label;" />
       <groupbox height="375" id="existsobjectgroup" width="100%" style="border:1px solid black">
+      <separator class="groove-thin" orient="horizontal" width="1000"/> 
 	        <hbox>
 	            <label id="lblsearch" control="txtvalueobj" value="&search.label;"/>
 	            <textbox id="txtvalueobj" size="30"/>
 	            <button label="&bsearch.label;" oncommand="searchCheckbox()" image="&imagesearch.value;" accesskey="s"/> 
 	        </hbox>
-	        <vbox align="left" id="checkbox-dynamic"> 
+	        <vbox align="left" id="checkbox-dynamic" > 
 	        </vbox> 
 	        <hbox align="left">
 	            <image src='chrome://openerp_plugin/skin/perform.gif'/>
@@ -32,9 +33,9 @@
                 <description>Documents</description>
             </hbox>
             <vbox>
-            <hbox style="border:1;overflow: auto;" height="250" width="100%">
+            <hbox  height="250" width="100%">
         
-	        <listbox height="250" width="510" id="listSearchBox" seltype="multiple">
+	        <listbox height="250" width="480" id="listSearchBox" seltype="multiple">
 	            <listhead>
 	    	        <listheader label="&listSearchBox.header;"/>
 	            </listhead>
@@ -44,15 +45,18 @@
 	        </listbox>
             </hbox>
             </vbox>
+            <separator class="groove-thin" orient="horizontal" width="1000"/> 
             <hbox align="right">
 	            <button label="&attach.label;" accesskey="u" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('upload');"/>
 	        </hbox>
+            <separator class="groove-thin" orient="horizontal" width="1000"/> 
       </groupbox>
          
    </vbox>
-   <vbox width="50%"  align="left" >
+   <vbox width="50%"  align="left" style="padding:12px;" >
      <caption label="&newobject.label;" />
-        <groupbox id="newobjectgroup" align="left" width="100%" height="382" style="border:1px solid black">
+        <groupbox id="newobjectgroup" align="left" width="100%" height="440" style="border:1px solid black;">
+        <separator class="groove-thin" orient="horizontal" width="1000"/> 
 	        <hbox align="left">
                 <vbox>
                     <label id="lblex3" align="right" width="135" control="section" value="&object.label;"/>
