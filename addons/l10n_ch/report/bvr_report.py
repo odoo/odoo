@@ -30,14 +30,15 @@
 #
 ##############################################################################
 
-import time
-from report import report_sxw
-from tools import mod10r
 import re
 import os
 import sys
 import shutil
+import time
 from mx.DateTime import *
+
+from report import report_sxw
+from tools import mod10r
 
 class account_invoice_bvr(report_sxw.rml_parse):
     """Report class that Allows to print BVR payement vector"""
@@ -111,14 +112,14 @@ class account_invoice_bvr(report_sxw.rml_parse):
 report_sxw.report_sxw(
     'report.l10n_ch.bvr',
     'account.invoice',
-    'addons/l10n_ch/report/bvr.rml',
+    'addons/l10n_ch/report/bvr_report.rml',
     parser=account_invoice_bvr,
     header=False)
 
 report_sxw.report_sxw(
     'report.l10n_ch.invoice.bvr',
     'account.invoice',
-    'addons/l10n_ch/report/invoice.rml',
+    'addons/l10n_ch/report/bvr_invoice_report.rml',
     parser=account_invoice_bvr,
     header=False)
 
