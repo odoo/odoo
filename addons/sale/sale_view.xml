@@ -288,6 +288,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help">The sale order manages the invoicing, the product fullfilment and the
+delivery processes. OpenERP can handle products, services and
+consumables so that a sale order can trigger tasks, manufacturing
+orders, purchases, etc. It support several invoicing methods according
+to your configuration: from the sale order, from the pickings, etc.
+            </field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
 
