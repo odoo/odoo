@@ -218,6 +218,53 @@ class account_voucher(osv.osv):
         'audit': lambda *a: False,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
     }
+
+    def create(self, cr, uid, vals, context={}):
+        """
+        Create a new record for a model account_voucher
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param vals: provides data for new record
+        @param context: context arguments, like lang, time zone
+        
+        @return: Returns an id of the new record
+        """
+
+        old_line = []
+        new_lines = []
+        
+        payment_ids = vals.get('payment_ids')
+        vals.update({
+            'payment_ids':False
+        })
+        for line in payment_ids:
+            id1 = line[0]
+            id2 = line[1]
+            res = line[2]
+            if id1 == 0 and id2 == 0:
+                new_lines += [(id1, id2, res)]
+            else:
+                old_line += [(id1, id2, res)]
+
+        if new_lines:
+            vals.update({
+                'payment_ids':new_lines
+            })
+        res_id = super(account_voucher, self).create(cr, uid, vals, context)
+        
+        if old_line:
+            new_payment_ids = []
+            for line in old_line:
+                id1 = line[0]
+                id2 = line[1]
+                res = line[2]
+                res.update({
+                    'voucher_id':res_id
+                })
+                new_payment_ids += [(id1, id2, res)]
+                
+            self.write(cr, uid, [res_id], {'payment_ids':new_payment_ids})
+        return res_id
     
     def onchange_partner_id(self, cr, uid, ids, partner_id, ttype, context={}):
         """
@@ -255,14 +302,7 @@ class account_voucher(osv.osv):
         if ttype not in ('payment', 'receipt'):
             return default
         
-        if not ids:
-            raise osv.except_osv(_('Invalid !'), _('Please save voucher before selection partner !'))
-        
-        line_ids = line_pool.search(cr, uid, [('voucher_id','=',ids[0])])
-        if line_ids:
-            line_pool.unlink(cr, uid, line_ids)
-        
-        voucher_id = ids[0]
+        voucher_id = ids and ids[0] or False
         ids = move_pool.search(cr, uid, [('reconcile_id','=', False), ('state','=','posted'), ('partner_id','=',partner_id)], context=context)
         for move in move_pool.browse(cr, uid, ids):
             rs = {

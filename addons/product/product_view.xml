@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended,base.group_system" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="9"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="9"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
@@ -197,7 +197,7 @@
         </record>
         <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_system,group_product_manager"/>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9" groups="group_product_manager"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9" groups="group_product_manager,base.group_sale_salesman,base.group_system"/>
         <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,group_product_manager"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
@@ -267,7 +267,7 @@
             <field name="view_id" ref="product_category_list_view"/>
         </record>
         <menuitem action="product_category_action_form"
-            groups="base.group_extended,base.group_system"
+            groups="base.group_extended"
             id="menu_product_category_action_form"
             parent="prod_config_main" sequence="2"/>
 
@@ -400,7 +400,7 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="base.group_extended,base.group_system" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
+            action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>

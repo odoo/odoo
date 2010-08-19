@@ -496,6 +496,7 @@
                         <field name="period_id"/>
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
+                        <field name="currency" invisible="1"/>
                         <button name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoices" type="action" icon="gtk-dnd"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
@@ -2464,6 +2465,7 @@
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" />
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
+                        <field name="currency" invisible="1"/>
                     </group>
 
                     <notebook colspan="4">

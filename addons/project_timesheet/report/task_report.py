@@ -66,7 +66,8 @@ class report_timesheet_task_user(osv.osv):
     }
 
     def init(self, cr):
-       cr.execute(""" create or replace view report_timesheet_task_user as (
+        tools.drop_view_if_exists(cr, 'report_timesheet_task_user')
+        cr.execute(""" create or replace view report_timesheet_task_user as (
         select
          ((r.id*12)+to_number(months.m_id,'99'))::integer as id,
                months.name as name,
