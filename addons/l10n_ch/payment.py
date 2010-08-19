@@ -30,8 +30,7 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
+from osv import osv, fields
 
 class payment_order(osv.osv):
     _inherit = 'payment.order'

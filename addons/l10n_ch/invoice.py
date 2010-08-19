@@ -30,11 +30,10 @@
 #
 ##############################################################################
 
-import time
-from osv import fields, osv
-from tools import mod10r
 from mx import DateTime
 
+from osv import fields, osv
+from tools import mod10r
 
 class account_invoice(osv.osv):
     """Inherit account.invoice in order to add bvr

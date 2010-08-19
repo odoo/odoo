@@ -87,10 +87,9 @@ TODO :
     ],
     "update_xml" : [
         "dta_view.xml",
-        "dta_wizard.xml",
-        "bvr_report.xml",
-        "bvr_wizard.xml",
-        "bvr_view.xml",
+        "wizard/bvr_import_view.xml",
+        "wizard/bvr_report_view.xml",
+        "wizard/create_dta_view.xml",
         "company_view.xml",
         "account_invoice.xml",
         "bank_view.xml",

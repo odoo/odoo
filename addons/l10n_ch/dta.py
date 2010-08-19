@@ -31,7 +31,7 @@
 ##############################################################################
 
 import time
-from osv import osv,fields
+from osv import osv, fields
 
 class account_dta(osv.osv):
     """class that implements bank DTA File format, 

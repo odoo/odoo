@@ -31,7 +31,6 @@
 
 from osv import fields, osv
 
-
 class Bank(osv.osv):
     """Inherit res.bank class in order to add swiss specific field"""
     _inherit = 'res.bank'

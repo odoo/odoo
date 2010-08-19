@@ -33,6 +33,7 @@
 
 import netsvc
 from osv import fields, osv
+
 class res_company(osv.osv):
     """override company in order to add bvr vertical and 
     Horizontal print delta"""

@@ -30,23 +30,24 @@
 #
 ##############################################################################
 
-import wizard
-import pooler
 import re
+
+import pooler
+from osv import osv, fields
 from tools.translate import _
 
-def _check(self, cr, uid, data, context):
+def _validate_bank_values(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     invoice_obj = pool.get('account.invoice')
     for invoice in invoice_obj.browse(cr, uid, data['ids'], context):
         if not invoice.partner_bank_id:
-            raise wizard.except_wizard(_('UserError'),
+            raise osv.except_osv(_('UserError'),
                     _('No bank specified on invoice:\n%s') % \
                             invoice_obj.name_get(cr, uid, [invoice.id], context=context)[0][1])
 
         if not re.compile('[0-9][0-9]-[0-9]{3,6}-[0-9]').match(
                 invoice.partner_bank_id.bvr_number or ''):
-            raise wizard.except_wizard(_('UserError'),
+            raise osv.except_osv(_('UserError'),
                     _('Your bank BVR number should be of the form 0X-XXX-X!\n' \
                             'Please check your company ' \
                             'information for the invoice:\n%s') % \
@@ -55,29 +56,51 @@ def _check(self, cr, uid, data, context):
         if invoice.partner_bank_id.bvr_adherent_num \
                 and not re.compile('[0-9]*$').match(
                         invoice.partner_bank_id.bvr_adherent_num):
-            raise wizard.except_wizard(_('UserError'),
-                    _('Your bank BVR adherent number must contain exactly seven' \
+            raise osv.except_osv(_('UserError'),
+                    _('Your bank BVR adherent number must contain exactly seven ' \
                             'digits!\nPlease check your company ' \
                             'information for the invoice:\n%s') % \
                             invoice_obj.name_get(cr, uid, [invoice.id], context=context)[0][1])
     return {}
 
-class wizard_report(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_check],
-            'result': {'type':'print', 'report':'l10n_ch.bvr', 'state':'end'}
-        }
-    }
-wizard_report('l10n_ch.bvr.check')
+class bvr_report(osv.osv_memory):
+    _name="bvr.report"
+    _columns={'name':fields.char('Name', size=10)}
+    
+    def view_init(self, cr, uid, fields_list, context=None):
+        data={}
+        active_ids = context.get('active_ids', [])
+        data['form'] = {}
+        data['ids'] = active_ids
+        _validate_bank_values(self, cr, uid, data, context)
+        pass
+    
+    def print_bvr_report(self, cr, uid, ids, context):
+        data={}
+        active_ids = context.get('active_ids', [])
+        data['form'] = {}
+        data['ids'] = active_ids
+        return {'type': 'ir.actions.report.xml', 'report_name': 'l10n_ch.bvr', 'datas': data}
+bvr_report()
 
-class ReportInvoiceBVRCheck(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_check],
-            'result': {'type':'print', 'report':'l10n_ch.invoice.bvr', 'state':'end'}
-        }
-    }
-ReportInvoiceBVRCheck('l10n_ch.invoice.bvr.check')
+class bvr_invoices_report(osv.osv_memory):
+    _name="bvr.invoices.report"
+    _columns={'name':fields.char('Name', size=10)}
+    
+    def view_init(self, cr, uid, fields_list, context=None):
+        data={}
+        active_ids = context.get('active_ids', [])
+        data['form'] = {}
+        data['ids'] = active_ids
+        _validate_bank_values(self, cr, uid, data, context)
+        pass 
+    
+    def print_bvr_invoices_report(self, cr, uid, ids, context):
+        data={}
+        active_ids = context.get('active_ids', [])
+        data['form'] = {}
+        data['ids'] = active_ids
+        return {'type': 'ir.actions.report.xml', 'report_name': 'l10n_ch.invoice.bvr', 'datas': data}
+bvr_invoices_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

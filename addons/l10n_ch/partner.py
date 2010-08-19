@@ -40,12 +40,7 @@ class res_partner(osv.osv):
         'ref_companies': fields.one2many('res.company', 'partner_id',
         'Companies that refers to partner'),
     }
-    
-
-
 res_partner()
-
-
 
 class res_partner_bank(osv.osv):
     _inherit = "res.partner.bank"
