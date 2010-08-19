@@ -36,10 +36,12 @@ import pooler
 from osv import osv, fields
 from tools.translate import _
 
-def _validate_bank_values(self, cr, uid, data, context):
+def _validate_bank_values(self, cr, uid, data, context=None):
+    if context is None:
+            context = {}
     pool = pooler.get_pool(cr.dbname)
     invoice_obj = pool.get('account.invoice')
-    for invoice in invoice_obj.browse(cr, uid, data['ids'], context):
+    for invoice in invoice_obj.browse(cr, uid, data['ids'], context=context):
         if not invoice.partner_bank_id:
             raise osv.except_osv(_('UserError'),
                     _('No bank specified on invoice:\n%s') % \
@@ -64,43 +66,57 @@ def _validate_bank_values(self, cr, uid, data, context):
     return {}
 
 class bvr_report(osv.osv_memory):
-    _name="bvr.report"
-    _columns={'name':fields.char('Name', size=10)}
-    
+    _name = "bvr.report"
+    _columns = {
+        'name':fields.char('Name', size=16)
+    }
+
     def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
+        data = {}
+        active_ids = context.get('active_ids', [])
+        data['form'] = {}
+        data['ids'] = active_ids
+        _validate_bank_values(self, cr, uid, data, context)
+        pass
+
+    def print_bvr_report(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        data = {}
+        active_ids = context.get('active_ids', [])
+        data['form'] = {}
+        data['ids'] = active_ids
+        return {'type': 'ir.actions.report.xml', 'report_name': 'l10n_ch.bvr', 'datas': data}
+
+bvr_report()
+
+class bvr_invoices_report(osv.osv_memory):
+    _name = "bvr.invoices.report"
+    _columns = {
+        'name':fields.char('Name', size=16)
+    }
+
+    def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         data={}
         active_ids = context.get('active_ids', [])
         data['form'] = {}
         data['ids'] = active_ids
         _validate_bank_values(self, cr, uid, data, context)
         pass
-    
-    def print_bvr_report(self, cr, uid, ids, context):
-        data={}
-        active_ids = context.get('active_ids', [])
-        data['form'] = {}
-        data['ids'] = active_ids
-        return {'type': 'ir.actions.report.xml', 'report_name': 'l10n_ch.bvr', 'datas': data}
-bvr_report()
 
-class bvr_invoices_report(osv.osv_memory):
-    _name="bvr.invoices.report"
-    _columns={'name':fields.char('Name', size=10)}
-    
-    def view_init(self, cr, uid, fields_list, context=None):
-        data={}
-        active_ids = context.get('active_ids', [])
-        data['form'] = {}
-        data['ids'] = active_ids
-        _validate_bank_values(self, cr, uid, data, context)
-        pass 
-    
-    def print_bvr_invoices_report(self, cr, uid, ids, context):
-        data={}
+    def print_bvr_invoices_report(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        data = {}
         active_ids = context.get('active_ids', [])
         data['form'] = {}
         data['ids'] = active_ids
         return {'type': 'ir.actions.report.xml', 'report_name': 'l10n_ch.invoice.bvr', 'datas': data}
+
 bvr_invoices_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

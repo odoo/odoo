@@ -206,6 +206,7 @@ class account_tax_code(osv.osv):
         ### The case code of the taxt code
         'code': fields.char('Case Code', size=512),
     }
+
 account_tax_code()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -43,19 +43,19 @@ You can also add with this module one of the following account plan:
  - l10n_ch_c2c_pcg
 
 
-    
+
 ------------------------------------------------------------------------
-    
-Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version 
-comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement) 
-et l'import du relevé de compte depuis la banque de manière automatisée. 
+
+Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version
+comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement)
+et l'import du relevé de compte depuis la banque de manière automatisée.
 De plus, nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
 
 Par ailleurs, conjointement à ce module, nous proposons 1 plan comptables issus de l'USAM :
 
 
  - l10n_ch_c2c_pcg
- 
+
 --------------------------------------------------------------------------
 TODO :
 - Implement bvr import partial reconciliation
@@ -70,11 +70,9 @@ TODO :
     "author" : "Camptocamp SA",
     "category" : "Localisation/Europe",
     "website": "http://www.camptocamp.com",
-    
+
     "depends" : [
-        "base", 
-        "account", 
-        "base_vat", 
+        "base_vat",
         "base_iban",
         "account_payment",
     ],

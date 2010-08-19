@@ -30,14 +30,17 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from osv import osv
 
 class payment_order(osv.osv):
     _inherit = 'payment.order'
 
     def get_wizard(self,mode):
         if mode == 'dta':
-            return 'l10n_ch','wizard_account_dta_create'
+            return 'l10n_ch', 'action_account_dtr_create_values'
+
         return super(payment_order,self).get_wizard(mode)
+
 payment_order()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

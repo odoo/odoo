@@ -30,7 +30,6 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields, osv
 
 class res_partner(osv.osv):
@@ -40,6 +39,7 @@ class res_partner(osv.osv):
         'ref_companies': fields.one2many('res.company', 'partner_id',
         'Companies that refers to partner'),
     }
+
 res_partner()
 
 class res_partner_bank(osv.osv):
@@ -51,7 +51,7 @@ class res_partner_bank(osv.osv):
         'bvr_adherent_num': fields.char('BVR adherent number', size=11),
         'dta_code': fields.char('DTA code', size=5),
     }
-    
+
 #   def _default_value(self, cursor, user, field, context=None):
 #       if field in ('country_id', 'state_id'):
 #           value = False
@@ -68,8 +68,8 @@ class res_partner_bank(osv.osv):
 #           else :
 #               value = False
 #       return value
-        
-        
+
+
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -84,9 +84,11 @@ class res_partner_bank(osv.osv):
         for r in self.read(cr, uid, ids, ['name','state'], context):
             res.append((r['id'], r['name']+' : '+bank_type_names[r['state']]))
         return res
-    
+
     _sql_constraints = [
         ('bvr_adherent_uniq', 'unique (bvr_adherent_num)', 'The BVR adherent number must be unique !')
     ]
+
 res_partner_bank()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

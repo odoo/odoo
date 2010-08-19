@@ -36,24 +36,7 @@ import base64
 
 from osv import osv, fields
 import pooler
-
 from tools.translate import _
-
-
-
-FORM = """<?xml version="1.0"?>
-<form string="DTA file creation - Results">
-<separator colspan="4" string="Clic on 'Save as' to save the DTA file :" />
-    <field name="dta"/>
-</form>"""
-
-FIELDS = {
-    'dta': {
-        'string': 'DTA File',
-        'type': 'binary',
-        'readonly': True,
-    },
-}
 
 TRANS=[
     (u'é','e'),
@@ -82,7 +65,6 @@ def tr(string_in):
 
 
 class record:
-
     def __init__(self, global_context_dict):
         for i in global_context_dict:
             global_context_dict[i] = global_context_dict[i] \
@@ -357,16 +339,17 @@ def c_ljust(s, size):
     s = s.decode('utf-8').encode('latin1','replace').ljust(size)
     return s
 
-def _create_dta(obj, cr, uid, data, context):
-    v={}
+def _create_dta(obj, cr, uid, data, context=None):
+    v = {}
     v['uid'] = str(uid)
-    v['creation_date']= time.strftime('%y%m%d')
-    dta=''
+    v['creation_date'] = time.strftime('%y%m%d')
+    dta = ''
 
     pool = pooler.get_pool(cr.dbname)
     payment_obj = pool.get('payment.order')
     attachment_obj = pool.get('ir.attachment')
-
+    if context is None:
+        context = {}
     payment = payment_obj.browse(cr, uid, data['id'], context=context)
 
     if not payment.mode or payment.mode.type.code != 'dta':
@@ -384,16 +367,15 @@ def _create_dta(obj, cr, uid, data, context):
                 _('You must provide a Clearing Number for your bank account.'))
 
     user = pool.get('res.users').browse(cr,uid,[uid])[0]
-    company= user.company_id
+    company = user.company_id
     #XXX dirty code use get_addr
-    co_addr= company.partner_id.address[0]
+    co_addr = company.partner_id.address[0]
     v['comp_country'] = co_addr.country_id and co_addr.country_id.name or ''
     v['comp_street'] = co_addr.street or ''
     v['comp_zip'] = co_addr.zip
     v['comp_city'] = co_addr.city
     v['comp_name'] = co_addr.name
     v['comp_dta'] = bank.dta_code or '' #XXX not mandatory in pratice
-
 
     v['comp_bank_number'] = bank.acc_number or ''
     if bank.iban:
@@ -407,7 +389,7 @@ def _create_dta(obj, cr, uid, data, context):
     dta_line_obj = pool.get('account.dta.line')
     res_partner_bank_obj = pool.get('res.partner.bank')
 
-    seq= 1
+    seq = 1
     amount_tot = 0
     amount_currency_tot = 0
 
@@ -434,8 +416,8 @@ def _create_dta(obj, cr, uid, data, context):
                     'on the partner: %s\n' \
                     'on line: %s') % (pline.bank_id.state, pline.partner_id.name, pline.name))
 
-        v['partner_bank_iban']=  pline.bank_id.iban or False
-        v['partner_bank_number']=  pline.bank_id.acc_number  \
+        v['partner_bank_iban'] =  pline.bank_id.iban or False
+        v['partner_bank_number'] =  pline.bank_id.acc_number  \
                 and pline.bank_id.acc_number.replace('.','').replace('-','') \
                 or  False
         v['partner_post_number']=  pline.bank_id.post_number \
@@ -462,12 +444,12 @@ def _create_dta(obj, cr, uid, data, context):
             v['partner_name'] = pline.bank_id.owner_name
         else:
             v['partner_name'] = pline.partner_id and pline.partner_id.name or ''
-        
+
         if pline.partner_id and pline.partner_id.address \
                 and pline.partner_id.address[0]:
             v['partner_street'] = pline.partner_id.address[0].street
-            v['partner_city']= pline.partner_id.address[0].city
-            v['partner_zip']= pline.partner_id.address[0].zip
+            v['partner_city'] = pline.partner_id.address[0].city
+            v['partner_zip'] = pline.partner_id.address[0].zip
             # If iban => country=country code for space reason
             elec_pay = pline.bank_id.state #Bank type
             if elec_pay == 'iban':
@@ -487,17 +469,17 @@ def _create_dta(obj, cr, uid, data, context):
                     'for the partner: ' + pline.partner_id.name + '\n' \
                     'on line: ' + pline.name)
 
-        if pline.order_id.date_planned :
+        if pline.order_id.date_planned:
             date_value = mx.DateTime.strptime(pline.order_id.date_planned, '%Y-%m-%d')
-        elif pline.date :
+        elif pline.date:
             date_value = mx.DateTime.strptime(pline.date, '%Y-%m-%d')
-        else :
+        else:
             date_value = mx.DateTime.now()
         v['date_value'] = date_value.strftime("%y%m%d")
 
         # si compte iban -> iban (836)
         # si payment structure  -> bvr (826)
-        # si non -> (827) 
+        # si non -> (827)
 
         if elec_pay == 'dta_iban':
             # If iban => country=country code for space reason
@@ -544,7 +526,7 @@ def _create_dta(obj, cr, uid, data, context):
         elif elec_pay == 'bvbank':
             if not v['partner_bank_number'] :
                 if v['partner_bank_iban'] :
-                    v['partner_bank_number']= v['partner_bank_iban'] 
+                    v['partner_bank_number']= v['partner_bank_iban']
                 else:
                     raise osv.except_osv(_('Error'), _('You must provide ' \
                             'a bank number \n' \
@@ -579,11 +561,11 @@ def _create_dta(obj, cr, uid, data, context):
 
     # segment total
     v['amount_total'] = str(amount_currency_tot).replace('.',',')
-    v['sequence'] = str(seq).rjust(5).replace(' ','0')  
+    v['sequence'] = str(seq).rjust(5).replace(' ','0')
     if dta :
         dta = dta + record_gt890(v).generate()
 
-    dta_data= base64.encodestring(dta)
+    dta_data = base64.encodestring(dta)
     payment_obj.set_done(cr, uid, data['id'], context)
     attachment_obj.create(cr, uid, {
         'name': 'DTA',
@@ -596,11 +578,14 @@ def _create_dta(obj, cr, uid, data, context):
 
 class create_dta_wizard(osv.osv_memory):
     _name="create.dta.wizard"
-    _columns={'dta_file':fields.binary('DTA File', readonly=True)}
+
+    _columns={
+        'dta_file':fields.binary('DTA File', readonly=True)
+    }
     def create_dta(self, cr, uid, ids, context=None):
         if not context:
-            context={}
-        data={}
+            context = {}
+        data = {}
         active_ids = context.get('active_ids', [])
         active_id = context.get('active_id', [])
         data['form'] = {}
@@ -609,21 +594,24 @@ class create_dta_wizard(osv.osv_memory):
         dta_file = _create_dta(self, cr, uid, data, context)
         context.update({'dta_file':dta_file})
         return self.save_dta(cr, uid, ids, context)
-    
-    def save_dta(self, cr, uid, ids, context):
+
+    def save_dta(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
-        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','dta_save_view')])
+        if context is None:
+            context = {}
+        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'), ('name','=','dta_save_view')])
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'create.dta.wizard',
-            'views': [(resource_id,'form')],
+            'views': [(resource_id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': context,
         }
-        return {}
+
+
 create_dta_wizard()
-#wizard_dta_create('account.dta_create')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

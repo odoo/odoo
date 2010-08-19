@@ -32,19 +32,19 @@
 
 import base64
 import time
-from tools import mod10r
 import re
-from tools.translate import _
 
+from tools.translate import _
 from osv import osv, fields
+from tools import mod10r
 import pooler
 
-def _reconstruct_invoice_ref(cursor, user, reference, context):
+def _reconstruct_invoice_ref(cursor, user, reference, context=None):
     ###
     id_invoice = False
     # On fait d'abord une recherche sur toutes les factures
     # we now searhc for company
-    user_obj=pooler.get_pool(cursor.dbname).get('res.users')
+    user_obj = pooler.get_pool(cursor.dbname).get('res.users')
     user_current=user_obj.browse(cursor, user, user)
 
     ##
@@ -68,7 +68,8 @@ def _reconstruct_invoice_ref(cursor, user, reference, context):
     else:
         return []
     return True
-def _import(obj, cursor, user, data, context):
+
+def _import(obj, cursor, user, data, context=None):
 
     pool = pooler.get_pool(cursor.dbname)
     statement_line_obj = pool.get('account.bank.statement.line')
@@ -79,12 +80,13 @@ def _import(obj, cursor, user, data, context):
     attachment_obj = pool.get('ir.attachment')
     file = data['form']['file']
     statement_id = data['id']
-
     records = []
     total_amount = 0
     total_cost = 0
     find_total = False
 
+    if context is None:
+        context = {}
     for lines in base64.decodestring(file).split("\n"):
         # Manage files without carriage return
         while lines:
@@ -168,7 +170,7 @@ def _import(obj, cursor, user, data, context):
             ('account_id.type', 'in', ['receivable', 'payable']),
             ], order='date desc', context=context)
         if not line_ids:
-            line_ids = _reconstruct_invoice_ref(cursor,user,reference,None)
+            line_ids = _reconstruct_invoice_ref(cursor, user, reference, None)
 
         line2reconcile = False
         partner_id = False
@@ -210,14 +212,19 @@ def _import(obj, cursor, user, data, context):
         'res_model': 'account.bank.statement',
         'res_id': statement_id,
         }, context=context)
+
     return {}
 
 class bvr_import_wizard(osv.osv_memory):
-    _name='bvr.import.wizard'
-    _columns={'file':fields.binary('BVR File', required=True)}
-    
+    _name = 'bvr.import.wizard'
+    _columns = {
+        'file':fields.binary('BVR File', required=True)
+    }
+
     def import_bvr(self, cr, uid, ids, context=None):
-        data={}
+        data = {}
+        if context is None:
+            context = {}
         active_ids = context.get('active_ids', [])
         active_id = context.get('active_id', False)
         data['form'] = {}
@@ -227,8 +234,9 @@ class bvr_import_wizard(osv.osv_memory):
         res = self.read(cr, uid, ids[0], ['file'])
         if res:
             data['form']['file'] = res['file']
-        _import(self, cr, uid, data, context)
+        _import(self, cr, uid, data, context=context)
         return {}
+
 bvr_import_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
