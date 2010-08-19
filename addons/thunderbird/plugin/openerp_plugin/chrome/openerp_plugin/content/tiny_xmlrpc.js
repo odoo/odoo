@@ -1432,7 +1432,7 @@ function upload_archivemail()
 	var b = [ref_ids, eml_string];
     var arrofarr = dictcontact(a,b);
     xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-    alert("Mail Archived Successfully");
+    alert("Mail Archived Successfully.");
 	window.close();
     
 }
@@ -1463,7 +1463,7 @@ function create_archivemail(){
 		var b = [object, eml_string];
 		var arrofarr = dictcontact(a,b);
 		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Document Created Successfully");
+        alert("Document Created Successfully.");
 		}
     	window.close();
 	}
@@ -1679,7 +1679,7 @@ var listLoginHandler = {
 		if(login.type == 12){
 			login = result.QueryInterface(Components.interfaces.nsISupportsPRInt32)
 			setUserId(login.data);
-			alert('Successfully Login To OpenERP');
+			alert('Successfully Login To OpenERP.');
             window.close();
 		}
 		else{
@@ -1706,7 +1706,7 @@ function testConnection(){
 	{
 		if (document.getElementById('DBlist_text').value =='')
 		{
-			alert("You Must Enter Database Name");
+			alert("You Must Enter Database Name.");
 			return false;
 		}
 		setDbName(document.getElementById('DBlist_text').value);
@@ -1715,7 +1715,7 @@ function testConnection(){
 	{
 		if (document.getElementById('DBlist').value == 0 || document.getElementById('DBlist').value =="--select--")
 		{
-			alert("You Must Select Database Name");
+			alert("You Must Select Database Name.");
 			return false;
 		}
 		setDbName(document.getElementById('DBlist').value);
@@ -1751,7 +1751,7 @@ var listcreateLoginHandler = {
 			setUserId(login.data);
 		}
 		else{
-			alert("Login Failed");
+			alert("Login Failed.");
 		}
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1787,7 +1787,7 @@ var listCreatePartnerHandler = {
 			window.close();
 		}
 		if(createId == 0){
-			alert("Partner Already Exist");
+			alert("Partner Already Exist.");
 		}
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1815,7 +1815,7 @@ function createPartner(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	if(document.getElementById('txtname').value ==''){
-		alert("You Must Enter Partner Name");
+		alert("You Must Enter Partner Name.");
 		return false;
 	}
 	var a = ['name'];
@@ -1829,7 +1829,7 @@ var listSearchDocumentHandler = {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var searchResult = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
 		if(searchResult.data == 0){
-			alert("Document Does Not Exist");
+			alert("Document Does Not Exist.");
 			return false;
 		}
 		var objvalue = getPref().getCharPref("listobject");
@@ -1842,7 +1842,7 @@ var listSearchDocumentHandler = {
 
 
 		if(objectcharpref.indexOf(document.getElementById("txtobject").value) != -1){
-			alert("Document already in List");
+			alert("Document already in List.");
 		}
 		else{
 			var	listItem = document.createElement("listitem");
@@ -1897,11 +1897,11 @@ function searchDocument(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	if(document.getElementById('txtobj').value =='' ){
-		alert("You Must Enter Document");
+		alert("You Must Enter Document.");
 		return false;
 	}
 	if(document.getElementById('txtobject').value =='' ){
-		alert("You Must Enter Document Name");
+		alert("You Must Enter Document Name.");
 		return false;
 	}
 	var a = ['model'];

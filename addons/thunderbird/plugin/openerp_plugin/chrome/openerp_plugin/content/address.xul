@@ -3,7 +3,7 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/address.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.createContactAddress()" height="380" width="720">
+	title="&title.label;" onload="myPrefObserver.createContactAddress()" height="480" width="764">
 
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
@@ -12,7 +12,8 @@
 <script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
 
 <tabpanel id="contact">
-  <groupbox id="contact" style="border:1px solid black" width="712">
+  <groupbox id="contact" style="border:1px solid black" width="752">
+    <separator class="groove-thin" orient="horizontal" width="94"/> 
      <hbox>
         <label  align="right" id="emailid"  value="&emailid.value;" width="94" />
 		 <textbox id="txtemail" width="268" align="right"/>
@@ -26,15 +27,16 @@
         <spacer width="5"/>
          <button label="New Partner" image="&imagecreate.value;" oncommand="CreatePartner.onMenuItemCommand(event);" width="133"/>
 	</hbox>
+    <separator class="groove-thin" orient="horizontal" width="94"/> 
    </groupbox>
 </tabpanel>
-
+<separator class="groove-thin" orient="horizontal" width="94"/> 
 <tabpanel id="address">
   <groupbox id="address" style="border:1px solid black">
     <hbox >
         <caption label="&postaladdress.value;" />
     </hbox>
-
+    <separator class="groove-thin" orient="horizontal" width="94"/> 
      <hbox>
         <label  align="right" id="contactname"  value="&contactname.value;" width="80" />
 		<textbox id="txtcontactname" align="right" width="270" />
@@ -77,11 +79,13 @@
    	    </menupopup>
       	  </menulist>
 	</hbox>
+    <separator class="groove-thin" orient="horizontal" width="94"/> 
 </groupbox>
-<groupbox id="communication" style="border:1px solid black">
+<groupbox id="communication" style="border:1px solid black" width="310">
    <vbox>
         <caption label="&communication.value;" />
      </vbox>
+    <separator class="groove-thin" orient="horizontal" width="94"/> 
     <hbox>
         <label  align="right" id="office"  value="&office.value;" width="50" />
 	    <textbox id="txtoffice" align="right"/>
@@ -96,11 +100,10 @@
     </hbox> 
 </groupbox>
 </tabpanel>
-
 <description></description>
 
 <hbox align="right">
-    <button label="&cancel.label;" image="&imagecancel.value;" oncommand="close();" />
+    <button label="&cancel.label;" image="&imagecancel.value;" oncommand="close();"/>
     <button label="&ok.label;" image="&imageok.value;" oncommand="UpdateContact();"/>
  
 </hbox>
