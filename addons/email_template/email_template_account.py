@@ -2,26 +2,25 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2009  Sharoon Thomas
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2009 Sharoon Thomas
+#    Copyright (C) 2004-2010 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 
 from osv import osv, fields
-from html2text import html2text
 import re
 import smtplib
 import base64
@@ -31,12 +30,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.header import decode_header, Header
 from email.utils import formatdate
-import re
 import netsvc
-import string
-import email
-import time, datetime
-import email_template_engines
+import datetime
 from tools.translate import _
 import tools
 
@@ -86,9 +81,10 @@ class email_template_account(osv.osv):
         'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)',
                         states={'draft':[('readonly', False)]}, readonly=True),
         'send_pref':fields.selection([
-                                      ('html', 'HTML otherwise Text'),
-                                      ('text', 'Text otherwise HTML'),
-                                      ('both', 'Both HTML & Text')
+                                      ('html', 'HTML, otherwise Text'),
+                                      ('text', 'Text, otherwise HTML'),
+                                      ('alternative', 'Both HTML & Text (Alternative)'),
+                                      ('mixed', 'Both HTML & Text (Mixed)')
                                       ], 'Mail Format', required=True),
         'company':fields.selection([
                         ('yes', 'Yes'),
@@ -135,7 +131,10 @@ class email_template_account(osv.osv):
          'unique (email_id)',
          'Another setting already exists with this email ID !')
     ]
-    
+
+    def name_get(self, cr, uid, ids, context=None):
+        return dict([(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)])
+
     def _constraint_unique(self, cursor, user, ids):
         """
         This makes sure that you dont give personal 
@@ -283,7 +282,7 @@ class email_template_account(osv.osv):
         TODO: Doc this
         """
         result = {'all':[]}
-        keys = ['To', 'CC', 'BCC']
+        keys = ['To', 'CC', 'BCC', 'Reply-To']
         for each in keys:
             ids_as_list = self.split_to_ids(addresses.get(each, u''))
             while u'' in ids_as_list:
@@ -292,7 +291,7 @@ class email_template_account(osv.osv):
             result['all'].extend(ids_as_list)
         return result
     
-    def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, context=None):
+    def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, message_id=None, context=None):
         #TODO: Replace all this with a single email object
         if body is None:
             body = {}
@@ -306,18 +305,38 @@ class email_template_account(osv.osv):
             serv = self.smtp_connection(cr, uid, id)
             if serv:
                 try:
-                    msg = MIMEMultipart()
+                    # Prepare multipart containers depending on data
+                    text_subtype = (core_obj.send_pref == 'alternative') and 'alternative' or 'mixed'
+                    # Need a multipart/mixed wrapper for attachments if content is alternative
+                    if payload and text_subtype == 'alternative':
+                        payload_part = MIMEMultipart(_subtype='mixed')
+                        text_part = MIMEMultipart(_subtype=text_subtype)
+                        payload_part.attach(text_part)
+                    else:
+                        # otherwise a single multipart/mixed will do the whole job 
+                        payload_part = text_part = MIMEMultipart(_subtype=text_subtype)
+
                     if subject:
-                        msg['Subject'] = subject
-                    sender_name = Header(core_obj.name, 'utf-8').encode()
-                    msg['From'] = sender_name + " <" + core_obj.email_id + ">"
-                    msg['Organization'] = tools.ustr(core_obj.user.company_id.name)
-                    msg['Date'] = formatdate()
+                        payload_part['Subject'] = subject
+                    from_email = core_obj.email_id
+                    if '<' in from_email:
+                        # We have a structured email address, keep it untouched
+                        payload_part['From'] = Header(core_obj.email_id, 'utf-8').encode()
+                    else:
+                        # Plain email address, construct a structured one based on the name:
+                        sender_name = Header(core_obj.name, 'utf-8').encode()
+                        payload_part['From'] = sender_name + " <" + core_obj.email_id + ">"
+                    payload_part['Organization'] = tools.ustr(core_obj.user.company_id.name)
+                    payload_part['Date'] = formatdate()
                     addresses_l = self.get_ids_from_dict(addresses) 
                     if addresses_l['To']:
-                        msg['To'] = u','.join(addresses_l['To'])
+                        payload_part['To'] = u','.join(addresses_l['To'])
                     if addresses_l['CC']:
-                        msg['CC'] = u','.join(addresses_l['CC'])
+                        payload_part['CC'] = u','.join(addresses_l['CC'])
+                    if addresses_l['Reply-To']:
+                        payload_part['Reply-To'] = addresses_l['Reply-To'][0]
+                    if message_id:
+                        payload_part['Message-ID'] = message_id
                     if body.get('text', False):
                         temp_body_text = body.get('text', '')
                         l = len(temp_body_text.replace(' ', '').replace('\r', '').replace('\n', ''))
@@ -326,28 +345,30 @@ class email_template_account(osv.osv):
                     # Attach parts into message container.
                     # According to RFC 2046, the last part of a multipart message, in this case
                     # the HTML message, is best and preferred.
-                    if core_obj.send_pref == 'text' or core_obj.send_pref == 'both':
-                        body_text = body.get('text', u'No Mail Message')
+                    if core_obj.send_pref in ('text', 'mixed', 'alternative'):
+                        body_text = body.get('text', u'<Empty Message>')
                         body_text = tools.ustr(body_text)
-                        msg.attach(MIMEText(body_text.encode("utf-8"), _charset='UTF-8'))
-                    if core_obj.send_pref == 'html' or core_obj.send_pref == 'both':
+                        text_part.attach(MIMEText(body_text.encode("utf-8"), _charset='UTF-8'))
+                    if core_obj.send_pref in ('html', 'mixed', 'alternative'):
                         html_body = body.get('html', u'')
                         if len(html_body) == 0 or html_body == u'':
-                            html_body = body.get('text', u'<p>No Mail Message</p>').replace('\n', '<br/>').replace('\r', '<br/>')
+                            html_body = body.get('text', u'<p>&lt;Empty Message&gt;</p>').replace('\n', '<br/>').replace('\r', '<br/>')
                         html_body = tools.ustr(html_body)
-                        msg.attach(MIMEText(html_body.encode("utf-8"), _subtype='html', _charset='UTF-8'))
-                    #Now add attachments if any
-                    for file in payload.keys():
-                        part = MIMEBase('application', "octet-stream")
-                        part.set_payload(base64.decodestring(payload[file]))
-                        part.add_header('Content-Disposition', 'attachment; filename="%s"' % file)
-                        Encoders.encode_base64(part)
-                        msg.attach(part)
+                        text_part.attach(MIMEText(html_body.encode("utf-8"), _subtype='html', _charset='UTF-8'))
+
+                    #Now add attachments if any, wrapping into a container multipart/mixed if needed
+                    if payload:
+                        for file in payload:
+                            part = MIMEBase('application', "octet-stream")
+                            part.set_payload(base64.decodestring(payload[file]))
+                            part.add_header('Content-Disposition', 'attachment; filename="%s"' % file)
+                            Encoders.encode_base64(part)
+                            payload_part.attach(part)
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
                     return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 try:
-                    serv.sendmail(msg['From'], addresses_l['all'], msg.as_string())
+                    serv.sendmail(payload_part['From'], addresses_l['all'], payload_part.as_string())
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Server Send Error\nDescription: %s") % (id, error))
                     return {'error_msg': "Server Send Error\nDescription: %s"%error}
@@ -358,7 +379,7 @@ class email_template_account(osv.osv):
             else:
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Account not approved") % id)
                 return {'error_msg':"Mail from Account %s failed. Probable Reason:Account not approved"% id}
-                                
+
     def extracttime(self, time_as_string):
         """
         TODO: DOC THis

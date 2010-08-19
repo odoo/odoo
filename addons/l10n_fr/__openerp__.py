@@ -40,6 +40,7 @@ Credits: Sistheo Zeekom CrysaLEAD
     "update_xml" : [
         "fr_report_demo.xml",
         "plan_comptable_general_demo.xml",
+        "l10n_fr_wizard.xml",
         "fr_pcg_taxes_demo.xml",
         "fr_tax_demo.xml",
         "fr_fiscal_templates_demo.xml",
@@ -47,6 +48,7 @@ Credits: Sistheo Zeekom CrysaLEAD
         "security/ir.model.access.csv",
         "wizard/fr_report_bilan_view.xml",
         "wizard/fr_report_compute_resultant_view.xml",
+        
     ],
     "demo_xml" : [],
     "certificate" : "00435321693876313629",

@@ -539,22 +539,21 @@ class account_invoice(osv.osv):
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
             else:
-                raise osv.except_osv(_('Configuration Error !'),
-                                _('Can not find account journal for this company in invoice, Please Create journal.'))
+                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.' % (journal_type)))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
             journal_ids = obj_journal.search(cr, uid, [])
 
         if currency_id and company_id:
             currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
-            if currency.company_id.id != company_id:
+            if currency.company_id and currency.company_id.id != company_id:
                 val['currency_id'] = False
             else:
                 val['currency_id'] = currency.id
 
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id)
-            if company.currency_id.company_id.id != company_id:
+            if company.currency_id.company_id and company.currency_id.company_id.id != company_id:
                 val['currency_id'] = False
             else:
                 val['currency_id'] = company.currency_id.id
@@ -1385,10 +1384,6 @@ class account_invoice_line(osv.osv):
 
         company = self.pool.get('res.company').browse(cr, uid, company_id)
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
-
-        if not currency.company_id.id == company.id:
-            raise osv.except_osv(_('Configuration Error !'),
-                        _('Can not select currency that is not related to any company.\nPlease select accordingly !.'))
 
         if company.currency_id.id != currency.id:
             new_price = res_final['value']['price_unit'] * currency.rate

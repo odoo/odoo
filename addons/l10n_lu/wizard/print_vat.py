@@ -5,7 +5,6 @@
 #Tranquil IT Systems
 
 from osv import osv, fields
-
 import pooler
 import tools
 from tools.translate import _
@@ -13,20 +12,25 @@ from report.render import render
 from report.interface import report_int
 
 class external_pdf(render):
+
     def __init__(self, pdf):
         render.__init__(self)
         self.pdf = pdf
         self.output_type='pdf'
+
     def _render(self):
         return self.pdf
 
 
 class report_custom(report_int):
-    def create(self, cr, uid, ids, datas, context={}):
+
+    def create(self, cr, uid, ids, datas, context=None):
 
         pool = pooler.get_pool(cr.dbname)
-
         taxobj = pool.get('account.tax.code')
+
+        if context is None:
+            context = {}
         code_ids = taxobj.search(cr, uid, [('parent_id','child_of',[datas['form']['tax_code_id']])])
         result = {}
         for t in taxobj.browse(cr, uid, code_ids, {'period_id': datas['form']['period_id']}):
@@ -54,12 +58,12 @@ report_custom('report.l10n_lu.tax.report.print')
 class vat_declaration_report(osv.osv_memory):
     _name = 'vat.declaration.report'
     _description = 'VAT Declaration Report'
-    
+
     _columns = {
-         'tax_code_id': fields.many2one('account.tax.code', 'Company', required=True, domain=[('parent_id','=',False)]),
+         'tax_code_id': fields.many2one('account.tax.code', 'Company', readonly=False, required=True, domain=[('parent_id','=',False)]),
          'period_id' : fields.many2one('account.period', 'Period', required=True)
-        }
-    
+    }
+
     def print_vat_declaration_report(self, cr, uid, ids, context=None):
         active_ids = context.get('active_ids',[])
         data = {}

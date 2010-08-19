@@ -29,15 +29,19 @@ class sale_make_invoice(osv.osv_memory):
         'grouped': fields.boolean('Group the invoices', help='Check the box to group the invoices for the same customers'),
         'invoice_date':fields.date('Invoice Date'),
     }
-    _default = {
-        'grouped' : lambda *a: False
+    _defaults = {
+        'grouped': False
     }
+    
     def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         record_id = context and context.get('active_id', False)     
         order = self.pool.get('sale.order').browse(cr, uid, record_id)
         if order.state == 'draft':
             raise osv.except_osv(_('Warning !'),'You can not create invoice when sale order is not confirmed.')
         return False
+    
     def make_invoices(self, cr, uid, ids, context={}):
         order_obj = self.pool.get('sale.order')
         newinv = []
@@ -68,5 +72,5 @@ class sale_make_invoice(osv.osv_memory):
         }
 
 sale_make_invoice()        
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -6,7 +6,7 @@
             <field name="model">vat.declaration.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form>
+            	<form string="Print Tax Statements">
 	               <field name="tax_code_id" widget="selection"/>
 	               <field name="period_id" widget="selection"/>
 	               <separator colspan="4"/>
@@ -30,5 +30,6 @@
 
        <menuitem id="legal_lu" parent="account.menu_finance_legal_statement" name="Luxembourg"/>
        <menuitem name="VAT Declaration" id="legal_lu_vat" parent="legal_lu" action="action_vat_report"/>
+
     </data>
 </openerp>
