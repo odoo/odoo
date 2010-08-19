@@ -197,19 +197,6 @@ class account_account(osv.osv):
     _parent_store = True
     logger = netsvc.Logger()
 
-    def _get_children_and_consol(self, cr, uid, ids, context={}):
-        ids2=[]
-        temp=[]
-        read_data= self.read(cr, uid, ids,['id','child_id'], context)
-        for data in read_data:
-            ids2.append(data['id'])
-            if data['child_id']:
-                temp=[]
-                for x in data['child_id']:
-                    temp.append(x)
-                ids2 += self._get_children_and_consol(cr, uid, temp, context)
-        return ids2
-
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if context is None:
@@ -244,7 +231,9 @@ class account_account(osv.osv):
         return super(account_account, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
-    def _get_children_and_consol(self, cr, uid, ids, context={}):
+    def _get_children_and_consol(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         #this function search for all the children and all consolidated children (recursively) of the given account ids
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context)
         ids3 = []
@@ -1051,13 +1040,13 @@ class account_move(osv.osv):
         ids = []
         if name:
             ids += self.search(cr, user, [('name','ilike',name)]+args, limit=limit, context=context)
-        
+
         if not ids and name and type(name) == int:
             ids += self.search(cr, user, [('id','=',name)]+args, limit=limit, context=context)
 
         if not ids:
             ids += self.search(cr, user, args, limit=limit, context=context)
-        
+
         return self.name_get(cr, user, ids, context=context)
 
     def name_get(self, cursor, user, ids, context=None):
@@ -1167,7 +1156,7 @@ class account_move(osv.osv):
                 if move.name =='/':
                     new_name = False
                     journal = move.journal_id
-                    
+
                     if invoice and invoice.internal_number:
                         new_name = invoice.internal_number
                     else:
