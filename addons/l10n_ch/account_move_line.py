@@ -34,8 +34,8 @@
 from osv import fields, osv
 
 class AccountMoveLine(osv.osv):
-    """ Inherit account.move.line in order to add a custom link 
-        between supplier invoice line and bank. The original link 
+    """ Inherit account.move.line in order to add a custom link
+        between supplier invoice line and bank. The original link
         was defined in account_payment between line """
 
     _inherit = 'account.move.line'
@@ -43,12 +43,13 @@ class AccountMoveLine(osv.osv):
     ## @param self The object pointer.
     ## @param cr a psycopg cursor
     ## @param uid res.user.id that is currently loged
-    ## @param payment_type manual 
-    ## @parma context a standard dict 
+    ## @param payment_type manual
+    ## @parma context a standard dict
     ## @return a dict  who has the account move line id as key and the bank id as value
+
     def line2bank(self, cr, uid, ids, payment_type='manual', context=None):
-        """add a link to account.move.line in order to link 
-        supplier invoice line and bank. The original link 
+        """add a link to account.move.line in order to link
+        supplier invoice line and bank. The original link
         was defined in account_payment"""
         payment_mode_obj = self.pool.get('payment.mode')
         line2bank = {}
@@ -69,4 +70,5 @@ class AccountMoveLine(osv.osv):
         return line2bank
 
 AccountMoveLine()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

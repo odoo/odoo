@@ -133,7 +133,7 @@ class email_template_account(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        return dict([(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)])
+        return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
 
     def _constraint_unique(self, cursor, user, ids):
         """
@@ -211,7 +211,7 @@ class email_template_account(osv.osv):
                     raise error
                 try:
                     if serv.has_extn('AUTH') or this_object.smtpuname or this_object.smtppass:
-                        serv.login(this_object.smtpuname, this_object.smtppass)
+                        serv.login(str(this_object.smtpuname), str(this_object.smtppass))
                 except Exception, error:
                     raise error
                 return serv

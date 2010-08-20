@@ -244,13 +244,21 @@
 			        </record>
        
 			        <record model="account.account.template" id="income_fx_expense">
-			            <field name="name">Foreign Exchange Loss - (test)</field>
-			            <field name="code">X2111</field>
+			            <field name="name">Foreign Exchange Loss</field>
+			            <field name="code">2111</field>
 			            <field name="type">other</field>
 			            <field name="user_type" ref="account_type_expense"/>
 			            <field name="reconcile" eval="False"/>
 			            <field name="parent_id" ref="ovr"/>
 			        </record>
+
+                    <record id="a_salary_expense" model="account.account.template">
+                        <field name="code">2112</field>
+                        <field name="name">Salary Expenses</field>
+                        <field ref="ovr" name="parent_id"/>
+                        <field name="type">other</field>
+                        <field name="user_type" ref="account_type_expense"/>
+                    </record>
 			        
 			        <!-- <record id="account.property_account_expense_categ" model="ir.property">
 			            <field eval="'account.account,'+str(a_expense)" name="value"/>
