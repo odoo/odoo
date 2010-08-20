@@ -36,11 +36,11 @@ class hr_evaluation_plan(osv.osv):
         'month_first': fields.integer('First Evaluation After'),
         'month_next': fields.integer('Next Evaluation After'),
         'active': fields.boolean('Active')
-        }
+    }
     _defaults = {
         'active': True,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
-        }
+    }
 hr_evaluation_plan()
 
 class hr_evaluation_plan_phase(osv.osv):
@@ -131,7 +131,7 @@ class hr_employee(osv.osv):
                     evaluation_date=(dt.ISO.ParseAny(evaluation_date)+ dt.RelativeDateTime(months=+evaluation_plan.month_next)).strftime('%Y-%m-%d')
                     flag = True
             if ids and flag:
-                self.pool.get("hr_evaluation.evaluation").create(cr, uid, {'employee_id': ids[0], 'plan_id': evaluation_plan_id}, context=context)
+                obj_evaluation.create(cr, uid, {'employee_id': ids[0], 'plan_id': evaluation_plan_id}, context=context)
         return {'value': {'evaluation_date': evaluation_date}}
 
     def create(self, cr, uid, vals, context=None):
@@ -139,7 +139,7 @@ class hr_employee(osv.osv):
             context = {}
         id = super(hr_employee, self).create(cr, uid, vals, context=context)
         if vals.get('evaluation_plan_id', False):
-            obj_evaluation.create(cr, uid, {'employee_id' : id, 'plan_id': vals['evaluation_plan_id']}, context=context)
+            self.pool.get('hr_evaluation.evaluation').create(cr, uid, {'employee_id' : id, 'plan_id': vals['evaluation_plan_id']}, context=context)
         return id
 
 hr_employee()
@@ -289,10 +289,10 @@ class hr_evaluation_interview(osv.osv):
         'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
         'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
         'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluation Type'),
-        }
+    }
     _defaults = {
         'is_evaluation': True,
-        }
+    }
 
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
         if context is None:
