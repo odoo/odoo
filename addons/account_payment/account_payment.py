@@ -46,9 +46,12 @@ class payment_mode(osv.osv):
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
             domain=[('type', '=', 'cash')], help='Cash Journal for the Payment Mode'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'type': fields.many2one('payment.type', 'Payment type', required=True, help='Select the Payment Type for the Payment Mode.'),
     }
-
+    _defaults = {
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
+    }
     def suitable_bank_types(self, cr, uid, payment_code=None, context={}):
         """Return the codes of the bank type that are suitable
         for the given payment type code"""
