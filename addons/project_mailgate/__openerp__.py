@@ -19,11 +19,28 @@
 #
 ##############################################################################
 
-import project
-import company
-import installer
-import report
-import wizard
-import res_partner
+
+{
+    "name": "Project MailGateWay",
+    "version": "1.1",
+    "author": "OpenERP SA",
+    "website": "http://www.openerp.com",
+    "category": "Generic Modules/Projects & Services",
+    "depends": ["project"],
+    "description": """This module is an interface that synchronises mails with OpenERP Project Task.
+
+It allows creating tasks as soon as a new mail arrives in our configured mail server. 
+Moreover, it keeps track of all further communications and task states.  
+    """,
+    "init_xml": [],
+    "update_xml": [
+        "project_mailgate_view.xml",
+    ],
+    'demo_xml': [
+    ],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

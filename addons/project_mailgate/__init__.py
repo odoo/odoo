@@ -19,11 +19,6 @@
 #
 ##############################################################################
 
-import project
-import company
-import installer
-import report
-import wizard
-import res_partner
+import project_mailgate
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
