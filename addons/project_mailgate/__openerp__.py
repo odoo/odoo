@@ -26,7 +26,7 @@
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Generic Modules/Projects & Services",
-    "depends": ["project"],
+    "depends": ["project", "mail_gateway"],
     "description": """This module is an interface that synchronises mails with OpenERP Project Task.
 
 It allows creating tasks as soon as a new mail arrives in our configured mail server. 
