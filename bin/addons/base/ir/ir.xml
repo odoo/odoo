@@ -606,8 +606,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Role">
-                    <field colspan="4" name="name" select="1"/>
-                    <field colspan="4" name="parent_id"/>
+                    <field name="name" select="1"/>
+                    <field name="parent_id"/>
+                    <separator string="Description" colspan="4"/>
+                    <field name="description" nolabel="1" colspan="4"/>
+                    <separator string="Workflow transitions" colspan="4"/>
+                     <field name="workflow_transition_ids" nolabel="1" colspan="4">
+                        <tree string="Workflow transitions">
+                            <field name="wkf_id"/>
+                            <field name="act_from"/>
+                            <field name="act_to"/>
+                            <field name="signal"/>
+                            <field name="condition"/>
+                        </tree>
+                     </field>
                 </form>
             </field>
         </record>
@@ -619,6 +631,8 @@
             <field name="arch" type="xml">
                 <tree string="Roles">
                     <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="description"/>
                 </tree>
             </field>
         </record>
