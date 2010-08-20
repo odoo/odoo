@@ -45,7 +45,7 @@
                                     <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="amount"/>
                                     <field name="ref"/>
-                                    <field name="account_analytic_id"/>
+                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
@@ -108,13 +108,13 @@
                         <separator orientation="vertical"/>
                         <field name="number" select='1'/>
                         <field name="account_id" select="1"/>
-                        <field name="partner_id" select='1'/>                       
+                        <field name="partner_id" select='1'/>
                         <field name="date" select='1'/>
                     </group>
                     <newline/>
                     <group col='8' colspan='4'>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                        <field name="period_id" context="{'period_id': self}" groups="base.group_extended"/>                        
+                        <field name="period_id" context="{'period_id': self}" groups="base.group_extended"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." col='8' colspan='4'>
@@ -155,7 +155,7 @@
                     <newline/>
                     <group col='8' colspan='4'>
                         <field name="journal_id" widget="selection" select="1"/>
-                        <field name="period_id" select="1"/>                        
+                        <field name="period_id" select="1"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
@@ -186,7 +186,7 @@
                 </graph>
             </field>
          </record>
-        
+
         <!--  Receipt Vouchers -->
 <!--        <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list">-->
 <!--            <field name="name">Sales Receipt</field>-->
@@ -255,7 +255,7 @@
 <!--        <menuitem action="action_cheque_register" -->
 <!--            id="menu_action_cheque_register" -->
 <!--            parent="account.menu_finance_receivables"/>-->
-        
+
 <!--        <record id="action_cheque_pay" model="ir.actions.act_window">-->
 <!--            <field name="name">Vendor Payment</field>-->
 <!--            <field name="type">ir.actions.act_window</field>-->
@@ -270,7 +270,7 @@
 <!--        <menuitem action="action_cheque_pay" -->
 <!--            id="menu_action_cheque_pay" -->
 <!--            parent="account.menu_finance_payables"/>-->
-        
+
 <!--        <record id="action_cheque_pay_voucher" model="ir.actions.act_window">-->
 <!--            <field name="name">Cheques</field>-->
 <!--            <field name="type">ir.actions.act_window</field>-->
@@ -285,7 +285,7 @@
 <!--        <menuitem action="action_cheque_pay_voucher" -->
 <!--            id="menu_action_cheque_pay_voucher" -->
 <!--            parent="account.menu_finance_bank_and_cash"/>-->
-        
+
         <record model="ir.ui.view" id="view_account_journal_form_inherit">
             <field name="name">account.journal.form.inherit</field>
             <field name="model">account.journal</field>
@@ -305,7 +305,7 @@
             context="{'journal_id': active_id, 'type':type}"
             res_model="account.voucher"
             src_model="account.journal"/>
-        
+
         <record model="ir.actions.act_window" id="action_review_voucher_list">
             <field name="name">Vouchers Entries</field>
             <field name="res_model">account.voucher</field>

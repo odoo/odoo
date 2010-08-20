@@ -13,7 +13,7 @@
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field domain="[('type','=','normal')]" name="analytic_account" groups="base.group_extended"/>
+                    <field domain="[('type','=','normal'), ('parent_id','!=',False)]" name="analytic_account" groups="base.group_extended"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
                     <field name="total_amount"/>
@@ -89,7 +89,7 @@
                                     <field name="unit_amount"/>
                                     <field name="ref"/>
                                     <field name="sequence" groups="base.group_extended"/>
-                                    <field domain="[('type','=','normal')]" name="analytic_account" groups="base.group_extended"/>
+                                    <field domain="[('type','=','normal'), ('parent_id','!=',False)]" name="analytic_account" groups="base.group_extended"/>
                                     <newline/>
                                     <field name="total_amount"/>
                                 </form>
