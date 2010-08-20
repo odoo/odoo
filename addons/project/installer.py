@@ -54,11 +54,11 @@ class project_installer(osv.osv_memory):
             help="Embeds the 'Getting Things Done concepts' into OpenERP's "
                  "project management."),
         }
-    
+
     _defaults={
-                'project_crm': True,
-               }
-    
+        'project_crm': True,
+    }
+
 project_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

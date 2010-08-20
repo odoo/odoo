@@ -35,7 +35,8 @@ class project_task_delegate(osv.osv_memory):
         'new_task_description': fields.text('New Task Description', help="Reinclude the description of the task in the task of the user"),
         'planned_hours': fields.float('Planned Hours',  help="Estimated time to close this task by the delegated user"),
         'planned_hours_me': fields.float('Hours to Validate', required=True, help="Estimated time for you to validate the work done by the user to whom you delegate this task"),
-        'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', required=True, help="New state of your own task. Pending will be reopened automatically when the delegated task is closed"), }
+        'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', required=True, help="New state of your own task. Pending will be reopened automatically when the delegated task is closed")
+    }
 
     def _get_name(self, cr, uid, context=None):
         if context is None:
@@ -43,7 +44,7 @@ class project_task_delegate(osv.osv_memory):
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             if task.name.startswith(_('CHECK: ')):
-                newname = task.name.strip(_('CHECK: '))
+                newname = str(task.name).replace(_('CHECK: '), '')
             else:
                 newname = task.name or ''
             return newname
@@ -63,10 +64,10 @@ class project_task_delegate(osv.osv_memory):
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             if task.name.startswith(_('CHECK: ')):
-                newname = task.name.strip(_('CHECK: '))
+                newname = str(task.name).replace(_('CHECK: '), '')
             else:
                 newname = task.name or ''
-            return _('CHECK: ')+ newname
+            return _('CHECK: ') + newname
         return ''
 
     def _get_new_desc(self, cr, uid, context=None):
@@ -85,7 +86,7 @@ class project_task_delegate(osv.osv_memory):
        'new_task_description': _get_new_desc,
        'state': 'pending',
     }
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
         obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
@@ -114,7 +115,7 @@ class project_task_delegate(osv.osv_memory):
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
 
         return res
-    
+
     def validate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -129,7 +130,7 @@ class project_task_delegate(osv.osv_memory):
             'planned_hours': delegate_data['planned_hours'],
             'remaining_hours': delegate_data['planned_hours'],
             'parent_ids': [(6, 0, [task.id])],
-            'state': 'open',
+            'state': 'draft',
             'description': delegate_data['new_task_description'] or '',
             'child_ids': [],
             'work_ids': []

@@ -29,7 +29,7 @@
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],
     "description": """
-    This is the base module for managing products and pricelists in Open ERP.
+    This is the base module for managing products and pricelists in OpenERP.
 
     Products support variants, different pricing methods, suppliers
     information, make to stock/order, different unit of measures,

@@ -29,11 +29,11 @@ class hr_attendance_bymonth(osv.osv_memory):
     _columns = {
         'month': fields.selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], 'Month', required=True),
         'year': fields.integer('Year', required=True)
-                }
+    }
     _defaults = {
          'month': time.gmtime()[1],
          'year': time.gmtime()[0],
-             }
+    }
 
     def print_report(self, cr, uid, ids, context=None):
         if context is None:
@@ -42,12 +42,12 @@ class hr_attendance_bymonth(osv.osv_memory):
              'ids': [],
              'model': 'hr.employee',
              'form': self.read(cr, uid, ids)[0]
-                 }
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'hr.attendance.bymonth',
             'datas': datas,
-            }
+        }
 
 hr_attendance_bymonth()
 

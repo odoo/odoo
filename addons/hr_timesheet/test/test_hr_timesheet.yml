@@ -20,11 +20,11 @@
     company_id: base.main_company
     context_lang: en_US
     groups_id:
-      - hr.group_hr_user
-      - hr_attendance.group_hr_attendance
+      - base.group_hr_user
+      - base.group_hr_attendance
       - base.group_user
       - base.group_extended
-      - hr.group_hr_manager
+      - base.group_hr_manager
     login: user1
     name: user1
     password: user1
@@ -124,7 +124,7 @@
     quantity_max: 0.0
     state: open
 
-- 
+-
   My work for this project is over and I stop working by clicking on "Stop Work" button of this wizard.
 -
   !python {model: hr.sign.out.project}: |

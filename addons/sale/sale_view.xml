@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="sale.group_sale_user"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,base.group_partner_manager"/>
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
@@ -116,7 +116,7 @@
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
-                                groups="base.group_extended"/>
+                                groups="base.group_extended" domain="[('parent_id','!=',False)]" />
                             <newline/>
                             <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
@@ -133,6 +133,7 @@
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, True)"
                                                 />
                                                 <field groups="product.group_uos" name="product_uos_qty"/>
+                                                <field groups="product.group_uos" name="product_uos"/>
                                             <field name="product_uom"
                                                 on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
                                             <field
@@ -168,8 +169,6 @@
                                         <page groups="base.group_extended" string="Extra Info">
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
-<!--                                            <separator colspan="4" string="Properties"/>-->
-<!--                                            <field colspan="4" name="property_ids" nolabel="1"/>-->
                                         </page>
                                         <page string="Notes">
                                             <field colspan="4" name="notes" nolabel="1"/>
@@ -289,7 +288,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="help">The sale order manages the invoicing, the product fullfilment and the delivery processes. OpenERP can handle products, services and consumables so that a sale order can trigger tasks, manufacturing orders, purchases, etc. It support several invoicing methods according to your configuration: from the sale order, from the pickings, etc.</field>
+            <field name="help">The sale order manages the invoicing, the product fullfilment and the
+delivery processes. OpenERP can handle products, services and
+consumables so that a sale order can trigger tasks, manufacturing
+orders, purchases, etc. It support several invoicing methods according
+to your configuration: from the sale order, from the pickings, etc.
+            </field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
 
@@ -411,9 +415,6 @@
                                     attrs="{'invisible': ['|',('state', 'not in', ('confirmed','exception')),('invoiced', '=', 0)]}"/>
                             </group>
                         </page>
-<!--                        <page string="Properties" groups="base.group_extended">-->
-<!--                            <field name="property_ids" nolabel="1"/>-->
-<!--                        </page>-->
                         <page string="Invoice Lines" groups="base.group_extended">
                             <field colspan="4" name="invoice_lines" nolabel="1"/>
                         </page>

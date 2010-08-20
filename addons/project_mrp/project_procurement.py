@@ -86,7 +86,7 @@ class procurement_order(osv.osv):
                 name_task = (procurement.origin, proc_name or '')
             else:
                 name_task = (procurement.product_id.name or procurement.origin, procurement.name or '')
-            planned_hours= procurement.product_id.sale_delay +procurement.product_id. produce_delay   
+            planned_hours= procurement.product_id.sale_delay + procurement.product_id. produce_delay   
             task_id = self.pool.get('project.task').create(cr, uid, {
                 'name': '%s:%s' % name_task,
                 'date_deadline': procurement.date_planned,

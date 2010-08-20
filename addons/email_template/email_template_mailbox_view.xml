@@ -8,14 +8,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Outbox">
-                    <group col="4" colspan="2">
-                        <field name="email_from" colspan="4" select="1"/>
-                        <field name="email_cc" colspan="4" select="1"/>
-                        <field name="date_mail" colspan="4" select="2"/>
-                    </group>
-                    <group col="4" colspan="2">
-                        <field name="email_to" colspan="4" required="1" select="1" />
-                        <field name="email_bcc" colspan="4" select="2"/>
+                    <group col="4" colspan="4" name="headers">
+                        <field name="email_from" select="1"/>
+                        <field name="email_to" required="1" select="1" />
+                        <field name="reply_to" select="2"/>
+                        <field name="email_cc" select="1"/>
+                        <field name="email_bcc" select="2"/>
+                        <field name="date_mail" select="2"/>
                         <field name="subject" colspan="4" select="1"/>
                     </group>
                     <notebook colspan="4">
@@ -27,12 +26,9 @@
                                 </page>
                                 <page string="Body (HTML-Web Client Only)">
                                     <field name="body_html" nolabel="1" colspan="4" />
-                                    <!--<label string="Note: HTML body can't be edited with GTK desktop client." colspan="4"/>
-                                --></page>
-
+                                </page>
                             </notebook>
                         </page>
-
 
                         <page string="Attachments">
                             <group col="4">
@@ -46,6 +42,7 @@
                                 <field name="server_ref" colspan="2" />
                                 <field name="mail_type" colspan="2" />
                                 <field name="folder" colspan="2" select="2"/>
+                                <field name="message_id" select="2"/>
                                 <separator string="History" colspan="4" />
                                 <field name="history" nolabel="1" colspan="4"/>
                             </group>
@@ -83,7 +80,7 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Mailboxes">
-                    <filter icon="terp-mail-message-new" string="Drafts" name="draft" domain="[('folder','=','drafts']"/>
+                    <filter icon="terp-mail-message-new" string="Drafts" name="draft" domain="[('folder','=','drafts')]"/>
                     <filter icon="terp-mail-" string="Outbox" name="outbox" domain="[('folder','=','outbox')]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-jump-to-ltr" string="Sent" domain="[('folder','=','sent')]"/>

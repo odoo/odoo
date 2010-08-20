@@ -1,15 +1,15 @@
 -
   In order to test the hr_holiday module in OpenERP, I will  Allocate leaves for Employee and manage leaves and leaves requests.
 -
-  I create new user "user1" to who makes leave request.
+  I create new user "user1" who will make leave request.
 -
   !record {model: res.users, id: res_users_user0}:
     company_id: base.main_company
     context_lang: en_US
     groups_id:
       - base.group_user
-      - hr.group_hr_manager
-      - hr.group_hr_user
+      - base.group_hr_manager
+      - base.group_hr_user
     login: user1
     name: user1
     password: user1

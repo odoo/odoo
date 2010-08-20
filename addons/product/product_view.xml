@@ -150,7 +150,7 @@
                             <field groups="base.group_extended" name="cost_method"/>
                             <newline/>
                             <field groups="base.group_extended" name="seller_id"/>
-                            <newline/>  
+                            <newline/>
                             <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
@@ -196,9 +196,10 @@
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">In OpenERP, a product is something you can buy and sell. It can be a raw material, a stockable product, a consumable or a service. The product form contains a detailed information on the products like procurement logistic, sales price, product category, suppliers, etc.</field>
         </record>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_system,group_product_manager"/>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
-        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9" groups="group_product_manager,base.group_sale_salesman,base.group_system"/>
+        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,group_product_manager"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -639,10 +640,6 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="res_id" ref="product.menu_products"/>
         </record>
-        <!--
-        <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_products" sequence="2"
-                  groups="product.group_product_variant" />
-        -->
 
     </data>
 </openerp>

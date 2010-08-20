@@ -121,14 +121,8 @@ import tempfile
 import warnings
 import random
 import stat
+from collections import deque
 from tarfile import filemode
-
-try:
-    import pwd
-    import grp
-except ImportError:
-    pwd = grp = None
-
 
 LOG_ACTIVE = True
 
@@ -190,24 +184,6 @@ proto_cmds = {
     'XPWD': 'Syntax: XPWD (obsolete; get current dir).',
     'XRMD': 'Syntax: XRMD <SP> dir-name (obsolete; remove directory).',
     }
-
-
-# hack around format_exc function of traceback module to grant
-# backward compatibility with python < 2.4
-if not hasattr(traceback, 'format_exc'):
-    try:
-        import cStringIO as StringIO
-    except ImportError:
-        import StringIO
-
-    def _format_exc():
-        f = StringIO.StringIO()
-        traceback.print_exc(file=f)
-        data = f.getvalue()
-        f.close()
-        return data
-
-    traceback.format_exc = _format_exc
 
 
 def _strerror(err):
@@ -571,7 +547,6 @@ class ActiveDTP(asyncore.dispatcher):
         handler = self.cmd_channel.dtp_handler(self.socket, self.cmd_channel)
         self.cmd_channel.data_channel = handler
         self.cmd_channel.on_dtp_connection()
-        #self.close()  # <-- (done automatically)
 
     def handle_expt(self):
         self.cmd_channel.respond("425 Can't connect to specified address.")
@@ -589,16 +564,6 @@ class ActiveDTP(asyncore.dispatcher):
             logerror(traceback.format_exc())
         self.cmd_channel.respond("425 Can't connect to specified address.")
         self.close()
-
-
-try:
-    from collections import deque
-except ImportError:
-    # backward compatibility with Python < 2.4 by replacing deque with a list
-    class deque(list):
-        def appendleft(self, obj):
-            list.insert(self, 0, obj)
-
 
 class DTPHandler(asyncore.dispatcher):
     """Class handling server-data-transfer-process (server-DTP, see
@@ -1227,21 +1192,9 @@ class AbstractedFS:
             if not nlinks:  # non-posix system, let's use a bogus value
                 nlinks = 1
             size = st.st_size  # file size
-            if pwd and grp:
-                # get user and group name, else just use the raw uid/gid
-                try:
-                    uname = pwd.getpwuid(st.st_uid).pw_name
-                except KeyError:
-                    uname = st.st_uid
-                try:
-                    gname = grp.getgrgid(st.st_gid).gr_name
-                except KeyError:
-                    gname = st.st_gid
-            else:
-                # on non-posix systems the only chance we use default
-                # bogus values for owner and group
-                uname = "owner"
-                gname = "group"
+            uname = st.st_uid or "owner"
+            gname = st.st_gid or "group"
+
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
@@ -1438,7 +1391,7 @@ class FTPHandler(asynchat.async_chat):
         """
         try:
             asynchat.async_chat.__init__(self, conn=conn) # python2.5
-        except TypeError, e:
+        except TypeError:
             asynchat.async_chat.__init__(self, sock=conn) # python2.6
         self.server = server
         self.remote_ip, self.remote_port = self.socket.getpeername()[:2]
@@ -1458,7 +1411,7 @@ class FTPHandler(asynchat.async_chat):
         self._epsvall = False
         self.__in_dtp_queue = None
         self.__out_dtp_queue = None
-        
+
         self.__errno_responses = {
                 errno.EPERM: 553,
                 errno.EINVAL: 504,
@@ -1469,13 +1422,10 @@ class FTPHandler(asynchat.async_chat):
 
         # mlsx facts attributes
         self.current_facts = ['type', 'perm', 'size', 'modify']
-        if os.name == 'posix':
-            self.current_facts.append('unique')
+        self.current_facts.append('unique')
         self.available_facts = self.current_facts[:]
-        if pwd and grp:
-            self.available_facts += ['unix.mode', 'unix.uid', 'unix.gid']
-        if os.name == 'nt':
-            self.available_facts.append('create')
+        self.available_facts += ['unix.mode', 'unix.uid', 'unix.gid']
+        self.available_facts.append('create')
 
         # dtp attributes
         self.data_server = None
@@ -1623,7 +1573,7 @@ class FTPHandler(asynchat.async_chat):
 
     def __check_path(self, cmd, line):
         """Check whether a path is valid."""
-        
+
         # Always true, we will only check later, once we have a cursor
         return True
 
@@ -1787,7 +1737,7 @@ class FTPHandler(asynchat.async_chat):
             self.__out_dtp_queue = (data, isproducer, file)
 
     def log(self, msg):
-        """Log a message, including additional identifying session data."""        
+        """Log a message, including additional identifying session data."""
         log("[%s]@%s:%s %s" %(self.username, self.remote_ip,
                               self.remote_port, msg))
 
@@ -1864,9 +1814,9 @@ class FTPHandler(asynchat.async_chat):
             why = (err.strerror) or 'Error in command'
             self.log('FAIL %s() %s errno=%s:  %s.' %(cmdname, uline, err.errno, why))
             self.respond('%s %s.' % (str(ret_code), why))
-        
+
             raise FTPExceptionSent(why)
-        except Exception, e:
+        except Exception, err:
             cmdname = function.__name__
             try:
                 logerror(traceback.format_exc())
@@ -2003,7 +1953,7 @@ class FTPHandler(asynchat.async_chat):
                     assert len(octs) == 4
                     for x in octs:
                         assert 0 <= x <= 255
-                except (AssertionError, ValueError, OverflowError), err:
+                except (AssertionError, ValueError, OverflowError):
                     self.respond("501 Invalid EPRT format.")
                 else:
                     self._make_eport(ip, port)
@@ -2107,7 +2057,7 @@ class FTPHandler(asynchat.async_chat):
         except FTPExceptionSent:
             self.fs.close_cr(datacr)
             return
-        
+
         try:
             self.log('OK LIST "%s". Transfer starting.' % line)
             producer = BufferedIteratorProducer(iterator)
@@ -2133,7 +2083,7 @@ class FTPHandler(asynchat.async_chat):
             else:
                 # if path is a file we just list its name
                 nodelist = [datacr[1],]
-            
+
             listing = []
             for nl in nodelist:
                 if isinstance(nl.path, (list, tuple)):
@@ -2143,7 +2093,7 @@ class FTPHandler(asynchat.async_chat):
         except FTPExceptionSent:
             self.fs.close_cr(datacr)
             return
-        
+
         self.fs.close_cr(datacr)
         data = ''
         if listing:
@@ -2194,7 +2144,7 @@ class FTPHandler(asynchat.async_chat):
         # if no argument, fall back on cwd as default
         if not line:
             line = ''
-        
+
         datacr = None
         try:
             datacr = self.get_crdata2(line, mode='list')
@@ -2581,12 +2531,6 @@ class FTPHandler(asynchat.async_chat):
         datacr = None
         try:
             datacr = self.get_crdata2(line, mode='file')
-            #if self.fs.isdir(datacr[1]):
-            #    why = "%s is not retrievable" %line
-            #    self.log('FAIL SIZE "%s". %s.' %(line, why))
-            #    self.respond("550 %s." %why)
-            #    self.fs.close_cr(datacr)
-            #    return
             size = self.try_as_current_user(self.fs.getsize,(datacr,), line=line)
         except FTPExceptionSent:
             self.fs.close_cr(datacr)
@@ -2601,7 +2545,7 @@ class FTPHandler(asynchat.async_chat):
         3307 style timestamp (YYYYMMDDHHMMSS) as defined in RFC-3659.
         """
         datacr = None
-            
+
         try:
             if line.find('/', 1) < 0:
                 # root or db, just return local
@@ -2610,9 +2554,7 @@ class FTPHandler(asynchat.async_chat):
                 datacr = self.get_crdata2(line)
                 if not datacr:
                     raise IOError(errno.ENOENT, "%s is not retrievable" %line)
-                #if not self.fs.isfile(datacr[1]):
-                #    raise IOError(errno.EPERM, "%s is not a regular file" % line)
-                
+
                 lmt = self.try_as_current_user(self.fs.getmtime, (datacr,), line=line)
             lmt = time.strftime("%Y%m%d%H%M%S", time.localtime(lmt))
             self.respond("213 %s" %lmt)

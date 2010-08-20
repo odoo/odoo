@@ -23,7 +23,6 @@ import base64
 import os
 import re
 import time
-import mx.DateTime
 from datetime import datetime, timedelta
 import binascii
 import collections
@@ -35,7 +34,7 @@ from osv.orm import except_orm
 from tools.translate import _
 import tools
 
-class project_issue(osv.osv, crm.crm_case):
+class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"
@@ -101,8 +100,8 @@ class project_issue(osv.osv, crm.crm_case):
                         date_until = issue.date_open
                         #Calculating no. of working hours to open the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                                mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
-                                mx.DateTime.strptime(issue.date_open, '%Y-%m-%d %H:%M:%S'))
+                                 datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
+                                 datetime.strptime(issue.date_open, '%Y-%m-%d %H:%M:%S'))
                 elif field in ['working_hours_close','day_close']:
                     if issue.date_closed:
                         date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
@@ -111,8 +110,8 @@ class project_issue(osv.osv, crm.crm_case):
                         ans = date_close - date_create
                         #Calculating no. of working hours to close the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                                mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
-                                mx.DateTime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
+                                datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
+                                datetime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
                 if ans:
                     resource_id = False
                     if issue.user_id:
@@ -122,9 +121,9 @@ class project_issue(osv.osv, crm.crm_case):
                     duration = float(ans.days)
                     if issue.project_id and issue.project_id.resource_calendar_id:
                         duration = float(ans.days) * 24
-                        new_dates = cal_obj.interval_min_get(cr, uid, issue.project_id.resource_calendar_id.id, mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'), duration, resource=resource_id)
+                        new_dates = cal_obj.interval_min_get(cr, uid, issue.project_id.resource_calendar_id.id, datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'), duration, resource=resource_id)
                         no_days = []
-                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
+                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
                             if in_time.date not in no_days:
                                 no_days.append(in_time.date)

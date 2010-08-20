@@ -68,7 +68,9 @@ def burndown_chart(cr, uid, tasks_id, date_start, date_stop):
     return result
 
 class report_tasks(report_int):
-    def create(self, cr, uid, ids, datas, context={}):
+    def create(self, cr, uid, ids, datas, context=None):
+        if context is None:
+            context = {}
         io = StringIO.StringIO()
 
         if 'date_start' not in datas:
@@ -91,7 +93,7 @@ class report_tasks(report_int):
         datas = _burndown.compute_burndown(cr, uid, ids, datas['date_start'], datas['date_stop'])
 
         canv = canvas.init(fname=io, format='pdf')
-        canv.set_author("Open ERP")
+        canv.set_author("OpenERP")
 
         max_hour = reduce(lambda x,y: max(y[1],x), datas, 0)
 

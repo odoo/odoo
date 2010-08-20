@@ -50,7 +50,6 @@ import account_invoice_state
 import account_chart
 #TODO: remove this file no moe used
 # also remove related view fiel
-#import account_move_line_select
 
 import account_validate_account_move
 import account_use_model

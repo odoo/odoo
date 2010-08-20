@@ -30,10 +30,10 @@ class account_print_journal(osv.osv_memory):
         'sort_selection': fields.selection([('date', 'Date'),
                                             ('ref', 'Reference Number'),],
                                             'Entries Sorted By', required=True),
-                }
+    }
     _defaults = {
         'sort_selection': 'date',
-                }
+    }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:

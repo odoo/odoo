@@ -39,13 +39,12 @@
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
-module named account_vouchers
+module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     "depends" : ["product", "analytic", "process","board"],
     'update_xml': [
-        #'test/test_parent_structure.yml',
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
@@ -80,7 +79,6 @@ module named account_vouchers
         'wizard/account_invoice_state_view.xml',
         'wizard/account_report_partner_balance_view.xml',
         'wizard/account_report_account_balance_view.xml',
-#        'wizard/account_move_line_select_view.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
         'wizard/account_compare_account_balance_report_view.xml',
         'wizard/account_report_partner_ledger_view.xml',
@@ -114,15 +112,12 @@ module named account_vouchers
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
         'report/account_report_view.xml',
-        'report/account_analytic_report_view.xml',
-        'report/account_account_report_view.xml',
         'report/account_analytic_entries_report_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
         "wizard/account_report_balance_sheet_view.xml"
     ],
     'demo_xml': [
-        #'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
@@ -137,7 +132,6 @@ module named account_vouchers
         'test/chart_of_account.yml',
         'test/account_period_close.yml',
         'test/account_fiscalyear_close_state.yml',
-        #'test/account_invoice_state.yml',
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',

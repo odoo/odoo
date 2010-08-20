@@ -44,6 +44,28 @@ class mailgate_thread(osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', readonly=True),
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Overrides orm copy method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: Id of mailgate thread
+        @param default: Dictionary of default values for copy.
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        default.update({
+            'message_ids': [],
+            'date_closed': False,
+            'date_open': False
+        })
+        return super(mailgate_thread, self).copy(cr, uid, id, default, context=context)
+
     def message_new(self, cr, uid, msg, context):
         raise Exception, _('Method is not implemented')
 
@@ -83,7 +105,7 @@ class mailgate_thread(osv.osv):
         @param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
         @param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To addresses if any
         @param email_date: Email Date string if different from now, in server Timezone
-        @param details: Description, Ddtails of case history if any
+        @param details: Description, Details of case history if any
         @param atach: Attachment sent in email
         @param context: A standard dictionary for contextual values"""
         if context is None:
@@ -112,13 +134,13 @@ class mailgate_thread(osv.osv):
             if history:
                 for att in attach:
                     attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
-                    
+
                 for param in (email, email_cc, email_bcc):
                     if isinstance(param, list):
                         param = ", ".join(param)
 
                 data = {
-                    'name': subject or 'History',
+                    'name': subject or _('History'),
                     'history': True,
                     'user_id': uid,
                     'model' : case._name,
@@ -141,7 +163,7 @@ class mailgate_thread(osv.osv):
 mailgate_thread()
 
 def format_date_tz(date, tz=None):
-    if not date: 
+    if not date:
         return 'n/a'
     format = tools.DEFAULT_SERVER_DATETIME_FORMAT
     return tools.server_to_local_timestamp(date, format, format, tz)
@@ -158,15 +180,15 @@ class mailgate_message(osv.osv):
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
             if message.history:
-                msg_txt += (message.email_from or '/') + ' wrote on ' + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
                 if message.description:
                     msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
             else:
-                msg_txt = (message.user_id.name or '/') + '  on ' + format_date_tz(message.date, tz) + ':\n\t'
-                if message.name == 'Opportunity':
-                    msg_txt += "Converted to Opportunity"
+                msg_txt = (message.user_id.name or '/') + _('  on ') + format_date_tz(message.date, tz) + ':\n\t'
+                if message.name == _('Opportunity'):
+                    msg_txt += _("Converted to Opportunity")
                 else:
-                    msg_txt += "Changed Status to: " + message.name
+                    msg_txt += _("Changed Status to: ") + message.name
             result[message.id] = msg_txt
         return result
 
@@ -191,7 +213,7 @@ class mailgate_message(osv.osv):
         'description': fields.text('Description', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
-        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'), 
+        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
     }
 
     def init(self, cr):
@@ -224,7 +246,7 @@ class mailgate_tool(osv.osv_memory):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param model: OpenObject Model
-        @param res_ids: Ids of the record of OpenObject model created 
+        @param res_ids: Ids of the record of OpenObject model created
         @param msg: Email details
         @param attach: Email attachments
         """
@@ -234,19 +256,19 @@ class mailgate_tool(osv.osv_memory):
         msg_pool = self.pool.get('mailgate.message')
         for res_id in res_ids:
             msg_data = {
-                        'name': msg.get('subject', 'No subject'),
-                        'date': msg.get('date'),
-                        'description': msg.get('body', msg.get('from')),
-                        'history': True,
-                        'res_model': model,
-                        'email_cc': msg.get('cc'),
-                        'email_from': msg.get('from'),
-                        'email_to': msg.get('to'), 
-                        'message_id': msg.get('message-id'),
-                        'references': msg.get('references') or msg.get('in-reply-to'),
-                        'res_id': res_id,
-                        'user_id': uid,
-                        'attachment_ids': [(6, 0, attach)]
+                'name': msg.get('subject', 'No subject'),
+                'date': msg.get('date'),
+                'description': msg.get('body', msg.get('from')),
+                'history': True,
+                'res_model': model,
+                'email_cc': msg.get('cc'),
+                'email_from': msg.get('from'),
+                'email_to': msg.get('to'),
+                'message_id': msg.get('message-id'),
+                'references': msg.get('references') or msg.get('in-reply-to'),
+                'res_id': res_id,
+                'user_id': uid,
+                'attachment_ids': [(6, 0, attach)]
             }
             msg_pool.create(cr, uid, msg_data, context=context)
         return True
@@ -261,7 +283,7 @@ class mailgate_tool(osv.osv_memory):
 
         for res in model_pool.browse(cr, uid, res_ids, context=context):
             message_followers = model_pool.message_followers(cr, uid, [res.id])[res.id]
-            message_followers_emails = self.to_email(','.join(message_followers))
+            message_followers_emails = self.to_email(','.join(filter(None, message_followers)))
             message_recipients = self.to_email(','.join(filter(None,
                                                          [self._decode_header(msg['from']),
                                                          self._decode_header(msg['to']),

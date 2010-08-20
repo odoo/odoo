@@ -38,20 +38,17 @@ class create_list(osv.osv_memory):
                                         'Partner'),
 
         }
-        
+
     def onchange_mailchimp_account_id(self, cr, uid, ids, mailchimp_account_id,
                                                                 action):
-        print mailchimp_account_id,action,
-        return {'value':{}}   
-        
+        return {'value':{}}
+
     def create_list(self, cr, uid, ids, context=None):
         create_list_obj = self.browse(cr, uid, ids[0])
-        print create_list_obj.id
         mailchimp_account_obj = self.pool.get('mailchimp.account')
         account_id = create_list_obj.mailchimp_account_id
         lists = mailchimp_account_obj.get_response(cr, uid, account_id.id, 'lists')
         lists = dict([(l['name'],l['id']) for l in lists])
-        print lists        
         if create_list_obj.list_name not in lists.keys():
             raise  osv.except_osv(_('UserError'),
                 _('There is no list define in account %s') % (account_id.name))

@@ -2,7 +2,7 @@
    <data>
 
         <menuitem id="menu_sale_journal_config" name="Sale Journals"
-            parent="base.menu_base_config" sequence="5"/>
+            parent="base.menu_base_config" sequence="5" groups="base.group_system"/>
 
    <!--  sale journal invoice Type's Form  view -->
 
@@ -43,7 +43,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-     <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="menu_sale_journal_config" action="action_definition_journal_invoice_type"/> 
+     <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="menu_sale_journal_config" action="action_definition_journal_invoice_type"/>
 
     <!-- sale journal Form view  -->
 
@@ -155,7 +155,7 @@
                 <field name="origin" position="after">
                 	<group colspan="2" col="2">
 	                    <separator string="Journal" colspan="4"/>
-	                    <field name="journal_id" select="1"/>
+	                    <field name="journal_id" select="1" widget="selection" domain="[('state','in', ('draft', 'open'))]"/>
 	                    <field name="invoice_type_id" select="1" widget="selection"/>
                     </group>
                 </field>
@@ -453,7 +453,7 @@
             <field name="search_view_id" ref="view_picking_journal_search"/>
         </record>
 
-        <menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_warehouse_config" action="action_definition_picking_journal"/>
+        <menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_warehouse_config" action="action_definition_picking_journal" groups="base.group_system"/>
 
         <record model="ir.actions.act_window" id="action_invoice_type_tree">
             <field name="name">Picking by invoice_method</field>
@@ -479,21 +479,6 @@
             <field name="object" eval="True"/>
         </record>
 
-
-        <!--record id="view_sale_journal_search_form" model="ir.ui.view">
-            <field name="name">sale.order.journal.search</field>
-            <field name="model">sale.order</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']/filter[@string='Salesman']" position="after">
-                   	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                    <separator orientation="vertical"/>
-                </xpath>
-            </field>
-        </record-->
-
-        
         <record id="view_picking_delivery_jorunal_search_form" model="ir.ui.view">
             <field name="name">stock.picking.journal.search</field>
             <field name="model">stock.picking</field>
@@ -501,11 +486,11 @@
             <field name="inherit_id" ref="stock.view_stock_delivery_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="/search/group[@string='Group By...']/filter[@string='Partner']" position="after">
-                   	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                 </xpath>
             </field>
-        </record>                 
-        
+        </record>
+
         <record id="view_picking_out_jorunal_search_form" model="ir.ui.view">
             <field name="name">stock.picking.journal.search</field>
             <field name="model">stock.picking</field>
@@ -513,11 +498,11 @@
             <field name="inherit_id" ref="stock.view_picking_out_search"/>
             <field name="arch" type="xml">
                 <xpath expr="/search/group[@string='Group By...']/filter[@string='Partner']" position="after">
-                   	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                 </xpath>
             </field>
         </record>
-                                 
+
         <record id="view_picking_in_jorunal_search_form" model="ir.ui.view">
             <field name="name">stock.picking.journal.search</field>
             <field name="model">stock.picking</field>
@@ -525,11 +510,11 @@
             <field name="inherit_id" ref="stock.view_picking_in_search"/>
             <field name="arch" type="xml">
                 <xpath expr="/search/group[@string='Group By...']/filter[@string='Partner']" position="after">
-                   	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                 </xpath>
             </field>
-        </record>    
-                                 
+        </record>
+
         <record id="view_picking_internal_jorunal_search_form" model="ir.ui.view">
             <field name="name">stock.picking.journal.search</field>
             <field name="model">stock.picking</field>
@@ -537,11 +522,11 @@
             <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="/search/group[@string='Group By...']/filter[@string='Origin']" position="after">
-                   	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                 </xpath>
             </field>
-        </record>    
-                        
-                
+        </record>
+
+
    </data>
 </openerp>

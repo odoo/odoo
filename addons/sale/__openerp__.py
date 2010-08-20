@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Sales Management',
     'version': '1.0',
@@ -48,7 +47,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['product', 'stock', 'procurement', 'process','board'],
+    'depends': ['stock', 'procurement', 'board'],
     'init_xml': [],
     'update_xml': [
         'wizard/sale_make_invoice_advance.xml',
@@ -66,9 +65,9 @@
         'sale_report.xml',
         'stock_view.xml',
         'board_sale_view.xml',
-#        'process/sale_process.xml',
+        'process/sale_process.xml',
     ],
-    'demo_xml': ['sale_demo.xml','board_sale_demo.xml'],
+    'demo_xml': ['sale_demo.xml'],
     'test': [
              'test/data_test.yml',
              'test/manual_order_policy.yml',
@@ -77,7 +76,6 @@
              'test/postpaid_order_policy.yml',
              'test/advance_invoice.yml',
              'test/so_make_line_invoice.yml',
-             'test/so_make_invoice.yml',
              'test/sale_procurement.yml',
              'test/invoice_on_ordered_qty.yml',
              'test/invoice_on_shipped_qty.yml',

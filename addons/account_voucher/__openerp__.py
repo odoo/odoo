@@ -41,13 +41,14 @@
         "voucher_sequence.xml",
         "voucher_workflow.xml",
         "voucher_report.xml",
-        "voucher_view.xml",
-        "voucher_wizard.xml",
         "wizard/account_voucher_open_view.xml",
-
+        "voucher_view.xml",
+        "voucher_sales_purchase_view.xml",
+        "voucher_payment_receipt_view.xml",
+        "voucher_wizard.xml"
     ],
     "test" : [
-         "test/account_voucher.yml",
+#         "test/account_voucher.yml",
     ],
 
     'certificate': '0037580727101',

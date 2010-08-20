@@ -37,12 +37,13 @@ This module installs:
     'update_xml': [
         'account.tax.code.template.csv',
         'l10n_lu_data.xml',
-        'account.tax.template.csv',
         'l10n_lu_wizard.xml',
-        'l10n_lu_report.xml'
+        'account.tax.template.csv',
+        'wizard/print_vat_view.xml'
     ],
     'demo_xml': ['account.report.report.csv'],
     'installable': True,
+    'active': False,
     'certificate': '0078164766621',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

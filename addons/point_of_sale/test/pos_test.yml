@@ -170,7 +170,6 @@
     type: cash
     view_id: account.account_journal_bank_view
     
-    
 - 
   I create property for account payable.
 - 
@@ -281,8 +280,6 @@
     list_price: 170.0
     mes_type: fixed
     name: LG Viewty Smart
-    pricelist_purchase: 'Default Purchase Pricelist (0.00) : 160.00\n'
-    pricelist_sale: 'Public Pricelist (0.00) : 170.00\n'
     procure_method: make_to_order
     property_account_expense: account_account_payable1
     property_account_income: account_account_receivable0
@@ -311,7 +308,7 @@
     seller_ids:
       - delay: 1
         name: res_partner_microlinktechnologies0
-        qty: 5.0
+        min_qty: 5.0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
@@ -374,10 +371,12 @@
 - 
   !record {model: pos.make.payment, id: pos_make_payment_0}:
     amount: 1615.0
-    journal: 5
+    journal: 7
     payment_date: 2010-05-13
     payment_name: Payment
     product_id: product_product_hppaviliondesktoppcs0
+    pricelist_id: product.list0
+    partner_id: base.res_partner_agrolait
     
 - 
   I make the payment.
@@ -427,6 +426,9 @@
   I click on close button.
 - 
   !python {model: pos.add.product}: |
+    return_obj = self.pool.get('pos.return')
+    context['active_ids'] = [ref("pos_order_pos0")] 
+    return_obj.view_init(cr, uid, [],context=context)
     self.close_action(cr, uid, [ref("pos_add_product_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz": False, "active_id": ref("pos_order_pos0"),
       })
@@ -436,10 +438,12 @@
 - 
   !record {model: pos.make.payment, id: pos_make_payment_1}:
     amount: 680.0
-    journal: 5
+    journal: 7
     payment_date: 2010-05-13
     payment_name: Payment
     product_id: product_product_hppaviliondesktoppcs0
+    pricelist_id: product.list0
+    partner_id: base.res_partner_agrolait
 
 - 
   For payment, I click on  Make Payment. 

@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-       <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2"/>
+       <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2" groups="base.group_system"/>
 
         <record id="project_issue_categ_action" model="ir.actions.act_window">
             <field name="name">Issue Categories</field>
@@ -79,7 +79,7 @@
                                 <tree string="Communication history">
                                     <field name="display_text" string="History Information"/>
                                     <button
-                                        string="Reply"
+                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
                                         name="%(crm.action_crm_send_mail)d"
                                         context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
                                         icon="terp-mail-replied" type="action" />
@@ -91,20 +91,26 @@
                                         <field name="email_to" widget="char" size="512"/>
                                         <field name="email_cc" widget="char" size="512"/>
                                         <field name="name" colspan="4" widget="char" size="512"/>
+                                        <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <field name="description" colspan="4" nolabel="1"/>
+                                            <group attrs="{'invisible': [('history', '!=', True)]}">
+                                                <field name="description" colspan="4" nolabel="1" height="250"/>
+                                                <button colspan="4"
+                                                    string="Reply"
+                                                    name="%(crm.action_crm_send_mail)d"
+                                                    context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
+                                                    icon="terp-mail-replied" type="action" />
+                                            </group>
+                                            <group attrs="{'invisible': [('history', '=', True)]}">
+                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                            </group>
                                         </page>
                                         <page string="Attachments">
                                             <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                         </page>
                                     </notebook>
-                                    <button colspan="4"
-                                        string="Reply"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
-                                        icon="terp-mail-replied" type="action" />
                                 </form>
                             </field>
                            <separator colspan="4"/>

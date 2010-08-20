@@ -19,41 +19,37 @@
             <field name="name">Technical department</field>
             <field name="parent_id" ref="dep_management"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="manager_id" ref="employee1"/>
+            <field name="manager_id" ref="employee3"/>
         </record>
 
         <record id="dep_it" model="hr.department">
             <field name="name">IT</field>
             <field name="parent_id" ref="dep_technical"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="manager_id" ref="employee1"/>
         </record>
 
         <record id="dep_marketing" model="hr.department">
             <field name="name">Marketing</field>
             <field name="parent_id" ref="dep_management"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="manager_id" ref="employee1"/>
+            <field name="manager_id" ref="employee2"/>
         </record>
 
         <record id="dep_sales" model="hr.department">
             <field name="name">Sales</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="manager_id" ref="employee1"/>
             <field name="parent_id" ref="dep_management"/>
         </record>
 
         <record id="dep_sales_europe" model="hr.department">
             <field name="name">Sales Europe</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="manager_id" ref="employee1"/>
             <field name="parent_id" ref="dep_sales"/>
         </record>
 
         <record id="dep_sales_america" model="hr.department">
             <field name="name">Sales America</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="manager_id" ref="employee1"/>
             <field name="parent_id" ref="dep_sales"/>
         </record>
 
@@ -104,6 +100,14 @@
             <field name="department_id" ref="dep_it"/>
         </record>
 
+        <!-- assign department on employee -->
+        <record id="employee2" model="hr.employee">
+            <field name="department_id" ref="hr.dep_technical"/>
+        </record>
+
+        <record id="employee3" model="hr.employee">
+            <field name="department_id" ref="dep_sales"/>
+        </record>
 
     </data>
 </openerp>

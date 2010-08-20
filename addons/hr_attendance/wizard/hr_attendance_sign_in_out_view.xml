@@ -28,7 +28,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sign in / Sign out">
-                    <label string="Sign-Out Entry must follow Sign-In." colspan="4" />
+                    <separator string="Sign-Out Entry must follow Sign-In." colspan="4" />
                     <group colspan="4" col="6">
                         <button icon="gtk-cancel" special="cancel" string="Ok"/>
                    </group>
@@ -47,7 +47,7 @@
         </record>
 
         <menuitem action="action_hr_attendance_sigh_in_out" id="menu_hr_attendance_sigh_in_out"
-            parent="menu_hr_time_tracking" sequence="4"/>
+            parent="menu_hr_time_tracking" sequence="4" groups="base.group_hr_manager,base.group_hr_user,base.group_hr_attendance"/>
 
        <record id="view_hr_attendance_so_ask" model="ir.ui.view">
             <field name="name">hr.sign.in.out.ask.form</field>
@@ -60,6 +60,7 @@
                     <field name="name" />
                     <field name="last_time" string="Your last sign out" />
                     </group>
+                    <separator colspan="4" />
                     <group colspan="4" col="6">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-go-back" string="Sign in" name="sign_in" type="object"/>
@@ -79,6 +80,7 @@
                     <field name="name" />
                     <field name="last_time" string="Your last sign in" />
                     </group>
+                    <separator colspan="4" />
                     <group colspan="4" col="6">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-go-back" string="Sign out" name="sign_out" type="object"/>

@@ -49,18 +49,17 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 		self.query = data['form'].get('query_line', '')
 		self.direction_selection = data['form'].get('direction_selection', 'past')
 		self.date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
+		if (data['form']['result_selection'] == 'customer' ):
+			self.ACCOUNT_TYPE = ['receivable']
+		elif (data['form']['result_selection'] == 'supplier'):
+			self.ACCOUNT_TYPE = ['payable']
+		else:
+			self.ACCOUNT_TYPE = ['payable','receivable']
 		return super(aged_trial_report, self).set_context(objects, data, ids, report_type=report_type)
 
 	def _get_lines(self, form):
 		res = []
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-		if (form['result_selection'] == 'customer' ):
-			self.ACCOUNT_TYPE = ['receivable']
-		elif (form['result_selection'] == 'supplier'):
-			self.ACCOUNT_TYPE = ['payable']
-		else:
-			self.ACCOUNT_TYPE = ['payable','receivable']
-
 		self.cr.execute('SELECT DISTINCT res_partner.id AS id,\
 					res_partner.name AS name \
 				FROM res_partner,account_move_line AS l, account_account\
@@ -129,8 +128,8 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
 		# Use one query per period and store results in history (a list variable)
 		# Each history will contain : history[1] = {'<partner_id>': <partner_debit-credit>}
-                history = []
-                for i in range(5):
+		history = []
+		for i in range(5):
 			self.cr.execute('SELECT partner_id, SUM(debit-credit)\
 					FROM account_move_line AS l, account_account\
 					WHERE (l.account_id = account_account.id)\
@@ -182,10 +181,6 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 			## Add for total
 			self.total_account[(i+1)] = self.total_account[(i+1)] + (total and total[0] or 0.0)
 			values['name'] = partner['name']
-			#t = 0.0
-			#for i in range(5)+['direction']:
-			#	t+= float(values.get(str(i), 0.0) or 0.0)
-			#values['total'] = t
 
 			if values['total']:
 				res.append(values)
@@ -218,7 +213,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 		    return 'Payable Accounts'
 		elif data['form']['result_selection'] == 'customer_supplier':
 		    return 'Receivable and Payable Accounts'
-		return ''	
+		return ''
 
 report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
 		'addons/account/report/account_aged_partner_balance.rml',parser=aged_trial_report, header=False)

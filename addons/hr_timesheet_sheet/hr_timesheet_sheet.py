@@ -147,14 +147,23 @@ class hr_timesheet_sheet(osv.osv):
                 sheet_id = link_emp[emp.id]
                 result[sheet_id] = emp.state
         return result
+    
+    def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
+        ids_signin = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_in')])
+        ids_signout = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_out')])
+
+        if len(ids_signin) != len(ids_signout):
+            raise osv.except_osv(('Warning !'),_('The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!'))
+        return True
 
     def copy(self, cr, uid, ids, *args, **argv):
-        raise osv.except_osv(_('Error !'), _('You can not duplicate a timesheet !'))
+        raise osv.except_osv(_('Error !'), _('You cannot duplicate a timesheet !'))
 
     def button_confirm(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
+            self.check_employee_attendance_state(cr, uid, sheet.id, context)
             di = sheet.user_id.company_id.timesheet_max_difference
             if (abs(sheet.total_difference) < di) or not di:
                 wf_service = netsvc.LocalService("workflow")

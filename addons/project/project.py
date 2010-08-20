@@ -21,7 +21,7 @@
 
 from lxml import etree
 import time
-from datetime import date, datetime
+from datetime import datetime, date
 
 from tools.translate import _
 from osv import fields, osv
@@ -76,11 +76,11 @@ class project(osv.osv):
 
     def get_all_child_projects(self, cr, uid, ids, context=None):
         # Calculate child project for Given project id => For progress rate + planned time + Time spent
-        cr.execute('''select prpc.id as id from account_analytic_account as p
-                    join account_analytic_account as c  on p.id = c.parent_id
-                    join project_project as prp on prp.analytic_account_id = p.id
-                    join project_project as prpc on prpc.analytic_account_id = c.id
-                    where prp.id in %s''',(tuple(ids),))
+        cr.execute('''SELECT prpc.id AS id from account_analytic_account AS p
+                    JOIN account_analytic_account AS c ON p.id = c.parent_id
+                    JOIN project_project AS prp ON prp.analytic_account_id = p.id
+                    JOIN project_project AS prpc ON prpc.analytic_account_id = c.id
+                    WHERE prp.id IN %s''',(tuple(ids),))
 
         child_ids = cr.fetchall()
         if child_ids:
@@ -163,7 +163,7 @@ class project(osv.osv):
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -247,21 +247,6 @@ class project(osv.osv):
             default['name'] = proj.name+_(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
 
-#        task_ids = task_obj.search(cr, uid, [('project_id','=', res), ('active','=',True)])
-#        tasks = task_obj.browse(cr, uid, task_ids)
-#        for task in tasks:
-#            date_deadline = None
-#            if task.date_start:
-#                ds = date(*time.strptime(task.date_start,'%Y-%m-%d %H:%M:%S')[:3])
-#                if task.date_deadline:
-#                    dd = date(*time.strptime(task.date_deadline,'%Y-%m-%d')[:3])
-#                    diff = dd-ds
-#                    date_deadline = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
-#            task_obj.write(cr, uid, task.id, {'date_start': False,
-#                                              'date_end': False,
-#                                              'date_deadline':date_deadline,
-#                                              })
-
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -272,11 +257,19 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id', False) # check me where to pass context for parent id ??
+            parent_id = context.get('parent_id', False)
             context.update({'analytic_project_copy': True})
+            new_date_start = time.strftime('%Y-%m-%d')
+            new_date_end = False
+            if proj.date_start and proj.date:
+                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
+                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
+                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
+                                    'date_start':new_date_start,
+                                    'date':new_date_end,
                                     'parent_id':parent_id}, context=context)
             result.append(new_id)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
@@ -290,7 +283,7 @@ class project(osv.osv):
             res_id = result[0]
             form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
             form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
-            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_list')
+            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
             tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
             search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
             search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
@@ -305,7 +298,7 @@ class project(osv.osv):
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view['res_id'],
                 'nodestroy': True
-                }
+            }
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context=None):
@@ -322,6 +315,13 @@ class project(osv.osv):
         return True
 
 project()
+
+class users(osv.osv):
+    _inherit = 'res.users'
+    _columns = {
+        'context_project_id': fields.many2one('project.project', 'Project')
+    }
+users()
 
 class task(osv.osv):
     _name = "project.task"
@@ -380,14 +380,11 @@ class task(osv.osv):
             return int(context['project_id'])
         return False
 
-    #_sql_constraints = [
-    #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
-    #]
-
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
-        default['work_ids'] = []
-        default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
+        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
+        if not default.get('remaining_hours', False):
+            default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
         return super(task, self).copy_data(cr, uid, id, default, context)
 
@@ -448,6 +445,7 @@ class task(osv.osv):
         'sequence': 10,
         'active': True,
         'project_id': _default_project,
+        'user_id': lambda obj, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
@@ -538,7 +536,7 @@ class task(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy': True
-                    }
+            }
         else:
             self.write(cr, uid, [task_id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         return False
@@ -647,48 +645,41 @@ class project_work(osv.osv):
     def create(self, cr, uid, vals, *args, **kwargs):
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
-
-        if (not 'task_id' in vals) or (not 'hours' in vals):
-            return super(project_work, self).create(cr, uid, vals, *args, **kwargs)
-        if not vals['hours']:
-            vals['hours'] = 0.00
-
-        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-        duration = vals['hours']
-
-        if user_uom != default_uom:
-            duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
-        cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (duration, vals['task_id']))
-        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+        if vals.get('hours', False):
+            user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+            duration = vals['hours']
+            if user_uom != default_uom:
+                duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
+            cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (duration, vals['task_id']))
+        return super(project_work, self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
-
-        if context is None:
-            context = {}
-        if not vals['hours']:
-            vals['hours'] = 0.00
-
-        user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-        duration = vals['hours']
-
-        if user_uom == default_uom:
-            for work in self.browse(cr, uid, ids, context):
-                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, work.hours, work.task_id.id))
-        else:
-            for work in self.browse(cr, uid, ids, context):
-                duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
-                del_work =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
-                cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, del_work, work.task_id.id))
-
-        return super(project_work,self).write(cr, uid, ids, vals, context)
+        if vals.get('hours', False):
+            old_hours = self.browse(cr, uid, ids, context=context)
+            user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
+            duration = vals['hours']
+            for old in old_hours:
+                if vals.get('hours') != old.hours:
+                    # this code is only needed when we update the hours of the project
+                    # TODO: it may still a second calculation if the task.id is changed
+                    # at this task.
+                    if user_uom == default_uom:
+                        for work in self.browse(cr, uid, ids, context=context):
+                            cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, work.hours, work.task_id.id))
+                    else:
+                        for work in self.browse(cr, uid, ids, context=context):
+                            duration =  uom_obj._compute_qty(cr, uid, default_uom, duration, user_uom)
+                            del_work =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
+                            cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (duration, del_work, work.task_id.id))
+        return super(project_work,self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         context = kwargs.get('context', {})
         project_obj = self.pool.get('project.project')
+        uom_obj = self.pool.get('product.uom')
         user_uom, default_uom = project_obj._get_user_and_default_uom_ids(cr, uid)
-
         if user_uom == default_uom:
             for work in self.browse(cr, uid, ids, context):
                 cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
@@ -696,7 +687,7 @@ class project_work(osv.osv):
             for work in self.browse(cr, uid, ids, context):
                 duration =  uom_obj._compute_qty(cr, uid, default_uom, work.hours, user_uom)
                 cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (duration, work.task_id.id))
-        return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
+        return super(project_work, self).unlink(cr, uid, ids, *args, **kwargs)
 
 project_work()
 
@@ -768,8 +759,8 @@ class config_compute_remaining(osv.osv_memory):
                     })
                 task_obj.write(cr, uid, [task.id], {'state': 'open'})
         return {
-                'type': 'ir.actions.act_window_close',
-         }
+            'type': 'ir.actions.act_window_close',
+        }
 
 config_compute_remaining()
 
@@ -799,16 +790,6 @@ class message(osv.osv):
     }
 
 message()
-
-class users(osv.osv):
-    _inherit = 'res.users'
-    _description = "Users"
-    _columns = {
-        'context_project_id': fields.many2one('project.project', 'Project')
-     }
-
-users()
-
 class account_analytic_account(osv.osv):
 
     _inherit = 'account.analytic.account'

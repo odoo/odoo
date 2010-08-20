@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,8 +26,6 @@ class res_partner_address(osv.osv):
     _name = 'res.partner.address'
     _inherit = 'res.partner.address'
     _columns = {
-#       'google_map': fields.function(_get_url, method=True,
-#           string='Google Map', type='char',),
         }
 res_partner_address()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

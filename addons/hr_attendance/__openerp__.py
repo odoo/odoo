@@ -30,12 +30,11 @@
     actions(Sign in/Sign out) performed by them.
        """,
     'author': 'OpenERP SA',
-    'depends': ['base', 'hr'],
+    'depends': ['hr'],
     'update_xml': [
         'security/hr_security.xml',
-        'security/ir.model.access.csv', 
+        'security/ir.model.access.csv',
         'hr_attendance_view.xml',
-        'hr_attendance_wizard.xml',
         'hr_attendance_report.xml',
         'security/ir.model.access.csv',
         'wizard/hr_attendance_bymonth_view.xml',

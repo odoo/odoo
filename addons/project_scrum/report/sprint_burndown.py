@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,11 +42,13 @@ class external_pdf(render):
         return self.pdf
 
 class report_tasks(report_int):
-    def create(self, cr, uid, ids, datas, context={}):
+    def create(self, cr, uid, ids, datas, context=None):
+        if context is None:
+            context = {}
         io = StringIO.StringIO()
 
         canv = canvas.init(fname=io, format='pdf')
-        canv.set_author("Open ERP")
+        canv.set_author("OpenERP")
 
         cr.execute('select id,date_start,date_stop from project_scrum_sprint where id=%s', (datas['id'],))
         for (id,date_start,date_stop) in cr.fetchall():
@@ -68,9 +70,9 @@ class report_tasks(report_int):
                     if (not result) or result[-1]<>res:
                         result.append(res)
                 return result
-            
+
             guideline__data=[(datas[0][0],max_hour), (datas[-1][0],0)]
-            
+
             ar = area.T(x_grid_style=line_style.gray50_dash1,
                 x_axis=axis.X(label="Date", format=int_to_date),
                 y_axis=axis.Y(label="Burndown Chart - Planned Hours"),
@@ -81,12 +83,12 @@ class report_tasks(report_int):
                 size = (680,450))
             ar.add_plot(line_plot.T(data=guideline__data, line_style=line_style.red))
             ar.add_plot(line_plot.T(data=datas, line_style=line_style.green))
-            
+
             entr1 = pychart.legend.Entry(label="guideline", line_style=line_style.red)
             entr2 = pychart.legend.Entry(label="burndownchart",line_style=line_style.green)
             legend = pychart.legend.T(nr_rows=2, inter_row_sep=5)
             legend.draw(ar,[entr1,entr2],canv)
-            
+
             ar.draw(canv)
         canv.close()
 

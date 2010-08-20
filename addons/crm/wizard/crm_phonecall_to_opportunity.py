@@ -88,7 +88,7 @@ Call Could not convert into Opportunity"))
                 address = None
                 if this.partner_id:
                     address_id = self.pool.get('res.partner').address_get(cr, uid, [this.partner_id.id])
-                    if address_id:
+                    if address_id['default']:
                         address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'], context=context)
                 new_opportunity_id = opp_obj.create(cr, uid, {
                                 'name': this.name,

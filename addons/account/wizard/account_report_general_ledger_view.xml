@@ -26,12 +26,12 @@
             <field name="inherit_id" ref="account_report_general_ledger_view" />
             <field name="arch" type="xml">
                <field name="fiscalyear_id" position="replace">
-               		<field name="fiscalyear_id" on_change="onchange_fiscalyear(fiscalyear_id)"/>
+               <field name="fiscalyear_id" on_change="onchange_fiscalyear(fiscalyear_id)"/>
                </field>
             </field>
         </record>
 
-	<record id="action_account_general_ledger_menu" model="ir.actions.act_window">  <!-- rename id -->
+        <record id="action_account_general_ledger_menu" model="ir.actions.act_window">  <!-- rename id -->
             <field name="name">General Ledger</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.report.general.ledger</field>
@@ -39,9 +39,9 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="account_report_general_ledger_view"/>
             <field name="target">new</field>
-    	</record>
+        </record>
 
-		<record model="ir.values" id="action_account_general_ledger_values">
+        <record model="ir.values" id="action_account_general_ledger_values">
             <field name="model_id" ref="account.model_account_account" />
             <field name="object" eval="1" />
             <field name="name">General Ledger</field>
@@ -49,15 +49,15 @@
             <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_general_ledger_menu'))" />
             <field name="key">action</field>
             <field name="model">account.account</field>
-		</record>
+        </record>
 
         <menuitem
-        	icon="STOCK_PRINT"
-	        name="General Ledger"
-	        parent="account.final_accounting_reports"
-	        action="action_account_general_ledger_menu"
-	        id="menu_general_ledger"
-	       />
+            icon="STOCK_PRINT"
+            name="General Ledger"
+            parent="account.final_accounting_reports"
+            action="action_account_general_ledger_menu"
+            id="menu_general_ledger"
+           />
 
     </data>
 </openerp>

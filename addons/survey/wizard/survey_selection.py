@@ -136,7 +136,7 @@ class survey_name_wiz(osv.osv_memory):
             'target': 'new',
             'search_view_id': search_id[0],
             'context': context
-         }
+        }
 
     def on_change_survey(self, cr, uid, ids, survey_id, context=None):
         """

@@ -13,7 +13,7 @@
                     <group colspan="4">
                         <field name="partner_id" required="1"/>
                         <field name="shop_id" required="1" widget="selection"/>
-                        <field name="analytic_account"/>
+                        <field name="analytic_account" domain="[('parent_id','!=',False)]" />
                         <field name="close" required="1"/>
                     	</group>
                             <field colspan="4" mode="tree,form,graph" name="sale_order_line" nolabel="1" widget="one2many_list">
@@ -58,20 +58,20 @@
                             </field>
                             <newline/>
 
-				
+
                 <separator colspan="4"/>
                 <group col="4" colspan="4">
                     <label string="" colspan="2"/>
                     <button special="cancel" string="_Close" icon="gtk-cancel"/>
-                    <button name="makeOrder" string="_Ok" type="object" icon='gtk-ok'/>
+                    <button name="makeOrder" string="_Create" type="object" icon='gtk-ok'/>
                 </group>
                 </group>
             </form>
           </field>
        </record>
-       
+
        <!-- crm make sale's  action -->
-       
+
        <record id="action_crm_make_sale" model="ir.actions.act_window">
           <field name="name">Make Quotation</field>
           <field name="type">ir.actions.act_window</field>
@@ -80,6 +80,6 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
        </record>
-       
+
    </data>
 </openerp>

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     "name": "Human Resources",
     "version": "1.1",
@@ -34,7 +33,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process', 'resource','board'],
+    'depends': ['resource', 'board'],
     'init_xml': [],
     'update_xml': [
         'security/hr_security.xml',

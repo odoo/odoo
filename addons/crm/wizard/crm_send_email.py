@@ -104,7 +104,7 @@ class crm_send_new_email(osv.osv_memory):
                 res_id = hist.res_id
                 ref_id = hist.ref_id
                 case = case_pool.browse(cr, uid, res_id, context=context)
-            emails = [obj.email_to]
+            emails = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_to or '')
             email_cc = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_cc or '')
             emails = filter(None, emails)
             body = obj.body
@@ -177,7 +177,8 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_from' in fields:
                 res.update({'email_from': user_mail_from and tools.ustr(user_mail_from) or ''})
             if 'reply_to' in fields:
-                res.update({'reply_to': case.section_id and case.section_id.reply_to or False})
+                if hasattr(case, 'section_id'):
+                    res.update({'reply_to': case.section_id and case.section_id.reply_to or False})
             if 'subject' in fields:
                 res.update({'subject': tools.ustr(context.get('subject', case.name) or '')})
             if 'email_cc' in fields:
@@ -236,7 +237,8 @@ class crm_send_new_email(osv.osv_memory):
                  email_cc = (case.email_cc and tools.ustr(case.email_cc) + ', ' or '') + (hist.email_cc or '')
                  res.update({'email_cc': email_cc})
             if 'reply_to' in fields:
-                res.update({'reply_to': case.section_id.reply_to})
+                if hasattr(case, 'section_id'):
+                    res.update({'reply_to': case.section_id.reply_to or ''})
             if 'state' in fields:
                 res['state'] = u'pending'
         return res

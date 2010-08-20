@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<record id="action_timesheet_report_all" model="ir.actions.act_window">
-		        <field name="name">Timesheets by Month</field>
-		        <field name="type">ir.actions.act_window</field>
-		        <field name="res_model">timesheet.report</field>
-		        <field name="view_type">form</field>
-		        <field name="view_mode">graph,tree</field>
-		        <field name="domain">[('user_id','=',uid), ('month', '=' , time.strftime('%m')), ('year', '=', time.strftime('%Y'))]</field>
-		        <field name="view_id" ref="hr_timesheet_sheet.view_timesheet_report_graph"/>
-		</record>
+    <record id="action_timesheet_report_all" model="ir.actions.act_window">
+            <field name="name">Timesheets by Month</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">timesheet.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('user_id','=',uid), ('month', '=' , time.strftime('%m')), ('year', '=', time.strftime('%Y'))]</field>
+            <field name="view_id" ref="hr_timesheet_sheet.view_timesheet_report_graph"/>
+    </record>
 
-		<record id="action_hr_timesheet_sheet_graph" model="ir.actions.act_window">
+    <record id="action_hr_timesheet_sheet_graph" model="ir.actions.act_window">
             <field name="name">Timesheets</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_timesheet_sheet.sheet</field>
@@ -23,12 +23,12 @@
         <record id="board_hr_timesheet_form" model="ir.ui.view">
             <field name="name">board.hr.timesheet.form</field>
             <field name="model">board.board</field>
-			<field name="inherit_id" ref="hr.board_hr_form"/>              
+      <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<xpath expr="/form/hpaned/child2" position="inside"> 
-					<action colspan="4" height="220" name="%(action_hr_timesheet_sheet_graph)d" string="Timesheets by Month" />
-				</xpath>
+        <xpath expr="/form/hpaned/child2" position="inside">
+          <action colspan="4" height="220" name="%(action_hr_timesheet_sheet_graph)d" string="Timesheets by Month" />
+        </xpath>
             </field>
         </record>
         <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
@@ -39,6 +39,7 @@
                 <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('done')" string="Timesheets">
                     <field name="date_from"/>
                     <field name="user_id"/>
+                    <field name="department_id" invisible="1"/>
                     <field name="name"/>
                     <field name="total_attendance"/>
                     <field name="total_timesheet"/>
@@ -46,25 +47,6 @@
                 </tree>
             </field>
         </record>
-        
-     <!--   Add in projectboard
-        <record id="act_hr_timesheet_sheet" model="ir.actions.act_window">
-            <field name="name">Timesheets</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('state','&lt;&gt;','done'),('user_id','in',department_users_get())]</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="hr_timesheet_sheet_tree"/>
-        </record>  
-		<record id="board_project_timesheet_form" model="ir.ui.view">
-            <field name="name">board.project.timesheet.form</field>
-            <field name="model">board.board</field>
-			<field name="inherit_id" ref="project.board_project_manager_form"/>              
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-				<xpath expr="/form/hpaned/child1" position="inside"> 
-					<action colspan="4" height="150" name="%(act_hr_timesheet_sheet)d" string="User's timesheets" width="510"/>
-				</xpath>
-            </field>
-        </record>-->
+
     </data>
 </openerp>

@@ -23,7 +23,7 @@ from crm import crm
 from osv import fields, osv
 import time
 
-class crm_helpdesk(osv.osv, crm.crm_case):
+class crm_helpdesk(crm.crm_case, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"

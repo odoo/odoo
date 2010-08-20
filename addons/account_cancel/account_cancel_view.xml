@@ -8,10 +8,9 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <field name="entry_posted" position="after">
-<!--                 <xpath expr="/form/notebook/page[@string='General Information']/group/group/field[@name='centralisation']" position="after">-->
                     <field name="update_posted"/>
                 </field>
             </field>
-           </record>
+        </record>
     </data>
 </openerp>

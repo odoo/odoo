@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Issue Management in Project Management',
     'version': '1.0',
@@ -50,8 +49,9 @@
     'test': [
       'test/convert_issue_to_task.yml',
       'test/test_project_issue_states.yml'
-            ],
+    ],
     'installable': True,
     'active': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

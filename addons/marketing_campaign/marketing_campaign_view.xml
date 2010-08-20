@@ -28,8 +28,9 @@
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
                     <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
-                    <button name="state_done_set" string="Close" states="running" icon="gtk-ok"/>
-                    <button name="state_cancel_set" string="Cancelled" states="running" icon="gtk-cancel"/>
+                    <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
+                    <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
+                    <button name="state_cancel_set" string="Cancelled" states="running" icon="terp-gtk-stop"/>
                 </group>
               </form>
         </field>
@@ -59,7 +60,7 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="start" invisible="1"/>
-                    <field name="condition"/>
+                    <field name="condition" widget="char"/>
                 </node>
                 <arrow object="marketing.campaign.transition" source="activity_from_id" destination="activity_to_id" label="['name']">
                     <field name="activity_from_id"/>
@@ -84,10 +85,13 @@
                <filter icon="terp-gtk-jump-to-rtl" string="Manual Mode" domain="[('mode','=','manual')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
-               <field name="object_id" select="1"/>
+               <field name="object_id" select="1" string="Resource"/>
                <newline/>
                <group expand="0" string="Group By..." colspan="10" col="12">
-                   <filter string="Object" name="Object" icon="terp-accessories-archiver" context="{'group_by':'object_id'}" />
+                   <filter string="Resource" name="Object" icon="terp-accessories-archiver" context="{'group_by':'object_id'}" />
+                   <separator orientation="vertical"/>
+                   <filter string="Mode" name="Mode" icon="terp-gtk-jump-to-rtl" context="{'group_by':'mode'}" />
+                   <separator orientation="vertical"/>
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
                </group>
            </search>
@@ -142,9 +146,10 @@
                 <separator string="Status" colspan="4"/>
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
-                    <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
-                    <button name="state_done_set" string="Close" states="running" icon="gtk-ok"/>
-                    <button name="state_cancel_set" string="Cancel" states="running" icon="gtk-cancel"/>
+                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
+                    <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
+                    <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
+                    <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
                 </group>
             </form>
         </field>
@@ -171,21 +176,23 @@
        <field name="type">search</field>
        <field name="arch" type="xml">
            <search string="Segments">
-               <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                <filter icon="terp-check" string="Running" name="running" domain="[('state','=','running')]"/>
+               <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                <separator orientation="vertical"/>
-               <filter icon="terp-go-month" string="Create Date" domain="[('sync_mode','=','create_date')]"/>
-               <filter icon="terp-go-month" string="Write Date" domain="[('sync_mode','=','write_date')]"/>
+               <filter icon="terp-go-month" string="Create After Sync" domain="[('sync_mode','=','create_date')]"/>
+               <filter icon="terp-go-month" string="Modified after Sync" domain="[('sync_mode','=','write_date')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
-               <field name="object_id" select="1"/>
                <field name="campaign_id" select="1"/>
+               <field name="object_id" select="1"/>
                <field name="date_run" select="1"/>
                <newline/>
                <group expand="0" string="Group By..." colspan="10" col="12">
                    <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
-                   <filter string="Date Run" name="Date Run" icon="terp-go-month" context="{'group_by':'date_run'}" />
+                   <separator orientation="vertical"/>
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
+                   <separator orientation="vertical"/>
+                   <filter string="Run Date" name="Date Run" icon="terp-go-month" context="{'group_by':'date_run'}" />
                </group>
            </search>
        </field>
@@ -229,7 +236,7 @@
                 <separator string="Action" colspan="4"/>
                 <group colspan='4' col='4'>
                     <group colspan="4" col="6">
-                        <field name="condition" colspan='5'/>
+                        <field name="condition" colspan="5" widget="char"/>
                         <group col='2'>
                             <field name="keep_if_condition_not_met" />
                         </group>
@@ -243,30 +250,39 @@
                             <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
                         </group>
                         <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]" />
-                        <!--
-                         <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')], 'invisible':[('type','!=','subcampaign')]}" />
-                        -->
                     </group>
                 </group>
                 <newline/>
 
                 <group colspan="4" col="2" expand="1">
                     <separator string="Transitions" colspan="2"/>
-                    <field name="from_ids" nolabel="1" mode="tree" default_get="{'default_activity_to_id': active_id}">
+                    <field name="from_ids" nolabel="1" mode="tree,form" default_get="{'default_activity_to_id': active_id}">
                         <tree string="Incoming Transitions" editable="bottom">
                             <field name="activity_from_id"/>
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
                         </tree>
+                        <form string="Incoming Transitions">
+                            <field name="activity_from_id"/>
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </form>
                     </field>
-                    <field name="to_ids" nolabel="1" mode="tree" default_get="{'default_activity_from_id': active_id}">
+                    <field name="to_ids" nolabel="1" mode="tree,form" default_get="{'default_activity_from_id': active_id}">
                         <tree string="Outgoing Transitions" editable="bottom">
                             <field name="activity_to_id"/>
                             <field name='trigger'/>
                             <field name="interval_nbr"/>
                             <field name="interval_type"/>
                         </tree>
+                        <form string="Outgoing Transitions">
+                            <field name="activity_to_id"/>
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </form>
                      </field>
                 </group>
             </form>
@@ -308,7 +324,7 @@
                 <field name="state"/>
                 <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
                 <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
-                <button string="Cancel" states="todo" name="button_cancel" type="object" icon="gtk-cancel"/>
+                <button string="Cancel" states="todo" name="button_cancel" type="object" icon="terp-gtk-stop"/>
             </tree>
         </field>
     </record>
@@ -347,7 +363,7 @@
                     <field name="state" nolabel="1" readonly="True" select="1"/>
                     <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
                     <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
-                    <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="gtk-cancel"/>
+                    <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
                 </group>
             </form>
         </field>
@@ -371,8 +387,9 @@
                    <filter string="Segment" name="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}" />
                    <filter string="Activity" name="Activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}" />
                    <separator orientation="vertical"/>
-                   <filter string="Date" name="Date" icon="terp-go-month" context="{'group_by':'date'}" />
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
+                   <separator orientation="vertical"/>
+                   <filter string="Execution Date" name="Date" icon="terp-go-month" context="{'group_by':'date'}" />
                </group>
            </search>
        </field>

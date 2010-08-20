@@ -3,8 +3,8 @@
     <data>
         <!-- Root Menus -->
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll"/>
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
-        <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll"/>
+        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_system"/>
+        <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
         <!-- Passport Views    -->
         <record id="hr_passport_form" model="ir.ui.view">
@@ -98,7 +98,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
+                <page string="Notes" position="before">
                     <page string="Contracts">
                         <field colspan="4" mode="form,tree" name="contract_ids" nolabel="1">
                             <tree string="Contracts">
@@ -110,7 +110,7 @@
                                 <field name="wage_type_id"/>
                                 <field name="wage"/>
                             </tree>
-                            <form string="Contract">
+                            <form string="Contracts">
                                 <group colspan="4" col="6">
                                     <field name="name" select="1"/>
                                     <field name="job_id"/>
@@ -153,11 +153,10 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Miscelleanous">
+                    <page string="Miscellaneous">
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
                             <field name="pan_no" select="1"/>
-<!--                            <field name="bank_account"/>-->
                             <field name="bank_account_id"/>
                             <field name="place_of_birth"/>
                             <field name="children"/>
@@ -167,7 +166,6 @@
                             <field name="manager" select="1"/>
                             <field name="vehicle" select="1"/>
                             <field name="vehicle_distance" select="1"/>
-                            <field name="medic_exam" select="1"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="2" string="ESI Information"/>
@@ -193,7 +191,7 @@
                                 <field name="amount_type"/>
                                 <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                                 <field name="account_id"/>
-                                <field name="analytic_account_id"/>
+                                <field name="analytic_account_id" groups="base.group_extended"/>
                             </tree>
                         </field>
                     </page>
@@ -201,10 +199,10 @@
                         <field name="property_bank_account"/>
                         <field name="salary_account"/>
                         <field name="employee_account"/>
-                        <field name="analytic_account"/>
+                        <field name="analytic_account" groups="base.group_extended"/>
                         <field name="slip_ids" colspan="4" nolabel="1"/>
                     </page>
-                </notebook>
+                </page>
             </field>
         </record>
 
@@ -298,7 +296,7 @@
                     <group col="6" colspan="4">
                         <field name="name" colspan="4" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="account_id" select="1"/>
+                        <field name="account_id" select="1" groups="base.group_extended"/>
                         <field name="company_id"/>
                     </group>
                     <notebook colspan="4">
@@ -335,7 +333,7 @@
                         <separator colspan="4" string="Payroll Accounting"/>
                         <field name="company_id" widget="selection" select="2"/>
                         <field name="code"/>
-                        <field name="analytic_account_id"/>
+                        <field name="analytic_account_id" groups="base.group_extended"/>
                         <field name="account_id"/>
                     </group>
                     <group col="2" colspan="2">
@@ -363,7 +361,7 @@
                     <field name="amount_type"/>
                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                     <field name="account_id"/>
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -391,7 +389,7 @@
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Accounting Informations"/>
                         <field name="account_id"/>
-                        <field name="analytic_account_id"/>
+                        <field name="analytic_account_id" groups="base.group_extended"/>
                         <separator colspan="4" string="Company contribution"/>
                         <field name="company_contrib"/>
                     </group>
@@ -425,11 +423,13 @@
                 <tree colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payslip">
                     <field name="number"/>
                     <field name="employee_id"/>
+                    <field name="register_id" invisible="1"/>
                     <field name="name"/>
                     <field name="date"/>
                     <field name="grows"/>
                     <field name="net"/>
                     <field name="state"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -461,7 +461,7 @@
                                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                                     <field name="total"/>
                                     <field name="account_id"/>
-                                    <field name="analytic_account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended"/>
                                 </tree>
                             </field>
 
@@ -521,7 +521,8 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Slip"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-account" string="Paid" domain="[('state','=','done'),('paid','=',True)]" help="Paid Slip"/>
+                        <filter icon="terp-dolar_ok!" string="Paid" domain="[('state','=','done'),('paid','=',True)]" help="Paid Slip"/>
+                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="employee_id"/>
                         <field name="number"/>
@@ -529,10 +530,13 @@
                     </group>
                     <newline/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
-                        <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'register_id':self}"/>
-                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'employee_id':self}"/>
-                        <filter string="Periods" name="period_id" icon="terp-go-month" context="{'period_id':self}"/>
-                        <filter string="Staes" name="state" icon="terp-stock_effects-object-colorize" context="{'state':self}"/>
+                        <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'group_by':'register_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Companies" name="company_id"  icon="terp-go-home" context="{'group_by':'company_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -653,8 +657,6 @@
                         <separator colspan="2" string="Other Information"/>
                         <field name="company_id" select="1"/>
                         <field name="active" select="1"/>
-<!--                        <field name="include_in_salary" />-->
-<!--                        <field name="account_id" attrs="{'required': [('include_in_salary','=',True)]}"/>-->
                     </group>
                     <notebook colspan="4">
                         <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
@@ -728,52 +730,6 @@
             parent="payroll_configure"
         />
         <!-- End Company Contribution -->
-
-        <!-- Contract Form-->
-<!--        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">-->
-<!--            <field name="name">hr.contract.view.form</field>-->
-<!--            <field name="model">hr.contract</field>-->
-<!--            <field name="type">form</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <form string="Contract">-->
-<!--                    <field name="employee_id"/>-->
-<!--                    <separator colspan="4" string="General Information"/>-->
-<!--                    <field colspan="4" name="name" select="1"/>-->
-<!--                    <newline/>-->
-<!--                    <separator colspan="4" string="Contract Duration"/>-->
-<!--                    <field name="function"/>-->
-<!--                    <field name="working_hours_per_day"/>-->
-<!--                    <field name="working_days_per_week"/>-->
-<!--                    <field name="date_start" select="1"/>-->
-<!--                    <field name="date_end" select="1"/>-->
-<!--                    -->
-<!--                    <separator colspan="4" string="Salary"/>-->
-<!--                    <field name="wage_type_id"/>-->
-<!--                    <field name="wage"/>-->
-<!--                    -->
-<!--                    <separator colspan="4" string="Notes"/>-->
-<!--                    <field colspan="4" name="notes" nolabel="1"/>-->
-<!--                    -->
-<!--                    <separator colspan="4" string="Passport and Visa"/>-->
-<!--                    <field name="permit_no"/>-->
-<!--                    <field name="passport_id"/>-->
-<!--                    <field name="visa_no"/>-->
-<!--                    <field name="visa_expire"/>-->
-<!--                </form>-->
-<!--            </field>-->
-<!--        </record>-->
-<!--        <record id="action_hr_contract" model="ir.actions.act_window">-->
-<!--            <field name="name">Employee Contract</field>-->
-<!--            <field name="res_model">hr.contract</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="view_mode">form,tree</field>-->
-<!--        </record>-->
-<!--        <menuitem -->
-<!--            action="action_hr_contract" -->
-<!--            name="Employee Contract" -->
-<!--            id="hr_menu_contract" -->
-<!--            parent="payroll_configure"-->
-<!--        />-->
 
         <record id="view_hr_bank_advice_tree" model="ir.ui.view">
             <field name="name">hr.payroll.advice.tree</field>
@@ -954,7 +910,7 @@
                 <form string="Contribution">
                     <field name="name" select="1"/>
                     <field name="account_id"/>
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="base.group_extended"/>
                     <field name="company_id" select="1"/>
                     <notebook colspan="4">
                         <page string="Contribution Lines">

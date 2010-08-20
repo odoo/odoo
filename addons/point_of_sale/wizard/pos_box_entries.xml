@@ -8,19 +8,18 @@
             <field name="model">pos.box.entries</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Entrée de caisse">
-				    	<separator string="Please fill these fields for entries to the box:" colspan="4"/>
-				    	<field name="name"/>
-				    	<field name="journal_id"/>
-				    	<field name="product_id"/>
-				    	<field name="amount"/>
-<!--				    	<field name="ref"/>-->
-				    	<group colspan="4" col="2">
+                <form string="Box Entries">
+				    <separator string="Please fill these fields for entries to the box:" colspan="4"/>
+			    	<field name="name"/>
+			    	<field name="journal_id"/>
+			    	<field name="product_id"/>
+			    	<field name="amount"/>
+			    	<group colspan="4" col="2">
 				 		<button icon='gtk-cancel' special="cancel"
                 			string="Close" />
                 		<button name="get_in" string="Take Money"
                 			colspan="1" type="object" icon="gtk-ok" />
-                			</group>
+          			</group>
                 </form>
             </field>
         </record>

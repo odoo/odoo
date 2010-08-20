@@ -24,20 +24,11 @@ from osv import fields
 
 class auction_transfer_unsold_object(osv.osv):
         '''
-        Open ERP Model
+        OpenERP Model
         '''
         _name = 'auction.transfer.unsold.object'
         _description = 'To transfer unsold objects'
-        
-        _columns = {
-                'auction_id_from':fields.many2one('auction.dates', 'From Auction Date', required=True),
-                'auction_id_to':fields.many2one('auction.dates', 'To Auction Date', required=True),
-        }
 
-        _defaults = {
-            'auction_id_from': _start,
-        }
-        
         def _start(self, cr, uid, context):
             """ 
             To initialize auction_id_from
@@ -52,7 +43,16 @@ class auction_transfer_unsold_object(osv.osv):
             rec = lots_obj.browse(cr, uid, context['active_id'], context)
             auction_from = rec and rec.auction_id.id or False
             return  auction_from
+        
+        _columns = {
+                'auction_id_from':fields.many2one('auction.dates', 'From Auction Date', required=True),
+                'auction_id_to':fields.many2one('auction.dates', 'To Auction Date', required=True),
+        }
 
+        _defaults = {
+            'auction_id_from': _start,
+        }
+        
         def transfer_unsold_object(self, cr, uid, ids, context):
             """ 
             To Transfer the unsold object

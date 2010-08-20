@@ -36,13 +36,6 @@
 		<field name="action">budget_validate()</field>
 	</record>
 
-	<!--<record model="workflow.activity" id="act_set_to_draft">
-		<field name="wkf_id" ref="wkf_crossovered_budget" />
-		<field name="name">settodraft</field>
-		<field name="kind">function</field>
-		<field name="action">action_set_to_draft()</field>
-	</record>-->
-
 	<record model="workflow.activity" id="act_cancel">
 		<field name="wkf_id" ref="wkf_crossovered_budget" />
 		<field name="name">cancel</field>
@@ -94,11 +87,5 @@
 		<field name="role_id" ref="crossovered_budget_role"/>
 	</record>
 
-	<!--<record model="workflow.transition" id="t7">
-		<field name="act_from" ref="act_cancel" />
-		<field name="act_to" ref="act_draft" />
-		<field name="signal">settodraft</field>
-		<field name="role_id" ref="crossovered_budget_role"/>
-	</record>-->
 </data>
 </openerp>

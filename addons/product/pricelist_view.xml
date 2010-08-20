@@ -2,7 +2,9 @@
 <openerp>
     <data>
 
-        <menuitem groups="base.group_extended" id="menu_product_pricelist_main" name="Pricelists" parent="prod_config_main" sequence="50"/>
+        <menuitem id="base.menu_sale_config_sales" name="Sales"
+            parent="base.menu_base_config" sequence="0" groups="base.group_extended"/>
+        <menuitem groups="base.group_extended" id="menu_product_pricelist_main" name="Pricelists" parent="base.menu_sale_config_sales" sequence="50"/>
 
         <record id="product_pricelist_version_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.form</field>
@@ -42,7 +44,7 @@
             <field name="view_id" ref="product_pricelist_version_tree_view"/>
         </record>
         <menuitem
-            action="product_pricelist_action" id="menu_product_pricelist_action" 
+            action="product_pricelist_action" id="menu_product_pricelist_action"
             parent="product.menu_product_pricelist_main" sequence="2"/>
 
         <record id="product_pricelist_item_tree_view" model="ir.ui.view">
@@ -110,7 +112,7 @@
                 </search>
             </field>
         </record>
-        
+
 
         <record id="product_pricelist_view_tree" model="ir.ui.view">
             <field name="name">product.pricelist.tree</field>

@@ -7,8 +7,8 @@
         <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
-        <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse mangement" parent="menu_stock_configuration" sequence="1"/>
+        <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="base.group_system"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse mangement" parent="menu_stock_configuration" sequence="1" groups="base.group_system"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
@@ -355,55 +355,6 @@
             </field>
         </record>
 
-        <!--wizard
-            id="action_lot4"
-            model="stock.production.lot"
-            name="stock.traceability.lot.downstream"
-            string="Downstream traceability"/-->
-
-        <!--wizard
-            id="action4"
-            model="stock.tracking"
-            name="stock.traceability.upstream"
-            string="Upstream traceability"/-->
-
-        <!--wizard
-            id="action2"
-            model="stock.tracking"
-            name="stock.traceability.downstream"
-            string="Downstream traceability"/-->
-
-        <!--record id="action3" model="ir.actions.act_window">
-            <field name="name">Downstream traceability</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.move</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
-            <field eval="stock_move_tree2" name="view_id"/>
-        </record>
-        <record id="ir_move_traceability_upstream" model="ir.values">
-            <field eval="'tree_but_action'" name="key2"/>
-            <field eval="'stock.move'" name="model"/>
-            <field name="name">Downstream traceability</field>
-            <field eval="'ir.actions.act_window,'+str(action3)" name="value"/>
-            <field eval="True" name="object"/>
-        </record>
-        <record id="action5" model="ir.actions.act_window">
-            <field name="name">Upstream traceability</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.move</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
-            <field eval="stock_move_tree" name="view_id"/>
-        </record>
-        <record id="ir_move_traceability_downstream" model="ir.values">
-            <field eval="'tree_but_action'" name="key2"/>
-            <field eval="'stock.move'" name="model"/>
-            <field name="name">Upstream traceability</field>
-            <field eval="'ir.actions.act_window,'+str(action5)" name="value"/>
-            <field eval="True" name="object"/>
-        </record-->
-
         <record id="view_location_form" model="ir.ui.view">
             <field name="name">stock.location.form</field>
             <field name="model">stock.location</field>
@@ -415,7 +366,6 @@
                     <newline/>
                     <field name="usage"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <!--<field name="account_id" groups="base.group_extended"/>-->
                     <field name="location_id"/>
                     <field name="address_id" context="{'contact_display':'partner'}"/>
                     <field name="icon" groups="base.group_extended"/>
@@ -450,11 +400,11 @@
             <field name="arch" type="xml">
                 <search string="Stock Locations">
                     <filter icon="terp-go-home" name="in_location"
-                        string="Internal" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" />
+                        string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations" />
                     <filter icon="terp-go-home" name="customer"
-                        string="Customer" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
+                        string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations" />
                     <filter icon="terp-go-home" name="supplier"
-                        string="Supplier" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
+                        string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations" />
                     <separator orientation="vertical"/>
                     <field name="name"/>
                 </search>
@@ -483,9 +433,10 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_location_tree2"/>
+            <field name="search_view_id" ref="view_location_search"/>
             <field name="context">{'full':1, 'search_default_in_location':1}</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config" />
+        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config" groups="base.group_system"/>
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -545,7 +496,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config"/>
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config" groups="base.group_system"/>
 
         <record id="stock_picking_move_wizard_form" model="ir.ui.view">
             <field name="name">stock.picking.move.wizard.form</field>
@@ -627,7 +578,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines}">
                                 <tree colors="grey:scraped == True" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
@@ -669,7 +620,7 @@
                                             <separator colspan="4" string="Move Information"/>
                                             <field name="location_id" domain="[('usage','=','internal')]"/>
                                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)" select="1"/>
+                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
                                             <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                             <field name="product_uom"/>
                                             <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -704,6 +655,9 @@
                                                 <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-no"/>
                                                 <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
                                             </group>
+                                        </page>
+                                           <page string="Return Picking History" groups="base.group_extended">
+                                            <field name="move_stock_return_history" nolabel="1"/>
                                         </page>
                                     </notebook>
                                 </form>
@@ -874,6 +828,9 @@
                                                 <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
                                             </group>
                                         </page>
+ 										<page string="Return Picking History">
+                                            <field name="move_stock_return_history" nolabel="1"/>
+                                        </page>                                  
                                     </notebook>
                                 </form>
                             </field>
@@ -1261,6 +1218,10 @@
                                                 <button name="action_cancel" states="assigned" string="Cancel" type="object" icon=""/>
                                             </group>
                                         </page>
+                                        <page string="Return Picking History">
+                                                    <field name="move_stock_return_history" nolabel="1"/>
+                                                </page>
+                                        
                                     </notebook>
                                 </form>
                             </field>
@@ -1392,6 +1353,7 @@
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit Of Measure"/>
+		    <field name="product_uos" groups="product.product_uos"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="gtk-convert" context="{'scrap': True}"
@@ -1480,6 +1442,9 @@
                                 </group>
                             </group>
                         </page>
+                        <page string="Return Picking History">
+                            <field name="move_stock_return_history" nolabel="1"/>
+                        </page>                        
                     </notebook>
                     <group col="6" colspan="4">
                         <field name="state"/>
@@ -1596,7 +1561,7 @@
                             <separator colspan="4" string="Move Information"/>
                             <field name="location_id" widget="selection"/>
                             <field name="location_dest_id" widget="selection"/>
-                            <field colspan="4" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
+                            <field colspan="4" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, address_id)"/>
                             <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                             <field name="product_uom" widget="selection"/>
                             <field name="product_uos_qty" groups="product.product_uos"/>
@@ -1637,6 +1602,9 @@
                                 <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
                             </group>
                         </page>
+           				<page string="Return Picking History">
+                            <field name="move_stock_return_history" nolabel="1"/>
+                         </page>                        
                     </notebook>
                 </form>
             </field>
@@ -1653,7 +1621,7 @@
                         <filter icon="terp-go-today" string="Today" domain="[('date_planned','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date_planned','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
-                        <filter icon="terp-check" name="received" string="Done" domain="[('state','=','done'))]"/>
+                        <filter icon="terp-check" name="received" string="Done" domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Order" domain="[('backorder_id','!=',False)]" help="Back Order"/>
                         <separator orientation="vertical"/>
@@ -1669,7 +1637,7 @@
                         <filter string="Order" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" />
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" />
                     </group>
                     <newline/>
                     <group expand="0" string="Extended options..." groups="base.group_extended">
@@ -1703,8 +1671,6 @@
             <field name="view_id" ref="view_move_form_reception_picking"/>
             <field name="act_window_id" ref="action_reception_picking_move"/>
         </record>
-<!--        <menuitem action="action_reception_picking_move" id="menu_action_reception_picking_move" parent="menu_stock_warehouse_mgmt" sequence="4"/>-->
-
 
         # -------------------------------------------------------------
         # Stock incoterms
@@ -1739,7 +1705,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_warehouse_config"/>-->
 
         <act_window
             context="{'location': active_id}"

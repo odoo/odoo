@@ -52,8 +52,9 @@ class account_voucher_unreconcile(osv.osv_memory):
                 reconcile_pool.unlink(cr, uid, rec)
             
             if res.remove:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'account.voucher', context.get('active_id'), 'cancel_voucher', cr)
+                voucher_pool.cancel_voucher(cr, uid, [context.get('active_id')], context)
+#                wf_service = netsvc.LocalService("workflow")
+#                wf_service.trg_validate(uid, 'account.voucher', context.get('active_id'), 'cancel_voucher', cr)
             
         return {}
 

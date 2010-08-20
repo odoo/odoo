@@ -3,7 +3,7 @@
     <data>
 
         <menuitem id="menu_config_claim" name="Claim"
-            groups="base.group_extended"
+            groups="base.group_extended,base.group_system"
             parent="base.menu_base_config" sequence="6" />
 
         <!-- Claims categories  -->
@@ -174,7 +174,7 @@
                                             string="Reply"
                                             name="%(crm.action_crm_send_mail)d"
                                             context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
-                                            icon="terp-mail-replied" type="action" />
+                                            icon="terp-mail-replied" type="action" attrs="{'invisible': [('history', '!=', True)]}" />
                                     </tree>
                                     <form string="Communication history">
                                         <group col="4" colspan="4">
@@ -183,20 +183,26 @@
                                             <field name="email_to" widget="char" size="512"/>
                                             <field name="email_cc" widget="char" size="512"/>
                                             <field name="name" colspan="4" widget="char" size="512"/>
+                                            <field name="history" invisible="1"/>
                                         </group>
                                         <notebook colspan="4">
                                             <page string="Details">
-                                                <field name="description" colspan="4" nolabel="1"/>
+                                                <group attrs="{'invisible': [('history', '!=', True)]}">
+                                                    <field name="description" colspan="4" nolabel="1" height="250"/>
+                                                    <button colspan="4"
+                                                        string="Reply"
+                                                        name="%(crm.action_crm_send_mail)d"
+                                                        context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
+                                                        icon="terp-mail-replied" type="action" />
+                                                </group>
+                                                <group attrs="{'invisible': [('history', '=', True)]}">
+                                                    <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                                </group>
                                             </page>
                                             <page string="Attachments">
                                                 <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                             </page>
                                         </notebook>
-                                        <button colspan="4"
-                                            string="Reply"
-                                            name="%(crm.action_crm_send_mail)d"
-                                            context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
-                                            icon="terp-mail-replied" type="action" />
                                     </form>
                                 </field>
                                 <button colspan="4" string="Send New Email"

@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-09 02:24+0000\n"
-"Last-Translator: ub121 <Unknown>\n"
+"PO-Revision-Date: 2010-08-14 08:46+0000\n"
+"Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-09 03:41+0000\n"
+"X-Launchpad-Export-Date: 2010-08-15 06:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -25,7 +25,7 @@ msgstr "Нэхэмжилсэн & Төлсөн"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 msgid "Supplier Invoice pre-generated on receptions for control"
-msgstr ""
+msgstr "Хүлээн авалт дээр нийлүүлэгчийн нэхэмжлэл үүснэ"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -35,7 +35,7 @@ msgstr "Хаана"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
-msgstr ""
+msgstr "Түүврээс"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -45,7 +45,7 @@ msgstr "Баталсан"
 #. module: purchase
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр заасан байна."
 
 #. module: purchase
 #: field:purchase.order,partner_id:0
@@ -70,12 +70,12 @@ msgstr "Захиалгаас"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
 msgid "Confirmed Purchase"
-msgstr ""
+msgstr "Батлагдсан худалдан авалт"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Нэхэмжлэлийн онцгой тохиолдол"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -112,6 +112,8 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr ""
+"Үнийн жагсаалт нь энэ захиалгад зориулж валютыг тохируулна. Мөн өгөгдсөн "
+"бараа/тоо ширхэг дээр үндэслэн нийлүүлэгчийн үнийг тооцоолно."
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
@@ -121,7 +123,7 @@ msgstr "Татан авах процесс"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 msgid "Invoice from Packing list"
-msgstr ""
+msgstr "Савласан баримт дээр үндэслэж нэхэмжлэх"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -155,7 +157,6 @@ msgstr "Тэмдэглэл"
 #. module: purchase
 #: rml:purchase.order:0
 #: field:purchase.order,amount_tax:0
-#: view:purchase.order.line:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "Татвар"
@@ -194,6 +195,12 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
+"Худалдан авах захиалга эсвэл үнийн хүсэлтийн төлөв. Үнийн хүсэлт гэдэг нь "
+"'Ноорог' төлөвтэй худалдан авах захиалга юм. Захиалга батлагдахад "
+"'Батлагдсан' төлөвт шилжинэ. Үүний дараа 'Зөвшөөрсөн'  төлөвт оруулахын тулд "
+"нийлүүлэгч захиалгыг зөвшөөрөх ёстой. Захиалга биелэгдээд, төлбөр хийгдсэний "
+"дараа 'Дууссан' төлөвт орно. Нэхэмжлэх эсвэл бараа хүлээн авах шатанд "
+"захиалга цуцлагдвал тооцоолоогүй онцгой төлөвт орох болно."
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -224,7 +231,7 @@ msgstr "Заалт"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "TVA :"
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -256,11 +263,16 @@ msgid ""
 "Manual: no invoice will be pre-generated. The accountant will have to encode "
 "manually."
 msgstr ""
+"Захиалгаас: захиалга дээр үндэслэж ноорог нэхэмжлэл үүснэ. Нягтлан энэ "
+"нэхэмжлэлийг батлах ёстой.\n"
+"Түүврээс: бараа бэлтгэл дээр үндэслэж ноорог нэхэмжлэл үүснэ.\n"
+"Гараар: нэхэмжлэл үүсэхгүй. Нягтлан гараар нэхэмжлэлийг үүсгэх хэрэгтэй "
+"болно."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Хүргэлт дээр үндэслэж нэхэмжлэх"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -275,17 +287,17 @@ msgstr "Захиалгын мөр"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Баталсан"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Product Receipt"
-msgstr ""
+msgstr "Барааны баримт"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
 msgid "Confirm"
-msgstr ""
+msgstr "Бататгах"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -301,7 +313,7 @@ msgstr "Үнийн хүсэлт"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Waiting"
-msgstr ""
+msgstr "Хүлээж байна"
 
 #. module: purchase
 #: field:purchase.order,picking_ids:0
@@ -321,7 +333,7 @@ msgstr "Захиалгын мөрүүд"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirm Purchase order from Request for quotation without origin"
-msgstr ""
+msgstr "Үнийн саналаас захиалгыг батлах"
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -347,7 +359,7 @@ msgstr "Хүргэх хаяг :"
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
-msgstr ""
+msgstr "Худалдан авах үнийн санал"
 
 #. module: purchase
 #: field:purchase.order,minimum_planned_date:0
@@ -362,7 +374,7 @@ msgstr "Нийлүүлэгч зөвшөөрсөн"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Packing"
-msgstr ""
+msgstr "Савлагаа"
 
 #. module: purchase
 #: model:ir.actions.wizard,name:purchase.purchase_order_merge
@@ -372,7 +384,7 @@ msgstr "Захиалга нэгтгэх"
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
-msgstr ""
+msgstr "Нөөц хүргэх хаяг"
 
 #. module: purchase
 #: field:purchase.order,name:0
@@ -392,7 +404,7 @@ msgstr "Үнийн хүснэгт"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "When controlling invoice from orders"
-msgstr ""
+msgstr "Захиалгаас нэхэмлэл удирдах үед"
 
 #. module: purchase
 #: constraint:ir.ui.view:0
@@ -407,12 +419,12 @@ msgstr "Захиалга дээр үндэслэж урьдчилан үүсгэ
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
 msgid "Invoice from Purchase"
-msgstr ""
+msgstr "Худалдан авалтаас нэхэмжлэх"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "Packing is created for the products reception control."
-msgstr ""
+msgstr "Бараа хүлээн авалтын хяналт дээр савлагаа баримт үүснэ"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -422,17 +434,17 @@ msgstr "Гараар"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirming Purchase"
-msgstr ""
+msgstr "Худалдан авалтыг бататгаж байна"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "Approve Purchase order after Confirming"
-msgstr ""
+msgstr "Бататгасны дараа захиалгыг зөвшөөрөх"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "Тээвэрлэлтийн онцгой тохиолдол"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
@@ -445,6 +457,7 @@ msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
 msgstr ""
+"Захиалгын мөрүүдээс хамгийн ойрын огноог сонгож энэ огноог тооцоолно."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -469,7 +482,7 @@ msgstr "Үнэ авах хүсэлт :"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
 msgid "Confirm Purchase order from Request for quotation"
-msgstr ""
+msgstr "Үнийн саналаас захиалгыг бататгах"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -480,7 +493,7 @@ msgstr "Захиалгыг батлах"
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this purchase"
-msgstr ""
+msgstr "Энэ худалдан авалтад зориулж үүсгэсэн барааны жагсаалт"
 
 #. module: purchase
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
@@ -543,22 +556,22 @@ msgstr "Худалдан авах захиалга"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 msgid "Request for quotation is proposed by the system."
-msgstr ""
+msgstr "Системээс санал болгосон үнийн хүсэлт."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 msgid "Packing Invoice"
-msgstr ""
+msgstr "Баглааны нэхэмжлэл"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
 msgid "Creates invoice from packin list"
-msgstr ""
+msgstr "Баглааны баримт дээр үндэслэж нэхэмжлэл үүсгэнэ"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Энэ баримт үүссэн огноо."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -573,7 +586,7 @@ msgstr "Огноо"
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid "Reference of the document that generated this purchase order request."
-msgstr ""
+msgstr "Энэ худалдан авах захиалгыг үүсгэсэн ишлэл баримт."
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -588,17 +601,17 @@ msgstr "Захиалгын дараа, Нэхэмжлэл үүсгэх."
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled date"
-msgstr ""
+msgstr "Төлөвлөсөн огноо"
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Our Order Reference"
-msgstr ""
+msgstr "Манай захиалгын ишлэл"
 
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "TVA:"
-msgstr ""
+msgstr "TVA:"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -618,7 +631,7 @@ msgstr "Захиалга цуцлах"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Create Packing list"
-msgstr ""
+msgstr "Баглааны баримт үүсгэх"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -628,7 +641,7 @@ msgstr "Нийт :"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "When purchase order is approved , it creates its packing list."
-msgstr ""
+msgstr "Захиалга батлагдахад баглааны баримт үүснэ."
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -659,7 +672,7 @@ msgstr "Нэгж үнэ"
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Санхүүгийн төлөв"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -681,7 +694,7 @@ msgstr "Цуцлах"
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchases Properties"
-msgstr ""
+msgstr "Худалдан авалтын атрибутууд"
 
 #. module: purchase
 #: field:purchase.order.line,order_id:0
@@ -692,7 +705,7 @@ msgstr "Захиалгын код"
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 msgid "Purchase Orders"
-msgstr ""
+msgstr "Худалдан авах захиалгууд"
 
 #. module: purchase
 #: wizard_view:purchase.order.merge,init:0
@@ -705,12 +718,14 @@ msgstr "Захиалга нэгтгэх"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+"болохгүй!"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action_new
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action_new
 msgid "New Purchase Order"
-msgstr ""
+msgstr "Шинэ захиалга"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -727,17 +742,17 @@ msgstr "Үнийн хүсэлт"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Out Packing"
-msgstr ""
+msgstr "Гарах баглаа"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Control invoices on receptions"
-msgstr ""
+msgstr "Ирэх нэхэмжлэлийг удирдах"
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Date Req."
-msgstr ""
+msgstr "Хүс. Огноо"
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
@@ -750,6 +765,8 @@ msgid ""
 "Module for purchase management\n"
 "    Request for quotation, Create Supplier Invoice, Print Order..."
 msgstr ""
+"Худалдан авалтын менежментийн модуль\n"
+"    Үнийн хүсэлт, Нийлүүлэгчийн нэхэмжлэл үүсгэх, Захиалга хэвлэх..."
 
 #. module: purchase
 #: field:purchase.order.line,product_id:0
@@ -766,43 +783,43 @@ msgstr "Тайлбар"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "Product recept invoice"
-msgstr ""
+msgstr "Бараа хүлээн авсан нэхэмжлэл"
 
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Expected Delivery address:"
-msgstr ""
+msgstr "Товлосон хүргэх хаяг"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action3
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action3
 msgid "Purchase Order Waiting Approval"
-msgstr ""
+msgstr "Захиалга зөвшөөрөл хүлээж байна"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
 msgid "Confirming Purchase Order"
-msgstr ""
+msgstr "Захиалгыг бататгаж байна"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product UOM"
-msgstr ""
+msgstr "Барааны хэмжих нэгж"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
 msgid "Reservation"
-msgstr ""
+msgstr "Урьдчилсан захиалга"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "Purchase order is confirmed by the user."
-msgstr ""
+msgstr "Захиалга хэрэглэгчээр батлагдсан."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "Purchase Invoice"
-msgstr ""
+msgstr "Худалдан авалтын нэхэмжлэл"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -812,7 +829,7 @@ msgstr "Таны захиалгын код"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Захиалга баталсан N°"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -827,7 +844,7 @@ msgstr "Захиалсан огноо"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Control"
-msgstr ""
+msgstr "Худалдан авалтын хяналт"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action2
@@ -853,7 +870,7 @@ msgstr "Зөвшөөрөгдсөн худалдан авалт"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
 msgid "From Packing list, Create invoice."
-msgstr ""
+msgstr "Савлах баримтаас нэхэмжлэл үүсгэнэ."
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -868,14 +885,44 @@ msgstr "Эдгээр захиалгыг нэгтгэх үү ?"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approving Purchase Order"
-msgstr ""
+msgstr "Худалдан авах захиалгыг зөвшөөрч байна"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
 msgid "After approved purchase order , it comes into the supplier invoice"
-msgstr ""
+msgstr "Захиалга зөвшөөрөгдсөний дараа нийлүүлэгчийн нэхэмжлэл болж хувирна."
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
 msgstr "Барааны хөдөлгөөн"
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Waiting Schedule"
+msgstr "Хүлээх төлөвлөгөө"
+
+#. module: purchase
+#: field:report.purchase.order.category,price_total:0
+#: field:report.purchase.order.product,price_total:0
+msgid "Total Price"
+msgstr "Нийт үнэ"
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Quotation"
+msgstr "Үнийн ишлэл"
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "Manual in progress"
+msgstr "Гарын авлага үргэлжилж байна"
+
+#. module: purchase
+#: selection:report.purchase.order.category,state:0
+#: selection:report.purchase.order.product,state:0
+msgid "In progress"
+msgstr "Үргэлжилж байна"

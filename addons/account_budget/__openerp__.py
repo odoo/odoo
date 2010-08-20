@@ -63,7 +63,6 @@ Three reports are available:
     ],
     'demo_xml': ['crossovered_budget_demo.xml'],
     'test':[
-#            'test/account_budget_spread.yml',
             'test/account_budget.yml',
             ],
     'installable': True,

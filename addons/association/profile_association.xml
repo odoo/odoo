@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
               <data>
                 <form position="attributes">
-                  <attribute name="string">Install Extra Modules</attribute>
+                  <attribute name="string">Association Profile Configuration</attribute>
                 </form>
                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
 	          	  <attribute name='string'></attribute>
@@ -63,7 +63,7 @@
       	</field>
 		</record>
 
-		<menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
+		<menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9" groups="base.group_extended"/>
 		<menuitem name="Events Organisation" id="base.menu_event_main" parent="base.menu_association" />
 		<menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
 		<menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>

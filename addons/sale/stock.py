@@ -29,6 +29,7 @@ class stock_move(osv.osv):
     _defaults = {
         'sale_line_id': False
     }
+    
 stock_move()
 
 class stock_picking(osv.osv):
@@ -115,6 +116,8 @@ class stock_picking(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         picking_obj = self.pool.get('stock.picking')
         invoice_line_obj = self.pool.get('account.invoice.line')
+        if context is None:
+            context = {}
 
         result = super(stock_picking, self).action_invoice_create(cursor, user,
                 ids, journal_id=journal_id, group=group, type=type,
@@ -183,10 +186,10 @@ class stock_picking(osv.osv):
                         'quantity': sale_line.product_uos_qty,
                         'invoice_line_tax_id': [(6, 0, tax_ids)],
                         'account_analytic_id': account_analytic_id,
-                        }, context=context)
+                    }, context=context)
                     self.pool.get('sale.order.line').write(cursor, user, [sale_line.id], {'invoiced':True,
                         'invoice_lines': [(6, 0, [invoice_line_id])],
-                        })
+                    })
 
         return result
 

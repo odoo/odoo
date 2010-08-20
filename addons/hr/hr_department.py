@@ -19,11 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class hr_department(osv.osv):
-
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -52,15 +51,13 @@ class hr_department(osv.osv):
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
         'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
         'note': fields.text('Note'),
-#        'manager_id': fields.many2one('res.users', 'Manager'),
-#        'member_ids': fields.many2many('res.users', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),
     }
 
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
                 }
 
-    def _get_members(self,cr, uid, context=None):
+    def _get_members(self, cr, uid, context=None):
         if context is None:
             context = {}
         mids = self.search(cr, uid, [('manager_id', '=', uid)], context=context)
@@ -87,7 +84,6 @@ class hr_department(osv.osv):
     ]
 
 hr_department()
-
 
 class ir_action_window(osv.osv):
     _inherit = 'ir.actions.act_window'
@@ -123,11 +119,19 @@ class res_users(osv.osv):
         result = {}
         obj_dept = self.pool.get('hr.department')
         for user_id in ids:
-            ids_dept = obj_dept.search(cr, uid, [('member_ids', 'in', [user_id])], context=context)
+            emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', user_id)])
+            cr.execute('SELECT emp.department_id FROM hr_employee AS emp \
+                        JOIN resource_resource AS res ON res.id = emp.resource_id \
+                        JOIN hr_department as dept ON dept.id = emp.department_id \
+                        WHERE res.user_id = %s AND emp.department_id IS NOT NULL AND dept.manager_id IS NOT NULL', (user_id,))
+            ids_dept = [x[0] for x in cr.fetchall()]
             parent_ids = []
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['manager_id'], context=context)
                 parent_ids = map(lambda x: x['manager_id'][0], data_dept)
+                cr.execute('SELECT res.user_id FROM hr_employee AS emp JOIN resource_resource AS res ON res.id=emp.resource_id \
+                        WHERE emp.id IN %s', (tuple(parent_ids),))
+                parent_ids = [x[0] for x in cr.fetchall()]
             result[user_id] = parent_ids
         return result
 
@@ -141,7 +145,7 @@ class res_users(osv.osv):
         child_ids = self._child_compute(cr, uid, parent, name, args, context=context)
         if not child_ids:
             return [('id', 'in', [0])]
-        return [('id', 'in', child_ids.get(uid,[]))]
+        return [('id', 'in', child_ids.get(uid, []))]
 
     def _child_compute(self, cr, uid, ids, name, args, context=None):
         if context is None:
@@ -149,24 +153,27 @@ class res_users(osv.osv):
         obj_dept = self.pool.get('hr.department')
         obj_user = self.pool.get('res.users')
         result = {}
-        for manager_id in ids:
+        for user_id in ids:
             child_ids = []
-            mgnt_dept_ids = obj_dept.search(cr, uid, [('manager_id', '=', manager_id)], context=context)
+            cr.execute('SELECT dept.id FROM hr_department AS dept \
+                        LEFT JOIN hr_employee AS emp ON dept.manager_id = emp.id \
+                        WHERE emp.id IN \
+                            (SELECT emp.id FROM hr_employee \
+                                JOIN resource_resource r ON r.id = emp.resource_id WHERE r.user_id=' + str(user_id) + ') ')
+            mgnt_dept_ids = [x[0] for x in cr.fetchall()]
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)], context=context)
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'], context=context)
                 childs = map(lambda x: x['member_ids'], data_dept)
                 childs = tools.flatten(childs)
                 childs = obj_user.search(cr, uid, [('id', 'in', childs),('active', '=', True)], context=context)
-                if manager_id in childs:
-                    childs.remove(manager_id)
+                if user_id in childs:
+                    childs.remove(user_id)
                 child_ids.extend(tools.flatten(childs))
                 set = {}
                 map(set.__setitem__, child_ids, [])
-                child_ids =  set.keys()
-            else:
-               child_ids = []
-            result[manager_id] = child_ids
+                child_ids = set.keys()
+            result[user_id] = child_ids
         return result
 
     def _child_search(self, cr, uid, obj, name, args, context=None):
@@ -179,7 +186,7 @@ class res_users(osv.osv):
         child_ids = self._child_compute(cr, uid, parent, name, args, context=context)
         if not child_ids:
             return [('id', 'in', [0])]
-        return [('id', 'in', child_ids.get(uid,[]))]
+        return [('id', 'in', child_ids.get(uid, []))]
 
     _columns = {
         'parent_id': fields.function(_parent_compute, relation='res.users', fnct_search=_parent_search, method=True, string="Managers", type='many2many'),

@@ -37,6 +37,6 @@ class report_designer_installer(osv.osv_memory):
                                 "After installation you will get Cube Browser and Cube Desinger in Reporting Menu. "
                                 "Cube Browser is used to generate the reports with table view (mdx view) of mdx query "
                                 "and Cube designer is used to make cubes in BI."),
-        }
+    }
 report_designer_installer()
 

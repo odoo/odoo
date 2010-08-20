@@ -289,7 +289,6 @@ class product_template(osv.osv):
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
-#        'company_id': lambda self, cr, uid, context: False, # Visible by all
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
         'cost_method': lambda *a: 'standard',
@@ -429,7 +428,7 @@ class product_product(osv.osv):
         'default_code' : fields.char('Reference', size=64),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=False),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
         'ean13': fields.char('EAN13', size=13),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
@@ -476,8 +475,6 @@ class product_product(osv.osv):
         if not len(ids):
             return []
         def _name_get(d):
-            #name = self._product_partner_ref(cr, user, [d['id']], '', '', context)[d['id']]
-            #code = self._product_code(cr, user, [d['id']], '', '', context)[d['id']]
             name = d.get('name','')
             code = d.get('default_code',False)
             if code:

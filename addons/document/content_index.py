@@ -98,7 +98,9 @@ class indexer(object):
 
     def _doIndexFile(self,fpath):
         raise NhException("Content not handled here")
-        
+
+    def __repr__(self):
+        return "<indexer %s.%s>" %(self.__module__, self.__class__.__name__)
         
 
 def mime_match(mime, mdict):
@@ -128,7 +130,7 @@ class contentIndex(object):
             f = True
             
         if f:
-            self.__logger.debug('Register content indexer: %s', obj)
+            self.__logger.debug('Register content indexer: %r', obj)
         if not f:
             raise Exception("Your indexer should at least suport a mimetype or extension")
     

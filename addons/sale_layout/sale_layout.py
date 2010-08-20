@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -19,12 +19,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields,osv
 from tools import config
 import decimal_precision as dp
 from tools.translate import _
+
 class sale_order_line(osv.osv):
-    
+
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -55,19 +57,20 @@ class sale_order_line(osv.osv):
             if (not type):
                 return {}
             if type != 'article':
-                temp = {'value': {
-                        'product_id': False,
-                        'uos_id': False,
-                        'account_id': False,
-                        'price_unit': 0.0,
-                        'price_subtotal': 0.0,
-                        'quantity': 0,
-                        'discount': 0.0,
-                        'invoice_line_tax_id': False,
-                        'account_analytic_id': False,
-                        'product_uom_qty':0.0,
-                        },
-                    }
+                temp = {
+                    'value': {
+                    'product_id': False,
+                    'uos_id': False,
+                    'account_id': False,
+                    'price_unit': 0.0,
+                    'price_subtotal': 0.0,
+                    'quantity': 0,
+                    'discount': 0.0,
+                    'invoice_line_tax_id': False,
+                    'account_analytic_id': False,
+                    'product_uom_qty':0.0,
+                    },
+                }
                 if type == 'line':
                     temp['value']['name'] = ' '
                 if type == 'break':
@@ -84,7 +87,7 @@ class sale_order_line(osv.osv):
             if vals['layout_type'] == 'break':
                 vals['name'] = ' '
             if vals['layout_type'] != 'article':
-                vals['product_uom_qty']= 0                
+                vals['product_uom_qty']= 0
         return super(sale_order_line, self).create(cr, user, vals, context)
 
     def write(self, cr, user, ids, vals, context=None):
@@ -100,7 +103,7 @@ class sale_order_line(osv.osv):
             default = {}
         default['layout_type'] = self.browse(cr, uid, id).layout_type
         return super(sale_order_line, self).copy(cr, uid, id, default, context)
-    
+
 
     _name = "sale.order.line"
     _order = "order_id, sequence asc"
@@ -115,17 +118,17 @@ class sale_order_line(osv.osv):
                 ('line','Separator Line'),
                 ('break','Page Break'),]
             ,'Layout Type', select=True, required=True),
-        'sequence': fields.integer('Sequence Number'), 
+        'sequence': fields.integer('Sequence Number'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2)),
-        'product_uom': fields.many2one('product.uom', 'Product UoM'),   
-    }   
+        'product_uom': fields.many2one('product.uom', 'Product UoM'),
+    }
 
     _defaults = {
         'layout_type': lambda *a: 'article',
     }
-sale_order_line()
 
+sale_order_line()
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
@@ -155,6 +158,7 @@ class sale_order(osv.osv):
         'abstract_line_ids': fields.one2many('sale.order.line', 'order_id', 'Order Lines',readonly=True, states={'draft':[('readonly',False)]}),
         'order_line': one2many_mod2('sale.order.line', 'order_id', 'Order Lines',readonly=True, states={'draft':[('readonly',False)]}),
     }
-sale_order()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+sale_order()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

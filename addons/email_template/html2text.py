@@ -9,7 +9,7 @@ __contributors__ = ["Martin 'Joey' Schulze", "Ricardo Reyes", "Kevin Jay North"]
 #   Support decoded entities with unifiable.
 
 if not hasattr(__builtins__, 'True'): True, False = 1, 0
-import re, sys, urllib, htmlentitydefs, codecs, StringIO, types
+import re, sys, urllib, htmlentitydefs, codecs
 import sgmllib
 import urlparse
 sgmllib.charref = re.compile('&#([xX]?[0-9a-fA-F]+)[^0-9a-fA-F]')

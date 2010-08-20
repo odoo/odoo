@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-23 04:07+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -193,6 +193,8 @@ msgstr "Lijnselectie verplaatsen"
 #. module: account
 #: rml:account.journal.period.print:0
 #: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Entry label"
 msgstr "Omschrijving boeking"
 
@@ -237,6 +239,7 @@ msgstr "Standaardboekingen"
 #: field:account.move,amount:0
 #: field:account.tax,amount:0
 #: field:account.tax.template,amount:0
+#: xsl:account.transfer:0
 msgid "Amount"
 msgstr "Bedrag"
 
@@ -306,6 +309,7 @@ msgstr "Achterstallige betalingen"
 #. module: account
 #: wizard_view:account.account.balance.report,checktype:0
 #: wizard_view:account.analytic.account.analytic.check.report,init:0
+#: wizard_view:account.analytic.account.balance.report,init:0
 #: wizard_view:account.analytic.account.cost_ledger.report,init:0
 #: wizard_view:account.analytic.account.inverted.balance.report,init:0
 #: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
@@ -345,7 +349,6 @@ msgid "Delta Debit"
 msgstr "Delta debet"
 
 #. module: account
-#: model:account.account.type,name:account.account_type_tax
 #: rml:account.invoice:0
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
@@ -360,9 +363,7 @@ msgstr "Debettrans."
 #. module: account
 #: field:account.analytic.line,account_id:0
 #: field:account.invoice.line,account_analytic_id:0
-#: wizard_field:account.invoice.pay,addendum,analytic_id:0
 #: field:account.move.line,analytic_account_id:0
-#: wizard_field:account.move.line.reconcile,addendum,analytic_id:0
 #: field:report.hr.timesheet.invoice.journal,account_id:0
 msgid "Analytic Account"
 msgstr "Analytische rekening"
@@ -685,11 +686,8 @@ msgstr "Subtotaal:"
 #. module: account
 #: field:account.analytic.account,line_ids:0
 #: view:account.analytic.line:0
-#: code:addons/account/project/wizard/wizard_account_analytic_line.py:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
-#: model:ir.actions.act_window,name:account.action_account_tree1
 #: model:ir.ui.menu,name:account.next_id_41
-#, python-format
 msgid "Analytic Entries"
 msgstr "Analytische boekingen"
 
@@ -704,7 +702,6 @@ msgid "Associated Partner"
 msgstr "Gekoppelde relatie"
 
 #. module: account
-#: view:account.invoice:0
 #: field:account.invoice,comment:0
 msgid "Additional Information"
 msgstr "Extra informatie"
@@ -1490,9 +1487,6 @@ msgstr "Leeg laten voor opbrengstenrekening"
 #: field:account.bank.statement.reconcile,line_new_ids:0
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
-#: code:addons/account/wizard/wizard_pay_invoice.py:0
-#: code:addons/account/wizard/wizard_reconcile.py:0
-#, python-format
 msgid "Write-Off"
 msgstr "Afschrijving"
 
@@ -1900,6 +1894,7 @@ msgstr ""
 #: field:account.journal,type:0
 #: field:account.move,type:0
 #: field:account.move.reconcile,type:0
+#: xsl:account.transfer:0
 msgid "Type"
 msgstr "Type"
 
@@ -2343,13 +2338,13 @@ msgstr "De rekeningbasis van de btw-aangifte."
 #: selection:account.general.ledger.report,checktype,sortbydate:0
 #: rml:account.journal.period.print:0
 #: field:account.move,date:0
-#: wizard_field:account.move.line.reconcile,addendum,date_p:0
 #: rml:account.overdue:0
 #: wizard_field:account.subscription.generate,init,date:0
 #: field:account.subscription.line,date:0
 #: rml:account.tax.code.entries:0
 #: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
+#: xsl:account.transfer:0
 msgid "Date"
 msgstr "Datum"
 
@@ -2470,7 +2465,6 @@ msgstr "Einddatum"
 #: view:account.bank.statement:0
 #: field:account.move.reconcile,line_id:0
 #: model:ir.actions.act_window,name:account.action_move_line_search
-#: model:ir.actions.act_window,name:account.action_move_line_select
 #: model:ir.actions.act_window,name:account.action_move_line_tree1
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
@@ -2662,8 +2656,6 @@ msgstr "Schakel deze optie in als de gebruiker deze rekening mag afpunten."
 
 #. module: account
 #: rml:account.analytic.account.journal:0
-#: wizard_view:account.invoice.pay,addendum:0
-#: wizard_view:account.move.line.reconcile,addendum:0
 #: model:ir.ui.menu,name:account.next_id_40
 #: model:process.node,name:account.process_node_analytic0
 #: model:process.node,name:account.process_node_analyticcost0
@@ -2773,7 +2765,6 @@ msgid "Invoice Number"
 msgstr "Factuurnummer"
 
 #. module: account
-#: wizard_field:account.analytic.account.balance.report,init,date2:0
 #: field:account.period,date_stop:0
 msgid "End of Period"
 msgstr "Einde periode"
@@ -2957,6 +2948,8 @@ msgstr ""
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 msgid "1cm 27.7cm 20cm 27.7cm"
 msgstr ""
@@ -3013,11 +3006,9 @@ msgstr ""
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 #: wizard_view:account.move.line.reconcile.select,init:0
-#: code:addons/account/wizard/wizard_reconcile_select.py:0
 #: model:ir.ui.menu,name:account.next_id_20
 #: model:process.node,name:account.process_node_reconciliation0
 #: model:process.node,name:account.process_node_supplierreconciliation0
-#, python-format
 msgid "Reconciliation"
 msgstr ""
 
@@ -3077,6 +3068,7 @@ msgstr ""
 
 #. module: account
 #: rml:account.invoice:0
+#: xsl:account.transfer:0
 msgid "Document"
 msgstr ""
 
@@ -3124,8 +3116,6 @@ msgstr ""
 
 #. module: account
 #: rml:account.general.ledger:0
-#: rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0
 msgid "Entry Label"
 msgstr ""
 
@@ -3317,7 +3307,6 @@ msgid "Generate Fiscal Year Opening Entries"
 msgstr ""
 
 #. module: account
-#: view:account.move.reconcile:0
 #: model:ir.actions.wizard,name:account.wizard_reconcile
 msgid "Reconcile Entries"
 msgstr ""
@@ -3665,6 +3654,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: wizard_field:account.invoice.pay,addendum,comment:0
 #: wizard_field:account.invoice.pay,init,name:0
 msgid "Entry Name"
 msgstr ""
@@ -4972,7 +4962,6 @@ msgid "Invoice Lines"
 msgstr ""
 
 #. module: account
-#: wizard_field:account.analytic.account.balance.report,init,date1:0
 #: field:account.period,date_start:0
 msgid "Start of Period"
 msgstr ""
@@ -5365,6 +5354,8 @@ msgstr ""
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 msgid "Page"
 msgstr ""
@@ -5446,6 +5437,7 @@ msgstr ""
 
 #. module: account
 #: wizard_field:account.analytic.account.analytic.check.report,init,date2:0
+#: wizard_field:account.analytic.account.balance.report,init,date2:0
 #: wizard_field:account.analytic.account.cost_ledger.report,init,date2:0
 #: wizard_field:account.analytic.account.inverted.balance.report,init,date2:0
 #: wizard_field:account.analytic.account.journal.report,init,date2:0
@@ -5634,6 +5626,7 @@ msgstr ""
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,date1:0
 #: wizard_field:account.analytic.account.analytic.check.report,init,date1:0
+#: wizard_field:account.analytic.account.balance.report,init,date1:0
 #: wizard_field:account.analytic.account.cost_ledger.report,init,date1:0
 #: wizard_field:account.analytic.account.inverted.balance.report,init,date1:0
 #: wizard_field:account.analytic.account.journal.report,init,date1:0
@@ -6155,7 +6148,7 @@ msgid "Show Comparision in %"
 msgstr ""
 
 #. module: account
-#: wizard_view:account.analytic.account.balance.report,init:0
+#: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Period"
 msgstr ""
 

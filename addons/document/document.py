@@ -22,16 +22,10 @@
 import base64
 
 from osv import osv, fields
-import urlparse
 
 import os
 
-import pooler
-import netsvc
-from osv.orm import except_orm
-#import StringIO
-
-from psycopg2 import Binary
+# from psycopg2 import Binary
 #from tools import config
 import tools
 from tools.translate import _

@@ -26,18 +26,18 @@ from osv import fields, osv
 from tools.translate import _
 import time
 
-class crm_lead(osv.osv, crm_case):
+class crm_lead(crm_case, osv.osv):
     """ CRM Leads """
     _name = 'crm.lead'
 crm_lead()
 
-class crm_phonecall(osv.osv, crm_case):
+class crm_phonecall(crm_case, osv.osv):
     """ CRM Phonecall """
     _name = 'crm.phonecall'
 crm_phonecall()
 
 
-class crm_meeting(osv.osv, crm_case):
+class crm_meeting(crm_case, osv.osv):
     """ CRM Meeting Cases """
 
     _name = 'crm.meeting'

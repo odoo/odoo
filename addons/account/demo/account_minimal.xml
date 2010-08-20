@@ -4,6 +4,7 @@
         <!--
         Account Type
         -->
+
         <record id="account_type_root" model="account.account.type">
             <field name="name">View</field>
             <field name="code">view</field>
@@ -89,15 +90,6 @@
             <field name="parent_id" ref="bal"/>
         </record>
 
-        <record model="account.account" id="liabilities_view">
-            <field name="name">Liabilities - (test)</field>
-            <field name="code">X11</field>
-            <field name="type">view</field>
-            <field name="user_type" ref="account_type_liability"/>
-            <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="bal"/>
-        </record>
-
         <record id="fas" model="account.account">
             <field name="code">X100</field>
             <field name="name">Fixed Assets - (test)</field>
@@ -144,7 +136,7 @@
             <field ref="cas" name="parent_id"/>
             <field name="type">receivable</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account_type_receivable"/>
+            <field name="user_type" ref="account_type_asset"/>
         </record>
 
         <record id="ova" model="account.account">
@@ -152,7 +144,7 @@
             <field name="name">Output VAT - (test)</field>
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_receivable"/>
+            <field name="user_type" ref="account_type_asset"/>
         </record>
 
         <record id="bnk" model="account.account">
@@ -171,6 +163,15 @@
             <field name="user_type" ref="account_type_asset"/>
         </record>
 
+        <record model="account.account" id="liabilities_view">
+            <field name="name">Liabilities - (test)</field>
+            <field name="code">X11</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="bal"/>
+        </record>
+
         <record id="cli" model="account.account">
             <field name="code">X110</field>
             <field name="name">Current Liabilities - (test)</field>
@@ -185,7 +186,7 @@
             <field ref="cli" name="parent_id"/>
             <field name="type">payable</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account_type_payable"/>
+            <field name="user_type" ref="account_type_liability"/>
         </record>
 
         <record id="iva" model="account.account">
@@ -193,7 +194,15 @@
             <field name="name">Input VAT - (test)</field>
             <field ref="cli" name="parent_id"/>
             <field name="type">other</field>
-            <field name="user_type" ref="account_type_payable"/>
+            <field name="user_type" ref="account_type_liability"/>
+        </record>
+
+        <record id="rsa" model="account.account">
+            <field name="code">X1113</field>
+            <field name="name">Reserve and Surplus - (test)</field>
+            <field ref="cli" name="parent_id"/>
+            <field name="type">payable</field>
+            <field name="user_type" ref="account_type_liability"/>
         </record>
 
         <!-- Profit and Loss -->
@@ -224,15 +233,6 @@
             <field name="parent_id" ref="income_view"/>
         </record>
 
-        <record model="account.account" id="expense_view">
-            <field name="name">Expense - (test)</field>
-            <field name="code">X21</field>
-            <field name="type">view</field>
-            <field name="user_type" ref="account_type_expense"/>
-            <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="gpf"/>
-        </record>
-
         <record id="rev" model="account.account">
             <field name="code">X200</field>
             <field name="name">Revenue - (test)</field>
@@ -248,6 +248,16 @@
             <field name="type">other</field>
             <field name="user_type" ref="account_type_income"/>
         </record>
+
+        <record model="account.account" id="expense_view">
+            <field name="name">Expense - (test)</field>
+            <field name="code">X21</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="gpf"/>
+        </record>
+
 
         <record id="cos" model="account.account">
             <field name="code">X210</field>
@@ -290,6 +300,14 @@
             <field name="parent_id" ref="ovr"/>
         </record>
 
+        <record id="a_salary_expense" model="account.account">
+            <field name="code">X2112</field>
+            <field name="name">Salary Expenses - (test)</field>
+            <field ref="ovr" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="account_type_expense"/>
+        </record>
+
         <!-- Properties -->
         <record forcecreate="True" id="property_account_receivable" model="ir.property">
             <field name="name">property_account_receivable</field>
@@ -307,6 +325,13 @@
             <field name="name">property_account_position</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_position')]"/>
             <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record forcecreate="True" id="property_reserve_and_surplus_account" model="ir.property">
+            <field name="name">property_account_receivable</field>
+            <field name="fields_id" search="[('model','=','res.company'),('name','=','property_reserve_and_surplus_account')]"/>
+            <field eval="'account.account,'+str(rsa)" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
 
@@ -381,7 +406,7 @@
         </record>
         <record id="cash_journal" model="account.journal">
             <field name="name">Cash Journal - (test)</field>
-            <field name="code">CHK</field>
+            <field name="code">CSH</field>
             <field name="type">cash</field>
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_journal"/>
@@ -394,18 +419,6 @@
         Product income and expense accounts, default parameters
         -->
 
-<!--        <record id="property_account_expense_prd" model="ir.property">-->
-<!--            <field name="name">property_account_expense</field>-->
-<!--            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_expense')]"/>-->
-<!--            <field eval="'account.account,'+str(ref('account.a_expense'))" name="value"/>-->
-<!--            <field name="company_id" ref="base.main_company"/>-->
-<!--        </record>-->
-<!--        <record id="property_account_income_prd" model="ir.property">-->
-<!--            <field name="name">property_account_income</field>-->
-<!--            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_account_income')]"/>-->
-<!--            <field eval="'account.account,'+str(ref('account.a_sale'))" name="value"/>-->
-<!--            <field name="company_id" ref="base.main_company"/>-->
-<!--        </record>-->
         <record id="property_account_expense_categ" model="ir.property">
             <field name="name">property_account_expense_categ</field>
             <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_expense_categ')]"/>

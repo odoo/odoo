@@ -38,36 +38,36 @@ class email_server(osv.osv):
     _description = "POP/IMAP Server"
 
     _columns = {
-        'name':fields.char('Name', size=256, required=True, readonly=False), 
-        'active':fields.boolean('Active', required=False), 
+        'name':fields.char('Name', size=256, required=True, readonly=False),
+        'active':fields.boolean('Active', required=False),
         'state':fields.selection([
-            ('draft', 'Not Confirmed'), 
-            ('wating', 'Waiting for Verification'), 
-            ('done', 'Confirmed'), 
-        ], 'State', select=True, readonly=True), 
-        'server' : fields.char('Server', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}), 
-        'port' : fields.integer('Port', required=True, readonly=True, states={'draft':[('readonly', False)]}), 
+            ('draft', 'Not Confirmed'),
+            ('wating', 'Waiting for Verification'),
+            ('done', 'Confirmed'),
+        ], 'State', select=True, readonly=True),
+        'server' : fields.char('Server', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}),
+        'port' : fields.integer('Port', required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'type':fields.selection([
-            ('pop', 'POP Server'), 
-            ('imap', 'IMAP Server'), 
-        ], 'Server Type', select=True, readonly=False), 
-        'is_ssl':fields.boolean('SSL ?', required=False), 
-        'attach':fields.boolean('Add Attachments ?', required=False), 
-        'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}), 
-        'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}), 
-        'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly', False)]}), 
-        'note': fields.text('Description'), 
-        'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]"), 
-        'object_id': fields.many2one('ir.model', "Model", required=True), 
-        'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"), 
-        'user_id':fields.many2one('res.users', 'User', required=False), 
+            ('pop', 'POP Server'),
+            ('imap', 'IMAP Server'),
+        ], 'Server Type', select=True, readonly=False),
+        'is_ssl':fields.boolean('SSL ?', required=False),
+        'attach':fields.boolean('Add Attachments ?', required=False),
+        'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}),
+        'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}),
+        'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly', False)]}),
+        'note': fields.text('Description'),
+        'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]"),
+        'object_id': fields.many2one('ir.model', "Model", required=True),
+        'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
+        'user_id':fields.many2one('res.users', 'User', required=False),
     }
     _defaults = {
-        'state': lambda *a: "draft", 
-        'active': lambda *a: True, 
-        'priority': lambda *a: 5, 
-        'date': lambda *a: time.strftime('%Y-%m-%d'), 
-        'user_id': lambda self, cr, uid, ctx: uid, 
+        'state': lambda *a: "draft",
+        'active': lambda *a: True,
+        'priority': lambda *a: 5,
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'user_id': lambda self, cr, uid, ctx: uid,
     }
 
     def check_duplicate(self, cr, uid, ids):
@@ -98,8 +98,6 @@ class email_server(osv.osv):
 
     def button_fetch_mail(self, cr, uid, ids, context={}):
         self.fetch_mail(cr, uid, ids)
-#        sendmail_thread = threading.Thread(target=self.fetch_mail, args=(cr, uid, ids))
-#        sendmail_thread.start()
         return True
 
     def _fetch_mails(self, cr, uid, ids=False, context={}):
@@ -125,7 +123,7 @@ class email_server(osv.osv):
 
                     imap_server.login(server.user, server.password)
                     imap_server.select()
-                    result, data = imap_server.search(None, '(UNSEEN)')                    
+                    result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
                         res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, context=context)
@@ -180,11 +178,11 @@ class mailgate_message(osv.osv):
     _inherit = "mailgate.message"
 
     _columns = {
-        'server_id': fields.many2one('email.server', "Mail Server", readonly=True, select=True), 
+        'server_id': fields.many2one('email.server', "Mail Server", readonly=True, select=True),
         'type':fields.selection([
-            ('pop', 'POP Server'), 
-            ('imap', 'IMAP Server'), 
-        ], 'Server Type', select=True, readonly=True), 
+            ('pop', 'POP Server'),
+            ('imap', 'IMAP Server'),
+        ], 'Server Type', select=True, readonly=True),
     }
     _order = 'id desc'
 
