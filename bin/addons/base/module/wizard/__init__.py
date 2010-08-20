@@ -21,6 +21,7 @@
 
 import wizard_update_module
 import wizard_module_upgrade
+import wizard_configuration
 import wizard_module_lang_install
 import add_new
 import wizard_export_lang

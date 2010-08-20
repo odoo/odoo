@@ -142,6 +142,9 @@ class noconnection:
     def makefile(self, mode, bufsize):
         return None
 
+    def close(self):
+        pass
+
 class dummyconn:
     def shutdown(self, tru):
         pass
@@ -169,10 +172,45 @@ class FixSendError:
         self.send_header('Connection', 'close')
         self.send_header('Content-Length', len(content) or 0)
         self.end_headers()
+        if hasattr(self, '_flush'):
+            self._flush()
+        
         if self.command != 'HEAD' and code >= 200 and code not in (204, 304):
             self.wfile.write(content)
 
-class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
+class HttpOptions:
+    _HTTP_OPTIONS = {'Allow': ['OPTIONS' ] }
+
+    def do_OPTIONS(self):
+        """return the list of capabilities """
+
+        opts = self._HTTP_OPTIONS
+        nopts = self._prep_OPTIONS(opts)
+        if nopts:
+            opts = nopts
+
+        self.send_response(200)
+        self.send_header("Content-Length", 0)
+
+        for key, value in opts.items():
+            if isinstance(value, basestring):
+                self.send_header(key, value)
+            elif isinstance(value, (tuple, list)):
+                self.send_header(key, ', '.join(value))
+        self.end_headers()
+
+    def _prep_OPTIONS(self, opts):
+        """Prepare the OPTIONS response, if needed
+        
+        Sometimes, like in special DAV folders, the OPTIONS may contain
+        extra keywords, perhaps also dependant on the request url. 
+        @param the options already. MUST be copied before being altered
+        @return the updated options.
+        
+        """
+        return opts
+
+class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
     """ this is a multiple handler, that will dispatch each request
         to a nested handler, iff it matches
 
@@ -208,7 +246,7 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
             except AuthRequiredExc,ae:
                 if self.request_version != 'HTTP/1.1':
                     self.log_error("Cannot require auth at %s",self.request_version)
-                    self.send_error(401)
+                    self.send_error(403)
                     return
                 self._get_ignore_body(fore) # consume any body that came, not loose sync with input
                 self.send_response(401,'Authorization required')
@@ -221,16 +259,35 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
                 return
             except AuthRejectedExc,e:
                 self.log_error("Rejected auth: %s" % e.args[0])
-                self.send_error(401,e.args[0])
+                self.send_error(403,e.args[0])
                 self.close_connection = 1
                 return
         mname = 'do_' + fore.command
         if not hasattr(fore, mname):
-            fore.send_error(501, "Unsupported method (%r)" % fore.command)
+            if fore.command == 'OPTIONS':
+                self.do_OPTIONS()
+                return
+            self.send_error(501, "Unsupported method (%r)" % fore.command)
             return
         fore.close_connection = 0
         method = getattr(fore, mname)
-        method()
+        try:
+            method()
+        except (AuthRejectedExc, AuthRequiredExc):
+            raise
+        except Exception, e:
+            if hasattr(self, 'log_exception'):
+                self.log_exception("Could not run %s", mname)
+            else:
+                self.log_error("Could not run %s: %s", mname, e)
+            self.send_error(500, "Internal error")
+            # may not work if method has already sent data
+            fore.close_connection = 1
+            self.close_connection = 1
+            if hasattr(fore, '_flush'):
+                fore._flush()
+            return
+        
         if fore.close_connection:
             # print "Closing connection because of handler"
             self.close_connection = fore.close_connection
@@ -289,6 +346,7 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
             [command, path] = words
             self.close_connection = 1
             if command != 'GET':
+                self.log_error("Junk http request: %s", self.raw_requestline)
                 self.send_error(400,
                                 "Bad HTTP/0.9 request type (%r)" % command)
                 return False
@@ -315,6 +373,14 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
             self.log_message("Could not parse rawline.")
             return
         # self.parse_request(): # Do NOT parse here. the first line should be the only
+        
+        if self.path == '*' and self.command == 'OPTIONS':
+            # special handling of path='*', must not use any vdir at all.
+            if not self.parse_request():
+                return
+            self.do_OPTIONS()
+            return
+            
         for vdir in self.server.vdirs:
             p = vdir.matches(self.path)
             if p == False:
@@ -397,12 +463,25 @@ class ConnThreadingMixIn:
     # main process
     daemon_threads = False
 
+    def _get_next_name(self):
+        return None
+
     def _handle_request_noblock(self):
         """Start a new thread to process the request."""
-        t = threading.Thread(target = self._handle_request2)
+        if not threading: # happens while quitting python
+            return
+        t = threading.Thread(name=self._get_next_name(), target=self._handle_request2)
         if self.daemon_threads:
             t.setDaemon (1)
         t.start()
+
+    def _mark_start(self, thread):
+        """ Mark the start of a request thread """
+        pass
+
+    def _mark_end(self, thread):
+        """ Mark the end of a request thread """
+        pass
 
     def _handle_request2(self):
         """Handle one request, without blocking.
@@ -412,14 +491,17 @@ class ConnThreadingMixIn:
         no risk of blocking in get_request().
         """
         try:
+            self._mark_start(threading.currentThread())
             request, client_address = self.get_request()
+            if self.verify_request(request, client_address):
+                try:
+                    self.process_request(request, client_address)
+                except Exception:
+                    self.handle_error(request, client_address)
+                    self.close_request(request)
         except socket.error:
             return
-        if self.verify_request(request, client_address):
-            try:
-                self.process_request(request, client_address)
-            except Exception:
-                self.handle_error(request, client_address)
-                self.close_request(request)
+        finally:
+            self._mark_end(threading.currentThread())
 
 #eof

@@ -590,7 +590,7 @@ log = logging.getLogger('init')
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
-    def process_sql_file(cr, file):
+    def process_sql_file(cr, fp):
         queries = fp.read().split(';')
         for query in queries:
             new_query = ' '.join(query.split())
@@ -634,14 +634,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
     def load_test(cr, module_name, id_map, mode):
         cr.commit()
-        if not tools.config.options['test-disable']:
+        if not tools.config.options['test_disable']:
             try:
                 _load_data(cr, module_name, id_map, mode, 'test')
             except Exception, e:
                 logger.notifyChannel('ERROR', netsvc.LOG_TEST, e)
                 pass
             finally:
-                if tools.config.options['test-commit']:
+                if tools.config.options['test_commit']:
                     cr.commit()
                 else:
                     cr.rollback()
@@ -655,7 +655,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             file = tools.file_open(pathname)
             # TODO manage .csv file with noupdate == (kind == 'init')
             if ext == '.sql':
-                process_sql_file(cr, fp)
+                process_sql_file(cr, file)
             elif ext == '.csv':
                 noupdate = (kind == 'init')
                 tools.convert_csv_import(cr, module_name, pathname, file.read(), id_map, mode, noupdate)

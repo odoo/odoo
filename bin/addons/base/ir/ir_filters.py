@@ -40,8 +40,8 @@ class ir_filters(osv.osv):
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True, required=True),
         'user_id':fields.many2one('res.users', 'User', help='False means for every user'),
-        'domain': fields.char('Domain Value', size=250, required=True),
-        'context': fields.char('Context Value', size=250, required=True),
+        'domain': fields.text('Domain Value', required=True),
+        'context': fields.text('Context Value', required=True),
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
     }
     

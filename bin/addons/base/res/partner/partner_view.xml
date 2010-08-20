@@ -8,11 +8,11 @@
         <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="30"
             groups="group_system"/>
 
-        <menuitem id="menu_config_address_book" name="Address Book" parent="menu_base_config" sequence="3"
+        <menuitem id="menu_config_address_book" name="Address Book" parent="menu_base_config" sequence="2"
             groups="group_system"/>
 
-        <menuitem id="menu_config_crm_address_contact" name="Contacts" parent="menu_config_address_book" sequence="4"
-            groups="group_system"/>
+<!--        <menuitem id="menu_config_crm_address_contact" name="Contacts" parent="menu_config_address_book" sequence="4"-->
+<!--            groups="group_system"/>-->
 
         <!--
           =====================
@@ -110,6 +110,7 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_address_filter"/>
+            <field name="help">Get an instant access to all your customer's contact with this menu.</field>
         </record>
         <record id="action_partner_address_form_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
@@ -124,7 +125,7 @@
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
         <menuitem action="action_partner_address_form" id="menu_partner_address_form"
-            groups="base.group_extended"
+            groups="base.group_extended,base.group_system,group_sale_manager,group_sale_salesman"
             parent="base.menu_address_book" sequence="30"/>
 
         <!--
@@ -208,7 +209,7 @@
             <field name="domain">[('domain','=','partner')]</field>
         </record>
 
-        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" name="Company Title" parent="menu_config_address_book" sequence="0"/>
+        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" name="Partner Title" parent="menu_config_address_book" sequence="2"/>
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contact Titles</field>
@@ -218,7 +219,7 @@
             <field name="domain">[('domain','=','contact')]</field>
         </record>
 
-        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" name="Titles" parent="menu_config_crm_address_contact" sequence="3"/>
+        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" name="Contact Titles" parent="menu_config_address_book" sequence="3"/>
         <!--
           =======================
           Partner
@@ -357,6 +358,7 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
+            <field name="help">The Address book manages your customers list. The form for customer allows you to record detailed on your customers (address, contacts, pricelist, account, etc.). With the history tab, you can follow all moves transactions related to a customer, like sales order, claims.</field>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
@@ -394,6 +396,7 @@
             <field name="domain">[]</field>
             <field name="context">{'default_customer':0, 'search_default_supplier': 1, 'default_supplier':1}</field>
             <field name="filter" eval="True"/>
+            <field name="help">With the Suppliers menu, you have access to all informations regarding your suppliers, including an history to track event (crm) and his accounting properties.</field>
         </record>
 
         <record id="action_partner_employee_form" model="ir.actions.act_window">
@@ -576,7 +579,7 @@
             <field name="view_type">form</field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Categories" sequence="2" parent="menu_config_address_book"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Categories" sequence="4" parent="menu_config_address_book"/>
 
         <act_window domain="[('partner_id', '=', active_id)]"
             id="act_res_partner_event" name="Events"

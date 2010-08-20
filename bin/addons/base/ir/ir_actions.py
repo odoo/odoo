@@ -94,42 +94,29 @@ class report_xml(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'type': fields.char('Report Type', size=32, required=True),
         'model': fields.char('Object', size=64, required=True),
-        'report_name': fields.char('Internal Name', size=64, required=True),
+        'type': fields.char('Action Type', size=32, required=True),
+        'report_name': fields.char('Service Name', size=64, required=True),
+        'usage': fields.char('Action Usage', size=32),
+        'report_type': fields.selection([ ('pdf','pdf'), ('html','html'), ('raw','raw'), ('sxw','sxw'), ('txt','txt'), ('odt','odt'), ('html2html','HTML from HTML'), ('mako2html','HTML from Mako'), ], string='Report Type', required=True),
+        'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
+        'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
+        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
+        'auto': fields.boolean('Custom python parser', required=True),
+
+        'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
+
         'report_xsl': fields.char('XSL path', size=256),
-        'report_xml': fields.char('XML path', size=256),
-        'report_rml': fields.char('RML path', size=256,
-            help="The .rml path of the file or NULL if the content is in report_rml_content"),
-        'report_sxw': fields.function(_report_sxw, method=True, type='char',
-            string='SXW path'),
+        'report_xml': fields.char('XML path', size=256, help=''),
+        'report_rml': fields.char('RML path', size=256, help="The .rml path of the file or NULL if the content is in report_rml_content"),
+        'report_sxw': fields.function(_report_sxw, method=True, type='char', string='SXW path'),
+
         'report_sxw_content_data': fields.binary('SXW content'),
         'report_rml_content_data': fields.binary('RML content'),
-        'report_sxw_content': fields.function(_report_content,
-            fnct_inv=_report_content_inv, method=True,
-            type='binary', string='SXW content',),
-        'report_rml_content': fields.function(_report_content,
-            fnct_inv=_report_content_inv, method=True,
-            type='binary', string='RML content'),
-        'auto': fields.boolean('Automatic XSL:RML', required=True),
-        'usage': fields.char('Action Usage', size=32),
-        'header': fields.boolean('Add RML header',
-            help="Add or not the coporate RML header"),
-        'multi': fields.boolean('On multiple doc.',
-            help="If set to true, the action will not be displayed on the right toolbar of a form view."),
-        'report_type': fields.selection([
-            ('pdf', 'pdf'),
-            ('html', 'html'),
-            ('raw', 'raw'),
-            ('sxw', 'sxw'),
-            ('txt', 'txt'),
-            ('odt', 'odt'),
-            ('html2html','HTML from HTML'),
-            ('mako2html','HTML from HTML(Mako)'),
-            ], string='Type', required=True),
-        'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
-        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
-        'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
+        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='SXW content',),
+        'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, method=True, type='binary', string='RML content'),
+
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.report.xml',
@@ -222,17 +209,25 @@ class act_window(osv.osv):
                 res[act.id] = str(form_arch)
         return res
 
+    def _get_help_status(self, cr, uid, ids, name, arg, context={}):
+        cr.execute(""" SELECT action.id,
+                     CASE WHEN r.uid IS NULL THEN True ELSE False END
+                     AS help_status FROM ir_act_window action
+                     LEFT JOIN ir_act_window_user_rel r ON
+                     (action.id = r.act_id AND (r.uid IS NULL or r.uid= %s)) WHERE action.id = ANY(%s)""",(uid,ids,))
+        return dict(cr.fetchall())
+
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
-        'domain': fields.char('Domain Value', size=250, 
+        'domain': fields.char('Domain Value', size=250,
             help="Optional domain filtering of the destination data, as a Python expression"),
-        'context': fields.char('Context Value', size=250, required=True, 
+        'context': fields.char('Context Value', size=250, required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
-        'res_model': fields.char('Object', size=64, required=True, 
+        'res_model': fields.char('Object', size=64, required=True,
             help="Model name of the object to open in the view window"),
-        'src_model': fields.char('Source Object', size=64, 
+        'src_model': fields.char('Source Object', size=64,
             help="Optional model name of the objects on which this action should be visible"),
         'target': fields.selection([('current','Current Window'),('new','New Window')], 'Target Window'),
         'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
@@ -253,8 +248,11 @@ class act_window(osv.osv):
         'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
         'menus': fields.char('Menus', size=4096),
-        'help': fields.text('Action description', 
-            help='Optional help text for the users with a description of the target view, such as its usage and purpose.')
+        'help': fields.text('Action description',
+            help='Optional help text for the users with a description of the target view, such as its usage and purpose.'),
+        'display_help':fields.function(_get_help_status, type='boolean', method=True, string='Display Help',
+            help='It gives the status if the help message has to be displayed or not when a user performs an action')
+
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
@@ -266,6 +264,12 @@ class act_window(osv.osv):
         'auto_refresh': lambda *a: 0,
         'auto_search':lambda *a: True
     }
+    def _auto_init(self, cr, context={}):
+        super(act_window, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_action_uid_index\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX act_window_action_uid_index ON ir_act_window_user_rel (act_id, uid)')
+            cr.commit()
 act_window()
 
 class act_window_view(osv.osv):

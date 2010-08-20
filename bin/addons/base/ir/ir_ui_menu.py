@@ -246,6 +246,16 @@ class ir_ui_menu(osv.osv):
             return {}
         return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
 
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from ir_ui_menu where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
@@ -253,7 +263,7 @@ class ir_ui_menu(osv.osv):
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
         'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
-                "If this field is empty, Open ERP will compute visibility based on the related object's read access."),
+                "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
@@ -269,6 +279,9 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.server', 'ir.actions.server'),
             ]),
     }
+    _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
+    ]
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',
         'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),

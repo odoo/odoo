@@ -211,7 +211,7 @@ class ir_model_grid(osv.osv):
                 acc_obj.write(cr, uid, rules, vals2, context=context)
         return True
 
-    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+    def fields_get(self, cr, uid, fields=None, context=None):
         result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
         groups = self.pool.get('res.groups').search(cr, uid, [])
         groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
@@ -386,6 +386,12 @@ class ir_model_access(osv.osv):
         else:
             model_name = model
 
+        # osv_memory objects can be read by everyone, as they only return
+        # results that belong to the current user (except for superuser)
+        model_obj = self.pool.get(model_name)
+        if isinstance(model_obj, osv.osv_memory):
+            return True
+
         # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_' + mode + ' THEN 1 ELSE 0 END) '
                    '  FROM ir_model_access a '
@@ -488,11 +494,24 @@ class ir_model_data(osv.osv):
 
     @tools.cache()
     def _get_id(self, cr, uid, module, xml_id):
-        ids = self.search(cr, uid, [('module','=',module),('name','=', xml_id)])
+        """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
+        ids = self.search(cr, uid, [('module','=',module), ('name','=', xml_id)])
         if not ids:
             raise ValueError('No references to %s.%s' % (module, xml_id))
         # the sql constraints ensure us we have only one result
         return ids[0]
+
+    @tools.cache()
+    def get_object_reference(self, cr, uid, module, xml_id):
+        """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
+        data_id = self._get_id(cr, uid, module, xml_id)
+        res = self.read(cr, uid, data_id, ['model', 'res_id'])
+        return (res['model'], res['res_id'])
+
+    def get_object(self, cr, uid, module, xml_id, context=None):
+        """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
+        res_model, res_id = self.get_object_reference(cr, uid, module, xml_id)
+        return self.pool.get(res_model).browse(cr, uid, res_id, context=context)
 
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
@@ -525,6 +544,7 @@ class ir_model_data(osv.osv):
                 result3 = cr.fetchone()
                 if not result3:
                     self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
+                    self.get_object_reference.clear_cache(cr.dbname, uid, module, xml_id)
                     cr.execute('delete from ir_model_data where id=%s', (action_id2,))
                     res_id = False
                 else:

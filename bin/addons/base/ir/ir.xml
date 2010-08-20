@@ -228,25 +228,30 @@
         <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
 
-	<!--		Filters form view-->
+        <!--Filters form view-->
 
-		<record id="ir_filters_view_form" model="ir.ui.view">
+        <record id="ir_filters_view_form" model="ir.ui.view">
             <field name="name">ir.filters.form</field>
             <field name="model">ir.filters</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Filters">
-                    <field name="name" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="model_id"/>
-                    <newline/>
-                    <field name="domain"/>
-                    <field name="context"/>
+                    <group colspan="4" >
+                        <field name="name" select="1"/>
+                        <field name="user_id" select="1"/>
+                        <field name="model_id"/>
+                    </group>
+                    <group col="4" expand="1">
+                        <separator string="Domain" colspan="2" />
+                        <separator string="Context" colspan="2" />
+                        <field name="domain" nolabel="1" colspan="2"/>
+                        <field name="context" nolabel="1" colspan="2"/>
+                    </group>
                 </form>
             </field>
         </record>
 
-        <!--		Filters tree view-->
+        <!--        Filters tree view-->
 
         <record id="ir_filters_view_tree" model="ir.ui.view">
              <field name="name">ir.filters.tree</field>
@@ -263,7 +268,7 @@
             </field>
         </record>
 
-		<!--		Filters action-->
+        <!--        Filters action-->
 
         <record id="actions_ir_filters_view" model="ir.actions.act_window">
             <field name="name">Filters</field>
@@ -273,13 +278,13 @@
             <field name="view_id" ref="ir_filters_view_tree"/>
         </record>
 
-		<!--		Filters view menu-->
+        <!--        Filters view menu-->
 
-		<menuitem parent="base.next_id_6" name="Filters"
-			id="menu_ir_filters" action="actions_ir_filters_view" />
+        <menuitem parent="base.next_id_6" name="Filters"
+            id="menu_ir_filters" action="actions_ir_filters_view" />
 
 
-		<record id="act_report_custom_view" model="ir.ui.view">
+        <record id="act_report_custom_view" model="ir.ui.view">
             <field name="name">ir.actions.report.custom</field>
             <field name="model">ir.actions.report.custom</field>
             <field name="type">form</field>
@@ -319,21 +324,44 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report xml">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="model" select="1"/>
-                    <newline/>
-                    <field name="report_name" select="1"/>
-                    <field name="report_xsl"/>
-                    <field name="report_xml"/>
-                    <field name="report_rml"/>
-                    <field name="auto"/>
-                    <field name="usage"/>
-                    <field name="header"/>
-                    <field name="report_type"/>
-                    <field name="attachment"/>
-                    <field name="attachment_use"/>
-                    <field colspan="4" name="groups_id"/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="model" select="1"/>
+                        <field name="type" select="1"/>
+
+                        <field name="report_name" select="1"/>
+                        <field name="usage"/>
+                        <field name="report_type"/>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Other Configuration">
+                            <group col="2" colspan="2">
+                                <separator string="RML Report" colspan="2"/>
+                                <field name="report_rml"/>
+                                <field name="header"/>
+                                <field name="auto"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="XML Report" colspan="2"/>
+                                <field name="report_xsl"/>
+                                <field name="report_xml"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Attachments" colspan="2"/>
+                                <field name="attachment"/>
+                                <field name="attachment_use"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Miscellaneous" colspan="2"/>
+                                <field name="multi"/>
+                            </group>
+                        </page>
+                        <page string="Security">
+                            <separator string="Groups" colspan="4"/>
+                            <field colspan="4" name="groups_id" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -382,40 +410,53 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Open a Window">
-                    <field name="name" select="1"/>
-                    <field name="type" readonly="1"/>
-                    <field name="res_model" select="1"/>
-                    <field name="src_model" select="2"/>
-                    <field name="usage"/>
-                    <field name="view_type"/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="res_model" select="1"/>
+                        <field name="type" readonly="1"/>
+                        <field name="src_model" select="2"/>
+                        <field name="usage"/>
+                        <field name="menus"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="General Settings">
-                            <field colspan="4" name="view_ids">
-                                <form string="Views">
-                                    <field colspan="4" name="sequence"/>
-                                    <field name="view_mode"/>
-                                    <field domain="[('type', '=', view_mode)]" name="view_id"/>
-                                </form>
-                                <tree string="Views">
-                                    <field name="sequence"/>
-                                    <field name="view_mode"/>
-                                    <field name="view_id"/>
-                                </tree>
-                            </field>
-                            <field colspan="4" name="default_user_ids"/>
-                            <field colspan="4" name="menus"/>
-                            <field colspan="4" name="domain"/>
-                            <field colspan="4" name="context"/>
-                            <field name="limit"/>
-                            <field name="auto_refresh"/>
-                            <newline/>
-                            <field name="view_mode"/>
-                            <field name="filter"/>
-                            <field name="auto_search"/>
-                            <field name="view_id"/>
-                            <field name="search_view_id"/>
+                            <group col="2" colspan="2">
+                                <separator string="Views" colspan="4"/>
+                                <field name="view_type"/>
+                                <field name="view_mode"/>
+                                <field name="view_id"/>
+                                <field name="search_view_id"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Filters" colspan="4"/>
+                                <field name="domain"/>
+                                <field name="context"/>
+                                <field name="limit"/>
+                                <field name="auto_refresh"/>
+                                <group col="4" colspan="2">
+                                    <field name="auto_search"/>
+                                    <field name="filter"/>
+                                </group>
+                            </group>
+                            <group col="4" colspan="4">
+                                <separator string="View Ordering" colspan="4"/>
+                                <field colspan="4" name="view_ids" nolabel="1">
+                                    <form string="Views">
+                                        <field colspan="4" name="sequence"/>
+                                        <field name="view_mode"/>
+                                        <field domain="[('type', '=', view_mode)]" name="view_id"/>
+                                    </form>
+                                    <tree string="Views">
+                                        <field name="sequence"/>
+                                        <field name="view_mode"/>
+                                        <field name="view_id"/>
+                                    </tree>
+                                </field>
+                            </group>
                         </page>
                         <page string="Security">
+                            <separator colspan="4" string="Select Users" />
+                            <field colspan="4" name="default_user_ids" nolabel="1"/>
                             <separator colspan="4" string="Select Groups" />
                             <field name="groups_id" nolabel="1" colspan="4" />
                         </page>
@@ -556,7 +597,8 @@
             <field name="res_model">res.groups</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"/>
+        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"
+            groups="base.group_extended"/>
 
         <record id="view_roles_form" model="ir.ui.view">
             <field name="name">res.roles.form</field>
@@ -809,9 +851,10 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_report_custom_form"/>
         </record>
+
         <!--
-    <menuitem name="Administration/Report/Report Custom" action="action_report_custom"/>
-    -->
+        <menuitem name="Administration/Report/Report Custom" action="action_report_custom"/>
+        -->
 
         <!-- model -->
         <record id="view_model_form" model="ir.ui.view">
@@ -820,12 +863,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Model Description">
-                    <notebook>
-                        <page string="Object">
-                            <field name="name" select="1"/>
-                            <field name="model" select="1"/>
-                            <field name="osv_memory" select="1"/>
-                            <separator colspan="4" string="Fields"/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="model" select="1"/>
+                        <field name="osv_memory" select="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Fields">
                             <field colspan="4" context="{'manual':True}" name="field_id" nolabel="1">
                                 <tree string="Fields Description">
                                     <field name="name"/>
@@ -1126,14 +1170,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Menu">
-                    <field name="complete_name" string="Menu"/>
-                    <field name="name" select="1" string="Root Menu"/>
-                    <field name="sequence"/>
-                    <field colspan="4" name="parent_id" select="1"/>
-                    <field name="action"/>
-                    <field colspan="4" name="groups_id"/>
-                    <field name="icon" on_change="onchange_icon(icon)"/>
-                    <field name="icon_pict" widget="picture" nolabel="1"/>
+                    <group col="8">
+                        <field name="name" select="1" string="Menu" />
+                        <field  name="parent_id" select="1" colspan="4"/>
+                        <field name="sequence" colspan="2"/>
+                        <field name="complete_name" string="Full Path" colspan="8"/>
+                        <field name="action" colspan="4" />
+                        <field name="icon" on_change="onchange_icon(icon)" colspan="2"/>
+                        <field name="icon_pict" widget="picture" nolabel="1" colspan="2"/>
+                    </group>
+                    <group col="4" colspan="4" expand="1">
+                        <separator string="Security on Groups" colspan="4"/>
+                        <field name="groups_id"  colspan="4" nolabel="1"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -1462,6 +1511,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="config_wizard_step_view_form" model="ir.ui.view">
             <field name="model">ir.actions.todo</field>
             <field name="name">Config Wizard Steps</field>
@@ -1474,12 +1524,26 @@
                     <field name="state"/>
                     <notebook colspan="4">
                         <page string="Groups">
-                    		<field name="groups_id" nolabel="1" colspan="4"/>
-                    	</page>
+                            <field name="groups_id" nolabel="1" colspan="4"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
         </record>
+
+        <record id="config_wizard_step_view_search" model="ir.ui.view">
+            <field name="model">ir.actions.todo</field>
+            <field name="name">ir.actions.todo.select</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Actions">
+                	<filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','onskip')]" help="Todo State Or (Skip State And Onskip Restart)"/>
+                    <field name="state"/>
+                    <field name="restart"/>
+                </search>
+            </field>
+        </record>
+
         <record id="act_ir_actions_todo_form" model="ir.actions.act_window">
             <field name="name">Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
@@ -1488,18 +1552,13 @@
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" 
-        		parent="next_id_11" groups="base.group_extended" sequence="20"/>
+        <wizard id="wizard_configuration" model="ir.module.module" name="module.configuration" string="Start Configuration"/>
+        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
+                parent="next_id_11" groups="base.group_extended" sequence="20"/>
 
-        <record id="action_start_configurator" model="ir.actions.server">
-          <field name="name">Launch Configuration Wizards</field>
-          <field name="model_id" ref="model_res_config"/>
-          <field name="state">code</field>
-          <field name="code">action = self.start(cr, uid, [])</field>
-        </record>
         <menuitem
-            action="action_start_configurator" name="Start Configuration"
+            action="wizard_configuration" name="Start Configuration"
             id="menu_configurator_module" parent="next_id_11"
-            type="server"/>
+            type="wizard"/>
     </data>
 </openerp>

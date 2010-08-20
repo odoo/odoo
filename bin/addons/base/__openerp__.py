@@ -26,8 +26,8 @@
     'version': '1.2',
     'category': 'Generic Modules/Base',
     'description': """The kernel of OpenERP, needed for all installation.""",
-    'author': 'OpenERP s.a.',
-    'maintainer': 'OpenERP s.a.',
+    'author': 'OpenERP SA',
+    'maintainer': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [],
     'init_xml': [
@@ -75,7 +75,7 @@
         'test/base_test.xml',
         #'test/base_test.yml'
         'test/test_context.xml',
-        'bug_lp541545.xml',
+        'test/bug_lp541545.xml',
     ],
     'installable': True,
     'active': True,

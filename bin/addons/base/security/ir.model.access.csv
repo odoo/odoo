@@ -26,7 +26,9 @@
 "access_ir_rule_group_user","ir_rule group_user","model_ir_rule",,1,0,0,0
 "access_ir_rule_group_erp_manager","ir_rule group_erp_manager","model_ir_rule","group_erp_manager",1,1,1,1
 "access_ir_sequence_group_user","ir_sequence group_user","model_ir_sequence",,1,0,0,0
+"access_ir_sequence_group_system","ir_sequence group_system","model_ir_sequence","group_system",1,1,1,1
 "access_ir_sequence_type_group_user","ir_sequence_type group_user","model_ir_sequence_type",,1,0,0,0
+"access_ir_sequence_type_group_system","ir_sequence_type group_system","model_ir_sequence_type","group_system",1,1,1,1
 "access_ir_translation_all","ir_translation all","model_ir_translation",,1,0,0,0
 "access_ir_translation_group_system","ir_translation group_system","model_ir_translation","group_system",1,1,1,1
 "access_ir_ui_menu_group_user","ir_ui_menu group_user","model_ir_ui_menu",,1,0,0,0
@@ -68,8 +70,6 @@
 "access_res_partner_category_group_partner_manager","res_partner_category group_partner_manager","model_res_partner_category","group_partner_manager",1,1,1,1
 "access_res_partner_event_group_user","res_partner_event group_user","model_res_partner_event","group_user",1,0,0,0
 "access_res_partner_event_group_partner_manager","res_partner_event group_partner_manager","model_res_partner_event","group_partner_manager",1,1,1,1
-"access_res_partner_som_group_user","res_partner_som group_user","model_res_partner_som","group_partner_manager",1,1,1,1
-"access_res_partner_som_group_partner_manager","res_partner_som group_partner_manager","model_res_partner_som","group_user",1,0,0,0
 "access_res_partner_title_group_user","res_partner_title group_user","model_res_partner_title","group_partner_manager",1,1,1,1
 "access_res_partner_title_group_partner_manager","res_partner_title group_partner_manager","model_res_partner_title",,1,0,0,0
 "access_res_request_group_user","res_request group_user","model_res_request","base.group_user",1,1,1,1
@@ -82,7 +82,7 @@
 "access_res_users_group_erp_manager","res_users group_erp_manager","model_res_users","group_erp_manager",1,1,1,1
 "access_ir_actions_all","ir_actions_all","model_ir_actions_actions",,1,0,0,0
 "access_ir_actions_group_system","ir_actions_group_system","model_ir_actions_actions","group_system",1,1,1,1
-"access_ir_actions_act_window_all","ir_actions_act_window_all","model_ir_actions_act_window",,1,0,0,0
+"access_ir_actions_act_window_all","ir_actions_act_window_all","model_ir_actions_act_window",,1,1,1,0
 "access_ir_actions_act_window_system","ir_actions_act_window_system","model_ir_actions_act_window","group_system",1,1,1,1
 "access_ir_actions_act_window_close_all","ir_actions_act_window_close_all","model_ir_actions_act_window_close",,1,0,0,0
 "access_ir_actions_act_window_close_group_system","ir_actions_act_window_close_group_system","model_ir_actions_act_window_close","group_system",1,1,1,1
@@ -124,3 +124,6 @@
 "access_ir_filter all","ir_filters all","model_ir_filters",,1,0,0,0
 "access_ir_filter employee","ir_filters employee","model_ir_filters","group_user",1,1,1,1
 "access_ir_filters","ir_filters_all","model_ir_filters",,1,1,1,1
+"access_ir_module_web","ir.module.web","model_ir_module_web","group_system",1,1,1,1
+"access_ir_module_web_dependency","ir.module.web.dependency","model_ir_module_web_dependency","group_system",1,1,1,1
+"access_res_partner_address","res.partner.address","model_res_partner_address","group_system",1,1,1,1

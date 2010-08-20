@@ -110,7 +110,7 @@ class _date_format(str, _format):
         if self.val:
             if getattr(self,'name', None):
                 date = datetime.strptime(self.name, DT_FORMAT)
-                return date.strftime(self.lang_obj.date_format)
+                return date.strftime(str(self.lang_obj.date_format)) 
         return self.val
 
 class _dttime_format(str, _format):
@@ -121,8 +121,8 @@ class _dttime_format(str, _format):
     def __str__(self):
         if self.val and getattr(self,'name', None):
             return datetime.strptime(self.name, DHM_FORMAT)\
-                   .strftime("%s %s"%(self.lang_obj.date_format,
-                                      self.lang_obj.time_format))
+                   .strftime("%s %s"%(str(self.lang_obj.date_format),
+                                      str(self.lang_obj.time_format)))
         return self.val
 
 
@@ -292,11 +292,11 @@ class rml_parse(object):
             text = ''.join(piece_list)
         return text
 
-    def _add_header(self, rml_dom, header=1):
-        if header==2:
-            rml_head =  self.rml_header2
-        else:
+    def _add_header(self, rml_dom, header='external'):
+        if header=='external':
             rml_head =  self.rml_header
+        else:
+            rml_head =  self.rml_header2
 
         head_dom = etree.XML(rml_head)
         for tag in head_dom:

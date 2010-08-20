@@ -174,11 +174,9 @@ class wkf_instance(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_res_type_state_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_id_res_type_state_index ON wkf_instance (res_id, res_type, state)')
-            cr.commit()
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_wkf_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_id_wkf_id_index ON wkf_instance (res_id, wkf_id)')
-            cr.commit()
 
 wkf_instance()
 
@@ -210,7 +208,6 @@ class wkf_triggers(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_triggers_res_id_model_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_triggers_res_id_model_index ON wkf_triggers (res_id, model)')
-            cr.commit()
 wkf_triggers()
 
 

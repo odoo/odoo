@@ -128,6 +128,7 @@ class ExportService(object):
             raise
 
 LOG_NOTSET = 'notset'
+LOG_DEBUG_SQL = 'debug_sql'
 LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_TEST = 'test'
@@ -138,6 +139,8 @@ LOG_CRITICAL = 'critical'
 
 logging.DEBUG_RPC = logging.DEBUG - 2
 logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
+logging.DEBUG_SQL = logging.DEBUG_RPC - 2
+logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
 
 logging.TEST = logging.INFO - 5
 logging.addLevelName(logging.TEST, 'TEST')
@@ -150,6 +153,7 @@ COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
 COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
+    logging.DEBUG_SQL: (WHITE, MAGENTA),
     logging.DEBUG_RPC: (BLUE, WHITE),
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
@@ -215,7 +219,6 @@ def init_logger():
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
 
-
 class Logger(object):
     def __init__(self):
         warnings.warn("The netsvc.Logger API shouldn't be used anymore, please "
@@ -263,8 +266,11 @@ class Logger(object):
             # better ignore the exception and carry on..
             pass
 
-    def set_loglevel(self, level):
-        log = logging.getLogger()
+    def set_loglevel(self, level, logger=None):
+        if logger is not None:
+            log = logging.getLogger(str(logger))
+        else:
+            log = logging.getLogger()
         log.setLevel(logging.INFO) # make sure next msg is printed
         log.info("Log level changed to %s" % logging.getLevelName(level))
         log.setLevel(level)
@@ -317,17 +323,39 @@ class Server:
     """
     __is_started = False
     __servers = []
+    __starter_threads = []
+
+    # we don't want blocking server calls (think select()) to
+    # wait forever and possibly prevent exiting the process,
+    # but instead we want a form of polling/busy_wait pattern, where
+    # _server_timeout should be used as the default timeout for
+    # all I/O blocking operations
+    _busywait_timeout = 0.5
 
 
     __logger = logging.getLogger('server')
 
     def __init__(self):
-        if Server.__is_started:
-            raise Exception('All instances of servers must be inited before the startAll()')
         Server.__servers.append(self)
+        if Server.__is_started:
+            # raise Exception('All instances of servers must be inited before the startAll()')
+            # Since the startAll() won't be called again, allow this server to
+            # init and then start it after 1sec (hopefully). Register that
+            # timer thread in a list, so that we can abort the start if quitAll
+            # is called in the meantime
+            t = threading.Timer(1.0, self._late_start)
+            t.name = 'Late start timer for %s' % str(self.__class__)
+            Server.__starter_threads.append(t)
+            t.start()
 
     def start(self):
         self.__logger.debug("called stub Server.start")
+        
+    def _late_start(self):
+        self.start()
+        for thr in Server.__starter_threads:
+            if thr.finished.is_set():
+                Server.__starter_threads.remove(thr)
 
     def stop(self):
         self.__logger.debug("called stub Server.stop")
@@ -350,6 +378,11 @@ class Server:
         if not cls.__is_started:
             return
         cls.__logger.info("Stopping %d services" % len(cls.__servers))
+        for thr in cls.__starter_threads:
+            if not thr.finished.is_set():
+                thr.cancel()
+            cls.__starter_threads.remove(thr)
+
         for srv in cls.__servers:
             srv.stop()
         cls.__is_started = False
@@ -382,8 +415,10 @@ class OpenERPDispatcherException(Exception):
 
 class OpenERPDispatcher:
     def log(self, title, msg):
-        if tools.config['log_level'] == logging.DEBUG_RPC:
-            Logger().notifyChannel('%s' % title, LOG_DEBUG_RPC, pformat(msg))
+        logger = logging.getLogger(title)
+        if logger.isEnabledFor(logging.DEBUG_RPC):
+            for line in pformat(msg).split('\n'):
+                logger.log(logging.DEBUG_RPC, line)
 
     def dispatch(self, service_name, method, params):
         try:

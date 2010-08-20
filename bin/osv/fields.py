@@ -299,7 +299,7 @@ class many2one(_column):
     def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
         result = {}
         for id in ids:
-            result[id] = obj.datas[id][name]
+            result[id] = obj.datas[id].get(name, False)
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
@@ -657,7 +657,9 @@ class function(_column):
             self.selectable = False
 
         if store:
-            self._classic_read = True
+            if self._type != 'many2one':
+                # m2o fields need to return tuples with name_get, not just foreign keys
+                self._classic_read = True
             self._classic_write = True
             if type=='binary':
                 self._symbol_get=lambda x:x and str(x)
@@ -751,44 +753,41 @@ class related(function):
         return [(self._arg[0], 'in', sarg)]
 
     def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
-        if values and field_name:
-            self._field_get2(cr, uid, obj, context)
-            relation = obj._name
-            res = {}
-            if type(ids) != type([]):
-                ids=[ids]
-            objlst = obj.browse(cr, uid, ids)
-            for data in objlst:
-                t_id = None
-                t_data = data
-                relation = obj._name
-                for i in range(len(self.arg)):
-                    field_detail = self._relations[i]
-                    relation = field_detail['object']
-                    if not t_data[self.arg[i]]:
-                        if self._type not in ('one2many', 'many2many'):
-                            t_id = t_data['id']
-                        t_data = False
-                        break
-                    if field_detail['type'] in ('one2many', 'many2many'):
-                        if self._type != "many2one":
-                            t_id = t_data.id
-                            t_data = t_data[self.arg[i]][0]
-                        else:
-                            t_data = False
-                            break
-                    else:
+        self._field_get2(cr, uid, obj, context)
+        if type(ids) != type([]):
+            ids=[ids]
+        objlst = obj.browse(cr, uid, ids)
+        for data in objlst:
+            t_id = data.id
+            t_data = data
+            for i in range(len(self.arg)):
+                if not t_data: break
+                field_detail = self._relations[i]
+                if not t_data[self.arg[i]]:
+                    if self._type not in ('one2many', 'many2many'):
                         t_id = t_data['id']
-                        t_data = t_data[self.arg[i]]
-
-                if t_id and t_data:
-                    obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
+                    t_data = False
+                elif field_detail['type'] in ('one2many', 'many2many'):
+                    if self._type != "many2one":
+                        t_id = t_data.id
+                        t_data = t_data[self.arg[i]][0]
+                    else:
+                        t_data = False
+                else:
+                    t_id = t_data['id']
+                    t_data = t_data[self.arg[i]]
+            else:
+                model = obj.pool.get(self._relations[-1]['object'])
+                model.write(cr, uid, [t_id], {args[-1]: values}, context=context)
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
         if not ids: return {}
         relation = obj._name
-        res = {}.fromkeys(ids, False)
+        if self._type in ('one2many', 'many2many'):
+            res = {}.fromkeys(ids, [])
+        else:
+            res = {}.fromkeys(ids, False)
 
         objlst = obj.browse(cr, 1, ids, context=context)
         for data in objlst:
@@ -808,11 +807,11 @@ class related(function):
                     break
                 if field_detail['type'] in ('one2many', 'many2many') and i != len(self.arg) - 1:
                     t_data = t_data[self.arg[i]][0]
-                else:
+                elif t_data:
                     t_data = t_data[self.arg[i]]
             if type(t_data) == type(objlst[0]):
                 res[data.id] = t_data.id
-            else:
+            elif t_data:
                 res[data.id] = t_data
         if self._type=='many2one':
             ids = filter(None, res.values())

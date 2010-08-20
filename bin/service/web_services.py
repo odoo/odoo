@@ -305,7 +305,7 @@ class db(netsvc.ExportService):
                 else:
                     cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
                 res = [str(name) for (name,) in cr.fetchall()]
-            except:
+            except Exception:
                 res = []
         finally:
             cr.close()
@@ -385,7 +385,8 @@ class common(_ObjectService):
             logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
             return True
         elif method in ['about', 'timezone_get', 'get_server_environment',
-                        'login_message','get_stats', 'check_connectivity']:
+                        'login_message','get_stats', 'check_connectivity',
+                        'list_http_services']:
             pass
         elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel']:
             passwd = params[0]
@@ -438,11 +439,7 @@ GNU Public Licence.
         return info
 
     def exp_timezone_get(self, db, login, password):
-        #timezone detection is safe in multithread, so lazy init is ok here
-        if (not tools.config['timezone']):
-            tools.config['timezone'] = tools.misc.detect_server_timezone()
-        return tools.config['timezone']
-
+        return tools.misc.get_server_timezone()
 
     def exp_get_available_updates(self, contract_id, contract_password):
         import tools.maintenance as tm
@@ -496,7 +493,7 @@ GNU Public Licence.
                 try:
                     try:
                         base64_decoded = base64.decodestring(zips[module])
-                    except:
+                    except Exception:
                         l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to read the module %s' % (module,))
                         raise
 
@@ -505,13 +502,13 @@ GNU Public Licence.
                     try:
                         try:
                             tools.extract_zip_file(zip_contents, tools.config['addons_path'] )
-                        except:
+                        except Exception:
                             l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to extract the module %s' % (module, ))
                             rmtree(module)
                             raise
                     finally:
                         zip_contents.close()
-                except:
+                except Exception:
                     l.notifyChannel('migration', netsvc.LOG_ERROR, 'restore the previous version of the module %s' % (module, ))
                     nmp = os.path.join(backup_directory, module)
                     if os.path.isdir(nmp):
@@ -556,9 +553,9 @@ GNU Public Licence.
     def exp_login_message(self):
         return tools.config.get('login_message', False)
 
-    def exp_set_loglevel(self,loglevel):
+    def exp_set_loglevel(self, loglevel, logger=None):
         l = netsvc.Logger()
-        l.set_loglevel(int(loglevel))
+        l.set_loglevel(int(loglevel), logger)
         return True
 
     def exp_get_stats(self):
@@ -566,6 +563,10 @@ GNU Public Licence.
         res = "OpenERP server: %d threads\n" % threading.active_count()
         res += netsvc.Server.allStats()
         return res
+
+    def exp_list_http_services(self):
+        from service import http_server
+        return http_server.list_http_services()
 
     def exp_check_connectivity(self):
         return bool(sql_db.db_connect('template1'))
