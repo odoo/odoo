@@ -1545,19 +1545,18 @@ true, it will allow you to hide the event alarm information without removing it.
         @return: True
         """
         res = False
-        for event_id in ids:
-            if isinstance(event_id, (int, long)):
-                res = super(calendar_event, self).unlink(cr, uid, event_id)
+        for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
+            if isinstance(event_datas['id'], (int, long)):
+                res = super(calendar_event, self).unlink(cr, uid, event_datas['id'])
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
-                continue
-            event_id, date_new = event_id.split('-')
-            event_id = [int(event_id)]
-            for record in self.read(cr, uid, event_id, ['date', 'rrule', 'exdate'], context=context):
-                if record['rrule']:
+            else:
+                event_id, date_new = event_datas['id'].split('-')
+                event_id = [int(event_id)]
+                if event_datas['rrule']:
                     # Remove one of the recurrent event
                     date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
-                    exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + date_new
+                    exdate = (event_datas['exdate'] and (event_datas['exdate'] + ',')  or '') + date_new
                     res = self.write(cr, uid, event_id, {'exdate': exdate})
                 else:
                     res = super(calendar_event, self).unlink(cr, uid, event_id)
