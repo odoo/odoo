@@ -63,14 +63,23 @@ class account_installer(osv.osv_memory):
                                   'Periods', required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
         'sale_tax':fields.float('Sale Tax(%)'),
-        'purchase_tax':fields.float('Purchase Tax(%)')
+        'purchase_tax':fields.float('Purchase Tax(%)'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
+
+    def _default_company(self, cr, uid, context={}):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if user.company_id:
+            return user.company_id.id
+        return False
+
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period':lambda *a:'month',
         'sale_tax':lambda *a:0.0,
         'purchase_tax':lambda *a:0.0,
+        'company_id': _default_company,
         #'charts':'configurable',
         'bank_accounts_id':_get_default_accounts
     }
@@ -251,10 +260,10 @@ class account_installer(osv.osv_memory):
                     elif val.account_type == 'check':
                         type = check_type_id
                         seq_prefix = "CHK/"
-                    else: 
+                    else:
                         type = check_type_id
                         seq_padding = None
-                        
+
                     vals_bnk = {'name': val.acc_name or '',
                         'currency_id': val.currency_id.id or False,
                         'code': str(110400 + code_cnt),
@@ -351,7 +360,7 @@ class account_installer(osv.osv_memory):
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.property_account_expense_categ.id]
 
         obj_journal.create(cr,uid,vals_journal)
-        
+
         # Creating Journals Sales Refund and Purchase Refund
         vals_journal={}
         data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_refund_journal_view')])
@@ -386,7 +395,7 @@ class account_installer(osv.osv_memory):
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.property_account_expense_categ.id]
 
         obj_journal.create(cr,uid,vals_journal)
-        
+
         # Bank Journals
         view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: Why put fixed name ?
         view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fixed name?
@@ -459,6 +468,7 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        res_obj = self.pool.get('account.fiscalyear')
         data_pool = self.pool.get('ir.model.data')
         obj_acc = self.pool.get('account.account')
         super(account_installer, self).execute(cr, uid, ids, context=context)
@@ -535,18 +545,18 @@ class account_installer(osv.osv_memory):
                 if int(name) != int(res['date_stop'][:4]):
                     name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
                     code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
-                res_obj = self.pool.get('account.fiscalyear')
-                vals = {'name':name,
-                        'code':code,
-                        'date_start':res['date_start'],
-                        'date_stop':res['date_stop'],
+                vals = {'name': name,
+                        'code': code,
+                        'date_start': res['date_start'],
+                        'date_stop': res['date_stop'],
+                        'company_id': res['company_id']
                        }
                 period_id = res_obj.create(cr, uid, vals, context=context)
                 if res['period'] == 'month':
                     res_obj.create_period(cr, uid, [period_id])
                 elif res['period'] == '3months':
                     res_obj.create_period3(cr, uid, [period_id])
-        
+
 #        #fially inactive the demo chart of accounts
 #        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
 #        if data_id:
