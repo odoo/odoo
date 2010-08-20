@@ -161,8 +161,6 @@ class account_invoice_line(osv.osv):
         # note: will call product_id_change_unit_price_inv with context...
 
         # Temporary trap, for bad context that came from koo:
-        # if isinstance(context, str):
-        #       print "str context:", context
 
         ctx = (context and context.copy()) or {}
         ctx.update({'price_type': ctx.get('price_type', 'tax_excluded')})

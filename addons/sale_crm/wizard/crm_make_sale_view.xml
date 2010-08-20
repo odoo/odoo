@@ -13,7 +13,7 @@
                     <group colspan="4">
                         <field name="partner_id" required="1"/>
                         <field name="shop_id" required="1" widget="selection"/>
-                        <field name="analytic_account"/>
+                        <field name="analytic_account" domain="[('parent_id','!=',False)]" />
                         <field name="close" required="1"/>
                     	</group>
                             <field colspan="4" mode="tree,form,graph" name="sale_order_line" nolabel="1" widget="one2many_list">

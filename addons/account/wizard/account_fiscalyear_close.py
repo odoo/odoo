@@ -39,10 +39,10 @@ class account_fiscalyear_close(osv.osv_memory):
                                  'Opening Entries Period', required=True),
        'report_name': fields.char('Name of new entries',size=64, required=True),
        'sure': fields.boolean('Check this box'),
-              }
+    }
     _defaults = {
         'report_name':'End of Fiscal Year Entry',
-        }
+    }
 
     def data_save(self, cr, uid, ids, context=None):
         """

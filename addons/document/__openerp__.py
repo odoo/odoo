@@ -22,7 +22,7 @@
 
 {
     'name': 'Integrated Document Management System',
-    'version': '1.99',
+    'version': '1.1',
     'category': 'Generic Modules/Others',
     'description': """This is a complete document management system:
     * User Authentication
@@ -57,7 +57,7 @@
     ],
     'installable': True,
     'active': False,
-    'certificate': None,
+    'certificate': '0070515416461',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

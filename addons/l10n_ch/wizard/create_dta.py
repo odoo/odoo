@@ -102,7 +102,6 @@ class record:
                 value = self.post[field[0]]
             else :
                 pass
-                #raise Exception(field[0]+' not found !')
             try:
                 res = res + c_ljust(value, field[1])
             except :

@@ -290,8 +290,6 @@ class PyOpenOffice(object):
     def oo_replace(self,content):
         regex = [
             (r"<para[^>]*/>", ""),
-            #(r"<text:ordered-list.*?>(.*?)</text:ordered-list>", "$1"),
-            #(r"<text:unordered-list.*?>(.*?)</text:unordered-list>", "$1"),
             (r"<para(.*)>(.*?)<text:line-break[^>]*/>", "<para$1>$2</para><para$1>"),
         ]
         for key,val in regex:

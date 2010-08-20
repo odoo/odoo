@@ -90,20 +90,6 @@ class partner_vat(osv.osv_memory):
 
             #it seems that this listing is only for belgian customers
             record['country'] = 'BE'
-            #...deprecated...
-            #~addr = pool.get('res.partner').address_get(cr, uid, [obj_partner.id], ['invoice'])
-
-            #~ if addr.get('invoice',False):
-                #~ads=pool.get('res.partner.address').browse(cr, uid, [addr['invoice']])[0]
-
-                #~ if ads.country_id:
-                    #~ record.append(ads.country_id.code)
-                #~ else:
-                    #~ error_message.append('Data Insufficient! : '+ 'The Partner "'+obj_partner.name + '"'' has no country associated with its Invoice address!')
-
-            #~ if len(record)<2:
-                #~ record.append('')
-                #~ error_message.append('Data Insufficient! : '+ 'The Partner "'+obj_partner.name + '"'' has no Invoice address!')
 
             record['amount'] = 0
             record['turnover'] = 0
@@ -120,7 +106,6 @@ class partner_vat(osv.osv_memory):
         model_data_ids = obj_model_data.search(cursor, user, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
         resource_id = obj_model_data.read(cursor, user, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
-#            'domain': "[('id','in', ["+','.join(map(str,data['form']['invoice_ids']))+"])]",
             'name': 'Vat Listing',
             'view_type': 'form',
             'view_mode': 'form',

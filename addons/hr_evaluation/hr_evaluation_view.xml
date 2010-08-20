@@ -201,7 +201,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');black:state in ('wait','progress');gray:state in('done','cancel')" string="Evaluation">
-                    <!--field name="create_date"/-->
                     <field name="employee_id"/>
                     <field name="plan_id"/>
                     <field name="date"/>
@@ -261,6 +260,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
+            <field name="help">Each employee can be assigned to an evaluation plan. These plans define the frequency and the way you manage your periodic personnal evalautions. You will be able to define steps and attach interview forms to each step. OpenERP manages all kind of evaluations: bottom-up, top-down, self evaluation and final evaluation by the manager.</field>
         </record>
 
         <menuitem name="Evaluation" parent="menu_eval_hr" id="menu_open_view_hr_evaluation_tree"
@@ -288,10 +288,6 @@
                     <separator string="State" colspan="4"/>
                     <group colspan="4" col="6">
                          <field name="state"/>
-                         <!--<button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
-                        <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" icon="gtk-new"/>
-                        <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
-                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>-->
                     </group>
                 </form>
             </field>
@@ -348,6 +344,7 @@
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
             <field name="context">{"search_default_todo":1,"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
+            <field name="help">Interview Requests are generated automatically by OpenERP according to employees evaluation plan. Each user receives automatic emails and requests to perform evaluation of their collegues periodically.</field>
         </record>
 
         <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"

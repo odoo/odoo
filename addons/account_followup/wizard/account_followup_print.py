@@ -98,22 +98,7 @@ class account_followup_print_all(osv.osv_memory):
          'partner_lang': True,
          'partner_ids': _get_partners,
          'summary': _get_summary,
-#         'email_body':'''
-#Date : %(date)s
-#
-#Dear %(partner_name)s,
-#
-#Please find in attachment a reminder of all your unpaid invoices, for a total amount due of:
-#
-#%(followup_amount).2f %(company_currency)s
-#
-#
-#Thanks,
-#--
-#%(user_signature)s
-#%(company_name)s
-#        '''
-                 }
+    }
 
     def _get_partners_followp(self, cr, uid, ids, context=None):
         data = {}

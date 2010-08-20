@@ -10,20 +10,19 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_report_latest_doposit_tree">
             <field name="res_model">auction.deposit</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-        </record>      
-        
+        </record>
+
         <record model="ir.ui.view" id="view_report_auction_estimation_adj_category_tree">
              <field name="name">report.auction.estimation.adj.category.tree</field>
             <field name="model">auction.lots</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Min est/Adj/Max est">
-                <!--field name="date" select="1"/-->
                 <field name="create_uid" select="1"/>
                 <field name="lot_type" select="1"/>
                 <field name="lot_est1" select="1"/>
@@ -47,13 +46,13 @@
             </graph>
         </field>
     </record>
-    
+
     <record model="ir.actions.act_window" id="action_report_auction_lots_estimation_adj_category_tree">
         <field name="name">Min est/Adj/Max est</field>
         <field name="res_model">auction.lots</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
-    </record>  
+    </record>
 
         <record model="ir.ui.view" id="board_auction_form1">
             <field name="name">board.auction.form</field>
@@ -103,9 +102,9 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_auction_form1"/>
         </record>
-        
+
         <menuitem name="Dashboard" id="menu_board_auction" parent="auction.auction_report_menu" sequence="0"/>
-        
+
         <menuitem
             name="Auction DashBoard"
             action="open_board_auction"

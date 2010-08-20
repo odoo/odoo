@@ -91,7 +91,7 @@ def mailto2str(arg):
         args = [arg,]
     else:
         args = arg
-    
+
     for ard in args:
         rstr = ard.get('name','')
         if ard.get('company',False):
@@ -108,12 +108,12 @@ def str2mailto(emailstr, multi=False):
     """
     # TODO: move to tools or sth.
     mege = re.compile(r'([^\(\<]+) *(\((.*?)\))? *(\< ?(.*?) ?\>)? ?(\((.*?)\))? *$')
-    
+
     mailz= [emailstr,]
     retz = []
     if multi:
         mailz = emailstr.split(',')
-    
+
     for mas in mailz:
         m = mege.match(mas.strip())
         if not m:
@@ -121,17 +121,17 @@ def str2mailto(emailstr, multi=False):
             # retz.append({ 'name': mas.strip() })
             # continue
             raise ValueError("Invalid email address %r" % mas)
-        rd = {  'name': m.group(1).strip(), 
+        rd = {  'name': m.group(1).strip(),
                 'email': m.group(5), }
         if m.group(2):
             rd['company'] = m.group(3).strip()
         elif m.group(6):
             rd['company'] = m.group(7).strip()
-        
+
         if rd['name'].startswith('"') and rd['name'].endswith('"'):
             rd['name'] = rd['name'][1:-1]
         retz.append(rd)
-        
+
     if multi:
         return retz
     else:
@@ -230,8 +230,6 @@ def map_data(cr, uid, obj, context=None):
 class CalDAV(object):
     __attribute__ = {}
 
-
-
     def ical_set(self, name, value, type):
         """ set calendar Attribute
          @param self: The object pointer,
@@ -294,13 +292,13 @@ class CalDAV(object):
         att_data = []
         exdates = []
         _server_tzinfo = pytz.timezone(tools.get_server_timezone())
-        
+
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
                 dmail = { 'name': cal_data.params.get('CN', ['',])[0],
-                            'email': cal_data.value.replace('MAILTO:',''),
+                            'email': cal_data.value.lower().replace('mailto:',''),
                             # TODO: company? 
-                            }
+                }
                 self.ical_set(cal_data.name.lower(), mailto2str(dmail), 'value')
                 continue
             if cal_data.name.lower() == 'attendee':

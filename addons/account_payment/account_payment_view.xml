@@ -69,6 +69,7 @@
                 <tree string="Payment Mode">
                     <field name="name"/>
                     <field name="journal"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -82,6 +83,7 @@
                     <field name="type"/>
                     <field name="journal"/>
                     <field name="bank_id"/>
+                    <field name="company_id" select="1" widget='selection'/>
                 </form>
             </field>
         </record>

@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Defaults">
                     <field name="sequence"/>
-                    <field name="analytic_id" required="1"/>
+                    <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
@@ -25,7 +25,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Defaults">
-                    <field name="analytic_id" required="1"/>
+                    <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]"/>
                     <field name="sequence"/>
                     <separator string="Conditions" colspan="4"/>
                     <field name="product_id"/>

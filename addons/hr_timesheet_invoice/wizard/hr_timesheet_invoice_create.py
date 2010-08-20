@@ -182,8 +182,6 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                             details.append("%s" % (line['unit_amount'], ))
                     if data['name']:
                         details.append(line['name'])
-                    #if data['price']:
-                    #   details.append(abs(line['amount']))
                     note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 
                 curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
@@ -201,18 +199,6 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         act_win['domain'] = [('id','in',invoices),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
-
-#        return {
-#            'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
-#            'name': _('Invoices'),
-#            'view_type': 'form',
-#            'view_mode': 'tree,form',
-#            'res_model': 'account.invoice',
-#            'view_id': False,
-#            'context': "{'type':'out_invoice'}",
-#            'type': 'ir.actions.act_window',
-#            'search_view_id': res['res_id']
-#        }
 
 
 hr_timesheet_invoice_create()
