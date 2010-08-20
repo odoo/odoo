@@ -556,7 +556,7 @@ class pos_order(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'cancel'})
-        self.cancel_picking(cr, uid, ids, context=None)
+        self.cancel_picking(cr, uid, ids, context=context)
         return True
 
     def add_payment(self, cr, uid, order_id, data, context=None):
