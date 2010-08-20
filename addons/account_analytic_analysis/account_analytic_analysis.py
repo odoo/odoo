@@ -41,7 +41,7 @@ class account_analytic_account(osv.osv):
                     group by account_analytic_line.account_id" ,(parent_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
-                
+
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
 
     def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
@@ -154,7 +154,7 @@ class account_analytic_account(osv.osv):
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
- 
+
     # TODO Take care of pricelist and purchase !
     def _ca_theorical_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -185,7 +185,7 @@ class account_analytic_account(osv.osv):
                 GROUP BY account_analytic_line.account_id""",(parent_ids,))
             for account_id, sum in cr.fetchall():
                 res2[account_id] = round(sum,2)
-                
+
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
             res2.setdefault(obj_id, 0.0)
@@ -194,7 +194,7 @@ class account_analytic_account(osv.osv):
                 if child_id != obj_id:
                     res[obj_id] += res.get(child_id, 0.0)
                     res[obj_id] += res2.get(child_id, 0.0)
-        
+
         # sum both result on account_id
         for id in ids:
             res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
@@ -384,7 +384,7 @@ class account_analytic_account(osv.osv):
         'month_ids': fields.function(_month, method=True, type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_user, method=True, type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
     }
-    
+
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
@@ -401,12 +401,12 @@ class account_analytic_account_summary_user(osv.osv):
         max_user = cr.fetchone()[0]
         account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
         user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
+        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
         if parent_ids:
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_user ' \
                     'WHERE account_id IN %s ' \
-                        'AND "user" IN %s',(parent_ids, user_ids,))
+                        'AND "user" IN %s',(parent_ids, tuple(user_ids),))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
         for obj_id in ids:
@@ -425,7 +425,7 @@ class account_analytic_account_summary_user(osv.osv):
             string='Total Time'),
         'user' : fields.many2one('res.users', 'User'),
     }
-    
+
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
         cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
@@ -472,7 +472,7 @@ class account_analytic_account_summary_user(osv.osv):
             fields = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
@@ -567,12 +567,12 @@ class account_analytic_account_summary_month(osv.osv):
         account_obj = self.pool.get('account.analytic.account')
         account_ids = [int(str(int(x))[:-6]) for x in ids]
         month_ids = [int(str(int(x))[-6:]) for x in ids]
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
+        parent_ids = tuple(account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)]))
         if parent_ids:
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_month ' \
                     'WHERE account_id IN %s ' \
-                        'AND month_id IN %s ',(parent_ids, month_ids,))
+                        'AND month_id IN %s ',(parent_ids, tuple(month_ids),))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
         for obj_id in ids:
@@ -650,7 +650,7 @@ class account_analytic_account_summary_month(osv.osv):
             fields = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
@@ -684,7 +684,7 @@ class account_analytic_account_summary_month(osv.osv):
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
-            
+
         res_trans_obj = self.pool.get('ir.translation')
         for f in fields_pre:
             if self._columns[f].translate:

@@ -101,8 +101,8 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Miscelleanous">
+                <page string="Notes" position="before">
+                    <page string="Miscellaneous">
                         <group colspan="2" col="2">
                         <separator string="Personal Info" colspan="2"/>
                         <field name="bank_account"/>
@@ -120,7 +120,22 @@
                         <field name="medic_exam" />
                         </group>
                     </page>
-                </notebook>
+                    <page string="Contracts">
+                        <field colspan="4" name="contract_ids" nolabel="1"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="hr_employee_view_form3" model="ir.ui.view">
+            <field name="name">hr.employee.view.form3</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="department_id" position="after">
+                    <field name="contract_id"/>
+                </field>
             </field>
         </record>
 
@@ -133,12 +148,14 @@
                    <group col='15' colspan='4'>
                    <field name="name"/>
                    <field name="employee_id"/>
+                   <field name="working_hours"/>
                    <field name="date_start"/>
                    <field name="date_end"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
                     <filter string="Wage Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'wage_type_id'}"/>
+                    <filter string="Working Schedule" icon="terp-personal+" domain="[]" context="{'group_by':'working_hours'}"/>
                    </group>
                </search>
             </field>
@@ -159,7 +176,7 @@
                     <field name="type_id" widget="selection"/>
                     </group>
                     <notebook>
-                    <page string="Main Data">
+                    <page string="Information">
                         <group col="2" colspan="2">
                         <separator colspan="2" string="Duration"/>
                         <field name="date_start" />

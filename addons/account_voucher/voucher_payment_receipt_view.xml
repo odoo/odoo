@@ -77,36 +77,51 @@
             <field name="arch" type="xml">
                 <form string="Sales Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, type)"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, type)" string="Customer"/>
+                        <field name="journal_id"
+                            domain="[('type','in',['bank', 'cash'])]"
+                            widget="selection" select="1"
+                            on_change="onchange_journal(journal_id,type)"
+                            string="Payment Method"/>
+
+                        <field name="amount" readonly="0"/>
+                        <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="4"/>
-                        <field name="journal_id" domain="[('type','in',['bank', 'cash'])]" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
-                        <field name="account_id" domain="[('type','=','other')]" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
-                        <field name="number"/>
+                        <field name="period_id" invisible="1"/>
+                        <field name="account_id"
+                            domain="[('type','=','other')]"
+                            widget="selection"
+                            on_change="onchange_account(account_id)"
+                            invisible="1"/>
+
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
                             <field name="payment_ids" colspan="4" nolabel="1" height="180">
                                 <tree string="Payment Lines" editable="top">
-                                    <field name="ref" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
-                                    <field name="amount"/>
+                                    <field name="move_line_id"/>
                                     <field name="account_id"/>
-                                    <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
-                                    <field name="account_analytic_id"/>
+                                    <field name="date_original"/>
+                                    <field name="date_due"/>
+                                    <field name="amount_original"/>
+                                    <field name="amount_unreconciled" sum="Open Balance"/>
+                                    <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
-                                <separator string="Narration" colspan="2"/>
+                                <separator string="Internal Notes" colspan="2"/>
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="reference" select="1"/>
                                 <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
-                                <field name="type" on_change="onchange_journal(journal_id,type)"/>
+                                <field name="currency_id" select="1"
+                                    attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                <field name="number"/>
+                                <field name="type" on_change="onchange_journal(journal_id,type)" invisible="1"/>
                             </group>
                         </page>
-                        <page string="Journal Items">
+                        <page string="Journal Items" groups="base.group_extended">
                             <group col="6" colspan="4">
                                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
