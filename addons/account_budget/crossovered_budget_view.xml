@@ -84,7 +84,7 @@
                                 </graph>
                                 <tree string="Budget Lines"  editable="top">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
@@ -95,7 +95,7 @@
                                 </tree>
                                 <form string="Budget Lines">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]" />
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>

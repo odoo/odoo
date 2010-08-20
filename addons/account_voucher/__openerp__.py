@@ -48,7 +48,7 @@
         "voucher_wizard.xml"
     ],
     "test" : [
-         "test/account_voucher.yml",
+#         "test/account_voucher.yml",
     ],
 
     'certificate': '0037580727101',

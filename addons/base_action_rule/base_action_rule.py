@@ -111,6 +111,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
 \nNote: This is case sensitive search."), 
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action', help="Describes the action name.\neg:on which object which action to be taken on basis of which condition"), 
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), 
+        'act_email_from' : fields.char('Email From', size=64, required=False,
+                help="Use a python expression to specify the right field on which one than we will use for the 'From' field of the header"),
     }
 
     _defaults = {
@@ -228,7 +230,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         }
         return self.format_body(body % data)
 
-    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context={}):
+    def email_send(self, cr, uid, obj, emails, body, emailfrom=None, context=None):
         """ send email
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -236,6 +238,13 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param email: pass the emails
             @param emailfrom: Pass name the email From else False
             @param context: A standard dictionary for contextual values """
+
+        if not emailfrom:
+            emailfrom = tools.config.get('email_from', False)
+
+        if context is None:
+            context = {}
+
         body = self.format_mail(obj, body)
         if not emailfrom:
             if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and\
@@ -342,7 +351,11 @@ the rule to mark CC(mail to any other person defined in actions)."),
         emails = filter(None, emails)
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
-            self.email_send(cr, uid, obj, emails, action.act_mail_body)
+            email_from = eval(action.act_email_from, {
+                'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
+                'obj' : obj,
+            })
+            self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_from)
         return True
 
     def _action(self, cr, uid, ids, objects, scrit=None, context={}):

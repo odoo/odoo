@@ -12,7 +12,6 @@
                     <field name="reference"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
-                    <field name="type" invisible=" not context.get('set_visible',True)"/>
                     <field name="account_id"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="period_id"/>
@@ -46,7 +45,7 @@
                                     <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="amount"/>
                                     <field name="ref"/>
-                                    <field name="account_analytic_id"/>
+                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
@@ -107,13 +106,13 @@
                         <separator orientation="vertical"/>
                         <field name="number" select='1'/>
                         <field name="account_id" select="1"/>
-                        <field name="partner_id" select='1'/>                       
+                        <field name="partner_id" select='1'/>
                         <field name="date" select='1'/>
                     </group>
                     <newline/>
                     <group col='8' colspan='4'>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                        <field name="period_id" context="{'period_id': self}" groups="base.group_extended"/>                        
+                        <field name="period_id" context="{'period_id': self}" groups="base.group_extended"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." col='8' colspan='4'>
@@ -154,7 +153,7 @@
                     <newline/>
                     <group col='8' colspan='4'>
                         <field name="journal_id" widget="selection" select="1"/>
-                        <field name="period_id" select="1"/>                        
+                        <field name="period_id" select="1"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
@@ -185,7 +184,7 @@
                 </graph>
             </field>
          </record>
-        
+
         <!-- Journal Vouchers -->
         <record model="ir.actions.act_window" id="action_voucher_list">
             <field name="name">Journal Vouchers</field>
@@ -217,7 +216,7 @@
             context="{'journal_id': active_id, 'type':type}"
             res_model="account.voucher"
             src_model="account.journal"/>
-        
+
         <record model="ir.actions.act_window" id="action_review_voucher_list">
             <field name="name">Vouchers Entries</field>
             <field name="res_model">account.voucher</field>
