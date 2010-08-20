@@ -161,33 +161,6 @@ class account_voucher(osv.osv):
         else:
             return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
-    def _compute_total(self, cr, uid, ids, name, args, context=None):
-        position_pool = self.pool.get('account.fiscal.position')
-        voucher_pool = self.pool.get('account.voucher')
-        voucher_line_pool = self.pool.get('account.voucher.line')
-        partner_pool = self.pool.get('res.partner')
-        tax_pool = self.pool.get('account.tax')
-        
-        res = {}
-        for voucher in self.browse(cr, uid, ids):
-            total = 0.0
-            for line in voucher.payment_ids:
-                total += line.amount
-            
-#            tax = tax_pool.browse(cr, uid, voucher.tax_id.id)
-#            total_tax = total * (voucher.tax_amount/100)
-            
-#        tax_id = voucher.tax_id.id
-#        partner = voucher.partner_id and partner_pool.browse(cr, uid, voucher.partner_id.id) or False
-#        taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, [voucher.tax_id])
-#        taxes = tax_pool.browse(cr, uid, taxes)
-#        for tax in tax_pool.compute_all(cr, uid, taxes, res[voucher.id], 1).get('taxes'):
-#            total_tax += tax.get('amount')
-    
-            res[voucher.id] = total + voucher.tax_amount
-        
-        return res
-    
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "id desc"
@@ -296,7 +269,7 @@ class account_voucher(osv.osv):
         
         if not payment_ids:
             payment_ids = []
-            
+        
         vals.update({
             'payment_ids':False
         })
@@ -370,7 +343,7 @@ class account_voucher(osv.osv):
                 if line_ids:
                     line_pool.unlink(cr, uid, line_ids)
             return default
-
+        
         account_id = False
         partner = partner_pool.browse(cr, uid, partner_id)
         if ttype in ('sale'):
@@ -391,31 +364,49 @@ class account_voucher(osv.osv):
             return default
         
         voucher_id = ids and ids[0] or False
-        ids = move_line_pool.search(cr, uid, [('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
+        search_type = 'credit'
+        account_type = False
+        if ttype == 'receipt':
+            search_type = 'debit'
+            account_type = 'receivable'
+        elif ttype == 'payment':
+            search_type = 'credit'
+            account_type = 'payable'
+
+        ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
+        total = 0.0
         for line in move_line_pool.browse(cr, uid, ids):
             rs = move_line_pool.default_get(cr, uid, move_line_pool._columns.keys(), context=context)
             rs.update({
+                'name':line.move_id.name,
                 'ref':line.ref or '/',
                 'move_id':line.move_id.id,
                 'move_line_id':line.id,
                 'voucher_id':voucher_id,
             })
+            amount = 0.0
             if ttype == 'payment':
                 rs.update({
                     'account_id':line.move_id.partner_id.property_account_payable.id,
-                    'type':'dr',
                     'amount':line.credit
                 })
+                amount = line.credit
             elif ttype == 'receipt':
                 rs.update({
                     'account_id':line.move_id.partner_id.property_account_receivable.id,
-                    'type':'cr',
                     'amount':line.debit
                 })
+                amount = line.debit
+
+            total += amount
             line_id = line_pool.create(cr, uid, rs, context=context)
             res += [line_id]
 
-        res = {'payment_ids':res, 'account_id':account_id}
+        res = {
+            'payment_ids':res, 
+            'account_id':account_id, 
+            'amount':total
+        }
         return {
             'value':res,
             'context':context,
@@ -601,7 +592,7 @@ class account_voucher(osv.osv):
                     'currency_id':inv.currency_id.id
                 })
 
-            if inv.type == 'sale':
+            if inv.type in ('sale', 'receipt'):
                 move_line.update({
                     'debit':inv.amount
                 })
@@ -648,7 +639,7 @@ class account_voucher(osv.osv):
                         'analytic_account_id':line.account_analytic_id.id
                     })
 
-                if inv.type in ('sale'):
+                if inv.type in ('sale', 'receipt'):
                     move_line.update({
                         'credit': line.amount or False
                     })
@@ -770,7 +761,6 @@ class account_voucher_line(osv.osv):
 
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
-#        'name':fields.related('voucher_id', 'name', size=256, type='char', string='Description'),
         'name':fields.char('Description', size=256, required=True),
         'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
@@ -781,14 +771,18 @@ class account_voucher_line(osv.osv):
         'is_tax':fields.boolean('Tax ?', required=False),
         'stype':fields.selection([('service','Service'),('other','Other')], 'Product Type'),
         'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
-        'date_original': fields.date('Date', readonly="1"), #fields.related account.move.line
-        'date_due': fields.date('Due Date', readonly="1"), #fields.related account.move.line
+        'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly="1"),
+#        'date_original': fields.date('Date', readonly="1"), #fields.related account.move.line
+        'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly="1"),
+#        'date_due': fields.date('Due Date', readonly="1"), #fields.related account.move.line
         'amount_original': fields.float('Originial Amount', readonly="1"), #fields.related account.move.line
-        'amount_unreconciled': fields.float('Open Balance', readonly="1"), #fields.related account.move.line
+        'amount_unreconciled': fields.related('move_line_id','balance', type='float', relation='account.move.line', string='Open Balance', readonly="1"),
+#        'amount_unreconciled': fields.float('Open Balance', readonly="1"), #fields.related account.move.line
         'move_id' : fields.many2one('account.move','Bill / Invoice'),
     }
     _defaults = {
-        'type': lambda *a: 'cr'
+        'type': lambda *a: 'cr',
+        'name': lambda *a: 'Payment'
     }
 
     def default_get(self, cr, user, fields_list, context=None):
