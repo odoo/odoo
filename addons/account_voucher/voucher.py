@@ -40,6 +40,17 @@ class account_journal(osv.osv):
     }
 account_journal()
 
+class account_account(osv.osv):
+    """
+    account_account
+    """
+    
+    _inherit = 'account.account'
+    _columns = {
+        'user_type_type': fields.related('user_type','report_type', type='char', size=64, relation='account.account.type', string='User Type Code', readonly=True, store=True)
+    }
+account_account()
+
 class account_move(osv.osv):
     _inherit = 'account.move'
     
@@ -210,8 +221,9 @@ class account_voucher(osv.osv):
                         \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
-        'amount': fields.function(_compute_total, method=True, type='float', digits=(14,2), string='Total', store=True),
-        'tax_amount':fields.float('Tax Amount', digits=(14,2), readonly=True, states={'draft':[('readonly',False)]}),
+        #'amount': fields.function(_compute_total, method=True, type='float', digits=(14,2), string='Total', store=True),
+        'amount': fields.float('Total', digits=(16, 2), readonly=True, states={'draft':[('readonly',False)]}),
+        'tax_amount':fields.float('Tax Amount', digits=(14,4), readonly=True, states={'draft':[('readonly',False)]}),
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
@@ -232,32 +244,40 @@ class account_voucher(osv.osv):
         'currency_id': _get_currency,
         'state': lambda *a: 'draft',
         'pay_now':lambda *a: 'pay_later',
-        'name': lambda *a: '/',
+        'name': lambda *a: '',
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'audit': lambda *a: False,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
     }
     
-    def onchange_tax_id(self, cr, uid, ids, amount, tax_id, context={}):
+    def onchange_price(self, cr, uid, ids, payment_ids, tax_amount, tax_id, context={}):
         res = {
-            'tax_amount':False
+            'tax_amount':False,
+            'amount':False
         }
         tax_pool = self.pool.get('account.tax')
+        
+        total = 0.0
+        
+        for line in payment_ids:
+            total += line[2].get('amount')
+        
         if tax_id:
             tax = tax_pool.browse(cr, uid, tax_id)
             if tax.type == 'percent':
-                res.update({
-                    'tax_amount':amount * tax.amount
-                })
+                tax_amount = total * tax_amount and tax_amount or tax.amount
             if tax.type == 'fixed':
-                res.update({
-                    'tax_amount':amount + tax.amount
-                })
+                tax_amount = tax_amount and tax_amount or tax.amount
+        
+        res.update({
+            'amount':total + tax_amount,
+            'tax_amount':tax_amount
+        })
         
         return {
             'value':res
         }
-        
+
     def create(self, cr, uid, vals, context={}):
         """
         Create a new record for a model account_voucher
@@ -273,6 +293,7 @@ class account_voucher(osv.osv):
         new_lines = []
         
         payment_ids = vals.get('payment_ids')
+        
         if not payment_ids:
             payment_ids = []
             
@@ -292,6 +313,7 @@ class account_voucher(osv.osv):
             vals.update({
                 'payment_ids':new_lines
             })
+
         res_id = super(account_voucher, self).create(cr, uid, vals, context)
         
         if old_line:
@@ -300,15 +322,16 @@ class account_voucher(osv.osv):
                 id1 = line[0]
                 id2 = line[1]
                 res = line[2]
-                res.update({
-                    'voucher_id':res_id
-                })
-                new_payment_ids += [(id1, id2, res)]
+                if res:
+                    res.update({
+                        'voucher_id':res_id
+                    })
+                    new_payment_ids += [(id1, id2, res)]
                 
             self.write(cr, uid, [res_id], {'payment_ids':new_payment_ids})
         return res_id
     
-    def onchange_partner_id(self, cr, uid, ids, partner_id, ttype, context={}):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, ttype, journal_id=False, context={}):
         """
         Returns a dict that contains new values and context
     
@@ -322,7 +345,9 @@ class account_voucher(osv.osv):
         """
         move_pool = self.pool.get('account.move')
         line_pool = self.pool.get('account.voucher.line')
+        move_line_pool = self.pool.get('account.move.line')
         partner_pool = self.pool.get('res.partner')
+        journal_pool = self.pool.get('account.journal')
         res = []
         
         context.update({
@@ -330,6 +355,10 @@ class account_voucher(osv.osv):
             'partner_id':partner_id, 
             'voucher':True,
         })
+        if journal_id:
+            context.update({
+                'journal_id':journal_id, 
+            })
         
         default = {
             'value':{},
@@ -344,39 +373,46 @@ class account_voucher(osv.osv):
 
         account_id = False
         partner = partner_pool.browse(cr, uid, partner_id)
-        if ttype in ('sale', 'receipt'):
+        if ttype in ('sale'):
             account_id = partner.property_account_receivable.id
-        elif ttype in ('purchase', 'payment'):
+        elif ttype in ('purchase'):
             account_id = partner.property_account_payable.id
-
+        elif ttype in ('payment', 'receipt'):
+            journal = journal_pool.browse(cr, uid, journal_id)
+            if ttype == 'payment':
+                account_id = journal.default_credit_account_id.id
+            elif ttype == 'receipt':
+                account_id = journal.default_debit_account_id.id
+        
         default['value'].update({
             'account_id':account_id
         })
-        
         if ttype not in ('payment', 'receipt'):
             return default
         
         voucher_id = ids and ids[0] or False
-        ids = move_pool.search(cr, uid, [('reconcile_id','=', False), ('state','=','posted'), ('partner_id','=',partner_id)], context=context)
-        for move in move_pool.browse(cr, uid, ids):
-            rs = {
-                'ref':move.ref or '/',
-                'move_id':move.id,
+        ids = move_line_pool.search(cr, uid, [('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
+        for line in move_line_pool.browse(cr, uid, ids):
+            rs = move_line_pool.default_get(cr, uid, move_line_pool._columns.keys(), context=context)
+            rs.update({
+                'ref':line.ref or '/',
+                'move_id':line.move_id.id,
+                'move_line_id':line.id,
                 'voucher_id':voucher_id,
-            }
+            })
             if ttype == 'payment':
                 rs.update({
-                    'account_id':move.partner_id.property_account_payable.id,
+                    'account_id':line.move_id.partner_id.property_account_payable.id,
                     'type':'dr',
-                    'amount':move.amount
+                    'amount':line.credit
                 })
             elif ttype == 'receipt':
                 rs.update({
-                    'account_id':move.partner_id.property_account_receivable.id,
+                    'account_id':line.move_id.partner_id.property_account_receivable.id,
                     'type':'cr',
-                    'amount':move.amount
+                    'amount':line.debit
                 })
-            line_id = line_pool.create(cr, uid, rs)
+            line_id = line_pool.create(cr, uid, rs, context=context)
             res += [line_id]
 
         res = {'payment_ids':res, 'account_id':account_id}
@@ -548,7 +584,7 @@ class account_voucher(osv.osv):
                 'name':inv.name,
                 'debit':False,
                 'credit':False,
-                'account_id':False,
+                'account_id':inv.account_id.id,
                 'move_id':move_id ,
                 'journal_id':inv.journal_id.id,
                 'period_id':inv.period_id.id,
@@ -567,14 +603,12 @@ class account_voucher(osv.osv):
 
             if inv.type == 'sale':
                 move_line.update({
-                    'account_id':inv.account_id.id,
                     'debit':inv.amount
                 })
             elif inv.type == 'purchase':
                 move_line.update({
-                    'account_id':inv.account_id.id,
                     'credit':inv.amount
-                })
+                })            
 
             line_ids = []
             line_ids += [move_line_pool.create(cr, uid, move_line)]
@@ -724,7 +758,7 @@ class account_voucher(osv.osv):
         #Restrict the list of journal view in search view
         if view_type == 'search':
             journal_list = journal_pool.name_search(cr, uid, '', [], context=context)
-            res['fields']['journal_id']['selection'] = journal_list        
+            res['fields']['journal_id']['selection'] = journal_list
         
         return res
         
@@ -736,7 +770,8 @@ class account_voucher_line(osv.osv):
 
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
-        'name':fields.related('voucher_id', 'name', size=256, type='char', string='Description'),
+#        'name':fields.related('voucher_id', 'name', size=256, type='char', string='Description'),
+        'name':fields.char('Description', size=256, required=True),
         'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'amount':fields.float('Amount'),
@@ -756,4 +791,42 @@ class account_voucher_line(osv.osv):
         'type': lambda *a: 'cr'
     }
 
+    def default_get(self, cr, user, fields_list, context=None):
+        """
+        Returns default values for fields
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param fields_list: list of fields, for which default values are required to be read 
+        @param context: context arguments, like lang, time zone
+        
+        @return: Returns a dict that contains default values for fields
+        """
+        journal_pool = self.pool.get('account.journal')
+        partner_pool = self.pool.get('res.partner')
+        account_id = False
+
+        values = super(account_voucher_line, self).default_get(cr, user, fields_list, context=context)
+        journal_id = context.get('journal_id', False)
+        ttype = context.get('type', False)
+        partner_id = context.get('partner_id', False)
+        
+        if ttype and journal_id and ttype in ('sale', 'purchase'):
+            journal = journal_pool.browse(cr, user, journal_id)
+            if ttype == 'sale' and journal:
+                account_id = journal.default_credit_account_id and journal.default_credit_account_id.id or False
+            elif ttype == 'purchase' and journal:
+                account_id = journal.default_credit_account_id and journal.default_debit_account_id.id or False
+        elif  ttype and partner_id and ttype in ('payment', 'receipt'):
+            partner = partner_pool.browse(cr, user, partner_id)
+            if ttype == 'receipt' and partner:
+                account_id = partner.property_account_receivable and partner.property_account_receivable.id or False
+            elif ttype == 'payment' and partner:
+                account_id = partner.property_account_receivable and partner.property_account_payable.id or False
+        else:
+            account_id = False
+        
+        values.update({
+            'account_id':account_id
+        })
+        return values
 account_voucher_line()
