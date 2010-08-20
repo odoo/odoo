@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-        <menuitem name="Marketing" icon="terp-crm" id="marketing_menu" sequence="10"/>
+        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17" groups="base.group_system,base.res_groups_email_template_admin"/>
 
         <record id="view_marketing_installer" model="ir.ui.view">
             <field name="name">marketing.installer.view</field>
@@ -12,7 +12,7 @@
             <field name="arch" type="xml">
                 <data>
                   <form position="attributes">
-                    <attribute name="string">Marketing Modules Installation</attribute>
+                    <attribute name="string">Marketing Modules Configuration</attribute>
                   </form>
                   <separator string="title" position="attributes">
                     <attribute name="string">Select Marketing Modules to Install</attribute>
@@ -29,8 +29,9 @@
                             <attribute name="string">Configure</attribute>
                   </xpath>
                   <group colspan="8">
-                        <field name="marketing_campaign" />
+                        <field name="email_template" />
                         <field name="crm_profiling" />
+                        <field name="marketing_campaign" />
                         <field name="marketing_campaign_mailchimp" />
                   </group>
                 </data>

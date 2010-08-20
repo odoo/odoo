@@ -1,0 +1,118 @@
+-
+  In order to test account_voucher_payment module in OpenERP I create an invoice and paid it through voucher
+-
+  I create a customer invoice record
+-
+  !record {model: account.invoice, id: account_invoice_voucher_payment}:
+    account_id: account.a_recv
+    address_contact_id: base.res_partner_address_3000
+    address_invoice_id: base.res_partner_address_3000
+    company_id: base.main_company
+    currency_id: base.EUR
+    invoice_line:
+      - account_id: account.a_sale
+        name: '[PC1] Basic PC'
+        price_unit: 450.0
+        quantity: 1.0
+        product_id: product.product_product_pc1
+        uos_id: product.product_uom_unit
+    journal_id: account.sales_journal
+    partner_id: base.res_partner_desertic_hispafuentes
+    reference_type: none
+
+-
+  I check that Initially customer invoice is in the "Draft" state
+-
+  !assert {model: account.invoice, id: account_invoice_voucher_payment}:
+    - state == 'draft'
+-
+  I change the state of invoice to "Proforma2" by clicking PRO-FORMA button
+-
+  !workflow {model: account.invoice, action: invoice_proforma2, ref: account_invoice_voucher_payment}
+-
+  I check that the invoice state is now "Proforma2"
+-
+  !assert {model: account.invoice, id: account_invoice_voucher_payment}:
+    - state == 'proforma2'
+-
+  I create invoice by clicking on Create button
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_voucher_payment}
+-
+  I check that the invoice state is "Open"
+-
+  !assert {model: account.invoice, id: account_invoice_voucher_payment}:
+    - state == 'open'
+
+-
+   I create a voucher record for above invoice
+-
+  !record {model: account.voucher, id: account_voucher_voucherforaxelor1}:
+    account_id: account.cash
+    company_id: base.main_company
+    currency_id: base.EUR
+    journal_id: account.bank_journal
+    name: Voucher for Axelor
+    narration: Basic Pc
+    payment_ids:
+      - account_id: account.a_recv
+        amount: 450.0
+        name: Voucher for Axelor
+        partner_id: base.res_partner_desertic_hispafuentes
+        invoice_id: account_invoice_voucher_payment
+        type: cr
+    period_id: account.period_6
+    reference_type: none
+
+-
+  I check that Initially customer voucher is in the "Draft" state
+-
+  !assert {model: account.voucher, id: account_voucher_voucherforaxelor1}:
+    - state == 'draft'
+-
+  I change the state of voucher to "proforma" by clicking PRO-FORMA button
+-
+  !workflow {model: account.voucher, action: open_voucher, ref: account_voucher_voucherforaxelor1}
+-
+  I check that the voucher state is now "proforma"
+-
+  !assert {model: account.voucher, id: account_voucher_voucherforaxelor1}:
+    - state == 'proforma'
+-
+  I create voucher by clicking on Create button
+-
+  !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucherforaxelor1}
+-
+  I check that the voucher state is "Waiting for re-checking"
+-
+  !assert {model: account.voucher, id: account_voucher_voucherforaxelor1}:
+    - state == 'recheck'
+-
+  I clicked on Validate Button
+-
+  !workflow {model: account.voucher, action: recheck_voucher, ref: account_voucher_voucherforaxelor1}
+-
+  I check that the voucher state is "posted"
+-
+  !assert {model: account.voucher, id: account_voucher_voucherforaxelor1}:
+    - state == 'posted'
+
+-
+  I check that Moves get created for this voucher
+-
+  !python {model: account.voucher}: |
+    acc_id=self.browse(cr, uid, ref("account_voucher_voucherforaxelor1"))
+    assert(acc_id.move_id)
+
+-
+  I check that the invoice state is now Done
+-
+  !assert {model: account.invoice, id: account_invoice_voucher_payment}:
+    - state == 'paid'
+
+
+
+
+
+
+

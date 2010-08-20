@@ -28,9 +28,15 @@ class l10n_be_vat_declaration(osv.osv_memory):
     _name = "l1on_be.vat.declaration"
     _description = "Vat Declaration"
 
+    def _get_xml_data(self, cr, uid, context=None):
+        if context.get('file_save', False):
+            return base64.encodestring(context['file_save'])
+        return ''
+
     _columns = {
         'name': fields.char('File Name', size=32),
         'period_id': fields.many2one('account.period','Period', required=True),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)]),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
         'ask_resitution': fields.boolean('Ask Restitution'),
@@ -39,7 +45,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
     }
     _defaults = {
         'msg': 'Save the File with '".xml"' extension.',
-    }
+        'file_save': _get_xml_data,
+        'name': 'vat_declaration.xml',
+                }
 
     def create_xml(self, cr, uid, ids, context=None):
         obj_fyear = self.pool.get('account.fiscalyear')
@@ -48,16 +56,22 @@ class l10n_be_vat_declaration(osv.osv_memory):
         obj_user = self.pool.get('res.users')
         obj_comp = self.pool.get('res.company')
         obj_data = self.pool.get('ir.model.data')
+        mod_obj = self.pool.get('ir.model.data')
 
         if context is None:
             context = {}
 
         list_of_tags=['00','01','02','03','44','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','88','91']
-        obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
+        data_tax = self.browse(cr, uid, ids[0])
+        if data_tax.tax_code_id:
+            obj_company = data_tax.tax_code_id.company_id
+        else:
+            obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         user_cmpny = obj_company.name
         vat_no = obj_company.partner_id.vat
         if not vat_no:
-            osv.except_osv(_('Data Insufficient'), _('No VAT  Number Associated with Main Company!'))
+            raise osv.except_osv(_('Data Insufficient'), _('No VAT  Number Associated with Main Company!'))
+
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
@@ -92,6 +106,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:
+            if item['code'] == '91' and ending_month != 12:
+                #the tax code 91 can only be send for the declaration of December
+                continue
             if item['code']:
                 if item['code'] == '71-72':
                     item['code']='71'
@@ -99,9 +116,21 @@ class l10n_be_vat_declaration(osv.osv_memory):
                     data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(item['sum_period']*100))) +  '</D'+str(int(item['code'])) +'>'
 
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
-        data['file_save'] = base64.encodestring(data_of_file)
-        self.write(cr, uid, ids, {'file_save': data['file_save'], 'name': 'vat_declare.xml'}, context=context)
-        return True
+        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context['file_save'] = data_of_file
+        return {
+            'name': _('Save XML For Vat declaration'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'l1on_be.vat.declaration',
+            'views': [(resource_id,'form')],
+            'view_id': 'view_vat_save',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+
 l10n_be_vat_declaration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

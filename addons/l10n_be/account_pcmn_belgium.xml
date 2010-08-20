@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="True">
+    <data>
 
         <!-- account.account.type -->
         <record id="user_type_view" model="account.account.type">
@@ -11,16 +11,19 @@
         <record id="user_type_capitaux" model="account.account.type">
             <field name="name">Capital</field>
             <field name="code">capital</field>
+            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
         <record id="user_type_immo" model="account.account.type">
             <field name="name">Immobilisation</field>
             <field name="code">immo</field>
+            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
         <record id="user_type_stock" model="account.account.type">
             <field name="name">Stock et Encours</field>
             <field name="code">stock</field>
+            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
         <record id="user_type_tiers" model="account.account.type">
@@ -31,11 +34,13 @@
         <record id="user_type_tiers_receiv" model="account.account.type">
             <field name="name">Tiers - Recevable</field>
             <field name="code">tiers -rec</field>
+            <field name="report_type">asset</field>
             <field name="close_method">unreconciled</field>
         </record>
         <record id="user_type_tiers_payable" model="account.account.type">
             <field name="name">Tiers - Payable</field>
             <field name="code">tiers - pay</field>
+            <field name="report_type">liability</field>
             <field name="close_method">unreconciled</field>
         </record>
         <record id="user_type_tax" model="account.account.type">
@@ -51,11 +56,13 @@
         <record id="user_type_charge" model="account.account.type">
             <field name="name">Charge</field>
             <field name="code">charge</field>
+            <field name="report_type">expense</field>
             <field name="close_method">none</field>
         </record>
         <record id="user_type_produit" model="account.account.type">
             <field name="name">Produit</field>
             <field name="code">produit</field>
+            <field name="report_type">income</field>
             <field name="close_method">none</field>
         </record>
 
@@ -7072,7 +7079,7 @@
             <field name="ref_base_code_id" ref="vat_code_a48"/>
             <field name="type_tax_use">sale</field>
         </record>
-        <record id="vat_IO_S" model="account.tax.template">
+        <record id="vat_IO_abc" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">TVA 0% ABC Intracommunautaire</field>
             <field name="description">V-INTRA-ABC 0</field>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,19 +15,20 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 #
 # Does not properly work concurrently !!!
 #
-import base64
-import mimetypes
-import httplib
-import threading
-from tools.translate import _
 from osv import fields,osv
+from tools.translate import _
+import base64
+import httplib
+import mimetypes
+import netsvc
+import threading
 
 class auction_lots_send_aie(osv.osv_memory):
     _name = 'auction.lots.send.aie'
@@ -140,13 +141,11 @@ class auction_lots_send_aie(osv.osv_memory):
     def _photos_send(cr, uid, uname, passwd, did, ids):
         service = netsvc.LocalService("object_proxy")
         for (ref,id) in ids:
-            
-    #       ids_attach = service.execute(db_name,uid, 'ir.attachment', 'search', [('res_model','=','auction.lots'), ('res_id', '=',id)])
-            datas = service.execute(cr.db_name,uid, 'auction.lots', 'read',[id], ['name','image'])
+            datas = service.execute(cr.db_name, uid, 'auction.lots', 'read', [id], ['name','image'])
             if len(datas):
                 bin = base64.decodestring(datas[0]['image'])
                 fname = datas[0]['name']
-                _photo_bin_send(uname, passwd, ref, did, fname, bin)
+                self._photo_bin_send(uname, passwd, ref, did, fname, bin)
     
     def get_dates(self, cr, uid, ids, context={}):
         import httplib

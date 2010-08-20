@@ -28,7 +28,6 @@ from report import report_sxw
 class tax_report(rml_parse.rml_parse):
 	_name = 'report.account.vat.declaration'
 	def __init__(self, cr, uid, name, context={}):
-		print "tax______init", name, context
 		super(tax_report, self).__init__(cr, uid, name, context=context)
 		self.localcontext.update({
 			'time': time,
@@ -79,16 +78,16 @@ class tax_report(rml_parse.rml_parse):
 				top_result.append(res_general[ind_general])
 				ind_general+=1
 			i+=1
-		#array_result = self.sort_result(top_result)
 		return top_result
 		#return array_result
 
 	def _get_period(self, period_id, context={}):
 		return self.pool.get('account.period').browse(self.cr, self.uid, period_id, context=context).name
 
-	def _get_general(self, tax_code_id,period_list ,company_id, based_on, context={}):
+	def _get_general(self, tax_code_id, period_list ,company_id, based_on, context={}):
 		res=[]
 		obj_account = self.pool.get('account.account')
+		periods_ids = tuple(period_list)
 		if based_on == 'payments':
 			self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
 						SUM(line.debit) AS debit, \
@@ -107,11 +106,11 @@ class tax_report(rml_parse.rml_parse):
 						AND line.account_id = account.id \
 						AND account.company_id = %s \
 						AND move.id = line.move_id \
-						AND line.period_id =ANY(%s) \
+						AND line.period_id IN %s \
 						AND ((invoice.state = %s) \
 							OR (invoice.id IS NULL))  \
 					GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-						company_id, period_list, 'paid',))
+						company_id, periods_ids, 'paid',))
 
 		else :
 			self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
@@ -127,13 +126,11 @@ class tax_report(rml_parse.rml_parse):
 						AND line.tax_code_id = %s  \
 						AND line.account_id = account.id \
 						AND account.company_id = %s \
-						AND line.period_id =ANY(%s)\
+						AND line.period_id IN %s\
 						AND account.active \
 					GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-						company_id, period_list,))
+						company_id, periods_ids,))
 		res = self.cr.dictfetchall()
-
-						#AND line.period_id IN ('+ period_sql_list +') \
 
 		i = 0
 		while i<len(res):

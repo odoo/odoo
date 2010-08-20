@@ -33,7 +33,7 @@ class account_chart(osv.osv_memory):
                                     help = 'Keep empty for all open fiscal years'),
        'target_move': fields.selection([('all', 'All Entries'),
                                         ('posted', 'All Posted Entries')], 'Target Moves', required = True),
-              }
+    }
 
     def _get_fiscalyear(self, cr, uid, context=None):
         """Return default Fiscalyear value"""
@@ -53,18 +53,18 @@ class account_chart(osv.osv_memory):
         act_obj = self.pool.get('ir.actions.act_window')
         data = self.read(cr, uid, ids, [], context=context)[0]
         result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
-        id = mod_obj.read(cr, uid, [result], ['res_id'],context=context)[0]['res_id']
+        id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['context'] = str({'fiscalyear': data['fiscalyear'], \
                                     'state': data['target_move']})
         if data['fiscalyear']:
-            result['name'] += ':' + self.pool.get('account.fiscalyear').read(cr, uid, [data['fiscalyear']],context=context)[0]['code']
+            result['name'] += ':' + self.pool.get('account.fiscalyear').read(cr, uid, [data['fiscalyear']], context=context)[0]['code']
         return result
 
     _defaults = {
         'fiscalyear': _get_fiscalyear,
         'target_move': 'all'
-                }
+    }
 account_chart()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

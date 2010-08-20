@@ -43,31 +43,41 @@ class report_menu_create(osv.osv_memory):
         if not context:
             context = {}
         context_id = context and context.get('active_id', False) or False
+        obj_menu = self.pool.get('ir.ui.menu')
+        data_obj = self.pool.get('ir.model.data')
+        obj_board = self.pool.get('base_report_creator.report')
         if context_id:
-            board = self.pool.get('base_report_creator.report').browse(cr, uid, context_id)
+            data = self.browse(cr, uid, ids, context=context)
+            if not data:
+                return {}
+            data = data[0]
+
+            board = obj_board.browse(cr, uid, context_id)
             view = board.view_type1
             if board.view_type2:
                 view += ',' + board.view_type2
             if board.view_type3:
                 view += ',' + board.view_type3
+                    
+            result = data_obj._get_id(cr, uid, 'base_report_creator', 'view_report_filter')
+            res = data_obj.read(cr, uid, result, ['res_id'])
             action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
                 'name': board.name,
                 'view_type':'form',
                 'view_mode':view,
                 'context': "{'report_id':%d}" % (board.id,),
-                'res_model': 'base_report_creator.report'
-                })
-        obj_menu = self.pool.get('ir.ui.menu')
-        #start Loop
-        for data in self.read(cr, uid, ids):
-            obj_menu.create(cr, uid, {
-                'name': data.get('menu_name'),
-                'parent_id': data.get('menu_parent_id'),
+                'res_model': 'base_report_creator.report',
+                'search_view_id': res['res_id']
+                })       
+            
+            menu_id = obj_menu.create(cr, uid, {
+                'name': data.menu_name,
+                'parent_id': data.menu_parent_id.id,
                 'icon': 'STOCK_SELECT_COLOR',
                 'action': 'ir.actions.act_window, ' + str(action_id)
                 }, context=context)
-            return {}
-        #End Loop
+            obj_board.write(cr, uid, context_id, {'menu_id': menu_id})
+        return {}
 report_menu_create()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

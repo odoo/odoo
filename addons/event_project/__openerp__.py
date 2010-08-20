@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,10 +28,10 @@
 
     This module allows you to create retro planning for managing your events.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['project_retro_planning', 'event'],
     'init_xml': [],
-    'update_xml': ['event_wizard.xml', 'event_view.xml'],
+    'update_xml': ['wizard/event_project_view.xml', 'event_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,

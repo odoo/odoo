@@ -1,69 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
+    <data>
 
-        <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="15"/>
-        <menuitem name="Email Template" id="menu_email_template" parent="base.menu_tools"/>
+        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17" groups="base.group_system,base.res_groups_email_template_admin"/>
+        <menuitem name="Emails" id="base.menu_emails" parent="base.marketing_menu" sequence="5"/>
+        <menuitem name="Email Template" id="menu_email_template" parent="base.menu_emails"/>
 
-		<record model="ir.ui.view" id="email_template_account_form">
-			<field name="name">email_template.account.form</field>
-			<field name="model">email_template.account</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Email Account Configuration">
-					<group colspan="2">
-						<field name="name" select="1" />
-					</group>
-					<notebook colspan="4">
-						<page string="Outgoing">
-							<separator string="Server Information" colspan="4" />
-							<group colspan="4">
-								<field name="smtpserver" select="1" colspan="2" />
-								<field name="smtpport" select="2" colspan="2" />
-								<field name="smtpssl" select="2" colspan="2" />
-								<field name="smtptls" select="2" colspan="2" />
-							</group>
-							<button name="check_outgoing_connection" type="object" string="Check Outgoing Connection" />
-							<separator string="User Information" colspan="4" />
-							<group col="2" colspan="2">
-								<field name="email_id" select="1" on_change="on_change_emailid(name,email_id)" colspan="2" />
-								<field name="smtppass" password="True" colspan="2" />
-								<field name="company" select="2" colspan="2" />
-							</group>
-							<group col="2" colspan="2">
-								<field name="smtpuname" select="1" colspan="2" />
-								<field name="user" select="2" colspan="2" />
-								<field name="send_pref" colspan="2" />
-							</group>
-						</page>
-					</notebook>
-					<group colspan="4" col="10">
-						<field name="state" select="1"/>
-						<button string="Approve Account" name="button_approval" states="draft" type="workflow"/>
-						<button string="Suspend Account" name="button_suspended" states="approved" type="workflow"  />
-						<button string="Request Re-activation" name="get_reapprove" states="suspended" type="workflow" />
-						<button string="Send/Receive" name="send_receive" states="approved" type="object" />
-					</group>
-				</form>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="email_template_account_form">
+            <field name="name">email_template.account.form</field>
+            <field name="model">email_template.account</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Email Account Configuration">
+                    <group colspan="2">
+                        <field name="name" select="1" />
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Outgoing">
+                            <separator string="Server Information" colspan="4" />
+                            <group colspan="4">
+                                <field name="smtpserver" select="1" colspan="2" />
+                                <field name="smtpport" select="2" colspan="2" />
+                                <field name="smtpssl" select="2" colspan="2" />
+                                <field name="smtptls" select="2" colspan="2" />
+                            </group>
+                            <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" />
+                            <separator string="User Information" colspan="4" />
+                            <group col="2" colspan="2">
+                                <field name="email_id" select="1" on_change="on_change_emailid(name,email_id)" colspan="2" />
+                                <field name="smtppass" password="True" colspan="2" />
+                                <field name="company" select="2" colspan="2" />
+                            </group>
+                            <group col="2" colspan="2">
+                                <field name="smtpuname" select="1" colspan="2" />
+                                <field name="user" select="2" colspan="2" />
+                                <field name="send_pref" colspan="2" />
+                            </group>
+                        </page>
+                    </notebook>
+                    <group colspan="4" col="10">
+                        <field name="state" select="1"/>
+                        <button string="Approve Account" name="button_approval" states="draft" type="workflow"/>
+                        <button string="Suspend Account" name="button_suspended" states="approved" type="workflow"  />
+                        <button string="Request Re-activation" name="get_reapprove" states="suspended" type="workflow" />
+                        <button string="Send/Receive" name="send_receive" states="approved" type="object" />
+                    </group>
+                </form>
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="email_template_account_tree">
-			<field name="name">email_template.account.tree</field>
-			<field name="model">email_template.account</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="SMTP Server">
-					<field name="name" select="2" />
-					<field name="email_id" select="2" />
-					<field name="smtpuname" select="2" />
-					<field name="user" select="2" />
-					<field name="smtpserver" select="2" />
-					<field name="smtpport" select="2" />
-					<field name="state" select="2" />
-				</tree>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="email_template_account_tree">
+            <field name="name">email_template.account.tree</field>
+            <field name="model">email_template.account</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree  colors="blue:state in ('draft');black:state in ('suspended','approved')" string="SMTP Server">
+                    <field name="name" select="2" />
+                    <field name="email_id" select="2" />
+                    <field name="smtpuname" select="2" />
+                    <field name="user" select="2" />
+                    <field name="smtpserver" select="2" />
+                    <field name="smtpport" select="2" />
+                    <field name="state" select="2" />
+                </tree>
+            </field>
+        </record>
 
        <record id="view_email_template_account_search" model="ir.ui.view">
            <field name="name">email_template.account.search</field>
@@ -85,21 +86,23 @@
            </field>
         </record>
 
-		<record model="ir.actions.act_window" id="action_email_template_account_tree_all">
-			<field name="name">Accounts</field>
-			<field name="res_model">email_template.account</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree</field>
-			<field name="view_id" ref="email_template_account_tree" />
+        <record model="ir.actions.act_window" id="action_email_template_account_tree_all">
+            <field name="name">Accounts</field>
+            <field name="res_model">email_template.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_template_account_tree" />
             <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_my': 1}</field>
             <field name="search_view_id" ref="view_email_template_account_search"/>
-		</record>
+        </record>
 
-		<menuitem name="Configuration" id="menu_email_template_configuration" parent="menu_email_template" />
+        <menuitem name="Configuration" parent="base.marketing_menu"
+         id="base.menu_marketing_config_root" sequence="20" groups="base.group_system"/>
+        <menuitem name="Emails" id="menu_email_template_configuration" parent="base.menu_marketing_config_root" />
 
-		<menuitem name="All Accounts" id="menu_email_template_account_all" parent="menu_email_template_configuration" action="action_email_template_account_tree_all" groups="res_groups_email_template_manager" />
+        <menuitem name="Email Accounts" id="menu_email_template_account_all" parent="menu_email_template_configuration" action="action_email_template_account_tree_all"/>
 
-	</data>
+    </data>
 </openerp>
 
 

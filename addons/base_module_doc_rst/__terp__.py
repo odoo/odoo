@@ -29,7 +29,7 @@
     * It creates a tarball (.tgz file suffix) containing an index file and one file per module
     * Generate Relationship Graph
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],

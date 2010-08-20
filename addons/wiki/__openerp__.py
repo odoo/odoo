@@ -24,13 +24,14 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    The base module to manage documents(wiki)
+The base module to manage documents(wiki)
 
-    keep track for the wiki groups, pages, and history
+keep track for the wiki groups, pages, and history
     """,
-    'author': 'Tiny & Axelor',
+    'author': 'OpenERP SA & Axelor',
     'website': 'http://openerp.com',
-    'depends': ['base'],
+    'depends': ['knowledge'],
+    'web_depends': ['widget_wiki'],
     'init_xml': [],
     'update_xml': [
         'wizard/wiki_wiki_page_open_view.xml',
@@ -40,10 +41,11 @@
         'wiki_view.xml',
         'data/wiki_quickstart.xml',
         'data/wiki_main.xml',
+        'security/wiki_security.xml',
         'security/ir.model.access.csv'
     ],
-    'demo_xml': ['test/wiki_test00.yml'],
-  #  'test': ['test/wiki_test00.yml'],
+    'demo_xml': [],
+    'test': ['test/wiki_test00.yml'],
     'installable': True,
     'active': False,
     'certificate': '0086363630317',

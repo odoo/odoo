@@ -6,9 +6,9 @@
             <field name="model">account.analytic.default</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Analytic Defaults" editable="bottom">
+                <tree string="Analytic Defaults">
                     <field name="sequence"/>
-                    <field name="analytic_id" required="1"/>
+                    <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
@@ -18,17 +18,18 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_account_analytic_default_form" model="ir.ui.view">
             <field name="name">account.analytic.default.form</field>
             <field name="model">account.analytic.default</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Defaults">
-                    <field name="analytic_id" select="1" required="1"/>
+                    <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]"/>
                     <field name="sequence"/>
                     <separator string="Conditions" colspan="4"/>
-                    <field name="product_id" select="1"/>
-                    <field name="partner_id" select="1"/>
+                    <field name="product_id"/>
+                    <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="date_start"/>
@@ -36,19 +37,37 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_account_analytic_default_form_search" model="ir.ui.view">
+            <field name="name">account.analytic.default.search</field>
+            <field name="model">account.analytic.default</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Accounts">
+                    <field name="analytic_id"/>
+                    <field name="product_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="company_id"/>
+                </search>
+            </field>
+        </record>
+
         <record id="action_analytic_default_form" model="ir.actions.act_window">
             <field name="name">Analytic Defaults</field>
             <field name="res_model">account.analytic.default</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_analytic_default_form_search"/>
         </record>
-        <menuitem
-            action="action_analytic_default_form"
-            id="menu_analytic_defaul_form"
-            parent="account.menu_analytic_accounting"/>
 
         <act_window
-            domain="[('account_id', '=', active_id)]" id="act_account_acount_move_line_open" name="Entries" res_model="account.move.line" src_model="account.account"/>
+            name="Entries"
+            id="act_account_acount_move_line_open"
+            res_model="account.move.line"
+            src_model="account.account"
+            domain="[('account_id', '=', active_id)]"/>
+
         <act_window
             name="Analytic Rules"
             id="analytic_rule_action_partner"
@@ -56,12 +75,15 @@
             src_model="res.partner"
             domain="[('partner_id','=',active_id)]"
             groups="base.group_extended"/>
+
         <act_window
             name="Analytic Rules"
             id="analytic_rule_action_user"
             res_model="account.analytic.default"
             src_model="res.users"
-            domain="[('user_id','=',active_id)]"/>
+            domain="[('user_id','=',active_id)]"
+            groups="base.group_extended"/>
+
         <act_window
             name="Analytic Rules"
             res_model="account.analytic.default"

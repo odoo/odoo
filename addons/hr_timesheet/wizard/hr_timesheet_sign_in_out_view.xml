@@ -46,15 +46,16 @@
             <field name="res_model">hr.sign.in.project</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_hr_timesheet_sign_in_message"/>
-           <field name="target">new</field>
+            <field name="view_id" ref="view_hr_timesheet_sign_in_message"/>
+            <field name="target">new</field>
+            <field name="help">Employees can encode their time spent on the different projects. A project is an analytic account and the time spent on a project generate costs on the analytic account. This feature allows to record at the same time the attendance and the timesheet.</field>
         </record>
 
         <menuitem action="action_hr_timesheet_sign_in"
         	id="menu_hr_timesheet_sign_in"
         	groups="base.group_extended"
         	parent="hr_attendance.menu_hr_time_tracking"
-        	/>
+        	sequence="5" />
 
     	<record id="view_hr_timesheet_sign_out" model="ir.ui.view">
             <field name="name">hr.sign.out.project.form</field>
@@ -69,11 +70,13 @@
 					    <field name="date_start"/>
 					    <field name="server_date"/>
 					    <separator string="Work done in the last period" colspan="4" />
-					    <field name="account_id" colspan="3"/>
-					    <field name="info" colspan="3"/>
+					    <field name="account_id" colspan="2"/>
+					    <field name="info" colspan="2"/>
 					    <field name="date"/>
 					    <label string="(Keep empty for current_time)" colspan="2"/>
-					    <field name="analytic_amount"/>                	</group>
+					    <field name="analytic_amount"/>
+					</group>
+					<separator string="" colspan="4" />
                     <group colspan="4" col="6">
                     	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
                     	<button icon="gtk-ok" string="Change Work" name="sign_out_result" type="object"/>

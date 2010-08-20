@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,9 +29,13 @@ Adds a reporting menu in products that computes sales, purchases, margins
 and other interesting indicators based on invoices. The wizard to launch
 the report has several options to help you get the data you need.
 """,
-    'author': 'Tiny',
-    'depends': ['base', 'product', 'account'],
-    'update_xml': ['wizard/product_margin_view.xml','product_margin_view.xml'],
+    'author': 'OpenERP SA',
+    'depends': ['account'],
+    'update_xml': [
+                   'security/ir.model.access.csv',
+                   'wizard/product_margin_view.xml',
+                   'product_margin_view.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,

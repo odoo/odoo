@@ -2,9 +2,7 @@
   In order to test the sale order working with procurements I will create some
   products with different supply method and procurement method.
 -
-  I create two products.
--
-  I create one product Table.
+  I create one product Table as MTO.
 -
   !record {model: product.product, id: product_product_table0}:
     categ_id: product.cat1
@@ -15,7 +13,7 @@
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
 -
-  I create another product Wood.
+  I create another product Wood as MTS.
 -
   !record {model: product.product, id: product_product_wood0}:
     categ_id: product.cat1
@@ -26,7 +24,7 @@
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
 -
-  I define Minimum stock rule for my stockable product wood
+  I define Minimum stock rule for my stockable product Wood (qty between 10 and 15)
 - 
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
     company_id: base.main_company
@@ -70,26 +68,25 @@
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
 -
-  I check that one procurement is generated.
+  I check that procurement is generated.
 -
   !python {model: procurement.order}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','=','confirmed')])
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
     assert proc_ids, _('No Procurements!')
 - 
-  The scheduler runs.
+  I run the scheduler.
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
       search: "[('state','=','confirmed')]"
 -
   I check that the procurement for the product table is in exception state.
-  As my product's supply method is produce and mrp module is yet not installed.
+  As my product's supply method is produce and the BoM is not defined.
 -
   !python {model: procurement.order}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','=','exception')])
-    assert proc_ids, _('No Procurements are in exception state!')
-  
-  
-  
+    proc_ids = self.search(cr, uid, [('state','=','exception'),('product_id','=',ref('sale.product_product_table0'))])
+    assert not proc_ids, _('There is no procurement in exception state!')

@@ -79,7 +79,8 @@ class subscription_subscription(osv.osv):
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
         'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
         'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created', readonly=True),
-        'cron_id': fields.many2one('ir.cron', 'Cron Job')
+        'cron_id': fields.many2one('ir.cron', 'Cron Job'),
+        'note': fields.text('Notes', help="Description or Summary of Subscription"),
     }
     _defaults = {
         'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),

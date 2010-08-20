@@ -37,19 +37,20 @@ recording them externally. That way, the mind is freed from the job of
 remembering everything that needs to be done, and can concentrate on actually
 performing those tasks.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['project'],
     'init_xml': [],
     'update_xml': [
         'project_gtd_data.xml',
         'project_gtd_view.xml',
-        'project_gtd_wizard.xml',
         'security/ir.model.access.csv',
         'wizard/project_gtd_empty_view.xml',
-        'wizard/project_gtd_daily_view.xml',
         'wizard/project_gtd_fill_view.xml',
     ],
     'demo_xml': ['project_gtd_demo.xml'],
+    'test':[
+        'test/gtd_test.yml'
+    ],
     'installable': True,
     'active': False,
     'certificate': '0043525236301',

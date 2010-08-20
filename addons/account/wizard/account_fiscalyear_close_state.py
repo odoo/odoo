@@ -33,7 +33,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
        'fy_id': fields.many2one('account.fiscalyear', \
                                  'Fiscal Year to close', required=True),
        'sure': fields.boolean('Check this box', required=False)
-              }
+    }
 
     def data_save(self, cr, uid, ids, context=None):
         """
@@ -43,7 +43,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
         @param ids: List of Account fiscalyear close state’s IDs
 
         """
-        for data in  self.read(cr, uid, ids,context=context):
+        for data in  self.read(cr, uid, ids, context=context):
             if not data['sure']:
                 raise osv.except_osv(_('UserError'), _('Closing of states \
 cancelled, please check the box !'))
@@ -58,6 +58,11 @@ cancelled, please check the box !'))
                     'WHERE fiscalyear_id = %s', ('done', fy_id))
             cr.execute('UPDATE account_fiscalyear ' \
                     'SET state = %s WHERE id = %s', ('done', fy_id))
+
+            # Log message for Fiscalyear
+            fy_pool = self.pool.get('account.fiscalyear')
+            fy_code = fy_pool.browse(cr, uid, fy_id, context=context).code
+            fy_pool.log(cr, uid, fy_id, "Fiscal year '%s' is closed, no more modification allowed." % (fy_code))
             return {}
 
 account_fiscalyear_close_state()

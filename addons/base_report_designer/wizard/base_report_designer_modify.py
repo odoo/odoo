@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -39,13 +39,13 @@ intro_fields = {
         'string': 'Introduction',
         'type': 'text',
         'readonly': True,
-        'default': lambda *args: """This system must be used with the Tiny OpenOffice plugin. If you
+        'default': lambda *args: """This system must be used with the OpenERP SA OpenOffice plugin. If you
 did not installed yet, you can find this package on:
     http://www.openerp.com
 
 This wizard will provide you the .SXW report that you can modify
 in OpenOffice. After having modified it, you will be able to reupload
-it to the Open ERP server.
+it to the OpenERP server.
 """},
     'operation': {
         'string': 'Operation',
@@ -83,7 +83,7 @@ get_form_result = '''<?xml version="1.0"?>
     <newline/>
     <field name="file_sxw"/>
     <newline/>
-    <label colspan="4" string="This is the template of your requested report.\nSave it as a .SXW file and open it with OpenOffice.\nDon't forget to install the Tiny OpenOffice package to modify it.\nOnce it is modified, re-upload it in Open ERP using this wizard." align="0.0"/>
+    <label colspan="4" string="This is the template of your requested report.\nSave it as a .SXW file and open it with OpenOffice.\nDon't forget to install the OpenERP SA OpenOffice package to modify it.\nOnce it is modified, re-upload it in OpenERP using this wizard." align="0.0"/>
 </form>'''
 
 get_form_fields = {
@@ -144,7 +144,7 @@ rml_form_fields = {
        'file_rml': {
         'string': 'Save As',
         'type': 'binary',
-    } 
+    }
 }
 
 save_rml_arch = '''<?xml version="1.0"?>

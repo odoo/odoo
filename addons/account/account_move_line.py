@@ -18,13 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
+from datetime import datetime
+
 import netsvc
 from osv import fields, osv
 from tools.translate import _
-
-from datetime import datetime
 import decimal_precision as dp
 import tools
 
@@ -37,8 +36,10 @@ class account_move_line(osv.osv):
         fiscalperiod_obj = self.pool.get('account.period')
         fiscalyear_ids = []
         fiscalperiod_ids = []
-        if not context.get('fiscalyear', False):
+        if not context.get('fiscalyear', False) and not context.get('empty_fy_allow', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
+        elif context.get('empty_fy_allow', False):
+            fiscalyear_ids = context['fiscalyear']
         else:
             fiscalyear_ids = [context['fiscalyear']]
 
@@ -55,20 +56,26 @@ class account_move_line(osv.osv):
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
 
-
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
-            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
+            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
             query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
+
+        if context.get('journal_ids', False):
+            query += ' AND '+obj+'.journal_id in (%s)' % ','.join(map(str, context['journal_ids']))
+
+        if context.get('chart_account_id', False):
+            child_ids = self.pool.get('account.account')._get_children_and_consol(cr, uid, [context['chart_account_id']], context=context)
+            query += ' AND '+obj+'.account_id in (%s)' % ','.join(map(str, child_ids))
 
         if context.get('period_manner','') == 'created':
             #the query have to be build with no reference to periods but thanks to the creation date
             if context.get('periods',False):
                 #if one or more period are given, use them
-                fiscalperiod_ids = fiscalperiod_obj.search(cr,uid,[('id','in',context['periods'])])
+                fiscalperiod_ids = fiscalperiod_obj.search(cr, uid, [('id','in',context['periods'])])
             else:
-                fiscalperiod_ids = self.pool.get('account.period').search(cr,uid,[('fiscalyear_id','in',fiscalyear_ids)])
+                fiscalperiod_ids = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id','in',fiscalyear_ids)])
 
 
 
@@ -87,7 +94,7 @@ class account_move_line(osv.osv):
             #add to 'res' a new clause containing the creation date criterion
             count = 1
             res += " AND ("
-            periods = self.pool.get('account.period').read(cr,uid,p_ids,['date_start','date_stop'])
+            periods = self.pool.get('account.period').read(cr, uid, p_ids, ['date_start','date_stop'])
             for period in periods:
                 if count != 1:
                     res += " OR "
@@ -137,7 +144,26 @@ class account_move_line(osv.osv):
             del(data['account_tax_id'])
         return data
 
+    def convert_to_period(self, cr, uid, context={}):
+        period_obj = self.pool.get('account.period')
+
+        #check if the period_id changed in the context from client side
+        if context.get('period_id', False):
+            period_id = context.get('period_id')
+            if type(period_id) == str:
+                ids = period_obj.search(cr, uid, [('name','ilike',period_id)])
+                context.update({
+                    'period_id':ids[0]
+                })
+
+        return context
+
     def _default_get(self, cr, uid, fields, context={}):
+
+        period_obj = self.pool.get('account.period')
+
+        context = self.convert_to_period(cr, uid, context)
+
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
         # Starts: Manual entry from account.move form
@@ -150,18 +176,17 @@ class account_move_line(osv.osv):
                     for item in i[2]:
                             data[item]=i[2][item]
             if context['journal']:
-                journal_obj=self.pool.get('account.journal').browse(cr,uid,context['journal'])
+                journal_obj=self.pool.get('account.journal').browse(cr, uid, context['journal'])
                 if journal_obj.type == 'purchase':
-                    if total_new>0:
+                    if total_new > 0:
                         account = journal_obj.default_credit_account_id
                     else:
                         account = journal_obj.default_debit_account_id
                 else:
-                    if total_new>0:
+                    if total_new > 0:
                         account = journal_obj.default_credit_account_id
                     else:
                         account = journal_obj.default_debit_account_id
-
 
                 if account and ((not fields) or ('debit' in fields) or ('credit' in fields)) and 'partner_id' in data and (data['partner_id']):
                     part = self.pool.get('res.partner').browse(cr, uid, data['partner_id'])
@@ -179,12 +204,10 @@ class account_move_line(osv.osv):
         if not 'move_id' in fields: #we are not in manual entry
             return data
 
-        period_obj = self.pool.get('account.period')
-
         # Compute the current move
         move_id = False
         partner_id = False
-        if context.get('journal_id',False) and context.get('period_id',False):
+        if context.get('journal_id', False) and context.get('period_id', False):
             if 'move_id' in fields:
                 cr.execute('select move_id \
                     from \
@@ -200,6 +223,7 @@ class account_move_line(osv.osv):
                     return data
                 else:
                     data['move_id'] = move_id
+
             if 'date' in fields:
                 cr.execute('select date  \
                     from \
@@ -215,7 +239,6 @@ class account_move_line(osv.osv):
                     period = period_obj.browse(cr, uid, context['period_id'],
                             context=context)
                     data['date'] = period.date_start
-
         if not move_id:
             return data
 
@@ -298,9 +321,10 @@ class account_move_line(osv.osv):
         for line_id in ids:
             res[line_id] = False
         cursor.execute('SELECT l.id, i.id ' \
-                'FROM account_move_line l, account_invoice i ' \
-                'WHERE l.move_id = i.move_id ' \
-                    'AND l.id =ANY(%s)',(ids,))
+                        'FROM account_move_line l, account_invoice i ' \
+                        'WHERE l.move_id = i.move_id ' \
+                        'AND l.id IN %s',
+                        (tuple(ids),))
         invoice_ids = []
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
@@ -333,7 +357,7 @@ class account_move_line(osv.osv):
             return []
         where = ' and '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
         cursor.execute('select id, sum(debit-credit) from account_move_line \
-                     group by id,debit,credit having '+where)
+                     group by id, debit, credit having '+where)
         res = cursor.fetchall()
         if not len(res):
             return [('id', '=', '0')]
@@ -400,8 +424,8 @@ class account_move_line(osv.osv):
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
-        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The move of this entry line.", select=2),
-
+        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2),
+        'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Narration'),
         'ref': fields.char('Ref.', size=64),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
@@ -431,10 +455,10 @@ class account_move_line(osv.osv):
         'invoice': fields.function(_invoice, method=True, string='Invoice',
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
-        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
 #TODO: remove this
-        'amount_taxed':fields.float("Taxed Amount",digits_compute=dp.get_precision('Account')),
-        'company_id': fields.related('account_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
 
     }
 
@@ -454,6 +478,7 @@ class account_move_line(osv.osv):
                         context=context)
                 dt = period.date_start
         return dt
+
     def _get_currency(self, cr, uid, context={}):
         if not context.get('journal_id', False):
             return False
@@ -469,7 +494,7 @@ class account_move_line(osv.osv):
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
     }
     _order = "date desc,id desc"
     _sql_constraints = [
@@ -482,7 +507,6 @@ class account_move_line(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
-            cr.commit()
 
     def _check_no_view(self, cr, uid, ids):
         lines = self.browse(cr, uid, ids)
@@ -498,9 +522,17 @@ class account_move_line(osv.osv):
                 return False
         return True
 
+    def _check_company_id(self, cr, uid, ids):
+        lines = self.browse(cr, uid, ids)
+        for l in lines:
+            if l.company_id != l.account_id.company_id or l.company_id != l.period_id.company_id:
+                return False
+        return True
+
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
+        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -539,11 +571,15 @@ class account_move_line(osv.osv):
             id2 =  part.property_account_receivable.id
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
-                if jt == 'sale':
+                #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
+                # Bank and cash journal can have a payment or receipt transaction, and in both type partner account
+                # will not be same id payment then payable, and if receipt then receivable
+                #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
+                if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id2)
-
-                elif jt == 'purchase':
+                elif jt in ('purchase', 'sale_refund', 'expense', 'bank', 'cash'):
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id1)
+
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
@@ -569,11 +605,54 @@ class account_move_line(osv.osv):
     # writeoff; entry generated for the difference between the lines
     #
 
-    def reconcile_partial(self, cr, uid, ids, type='auto', context={}):
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+        if context and context.get('next_partner_only', False):
+            if not context.get('partner_id', False):
+                partner = self.get_next_partner_only(cr, uid, offset, context)
+            else:
+                partner = context.get('partner_id', False)
+            if not partner:
+                return []
+            args.append(('partner_id', '=', partner[0]))
+        return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
+
+    def get_next_partner_only(self, cr, uid, offset=0, context=None):
+        cr.execute(
+             """
+             SELECT p.id
+             FROM res_partner p
+             RIGHT JOIN (
+                SELECT l.partner_id as partner_id, SUM(l.debit) as debit, SUM(l.credit) as credit
+                FROM account_move_line l
+                LEFT JOIN account_account a ON (a.id = l.account_id)
+                    LEFT JOIN res_partner p ON (l.partner_id = p.id)
+                    WHERE a.reconcile IS TRUE
+                    AND l.reconcile_id IS NULL
+                    AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
+                    AND l.state <> 'draft'
+                    GROUP BY l.partner_id
+                ) AS s ON (p.id = s.partner_id)
+                ORDER BY p.last_reconciliation_date LIMIT 1 OFFSET %s""", (offset,)
+            )
+        return cr.fetchone()
+
+    def reconcile_partial(self, cr, uid, ids, type='auto', context=None):
         merges = []
         unmerge = []
         total = 0.0
         merges_rec = []
+
+        company_list = []
+        if context is None:
+            context = {}
+
+        for line in self.browse(cr, uid, ids, context=context):
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
+            company_list.append(line.company_id.id)
+
         for line in self.browse(cr, uid, ids, context):
             if line.reconcile_id:
                 raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
@@ -587,6 +666,7 @@ class account_move_line(osv.osv):
             else:
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
+
         if not total:
             res = self.reconcile(cr, uid, merges+unmerge, context=context)
             return res
@@ -597,13 +677,22 @@ class account_move_line(osv.osv):
         self.pool.get('account.move.reconcile').reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
         return True
 
-    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
+    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
         credit = debit = 0.0
         currency = 0.0
         account_id = False
         partner_id = False
+        if context is None:
+            context = {}
+
+        company_list = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
+            company_list.append(line.company_id.id)
+
         for line in unrec_lines:
             if line.state <> 'valid':
                 raise osv.except_osv(_('Error'),
@@ -614,16 +703,18 @@ class account_move_line(osv.osv):
             account_id = line['account_id']['id']
             partner_id = (line['partner_id'] and line['partner_id']['id']) or False
         writeoff = debit - credit
+
         # Ifdate_p in context => take this date
         if context.has_key('date_p') and context['date_p']:
             date=context['date_p']
         else:
             date = time.strftime('%Y-%m-%d')
 
-        cr.execute('SELECT account_id, reconcile_id \
-                FROM account_move_line \
-                WHERE id =ANY(%s) \
-                GROUP BY account_id,reconcile_id',(ids,))
+        cr.execute('SELECT account_id, reconcile_id '\
+                   'FROM account_move_line '\
+                   'WHERE id IN %s '\
+                   'GROUP BY account_id,reconcile_id',
+                   (tuple(ids),))
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
         if (len(r) != 1) and not context.get('fy_closing', False):
@@ -701,9 +792,15 @@ class account_move_line(osv.osv):
         # because of the way the line_id are defined: (4, x, False)
         for id in ids:
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
+
+        if lines and lines[0]:
+            partner_id = lines[0].partner_id.id
+            if context and context.get('stop_reconcile', False):
+                self.pool.get('res.partner').write(cr, uid, [partner_id], {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context):
+        context = self.convert_to_period(cr, user, context)
         if context.get('account_id', False):
             cr.execute('select code from account_account where id=%s', (context['account_id'],))
             res = cr.fetchone()
@@ -719,59 +816,138 @@ class account_move_line(osv.osv):
             return j+(p and (':'+p) or '')
         return False
 
+    def onchange_date(self, cr, user, ids, date, context={}):
+        """
+        Returns a dict that contains new values and context
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param date: latest value from user input for field date
+        @param args: other arguments
+        @param context: context arguments, like lang, time zone
+        @return: Returns a dict which contains new values, and context
+        """
+        res = {}
+        period_pool = self.pool.get('account.period')
+        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        if pids:
+            res.update({
+                'period_id':pids[0]
+            })
+            context.update({
+                'period_id':pids[0]
+            })
+        return {
+            'value':res,
+            'context':context,
+        }
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
-        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar, submenu=submenu)
-        if view_type=='tree' and 'journal_id' in context:
-            title = self.view_header_get(cr, uid, view_id, view_type, context)
-            journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
+        journal_pool = self.pool.get('account.journal')
 
-            # if the journal view has a state field, color lines depending on
-            # its value
-            state = ''
+        result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type != 'tree':
+            #Remove the toolbar from the form view
+            if view_type == 'form':
+                if result.get('toolbar', False):
+                    result['toolbar']['action'] = []
+
+            #Restrict the list of journal view in search view
+            if view_type == 'search':
+                journal_list = journal_pool.name_search(cr, uid, '', [], context=context)
+                result['fields']['journal_id']['selection'] = journal_list
+            return result
+
+        if context.get('view_mode', False):
+            return result
+
+        fld = []
+        fields = {}
+        flds = []
+        title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
+        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
+
+        ids = journal_pool.search(cr, uid, [])
+        journals = journal_pool.browse(cr, uid, ids)
+        all_journal = [None]
+        common_fields = {}
+        total = len(journals)
+        for journal in journals:
+            all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
-                if field.field=='state':
-                    state = ' colors="red:state==\'draft\'"'
-
-            #xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5"%s>\n\t''' % (title, state)
-            xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write"%s>\n\t''' % (title, state)
-            fields = []
-
-            widths = {
-                'ref': 50,
-                'statement_id': 50,
-                'state': 60,
-                'tax_code_id': 50,
-                'move_id': 40,
-            }
-            for field in journal.view_id.columns_id:
-                fields.append(field.field)
-                attrs = []
-                if field.field=='debit':
-                    attrs.append('sum="Total debit"')
-                elif field.field=='credit':
-                    attrs.append('sum="Total credit"')
-                elif field.field=='account_tax_id':
-                    attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
-                elif field.field=='account_id' and journal.id:
-                    attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
-                elif field.field == 'partner_id':
-                    attrs.append('on_change="onchange_partner_id(move_id,partner_id,account_id,debit,credit,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
-                if field.readonly:
-                    attrs.append('readonly="1"')
-                if field.required:
-                    attrs.append('required="1"')
+                if not field.field in fields:
+                    fields[field.field] = [journal.id]
+                    fld.append((field.field, field.sequence))
+                    flds.append(field.field)
+                    common_fields[field.field] = 1
                 else:
-                    attrs.append('required="0"')
-                if field.field in ('amount_currency','currency_id'):
-                    attrs.append('on_change="onchange_currency(account_id,amount_currency,currency_id,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
+                    fields.get(field.field).append(journal.id)
+                    common_fields[field.field] = common_fields[field.field] + 1
 
-                if field.field in widths:
-                    attrs.append('width="'+str(widths[field.field])+'"')
-                xml += '''<field name="%s" %s/>\n''' % (field.field,' '.join(attrs))
+        fld.append(('period_id', 3))
+        fld.append(('journal_id', 10))
+        flds.append('period_id')
+        flds.append('journal_id')
+        fields['period_id'] = all_journal
+        fields['journal_id'] = all_journal
 
-            xml += '''</tree>'''
-            result['arch'] = xml
-            result['fields'] = self.fields_get(cr, uid, fields, context)
+        from operator import itemgetter
+        fld = sorted(fld, key=itemgetter(1))
+
+        widths = {
+            'ref': 50,
+            'statement_id': 50,
+            'state': 60,
+            'tax_code_id': 50,
+            'move_id': 40,
+        }
+
+        for field_it in fld:
+            field = field_it[0]
+
+            if common_fields.get(field) == total:
+                fields.get(field).append(None)
+
+            if field=='state':
+                state = 'colors="red:state==\'draft\'"'
+
+            attrs = []
+            if field == 'debit':
+                attrs.append('sum="Total debit"')
+
+            elif field == 'credit':
+                attrs.append('sum="Total credit"')
+
+            elif field == 'account_tax_id':
+                attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
+                attrs.append("context=\"{'journal_id':journal_id}\"")
+
+            elif field == 'account_id' and journal.id:
+                attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
+
+            elif field == 'partner_id':
+                attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
+
+            elif field == 'journal_id':
+                attrs.append("context=\"{'journal_id':journal_id}\"")
+
+            elif field == 'statement_id':
+                attrs.append("domain=\"[('state','!=','confirm'),('journal_id.type','=','bank')]\"")
+
+            elif field == 'date':
+                attrs.append('on_change="onchange_date(date)"')
+
+            if field in ('amount_currency', 'currency_id'):
+                attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
+
+            if field in widths:
+                attrs.append('width="'+str(widths[field])+'"')
+
+            attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
+            xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
+
+        xml += '''</tree>'''
+        result['arch'] = xml
+        result['fields'] = self.fields_get(cr, uid, flds, context)
         return result
 
     def _check_moves(self, cr, uid, context):
@@ -799,6 +975,7 @@ class account_move_line(osv.osv):
     def _check_date(self, cr, uid, vals, context=None, check=True):
         if context is None:
             context = {}
+        journal_id = False
         if 'date' in vals.keys():
             if 'journal_id' in vals and 'journal_id' not in context:
                 journal_id = vals['journal_id']
@@ -809,13 +986,14 @@ class account_move_line(osv.osv):
                 journal_id = m.journal_id.id
                 period_id = m.period_id.id
             else:
-                journal_id = context['journal_id']
-                period_id = context['period_id']
-            journal = self.pool.get('account.journal').browse(cr,uid,[journal_id])[0]
-            if journal.allow_date:
-                period = self.pool.get('account.period').browse(cr,uid,[period_id])[0]
-                if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
-                    raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
+                journal_id = context.get('journal_id',False)
+                period_id = context.get('period_id',False)
+            if journal_id:
+                journal = self.pool.get('account.journal').browse(cr, uid, [journal_id])[0]
+                if journal.allow_date and period_id:
+                    period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
+                    if not time.strptime(vals['date'][:10],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'][:10],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
+                        raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
         else:
             return True
 
@@ -836,7 +1014,7 @@ class account_move_line(osv.osv):
         if vals.get('date', False):
             todo_date = vals['date']
             del vals['date']
-            
+
         for line in self.browse(cr, uid, ids,context=context):
             ctx = context.copy()
             if ('journal_id' not in ctx):
@@ -848,8 +1026,8 @@ class account_move_line(osv.osv):
                 if line.move_id:
                     ctx['period_id'] = line.move_id.period_id.id
                 else:
-                    ctx['period_id'] = line.period_id.id  
-            #Check for centralisation  
+                    ctx['period_id'] = line.period_id.id
+            #Check for centralisation
             journal = self.pool.get('account.journal').browse(cr, uid, ctx['journal_id'], context=ctx)
             if journal.centralisation:
                 self._check_moves(cr, uid, context=ctx)
@@ -977,15 +1155,10 @@ class account_move_line(osv.osv):
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals.get('ref', False),
                     })]
-            #else:
-            #    raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
-
-        #if not 'currency_id' in vals:
-        #    vals['currency_id'] = account.company_id.currency_id.id
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
-        if vals.get('account_tax_id',False):
+        if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
             total = vals['debit'] - vals['credit']
             if journal.refund_journal:
@@ -1050,15 +1223,10 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        # No needed, related to the job
-        #if not is_new_move and 'date' in vals:
-        #    if context and ('__last_update' in context):
-        #        del context['__last_update']
-        #    self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
         if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
-                self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
+                rs = self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
         return result
 account_move_line()
 

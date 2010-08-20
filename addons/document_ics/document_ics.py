@@ -63,7 +63,7 @@ class document_directory_ics_fields(osv.osv):
     _name = 'document.directory.ics.fields'
     _description = 'Document Directory ICS Fields'
     _columns = {
-        'field_id': fields.many2one('ir.model.fields', 'Open ERP Field'),
+        'field_id': fields.many2one('ir.model.fields', 'OpenERP Field'),
         'name': fields.selection(map(lambda x: (x, x), ICS_TAGS.keys()), 'ICS Value', required=True),
         'content_id': fields.many2one('document.directory.content', 'Content',\
                              required=True, ondelete='cascade'),
@@ -85,9 +85,9 @@ class document_directory_content(osv.osv):
 
     _columns = {
         'object_id': fields.many2one('ir.model', 'Object', oldname= 'ics_object_id'),
-        'obj_iterate': fields.boolean('Iterate object',help="If set, a separate \
+        'obj_iterate': fields.boolean('Iterate object', help="If set, a separate \
                         instance will be created for each record of Object"),
-        'fname_field': fields.char("Filename field",size=16,help="The field of the \
+        'fname_field': fields.char("Filename field", size=16, help="The field of the \
                         object used in the filename. Has to be a unique identifier."),
         'ics_domain': fields.char('Domain', size=64),
         'ics_field_ids': fields.one2many('document.directory.ics.fields', 'content_id', 'Fields Mapping')
@@ -138,7 +138,7 @@ class document_directory_content(osv.osv):
                 dctx2 = { 'active_id': ro['id'] }
                 if fname_fld:
                     dctx2['active_'+fname_fld] = ro[fname_fld]
-                n = node_content(tname, node, node.context,content,dctx=dctx2, act_id = ro['id'])
+                n = node_content(tname, node, node.context, content, dctx=dctx2, act_id = ro['id'])
                 n.fill_fields(cr, dctx2)
                 res2.append(n)
             return res2
@@ -166,7 +166,6 @@ class document_directory_content(osv.osv):
         ctx = (context or {})
         ctx.update(node.context.context.copy())
         ctx.update(node.dctx)
-        # print "ICS domain: ", type(content.ics_domain), content.ics_domain
         if content.ics_domain:
             for d in safe_eval(content.ics_domain,ctx):
                 # TODO: operator?
@@ -195,7 +194,6 @@ class document_directory_content(osv.osv):
                     elif ICS_TAGS[enl]=='date':
                         result[fields[enl]] = event.value.strftime('%Y-%m-%d %H:%M:%S')
 
-                    # print "Field ",enl,  result[fields[enl]]
                 elif fields[enl] and funcs[enl] == 'hours':
                     ntag = fexprs[enl] or 'dtstart'
                     ts_start = child.getChildValue(ntag, default=False)
@@ -237,9 +235,6 @@ class document_directory_content(osv.osv):
                     pass
 
                 wexpr = [ ( 'id', '=', wematch.group(2) ) ]
-
-            # print "Looking at ", cmodel, " for ", wexpr
-            # print "domain=", idomain
 
             fobj = self.pool.get(content.object_id.model)
 
@@ -354,7 +349,7 @@ class crm_meeting(osv.osv):
         if not default: default = {}
         if not context: context = {}
         default.update({'code': self.pool.get('ir.sequence').get(cr, uid, 'crm.meeting'), 'id': False})
-        return super(crm_meeting, self).copy(cr, uid, id, default, context)  
+        return super(crm_meeting, self).copy(cr, uid, id, default, context)
 
 crm_meeting()
 

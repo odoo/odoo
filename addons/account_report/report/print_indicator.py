@@ -23,15 +23,6 @@ import pooler
 import time
 from report import report_sxw
 
-#from report.interface import report_int
-#from reportlab.graphics.shapes import Drawing
-#from reportlab.graphics.charts.barcharts import VerticalBarChart
-#import reportlab.lib.colors as colors
-#from reportlab.graphics.widgetbase import Widget, TypedPropertyCollection
-#from reportlab.graphics.charts.textlabels import BarChartLabel
-#from reportlab.graphics import renderPM
-#from report.render import render
-#from report.interface import report_int
 from pychart import *
 import StringIO
 theme.use_color = 1
@@ -70,14 +61,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
         ind_ids=self.pool.get('account.report.report').search(self.cr,self.uid,[])
         obj_inds=self.pool.get('account.report.report').browse(self.cr,self.uid,ind_ids)
 
-#        def find_child(obj):
-#            self.list.append(obj)
-#            if obj.child_ids:
-#                for child in obj.child_ids:
-#                    find_child(child)
-#            return True
-#
-#        find_child(obj_inds)
 
         for obj_ind in obj_inds:
             level = 0
@@ -113,7 +96,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
         else:
             temp_head = [str(x[0:3]) for x in self.header_name]
             head_dict = dict(zip(temp_head,temp_head))
-        print "head_dict",head_dict
         return [head_dict]
 
     def getarray(self,data,object,array_header=''):
@@ -246,39 +228,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
         if intercall:
             return True
         self.count +=1
-#        drawing = Drawing(400, 300)
-#        data = [
-#                 tuple(data_val),
-#                 ]
-#        value_min=0.0
-#        vmin=min(data_val)
-#        vmax=max(data_val)
-#
-#        val_min=((vmin < 0.00 and vmin-2.00)  or 0.00)
-#        # calculating maximum
-#        val_max=(vmax/(pow(10,len(str(int(vmax)))-2))+1)*pow(10,len(str(int(vmax)))-2)
-#        bc = VerticalBarChart()
-#        bc.x = 50
-#        bc.y = 50
-#        bc.height = 245
-#        bc.width = 300
-#        bc.data = data
-#        value_step=(abs(val_max)-abs(val_min))/5
-#
-#        bc.strokeColor = colors.black
-#        bc.valueAxis.valueMin = val_min
-#        bc.valueAxis.valueMax = val_max
-#        bc.valueAxis.valueStep = value_step
-#
-#        bc.categoryAxis.labels.boxAnchor = 'ne'
-#        bc.categoryAxis.labels.dx = 8
-#
-#        bc.categoryAxis.labels.dy = -2
-#        bc.categoryAxis.labels.angle = 30
-#        bc.categoryAxis.categoryNames = data_period
-#        drawing.add(bc)
-#        drawing.save(formats=['png'],fnRoot=path+str(self.count),title="helo")
-#        renderPM.drawToFile(drawing1, 'example1.jpg','jpg')
         import os
         path=tools.config['addons_path']+"/account_report/tmp_images/image"
 
@@ -287,7 +236,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
             os.mkdir(dirname)
 
         can = canvas.init('image'+str(self.count)+".png")
-#        can.clip(0,0,600,400)
 
         data=zip(self.header_name,self.header_val)
 
@@ -301,7 +249,6 @@ class accounting_report_indicator(report_sxw.rml_parse):
         can.close()
         os.system('cp '+'image'+str(self.count)+'.png ' +path+str(self.count)+'.png')
         os.system('rm '+'image'+str(self.count)+'.png')
-#        can.endclip()
         return path+str(self.count)+'.png'
 
 report_sxw.report_sxw('report.print.indicators', 'account.report.history',

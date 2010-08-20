@@ -1,0 +1,97 @@
+- 
+  Create project 'Develop an outlook-openerp synchronization plugin'
+- 
+  !record {model: project.project, id: project_project_project0}:
+    company_id: base.main_company
+    name: Project123
+    members:
+      - project_long_term.res_users_manager0
+      - project_long_term.res_users_user0
+      - project_long_term.res_users_userfinance0
+      - project_long_term.res_users_userdesign0
+      - project_long_term.res_users_userdeveloper0
+      - project_long_term.res_users_usertester0
+      - project_long_term.res_users_useranalyst0
+- 
+  Create phase 'Develop GUI' in Outlook
+- 
+  !record {model: project.phase, id: project_phase_phase0}:
+    date_start: '2010-06-02'
+    duration: 200.0
+    name: phase123
+    product_uom: product.uom_day
+    project_id: project_project_project0
+    state: draft
+    resource_ids:
+      - resource_id: project_long_term.resource_resource_analyst0
+        useability: 80.0
+      - resource_id: project_long_term.resource_resource_programmer0
+        useability: 30.0
+      - resource_id: project_long_term.resource_resource_webdesigner0
+        useability: 30.0
+    
+    
+- 
+  Create the phase task 'Develop GUI for Server Configuration'
+- 
+  !record {model: project.task, id: project_task_t0}:
+    name: t1
+    planned_hours: 20.0
+    remaining_hours: 20.0
+    state: draft
+    phase_id: project_phase_phase0
+    project_id: project_project_project0
+    
+    
+- 
+  Create the phase task 'Develop GUI for Modules Configuration'
+- 
+  !record {model: project.task, id: project_task_t1}:
+    name: t2
+    planned_hours: 25.0
+    remaining_hours: 25.0
+    state: draft
+    phase_id: project_phase_phase0
+    project_id: project_project_project0
+        
+- 
+  Create the phase task 'Develop GUI for OpenERP Synchronisation'
+- 
+  !record {model: project.task, id: project_task_t2}:
+    name: t3
+    planned_hours: 30.0
+    remaining_hours: 30.0
+    state: draft
+    phase_id: project_phase_phase0
+    project_id: project_project_project0
+    
+    
+- 
+  Create the phase task 'Develop required Menus'
+- 
+  !record {model: project.task, id: project_task_3}:
+    name: t4
+    planned_hours: 25.0
+    remaining_hours: 25.0
+    state: draft
+    phase_id: project_phase_phase0
+    project_id: project_project_project0
+    
+    
+- 
+  Schedule phase tasks
+- 
+  !python {model: project.schedule.tasks}: |
+     self.compute_date(cr, uid, {"lang": "en_US",
+      "active_model": "project.phase", "active_ids": [ref("project_phase_phase0")],
+      "tz": False, "record_id": 138, "project_id": ref("project_project_project0"), "active_id": ref("project_phase_phase0"),
+      })
+
+-
+  Check if tasks scheduled, check that either of task's start_date, end_date and user_id is not null
+-
+  !python {model: project.phase}: |
+     phase=self.browse(cr, uid, [ref("project_phase_phase0")])[0]
+     for task in phase.task_ids:
+     	if (not task.user_id) or (not task.date_start) or (not task.date_end):
+     	   raise AssertionError("Phase Tasks not scheduled")

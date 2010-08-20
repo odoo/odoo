@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-          <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="15"/>
+          <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
           <menuitem name="Lunch Order" parent="base.menu_tools"
               id="menu_lunch" sequence="1" />
 
           <menuitem name="Reporting" parent="base.menu_tools"
-              id="base.menu_lunch_reporting" sequence="5" />
+              id="base.menu_lunch_reporting" sequence="6" />
 
           <menuitem name="Lunch Orders"
               parent="base.menu_lunch_reporting"
               id="menu_lunch_reporting_order" sequence="1" />
 
           <menuitem name="Configuration" parent="base.menu_tools"
-              id="base.menu_lunch_survey_root" sequence="6" />
+              id="base.menu_lunch_survey_root" sequence="20" />
 
           <menuitem name="Lunch" parent="base.menu_lunch_survey_root"
               id="menu_lunch_category_root_configuration" sequence="1" />
@@ -29,8 +29,9 @@
                         <field name="user_id" select="1"/>
                         <field name="date" select="1"/>
                         <field name="product" select="1" on_change="onchange_product(product)"/>
-                        <field name="price"/>
+                        <field name="category"/>
                         <field name="descript"/>
+                        <field name="price"/>
                         <field name="cashmove"/>
                         <field name="state"/>
                     </group>
@@ -45,15 +46,52 @@
             <field name="model">lunch.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Order">
+                <tree colors="blue:state in ('draft');black:state in ('confirmed')" string="Order">
                     <field name="user_id"/>
                     <field name="product"/>
+                    <field name="category"/>
                     <field name="date"/>
                     <field name="cashmove"/>
                     <field name="state"/>
                     <field name="descript"/>
                     <field name="price" sum="Total price"/>
+                    <button colspan="1"
+                              name="%(action_lunch_order_confirm)d"
+                              string="Confirm Order"
+                              type="action" states="draft"
+                              icon="terp-gtk-go-back-rtl" />
+                    <button colspan="1"
+                              name="%(action_lunch_order_cancel)d"
+                              string="Cancel Order"
+                              type="action" states="confirmed"
+                              icon="gtk-cancel" />
                 </tree>
+            </field>
+        </record>
+
+<!-- Lunch order Search view -->
+
+        <record id="view_lunch_order_filter" model="ir.ui.view">
+            <field name="name">lunch.order.list.select</field>
+            <field name="model">lunch.order</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Lunch Order">
+                    <filter icon="terp-check" string="To Confirm" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=',('confirmed'))]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-today" name="Today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                    <separator orientation="vertical"/>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="20">
+                        <filter string="Cashbox" icon="terp-dolar" domain="[]"  context="{'group_by':'cashmove'}"/>
+                        <separator orientation="vertical"/>
+<!--                        <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product'}"/>-->
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'category'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -63,6 +101,8 @@
                 <field name="name">Lunch Orders</field>
                 <field name="res_model">lunch.order</field>
                 <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="view_lunch_order_filter"/>
+                <field name="context">{"search_default_Today":1}</field>
         </record>
 
         <menuitem name="Lunch Order" parent="menu_lunch"
@@ -133,12 +173,36 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="CashMove" editable="top">
+                    <field name="box" select="1"/>
                     <field name="name" select="1" required="1"/>
                     <field name="user_cashmove" select="1"/>
-                    <field name="amount" select="1" sum="Total amount"/>
-                    <field name="box" select="1"/>
                     <field name="create_date"/>
+                    <field name="amount" select="1" sum="Total amount"/>
                 </tree>
+            </field>
+        </record>
+
+<!--  Cash Move Search View  -->
+
+        <record id="view_lunch_cashmove_filter" model="ir.ui.view">
+            <field name="name">lunch.cashmove.list.select</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search CashMove">
+                    <filter icon="terp-go-today" name="Today" string="Today" domain="[('create_date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59'))]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="user_cashmove"/>
+                    <field name="create_date"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="20">
+                        <filter string="User" icon="terp-personal" domain="[]"  context="{'group_by':'user_cashmove'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Box" icon="terp-dolar" domain="[]"  context="{'group_by':'box'}"/>
+                    </group>
+                </search>
+
             </field>
         </record>
 
@@ -147,6 +211,8 @@
         <record model="ir.actions.act_window" id="action_lunch_cashmove_form">
                 <field name="name">CashMove</field>
                 <field name="res_model">lunch.cashmove</field>
+                <field name="search_view_id" ref="view_lunch_cashmove_filter"/>
+                <field name="context">{"search_default_Today":1}</field>
         </record>
 
         <menuitem name="Cash Moves" parent="menu_lunch"
@@ -271,6 +337,27 @@
             </field>
         </record>
 
+<!-- Lunch Amount Search view -->
+
+        <record model="ir.ui.view" id="view_report_lunch_amount_search">
+            <field name="name">Lunch amount</field>
+            <field name="model">report.lunch.amount</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Box Amount by User">
+                    <group>
+                        <field name="user_id" select="1"/>
+                        <field name="box" select="1"/>
+                        <field name="amount" select="1"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="4">
+                        <filter string="Box" icon="terp-dolar" context="{'group_by':'box'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
 <!-- Lunch Amount Action -->
 
         <record model="ir.actions.act_window" id="action_report_lunch_amount_tree">
@@ -278,6 +365,7 @@
             <field name="res_model">report.lunch.amount</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_report_lunch_amount_search"/>
         </record>
 
         <menuitem name="Cash Position by User"

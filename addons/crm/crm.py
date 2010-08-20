@@ -22,7 +22,7 @@
 import time
 from datetime import datetime
 from datetime import timedelta
-
+import base64
 import tools
 from osv import fields
 from osv import osv
@@ -73,6 +73,35 @@ class crm_case(object):
             return False
         return user.address_id.partner_id.id
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Overrides orm copy method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: Id of mailgate thread
+        @param default: Dictionary of default values for copy.
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        default.update({
+                    'message_ids': [], 
+                })
+        if hasattr(self, '_columns'):
+            if self._columns.get('date_closed'):
+                default.update({
+                    'date_closed': False, 
+                })
+            if self._columns.get('date_open'):
+                default.update({
+                    'date_open': False
+                })
+        return super(osv.osv, self).copy(cr, uid, id, default, context=context)
+    
     def _get_default_email(self, cr, uid, context):
         """Gives default email address for current user
         @param self: The object pointer
@@ -118,15 +147,17 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
-
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
+        stage = False
         for case in self.browse(cr, uid, ids, context):
             if section in s:
-                st = case.stage_id.id  or False
+                st =  not context.get('force_domain', False) and case.stage_id.id  or False
                 if st in s[section]:
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
-        return True
+                    data = {'stage_id': s[section][st]}
+                    stage = s[section][st]
+                    self.write(cr, uid, [case.id], data)
+        return stage
 
     def get_stage_dict(self, cr, uid, ids, context=None):
         """This function gives dictionary for stage according to stage levels
@@ -138,11 +169,26 @@ class crm_case(object):
         if not context:
             context = {}
         stage_obj = self.pool.get('crm.case.stage')
-        sid = stage_obj.search(cr, uid, \
-                            [('object_id.model', '=', self._name)], context=context)
+        res = self.read(cr, uid, ids, ['section_id', 'stage_id'], context)[0]
+        section_id = res['section_id'] and res['section_id'][0] or False
+        stage_id = res['stage_id'] and res['stage_id'][0] or False
+
+        # We select either the stages in the same section as the current stage
+        # if it a stage that does not have a section, or the stages of the 
+        # current section of the case
+        if stage_id:
+            stage_record = stage_obj.browse(cr, uid, stage_id)
+            if not stage_record.section_id:
+                section_id = False # only select stages without section
+
+        domain = [('object_id.model', '=', self._name), ('section_id', '=', section_id)]
+        if 'force_domain' in context and context['force_domain']:
+            domain += context['force_domain']
+        sid = stage_obj.search(cr, uid, domain, context=context)
         s = {}
         previous = {}
         section = self._name
+
         for stage in stage_obj.browse(cr, uid, sid, context=context):
             s.setdefault(section, {})
             s[section][previous.get(section, False)] = stage.id
@@ -162,12 +208,18 @@ class crm_case(object):
 
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
+        stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
-                st = case.stage_id.id or False
+                st = not context.get('force_domain', False) and case.stage_id.id or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+                    data = {'stage_id': s[section][st]}
+                    if s[section][st]:
+                        stage = stage_pool.browse(cr, uid, s[section][st], context=context)
+                        if stage.on_change:
+                            data.update({'probability': stage.probability})
+                    self.write(cr, uid, [case.id], data)
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -181,7 +233,8 @@ class crm_case(object):
         """
         if not part:
             return {'value': {'partner_address_id': False,
-                            'email_from': False,
+                            'email_from': False, 
+                            'phone': False
                             }}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
@@ -200,11 +253,11 @@ class crm_case(object):
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email}}
+        return {'value': {'email_from': address.email, 'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
+        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
                                        message_id=message_id, attach=attach, \
@@ -258,12 +311,13 @@ class crm_case(object):
         """
         cases = self.browse(cr, uid, ids)
         for case in cases:
-            data = {'active': True, 'user_id': False}
+            data = {'active': True}
 
             if case.section_id.parent_id:
                 data['section_id'] = case.section_id.parent_id.id
-                if case.section_id.parent_id.user_id:
-                    data['user_id'] = case.section_id.parent_id.user_id.id
+                if case.section_id.parent_id.change_responsible:
+                    if case.section_id.parent_id.user_id:
+                        data['user_id'] = case.section_id.parent_id.user_id.id
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate, You are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
@@ -286,6 +340,13 @@ class crm_case(object):
         self.write(cr, uid, ids, {'state': 'cancel',
                                   'active': True})
         self._action(cr, uid, cases, 'cancel')
+        for case in cases:
+            message = "The " + self._description + " '" + case.name + "' has been Cancelled."
+            #TODO: Need to differentiate lead and opportunity
+#            if hasattr(case, 'type'):
+#                #TO CHECK: hasattr gives warning for other crm objects that don't have field 'type'
+#                message = "The " + (case.type or 'Case').title() + " '" + case.name + "' has been Cancelled."
+            self.log(cr, uid, case.id, message)
         return True
 
     def case_pending(self, cr, uid, ids, *args):
@@ -332,7 +393,6 @@ class crm_case(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context={}, attach=False,destination=True):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -349,38 +409,38 @@ class crm_case(object):
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
                 dest = case.section_id.reply_to
-                body = ""
-                body = case.email_last or case.description
+                body = case.description or ""
+                if case.message_ids:
+                    body = case.message_ids[0].description or ""
                 if not destination:
                     src, dest = dest, src
                     if body and case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature)
+                        if body:
+                            body += '\n\n%s' % (case.user_id.signature)
+                        else:
+                            body = '\n\n%s' % (case.user_id.signature)
 
                 body = self.format_body(body)
-                dest = [dest]
 
                 attach_to_send = None
 
                 if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
+                subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
                 flag = tools.email_send(
                     src,
-                    dest,
-                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
+                    [dest],
+                    subject, 
                     body,
                     reply_to=case.section_id.reply_to,
                     openobject_id=str(case.id),
                     attach=attach_to_send
                 )
-                self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
-                #if flag:
-                #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
-                #else:
-                #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
+                self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
         return True
 
     def _check(self, cr, uid, ids=False, context={}):
@@ -411,7 +471,7 @@ class crm_case(object):
         rule_obj = self.pool.get('base.action.rule')
         model_obj = self.pool.get('ir.model')
         model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('name','=',model_ids[0])])
+        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
     def format_body(self, body):
@@ -419,6 +479,20 @@ class crm_case(object):
 
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
+
+    def message_followers(self, cr, uid, ids, context=None):
+        """ Get a list of emails of the people following this thread
+        """
+        res = {}
+        for case in self.browse(cr, uid, ids, context=context):
+            l=[]
+            if case.email_cc:
+                l.append(case.email_cc)
+            if case.user_id and case.user_id.user_email:
+                l.append(case.user_id.user_email)
+            res[case.id] = l
+        return res
+
 
 class crm_case_section(osv.osv):
     """Sales Team"""
@@ -430,13 +504,13 @@ class crm_case_section(osv.osv):
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'code': fields.char('Code', size=8),
-        'active': fields.boolean('Active', help="If the active field is set to \
-                        true, it will allow you to hide the sales team without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to "\
+                        "true, it will allow you to hide the sales team without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
+        'change_responsible': fields.boolean('Change Responsible', help="Thick this box if you want that on escalation, the responsible of this sale team automatically becomes responsible of the lead/opportunity escaladed"),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address put \
-                        in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
@@ -465,7 +539,7 @@ class crm_case_section(osv.osv):
         level = 100
 
         while len(ids):
-            cr.execute('select distinct parent_id from crm_case_section where id =ANY(%s)', (ids,))
+            cr.execute('select distinct parent_id from crm_case_section where id IN %s', (tuple(ids),))
             ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
@@ -541,7 +615,7 @@ class crm_case_resource_type(osv.osv):
     _rec_name = "name"
 
     _columns = {
-        'name': fields.char('Case Resource Type', size=64, required=True, translate=True),
+        'name': fields.char('Resource Type', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
@@ -574,8 +648,7 @@ class crm_case_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order \
-                        when displaying a list of case stages."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model', 'Object Name'),
         'probability': fields.float('Probability (%)', required=True),
         'on_change': fields.boolean('Change Probability Automatically', \
@@ -630,5 +703,87 @@ class res_partner(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 res_partner()
+
+
+class crm_case_section_custom(osv.osv):
+    _name = "crm.case.section.custom"
+    _description = 'Custom CRM Case Section' 
+
+    _columns = {
+        'name': fields.char('Case Section',size=64, required=True, translate=True),
+        'code': fields.char('Section Code',size=8),
+        'active': fields.boolean('Active'),
+        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
+        'sequence': fields.integer('Sequence'),
+        'user_id': fields.many2one('res.users', 'Responsible User'),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this section"),
+        'parent_id': fields.many2one('crm.case.section.custom', 'Parent Section'), 
+        'note': fields.text('Notes'),
+    }
+
+    _defaults = {
+        'active': 1,
+        'allow_unlink': 1,
+    }
+
+    _sql_constraints = [
+        ('code_uniq', 'unique (code)', 'The code of the section must be unique !')
+    ]
+
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('SELECT DISTINCT parent_id FROM crm_case_section_custom '\
+                       'WHERE id IN %s',
+                       (tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+    _constraints = [
+        (_check_recursion, 'Error ! You cannot create recursive sections.', ['parent_id'])
+    ]
+
+crm_case_section_custom()
+
+
+class crm_case_custom(osv.osv, crm_case):
+    _name = 'crm.case.custom'
+    _inherit = 'mailgate.thread'
+    _description = "Custom CRM Case"
+
+    _columns = {
+            'id': fields.integer('ID', readonly=True),
+            'name': fields.char('Name',size=64,required=True),
+            'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
+            'active': fields.boolean('Active'),
+            'description': fields.text('Description'),
+            'section_id': fields.many2one('crm.case.section.custom', 'Section', required=True, select=True),
+            'probability': fields.float('Probability (%)'),
+            'email_from': fields.char('Partner Email', size=128),
+            'email_cc': fields.char('CC', size=252),
+            'partner_id': fields.many2one('res.partner', 'Partner'),
+            'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
+            'date': fields.datetime('Date'),
+            'create_date': fields.datetime('Created' ,readonly=True),
+            'date_deadline': fields.datetime('Deadline'),
+            'date_closed': fields.datetime('Closed', readonly=True),
+            'user_id': fields.many2one('res.users', 'Responsible'),
+            'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+            'ref' : fields.reference('Reference', selection=_links_get, size=128),
+            'date_action_last': fields.datetime('Last Action', readonly=1),
+            'date_action_next': fields.datetime('Next Action', readonly=1),
+        }
+
+    _defaults = {
+        'active': 1,
+        'state': 'draft',
+        'priority': AVAILABLE_PRIORITIES[2][0],
+        'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+    }
+
+crm_case_custom()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

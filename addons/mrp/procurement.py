@@ -31,6 +31,7 @@ class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
+        'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
     }
     
     def check_produce_product(self, cr, uid, procurement, context=[]):
@@ -39,8 +40,11 @@ class procurement_order(osv.osv):
         """
         properties = [x.id for x in procurement.property_ids]
         bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
-        if not bom_id:
+        if not bom_id:            
             cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
+            for (id, name) in self.name_get(cr, uid, procurement.id):
+                message = _('Procurement ') + " '" + name + "' "+ _("has an exception.") + _('No BoM defined for this product !')
+                self.log(cr, uid, id, message)
             return False
         return True
     
@@ -51,7 +55,7 @@ class procurement_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         res = procurement_obj.make_mo(cr, uid, ids, context=context)
         res = res.values()
-        return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
+        return len(res) and res[0] or 0
     
     def make_mo(self, cr, uid, ids, context={}):
         """ Make Manufacturing(production) order from procurement

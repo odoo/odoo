@@ -10,50 +10,50 @@
           <form position="attributes">
             <attribute name="string">Contact Information</attribute>
           </form>
-		  <xpath expr="//label[@string='description']" position="attributes">
-	            <attribute name="string">Information about you and the company you are related too. The Basic information related to the company has already been collected and some more information required by you to fill.</attribute>
-	      </xpath>
-	      <xpath expr='//separator[@string="title"]' position='attributes'>
-	          	  <attribute name='string'>Would you like more information or documentation ?</attribute>
-	          	  <attribute name='colspan'>4</attribute>
-	      </xpath>
-	      <xpath expr='//separator[@string="vsep"]' position='attributes'>
-	          	  <attribute name='rowspan'>22</attribute>
-	          	  <attribute name='string'></attribute>
-	      </xpath>
+          <xpath expr="//label[@string='description']" position="attributes">
+                <attribute name="string">To receive more information, please fill in the form about you and your company. Documentation and/or information will be sent to you as soon as possible.</attribute>
+          </xpath>
+          <xpath expr='//separator[@string="title"]' position='attributes'>
+                    <attribute name='string'>Would you like more information or documentation ?</attribute>
+                    <attribute name='colspan'>4</attribute>
+          </xpath>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                    <attribute name='rowspan'>22</attribute>
+                    <attribute name='string'></attribute>
+          </xpath>
           <group string="res_config_contents" position="replace">
-          	<group colspan="4" height="450" width="600">
-          	 	<group colspan="4">
- 		            <field name="ebook" nolabel="1"/>
-		            <label align="0.0" string="I want to receive the Open ERP ebook (PDF) by email." colspan="3"/>
-		            <field name="updates" nolabel="1"/>
-		            <label align="0.0" string="Yes, I would like to receive information updates from OpenERP." colspan="3"/>
-		       </group>
-          		<group colspan="4" attrs="{'invisible':[('ebook','=',False),('updates','=',False)]}">
-          		 	<separator colspan="4" string="About You"/>
-	            	<field name="name" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
-	            	<field name="job" colspan="2"/>
-		            <field name="email" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
-		            <field name="phone" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
-		            <field name="total_employees" colspan="2"/>
-		            <field name="industry" colspan="2"/>
-		        </group>
-		        <group colspan="4" attrs="{'invisible':[('ebook','=',False),('updates','=',False)]}">
-		            <separator string="Your projects with OpenERP" colspan="4"/>
-		            <field name="use_openerp" align="0.0"  colspan="1"/>
-		            <field name="already_using_openerp" align="0.0"  colspan="1"/>
-		            <field name="sell_openerp" align="0.0"  colspan="1"/>
-		            <field name="already_selling__openerp" align="0.0" colspan="1"/>
-		            <separator colspan="4" string="You would like to know more about"/>
-		            <field name="features" align="0.0" colspan="1"/>
-		            <field name="training" align="0.0" colspan="1"/>
-		            <field name="saas" align="0.0" colspan="1"/>
-		            <field name="support" align="0.0" colspan="1"/>
-		            <field name="partners_program" align="0.0" colspan="1"/>
-		            <field name="other" align="0.0" colspan="1"/>
-		       </group>
-	       </group>
-	       </group>
+              <group colspan="4" height="450" width="600">
+                   <group colspan="4">
+                     <field name="ebook" nolabel="1"/>
+                    <label align="0.0" string="I want to receive the OpenERP ebook (PDF) by email." colspan="3"/>
+                    <field name="updates" nolabel="1"/>
+                    <label align="0.0" string="Yes, I would like to receive information updates from OpenERP." colspan="3"/>
+               </group>
+                  <group colspan="4" attrs="{'invisible':[('ebook','=',False),('updates','=',False)]}">
+                       <separator colspan="4" string="About You"/>
+                    <field name="name" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
+                    <field name="job" colspan="2"/>
+                    <field name="email" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
+                    <field name="phone" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
+                    <field name="total_employees" colspan="2"/>
+                    <field name="industry" colspan="2"/>
+                </group>
+                <group colspan="4" attrs="{'invisible':[('ebook','=',False),('updates','=',False)]}">
+                    <separator string="Your projects with OpenERP" colspan="4"/>
+                    <field name="use_openerp" align="0.0"  colspan="1"/>
+                    <field name="already_using_openerp" align="0.0"  colspan="1"/>
+                    <field name="sell_openerp" align="0.0"  colspan="1"/>
+                    <field name="already_selling__openerp" align="0.0" colspan="1"/>
+                    <separator colspan="4" string="You would like to know more about"/>
+                    <field name="features" align="0.0" colspan="1"/>
+                    <field name="training" align="0.0" colspan="1"/>
+                    <field name="saas" align="0.0" colspan="1"/>
+                    <field name="support" align="0.0" colspan="1"/>
+                    <field name="partners_program" align="0.0" colspan="1"/>
+                    <field name="other" align="0.0" colspan="1"/>
+               </group>
+           </group>
+           </group>
         </data>
       </field>
     </record>
@@ -70,7 +70,7 @@
 
     <record id="base_setup_contact_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_contact"/>
-        <field name="sequence">1</field>
+        <field name="sequence">5</field>
         <field name="restart">never</field>
     </record>
   </data>

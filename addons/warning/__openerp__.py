@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """Module for Warnings form onchange Event.""",
-    'author': 'Tiny',
-    'depends': ['base', 'sale'],
+    'author': 'OpenERP SA',
+    'depends': ['base', 'sale', 'purchase'],
     'update_xml': ['warning_view.xml'],
     'demo_xml': [],
     'installable': True,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -33,25 +33,6 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 class account_report(osv.osv):
     _name = "account.report.report"
     _description = "Account Reporting"
-#    _color = [
-#            ('', ''),
-#            ('green','Green'),
-#            ('red','Red'),
-#            ('pink','Pink'),
-#            ('blue','Blue'),
-#            ('yellow','Yellow'),
-#            ('cyan','Cyan'),
-#            ('lightblue','Light Blue'),
-#            ('orange','Orange'),
-#            ]
-#    _style = [
-#            ('1','Header 1'),
-#            ('2','Header 2'),
-#            ('3','Header 3'),
-#            ('4','Header 4'),
-#            ('5','Normal'),
-#            ('6', 'Small'),
-#            ]
 
     def _amount_get(self, cr, uid, ids, field_name, arg, context={}):
         obj_fy=self.pool.get('account.fiscalyear')
@@ -61,7 +42,7 @@ class account_report(osv.osv):
             if key==0:
                 return obj.find(cr, uid, exception=False)
             else:
-                obj_key=obj.browse(cr,uid,obj.find(cr, uid, exception=False))
+                obj_key=obj.browse(cr, uid, obj.find(cr, uid, exception=False))
                 if isinstance(obj_key,list):
                     obj_key=obj_key[0]
                 key_ids=obj.search(cr,uid,[('date_stop','<',obj_key.date_start)])
@@ -69,8 +50,8 @@ class account_report(osv.osv):
                     return False
                 return key_ids[key]
 
-        def _calc_credit(code,year=0):
-            context['fiscalyear']=_calc_context(year,obj_fy)
+        def _calc_credit(code, year=0):
+            context['fiscalyear']=_calc_context(year, obj_fy)
             if not context['fiscalyear']:
                 del context['fiscalyear']
             acc = self.pool.get('account.account')
@@ -78,7 +59,7 @@ class account_report(osv.osv):
             return reduce(lambda y,x=0: x.credit+y, acc.browse(cr, uid, acc_id, context),0.0)
 
         def _calc_debit(code,year=0):
-            context['fiscalyear']=_calc_context(year,obj_fy)
+            context['fiscalyear']=_calc_context(year, obj_fy)
             if not context['fiscalyear']:
                 del context['fiscalyear']
             acc = self.pool.get('account.account')
@@ -86,7 +67,7 @@ class account_report(osv.osv):
             return reduce(lambda y,x=0: x.debit+y, acc.browse(cr, uid, acc_id, context),0.0)
 
         def _calc_balance(code,year=0):
-            context['fiscalyear']=_calc_context(year,obj_fy)
+            context['fiscalyear']=_calc_context(year, obj_fy)
             if not context['fiscalyear']:
                 del context['fiscalyear']
             acc = self.pool.get('account.account')
@@ -102,7 +83,7 @@ class account_report(osv.osv):
             return reduce(lambda y,x=0: x.amount+y, acc.browse(cr, uid, acc_id, context),0.0)
 
         def _calc_tax_code(code,period=0):
-            context['period_id']=_calc_context(period,obj_period)
+            context['period_id']=_calc_context(period, obj_period)
             if not context['period_id']:
                 return 0.00
             context['period_id']=context['period_id'][0]
@@ -118,10 +99,6 @@ class account_report(osv.osv):
                 'report': _calc_report,
                 'tax_code': _calc_tax_code,
             }
-#            if field_name=='status':
-#                fld_name = 'expression_status'
-#            else:
-#                fld_name = 'expression'
             try:
                 val = eval(getattr(rep,'expression'), objdict)
             except:
@@ -145,10 +122,8 @@ class account_report(osv.osv):
     def onchange_parent_id(self, cr, uid, ids, parent_id):
         v={}
         if parent_id:
-            acc=self.pool.get('account.report.report').browse(cr,uid,parent_id)
+            acc=self.pool.get('account.report.report').browse(cr, uid, parent_id)
             v['type']=acc.type
-#            if int(acc.style) < 6:
-#                v['style'] = str(int(acc.style)+1)
         return {'value': v}
 
     _columns = {
@@ -163,8 +138,8 @@ class account_report(osv.osv):
             ('other','Others')],
             'Type', required=True),
         'expression': fields.char('Expression', size=240, required=True),
-        'badness_limit' :fields.float('Badness Indicator Limit', digits=(16,2),help='This Value sets the limit of badness.'),
-        'goodness_limit' :fields.float('Goodness Indicator Limit', digits=(16,2),help='This Value sets the limit of goodness.'),
+        'badness_limit' :fields.float('Badness Indicator Limit', digits=(16,2), help='This Value sets the limit of badness.'),
+        'goodness_limit' :fields.float('Goodness Indicator Limit', digits=(16,2), help='This Value sets the limit of goodness.'),
         'parent_id': fields.many2one('account.report.report', 'Parent'),
         'child_ids': fields.one2many('account.report.report', 'parent_id', 'Children'),
         'note': fields.text('Note'),
@@ -180,14 +155,10 @@ class account_report(osv.osv):
                 ('very good', 'Very Good')
             ],
             string='Status'),
-         'disp_tree':fields.boolean('Display Tree',help='When the indicators are printed, if one indicator is set with this field to True, then it will display one more graphs with all its children in tree'),
-         'disp_graph':fields.boolean('Display As Graph',help='If the field is set to True, information will be printed as a Graph, otherwise as an array.'),
-#        'style': fields.selection(_style, 'Style', required=True),
-#        'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
-#        'color_back' : fields.selection(_color, 'Back Color')
+         'disp_tree':fields.boolean('Display Tree', help='When the indicators are printed, if one indicator is set with this field to True, then it will display one more graphs with all its children in tree'),
+         'disp_graph':fields.boolean('Display As Graph', help='If the field is set to True, information will be printed as a Graph, otherwise as an array.'),
     }
     _defaults = {
-#        'style': lambda *args: '5',
         'active': lambda *args: True,
         'type': lambda *args: 'indicator',
     }
@@ -207,7 +178,7 @@ class account_report(osv.osv):
         return self.name_get(cr, user, ids, context=context)
 
     _constraints = [
-    #TODO Put an expression to valid expression 
+    #TODO Put an expression to valid expression
     ]
 
 account_report()
@@ -215,12 +186,12 @@ account_report()
 class account_report_history(osv.osv):
 
     def _calc_value(self, cr, uid, ids, name, args, context):
-        acc_report_id=self.read(cr,uid,ids,['tmp','period_id'])
+        acc_report_id=self.read(cr, uid, ids, ['tmp','period_id'])
         tmp_ids={}
         for a in acc_report_id:
-            period_val=pooler.get_pool(cr.dbname).get('account.period').read(cr,uid,[a['period_id'][0]])[0]
-            period_id=pooler.get_pool(cr.dbname).get('account.period').search(cr,uid,[('date_start','<=',period_val['date_start']),('fiscalyear_id','=',period_val['fiscalyear_id'][0])])
-            tmp_ids[a['id']] = pooler.get_pool(cr.dbname).get('account.report.report').read(cr,uid,[a['tmp']],context={'periods':period_id})[0]['amount']
+            period_val=pooler.get_pool(cr.dbname).get('account.period').read(cr, uid, [a['period_id'][0]])[0]
+            period_id=pooler.get_pool(cr.dbname).get('account.period').search(cr, uid, [('date_start','<=',period_val['date_start']),('fiscalyear_id','=',period_val['fiscalyear_id'][0])])
+            tmp_ids[a['id']] = pooler.get_pool(cr.dbname).get('account.report.report').read(cr, uid, [a['tmp']], context={'periods':period_id})[0]['amount']
         return tmp_ids
 
     _name = "account.report.history"

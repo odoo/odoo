@@ -15,15 +15,18 @@
                    <attribute name="string">Thunderbird</attribute>
               </separator>
               <xpath expr="//label[@string='description']" position="attributes">
-                  <attribute name="string">This module is required for the thuderbird plug-in to work properly.This allows you to select an object that you had like to add to your email and its attachments. You can select a partner, a task, a project, an analytical account, or any other object and attach selected mail as .eml file in attachment of selected record.</attribute>
+                  <attribute name="string">This module allows you to archive an e-mail on one or more objects of OpenERP. You can attach an email to a partner, a task, an analytic account or any other object. You can also create a new object like a lead, a phone call, claim and many more.</attribute>
               </xpath>
+	      <xpath expr="//button[@string='Install Modules']" position="attributes">
+	        <attribute name="string">Configure</attribute>
+	      </xpath>
               <xpath expr='//separator[@string="vsep"]' position='attributes'>
 		  		<attribute name='string'></attribute>
 		  		<attribute name='rowspan'>15</attribute>
 		  	  </xpath>
 		  	  <group colspan="8" position="replace">
-              <group colspan="8" height="400" width="700">
-                  <field name="thunderbird"/>
+              <group colspan="8" height="450" width="750">
+                  <field name="thunderbird" invisible="1" />
                   <field name="name" invisible="1"/>
                   <field name="pdf_name" invisible="1"/>
                   <newline/>
@@ -69,27 +72,27 @@
                       <group colspan="2">
                           <image name="gtk-dialog-info"/>
                           <newline/>
-                          <label align="0.0" string="This module is required for the thuderbird plug-in to work properly.This allows you to select an object that you had like to add to your email and its attachments. You can select a partner, a task, a project, an analytical account, or any other object and attach selected mail as .eml file in attachment of selected record." width="200"/>
+                          <label align="0.0" string="This module allows you to archive an e-mail on one or more objects of OpenERP. You can attach an email to a partner, a task, an analytic account or any other object. You can also create a new object like a lead, a phone call, claim and many more." width="200"/>
                        </group>
                        <group colspan="8">
-		                  <field name="thunderbird"/>
+		                  <field name="thunderbird" invisible="1"/>
 		                  <field name="name" invisible="1"/>
 		                  <field name="pdf_name" invisible="1"/>
 		                  <newline/>
-		
+
 		                  <field name="plugin_file" filename="name"/>
 		                  <newline/>
 		                  <field name="pdf_file" filename="pdf_name"/>
 		                  <newline/>
 		                  <separator string="Thunderbird plugin installation note." colspan="4"/>
-		                  <field name="description" nolabel="1" colspan="8"/>                       
+		                  <field name="description" nolabel="1" colspan="8"/>
 		               </group>
                    </group>
              </group>
              <separator string="" colspan="4"/>
              <group colspan="4">
                  <label align="0.0" string="" colspan="3"/>
-                 <button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
+                 <button colspan="1" icon="gtk-close" special="cancel" string="_Close"/>
              </group>
          </form>
       </field>
@@ -105,8 +108,9 @@
       <field name="target">new</field>
     </record>
 
-	<menuitem id="menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10" />
-	<menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_wizard" name="Thunderbird" parent="menu_base_config_plugins" sequence="10" />
+    <menuitem id="base.menu_base_config_mail" name="Mail" parent="base.menu_base_config" sequence="10"/>
+	<menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config_mail" sequence="10" />
+	<menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_wizard" name="Thunderbird" parent="base.menu_base_config_plugins" sequence="10" />
 
   </data>
 </openerp>

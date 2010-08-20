@@ -19,19 +19,27 @@
 #
 ##############################################################################
 
+import time
+from mx import DateTime
+
 from osv import osv
 import netsvc
 import pooler
-from mx import DateTime
-import time
-
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
 
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
-        use_new_cursor: False or the dbname
+        Call the scheduler to check the procurement order
+        
+        @param self: The object pointer
+        @param cr: The current row, from the database cursor,
+        @param uid: The current user ID for security checks
+        @param ids: List of selected IDs
+        @param use_new_cursor: False or the dbname
+        @param context: A standard dictionary for contextual values
+        @return:  Dictionary of values        
         '''
         if not context:
             context = {}
@@ -126,6 +134,15 @@ class procurement_order(osv.osv):
         return {}
 
     def create_automatic_op(self, cr, uid, context=None):
+        """
+        Create procurement of  virtual stock < 0
+        
+        @param self: The object pointer
+        @param cr: The current row, from the database cursor,
+        @param uid: The current user ID for security checks
+        @param context: A standard dictionary for contextual values
+        @return:  Dictionary of values
+        """
         if not context:
             context = {}
         product_obj = self.pool.get('product.product')
@@ -167,7 +184,16 @@ class procurement_order(osv.osv):
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
             use_new_cursor=False, context=None, user_id=False):
         '''
+        Create procurement based on Orderpoint
         use_new_cursor: False or the dbname
+        
+        @param self: The object pointer
+        @param cr: The current row, from the database cursor,
+        @param user_id: The current user ID for security checks
+        @param context: A standard dictionary for contextual values
+        @param param: False or the dbname
+        @return:  Dictionary of values
+        """        
         '''
         if not context:
             context = {}
@@ -196,7 +222,7 @@ class procurement_order(osv.osv):
                     qty = max(op.product_min_qty, op.product_max_qty)-prods
                     reste = qty % op.qty_multiple
                     if reste > 0:
-                        qty += op.qty_multiple - reste                    
+                        qty += op.qty_multiple - reste
                     newdate = DateTime.now() + DateTime.RelativeDateTime(
                             days = int(op.product_id.seller_delay))
                     if op.product_id.supply_method == 'buy':
@@ -233,11 +259,12 @@ class procurement_order(osv.osv):
                 'act_from': user_id,
                 'act_to': user_id,
                 'body': '\n'.join(report)
-                })
+            })
         if use_new_cursor:
             cr.commit()
             cr.close()
         return {}
+
 procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

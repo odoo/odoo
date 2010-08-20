@@ -31,16 +31,17 @@
     Each idea has a score based on the different votes.
     The managers can obtain an easy view on best ideas from all the users.
     Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
+        'security/idea_security.xml',
+        'security/ir.model.access.csv',
         'wizard/idea_post_vote_view.xml',
         'idea_view.xml',
         'idea_workflow.xml',
-        'security/idea_security.xml',
-        'security/ir.model.access.csv',
+        'report/report_vote_view.xml',
     ],
     'demo_xml': [
         "idea_data.xml"

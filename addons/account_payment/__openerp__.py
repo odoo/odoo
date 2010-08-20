@@ -23,7 +23,7 @@
 {
     "name": "Payment Management",
     "version": "1.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "category": "Generic Modules/Payment",
     "depends": ["account"],
     "init_xml": [],
@@ -32,7 +32,7 @@
     * a more efficient way to manage invoice payment.
     * a basic mechanism to easily plug various automated payment.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [
@@ -41,14 +41,14 @@
         'wizard/account_payment_pay_view.xml',
         'wizard/account_payment_populate_statement_view.xml',
         'wizard/account_payment_create_order_view.xml',
-        'payment_view.xml',
-        'payment_workflow.xml',
-        'payment_sequence.xml',
+        'account_payment_view.xml',
+        'account_payment_workflow.xml',
+        'account_payment_sequence.xml',
         'account_invoice_view.xml',
-        'payment_report.xml',
-
+        'account_payment_report.xml',
     ],
     'demo_xml': [],
+    'test': ['test/account_payment.yml'],
     'installable': True,
     'active': False,
     'certificate': '0061703998541',

@@ -37,13 +37,14 @@
     It also asks screens to help easily configure your company, the header and
     footer, the account chart to install and the language.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': ['base_setup_data.xml'],
     'update_xml': ['security/ir.model.access.csv',
                    'base_setup_installer.xml',
-                   'base_setup_todo.xml','gtk_contact_form.xml'],
+                   'base_setup_todo.xml',
+                   ],
     'demo_xml': ['base_setup_demo.xml'],
     'installable': True,
     'active': True,

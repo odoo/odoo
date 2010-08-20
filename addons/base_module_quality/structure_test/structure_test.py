@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -50,7 +50,6 @@ This test checks if the module satisfy tiny structure
         f_list = []
         module_dict = {}
         module_dict['module'] = []
-#        count = 0
         final_score = 0.0
 
         if not module_name.islower():
@@ -67,7 +66,6 @@ This test checks if the module satisfy tiny structure
                 elif file_struct == 'process' and os.path.isdir(path):
                     module_dict[file_struct] = []
                 elif file_struct != 'i18n' and os.path.isdir(path):
-#                    self.counter += 1
                     self.run_test(cr, uid, path)
                 module_dict['module'].append(file_struct)
                 f_list.append(file_struct)
@@ -82,7 +80,7 @@ This test checks if the module satisfy tiny structure
         # module files calculation (module.py,module_view.xml,etc..)
         com_list = ['_unit_test.xml', '.py', '_view.xml', '_workflow.xml' , '_wizard.xml', '_report.xml', '_data.xml', '_demo.xml', '_security.xml', '_sequence.xml', '_graph.xml']
         com_list = map(lambda x: module_name + x, com_list)
-        main_file = ['__init__.py', '__terp__.py']
+        main_file = ['__init__.py', '__openerp__.py']
         com_list.extend(main_file)
         module_dict['module'] = filter(lambda x: len(x.split(".")) > 1, module_dict['module'])
         score = self.get_score(module_dict['module'], com_list)

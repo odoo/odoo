@@ -36,12 +36,10 @@ class budget_report(report_sxw.rml_parse):
         })
         self.context=context
 
-    def funct(self,object,form,ids={}, done=None, level=1):
+    def funct(self, object, form, ids={}, done=None, level=1):
 
         if not ids:
             ids = self.ids
-#       if not ids:
-#           return []
         if not done:
             done={}
 
@@ -71,14 +69,13 @@ class budget_report(report_sxw.rml_parse):
             if not budget_ids:
                 return []
 
-#            bd_ids = ','.join([str(x) for x in budget_lines])
             self.cr.execute('select distinct(analytic_account_id) from crossovered_budget_lines where id =ANY(%s)',(budget_ids,))
             an_ids=self.cr.fetchall()
 
             context={'wizard_date_from':d_from,'wizard_date_to':d_to}
             for i in range(0,len(an_ids)):
 
-                analytic_name=self.pool.get('account.analytic.account').browse(self.cr, self.uid,[an_ids[i][0]])
+                analytic_name=self.pool.get('account.analytic.account').browse(self.cr, self.uid, [an_ids[i][0]])
 
                 res={
                     'b_id':'-1',
@@ -94,7 +91,7 @@ class budget_report(report_sxw.rml_parse):
 
                 line_ids = c_b_lines_obj.search(self.cr, self.uid, [('id', 'in', budget_ids),('analytic_account_id','=',an_ids[i][0])])
 
-                line_id = c_b_lines_obj.browse(self.cr,self.uid,line_ids)
+                line_id = c_b_lines_obj.browse(self.cr, self.uid, line_ids)
                 tot_theo=tot_pln=tot_prac=tot_perc=0.00
 
                 done_budget=[]
@@ -194,7 +191,7 @@ class budget_report(report_sxw.rml_parse):
                 tot['perc']=float(tot['prac'] /tot['theo'])*100
         return result
 
-    def funct_total(self,form):
+    def funct_total(self, form):
         result=[]
         res={}
 

@@ -42,12 +42,12 @@ def strToDate(dt):
         return
 
 
-def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
+def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, eom):
     display={}
     if dept==0:
         count=0
-        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr,uid,[('employee_id','in',[empid,False]), ('type', '=', 'remove')])
-        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr,uid,p_id,['date_from','date_to','holiday_status_id','state'])
+        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr, uid, [('employee_id','in',[empid,False]), ('type', '=', 'remove')])
+        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr, uid, p_id, ['date_from','date_to','holiday_status_id','state'])
 
         for index in range(1,61):
             diff=index-1
@@ -88,6 +88,8 @@ def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
 
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, data, context):
+        obj_dept = pooler.get_pool(cr.dbname).get('hr.department')
+        obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
         depts=[]
         emp_id={}
 #        done={}
@@ -211,44 +213,31 @@ class report_custom(report_rml):
 
         if data['model']=='hr.employee':
             for id in data['form']['emp']:
-                 items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,id,['id','name'])
+                 items = obj_emp.read(cr, uid, id, ['id','name'])
 
-                 emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,items['id'],items['name'],som, eom)
+                 emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
                  row_id = row_id +1
 
         elif data['model']=='ir.ui.menu':
             for id in data['form']['depts']:
-                dept = pooler.get_pool(cr.dbname).get('hr.department').browse(cr, uid, id, context.copy())
-                depts.append(dept)
-                dept_ids = tuple(data['form']['depts'])
+                dept = obj_dept.browse(cr, uid, id, context=context)
 
-                cr.execute("""select dept_user.user_id \
-                from hr_department_user_rel dept_user \
-                where dept_user.department_id = %s\
-                union\
-                select dept.manager_id from hr_department dept\
-                where dept.id = %s""", (id, id))
-
+                cr.execute("""select dept.manager_id from hr_department dept\
+                where dept.id = %s""", (id,))
                 result=cr.fetchall()
                 if result==[]:
                     continue
                 dept_done=0
                 for d in range(0,len(result)):
-                    emp_id[d]=pooler.get_pool(cr.dbname).get('hr.employee').search(cr,uid,[('user_id','=',result[d][0])])
-                    items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,emp_id[d],['id','name'])
+                    emp_id[d] = obj_emp.search(cr, uid, [('user_id', '=', result[d][0])])
+                    items = obj_emp.read(cr, uid, emp_id[d], ['id', 'name'])
                     for item in items:
-#                        if item['id'] in done:
-#                            continue
-#                        else:
                         if dept_done==0:
-                            emp_xml += emp_create_xml(self,cr,uid,1,holiday_type,row_id,dept.id,dept.name,som, eom)
+                            emp_xml += emp_create_xml(self, cr, uid, 1, holiday_type, row_id, dept.id, dept.name, som, eom)
                             row_id = row_id +1
                         dept_done=1
-
-#                        done[item['id']] = 1
-                        emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,item['id'],item['name'],som, eom)
+                        emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
                         row_id = row_id +1
-
         # Computing the xml
         xml='''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
@@ -261,5 +250,6 @@ class report_custom(report_rml):
         return xml
 
 report_custom('report.holidays.summary', 'hr.holidays', '', 'addons/hr_holidays/report/holidays_summary.xsl')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

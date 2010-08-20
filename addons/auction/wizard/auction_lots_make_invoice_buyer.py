@@ -21,21 +21,21 @@
 from osv import fields, osv
 
 class auction_lots_make_invoice_buyer(osv.osv_memory):
-    _name = "auction.lots.make.invoice.buyer"
-    _description = "Make invoice buyer "
+    """Make Invoice for Buyer"""
     
+    _name = "auction.lots.make.invoice.buyer"
+    _description = __doc__
     _columns= {
-       'amount': fields.float('Invoiced Amount', required =True, readonly=True), 
+       'amount': fields.float('Invoiced Amount', required =True, readonly=True, help="Buyer Price"), 
        'objects':fields.integer('# of objects', required =True, readonly=True), 
        'number':fields.char('Invoice Number', size=64), 
        'buyer_id':fields.many2one('res.partner', 'Buyer', required=True), 
     }
-
     _defaults={
        'number': lambda *a: False,
     }
     
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
          To get default values for the object.
          @param self: The object pointer.
@@ -45,14 +45,17 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """        
+        if not context:
+            context={}
         res = super(auction_lots_make_invoice_buyer, self).default_get(cr, uid, fields, context=context)
-        for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
+        lots_obj=self.pool.get('auction.lots')
+        for lot in lots_obj.browse(cr, uid, context.get('active_ids', [])):
             if 'amount' in fields:
                 res.update({'amount': lot.buyer_price})                
             if 'buyer_id' in fields:
                 res.update({'buyer_id': lot.ach_uid and lot.ach_uid.id or False})                        
             if 'objects' in fields:
-                res.update({'objects': len(context['active_ids'])})   
+                res.update({'objects': len(context.get('active_ids', []))})   
         return res
 
     def makeInvoices(self, cr, uid, ids, context):
@@ -67,13 +70,12 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data') 
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
-        lots = order_obj.browse(cr, uid, context['active_ids'])
-        for data in self.read(cr, uid, ids):            
-            invoice_number = data['number']
+        lots = order_obj.browse(cr, uid, context.get('active_ids', []))
+        for current in self.browse(cr, uid, ids, context):            
+            invoice_number = current.number
             for lot in lots:
-                up_auction = order_obj.write(cr, uid, [lot.id], {'ach_uid': data['buyer_id']})
-            lots_ids = order_obj.lots_invoice(cr, uid, context['active_ids'], context, data['number'])
-            cr.commit()
+                up_auction = order_obj.write(cr, uid, [lot.id], {'ach_uid': current.buyer_id.id})
+            lots_ids = order_obj.lots_invoice(cr, uid, context.get('active_ids', []), context, current.number)
             return  {
                 'domain': "[('id','in', ["+','.join(map(str, lots_ids))+"])]", 
                 'name': 'Buyer invoices', 

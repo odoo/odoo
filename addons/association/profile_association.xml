@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
               <data>
                 <form position="attributes">
-                  <attribute name="string">Install Extra Modules</attribute>
+                  <attribute name="string">Association Profile Configuration</attribute>
                 </form>
                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
 	          	  <attribute name='string'></attribute>
@@ -18,16 +18,19 @@
                        position="attributes">
                   <attribute name="string">Install more modules. A few modules are proposed according to the Association Profile you selected. You will be able to install them based on our requirements.</attribute>
                 </xpath>
+                <xpath expr="//button[@string='Install Modules']" position="attributes">
+                    <attribute name="string">Configure</attribute>
+                </xpath>
                 <separator string="title" position="replace"/>
                 <group colspan="8">
                   <separator string="Project Management" colspan="4"/>
                   <field name="project"/>
                   <field name="project_gtd"/>
                   <field name="wiki"/>
+                  <separator string="Event Management" colspan="4"/>
+                  <field name="event_project"/>
                   <separator string="Resources Management" colspan="4"/>
                   <field name="hr_expense"/>
-                  <separator string="Relationship Management" colspan="4"/>
-                  <field name="crm_configuration"/>
                 </group>
               </data>
             </field>
@@ -59,5 +62,10 @@
       		</xpath>
       	</field>
 		</record>
+
+		<menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9" groups="base.group_extended"/>
+		<menuitem name="Events Organisation" id="base.menu_event_main" parent="base.menu_association" />
+		<menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+		<menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
     </data>
 </openerp>

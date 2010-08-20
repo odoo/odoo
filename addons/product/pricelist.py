@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 
-#from tools.misc import currency
 from _common import rounding
 import time
 from tools import config
@@ -64,7 +63,7 @@ class price_type(osv.osv):
         "active": lambda *args: True,
         "currency_id": _get_currency
     }
-    
+
 price_type()
 
 #----------------------------------------------------------
@@ -93,8 +92,7 @@ class product_pricelist(osv.osv):
             res.append((type['key'],type['name']))
 
         return res
-#        cr.execute('select key,name from product_pricelist_type order by name')
-#        return cr.fetchall()
+
     _name = "product.pricelist"
     _description = "Pricelist"
     _columns = {
@@ -228,10 +226,9 @@ class product_pricelist(osv.osv):
                         if sinfo:
                             cr.execute('SELECT * ' \
                                     'FROM pricelist_partnerinfo ' \
-                                    'WHERE suppinfo_id IN (' + \
-                                        ','.join(map(str, sinfo)) + ') ' \
+                                    'WHERE suppinfo_id IN %s' \
                                         'AND min_quantity <= %s ' \
-                                    'ORDER BY min_quantity DESC LIMIT 1', (qty,))
+                                    'ORDER BY min_quantity DESC LIMIT 1', (tuple(sinfo),qty,))
                             res2 = cr.dictfetchone()
                             if res2:
                                 price = res2['price']

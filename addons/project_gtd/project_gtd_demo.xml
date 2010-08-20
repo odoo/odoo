@@ -5,52 +5,48 @@
     <record model="project.gtd.context" id="context_office">
         <field name="name">Office</field>
         <field name="sequence">0</field>
-        <field name="project_default_id" ref="project.project_project_9"/>
     </record>
     <record model="project.gtd.context" id="context_travel">
         <field name="name">Travel</field>
         <field name="sequence">2</field>
-        <field name="project_default_id" ref="project.project_project_9"/>
     </record>
     <record model="project.gtd.context" id="context_car">
         <field name="name">Car</field>
         <field name="sequence">1</field>
-        <field name="project_default_id" ref="project.project_project_9"/>
     </record>
     <record model="project.gtd.context" id="context_home">
         <field name="name">Home</field>
         <field name="sequence">3</field>
-        <field name="project_default_id" ref="project.project_project_9"/>
     </record>
 
     <record model="project.gtd.timebox" id="timebox_daily">
         <field name="name">Today</field>
-        <field name="icon">terp-hr</field>
+        <field name="icon">terp-go-today</field>
     </record>
     <record model="project.gtd.timebox" id="timebox_weekly">
         <field name="name">This Week</field>
-        <field name="icon">terp-partner</field>
+        <field name="icon">terp-go-week</field>
     </record>
     <record model="project.gtd.timebox" id="timebox_monthly">
         <field name="name">This Month</field>
-        <field name="icon">terp-product</field>
+        <field name="icon">terp-go-month</field>
     </record>
     <record model="project.gtd.timebox" id="timebox_lt">
         <field name="name">Long Term</field>
         <field name="icon">terp-project</field>
     </record>
-    
+
     <record id="project.project_task_116" model="project.task">
         <field name="planned_hours">38.0</field>
         <field name="remaining_hours">38.0</field>
         <field name="timebox_id" ref="timebox_daily"/>
         <field name="context_id" ref="context_office"/>
-        <field name="type" ref="project.project_tt_development"/>
+        <field name="type_id" ref="project.project_tt_development"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field name="name">Specific adaptation to MRP</field>
     </record>
-   
+
      <record id="project.project_task_201" model="project.task">
         <field name="sequence">40</field>
         <field name="planned_hours">32.0</field>
@@ -67,23 +63,23 @@
         <field name="planned_hours">24.0</field>
         <field name="remaining_hours">24.0</field>
         <field name="timebox_id" ref="timebox_weekly"/>
-          <field name="context_id" ref="context_office"/>
+        <field name="context_id" ref="context_office"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field name="name">Validation + latest modifications.</field>
-      </record> 
-    
+      </record>
+
     <record id="project.project_task_116" model="project.task">
         <field name="planned_hours">38.0</field>
         <field name="remaining_hours">38.0</field>
         <field name="timebox_id" ref="timebox_daily"/>
         <field name="context_id" ref="context_office"/>
-        <field name="type" ref="project.project_tt_development"/>
+        <field name="type_id" ref="project.project_tt_development"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field name="name">Specific adaptation to MRP</field>
     </record>
-   
+
      <record id="project.project_task_201" model="project.task">
         <field name="sequence">40</field>
         <field name="planned_hours">32.0</field>
@@ -100,11 +96,11 @@
         <field name="planned_hours">24.0</field>
         <field name="remaining_hours">24.0</field>
         <field name="timebox_id" ref="timebox_weekly"/>
-          <field name="context_id" ref="context_office"/>
+        <field name="context_id" ref="context_office"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="project_id" ref="project.project_project_22"/>
         <field name="name">Validation + latest modifications.</field>
-      </record> 
-    
+      </record>
+
     </data>
 </openerp>

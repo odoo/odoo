@@ -75,22 +75,16 @@
                         <page string="Accounts">
                             <field name="account_ids" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Dotations">
-                            <button string="Spread" name="%(action_account_budget_spread)d" type="action" icon="gtk-fullscreen"/>
-                            <field name="dotation_ids" colspan="4" nolabel="1"/>
-                        </page>
-
                         <page string="Budget Lines">
                             <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
                                 <graph type="bar" string="Lines">
-                                    <field name="analytic_account_id" />
-                                    <!--<field name="general_budget_id" operator="+" />-->
+                                    <field name="analytic_account_id" groups="base.group_extended"/>
                                     <field name="planned_amount" operator="+"/>
                                     <field group="True" name="general_budget_id"/>
                                 </graph>
                                 <tree string="Budget Lines"  editable="top">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
@@ -101,7 +95,7 @@
                                 </tree>
                                 <form string="Budget Lines">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]" />
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
@@ -131,7 +125,7 @@
                             <field name="date_to"/>
                             <field name="crossovered_budget_line" colspan="4" nolabel="1">
                                 <tree string="Budget Lines">
-                                    <field name="analytic_account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended"/>
                                     <field name="general_budget_id"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
@@ -142,7 +136,7 @@
                                     <field name="percentage"/>
                                 </tree>
                                 <form string="Budget Lines">
-                                    <field name="analytic_account_id" select="1"/>
+                                    <field name="analytic_account_id" select="1" groups="base.group_extended"/>
                                     <field name="general_budget_id" select="1"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
@@ -153,10 +147,9 @@
                             <field name="state" select="1"/>
                             <group col="4" colspan="2">
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-apply" />
-                                <button string="Validate" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
+                                <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
                                 <button string="Done" name="done" states="validate" type="workflow"   icon="gtk-jump-to" />
                                 <button string="Cancel" name="cancel" states="confirm,validate" type="workflow" icon="gtk-cancel"/>
-                                <!--<button string="Set to Draft" name="action_set_to_draft" states="cancel" type="object"/>-->
                             </group>
 
                 </form>
@@ -168,7 +161,7 @@
             <field name="model">crossovered.budget</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Budget">
+               <tree colors="blue:state in ('draft');gray:state in ('done','cancel');black:state in ('confirm','validate')" string="Budget">
                     <field name="name" colspan="1" select="1"/>
                     <field name="code" colspan="1" select="1" />
                     <field name="state"/>
@@ -186,7 +179,7 @@
                <search string="Budget">
                    <group col="20" colspan="4">
                        <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"  default="1"/>
-                       <filter string="To Validate" icon="terp-gtk-go-back-rtl" domain="[('state','=','validate')]" help="To Validate Budgets" />
+                       <filter string="To Approve" icon="terp-gtk-go-back-rtl" domain="[('state','=','validate')]" help="To Approve Budgets" />
                        <separator orientation="vertical"/>
                        <field name="name" select="1"/>
                        <field name="code" select="1" />
@@ -216,7 +209,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budget Lines">
-                    <field name="analytic_account_id"/>
+                    <field name="analytic_account_id" groups="base.group_extended"/>
                     <field name="general_budget_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -235,7 +228,7 @@
             <field name="arch" type="xml">
                 <form string="Budget Lines">
                     <field name="crossovered_budget_id"/>
-                    <field name="analytic_account_id" select="1"/>
+                    <field name="analytic_account_id" select="1" groups="base.group_extended"/>
                     <field name="general_budget_id" select="1"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -295,7 +288,6 @@
                                 </form>
                                 <graph type="bar" string="Lines">
                                     <field name="general_budget_id" />
-                                    <!--<field name="analytic_account_id" operator="+"/>-->
                                     <field name="planned_amount" operator="+"/>
                                     <field group="True" name="analytic_account_id"/>
                                 </graph>
@@ -304,25 +296,7 @@
                 </notebook>
             </field>
         </record>
-        <!-- moved from account module -->
-         <!--Budget -->
-        <!--<report
-             id="account_analytic_budget_print"
-            string="Print Budget"
-            model="account.analytic.budget.post"
-            name="account.analytic.budget.print"
-            rml="account/project/report/account_analytic_budget_report.rml"
-            auto="False"
-            menu="False"/>-->
 
-        <!--Menu for project management-->
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
-        <menuitem id="base.menu_pm_invoicing" name="Billing" parent="base.menu_main_pm" sequence="7"/>
-        <menuitem id="menu_pm_budget" name="Budgets" parent="base.menu_pm_invoicing"/>
-        <menuitem action="open_budget_post_form" id="menu_pm_budget_post_form" parent="menu_pm_budget"/>
-        <menuitem parent="menu_pm_budget"
-             id="menu_act_pm_crossovered_budget_view"
-             action="act_crossovered_budget_view" />
     </data>
 </openerp>
 

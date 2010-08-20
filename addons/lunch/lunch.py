@@ -52,7 +52,7 @@ class lunch_product(osv.osv):
 
     _defaults = {
         'active': lambda *a : True,
-        }
+    }
 
 lunch_product()
 
@@ -82,7 +82,7 @@ class lunch_cashbox(osv.osv):
         'manager': fields.many2one('res.users', 'Manager'),
         'name': fields.char('Name', size=30, required=True, unique = True),
         'sum_remain': fields.function(amount_available, method=True, string='Remained Total'),
-        }
+    }
 
 lunch_cashbox()
 
@@ -94,16 +94,16 @@ class lunch_cashmove(osv.osv):
     _description = "Cash Move"
 
     _columns = {
-        'name': fields.char('Name', size=128),
+        'name': fields.char('Description', size=128),
         'user_cashmove': fields.many2one('res.users', 'User Name', required=True),
         'amount': fields.float('Amount', digits=(16, 2)),
         'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, required=True),
         'active': fields.boolean('Active'),
         'create_date': fields.datetime('Created date', readonly=True),
-        }
+    }
 
     _defaults = {
-    'active': lambda *a: True,
+        'active': lambda *a: True,
     }
 
 lunch_cashmove()
@@ -141,12 +141,13 @@ class lunch_order(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ], \
             'State', readonly=True, select=True),
         'price': fields.function(_price_get, method=True, string="Price"),
+        'category': fields.many2one('lunch.category','Category'),
     }
 
     _defaults = {
-        'user_id': lambda self,cr,uid,context: uid,
-        'date': lambda self,cr,uid,context: time.strftime('%Y-%m-%d'),
-        'state': lambda self,cr,uid,context: 'draft',
+        'user_id': lambda self, cr, uid, context: uid,
+        'date': lambda self, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'state': lambda self, cr, uid, context: 'draft',
     }
 
     def confirm(self, cr, uid, ids, box, context):
@@ -198,7 +199,8 @@ class lunch_order(osv.osv):
         if not product:
             return {'value': {'price': 0.0}}
         price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']
-        return {'value': {'price': price}}
+        categ_id = self.pool.get('lunch.product').browse(cr, uid, product).category_id.id
+        return {'value': {'price': price,'category':categ_id}}
 
 lunch_order()
 
@@ -215,7 +217,7 @@ class report_lunch_amount(osv.osv):
         'user_id': fields.many2one('res.users', 'User Name', readonly=True),
         'amount': fields.float('Amount', readonly=True, digits=(16, 2)),
         'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, readonly=True),
-        }
+    }
 
     def init(self, cr):
 

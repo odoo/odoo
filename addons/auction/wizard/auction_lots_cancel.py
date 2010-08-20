@@ -24,30 +24,31 @@ from osv import fields
 
 class auction_lots_cancel(osv.osv):
         '''
-        Open ERP Model
+        OpenERP Model
         '''
         _name = 'auction.lots.cancel'
         _description = 'To cancel auction lots.'
-        
-        def cancel(self, cr, uid, ids, context):
-            """ 
+
+        def cancel(self, cr, uid, ids, context=None):
+            """
             To cancel the auction lot
-    
+
             @param self: The object pointer.
             @param cr: A database cursor
             @param uid: ID of the user currently logged in
-            @param ids: List of IDs selected 
-            @param context: A standard dictionary 
-            @return: 
+            @param ids: List of IDs selected
+            @param context: A standard dictionary
+            @return:
             """
-
+            if not context:
+                context={}
             lots_obj = self.pool.get('auction.lots')
             invoice_obj = self.pool.get('account.invoice')
-            lot = lots_obj.browse(cr,uid,context['active_id'],context)
+            lot = lots_obj.browse(cr, uid, context.get('active_id', False), context)
             if lot.ach_inv_id:
-                    supplier_refund_inv_id = invoice_obj.refund(cr, uid,[lot.ach_inv_id.id])
+                    supplier_refund_inv_id = invoice_obj.refund(cr, uid, [lot.ach_inv_id.id])
             if lot.sel_inv_id:
-                    customer_refund_inv_id = invoice_obj.refund(cr, uid,[lot.sel_inv_id.id])
+                    customer_refund_inv_id = invoice_obj.refund(cr, uid, [lot.sel_inv_id.id])
             return {}
                 
         _columns = {

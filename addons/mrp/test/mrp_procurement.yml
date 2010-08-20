@@ -42,7 +42,7 @@
     seller_ids:
       - delay: 1
         name: base.res_partner_maxtor
-        qty: 300.0
+        min_qty: 300.0
     standard_price: 1.0
     supply_method: buy
     type: product
@@ -68,7 +68,7 @@
     seller_ids:
       - delay: 1
         name: base.res_partner_asus
-        qty: 100.0
+        min_qty: 100.0
     standard_price: 1.0
     supply_method: buy
     type: product
@@ -221,8 +221,7 @@
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
-    partner_id: base.res_partner_maxtor
-    address_id: base.res_partner_address_wong
+
 -
   I make my picking done.
 -
@@ -231,8 +230,6 @@
      picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Wong'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
-            'partner_id' : partial.partner_id and partial.partner_id.id or False,
-            'address_id' : partial.address_id and partial.address_id.id or False,
             'delivery_date' : partial.date         
      }
      for pick in pick_obj.browse(cr, uid, picking_ids):
@@ -260,8 +257,7 @@
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
-    partner_id: base.res_partner_maxtor
-    address_id: base.res_partner_address_wong
+
 -
   I make my picking done.
 -
@@ -270,8 +266,6 @@
      picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Tang'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
-            'partner_id': partial.partner_id and partial.partner_id.id or False,
-            'address_id': partial.address_id and partial.address_id.id or False,
             'delivery_date': partial.date         
      }
      for pick in pick_obj.browse(cr, uid, picking_ids):

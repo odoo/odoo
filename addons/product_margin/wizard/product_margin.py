@@ -18,21 +18,30 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
-from osv import osv
-from osv import fields
 
-import netsvc
 import time
+
+from osv import fields, osv
 from tools.translate import _
+
 class product_margin(osv.osv_memory):
-    '''
-    Product Margin
-    '''
     _name = 'product.margin'
     _description = 'Product Margin'
-
-    def action_open_window(self, cr, uid, ids, context):
+    _columns = {
+        'from_date': fields.date('From'),
+        'to_date': fields.date('To'),
+        'invoice_state':fields.selection([
+           ('paid','Paid'),
+           ('open_paid','Open and Paid'),
+           ('draft_open_paid','Draft, Open and Paid'),
+        ],'Invoice State', select=True, required=True),
+    }
+    _defaults = {
+        'from_date': time.strftime('%Y-01-01'),
+        'to_date': time.strftime('%Y-12-31'),
+        'invoice_state': "open_paid",
+    }
+    def action_open_window(self, cr, uid, ids, context=None):
         """
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
@@ -65,32 +74,6 @@ class product_margin(osv.osv_memory):
             'search_view_id': id['res_id']
         }
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        """
-           
-
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: the ID or list of IDs if we want more than one
-
-            @return:
-        """
-        return {'type':'ir.actions.act_window_close'}
-
-    _columns = {
-        #TODO : import time required to get currect date
-        'from_date': fields.date('From'),
-        #TODO : import time required to get currect date
-        'to_date': fields.date('To'),
-        'invoice_state':fields.selection([
-           ('paid','Paid'),
-           ('open_paid','Open and Paid'),
-           ('draft_open_paid','Draft, Open and Paid'),
-        ],'Invoice State', select=True, required=True),
-    }
-    _defaults = {
-        'from_date':  lambda *a:time.strftime('%Y-01-01'),
-        'to_date': lambda *a:time.strftime('%Y-01-01'),
-        'invoice_state': lambda *a:"open_paid",
-    }
 product_margin()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -27,8 +27,9 @@
     'description': """Financial and accounting reporting
     Fiscal statements
     Indicators
+    Add a dashboards for accountant that include  Indicators reporting.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
@@ -39,6 +40,7 @@
         'account_wizard.xml',
         'wizard/account_report_print_indicators_view.xml',
         'wizard/account_report_print_indicators_with_pdf_view.xml',
+        'board_account_report_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

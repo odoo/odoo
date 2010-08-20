@@ -21,32 +21,30 @@
 
 
 {
-    'name': 'report_account_analytic',
-    'version': '1.0',
-    'category': 'Generic Modules/Accounting',
+    'name'      : 'report_account_analytic',
+    'version'   : '1.1',
+    'category'  : 'Generic Modules/Accounting',
     'description': """
-    This module is for modifying account analytic view to show
-    important data to project manager of services companies.
-    Adds menu to show relevant information to each manager..
+This module is for modifying account analytic view to show
+important data to project manager of services companies.
+Adds menu to show relevant information to each manager..
 
-    You can also view the report of account analytic summary
-    user-wise as well as month wise.
+You can also view the report of account analytic summary
+user-wise as well as month wise.
 """,
-    "version" : "1.1",
-    "author" : "Camptocamp",
-    "category" : "Generic Modules/Accounting",
-    "module": "",
-    "website": "http://www.camptocamp.com/",
-    "depends" : ["account","hr_timesheet","hr_timesheet_invoice","project"],
-    "init_xml" : [],
-    "update_xml" : [
-        "security/ir.model.access.csv",
-        "account_analytic_analysis_view.xml",
-        "account_analytic_analysis_menu.xml",
-    ],
-    'demo_xml': [],
+    "author"    : "Camptocamp",
+    "website"   : "http://www.camptocamp.com/",
+    "depends"   : ["hr_timesheet_invoice"],
+    "init_xml"  : [],
+    "update_xml": [
+                    "security/ir.model.access.csv",
+                    "account_analytic_analysis_view.xml",
+                    "account_analytic_analysis_menu.xml",
+                    ],
+    'demo_xml'  : [],
     'installable': True,
-    'active': False,
+    'active'    : False,
     'certificate': '0042927202589',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

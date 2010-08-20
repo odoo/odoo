@@ -7,7 +7,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
              <form string="Create invoices">
-    			<separator colspan="4" string="Do you really want to create the invoices ?" />
+    			<separator colspan="4" string="Do you really want to create the invoice(s) ?" />
               	<button special="cancel" string="Cancel" icon="gtk-cancel"/>
                	<button name="make_invoices" string="Create Invoices" type="object" icon="gtk-ok"/>
              </form>
@@ -22,6 +22,5 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-
     </data>
 </openerp>

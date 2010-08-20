@@ -27,18 +27,21 @@
             <field name="kind">function</field>
             <field name="action">write({'state': 'draft'})</field>
         </record>
+
         <record id="act_confirm" model="workflow.activity">
             <field name="wkf_id" ref="wkf_expenses"/>
             <field name="name">confirm</field>
             <field name="kind">function</field>
             <field name="action">expense_confirm()</field>
         </record>
+
         <record id="act_accepted" model="workflow.activity">
             <field name="wkf_id" ref="wkf_expenses"/>
             <field name="name">accepted</field>
             <field name="kind">function</field>
             <field name="action">expense_accept()</field>
         </record>
+
         <record id="act_paid" model="workflow.activity">
             <field name="wkf_id" ref="wkf_expenses"/>
             <field name="name">paid</field>
@@ -46,13 +49,14 @@
             <field name="action">expense_paid()</field>
             <field name="flow_stop">True</field>
         </record>
+
         <record id="act_refused" model="workflow.activity">
             <field name="wkf_id" ref="wkf_expenses"/>
             <field name="name">refused</field>
             <field name="kind">function</field>
             <field name="action">expense_canceled()</field>
-<!--            <field name="flow_stop">True</field>-->
         </record>
+
         <record id="act_invoice" model="workflow.activity">
             <field name="wkf_id" ref="wkf_expenses"/>
             <field name="name">invoice</field>
@@ -66,24 +70,21 @@
             <field name="act_to" ref="act_confirm"/>
             <field name="signal">confirm</field>
         </record>
+
         <record id="t2" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_accepted"/>
             <field name="signal">validate</field>
             <field name="role_id" ref="HR"/>
         </record>
-        <!--record model="workflow.transition" id="t3">
-			<field name="act_from" ref="act_accepted" />
-			<field name="act_to" ref="act_paid" />
-			<field name="signal">paid</field>
-			<field name="role_id" ref="HR"/>
-		</record-->
+
         <record id="t4" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_refused"/>
             <field name="signal">refuse</field>
             <field name="role_id" ref="HR"/>
         </record>
+
         <record id="t5" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_refused"/>
@@ -96,33 +97,39 @@
             <field name="signal">refuse</field>
             <field name="role_id" ref="HR"/>
         </record>
+
         <record id="t7" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">draft</field>
             <field name="role_id" ref="HR"/>
         </record>
+
         <record id="t8" model="workflow.transition">
             <field name="act_from" ref="act_accepted"/>
             <field name="act_to" ref="act_invoice"/>
             <field name="signal">invoice</field>
             <field name="role_id" ref="HR_INV"/>
         </record>
+
         <record id="t9" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_paid"/>
             <field name="signal">subflow.paid</field>
         </record>
+
         <record id="t10" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_refused"/>
             <field name="signal">subflow.cancel</field>
         </record>
+
 		<record id="t11" model="workflow.transition">
             <field name="act_from" ref="act_refused"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">draft</field>
             <field name="role_id" ref="HR"/>
         </record>
+
     </data>
 </openerp>

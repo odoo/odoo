@@ -1,6 +1,27 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2009 Sharoon Thomas
+#    Copyright (C) 2004-2010 OpenERP SA (<http://www.openerp.com>)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
+##############################################################################
+
 from osv import osv, fields
 import time
-import email_template_engines
 import netsvc
 from tools.translate import _
 import tools
@@ -15,7 +36,7 @@ class email_template_mailbox(osv.osv):
     
     def run_mail_scheduler(self, cursor, user, context=None):
         """
-        This method is called by Open ERP Scheduler
+        This method is called by OpenERP Scheduler
         to periodically send emails
         """
         try:
@@ -41,9 +62,8 @@ class email_template_mailbox(osv.osv):
         return True
     
     def send_this_mail(self, cr, uid, ids=None, context=None):
-        if ids is None:
-            ids = []
-        for id in ids:
+        result = True
+        for id in (ids or []):
             try:
                 account_obj = self.pool.get('email_template.account')
                 values = self.read(cr, uid, id, [], context) 
@@ -54,22 +74,28 @@ class email_template_mailbox(osv.osv):
                         payload[attachment.datas_fname] = attachment.datas
                 result = account_obj.send_mail(cr, uid,
                               [values['account_id'][0]],
-                              {'To':values.get('email_to', u'') or u'', 'CC':values.get('email_cc', u'') or u'', 'BCC':values.get('email_bcc', u'') or u''},
+                              {'To':values.get('email_to') or u'',
+                               'CC':values.get('email_cc') or u'',
+                               'BCC':values.get('email_bcc') or u'',
+                               'Reply-To':values.get('reply_to') or u''},
                               values['subject'] or u'',
-                              {'text':values.get('body_text', u'') or u'', 'html':values.get('body_html', u'') or u''},
-                              payload=payload, context=context)
-                
+                              {'text':values.get('body_text') or u'', 'html':values.get('body_html') or u''},
+                              payload=payload,
+                              message_id=values['message_id'], 
+                              context=context)
                 if result == True:
                     self.write(cr, uid, id, {'folder':'sent', 'state':'na', 'date_mail':time.strftime("%Y-%m-%d %H:%M:%S")}, context)
                     self.historise(cr, uid, [id], "Email sent successfully", context)
                 else:
-                    self.historise(cr, uid, [id], result, context)
+                    error = result['error_msg']
+                    self.historise(cr, uid, [id], error, context)
+                    
             except Exception, error:
                 logger = netsvc.Logger()
-                logger.notifyChannel(_("Power Email"), netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (id, error))
+                logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (id, error))
                 self.historise(cr, uid, [id], error, context)
             self.write(cr, uid, id, {'state':'na'}, context)
-        return True
+        return result
     
     def historise(self, cr, uid, ids, message='', context=None):
         for id in ids:
@@ -81,21 +107,27 @@ class email_template_mailbox(osv.osv):
                             'From', 
                             size=64),
             'email_to':fields.char(
-                            'Recepient (To)', 
+                            'Recipient (To)', 
                             size=250,),
             'email_cc':fields.char(
-                            ' CC', 
+                            'CC', 
                             size=250),
             'email_bcc':fields.char(
-                            ' BCC', 
+                            'BCC', 
+                            size=250),
+            'reply_to':fields.char(
+                            'Reply-To', 
+                            size=250),
+            'message_id':fields.char(
+                            'Message-ID', 
                             size=250),
             'subject':fields.char(
-                            ' Subject', 
+                            'Subject', 
                             size=200,),
             'body_text':fields.text(
                             'Standard Body (Text)'),
             'body_html':fields.text(
-                            'Body (Text-Web Client Only)'),
+                            'Body (Rich Text Clients Only)'),
             'attachments_ids':fields.many2many(
                             'ir.attachment', 
                             'mail_attachments_rel', 

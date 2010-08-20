@@ -26,18 +26,22 @@ class sale_make_invoice(osv.osv_memory):
     _name = "sale.make.invoice"
     _description = "Sale Make Invoice"
     _columns = {
-        'grouped': fields.boolean('Group the invoices'),
+        'grouped': fields.boolean('Group the invoices', help='Check the box to group the invoices for the same customers'),
         'invoice_date':fields.date('Invoice Date'),
     }
-    _default = {
-        'grouped' : lambda *a: False
+    _defaults = {
+        'grouped': False
     }
+    
     def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         record_id = context and context.get('active_id', False)     
         order = self.pool.get('sale.order').browse(cr, uid, record_id)
         if order.state == 'draft':
             raise osv.except_osv(_('Warning !'),'You can not create invoice when sale order is not confirmed.')
         return False
+    
     def make_invoices(self, cr, uid, ids, context={}):
         order_obj = self.pool.get('sale.order')
         newinv = []
@@ -50,11 +54,11 @@ class sale_make_invoice(osv.osv_memory):
         for o in order_obj.browse(cr, uid, context.get(('active_ids'),[]), context):
             for i in o.invoice_ids:
                 newinv.append(i.id)
-        
+         
         mod_obj =self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         
-        id = mod_obj.read(cr, uid, result, ['res_id'])                
+        id = mod_obj.read(cr, uid, result, ['res_id'])   
         return {
             'domain': "[('id','in', ["+','.join(map(str,newinv))+"])]",
             'name': 'Invoices',
@@ -64,9 +68,9 @@ class sale_make_invoice(osv.osv_memory):
             'view_id': False,
             'context': "{'type':'out_refund'}",
             'type': 'ir.actions.act_window',
-            'search_view_id': id['id']                
+            'search_view_id': id['res_id']                
         }
 
 sale_make_invoice()        
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

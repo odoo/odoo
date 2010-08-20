@@ -39,10 +39,10 @@ class account_fiscalyear_close(osv.osv_memory):
                                  'Opening Entries Period', required=True),
        'report_name': fields.char('Name of new entries',size=64, required=True),
        'sure': fields.boolean('Check this box'),
-              }
+    }
     _defaults = {
         'report_name':'End of Fiscal Year Entry',
-        }
+    }
 
     def data_save(self, cr, uid, ids, context=None):
         """
@@ -68,8 +68,10 @@ class account_fiscalyear_close(osv.osv_memory):
         fy_id = data[0]['fy_id']
 
 
-        period_ids = obj_acc_period.search(cr, uid, [('fiscalyear_id', '=', fy_id)])
-        periods_fy2 = obj_acc_period.search(cr, uid, [('fiscalyear_id', '=', data[0]['fy2_id'])])
+        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)" , (str(data[0]['fy2_id']),))
+        fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
+        cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)" , (str(fy_id),))
+        fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
         period = obj_acc_period.browse(cr, uid, data[0]['period_id'], context=context)
         new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0]['fy2_id'], context=context)
@@ -90,8 +92,7 @@ class account_fiscalyear_close(osv.osv_memory):
         if move_ids:
             raise osv.except_osv(_('UserError'),
                     _('The opening journal must not have any entry in the new fiscal year !'))
-        query = "SELECT id FROM account_fiscalyear WHERE date_stop < '" + str(new_fyear.date_start) + "'"
-        cr.execute(query)
+        cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
         result = cr.dictfetchall()
         fy_ids = ','.join([str(x['id']) for x in result])
         query_line = obj_acc_move_line._query_get(cr, uid,
@@ -151,19 +152,17 @@ class account_fiscalyear_close(osv.osv_memory):
                 offset = 0
                 limit = 100
                 while True:
-                    #TODO: this query could be improved in order to work if there is more than 2 open FY
-                    # a.period_id IN ('+fy2_period_set+') is the problematic clause
-                    cr.execute('SELECT b.id, b.name, b.quantity, b.debit, b.credit, b.account_id, b.ref, ' \
+                    cr.execute('SELECT  DISTINCT b.id, b.name, b.quantity, b.debit, b.credit, b.account_id, b.ref, ' \
                                 'b.amount_currency, b.currency_id, b.blocked, b.partner_id, ' \
                                 'b.date_maturity, b.date_created ' \
                             'FROM account_move_line a, account_move_line b ' \
                             'WHERE b.account_id = %s ' \
                                 'AND b.reconcile_id is NOT NULL ' \
                                 'AND a.reconcile_id = b.reconcile_id ' \
-                                'AND b.period_id =ANY(%s)'\
-                                'AND a.period_id =ANY(%s)' \
+                                'AND b.period_id IN ('+fy_period_set+') ' \
+                                'AND a.period_id IN ('+fy2_period_set+') ' \
                             'ORDER BY id ' \
-                            'LIMIT %s OFFSET %s', (account.id,period_ids,periods_fy2,limit, offset))
+                            'LIMIT %s OFFSET %s', (account.id, limit, offset))
                     result = cr.dictfetchall()
                     if not result:
                         break

@@ -20,6 +20,9 @@
     type: product
     uom_id: product_uom_litre0
     uom_po_id: product_uom_litre0
+    property_stock_inventory: stock.location_inventory
+    property_stock_procurement: stock.location_procurement
+    property_stock_production: stock.location_production
 -
   I create record for product Orange.
 - 
@@ -30,11 +33,15 @@
     seller_ids:
       - delay: 1
         name: base.res_partner_asus
-        qty: 1.0
+        min_qty: 1.0
+        product_uom: product_uom_litre0
     supply_method: buy
     type: product
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
+    property_stock_inventory: stock.location_inventory
+    property_stock_procurement: stock.location_procurement
+    property_stock_production: stock.location_production
 -
   I create record for product Sugar.
 - 
@@ -45,11 +52,15 @@
     seller_ids:
       - delay: 1
         name: base.res_partner_desertic_hispafuentes
-        qty: 2.0
+        min_qty: 2.0
+        product_uom: product.product_uom_kgm
     supply_method: buy
     type: product
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
+    property_stock_inventory: stock.location_inventory
+    property_stock_procurement: stock.location_procurement
+    property_stock_production: stock.location_production
 -
   I create record for product Water.
 - 
@@ -61,6 +72,9 @@
     type: consu
     uom_id: product_uom_litre0
     uom_po_id: product_uom_litre0
+    property_stock_inventory: stock.location_inventory
+    property_stock_procurement: stock.location_procurement
+    property_stock_production: stock.location_production
 -
   I define the BoM to produce an orange juice.
 - 
@@ -182,14 +196,14 @@
 -
   !python {model: procurement.order}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','!=','cofirmed')])
+    proc_ids = self.search(cr, uid, [('state','!=','confirmed')])
     assert proc_ids, _('No Procurements!')
 -
   The scheduler runs.
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
-      search: "[('state','!=','cofirmed')]"
+      search: "[('state','=','confirmed')]"
 -
   I am checking Internal picking. I see one picking for Orange juice and its 
   stock moves for Oranges, Sugar and Water made correctly.
@@ -237,14 +251,27 @@
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
-    partner_id: base.res_partner_asus
-    address_id: base.res_partner_address_tang
 -
   I make my pickings done.
 -
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
-     picking_ids = pick_obj.search(cr, uid, [('type','=','in')])
-     self.view_init(cr, uid, ['date','partner_id','address_id'],context={'active_ids': picking_ids})
-     self.do_partial(cr, uid, [1], context={'active_ids': picking_ids})
-     
+     picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Tang'),('state','=','assigned')])
+     partial = self.browse(cr, uid, 1, context)
+     partial_datas = {
+            'delivery_date': partial.date         
+     }
+     for pick in pick_obj.browse(cr, uid, picking_ids):
+        for m in pick.move_lines:
+           partial_datas['move%s'%(m.id)] = {
+                    'product_id': m.product_id.id,
+                    'product_qty': m.product_qty,
+                    'product_uom': m.product_uom.id
+           }
+           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):   
+                    partial_datas['move%s'%(m.id)].update({             
+                        'product_price': m.product_price,
+                        'product_currency': m.product_currency
+                    })
+     pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
+

@@ -1,0 +1,47 @@
+- 
+  Create project 'Retro Planning'
+- 
+  !record {model: project.project, id: project_project_retroplanning0}:
+    company_id: base.main_company
+    date: !eval time.strftime('%Y-%m-%d')
+    name: Retro Planning
+    
+- 
+  Create task 'Plan all projects'
+- 
+  !record {model: project.task, id: project_task_planallprojects0}:
+    date_deadline: '2010-06-07'
+    date_end: '2010-06-04 14:00:00'
+    date_start: '2010-06-01 17:25:32'
+    name: Plan all projects
+    planned_hours: 24.0
+    project_id: project_project_retroplanning0
+    remaining_hours: 24.0
+    state: draft
+-
+  Check if task deadline_date and start_date changes upon changing its project's end_date 
+-
+  !python {model: project.project}: |
+    from datetime import datetime, date, timedelta
+    import time
+    data_project = self.browse(cr,uid,[ref("project_project_retroplanning0")])
+    prj = data_project[0]
+    old_end_date=''
+    if prj.date:
+    	old_end_date = date(*time.strptime(prj.date,'%Y-%m-%d')[:3])
+    if old_end_date:
+    	new_end_date = date.today()+timedelta(1)
+    	res={}
+    	for task in prj.tasks:
+    		start_dt = (datetime(*time.strptime(task.date_start,'%Y-%m-%d  %H:%M:%S')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
+    		deadline_dt=''
+            if task.date_deadline:
+           	    deadline_dt = (datetime(*time.strptime(task.date_deadline,'%Y-%m-%d')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d')
+           	res[task.id]=[start_dt,deadline_dt]
+    self.write(cr, uid, [ref("project_project_retroplanning0")], {'date' : (datetime.now()+timedelta(1)).strftime('%Y-%m-%d')})
+    data_project = self.browse(cr,uid,[ref("project_project_retroplanning0")])
+    prj = data_project[0]
+    
+    for task in prj.tasks:
+        assert task.date_start == res[task.id][0], "task start date differs, expected %s, got %s"%(res[task.id][0], task.date_start)
+        assert task.date_deadline == res[task.id][1], "task deadline date differs, expected %s, got %s"%(res[task.id][1], task.date_deadline)

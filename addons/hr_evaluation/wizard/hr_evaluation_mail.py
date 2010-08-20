@@ -28,8 +28,10 @@ class hr_evaluation_reminder(osv.osv_memory):
         'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluations', required=True)
     }
 
-    def send_mail(self, cr, uid, ids, context={}):
+    def send_mail(self, cr, uid, ids, context=None):
         hr_evaluation_obj = self.pool.get('hr_evaluation.evaluation')
+        if context is None:
+            context = {}
         evaluation_data = self.read(cr, uid, ids, context=context)[0]
         for waiting_id in hr_evaluation_obj.browse(cr, uid, evaluation_data['evaluation_id'], context=context).survey_request_ids:
             if waiting_id.state == "waiting_answer" and waiting_id.user_to_review_id.work_email :

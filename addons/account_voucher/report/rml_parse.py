@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -41,7 +41,6 @@ class rml_parse(report_sxw.rml_parse):
         })
 
     def comma_me(self,amount):
-        #print "#" + str(amount) + "#"
         if not amount:
             amount = 0.0
         if  type(amount) is float :
@@ -56,14 +55,14 @@ class rml_parse(report_sxw.rml_parse):
             return new
         else:
             return self.comma_me(new)
-        
+
     def _ellipsis(self, string, maxlen=100, ellipsis = '...'):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
         except Exception, e:
             return False
-        
+
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
@@ -100,16 +99,14 @@ class rml_parse(report_sxw.rml_parse):
             try:
                 Stringer = str.encode("utf-16")
             except UnicodeDecodeError:
-                print "UTF_16 Error"
                 Stringer = str
             else:
                 return Stringer
         else:
             return Stringer
         return Stringer
-    
+
     def explode_this(self,chaine,length):
-        #chaine = self.repair_string(chaine)
         chaine = rstrip(chaine)
         ast = list(chaine)
         i = length
@@ -118,20 +115,18 @@ class rml_parse(report_sxw.rml_parse):
             i = i + length
         chaine = str("".join(ast))
         return chaine
-    
+
     def repair_string(self,chaine):
         ast = list(chaine)
         UnicodeAst = []
         _previouslyfound = False
         i = 0
-        #print str(ast)
         while i < len(ast):
             elem = ast[i]
             try:
                 Stringer = elem.encode("utf-8")
             except UnicodeDecodeError:
                 to_reencode = elem + ast[i+1]
-                print str(to_reencode)
                 Good_char = to_reencode.decode('utf-8')
                 UnicodeAst.append(Good_char)
                 i += i +2
@@ -141,17 +136,13 @@ class rml_parse(report_sxw.rml_parse):
         return "".join(UnicodeAst)
 
     def ReencodeAscii(self,str):
-        print sys.stdin.encoding
         try:
             Stringer = str.decode("ascii")
         except UnicodeEncodeError:
-            print "REENCODING ERROR"
             return str.encode("ascii")
         except UnicodeDecodeError:
-            print "DECODING ERROR"
             return str.encode("ascii")
         else:
-            print Stringer
             return Stringer
 
     def _add_header(self, node, header=1):

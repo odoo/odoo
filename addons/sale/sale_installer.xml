@@ -1,0 +1,66 @@
+<openerp>
+  <data>
+    <record id="view_sale_installer" model="ir.ui.view">
+      <field name="name">sale.installer.view</field>
+      <field name="model">sale.installer</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="arch" type="xml">
+        <data>
+          <form position="attributes">
+            <attribute name="string">Sale Management Modules Configuration</attribute>
+          </form>
+
+          <separator string="title" position="attributes">
+            <attribute name="string">Sales Management</attribute>
+          </separator>
+          <xpath expr="//label[@string='description']"
+                 position="attributes">
+            <attribute name="string">After having installed the core sales application, you can extend it depending on the needs of your sale's organization.</attribute>
+          </xpath>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                <attribute name='string'></attribute>
+          </xpath>
+          <xpath expr="//button[@string='Install Modules']" position="attributes">
+                   <attribute name="string">Configure</attribute>
+          </xpath>
+          <group colspan="8">
+            <field name="sale_analytic_plans"/>
+            <field name="sale_journal"/>
+            <field name="sale_layout"/>
+            <field name="sale_margin"/>
+            <field name="sale_order_dates"/>
+          </group>
+        </data>
+      </field>
+    </record>
+
+    <record id="action_sale_installer" model="ir.actions.act_window">
+      <field name="name">Sale Management Modules Installation</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">sale.installer</field>
+      <field name="view_id" ref="view_sale_installer"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="sale_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_sale_installer"/>
+      <field name="sequence">3</field>
+      <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
+    </record>
+
+   <record id="sale_ir_actions_todo_tree" model="ir.ui.view">
+    <field name="model">ir.actions.todo</field>
+    <field name="name">sale_installer_action_replace</field>
+    <field name="type">tree</field>
+    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+    <field name="arch" type="xml">
+     <xpath expr="//button[@string='Launch']" position="replace">
+            <button name="%(action_sale_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+        </xpath>
+    </field>
+    </record>
+  </data>
+</openerp>

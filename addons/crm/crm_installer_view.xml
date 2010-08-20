@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">CRM Modules Installation</attribute>
+            <attribute name="string">CRM Modules Configuration</attribute>
           </form>
 
           <separator string="title" position="attributes">
@@ -25,26 +25,24 @@
           <xpath expr="//button[@string='Install Modules']" position="attributes">
             <attribute name="string">Configure</attribute>
           </xpath>
-		  <group colspan="8">
+	  	  <group colspan="8">
+			<group colspan="4" col="4" groups="base.group_extended" name="other">
+		  		<field name="crm_claim" />
+		  		<field name="crm_helpdesk" />
+		  		<field name="crm_fundraising" />
+        	  	<field name="wiki_sale_faq"/>
+  		  		<field name="sale_crm" invisible="1"/>
+			</group>
 			<group colspan="2" col="2">
 				<separator string="Synchronization" colspan="4" />
           		<field name="crm_caldav" />
           		<field name="fetchmail" />
           	</group>
           	<group colspan="2" col="2">
-				<separator string="Plugins" colspan="4" />
+			<separator string="Plugins" colspan="4" />
           		<field name="thunderbird" />
-          		<label string="*Outlook*" />
-<!--    TODO      		<field name="outlook" />-->
+          		<field name="outlook" />
           	</group>
-			<group colspan="4" col="4" groups="base.group_extended" name="other">
-				<separator string="Additional features" colspan="4" />
-	          	<field name="crm_claim" />
-	          	<field name="crm_helpdesk" />
-	          	<field name="crm_fundraising" />
-                <field name="wiki_sale_faq"/>
-  	          	<field name="sale_crm" invisible="1"/>
-          </group>
           </group>
         </data>
       </field>

@@ -29,13 +29,17 @@ class project_timebox_fill(osv.osv_memory):
         'timebox_id': fields.many2one('project.gtd.timebox', 'Get from Timebox', required=True),
         'timebox_to_id': fields.many2one('project.gtd.timebox', 'Set to Timebox', required=True),
         'task_ids': fields.many2many('project.task', 'project_task_rel', 'task_id', 'fill_id', 'Tasks selection')
-                }
+    }
 
     def _get_from_tb(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         ids = self.pool.get('project.gtd.timebox').search(cr, uid, [], context=context)
         return ids and ids[0] or False
 
     def _get_to_tb(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'active_id' in context:
             return context['active_id']
         return False
@@ -43,7 +47,7 @@ class project_timebox_fill(osv.osv_memory):
     _defaults = {
          'timebox_id': _get_from_tb,
          'timebox_to_id': _get_to_tb,
-                 }
+    }
 
     def process(self, cr, uid, ids, context=None):
         if context is None:

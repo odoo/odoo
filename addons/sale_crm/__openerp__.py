@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Creates Sale orders from Opportunity',
     'version': '1.0',
@@ -34,16 +33,18 @@ The case is then closed and linked to the generated sale order.
 We suggest you to install this module if you installed both the sale and the
 crm modules.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['sale', 'crm'],
     'init_xml': [],
-    'update_xml': ['sale_crm_wizard.xml',
+    'update_xml': ['wizard/crm_make_sale_view.xml',
                    'sale_crm_view.xml',
+                   'board_sale_crm_view.xml',
                    'process/sale_crm_process.xml',
                    'security/sale_crm_security.xml',
                    ],
     'demo_xml': [],
+    'test': ['test/sale_crm.yml'],
     'installable': True,
     'active': False,
     'certificate': '0064360130141',

@@ -19,24 +19,13 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
-
-import mx.DateTime
-import base64
-
-from tools.translate import _
-
-import tools
-from osv import fields,osv,orm
-from osv.orm import except_orm
+from osv import fields,osv
 
 class project_tasks(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
 
-    def msg_new(self, cr, uid, msg):        
+    def msg_new(self, cr, uid, msg):
         mailgate_obj = self.pool.get('mail.gateway')
         msg_body = mailgate_obj.msg_body_get(msg)
         data = {      
@@ -72,12 +61,11 @@ class project_tasks(osv.osv):
             if msg_actions['priority'] in ('1','2','3','4','5'):
                 data['priority'] = msg_actions['priority']
         
-
         self.write(cr, uid, [id], data)
         getattr(self,act)(cr, uid, [id])
         return True
 
-    def emails_get(self, cr, uid, ids, context={}):                
+    def message_followers(self, cr, uid, ids, context=None):
         res = []
         if isinstance(ids, (str, int, long)):
             select = [ids]
@@ -91,6 +79,8 @@ class project_tasks(osv.osv):
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
-        return True 
+        return True
 
 project_tasks()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

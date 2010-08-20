@@ -30,12 +30,12 @@ class report_rappel(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(report_rappel, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
-            'time' : time,
+            'time': time,
             'ids_to_objects': self._ids_to_objects,
-            'adr_get' : self._adr_get,
-            'getLines' : self._lines_get,
-            'get_text' : self._get_text
-        })
+            'adr_get': self._adr_get,
+            'getLines': self._lines_get,
+            'get_text': self._get_text
+                                })
 
     def _ids_to_objects(self, partners_ids):
         pool = pooler.get_pool(self.cr.dbname)
@@ -50,7 +50,7 @@ class report_rappel(report_sxw.rml_parse):
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
         res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
         adr = res_partner.address_get(self.cr, self.uid, [partner.id], [type])[type]
-        return adr and res_partner_address.read(self.cr, self.uid, [adr]) or False
+        return adr and res_partner_address.read(self.cr, self.uid, [adr]) or [{}]
 
     def _lines_get(self, partner):
         moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -91,10 +91,8 @@ class report_rappel(report_sxw.rml_parse):
 
         return text
 
-
 report_sxw.report_sxw('report.account_followup.followup.print',
-        'res.partner', 'addons/account_followup/report/rappel.rml',
+        'res.partner', 'addons/account_followup/report/report_followp_print.rml',
         parser=report_rappel)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

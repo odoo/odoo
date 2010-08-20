@@ -132,8 +132,7 @@
             </tr>
             <tr>
                 <td><para style="P8">[[ repeatIn(o.lines,'line') ]]</para>
-                    <para style="terp_default_9b">[[ len(line.product_id.name) > 39 and line.product_id.name[:39] + '...' or line.product_id.name ]]</para>
-                    
+                    <para style="terp_default_9b">[[ line.product_id.name ]]</para>
                 </td>
                 <td>
                     <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][['%.f' % line.qty ]]</para>

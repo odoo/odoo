@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* mrp
+# 	* mrp
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-04-13 05:41+0000\n"
-"Last-Translator: grisha <Unknown>\n"
+"PO-Revision-Date: 2010-08-08 08:53+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 03:58+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -42,7 +42,7 @@ msgstr "Планирование материальных ресурсов"
 #. module: mrp
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
@@ -64,7 +64,7 @@ msgstr "Исключения поставок"
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Workcenters"
-msgstr "Используемые мощности маршрута"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.property,composition:0
@@ -75,12 +75,12 @@ msgstr "Не используется в расчётах, только для �
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "Маршруты"
+msgstr "Техн. маршруты"
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
 msgid "Packing list"
-msgstr "Упаковочный лист"
+msgstr "Упаковочный перечень"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
@@ -157,8 +157,8 @@ msgid ""
 "Number of operation this workcenter can do in parallel. If this workcenter "
 "represent a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
-"Количество одновременно выполняемых рабочим центром операций. Если рабочиё "
-"центр представлен пятью рабочими, этот показатель равен 5"
+"Количество одновременно выполняемых операций на участке. Например, если "
+"участке обработки пять рабочих, то производительность на цикл равен 5."
 
 #. module: mrp
 #: wizard_button:product.product.procurement,init,create:0
@@ -181,7 +181,7 @@ msgstr "Кол-во продукции"
 #. module: mrp
 #: field:mrp.production,move_lines:0
 msgid "Products Consummed"
-msgstr ""
+msgstr "Израсходованные"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -251,7 +251,7 @@ msgstr ""
 #. module: mrp
 #: wizard_view:mrp.procurement.compute,init:0
 msgid "This wizard will schedule procurements."
-msgstr ""
+msgstr "Этот мастер планирует снабжение"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -358,7 +358,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,date_planned_date:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Запланированная дата"
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
@@ -375,7 +375,7 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Bill Of Material"
-msgstr ""
+msgstr "Спецификация"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -393,7 +393,7 @@ msgstr "Резервирование"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr ""
+msgstr "Структура спецификации"
 
 #. module: mrp
 #: wizard_field:product.product.procurement,init,product_id:0
@@ -441,7 +441,7 @@ msgstr ""
 #. module: mrp
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr ""
+msgstr "Время доставки"
 
 #. module: mrp
 #: field:mrp.routing,location_id:0
@@ -451,12 +451,12 @@ msgstr "Расположение производства"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Change Qty"
-msgstr ""
+msgstr "Изменить кол-во"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Force Reservation"
-msgstr ""
+msgstr "Не ждать пополнения расходных"
 
 #. module: mrp
 #: field:mrp.bom.revision,author_id:0
@@ -472,7 +472,7 @@ msgstr ""
 #: field:mrp.bom,product_uos:0
 #: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
-msgstr ""
+msgstr "Вторая ед. изм."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
@@ -512,7 +512,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Consumed Products"
-msgstr ""
+msgstr "Расходные"
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -534,7 +534,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action4
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action4
 msgid "Exceptions Procurements to Fix"
-msgstr ""
+msgstr "Исключительные ситуации снабжения, требующие вмешательства"
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -544,18 +544,18 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Workcenter Operations"
-msgstr ""
+msgstr "Обрабатывающие операции"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2_gantt
 #: model:ir.ui.menu,name:mrp.menu_production_orders_start_gantt
 msgid "Production Orders Planning"
-msgstr ""
+msgstr "Планирование заказов на производство"
 
 #. module: mrp
 #: help:mrp.workcenter,time_efficiency:0
 msgid "Factor that multiplies all times expressed in the workcenter."
-msgstr ""
+msgstr "Коэффициент, на который умножаются все времена участка обработки."
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
@@ -573,6 +573,8 @@ msgid ""
 "This is the internal picking list take bring the raw materials to the "
 "production plan."
 msgstr ""
+"Внутренне перемещение расходных материалов со склада на производственный "
+"цчасток"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -596,7 +598,7 @@ msgstr "В ожидании"
 #: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
-msgstr ""
+msgstr "Техн. маршрут"
 
 #. module: mrp
 #: wizard_button:mrp.workcenter.load,init,report:0
@@ -622,7 +624,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.procurement,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr ""
+msgstr "Кол-во во второй единице измерения"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -653,7 +655,7 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "WorkCenter"
-msgstr ""
+msgstr "Участок обработки"
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -669,7 +671,7 @@ msgstr "Заказы на производство"
 #: field:mrp.bom,child_complete_ids:0
 #: field:mrp.bom,child_ids:0
 msgid "BoM Hyerarchy"
-msgstr ""
+msgstr "Дерево спецификаций"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -724,6 +726,8 @@ msgid ""
 "This wizard will planify the procurement for this product. This procurement "
 "may generate task, production orders or purchase orders."
 msgstr ""
+"Этот мастер планирует снабжение изделием или материалом. Он может создать "
+"задачу, заказ на производство или заказ на снабжение."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_mts0
@@ -798,7 +802,7 @@ msgstr "Отмена"
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Move product"
-msgstr ""
+msgstr "Перемещение готового изделия"
 
 #. module: mrp
 #: selection:mrp.workcenter,type:0
@@ -813,7 +817,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,name:0
 msgid "Workcenter Name"
-msgstr ""
+msgstr "Наименование участка обработки"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -831,6 +835,7 @@ msgid ""
 "Description of the workcenter. Explain here what's a cycle according to this "
 "workcenter."
 msgstr ""
+"Описание участка обработка. Укажите здесь, что соответствует циклу участка."
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -847,7 +852,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_action
 #: field:mrp.routing,workcenter_lines:0
 msgid "Workcenters"
-msgstr ""
+msgstr "Участки обработки"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -868,7 +873,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
 msgid "Nbr of cycle"
-msgstr ""
+msgstr "Кол-во циклов"
 
 #. module: mrp
 #: field:mrp.bom,name:0
@@ -933,12 +938,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,location_dest_id:0
 msgid "Finished Products Location"
-msgstr ""
+msgstr "Расположение готовой продукции"
 
 #. module: mrp
 #: wizard_field:product.product.procurement,init,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Ед. изм."
 
 #. module: mrp
 #: field:mrp.procurement,procure_method:0
@@ -953,7 +958,7 @@ msgstr "Книга аналитики"
 #. module: mrp
 #: selection:mrp.workcenter.load,init,time_unit:0
 msgid "Per week"
-msgstr ""
+msgstr "В неделю"
 
 #. module: mrp
 #: wizard_button:mrp.procurement.compute,init,compute:0
@@ -985,7 +990,7 @@ msgstr "Кол-во часов"
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Notes"
-msgstr ""
+msgstr "Примечания"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1002,12 +1007,12 @@ msgstr "Выбрать ед. времени"
 #. module: mrp
 #: wizard_field:product_price,init,number:0
 msgid "Number of products to produce"
-msgstr ""
+msgstr "Количество выпускаемых изделий"
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr ""
+msgstr "Местоположение, в которое помещаются готовые изделия"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -1022,17 +1027,17 @@ msgstr ""
 #. module: mrp
 #: model:process.node,name:mrp.process_node_productminimumstockrule0
 msgid "Minimum stock rule"
-msgstr ""
+msgstr "Правило минимальных запасов"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Revisions"
-msgstr ""
+msgstr "Ревизии"
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Product Efficiency"
-msgstr "Эффективночть продукта"
+msgstr "Эффективность продукта"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
@@ -1082,7 +1087,7 @@ msgstr "Инструмент"
 #: help:mrp.production,location_src_id:0
 msgid ""
 "Location where the system will look for products used in raw materials."
-msgstr ""
+msgstr "Местоположение расходных материалов для производства"
 
 #. module: mrp
 #: rml:mrp.production.order:0
@@ -1124,7 +1129,7 @@ msgstr "Снабжение"
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.product_procurement_wizard
 msgid "Procurement Request"
-msgstr ""
+msgstr "Запланировать снабжение"
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_price
@@ -1164,14 +1169,14 @@ msgstr "алфавитные указатели"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Procurement for raw materials."
-msgstr ""
+msgstr "Снабжение расходными материалами"
 
 #. module: mrp
 #: view:mrp.procurement:0
 #: field:mrp.procurement,note:0
 #: rml:mrp.production.order:0
 msgid "Note"
-msgstr ""
+msgstr "Примечания"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
@@ -1216,7 +1221,7 @@ msgstr ""
 #: field:mrp.procurement,property_ids:0
 #: view:mrp.property:0
 msgid "Properties"
-msgstr "Свойства"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,date_planned:0
@@ -1271,7 +1276,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_change_production_qty
 msgid "Change Product Qty."
-msgstr ""
+msgstr "Изменить кол-во"
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -1315,7 +1320,7 @@ msgstr "Исполняемые заказы на производство"
 #: model:ir.ui.menu,name:mrp.menu_action_orderpoint_form
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "Правила минимальных запасов"
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1341,12 +1346,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,location_src_id:0
 msgid "Raw Materials Location"
-msgstr ""
+msgstr "Расположение исходных материалов"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
 msgid "Product BoM Structure"
-msgstr ""
+msgstr "Древовидная спецификация"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -1362,6 +1367,8 @@ msgid ""
 "Reference of the document that created this procurement.\n"
 "This is automatically completed by Open ERP."
 msgstr ""
+"Номер документа, с которым связан этот заказ на снабжение. Автоматически "
+"заполняется OpenERP."
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
@@ -1383,7 +1390,7 @@ msgstr ""
 #: field:mrp.procurement,product_uos:0
 #: field:mrp.production,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Вторая ед. изм."
 
 #. module: mrp
 #: field:mrp.procurement,product_uom:0
@@ -1396,7 +1403,7 @@ msgstr "Ед. изм. продукции"
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
 msgid "Workcenter"
-msgstr ""
+msgstr "Участок обработки"
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
@@ -1408,12 +1415,12 @@ msgstr "Весьма срочно"
 #: field:mrp.procurement,purchase_id:0
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Purchase Order"
-msgstr ""
+msgstr "Заказ на закупку"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Workcenters"
-msgstr ""
+msgstr "Производственные участки"
 
 #. module: mrp
 #: view:mrp.property.group:0
@@ -1426,11 +1433,13 @@ msgid ""
 "If you encode manually a procurement, you probably want to use a make to "
 "order method."
 msgstr ""
+"Если вы планируете снабжение вручную, вам, вероятно, нужен метод "
+"\"изготовление под заказ\""
 
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Source Location"
-msgstr ""
+msgstr "Склад расходных материалов"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -1468,7 +1477,7 @@ msgstr ""
 #: view:mrp.production:0
 #: rml:mrp.production.order:0
 msgid "Work Orders"
-msgstr ""
+msgstr "Рабочие задания"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1478,7 +1487,7 @@ msgstr "Стоимость по циклам"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
 msgid "Bill of material revisions"
-msgstr ""
+msgstr "Ревизии спецификации"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1515,7 +1524,7 @@ msgstr ""
 #. module: mrp
 #: wizard_view:product.product.procurement,init:0
 msgid "Internal Procurement Request"
-msgstr ""
+msgstr "Внутренняя заявка на снабжение"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
@@ -1541,12 +1550,12 @@ msgstr "Категории свойств"
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
 msgid "Compute Procurements Only"
-msgstr ""
+msgstr "Рассчитать только снабжение"
 
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Qty"
-msgstr ""
+msgstr "Кол-во продукции, 2 ед. изм."
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -1557,7 +1566,7 @@ msgstr "Структура спецификации"
 #. module: mrp
 #: field:mrp.bom,date_stop:0
 msgid "Valid Until"
-msgstr ""
+msgstr "Действительно до"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action11
@@ -1568,7 +1577,7 @@ msgstr "Временные исключения снабжения"
 #. module: mrp
 #: field:mrp.bom,date_start:0
 msgid "Valid From"
-msgstr ""
+msgstr "Действительно с"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1579,7 +1588,7 @@ msgstr "Нормальная спецификация"
 #: field:mrp.bom,product_uos_qty:0
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr ""
+msgstr "Кол-во продукции, 2 ед. изм."
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -1612,12 +1621,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
 msgid "Product Rounding"
-msgstr ""
+msgstr "Минимальная кратность"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr ""
+msgstr "Рабочее задание"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1637,7 +1646,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "Правило минимальных запасов"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action_new
@@ -1648,7 +1657,7 @@ msgstr "Новая спецификация"
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
-msgstr ""
+msgstr "Время после производства"
 
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,time_unit:0
@@ -1658,7 +1667,7 @@ msgstr "Тип периода"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Total Qty"
-msgstr ""
+msgstr "Общее кол-во"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
@@ -1679,12 +1688,12 @@ msgstr "Свойство"
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr ""
+msgstr "Родительский маршрут"
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
-msgstr ""
+msgstr "Время наладки в часах"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1741,7 +1750,7 @@ msgstr "последний индекс"
 #: field:mrp.bom,revision_ids:0
 #: view:mrp.bom.revision:0
 msgid "BoM Revisions"
-msgstr ""
+msgstr "Ревизии спецификации"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1769,7 +1778,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
 #: model:ir.ui.menu,name:mrp.menu_production_orders_start
 msgid "Production Orders To Start"
-msgstr ""
+msgstr "Заказы на производство для запуска"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1831,12 +1840,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,sale_name:0
 msgid "Sale Name"
-msgstr ""
+msgstr "Заказ на продажу"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Create minimum stock rules"
-msgstr ""
+msgstr "Создать правила мин. запасов"
 
 #. module: mrp
 #: wizard_field:product.product.procurement,init,warehouse_id:0
@@ -1864,7 +1873,7 @@ msgstr ""
 #. module: mrp
 #: wizard_view:change_production_qty,confirm:0
 msgid "Change Product Qty"
-msgstr ""
+msgstr "Изменить кол-во"
 
 #. module: mrp
 #: field:mrp.bom.revision,description:0
@@ -1887,7 +1896,7 @@ msgstr "Выполняется"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
 msgid "Manufacturing"
-msgstr ""
+msgstr "Производство"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action3
@@ -1904,7 +1913,7 @@ msgstr "Структура спецификации"
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_workcenter_load
 msgid "Workcenter load"
-msgstr ""
+msgstr "Загрузка участка обработки"
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -1944,3 +1953,94 @@ msgstr "Последовательность"
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Materials Components"
 msgstr "Компоненты спецификации"
+
+#. module: mrp
+#: field:report.mrp.inout,date:0 field:report.workcenter.load,name:0
+msgid "Week"
+msgstr "Неделя"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.next_id_77
+msgid "Reporting"
+msgstr "Отчетность"
+
+#. module: mrp
+#: view:report.workcenter.load:0
+msgid "Workcenters load"
+msgstr "Загрузка рабочей области"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_workcenter_load
+msgid "Workcenter Load"
+msgstr "Загрузка рабочей области"
+
+#. module: mrp
+#: model:ir.module.module,shortdesc:report_mrp.module_meta_information
+msgid "MRP Management - Reporting"
+msgstr "Управление MRP - Отчёт"
+
+#. module: mrp
+#: field:report.mrp.inout,value:0
+msgid "Stock value"
+msgstr "Оценка запасов"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
+#: model:ir.ui.menu,name:mrp.menu_report_workcenter_load
+msgid "Workcenter Loads"
+msgstr "Загрузка рабочих областей"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
+#: model:ir.ui.menu,name:mrp.menu_report_in_out_picking
+msgid "Weekly Stock Value Variation"
+msgstr "Недельное изменения оценки запасов"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_inout
+#: view:report.mrp.inout:0
+msgid "Stock value variation"
+msgstr "Изменения оценки запасов"
+
+#. module: mrp
+#: view:board.board:0
+msgid "Next production orders"
+msgstr "Ближайшие заказы на производство"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Внимание!"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Для этого изделия/материала не задан поставщик!"
+
+#, python-format
+#~ msgid "Workcenter name"
+#~ msgstr "Наименование участка обработки"
+
+#, python-format
+#~ msgid "from stock: products assigned."
+#~ msgstr "Со склада: изделие доставлено."
+
+#, python-format
+#~ msgid "No BoM defined for this product !"
+#~ msgstr "С этим изделием не связано ни одной спецификации!"
+
+#, python-format
+#~ msgid "TOTAL"
+#~ msgstr "Итого"
+
+#, python-format
+#~ msgid "Couldn't find bill of material for product"
+#~ msgstr "Не удалось найти спецификацию изделия"
+
+#~ msgid "OTK"
+#~ msgstr "Предъявление продукции ОТК"
+
+#~ msgid "Error!"
+#~ msgstr "Ошибка!"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Ошибка"

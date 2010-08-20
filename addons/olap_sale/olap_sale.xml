@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="True">
+<data>
 
 <!--
 CUSTOM CUBE FOR SALES
@@ -65,7 +65,7 @@ cube table and cube table line
         <field name="table_db_name">res_partner_address</field>
         <field name="fact_database_id" ref="fact_databases_BI"/>
         <field name="active">True</field>
-    </record>	
+    </record>
 
     <record model="olap.database.tables" id="table_res_country">
         <field name="name">res_country</field>
@@ -87,7 +87,7 @@ cube table and cube table line
         <field name="fact_database_id" ref="fact_databases_BI"/>
         <field name="active">True</field>
 
-    </record>	
+    </record>
     <record model="olap.database.columns" id="columns_product_id_sale_order_line">
         <field name="name">product_id</field>
         <field name="column_db_name">product_id</field>
@@ -105,15 +105,7 @@ cube table and cube table line
         <field name="primary_key">True</field>
         <field name="active">True</field>
 </record>
-<!--	<record model="olap.database.columns" id="columns_sale_order_line_product_id">
-		<field name="name">product_id</field>
-		<field name="column_db_name">id</field>
-		<field name="type">int4</field>
-		<field name="table_id" ref="table_sale_order_line"/>
-		<field name="active">True</field>
-		<field name="related_to" ref="table_product_product"/>
-	</record>
--->	
+
     <record model="olap.database.columns" id="columns_product_template_id">
         <field name="name">id</field>
         <field name="column_db_name">id</field>
@@ -265,16 +257,6 @@ cube table and cube table line
         <field name="active">True</field>
     </record>
 
-<!--	<record model="olap.database.columns" id="columns_sale_order_line_product_id">
-<field name="name">product_id</field>
-<field name="column_db_name">product_id</field>
-<field name="type">int4</field>
-<field name="table_id" ref="table_sale_order_line"/>
-<field name="related_to" ref="table_product_product"/>
-<field name="active">True</field>
-
-</record>
--->
     <record model="olap.database.columns" id="columns_sale_order_line_order_id">
         <field name="name">order_id</field>
         <field name="column_db_name">order_id</field>
@@ -360,7 +342,7 @@ cube table and cube table line
         <field name="type">varchar</field>
         <field name="table_id" ref="table_res_country"/>
         <field name="active">True</field>
-    </record>	
+    </record>
 
     <record model="olap.database.columns" id="columns_res_partner_address_country_id">
         <field name="name">country_id</field>
@@ -369,7 +351,7 @@ cube table and cube table line
         <field name="table_id" ref="table_res_partner_address"/>
         <field name="related_to" ref="table_res_country"/>
         <field name="active">True</field>
-    </record>	
+    </record>
 
     <record model="olap.database.columns" id="columns_res_partner_address_city">
         <field name="name">city</field>
@@ -388,16 +370,6 @@ cube table and cube table line
         <field name="active">True</field>
     </record>
 
-<!--	<record model="olap.database.columns" id="columns_sale_order_line_product_id">
-<field name="name">product_id</field>
-<field name="column_db_name">product_id</field>
-<field name="type">int4</field>
-<field name="table_id" ref="table_sale_order_line"/>
-<field name="related_to" ref="table_product_product"/>
-<field name="active">True</field>
-
-</record>
--->
     <record model="olap.database.columns" id="columns_sale_order_line_product_uom_qty">
         <field name="name">product_uom_qty</field>
         <field name="column_db_name">product_uom_qty</field>
@@ -425,7 +397,7 @@ cube table and cube table line
 
 
 <!--
-Making of the olap.cube.table and olap.cube.table.lines 
+Making of the olap.cube.table and olap.cube.table.lines
 
 -->
     <record model="olap.cube.table" id="cube_table_sale_order_line">

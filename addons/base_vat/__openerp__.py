@@ -28,7 +28,7 @@
     This module follows the methods stated at http://sima-pc.com/nif.php for
     checking the validity of VAT Number assinged to partners in European countries.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['account'],
     'website': 'http://www.openerp.com',
     'update_xml': ['base_vat_view.xml'],

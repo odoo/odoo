@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,7 +26,7 @@ from tools.translate import _
 class auction_lots_invoice(osv.osv_memory):
     _name = 'auction.lots.invoice'
     _description = "Auction Lots Invoice"
-    
+
     _columns = {
         'amount': fields.float('Invoiced Amount', required=True, readonly=True),
         'amount_topay': fields.float('Amount to pay', required=True, readonly=True),
@@ -34,39 +34,33 @@ class auction_lots_invoice(osv.osv_memory):
         'objects': fields.integer('# of objects', required=True, readonly=True),
         'ach_uid': fields.many2one('res.partner','Buyer Name', required=True ),
         'number': fields.integer('Invoice Number'),
-#        'tax_applied':{'string':'Tax Applied', 'type':'float', 'readonly':True},
     }
 
     def default_get(self, cr, uid, fields, context={}):
-        """ 
+        """
          To get default values for the object.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param fields: List of fields for which we want default values 
-         @param context: A standard dictionary 
-         @return: A dictionary which of fields with values. 
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+         @return: A dictionary which of fields with values.
         """
         res = super(auction_lots_invoice, self).default_get(cr, uid, fields, context=context)
         service = netsvc.LocalService("object_proxy")
         lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context.get('active_ids', []))
-        auction = service.execute(cr.dbname,uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
-    
+        auction = service.execute(cr.dbname, uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
+
         price = 0.0
         price_topay = 0.0
         price_paid = 0.0
-        #tax=data['form']['tax_applied']
-#        uid = False
         for lot in lots:
             price_lot = lot['obj_price'] or 0.0
-            
+
             costs = service.execute(cr.dbname, uid, 'auction.lots', 'compute_buyer_costs', [lot['id']])
             price_lot += costs['amount']
-#            for cost in costs:
-#                price_lot += cost['amount']
-    
             price += price_lot
-    
+
             if lot['ach_uid']:
                 if uid and (lot['ach_uid'][0]<>uid):
                     raise osv.except_osv(_('UserError'), _('Two different buyers for the same invoice !\nPlease correct this problem before invoicing'))
@@ -81,7 +75,7 @@ class auction_lots_invoice(osv.osv_memory):
             else:
                 price_topay += price_lot
                 #*tax
-    
+
     #TODO: recuperer id next invoice (de la sequence)???
         invoice_number = False
         for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
@@ -106,19 +100,18 @@ class auction_lots_invoice(osv.osv_memory):
         @param uid: the current user’s ID for security checks.
         @param ids: List of Auction lots make invoice buyer’s IDs
         @return: dictionary of  account invoice form.
-        """ 
+        """
         service = netsvc.LocalService("object_proxy")
         datas = {'ids' : context.get('active_ids',[])}
         res = self.read(cr, uid, ids, ['number','ach_uid'])
-        res = res and res[0] or {}        
+        res = res and res[0] or {}
         datas['form'] = res
-#        service.execute(cr.dbname, uid, 'auction.lots', 'lots_invoice_and_cancel_old_invoice', datas['ids'], datas['form']['number'], datas['form']['ach_uid'], 'invoice_open')
         return {
             'type' : 'ir.actions.report.xml',
             'report_name':'auction.invoice',
-            'datas' : datas, 
+            'datas' : datas,
         }
-        
+
 auction_lots_invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

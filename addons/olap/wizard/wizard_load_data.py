@@ -73,7 +73,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
         tables_id = map(lambda x: str(tables[x]),tables)
         cols={}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id IN (' + ','.join(tables_id) +')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -101,7 +101,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
             WHERE table_schema = 'public'""")
 
         for col in cr_db.fetchall():
-            val={
+            val = {
                 'table_id': tables[col[0]],
                 'column_db_name': col[1],
                 'type': col[2],
@@ -120,13 +120,13 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 INFORMATION_schema.key_column_usage
             where
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from INFORMATION_SCHEMA .table_constraints
                             where
                                 constraint_type = 'PRIMARY KEY')""")
         print "Updating the Primary Key Constraint"
         for constraint in cr_db.fetchall():
-            val={
+            val = {
                 'primary_key':True
             }
 
@@ -138,7 +138,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 INFORMATION_schema.constraint_column_usage
             where
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from INFORMATION_SCHEMA.table_constraints
                             where
                                 constraint_type = 'FOREIGN KEY')""")
@@ -149,13 +149,13 @@ def olap_db_connect(self,cr,uid,part,context={}):
                  from
                      INFORMATION_schema.key_column_usage
                  where
-                     constraint_name in (
+                     constraint_name IN (
                                  select constraint_name from INFORMATION_SCHEMA.table_constraints
                                  where
                                      constraint_type = 'FOREIGN KEY')""")
 
         for constraint in cr_db.fetchall():
-            val={
+            val = {
                 'related_to':tables[for_key[constraint[2]]]
             }
             id_to_write=filter(lambda x:(int(cols[x][1])==int(tables[constraint[0]])and (constraint[1]==cols[x][0])),cols)
@@ -181,7 +181,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
         tables_id = map(lambda x: str(tables[x]),tables)
         cols={}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id IN (' + ','.join(tables_id) +')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -209,7 +209,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
 
         for col in cr_db.fetchall():
 
-            val={
+            val = {
                 'table_id': tables[col[0]],
                 'column_db_name': col[1],
                 'type': col[2],
@@ -228,23 +228,23 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 INFORMATION_schema.key_column_usage
             where table_schema= %s and
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from INFORMATION_SCHEMA .table_constraints
                             where
-                                constraint_type in('PRIMARY KEY','FOREIGN KEY'))
+                                constraint_type IN ('PRIMARY KEY','FOREIGN KEY'))
                             """,(db_name))
 
         for constraint in cr_db.fetchall():
 
             if constraint[0]:
-                val={
-                     'related_to':tables[constraint[1]]
-                     }
+                val = {
+                    'related_to':tables[constraint[1]]
+                }
             else:
 
-                val={
-                     'primary_key':True
-                     }
+                val = {
+                    'primary_key':True
+                }
             id_to_write=filter(lambda x:(int(cols[x][1])==int(tables[constraint[3]])and(constraint[2]==cols[x][0])),cols)
             col_id=tcol.write(cr,uid,int(id_to_write[0]),val,context)
 
@@ -267,7 +267,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
         tables_id = map(lambda x: str(tables[x]),tables)
         cols={}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id IN (' + ','.join(tables_id) +')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -304,7 +304,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
                 type_col='varchar'
             else:
                 type_col=col[2]
-            val={
+            val = {
                 'table_id': tables[col[0]],
                 'column_db_name': col[1],
                 'type': type_col,
@@ -323,7 +323,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 all_cons_columns
             where
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from all_constraints
                             where
                                 constraint_type = 'P' and owner= %s)
@@ -331,7 +331,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
         temp = cr_db.fetchall()
         pk_table = {}
         for constraint in temp:
-            val={
+            val = {
                 'primary_key' : True
             }
             pk_table[constraint[2]] = constraint[0]
@@ -353,7 +353,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 all_cons_columns
             where
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from all_constraints
                             where
                                 constraint_type = 'R' and owner = %s)
@@ -364,7 +364,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
         for constraint in temp:
             rel_constraint_name=constraints_map[constraint[2]]
             req_table = pk_table[rel_constraint_name]
-            val={
+            val = {
                 'related_to' : tables[req_table]
             }
             id_to_write=filter(lambda x:(int(cols[x][1])==int(tables[constraint[0]])and (constraint[1]==cols[x][0])),cols)

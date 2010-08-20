@@ -30,6 +30,9 @@ from osv import osv
 from osv import fields, osv
 import netsvc
 import cube
+import os
+import tools
+import base64
 from cube import levels
 
 
@@ -200,7 +203,7 @@ class olap_schema(osv.osv ):
         'state': lambda * a: 'none',
         'configure': lambda * a: False,
         'ready': lambda * a: False
-        }
+    }
 
     def action_dbconnect(self, cr, uid, ids, context = {}):
         """ Connect DB with postgres ,Or MySql,Or Orcale
@@ -359,24 +362,16 @@ class olap_schema(osv.osv ):
         if not ids:
             raise 'Schema not found !'
         schema = self.browse(cr, uid, ids[0], context)
-        print 'Parsing MDX...'
-        print '        ', request
         mdx_parser = cube.mdx_parser()
         mdx = mdx_parser.parse(request)
 
-        print 'Validating MDX...'
         mdx.preprocess()
         validate, cubex = mdx.validate(schema)
 
-        print 'Running MDX...'
         res_comp = self.pool.get('res.company').search(cr, uid, ([]))
         res_comp = self.pool.get('res.company').browse(cr, uid, res_comp)
         currency = res_comp[0].currency_id.name
-        print " Default Currency", currency
         data = mdx.run(currency)
-
-        print 'Running Done...'
-        print 'Formatting Output...'
 
         if cubex.query_log:
             log = context.get('log')
@@ -502,7 +497,7 @@ class olap_database_columns(osv.osv):
         'text': 'Text',
         'date': 'Date',
         'time': 'TimeStamp without Time Zone',
-    'number': 'NUMBER',
+        'number': 'NUMBER',
     }
 
     def _datatypes_get(self, *args, **argv):
@@ -723,9 +718,9 @@ class olap_database_columns(osv.osv):
         if context['parent_id']:
             parent_id = context['parent_id']
             val = {
-            'cube_table_id': parent_id,
-            'table_id': table_id,
-            'field_id': ids[0]
+                'cube_table_id': parent_id,
+                'table_id': table_id,
+                'field_id': ids[0]
             }
             id = self.pool.get('olap.cube.table.line').create(cr, uid, val, context)
 
@@ -998,7 +993,7 @@ class olap_cube_table(osv.osv):
             relation = 'olap.database.columns',
             string = 'Available Tables',
             type = "many2many"
-       ),
+        ),
     }
 
     _defaults = {
@@ -1075,8 +1070,8 @@ class olap_cube(osv.osv):
     }
 
     _defaults = {
-                 'schema_id': _set_schema
-                 }
+        'schema_id': _set_schema
+    }
 olap_cube()
 
 
@@ -1086,7 +1081,7 @@ class olap_query_logs(osv.osv):
     _description = "Olap query logs"
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'Tiny ERP User'),
+        'user_id': fields.many2one('res.users', 'OpenERP SA User'),
         'query': fields.text('Query', required = True),
         'time': fields.datetime('Time', required = True),
         'result_size': fields.integer('Result Size', readonly = True),
@@ -1096,8 +1091,8 @@ class olap_query_logs(osv.osv):
     }
 
     _defaults = {
-                 'count':lambda * args: 0
-                 }
+        'count':lambda * args: 0
+    }
 olap_query_logs()
 
 
@@ -1125,7 +1120,7 @@ class olap_dimension(osv.osv):
         'hierarchy_ids': fields.one2many('olap.hierarchy', 'dimension_id', 'Hierarchies'),
     }
     _defaults = {
-                 'cube_id': _set_cube,
+        'cube_id': _set_cube,
     }
 
 olap_dimension()
@@ -1419,15 +1414,15 @@ class olap_saved_query(osv.osv):
     _decription = "Olap Saved Query"
 
     _columns = {
-                'name': fields.text('Query Name', size = 64),
-                'user_id': fields.many2one('res.users', 'User'),
-                'query': fields.text('Query', required = True),
-                'cube_id': fields.many2one('olap.cube', 'Cube', required = True),
-                'mdx_id': fields.char('Module', size=64),
-                'schema_id': fields.many2one('olap.schema', 'Schema', required = True),
-                'time': fields.datetime('Time', required = True),
-                'axis_keys': fields.text('Axis Keys'),
-                }
+        'name': fields.text('Query Name', size = 64),
+        'user_id': fields.many2one('res.users', 'User'),
+        'query': fields.text('Query', required = True),
+        'cube_id': fields.many2one('olap.cube', 'Cube', required = True),
+        'mdx_id': fields.char('Module', size=64),
+        'schema_id': fields.many2one('olap.schema', 'Schema', required = True),
+        'time': fields.datetime('Time', required = True),
+        'axis_keys': fields.text('Axis Keys'),
+    }
 
 olap_saved_query()
 # Wizard for the Load Data Structure
@@ -1597,7 +1592,7 @@ class bi_load_db_wizard(osv.osv_memory):
                          from
                              INFORMATION_schema.key_column_usage
                          where
-                             constraint_name in (
+                             constraint_name IN (
                                          select constraint_name from INFORMATION_SCHEMA.table_constraints
                                          where
                                              constraint_type = 'FOREIGN KEY')""")
@@ -1633,7 +1628,7 @@ class bi_load_db_wizard(osv.osv_memory):
                 cols = {}
                 if tables_id:
                     cr.execute('select column_db_name,id,table_id from \
-                        olap_database_columns where table_id in (' + ','.join(tables_id) + ')')
+                        olap_database_columns where table_id IN (' + ','.join(tables_id) + ')')
                 else:
                     cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -1681,10 +1676,10 @@ class bi_load_db_wizard(osv.osv_memory):
                     from
                         INFORMATION_schema.key_column_usage
                     where table_schema= %s and
-                        constraint_name in (
+                        constraint_name IN (
                                     select constraint_name from INFORMATION_SCHEMA .table_constraints
                                     where
-                                        constraint_type in('PRIMARY KEY','FOREIGN KEY'))
+                                        constraint_type IN ('PRIMARY KEY','FOREIGN KEY'))
                                     """, (db_name))
                 for constraint in cr_db.fetchall():
 
@@ -1722,7 +1717,7 @@ class bi_load_db_wizard(osv.osv_memory):
                 cols = {}
                 if tables_id:
                     cr.execute('select column_db_name,id,table_id from \
-                            olap_database_columns where table_id in (' + ','.join(tables_id) + ')')
+                            olap_database_columns where table_id IN (' + ','.join(tables_id) + ')')
                 else:
                     cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -1809,7 +1804,7 @@ class bi_load_db_wizard(osv.osv_memory):
                     from
                         all_cons_columns
                     where
-                        constraint_name in (
+                        constraint_name IN (
                                     select constraint_name from all_constraints
                                     where
                                         constraint_type = 'R' and owner = %s)
@@ -1870,11 +1865,11 @@ class bi_auto_configure_wizard(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Fact Name' , size = 64, readonly = True),
-        }
+    }
 
     _defaults = {
-                   'name': _get_name,
-                   }
+        'name': _get_name,
+    }
 
     def action_load(self, cr, uid, ids, context = None):
         """
@@ -2083,12 +2078,12 @@ class olap_warehouse_wizard(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close' }
 
     _columns = {
-                'query': fields.text('Query', readonly=True),
-                }
+        'query': fields.text('Query', readonly=True),
+    }
 
     _defaults = {
         'query': _get_queries,
-        }
+    }
 
 olap_warehouse_wizard()
 
@@ -2136,17 +2131,35 @@ class olap_parameters_config_wizard(osv.osv_memory):
                Word(alphanums + "_" + " ").suppress()
         return s_p.parseString(aid.url)[1]
 
+    def _get_image(self, cr, uid, context=None):
+        path = os.path.join('base','res','config_pixmaps/1.png')
+        file_data = tools.file_open(path,'rb').read()
+        return base64.encodestring(file_data)
+
+    def _progress(self, cr, uid, context=None):
+        total = self.pool.get('ir.actions.todo')\
+            .search_count(cr, uid, [], context)
+        open = self.pool.get('ir.actions.todo')\
+            .search_count(cr, uid, [('state','<>','open')], context)
+        if total:
+            return round(open*90./total)
+        return 100.
+
     _columns = {
         'host_name': fields.char('Server Name', size = 64, help = "Put here the server address or IP \
                 Put localhost if its not clear.", required = True),
         'host_port': fields.char('Port', size = 4, help = "Put the port for the server. Put 8080 if \
                 its not clear.", required = True),
-            }
+        'config_logo': fields.binary('Image', readonly=True),
+        'progress': fields.float('Configuration Progress', readonly=True),
+    }
 
     _defaults = {
         'host_name': _get_host,
         'host_port': _get_port,
-        }
+        'progress': _progress,
+        'config_logo': _get_image,
+    }
 
     def action_cancel(self, cr, uid, ids, conect = None):
         """
@@ -2158,11 +2171,11 @@ class olap_parameters_config_wizard(osv.osv_memory):
         """
 
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.actions.configuration.wizard',
+            'type': 'ir.actions.act_window',
+            'target':'new',
          }
 
     def action_config(self, cr, uid, ids, context = None):
@@ -2190,11 +2203,11 @@ class olap_parameters_config_wizard(osv.osv_memory):
                    ':' + (conf.host_port or '8080') + '/designer'})
 
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.actions.configuration.wizard',
+            'type': 'ir.actions.act_window',
+            'target':'new',
         }
 
 olap_parameters_config_wizard()

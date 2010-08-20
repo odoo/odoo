@@ -39,7 +39,7 @@
         </record>
         
         <record id="process_node_supplierinvoiceinvoice0" model="process.node">
-            <field name="menu_id" ref="account.menu_finance_invoice"/>
+            <field name="menu_id" ref="account.menu_finance_payables"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
@@ -62,7 +62,7 @@
         </record>
         
         <record id="process_node_supplieraccountingentries0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_form"/>
+            <field name="menu_id" ref="account.menu_action_move_journal_line_form"/>
             <field name="model_id" ref="account.model_account_move"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Accounting&quot;&quot;&quot;" name="name"/>
@@ -72,7 +72,7 @@
         </record>
         
         <record id="process_node_supplierpaymentorder0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="menu_id" ref="account.menu_eaction_account_moves_all"/>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Payment Order&quot;&quot;&quot;" name="name"/>
@@ -83,7 +83,7 @@
         </record>
         
         <record id="process_node_supplierreconciliation0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="menu_id" ref="account.menu_eaction_account_moves_all"/>
             <field name="model_id" ref="account.model_account_move_reconcile"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Reconciliation&quot;&quot;&quot;" name="name"/>
@@ -124,7 +124,7 @@
             <field eval="&quot;&quot;&quot;Draft invoices are validated. &quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_supplierinvoiceinvoice0"/>
             <field model="process.node" name="source_node_id" ref="process_node_supplierdraftinvoices0"/>
-            <field eval="[(6,0,[ref('account.t5')])]" name="transition_ids"/>
+            <field eval="[(6,0,[ref('account.pro2_to_open')])]" name="transition_ids"/>
         </record>
     
         <record id="process_transition_suppliervalidentries0" model="process.transition">

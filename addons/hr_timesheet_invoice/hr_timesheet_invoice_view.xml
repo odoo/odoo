@@ -20,7 +20,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="view_account_analytic_account_form" model="ir.ui.view">
             <field name="name">account.analytic.account.form</field>
             <field name="model">account.analytic.account</field>
@@ -32,7 +32,7 @@
                 </field>
             </field>
         </record>
-            
+
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
@@ -84,7 +84,6 @@
         </record>
 
         <!-- Inherits for account analytic lines -->
-
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>
             <field name="model">account.analytic.line</field>
@@ -110,17 +109,24 @@
         </record>
 
         <!-- Menus -->
+        <menuitem 
+            parent="account.menu_finance_periodical_processing" 
+            id="menu_finance_periodical_processing_billing" 
+            name="Billing"/>
+        
         <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
             <field name="name">Entries to invoice</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('to_invoice','&lt;&gt;',False)]</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="help">OpenERP automatically group the entries to be invoiced so you can keep an eye on them on real time in one glance.</field>
         </record>
-        <menuitem 
-            action="action_hr_analytic_timesheet_open_tree" 
-            id="menu_hr_analytic_timesheet_tree" 
-            parent="account.menu_finance_periodical_processing"/>
+        <menuitem
+            action="action_hr_analytic_timesheet_open_tree"
+            id="menu_hr_analytic_timesheet_tree"
+            parent="menu_finance_periodical_processing_billing"/>
 
         <record id="action_hr_analytic_timesheet_tree_invoiced" model="ir.actions.act_window">
             <field name="name">Uninvoiced Entries</field>
@@ -178,10 +184,10 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
         </record>
-        <menuitem 
-            action="action_hr_timesheet_invoice_factor_form" 
-            id="hr_timesheet_invoice_factor_view" 
-            parent="account.account_analytic_def_account"/>
+        <menuitem
+            action="action_hr_timesheet_invoice_factor_form"
+            id="hr_timesheet_invoice_factor_view"
+            parent="account.menu_low_level"/>
 
     </data>
 </openerp>

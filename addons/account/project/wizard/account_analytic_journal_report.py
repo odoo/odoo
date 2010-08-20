@@ -29,12 +29,12 @@ class account_analytic_Journal_report(osv.osv_memory):
     _columns = {
         'date1': fields.date('Start of period', required=True),
         'date2': fields.date('End of period', required=True),
-        }
+    }
 
     _defaults = {
         'date1':time.strftime('%Y-01-01'),
         'date2':time.strftime('%Y-%m-%d')
-        }
+    }
 
     def check_report(self, cr, uid, ids, context=None):
         datas = {}

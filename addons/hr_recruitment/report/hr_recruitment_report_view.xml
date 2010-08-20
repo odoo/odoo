@@ -23,6 +23,8 @@
                 <field name="nbr" sum="# Cases"/>
                 <field name="salary_prop" sum="Salary Proposed" />
                 <field name="salary_exp" sum="Salary Expected"/>
+                <field name="delay_open" avg='Avg Opening Delay'/>
+                <field name="delay_close" avg='Avg Closing Delay'/>
                 <field name="available" sum="Available"/>
             </tree>
         </field>
@@ -60,7 +62,7 @@
 	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
 	                    help="Recruitment during last 7 days"/>
 	                <separator orientation="vertical"/>
-	                <filter string="Draft"
+	                <filter string="New"
                     	icon="terp-document-new"
                     	domain="[('state','=','draft')]"
                     	help = "Draft recruitment"/>
@@ -73,9 +75,9 @@
                    		domain="[('state','=','pending')]"
                    		help = "Pending recruitment"/>
   					<separator orientation="vertical"/>
-  					<field name="partner_id"/>
+  					<field name="job_id"/>
 					<field name="department_id" widget="selection"/>
-                    <field name="user_id" widget="selection">
+                    <field name="user_id">
                         <filter icon="terp-hr"
                             string="My Recruitment"
                             help="My Recruitment"
@@ -95,13 +97,13 @@
                    <filter string="Department" name="department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                    <filter string="Degree" name="degree" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'type_id'}"/>
             	   <separator orientation="vertical"/>
-            	   <filter string="Day" name = "day" icon="terp-go-month" domain="[]" context="{'group_by':'day'}"/>
+            	   <filter string="Day" name = "day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}"/>
             	   <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}"/>
             	   <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}"/>
                 </group>
 
                 <newline/>
-                <group expand="0" string="Extended options..." groups="base.group_extended">
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="state"/>
                     <separator orientation="vertical"/>
                     <field name="date"/>
@@ -125,11 +127,11 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
 	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>
-    <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="2"/>
+    <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="1"/>
 
 </data>
 </openerp>

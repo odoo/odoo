@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,16 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 #
 # This module provides a minimal UK chart of accounts for building upon further
-# Open ERP's default currency and accounts are remapped to this chart
+# OpenERP's default currency and accounts are remapped to this chart
 #
-# This module works for Open ERP 4.1.0 (and, assumed, onwards).
-# This module does not work for Open ERP 4.0.2 and before.
+# This module works for OpenERP 4.1.0 (and, assumed, onwards).
+# This module does not work for OpenERP 4.0.2 and before.
 #
 # VAT is structured thus:
 #  - the user company is assumed to be non-VAT exempt (easy to modify, however)
@@ -47,34 +47,34 @@
 #    - refunds of invoices are deducted from the output category
 #
 # This forms a basis for accrual tax accounting
-# Cash tax accounting can be accommodated with further processing in Open ERP
+# Cash tax accounting can be accommodated with further processing in OpenERP
 #
-# Status beta 0.92 - tested on Open ERP 4.1.0
-# Status beta 0.93 - tested on Open ERP 4.1.0
+# Status beta 0.92 - tested on OpenERP 4.1.0
+# Status beta 0.93 - tested on OpenERP 4.1.0
 # - trivial change to depend only on 'account'
 #   (seemed to be important for importing with no demo data)
-# Status 1.0 - tested on Open ERP 4.1.0, 4.0.3
+# Status 1.0 - tested on OpenERP 4.1.0, 4.0.3
 # - COGS account type fixed
 #
-
 
 {
     'name': 'United Kingdom - minimal',
     'version': '1.1',
     'category': 'Localisation/Account Charts',
-    'description': """This is the base module to manage the accounting chart for United Kingdom in Open ERP.""",
+    'description': """This is the base module to manage the accounting chart for United Kingdom in OpenERP.""",
     'author': 'Seath Solutions Ltd',
     'website': 'http://www.seathsolutions.com',
-    'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
+    'depends': ['base_iban', 'base_vat', 'account_chart'],
     'init_xml': [],
     'update_xml': [
-        'account_types.xml',
-        'account_chart.xml',
-        'account_tax.xml',
+        'l10n_uk_types.xml',
+        'l10n_uk_chart.xml',
+        'l10n_uk_tax.xml',
         'l10n_uk_wizard.xml'
     ],
     'demo_xml': [],
     'installable': True,
+    'active': False,
     'certificate': '0064392144797',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

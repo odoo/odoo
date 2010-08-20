@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-16 19:59+0000\n"
-"Last-Translator: Andreas Porevopoulos <Unknown>\n"
+"PO-Revision-Date: 2010-08-02 18:21+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:06+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -2181,7 +2181,8 @@ msgid "Analytic Entry"
 msgstr "Αναλυτική Εγγραφή"
 
 #. module: account
-#: view:res.company:0 field:res.company,overdue_msg:0
+#: view:res.company:0
+#: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
 msgstr "Μήνυμα καθυστερημένων πληρωμών"
 
@@ -6081,6 +6082,364 @@ msgstr ""
 msgid "Compute Entry Dates"
 msgstr "Υπολογισμός Ημερομηνιών Εγγραφής"
 
+#. module: account
+#: view:board.board:0
+msgid "Analytic accounts to close"
+msgstr "Αναλυτικοί λογαριασμοί για κλείσιμο"
+
+#. module: account
+#: view:board.board:0
+msgid "Draft invoices"
+msgstr "Πρόχειρα τιμολόγια"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_board_account
+msgid "Accounting Dashboard"
+msgstr "Πίνακας Αναφορών Λογιστικής"
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.act_my_account
+msgid "Accounts to invoice"
+msgstr "Λογαριασμοί για τιμολόγηση"
+
+#. module: account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.action_account_analytic_line_to_invoice
+msgid "Costs to invoice"
+msgstr "Κόστη για τιμολόγηση"
+
+#. module: account
+#: view:board.board:0
+msgid "Aged receivables"
+msgstr "Παλαιωμένα εισπρακτέα"
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Board for accountant"
+msgstr "Πίνακας Λογιστηρίου"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_income
+msgid "Income Accounts"
+msgstr "Λογαριασμοί Εσόδων"
+
+#. module: account
+#: view:board.board:0
+msgid "My indicators"
+msgstr "Οι δείκτες μου"
+
+#. module: account
+#: view:board.board:0
+msgid "Account Board"
+msgstr "Πίνακας Λογαριασμού"
+
+#. module: account
+#: view:board.board:0
+msgid "Aged income"
+msgstr "Παλαιωμένα έσοδα"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,show_columns:0
+msgid "Show Debit/Credit Information"
+msgstr "Προβολή Πληροφοριών Χρέωσης/Πίστωσης"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,account_choice:0
+msgid "All accounts"
+msgstr "Όλοι οι λογαριασμοί"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,period_manner:0
+msgid "Entries Selection Based on"
+msgstr "Επιλογή Εγγραφών Βασισμένων σε"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr "Υπενθύμιση"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Financial Period"
+msgstr "Οικονομική Περίοδος"
+
+#. module: account
+#: model:ir.actions.report.xml,name:account.account_account_balance
+#: model:ir.actions.report.xml,name:account.account_account_balance_landscape
+msgid "Account balance"
+msgstr "Ισοζύγιο Λογαριασμού"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period(s)"
+msgstr "Επιλέξτε Περίοδο(ους)"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Percentage"
+msgstr "Ποσοστό"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Compare Selected Years In Terms Of"
+msgstr "Σύγκριση Επιλεγμένων Ετών σε Όρους"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Fiscal Year(s)(Maximum Three Years)"
+msgstr "Επιλογή Λογιστικού Έτους(ων) (Μέγιστο Τρία Έτη)"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr "Επιλέξτε Λογαριασμό Αναφοράς (για % σύγκρισης)"
+
+#. module: account
+#: model:ir.actions.wizard,name:account.wizard_account_balance_report
+msgid "Account balance-Compare Years"
+msgstr "Ισοζύγιο Λογαριασμού-Σύγκριση Ετών"
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid ""
+"Account Balance Module is an added functionality to the Financial Management "
+"module.\n"
+"\n"
+"    This module gives you the various options for printing balance sheet.\n"
+"\n"
+"    1. You can compare the balance sheet for different years.\n"
+"\n"
+"    2. You can set the cash or percentage comparison between two years.\n"
+"\n"
+"    3. You can set the referential account for the percentage comparison for "
+"particular years.\n"
+"\n"
+"    4. You can select periods as an actual date or periods as creation "
+"date.\n"
+"\n"
+"    5. You have an option to print the desired report in Landscape format.\n"
+"    "
+msgstr ""
+"Το κομμάτι Ισολογισμών είναι ένα επιπρόσθετο λειτουργικό κομμάτι στο κομμάτι "
+"της Οικονομικής Διαχείρισης\n"
+"\n"
+"    Αυτό το κομμάτι σου δίνει διάφορες επιλογές για εκτύπωση ισολογισμών.\n"
+"\n"
+"    1. Μπορείς να συγκρίνεις τους ισολογισμούς διαφόρων ετών.\n"
+"\n"
+"    2. Μπορείς να ορίσεις την απόλυτη ή επί τοις εκατό σύγκριση μεταξύ δύο "
+"ετών.\n"
+"\n"
+"    3. Μπορείς να ορίσεις το ισολογισμό αναφοράς για την επί τοις εκατό "
+"σύγκριση συγκεκριμένων ετών.\n"
+"\n"
+"    4. Μπορείς να επιλέξεις περιόδους ως πραγματική ημερομηνία ή περιόδους "
+"ως ημέρα δημιουργίας.\n"
+"\n"
+"    5. Έχεις δυνατότητα να εκτυπώσεις την επιθυμητή αναφορά σε μορφή "
+"Landscape.\n"
+"    "
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You have to select 'Landscape' option. Please Check it."
+msgstr ""
+"Θα πρέπει να επιλέξτε την επιλογή 'Landscape'. Παρακαλώ επιλέξτε την."
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,landscape:0
+msgid "Show Report in Landscape Form"
+msgstr "Εμφάνση Αναφοράς σε Φόρμα Landscape"
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr "Σύνολο:"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,format_perc:0
+msgid "Show Comparision in %"
+msgstr "Εμφάνιση Σύγκρισης σε %"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr "Επιλογή Περιόδου"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Report Options"
+msgstr "Επιλογές Αναφοράς"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,compare_pattern:0
+msgid "Don't Compare"
+msgstr "Χωρίς Σύγκριση"
+
+#. module: account
+#: wizard_field:account.balance.account.balance.report,init,account_choice:0
+msgid "Show Accounts"
+msgstr "Εμφάνιση Λογαριασμών"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "1. You have selected more than 3 years in any case."
+msgstr "1. Έχετε επιλέξτε περισσότερα απο 3 έτη σε κάθε περίπτωση."
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Accounting and financial management-Compare Accounts"
+msgstr "Λογιστική και οικονομική διαχείριση - Σύγκριση λογαριασμών"
+
+#. module: account
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr "Έτος :"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid "You can select maximum 3 years. Please check again."
+msgstr "Μπορείτε να επιλέξετε το πολύ 3 έτη. Παρακαλώ ελέγξτε ξανά."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"3. You have selected 'Percentage' option with more than 2 years, but you "
+"have not selected landscape format."
+msgstr ""
+"3. Έχετε επιλέξτε επιλογή 'Ποσοστό' με περισσότερα απο 2 έτη, αλλα δεν έχετε "
+"επιλέξει διάταξη landscape."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"You might have done following mistakes. Please correct them and try again."
+msgstr ""
+"Μπορεί να έχετε κάνει τα ακόλουθα λάθη. Παρακαλώ διορθώστε και "
+"ξαναπροσπαθήστε."
+
+#. module: account
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr "Διατηρήστε κενα για σύγκριση με κατηγορίες"
+
+#. module: account
+#: selection:account.balance.account.balance.report,init,period_manner:0
+msgid "Creation Date"
+msgstr "Ημερομηνία Δημιουργίας"
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+msgid ""
+"2. You have not selected 'Percentage' option, but you have selected more "
+"than 2 years."
+msgstr ""
+"2. Δεν έχετε επιλέξει 'Ποσοστό', αλλα έχετε επιλέξει περισσότερο απο 2 έτη."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid ""
+"You may have selected the compare options with more than 1 year with "
+"credit/debit columns and % option.This can lead contents to be printed out "
+"of the paper.Please try again."
+msgstr ""
+"Μπορεί να επιλέξατε την επιλογή σύγκρισης με περισσότερα απο 1 έτη με στήλες "
+"χρέωσης/πίστωσης και %. Αυτό μπορεί να οδηγήσει σε περιεχόμενα που θα "
+"εκτυπωθούν πέρα απο τα όρια του χαρτιού. Παρακαλώ επιλέξτε ξανά."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You have to select at least 1 Fiscal Year. Try again."
+msgstr ""
+"Θα πρέπει να επιλέξετε τουλάχιστον 1 λογιστικό έτος. Προσπαθήστε ξανά."
+
+#. module: account
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Customize Report"
+msgstr "Παραμετροποίηση Αναφοράς"
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr "Διάρκεια μηνός"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr "Τιμολόγια που εκδόθηκαν τις τελευταίες 15 μέρες"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr "Αναφορά τιμολογίων των τελευταίων 15 ημερών"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr "Σύνολο"
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "Λογαριασμοί με βάση τον τύπο"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr "Παλαιωμένα εισπρακτέα μέχρι σήμερα"
+
+#. module: account
+#: model:ir.model,name:report_account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr "Εισπρακτέοι λογαριασμοί"
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr "Εύρος"
+
+#. module: account
+#: model:ir.module.module,description:report_account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr "Ένα πρόσθετο με νέες αναφορές βασισμένο στο account module"
+
+#. module: account
+#: model:ir.module.module,shortdesc:report_account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr "Αναφορές Λογαρισμών - Αναφορές"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "Ισοζύγιο κατα Τύπο Λογαριασμού"
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr "Εβδομάδα Έτους"
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr "Ημερομηνία Δημιουργίας"
+
+#. module: account
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr "Παλαιωμένα εισπρακτέα"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr "Αφορολόγητο Ποσό"
+
 #, python-format
 #~ msgid "Integrity Error !"
 #~ msgstr "Σφάλμα Ακεραιότητας !"
@@ -6258,6 +6617,9 @@ msgstr "Υπολογισμός Ημερομηνιών Εγγραφής"
 #, python-format
 #~ msgid "Can not %s draft/proforma/cancel invoice."
 #~ msgstr "Αδύνατη η %s προσωρινού/προφόρμα/ακυρωμένου τιμολογίου"
+
+#~ msgid "account.config.wizard"
+#~ msgstr "account.config.wizard"
 
 #, python-format
 #~ msgid "No sequence defined in the journal !"
@@ -6461,3 +6823,15 @@ msgstr "Υπολογισμός Ημερομηνιών Εγγραφής"
 #, python-format
 #~ msgid "SAJ"
 #~ msgstr "SAJ"
+
+#~ msgid "at"
+#~ msgstr "σε"
+
+#~ msgid "Printing date:"
+#~ msgstr "Ημερομηνία εκτύπωσης:"
+
+#~ msgid "Account Information"
+#~ msgstr "Πληροφορίες Λογαριασμού"
+
+#~ msgid "Currency:"
+#~ msgstr "Νόμισμα:"

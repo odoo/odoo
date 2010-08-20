@@ -22,46 +22,46 @@
 from osv import fields, osv
 from tools.translate import _
 
-
 class product_product(osv.osv):
-    _inherit = "product.product"    
-    
+    _inherit = "product.product"
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
-        @param product_id: product id            
+        @param product_id: product id
         @return: dictionary which contains information regarding stock input account, stock output account and stock journal
         """
-        product_obj = self.pool.get('product.product').browse(cr, uid, product_id, context)
-        
-        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
+        if context is None:
+            context = {}
+        product_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+
+        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False
         if not stock_input_acc:
             stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
-        
+
         stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
         if not stock_output_acc:
             stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
 
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
         account_variation = product_obj.categ_id.property_stock_variation and product_obj.categ_id.property_stock_variation.id or False
-        
+
         return {
-            'stock_account_input': stock_input_acc, 
-            'stock_account_output': stock_output_acc, 
-            'stock_journal': journal_id, 
+            'stock_account_input': stock_input_acc,
+            'stock_account_output': stock_output_acc,
+            'stock_journal': journal_id,
             'property_stock_variation': account_variation
-        }  
+        }
 
     def do_change_standard_price(self, cr, uid, ids, datas, context={}):
         """ Changes the Standard Price of Product and creates an account move accordingly.
         @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
-        @param context: A standard dictionary 
-        @return:  
-        
-        """        
+        @param context: A standard dictionary
+        @return:
+
+        """
         location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('account.move')
-        move_line_obj = self.pool.get('account.move.line')                        
+        move_line_obj = self.pool.get('account.move.line')
 
         new_price = datas.get('new_price', 0.0)
         stock_output_acc = datas.get('stock_output_account', False)
@@ -70,26 +70,25 @@ class product_product(osv.osv):
         property_obj=self.pool.get('ir.property')
         product_obj=self.browse(cr,uid,ids)[0]
         account_variation = product_obj.categ_id.property_stock_variation
-        move_ids = []        
+        account_variation_id = account_variation and account_variation.id or False
+        if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s' % (product_obj.categ_id.name)))
+        move_ids = []
+        loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
-            loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
             for location in location_obj.browse(cr, uid, loc_ids):
                 c = context.copy()
                 c.update({
                     'location': location.id,
                     'compute_child': False
-                })           
-                
+                })
+
                 product = self.browse(cr, uid, rec_id, context=c)
                 qty = product.qty_available
-                diff = product.standard_price - new_price 
-                assert diff, _("Could not find any difference between standard price and new price!")
+                diff = product.standard_price - new_price
+                if not diff: raise osv.except_osv(_('Error!'), _("Could not find any difference between standard price and new price!"))
                 if qty:
-                    location_account = account_variation and account_variation.id or False
-                    
-                    company_id = location.company_id and location.company_id.id or False                    
-                    assert location_account, _('Inventory Account is not specified for Location: %s' % (location.name))
-                    assert company_id, _('Company is not specified in Location')
+                    company_id = location.company_id and location.company_id.id or False
+                    if not company_id: raise osv.except_osv(_('Error!'), _('Company is not specified in Location'))
                     #
                     # Accounting Entries
                     #
@@ -102,10 +101,10 @@ class product_product(osv.osv):
                                 (product.categ_id.name,
                                     product.categ_id.id,))
                     move_id = move_obj.create(cr, uid, {
-                                'journal_id': journal_id, 
+                                'journal_id': journal_id,
                                 'company_id': company_id
-                                }) 
-                    
+                                })
+
                     move_ids.append(move_id)
 
 
@@ -122,7 +121,7 @@ class product_product(osv.osv):
                                             'for this product: "%s" (id: %d)') % \
                                             (product.name,
                                                 product.id,))
-                        amount_diff = qty * diff        
+                        amount_diff = qty * diff
                         move_line_obj.create(cr, uid, {
                                     'name': product.name,
                                     'account_id': stock_input_acc,
@@ -130,12 +129,12 @@ class product_product(osv.osv):
                                     'move_id': move_id,
                                     })
                         move_line_obj.create(cr, uid, {
-                                    'name': location.name,
-                                    'account_id': location_account,
+                                    'name': product.categ_id.name,
+                                    'account_id': account_variation_id,
                                     'credit': amount_diff,
                                     'move_id': move_id
                                     })
-                    elif diff < 0: 
+                    elif diff < 0:
                         if not stock_output_acc:
                             stock_output_acc = product.product_tmpl_id.\
                                 property_stock_account_output.id
@@ -150,27 +149,29 @@ class product_product(osv.osv):
                                                 product.id,))
                         amount_diff = qty * -diff
                         move_line_obj.create(cr, uid, {
-                                    'name': product.name,
-                                    'account_id': stock_output_acc,
-                                    'credit': amount_diff,
-                                    'move_id': move_id
+                                        'name': product.name,
+                                        'account_id': stock_output_acc,
+                                        'credit': amount_diff,
+                                        'move_id': move_id
                                     })
                         move_line_obj.create(cr, uid, {
-                                    'name': location.name,
-                                    'account_id': location_account,
-                                    'debit': amount_diff,
-                                    'move_id': move_id
-                                    })                   
-                
+                                        'name': product.categ_id.name,
+                                        'account_id': account_variation_id,
+                                        'debit': amount_diff,
+                                        'move_id': move_id
+                                    })
+
             self.write(cr, uid, rec_id, {'standard_price': new_price})
 
         return move_ids
 
-    def view_header_get(self, cr, user, view_id, view_type, context):
+    def view_header_get(self, cr, user, view_id, view_type, context=None):
+        if context is None:
+            context = {}
         res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
         if res: return res
-        if (context.get('location', False)):
-            return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['location'], context).name
+        if (context.get('active_id', False)) and (context.get('active_model') == 'stock.location'):
+            return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
     def get_product_available(self, cr, uid, ids, context=None):
@@ -202,6 +203,8 @@ class product_product(osv.osv):
         if context.get('location', False):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
+            elif type(context['location']) in (type(''), type(u'')):
+                location_ids = self.pool.get('stock.location').search(cr, uid, [('name','ilike',context['location'])], context=context)
             else:
                 location_ids = context['location']
         else:
@@ -241,11 +244,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id <> ANY(%s)'\
-                'and location_dest_id =ANY(%s)'\
-                'and product_id =ANY(%s)'\
-                'and state in %s' + (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
+                'where location_id NOT IN %s'\
+                'and location_dest_id IN %s'\
+                'and product_id IN %s'\
+                'and state IN %s' + (date_str and 'and '+date_str+' ' or '') +''\
+                'group by product_id,product_uom',(tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states),)
             )
             results = cr.fetchall()
         if 'out' in what:
@@ -253,11 +256,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id = ANY(%s)'\
-                'and location_dest_id <> ANY(%s) '\
-                'and product_id =ANY(%s)'\
+                'where location_id IN %s'\
+                'and location_dest_id NOT IN %s '\
+                'and product_id  IN %s'\
                 'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
+                'group by product_id,product_uom',(tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states),)
             )
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')
@@ -280,12 +283,14 @@ class product_product(osv.osv):
             res[prod_id] -= amount
         return res
 
-    def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
+    def _product_available(self, cr, uid, ids, field_names=None, arg=False, context=None):
         """ Finds the incoming and outgoing quantity of product.
         @return: Dictionary of values
         """
         if not field_names:
             field_names = []
+        if context is None:
+            context = {}
         res = {}
         for id in ids:
             res[id] = {}.fromkeys(field_names, 0.0)
@@ -312,7 +317,7 @@ class product_product(osv.osv):
         'track_production': fields.boolean('Track Production Lots' , help="Forces to use a Production Lot during production order"),
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to use a tracking lot during receptions"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to use a tracking lot during deliveries"),
-        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage','=','internal')]),
+        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'valuation':fields.selection([('manual_periodic', 'Periodic (manual)'),
                                         ('real_time','Real Time (automatized)'),], 'Stock Valuation', help="Decide if the system must automatically creates account moves based on stock moves", required=True),
     }
@@ -323,7 +328,7 @@ class product_product(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if context == None:
+        if context is None:
             context = {}
         if ('location' in context) and context['location']:
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
@@ -348,7 +353,8 @@ class product_product(osv.osv):
                 if location_info.usage == 'inventory':
                     if fields.get('virtual_available'):
                         res['fields']['virtual_available']['string'] = _('Future P&L')
-                    res['fields']['qty_available']['string'] = _('P&L Qty')
+                    if fields.get('qty_available'):
+                        res['fields']['qty_available']['string'] = _('P&L Qty')
 
                 if location_info.usage == 'procurement':
                     if fields.get('virtual_available'):
@@ -361,10 +367,9 @@ class product_product(osv.osv):
                         res['fields']['virtual_available']['string'] = _('Future Productions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
-
         return res
-product_product()
 
+product_product()
 
 class product_template(osv.osv):
     _name = 'product.template'
@@ -406,10 +411,11 @@ class product_template(osv.osv):
             string='Stock Output Account', method=True, view_load=True,
             help='This account will be used, instead of the default one, to value output stock'),
     }
+
 product_template()
 
-
 class product_category(osv.osv):
+
     _inherit = 'product.category'
     _columns = {
         'property_stock_journal': fields.property('account.journal',
@@ -424,14 +430,14 @@ class product_category(osv.osv):
             type='many2one', relation='account.account',
             string='Stock Output Account', method=True, view_load=True,
             help='This account will be used to value the output stock'),
-        'property_stock_variation': fields.property('account.account', 
+        'property_stock_variation': fields.property('account.account',
             type='many2one',
             relation='account.account',
-            string="Stock variation Account",
-            method=True, view_load=True,  
+            string="Stock Variation Account",
+            method=True, view_load=True,
             help="This account will be used in product when valuation type is real-time valuation ",),
     }
+
 product_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

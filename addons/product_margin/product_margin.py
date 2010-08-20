@@ -19,32 +19,32 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import pooler
-from tools import config
 import time
+
+from osv import fields, osv
 
 class product_product(osv.osv):
     _inherit = "product.product"
 
-
-    def _product_margin(self, cr, uid, ids, field_names, arg, context):
+    def _product_margin(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
+        if context is None:
+            context = {}
         for val in self.browse(cr, uid, ids,context=context):
             res[val.id] = {}
-            date_from=context.get('date_from', time.strftime('%Y-01-01'))
-            date_to=context.get('date_to', time.strftime('%Y-12-31'))
-            invoice_state=context.get('invoice_state', 'open_paid')
+            date_from = context.get('date_from', time.strftime('%Y-01-01'))
+            date_to = context.get('date_to', time.strftime('%Y-12-31'))
+            invoice_state = context.get('invoice_state', 'open_paid')
             if 'date_from' in field_names:
             	res[val.id]['date_from']=date_from
             if 'date_to' in field_names:
                 res[val.id]['date_to']=date_to
             if 'invoice_state' in field_names:
             	res[val.id]['invoice_state']=invoice_state
-            invoice_types=()
-            states=()
+            invoice_types = ()
+            states = ()
             if invoice_state=='paid':
-                states=('paid')
+                states=('paid',)
             elif invoice_state=='open_paid':
                 states=('open','paid')
             elif invoice_state=='draft_open_paid':
@@ -64,7 +64,7 @@ class product_product(osv.osv):
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
                 left join product_template product on (product.id=l.product_id)
-                where l.product_id = %s and i.state in %s and i.type in %s and i.date_invoice>=%s and i.date_invoice<=%s
+                where l.product_id = %s and i.state in %s and i.type IN %s and i.date_invoice>=%s and i.date_invoice<=%s
                 """,(val.id,states,invoice_types,date_from,date_to))
                 result=cr.fetchall()[0]
                 if 'sale_avg_price' in field_names or 'sale_num_invoiced' in field_names or 'turnover' in field_names or 'sale_expected' in field_names:
@@ -81,7 +81,7 @@ class product_product(osv.osv):
                     res[val.id]['purchase_gap']=res[val.id]['normal_cost']-res[val.id]['total_cost']
 
             if 'total_margin' in field_names:
-                res[val.id]['total_margin']=val.turnover-val.total_cost
+                res[val.id]['total_margin']=val.turnover-val.standard_price
             if 'expected_margin' in field_names:
                 res[val.id]['expected_margin']=val.sale_expected-val.normal_cost
             if 'total_margin_rate' in field_names:
@@ -106,13 +106,12 @@ class product_product(osv.osv):
         'total_cost'  : fields.function(_product_margin, method=True, type='float', string='Total Cost', multi='purchase',help="Sum of Multification of Invoice price and quantity of Supplier Invoices "),
         'sale_expected' :  fields.function(_product_margin, method=True, type='float', string='Expected Sale', multi='sale',help="Sum of Multification of Sale Catalog price and quantity of Customer Invoices"),
         'normal_cost'  : fields.function(_product_margin, method=True, type='float', string='Normal Cost', multi='purchase',help="Sum of Multification of Cost price and quantity of Supplier Invoices"),
-        'total_margin' : fields.function(_product_margin, method=True, type='float', string='Total Margin', multi='total',help="Turnorder - Total Cost"),
+        'total_margin' : fields.function(_product_margin, method=True, type='float', string='Total Margin', multi='total',help="Turnorder - Standard price"),
         'expected_margin' : fields.function(_product_margin, method=True, type='float', string='Expected Margin', multi='total',help="Expected Sale - Normal Cost"),
         'total_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Total Margin (%)', multi='margin',help="Total margin * 100 / Turnover"),
         'expected_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Expected Margin (%)', multi='margin',help="Expected margin * 100 / Expected Sale"),
     }
+
 product_product()
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

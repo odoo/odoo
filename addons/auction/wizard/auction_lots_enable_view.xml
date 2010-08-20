@@ -7,11 +7,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Confirm">
-                	<group colspan="4" >
-                		 <separator string="Confirmation enable taken away" colspan="4"/>
-              			 <newline/>
-                    </group>
-                       	<separator string="" colspan="4" />
+              		<separator string="Confirmation Enable Taken away" colspan="4"/>
                     <group colspan="4" col="6">
                     	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
                     	<button icon="gtk-goto-last"  string="Enable Taken away" name="confirm_enable" type="object"/>
@@ -20,7 +16,6 @@
             </field>
   		</record>
   		
-  		
         <act_window name="Unmark as taken away"		    
 		    res_model="auction.lots.enable"
 		    src_model="auction.lots"
@@ -28,7 +23,6 @@
 		    target="new"        
             key2="client_action_multi"    
 		    id="action_auction_lots_enable"/>    
-		      		
         
     </data>
 </openerp>

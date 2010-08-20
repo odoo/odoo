@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,19 +15,19 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import netsvc
-from osv import osv, fields 
+from osv import osv, fields
 
 class make_invoice(osv.osv_memory):
     _name = 'mrp.repair.make_invoice'
     _description = 'Make Invoice'
-    
+
     _columns = {
-	       'group': fields.boolean('Group by partner invoice address'),
+	   'group': fields.boolean('Group by partner invoice address'),
     }
 
     def make_invoices(self, cr, uid, ids, context):
@@ -35,15 +35,15 @@ class make_invoice(osv.osv_memory):
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected 
-        @param context: A standard dictionary 
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
         @return: Loads the view of new invoice(s).
         """
         inv = self.browse(cr, uid, ids[0])
-        order_obj = self.pool.get('mrp.repair')       
-        newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'], 
-                                                 group=inv.group,context=context)    
-            
+        order_obj = self.pool.get('mrp.repair')
+        newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'],
+                                                 group=inv.group,context=context)
+
         return {
             'domain': [('id','in', newinv.values())],
             'name': 'Invoices',

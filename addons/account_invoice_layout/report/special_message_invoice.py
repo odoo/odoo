@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import time
+
 from report import report_sxw
 import pooler
 
@@ -89,7 +90,7 @@ class account_invoice_with_message(report_sxw.rml_parse):
                 if entry.uos_id.id==False:
                     res['uos']=''
                 else:
-                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'],self.context.copy())
+                    uos_name = self.pool.get('product.uom').read(self.cr, self.uid, entry.uos_id.id, ['name'], self.context.copy())
                     res['uos']=uos_name['name']
             else:
 

@@ -7,19 +7,21 @@
             <field name="model">hr.timesheet.analytic.profit</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Timesheet Profit">
-			    <group col="4" colspan="6">
-		    	    <field name="date_from"/>
-				    <field name="date_to"/>
-				    <field name="journal_ids" colspan="4"/>
-				    <field name="employee_ids" colspan="4"/>
-				</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="print_report" string="Print" colspan="1" type="object" icon="gtk-yes"/>
-				</group>
-			</form>
+				<form string="Timesheet Profit">
+					<group height="340" width="480">
+						<group col="4" colspan="6">
+							<field name="date_from"/>
+							<field name="date_to"/>
+							<field name="journal_ids" colspan="4"/>
+							<field name="employee_ids" colspan="4"/>
+						</group>
+						<separator colspan="4"/>
+						<group col="2" colspan="4">
+							<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+							<button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
+						</group>
+					</group>
+				</form>
             </field>
         </record>
 
@@ -34,7 +36,7 @@
 
        	<menuitem action="action_hr_timesheet_analytic_profit"
         	id="menu_hr_timesheet_analytic_profit"
-        	parent="menu_hr_reporting_timesheet_invoice" groups="base.group_extended"/>
+        	parent="hr_timesheet.menu_hr_reporting_timesheet" groups="base.group_extended" icon="STOCK_PRINT"/>
 
 	</data>
 </openerp>

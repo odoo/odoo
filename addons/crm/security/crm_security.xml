@@ -2,21 +2,17 @@
 <openerp>
 <data noupdate="0">
 
-    <record id="group_crm_manager" model="res.groups">
-        <field name="name">CRM / Manager</field>
+    <record id="base.group_sale_manager" model="res.groups">
+        <field name="name">Sales / Manager</field>
     </record>
 
-    <record id="group_crm_user" model="res.groups">
-        <field name="name">CRM / User</field>
+    <record id="base.group_sale_salesman" model="res.groups">
+        <field name="name">Sales / User</field>
     </record>
-<!---->
-<!--    <record model='ir.ui.menu' id='menu_crm'>-->
-<!--        <field name="groups_id" eval="[(6,0,[ref('group_crm_manager'),ref('group_crm_user')])]"/>-->
-<!--    </record>-->
 
-<!--    <record model='ir.ui.menu' id='menu_crm_configuration'>-->
-<!--        <field name="groups_id" eval="[(6,0,[ref('group_crm_manager')])]"/>-->
-<!--    </record>-->
+    <record model='ir.ui.menu' id='base.menu_base_partner'>
+        <field name="groups_id" eval="[(4,ref('base.group_sale_manager')),(4,ref('base.group_sale_salesman'))]"/>
+    </record>
 
     </data>
 </openerp>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,22 +25,22 @@ import pooler, tools
 from osv import fields, osv
 
 class Env(dict):
-    
+
     def __init__(self, obj, user):
         self.__obj = obj
         self.__usr = user
-        
+
     def __getitem__(self, name):
-        
+
         if name in ('__obj', '__user'):
             return super(ExprContext, self).__getitem__(name)
-        
+
         if name == 'user':
             return self.__user
-        
+
         if name == 'object':
             return self.__obj
-        
+
         return self.__obj[name]
 
 class process_process(osv.osv):
@@ -85,7 +85,7 @@ class process_process(osv.osv):
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
 
         pool = pooler.get_pool(cr.dbname)
-        
+
         process = pool.get('process.process').browse(cr, uid, [id], context)[0]
 
         name = process.name
@@ -135,7 +135,7 @@ class process_process(osv.osv):
 
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
-            
+
             if node.model_id and node.model_id.model == res_model:
                 try:
                     data['active'] = eval(node.model_states, expr_context)
@@ -233,7 +233,7 @@ class process_process(osv.osv):
 
         # calculate graph layout
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
-        g.process(start)        
+        g.process(start)
         g.scale(*scale) #g.scale(100, 100, 180, 120)
         graph = g.result_get()
 

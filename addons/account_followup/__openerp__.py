@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Accounting follow-ups management',
     'version': '1.0',
@@ -28,35 +27,36 @@
     Modules to automate letters for unpaid invoices, with multi-level recalls.
 
     You can define your multiple levels of recall through the menu:
-        Financial Management/Configuration/Payment Terms/Follow-Ups
+        Financial Management/Configuration/Follow-Ups
 
     Once it's defined, you can automatically print recalls every day
     through simply clicking on the menu:
-        Financial_Management/Periodical_Processing/Print_Follow-Ups
+        Financial Management/Periodical Processing/Send followups
 
     It will generate a PDF with all the letters according the the
     different levels of recall defined. You can define different policies
-    for different companies.
-
+    for different companies. You can send also mail to the customer.
 
     Note that if you want to change the followup level for a given partner/account entry, you can do it in the menu:
-        Financial_Management/Reporting/Follow-Ups/All Receivable Entries
+        Accounting/Reporting/Follow-Ups/All receivable entries
 
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
         'wizard/account_followup_print_view.xml',
-        'followup_report_view.xml',
-        'followup_view.xml',
-        'followup_data.xml'
+        'report/account_followup_report.xml',
+        'account_followup_view.xml',
+        'account_followup_data.xml'
     ],
-    'demo_xml': ['followup_demo.xml'],
+    'demo_xml': ['account_followup_demo.xml'],
+    'test': ['test/account_followup.yml'],
     'installable': True,
     'active': False,
     'certificate': '0072481076453',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

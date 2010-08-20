@@ -58,16 +58,16 @@ class payment_order_create(osv.osv_memory):
     def create_payment(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('payment.order')
         line_obj = self.pool.get('account.move.line')
-
-        data = self.read(cr, uid, ids, [], context)[0]
-        line_ids= data['entries']
+        payment_obj = self.pool.get('payment.line')
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids, [])[0]
+        line_ids = data['entries']
         if not line_ids: return {}
 
-        payment = order_obj.browse(cr, uid, data['active_id'],
-                context=context)
+        payment = order_obj.browse(cr, uid, context['active_id'], context=context)
         t = payment.mode and payment.mode.type.id or None
-        line2bank = pool.get('account.move.line').line2bank(cr, uid,
-                line_ids, t, context)
+        line2bank = line_obj.line2bank(cr, uid, line_ids, t, context)
 
         ## Finally populate the current payment with new lines:
         for line in line_obj.browse(cr, uid, line_ids, context=context):
@@ -78,7 +78,7 @@ class payment_order_create(osv.osv_memory):
                 date_to_pay = line.date_maturity
             elif payment.date_prefered == 'fixed':
                 date_to_pay = payment.date_planned
-            pool.get('payment.line').create(cr, uid,{
+            payment_obj.create(cr, uid,{
                 'move_line_id': line.id,
                 'amount_currency': line.amount_to_pay,
                 'bank_id': line2bank.get(line.id),
@@ -94,7 +94,8 @@ class payment_order_create(osv.osv_memory):
         order_obj = self.pool.get('payment.order')
         line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
-
+        if context is None:
+            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         search_due_date = data['duedate']
         payment = order_obj.browse(cr, uid, context['active_id'], context=context)
@@ -109,8 +110,7 @@ class payment_order_create(osv.osv_memory):
         context.update({'line_ids': line_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_create_payment_order_lines')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {
-                'name': ('Entrie Lines'),
+        return {'name': ('Entrie Lines'),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'form',

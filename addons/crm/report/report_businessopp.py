@@ -34,7 +34,6 @@ from report.interface import report_int
 from pychart import *
 
 theme.use_color = 1
-#theme.scale = 2
 random.seed(0)
 
 class external_pdf(render):
@@ -69,7 +68,7 @@ class report_custom(report_int):
 
         cr.execute('select probability, planned_revenue, planned_cost, user_id,\
                  res_users.name as name from crm_case left join res_users on \
-                 (crm_case.user_id=res_users.id) where crm_case.id =ANY(%s) order by user_id',(ids,))
+                 (crm_case.user_id=res_users.id) where crm_case.id IN %s order by user_id',(tuple(ids),))
 
         res = cr.dictfetchall()
         for row in res:

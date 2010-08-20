@@ -20,21 +20,14 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-from tools.misc import UpdateableStr, UpdateableDict
 from tools.translate import _
-import netsvc
-import pooler
-import time
-import wizard
-
 
 class stock_fill_inventory(osv.osv_memory):
     _name = "stock.fill.inventory"
     _description = "Fill Inventory"
     _columns = {
-            'location_id': fields.many2one('stock.location', 'Location', required=True),
-            'recursive': fields.boolean("Include all children for the location"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'recursive': fields.boolean("Include all children for the location"),
     }
 
     def fill_inventory(self, cr, uid, ids, context):
@@ -42,10 +35,10 @@ class stock_fill_inventory(osv.osv_memory):
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: the ID or list of IDs if we want more than one 
-        @param context: A standard dictionary 
-        @return:  
-        """        
+        @param ids: the ID or list of IDs if we want more than one
+        @param context: A standard dictionary
+        @return:
+        """
         inventory_line_obj = self.pool.get('stock.inventory.line')
         location_obj = self.pool.get('stock.location')
         product_obj = self.pool.get('product.product')
@@ -64,7 +57,7 @@ class stock_fill_inventory(osv.osv_memory):
                 res = location_obj._product_get(cr, uid,
                             fill_inventory.location_id.id, context=context)
                 res_location[fill_inventory.location_id.id] = res
-        
+
         product_ids = []
         for location in res_location.keys():
             res = res_location[location]
@@ -83,11 +76,13 @@ class stock_fill_inventory(osv.osv_memory):
                          ('product_uom', '=', uom),
                         ('product_qty', '=', amount)])
                     if not len(line_ids):
-                        inventory_line = {'inventory_id': context['active_ids'][0],
-                                        'location_id': location,
-                                        'product_id': product_id,
-                                        'product_uom': uom,
-                                        'product_qty': amount}
+                        inventory_line = {
+                            'inventory_id': context['active_ids'][0],
+                            'location_id': location,
+                            'product_id': product_id,
+                            'product_uom': uom,
+                            'product_qty': amount
+                        }
                         inventory_line_obj.create(cr, uid, inventory_line)
                     product_ids.append(product_id)
 

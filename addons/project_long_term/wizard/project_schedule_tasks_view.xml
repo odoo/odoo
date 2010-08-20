@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               	<form string="Schedule Tasks">
-              		  <group height="90" width="250">
+              		  <group height="90" width="275">
 	              		  <label string="Task Scheduling completed successfully."/>
 			              <group colspan="4" col="6">
 			            		<button  icon="gtk-ok" colspan="4" special="cancel" string="_Ok"/>
@@ -25,7 +25,7 @@
 	           <field name="view_type">form</field>
 	           <field name="view_mode">form</field>
 	           <field name="view_id" ref="view_project_schedule_tasks"/>
-		       <field name="context">{'record_id' : active_id}</field>
+		       <field name="context">{'record_id': active_id}</field>
 	           <field name="target">new</field>
     	</record>
 

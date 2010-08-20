@@ -1,30 +1,24 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2006 TINY SPRL. (http://axelor.com) All Rights Reserved.
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 
 from osv import fields, osv
 from tools.translate import _
@@ -32,7 +26,6 @@ import difflib
 
 class Wiki(osv.osv):
     """ wiki """
-
     _name = "wiki.wiki"
 
 Wiki()
@@ -54,31 +47,57 @@ class WikiGroup(osv.osv):
        'method':fields.selection([('list', 'List'), ('page', 'Home Page'), \
                                    ('tree', 'Tree')], 'Display Method'),
        'home':fields.many2one('wiki.wiki', 'Home Page'),
+       'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
     }
 
     _defaults = {
         'method': lambda *a: 'page',
     }
 
+    def open_wiki_page(self, cr, uid, ids, context):
+
+        """ Opens Wiki Page of Group
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of open wiki group’s IDs
+        @return: dictionay of open wiki window on give group id
+        """
+        if not context:
+            context = {}
+        if type(ids) in (int,long,):
+            ids = [ids]
+        group_id = False
+        if ids:
+            group_id = ids[0]
+        if not group_id:
+            return {}
+        value = {            
+            'name': 'Wiki Page',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'wiki.wiki',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+        }
+        group = self.browse(cr, uid, group_id, context=context)
+        value['domain'] = "[('group_id','=',%d)]" % (group.id)
+        if group.method == 'page':
+            value['res_id'] = group.home.id
+        elif group.method == 'list':
+            value['view_type'] = 'form'
+            value['view_mode'] = 'tree,form'
+        elif group.method == 'tree':
+            view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'wiki.wiki.tree.childs')])
+            value['view_id'] = view_id
+            value['domain'] = [('group_id', '=', group.id), ('parent_id', '=', False)]
+            value['view_type'] = 'tree'
+
+        return value
 WikiGroup()
 
 
-class GroupLink(osv.osv):
-    """ Apply Group Link """
-
-    _name = "wiki.groups.link"
-    _description = "Wiki Groups Links"
-    _rec_name = 'action_id'
-
-    _columns = {
-       'group_id': fields.many2one('wiki.groups', 'Parent Group', ondelete='set null'),
-       'action_id': fields.many2one('ir.ui.menu', 'Menu')
-    }
-
-GroupLink()
-
-
-class Wiki(osv.osv):
+class Wiki2(osv.osv):
     """ Wiki Page """
 
     _inherit = "wiki.wiki"
@@ -87,19 +106,22 @@ class Wiki(osv.osv):
 
     _columns = {
         'name': fields.char('Title', size=256, select=True, required=True),
-        'write_uid': fields.many2one('res.users', "Last Author"),
+        'write_uid': fields.many2one('res.users', "Last Contributor", select=True),
         'text_area': fields.text("Content"),
         'create_uid': fields.many2one('res.users', 'Author', select=True),
         'create_date': fields.datetime("Created on", select=True),
         'write_date': fields.datetime("Modification Date", select=True),
-        'tags': fields.char('Tags', size=1024),
+        'tags': fields.char('Tags', size=1024, select=True),
         'history_id': fields.one2many('wiki.wiki.history', 'wiki_id', 'History Lines'),
         'minor_edit': fields.boolean('Minor edit', select=True),
         'summary': fields.char('Summary', size=256),
-        'section': fields.char('Sequence', size=32, help="Use page section code like 1.2.1"),
-        'group_id': fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
-        'toc': fields.boolean('Table of Contents'),
-        'review': fields.boolean('Need Review'),
+        'section': fields.char('Section', size=32, help="Use page section code like 1.2.1", select=True),
+        'group_id': fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null',
+            help="Topic, also called Wiki Group"),
+        'toc': fields.boolean('Table of Contents',
+            help="Indicates that this pages is a table of contents (linking to other pages)"),
+        'review': fields.boolean('Needs Review', select=True,
+            help="Indicates that this page should be reviewed, raising the attention of other contributors"),
         'parent_id': fields.many2one('wiki.wiki', 'Parent Page'),
         'child_ids': fields.one2many('wiki.wiki', 'parent_id', 'Child Pages'),
     }
@@ -176,29 +198,7 @@ class Wiki(osv.osv):
                 history.create(cr, uid, res)
         return result
 
-    def open_wiki_page(self, cr, uid, ids, context):
-
-        """ Opens Wiki Page for Editing
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of wiki page’s IDs
-
-        """
-        pages = self.pool.get('wiki.wiki').search(cr, uid, [('name', '=', 'Basic Wiki Editing')])
-        if not pages:
-           raise osv.except_osv(_('Warning !'), _("No Help page is defined"))
-        value = {
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'wiki.wiki',
-            'view_id': False,
-            'res_id': pages[0],
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-        }
-        return value
-
-Wiki()
+Wiki2()
 
 
 class History(osv.osv):
@@ -210,13 +210,13 @@ class History(osv.osv):
     _order = 'id DESC'
 
     _columns = {
-              'create_date': fields.datetime("Date", select=True),
-              'text_area': fields.text("Text area"),
-              'minor_edit': fields.boolean('This is a major edit ?', select=True),
-              'summary': fields.char('Summary', size=256, select=True),
-              'write_uid': fields.many2one('res.users', "Modify By", select=True),
-              'wiki_id': fields.many2one('wiki.wiki', 'Wiki Id', select=True)
-            }
+          'create_date': fields.datetime("Date", select=True),
+          'text_area': fields.text("Text area"),
+          'minor_edit': fields.boolean('This is a major edit ?', select=True),
+          'summary': fields.char('Summary', size=256, select=True),
+          'write_uid': fields.many2one('res.users', "Modify By", select=True),
+          'wiki_id': fields.many2one('wiki.wiki', 'Wiki Id', select=True)
+    }
 
     _defaults = {
         'write_uid': lambda obj, cr, uid, context: uid,

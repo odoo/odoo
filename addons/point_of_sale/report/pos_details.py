@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -28,9 +27,9 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_invoice(self,inv_id,user):
         res={}
-        self.cr.execute("select name from account_invoice as ac where id = %d" %(inv_id))
-        res = self.cr.fetchone()
-        if res:
+        if inv_id:
+            self.cr.execute("select name from account_invoice as ac where id = %d" %(inv_id))
+            res = self.cr.fetchone()
             return res[0]
         else:
             return  ''
@@ -39,7 +38,7 @@ class pos_details(report_sxw.rml_parse):
         data={}
         self.cr.execute ("select po.name as pos_name,po.date_order,pt.name ,pol.qty,pol.price_unit,pol.discount,po.invoice_id,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,res_users as ru,res_company as rc " \
-                         "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  in ('done','paid','invoiced') " \
+                         "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
                          "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \
                          "and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
                          "group by po.name,pol.qty,po.date_order,pt.name,pol.price_unit,pol.discount,po.invoice_id " \
@@ -57,7 +56,7 @@ class pos_details(report_sxw.rml_parse):
         qty=[]
         self.cr.execute("select sum(pol.qty) as qty " \
                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,res_users as ru,res_company as rc " \
-                        "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  in ('done','paid','invoiced') " \
+                        "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
                         " and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \
                         "and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
                          ,(form['date_start'],form['date_end'],str(user.company_id.id),str(self.uid)))
@@ -65,7 +64,11 @@ class pos_details(report_sxw.rml_parse):
         return qty[0] or 0.00
 
     def _get_sales_total_2(self, form,user):
-        self.cr.execute("sELECT sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total from  pos_order_line as pol , pos_order po, product_product as pp,product_template as pt  where po.company_id='%s' and po.id=pol.order_id and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= '%s' and  to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= '%s' and po.state in ('paid','invoiced','done') and pt.id=pp.product_tmpl_id and pol.product_id=pp.id"% (str(user.company_id.id),form['date_start'],form['date_end']))
+        self.cr.execute("select sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
+                        "from  pos_order_line as pol , pos_order po, product_product as pp,product_template as pt " \
+                        " where po.company_id='%s' and po.id=pol.order_id and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= '%s' " \
+                        " and  to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= '%s' and po.state IN ('paid','invoiced','done') " \
+                        " and pt.id=pp.product_tmpl_id and pol.product_id=pp.id"% (str(user.company_id.id),form['date_start'],form['date_end']))
         res2=self.cr.fetchone()
         return res2 and res2[0] or 0.0
 
@@ -93,17 +96,6 @@ class pos_details(report_sxw.rml_parse):
         self.total_paid=res3[0]
         return res3[0] or False
 
-#    def _get_qty_total(self, objects):
-#        #code for the sum of qty_total
-#        return reduce(lambda acc, object:
-#                                        acc + reduce(
-#                                                lambda sum_qty, line:
-#                                                        sum_qty + line.qty,
-#                                                object.lines,
-#                                                0),
-#                                    objects,
-#                                    0)
-
     def _get_sum_discount(self, objects):
         #code for the sum of discount value
         return reduce(lambda acc, object:
@@ -116,18 +108,6 @@ class pos_details(report_sxw.rml_parse):
                                     0.0)
 
     def _get_payments(self, form,user, ignore_gift=False):
-#        gift_journal_id = None
-#        if ignore_gift:
-#            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
-#            if len(config_journal_ids):
-#                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
-#                gift_journal_id = config_journal.journal_id.id
-#
-#        result = {}
-#        for obj in objects:
-#            for payment in obj.statement_ids:
-#                result[payment.journal_id] = result.get(payment.journal_id, 0.0) + payment.amount
-#        return result
         statement_line_obj = self.pool.get("account.bank.statement.line")
         gift_journal_id = None
         if ignore_gift:
@@ -144,11 +124,9 @@ class pos_details(report_sxw.rml_parse):
                 a_l=[]
                 for r in st_id :
                     a_l.append(r['id'])
-                    a = ','.join(map(str,a_l))
                 self.cr.execute("select aj.name,sum(amount) from account_bank_statement_line as absl,account_bank_statement as abs,account_journal as aj " \
-                                "where absl.statement_id = abs.id and abs.journal_id = aj.id  and absl.id in (%s) " \
-                                "group by aj.name " \
-                                %(a))
+                                "where absl.statement_id = abs.id and abs.journal_id = aj.id  and absl.id IN %s " \
+                                "group by aj.name ",(tuple(a_l),))
 
                 data=self.cr.dictfetchall()
                 return data
@@ -199,13 +177,6 @@ class pos_details(report_sxw.rml_parse):
         temp.update({'amount':temp2})
         return [temp] or False
 
-#    def _get_period(self, form):
-#        min_date = form['date_start']
-#        max_date = form['date_end']
-#        if min_date == max_date:
-#            return '%s' % min_date
-#        else:
-#            return '%s - %s' % (min_date, max_date)
     def _get_period(self, form):
         return form['date_start']
 

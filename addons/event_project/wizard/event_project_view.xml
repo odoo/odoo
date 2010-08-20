@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_event_project" model="ir.ui.view">
+            <field name="name">Retro-Planning</field>
+            <field name="model">event.project</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+               <form string="Retro-Planning">
+                    <field name="project_id" colspan="4"/>
+                    <field name="date_start"/>
+                    <field name="date"/>
+                    <separator string="" colspan="4"/>
+                    <group colspan="4" col="6">
+                        <button  icon="gtk-close" special="cancel" string="Close"/>
+                        <button icon="gtk-ok" name="create_duplicate" string="Ok" type="object"/>
+                    </group>
+              </form>
+            </field>
+        </record>
+
+        <record id="action_event_project" model="ir.actions.act_window">
+            <field name="name">Retro-Planning</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">event.project</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_event_project"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

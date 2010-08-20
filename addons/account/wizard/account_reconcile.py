@@ -30,7 +30,7 @@ class account_move_line_reconcile_prompt(osv.osv_memory):
     _name = 'account.move.line.reconcile.prompt'
     _description = 'Account move line reconcile'
     _columns = {
-        }
+    }
 
     def ask_reconcilation(self, cr, uid, ids, context):
         return self.pool.get('account.move.line.reconcile').partial_check(cr, uid, ids, context)
@@ -45,10 +45,10 @@ class account_move_line_reconcile(osv.osv_memory):
     _description = 'Account move line reconcile'
     _columns = {
         'trans_nbr': fields.integer('# of Transaction', readonly=True),
-        'credit': fields.float('Credit amount',readonly=True),
-        'debit': fields.float('Debit amount',readonly=True),
-        'writeoff': fields.float('Write-Off amount',readonly=True),
-        }
+        'credit': fields.float('Credit amount', readonly=True),
+        'debit': fields.float('Debit amount', readonly=True),
+        'writeoff': fields.float('Write-Off amount', readonly=True),
+    }
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(account_move_line_reconcile, self).default_get(cr, uid, fields, context=context)
@@ -56,11 +56,11 @@ class account_move_line_reconcile(osv.osv_memory):
         if 'trans_nbr' in fields:
             res.update({'trans_nbr':data['trans_nbr']})
         if 'credit' in fields:
-            res.update({'trans_nbr':data['credit']})
+            res.update({'credit':data['credit']})
         if 'debit' in fields:
-            res.update({'trans_nbr':data['debit']})
+            res.update({'debit':data['debit']})
         if 'writeoff' in fields:
-            res.update({'trans_nbr':data['writeoff']})
+            res.update({'writeoff':data['writeoff']})
         return res
 
     def partial_check(self, cr, uid, ids, context=None):
@@ -148,12 +148,12 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         'writeoff_acc_id': fields.many2one('account.account','Write-Off account', required=True),
         'date_p': fields.date('Date'),
         'comment': fields.char('Comment', size= 64, required=True),
-        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        }
+        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
+    }
     _defaults = {
         'date_p': time.strftime('%Y-%m-%d'),
         'comment': 'Write-off',
-        }
+    }
 
     def trans_rec_addendum(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')

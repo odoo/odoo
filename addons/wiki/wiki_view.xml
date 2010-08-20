@@ -1,18 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-       <menuitem name="Knowledge Management" icon="terp-stock"
-           id="base.menu_document" sequence="4" />
+       <menuitem name="Knowledge" icon="terp-stock"
+           id="knowledge.menu_document" sequence="19" />
 
        <menuitem name="Configuration"
-           id="base.menu_document_configuration"
-           parent="base.menu_document" sequence="50" />
+           id="knowledge.menu_document_configuration"
+           parent="knowledge.menu_document" sequence="50" groups="base.group_system" />
 
        <menuitem name="Wiki" id="menu_wiki_configuration"
-           parent="base.menu_document_configuration" sequence="2" />
+           parent="knowledge.menu_document_configuration" sequence="2" />
 
-       <menuitem id="base.menu_document2" name="Collaborative Content"
-           parent="base.menu_document" />
 
 <!--  Wiki Groups Tree view -->
 
@@ -50,11 +48,18 @@
                         <field name="template" colspan="4" nolabel="1" widget="text_wiki"/>
                     </page>
                     </notebook>
+                     <field name="menu_id"/>
                      <button
                          name="%(wiki.action_wiki_create_menu)d"
                          string="Create Menu"
                           type="action"
-                          icon="gtk-justify-fill" />
+                          icon="gtk-justify-fill"
+                          attrs="{'invisible':[('menu_id','!=',False)]}"/>
+                     <button
+                         name="open_wiki_page"
+                         string="Open Wiki Page"
+                          type="object"
+                          icon="gtk-ok" />
                 </form>
             </field>
         </record>
@@ -125,18 +130,13 @@
             <field name="arch" type="xml">
                 <form string="Wiki">
                     <group col="8" colspan="4">
-                        <field name="name" select="1" colspan="6"/>
-                        <button name="open_wiki_page" type="object"
-                        string="Basic Wiki Editing" icon="gtk-ok" />
-                    </group>
-                    <group col="8" colspan="4">
+                        <field name="name" select="1" colspan="8"/>
                         <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                        <field name="section" invisible="not context.get('section',False)"/>
-<!--                        <field name="parent_id"/>-->
+                        <field name="section"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Content">
-                        <separator colspan="4" string="Informations"/>
+                        <separator colspan="4" string="Page Content"/>
                         <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                         </page>
                     </notebook>
@@ -146,13 +146,12 @@
                         <field name="review" select="1"/>
                         <field name="tags" select="1" groups="base.group_extended"/>
                         <field name="toc"/>
-<!--                        <field name="summary" colspan="4" groups="base.group_extended"/>-->
                     </group>
                 </form>
             </field>
         </record>
 
-<!-- wiki Search view  -->
+    <!-- wiki Search view  -->
 
         <record id="view_wiki_filter" model="ir.ui.view">
             <field name="name">wiki.wiki.search</field>
@@ -160,20 +159,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wiki">
-                        <filter icon="terp-check" string="Need Review" domain="[('review','=',True)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="section" select="1"/>
-                        <field name="name" select="1"/>
-                        <field name="group_id" select="1"/>
-                        <field name="write_uid" select="1"/>
-                        <field name="write_date" select="1"/>
-                        <field name="review" select="1"/>
-<!--                        <field name="create_uid" widget="selection" select="1"/>-->
-                        <newline/>
+                    <filter icon="terp-check" string="Need Review" domain="[('review','=',True)]"/>
+                    <separator orientation="vertical"/>
+                    <field name="section" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="group_id" select="1"/>
+                    <field name="write_uid" select="1"/>
+                    <field name="write_date" select="1"/>
+                    <newline/>
                     <group expand="0" string="Group By..." colspan="8" col="6">
                         <filter icon="terp-check" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter icon="terp-personal-" string="Last Author" domain="[]" context="{'group_by':'write_uid'}"/>
+                        <filter icon="terp-personal-" string="Last Contributor" domain="[]" context="{'group_by':'write_uid'}"/>
                     </group>
                 </search>
             </field>
@@ -187,11 +184,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
-<!--            <field name="context">{'section':'1','search_default_create_uid':uid}</field>-->
             <field name="search_view_id" ref="view_wiki_filter"/>
         </record>
 
-        <menuitem parent="base.menu_document2"
+        <menuitem parent="knowledge.menu_document2"
             id="menu_action_wiki_wiki" name="Wiki Pages"
             action="action_wiki" />
 

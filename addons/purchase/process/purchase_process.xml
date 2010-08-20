@@ -17,7 +17,6 @@
         -->
 
         <record id="process_node_packinginvoice0" model="process.node">
-<!--            <field name="menu_id" ref="stock.menu_action_picking_tree"/>-->
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Outgoing Products&quot;&quot;&quot;" name="name"/>
@@ -107,7 +106,7 @@
         </record>
 
         <record id="process_node_invoiceafterpacking0" model="process.node">
-            <field name="menu_id" ref="account.menu_finance_invoice"/>
+            <field name="menu_id" ref="account.menu_finance_receivables"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Draft Invoice&quot;&quot;&quot;" name="name"/>
@@ -119,7 +118,6 @@
         </record>
 
         <record id="process_node_productrecept0" model="process.node">
-<!--            <field name="menu_id" ref="stock.menu_action_picking_tree"/>-->
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Incoming Products&quot;&quot;&quot;" name="name"/>
@@ -141,7 +139,7 @@
             <field eval="&quot;&quot;&quot;condition_origin&quot;&quot;&quot;" name="name"/>
         </record>
 
-    	<record id="process_condition_conditioninvoicemanual" model="process.condition">
+        <record id="process_condition_conditioninvoicemanual" model="process.condition">
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="node_id" ref="process_node_invoicecontrol0"/>
             <field eval="&quot;&quot;&quot;object.invoice_method=='manual'&quot;&quot;&quot;" name="model_states"/>
@@ -152,20 +150,7 @@
             Process Transition
         -->
 
-    	<record id="res_roles_purchase0" model="res.roles">
-            <field eval="&quot;&quot;&quot;Purchase&quot;&quot;&quot;" name="name"/>
-        </record>
-
-        <record id="purchase.trans_draft_confirmed" model="workflow.transition">
-            <field name="role_id" ref="res_roles_purchase0"/>
-        </record>
-
-        <record id="purchase.trans_router_invoice" model="workflow.transition">
-            <field name="role_id" ref="res_roles_purchase0"/>
-        </record>
-
         <record id="process_transition_productrecept0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a Pick list&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A Pick list generates a supplier invoice. Depending on the Invoicing control of the purchase order, the invoice is based on received or on ordered quantities.&quot;&quot;&quot;" name="note"/>
@@ -174,7 +159,6 @@
         </record>
 
         <record id="process_transition_confirmingpurchaseorder0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirmation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The buyer has to approve the RFQ before being sent to the supplier. The RFQ becomes a confirmed Purchase Order.&quot;&quot;&quot;" name="note"/>
@@ -184,7 +168,6 @@
         </record>
 
         <record id="process_transition_confirmingpurchaseorder1" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirmation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case there is no supplier for this product, the buyer can fill the form manually and confirm it. The RFQ becomes a confirmed Purchase Order.&quot;&quot;&quot;" name="note"/>
@@ -193,7 +176,6 @@
         </record>
 
         <record id="process_transition_approvingpurchaseorder0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Approbation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The supplier approves the Purchase Order.&quot;&quot;&quot;" name="note"/>
@@ -202,7 +184,6 @@
         </record>
 
         <record id="process_transition_invoicefrompurchase0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The invoice is created automatically if the Invoice control of the purchase order is 'On order'. The invoice can also be generated manually by the accountant (Invoice control = Manual).&quot;&quot;&quot;" name="note"/>
@@ -212,7 +193,6 @@
         </record>
 
         <record id="process_transition_createpackinglist0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Pick list generated&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A pick list is generated to track the incoming products.&quot;&quot;&quot;" name="note"/>
@@ -221,7 +201,6 @@
         </record>
 
         <record id="process_transition_invoicefrompackinglist0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The invoice is created automatically if the Invoice control of the purchase order is 'On picking'. The invoice can also be generated manually by the accountant (Invoice control = Manual).&quot;&quot;&quot;" name="note"/>
@@ -230,7 +209,6 @@
         </record>
 
         <record id="process_transition_purchaseinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a purchase order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A purchase order generates a supplier invoice, as soon as it is confirmed by the buyer. Depending on the Invoicing control of the purchase order, the invoice is based on received or on ordered quantities.&quot;&quot;&quot;" name="note"/>
@@ -239,7 +217,6 @@
         </record>
 
         <record id="process_transition_packinginvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a Pick list&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A Pick list generates an invoice. Depending on the Invoicing control of the sale order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>
