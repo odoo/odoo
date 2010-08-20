@@ -242,6 +242,7 @@ function open_contact()
 
 }
 
+
 //function to open the configuration window
 var Config = {
   onLoad: function() {
@@ -298,8 +299,9 @@ var Select = {
 	},
 
 	onMenuItemCommand: function(){
-		window.open("chrome://openerp_plugin/content/selectpartner.xul", "", "chrome");
-	}
+         //document.getElementById("txtselectpartner").value="";
+		 window.open("chrome://openerp_plugin/content/selectpartner.xul", "", "chrome");
+    }
 };
 
 var CreatePartner = {
