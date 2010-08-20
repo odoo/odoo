@@ -1551,6 +1551,7 @@
                     <field name="name" select="1"/>
                     <field name="ref" select="1"/>
                     <field name="journal_id" select="1"/>
+                    <field name="company_id" select="1" widget='selection'/>
                     <field colspan="4" nolabel="1" name="lines_id" height="250" widget="one2many_list"/>
                     <separator string="Legend" colspan="4"/>
                     <field name="legend" colspan="4" nolabel="1"/>
@@ -1568,6 +1569,7 @@
                 <tree string="Entry Model">
                     <field name="name"/>
                     <field name="journal_id"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
