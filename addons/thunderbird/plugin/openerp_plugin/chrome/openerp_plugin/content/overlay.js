@@ -177,6 +177,7 @@ function searchmail()
 	}
 }
 
+
 function open_contact()
 {	
 	setTimeout("createConnection()",5000)
@@ -222,8 +223,8 @@ function open_contact()
 	}
 
 	//set the initial information for the selected email
-	setSenderEmail(senderemail);
-	setSenderName(sendername);
+    setSenderEmail(senderemail);
+    setSenderName(sendername);
     setPartnerName("");
     setStreet("");
     setStreet2("");
@@ -238,7 +239,6 @@ function open_contact()
 		alert("Please install the thunderbird module on your '" + getDbName() +"' database  and try again !");
 		return false
 	}
-	window.open("chrome://openerp_plugin/content/address.xul", "", "chrome, resizable=yes");
 
 }
 
@@ -286,7 +286,7 @@ var Address = {
 
 	onMenuItemCommand: function(){
        open_contact();
-        searchContact();
+       searchContact();
 	}
 };
 
