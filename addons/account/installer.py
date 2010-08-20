@@ -610,9 +610,9 @@ class account_installer_modules(osv.osv_memory):
         'account_voucher':fields.boolean('Voucher Management',
             help="Account Voucher module includes all the basic requirements of "
                  "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
-        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
-            help="Extension Account Voucher module includes allows to link payment / receipt "
-                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
+#        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
+#            help="Extension Account Voucher module includes allows to link payment / receipt "
+#                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
                  }
 
 account_installer_modules()

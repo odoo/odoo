@@ -94,9 +94,9 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="payment_ids" on_change="onchange_price(payment_ids, tax_amount, tax_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="payment_ids" on_change="onchange_price(payment_ids, False, False)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Payment Lines" editable="bottom">
-                                    <field name="move_line_id"/>
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'type':parent.type, 'partner_id':parent.partner_id}" on_change="onchange_move_line_id(move_line_id)" domain="[('account_id.type','=','receivable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id), ('debit','>',0)]"/>
                                     <field name="account_id"  domain="[('type','=','receivable')]"/>
                                     <field name="date_original"/>
                                     <field name="date_due"/>
