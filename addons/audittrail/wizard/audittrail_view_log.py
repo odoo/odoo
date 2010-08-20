@@ -23,7 +23,7 @@ from osv import fields, osv
 import time
 
 class audittrail_view_log(osv.osv_memory):
-    
+
     _name = "audittrail.view.log"
     _description = "View Log"
     _columns = {
@@ -33,7 +33,7 @@ class audittrail_view_log(osv.osv_memory):
     _defaults = {
              'to': lambda *a: time.strftime("%Y-%m-%d %H:%M:%S"),
            }
-    
+
     def log_open_window(self, cr, uid, ids, context=None):
         """
         Open Log  form from given date range..
@@ -44,26 +44,23 @@ class audittrail_view_log(osv.osv_memory):
         """
         if not context:
             context = {}
-            
+
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         result = mod_obj._get_id(cr, uid, 'audittrail', 'action_audittrail_log_tree')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
-        #log_obj = self.pool.get(result['res_model'])
-        #log_id = log_obj.search(cr, uid, [])
-        #log_model = log_obj.read(cr, uid, log_id, ['object_id'])  
 
-        #start Loop 
+        #start Loop
         for datas in self.read(cr, uid, ids):
             if not datas.get('from', None):
                 if  datas.get('to') <> time.strftime("%Y-%m-%d %H:%M:%S"):
-                    result['domain'] = str([('timestamp', '<', datas.get('to'))])                
+                    result['domain'] = str([('timestamp', '<', datas.get('to'))])
                 else:
                     pass
             else:
                 result['domain'] = str([('timestamp', '>', datas.get('from', None)), ('timestamp', '<', datas.get('to'))])
-        #End Loop        
+        #End Loop
         return result
 
 audittrail_view_log()

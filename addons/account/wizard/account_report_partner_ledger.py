@@ -35,12 +35,12 @@ class account_partner_ledger(osv.osv_memory):
         'reconcil': fields.boolean('Include Reconciled Entries', help='Consider reconciled entries'),
         'page_split': fields.boolean('One Partner Per Page', help='Display Ledger Report with One partner per page'),
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
-                }
+    }
     _defaults = {
        'reconcil': True,
        'initial_balance': True,
        'page_split': False,
-               }
+    }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
@@ -52,12 +52,12 @@ class account_partner_ledger(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger',
                 'datas': data,
-                    }
+            }
         return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger_other',
                 'datas': data,
-                }
+        }
 
 account_partner_ledger()
 

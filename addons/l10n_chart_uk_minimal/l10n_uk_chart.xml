@@ -63,10 +63,6 @@
 			            <field name="user_type" ref="account_type_liability"/>
 			        </record>
 
-	        <!-- <record id="account.property_account_payable" model="ir.property">
-	            <field eval="'account.account,'+str(a_pay)" name="value"/>
-	        </record>-->
-
 	        <record model="account.account.template" id="assets_view">
 	            <field name="name">Assets</field>
 	            <field name="code">10</field>
@@ -124,10 +120,6 @@
 				            <field eval="True" name="reconcile"/>
 				            <field name="user_type" ref="account_type_asset"/>
 				        </record>
-
-				        <!-- <record id="account.property_account_receivable" model="ir.property">
-				            <field eval="'account.account,'+str(a_recv)" name="value"/>
-				        </record> -->
 
 				        <record id="ova" model="account.account.template">
 				            <field name="code">11003</field>
@@ -207,10 +199,6 @@
 	            <field name="parent_id" ref="gpf"/>
 	        </record>
            
-		        <!-- <record id="account.property_account_income_categ" model="ir.property">
-		            <field eval="'account.account,'+str(a_sale)" name="value"/>
-		        </record> -->
-		
 		        <record id="cos" model="account.account.template">
 		            <field name="code">210</field>
 		            <field name="name">Cost of Sales</field>
@@ -260,8 +248,5 @@
                         <field name="user_type" ref="account_type_expense"/>
                     </record>
 			        
-			        <!-- <record id="account.property_account_expense_categ" model="ir.property">
-			            <field eval="'account.account,'+str(a_expense)" name="value"/>
-			        </record> -->
     </data>
 </openerp>

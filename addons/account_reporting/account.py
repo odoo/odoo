@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import time
@@ -88,7 +88,6 @@ class account_report_bs(osv.osv):
         'code': fields.char('Code', size=64, required=True),
         'account_id': fields.many2many('account.account', 'account_report_rel', 'report_id', 'account_id', 'Accounts'),
         'note': fields.text('Note'),
-#       'style': fields.selection(_style, 'Style'),
         'color_font' : fields.many2one('color.rml','Font Color'),
         'color_back' : fields.many2one('color.rml','Back Color'),
         'font_style' : fields.selection(_font, 'Font'),

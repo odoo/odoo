@@ -30,10 +30,10 @@ class account_common_partner_report(osv.osv_memory):
                                               ('supplier','Payable Accounts'),
                                               ('customer_supplier' ,'Receivable and Payable Accounts')],
                                               "Partner's", required=True),
-                }
+    }
     _defaults = {
         'result_selection': 'customer',
-                }
+    }
 
     def pre_print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:

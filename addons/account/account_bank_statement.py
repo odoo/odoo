@@ -367,8 +367,6 @@ class account_bank_statement(osv.osv):
                             account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
-                    #except:
-                    #    raise osv.except_osv(_('Error !'), _('Unable to reconcile entry "%s": %.2f') % (move.name, move.amount))
 
                 if st.journal_id.entry_posted:
                     account_move_obj.write(cr, uid, [move_id], {'state': 'posted'})

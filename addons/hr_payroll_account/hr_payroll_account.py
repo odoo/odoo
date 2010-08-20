@@ -133,7 +133,6 @@ class hr_payslip(osv.osv):
             ded_rec = {
                 'move_id':move_id,
                 'name': name,
-                #'partner_id': partner_id,
                 'date': slip.date,
                 'account_id': slip.employee_id.property_bank_account.id,
                 'debit': 0.0,
@@ -293,7 +292,6 @@ class hr_payslip(osv.osv):
                 period_id = search_periods[0]
 
             move = {
-                #'name': slip.name,
                 'journal_id': slip.journal_id.id,
                 'period_id': period_id,
                 'date': slip.date,
@@ -408,140 +406,6 @@ class hr_payslip(osv.osv):
 
                 for contrub in line.category_id.contribute_ids:
                     print contrib.name, contrub.code, contrub.amount_type, contrib.contribute_per, line.total
-
-
-
-#                if line.company_contrib > 0:
-#                    company_contrib = line.company_contrib
-##                    if line.category_id.amount_type == 'per':
-##                        company_contrib = (amount * line.category_id.contribute_per)
-
-#                    narration = """Company Contribution of %s Encode same as a Company Expanse @ %s""" % (line.name, company_contrib)
-#                    move = {
-#                        #'name': slip.name,
-#                        'journal_id': slip.journal_id.id,
-#                        'period_id': period_id,
-#                        'date': slip.date,
-#                        'ref':slip.number,
-#                        'narration': narration
-#                    }
-#                    company_contrib_move_id = move_pool.create(cr, uid, move)
-#                    name = "[%s] - %s / %s - Company Contribution" % (line.code, line.name, slip.employee_id.name)
-#                    self.create_voucher(cr, uid, [slip.id], name, company_contrib_move_id)
-#
-#                    ded_deb = {
-#                        'move_id':company_contrib_move_id,
-#                        'name': name,
-#                        'date': slip.date,
-#                        'quantity':1,
-#                        'account_id': line.category_id.account_id.id,
-#                        'debit': company_contrib,
-#                        'credit' : 0.0,
-#                        'journal_id': slip.journal_id.id,
-#                        'period_id': period_id,
-#                        'ref':slip.number
-#                    }
-#                    line_ids += [movel_pool.create(cr, uid, ded_deb)]
-#                    ded_cre = {
-#                        'move_id':company_contrib_move_id,
-#                        'name': name,
-#                        'date': slip.date,
-#                        'quantity':1,
-#                        'account_id': line.category_id.register_id.account_id.id,
-#                        'debit': 0.0,
-#                        'credit' : company_contrib,
-#                        'journal_id': slip.journal_id.id,
-#                        'period_id': period_id,
-#                        'ref':slip.number
-#                    }
-#                    line_ids += [movel_pool.create(cr, uid, ded_cre)]
-#
-#                    if line.category_id.include_in_salary:
-#                        narration = """Company Contribution of %s Deducted from Employee %s""" % (line.name, company_contrib)
-#                        move = {
-#                            #'name': slip.name,
-#                            'journal_id': slip.journal_id.id,
-#                            'period_id': period_id,
-#                            'date': slip.date,
-#                            'ref':slip.number,
-#                            'narration': narration
-#                        }
-#                        include_in_salary_move_id = move_pool.create(cr, uid, move)
-#                        self.create_voucher(cr, uid, [slip.id], narration, include_in_salary_move_id)
-#
-#                        total_deduct += company_contrib
-#                        ded_deb = {
-#                            'move_id':include_in_salary_move_id,
-#                            'name': name,
-#                            'partner_id': partner_id,
-#                            'date': slip.date,
-#                            'quantity':1,
-#                            'account_id': partner.property_account_receivable.id,
-#                            'debit': company_contrib,
-#                            'credit' : 0.0,
-#                            'journal_id': slip.journal_id.id,
-#                            'period_id': period_id,
-#                            'ref':slip.number
-#                        }
-#                        line_ids += [movel_pool.create(cr, uid, ded_deb)]
-#                        ded_cre = {
-#                            'move_id':include_in_salary_move_id,
-#                            'name': name,
-#                            'date': slip.date,
-#                            'quantity':1,
-#                            'account_id': line.category_id.account_id.id,
-#                            'debit': 0.0,
-#                            'credit' : company_contrib,
-#                            'journal_id': slip.journal_id.id,
-#                            'period_id': period_id,
-#                            'ref':slip.number
-#                        }
-#                        line_ids += [movel_pool.create(cr, uid, ded_cre)]
-
-                #make an entry line to contribution register
-#                if line.category_id.register_id:
-#                    ctr = {
-#                        'register_id':line.category_id.register_id.id,
-#                        'name':line.name,
-#                        'code':line.code,
-#                        'employee_id':slip.employee_id.id,
-#                        'period_id':period_id,
-#                        'emp_deduction':amount,
-#                    }
-#                    if line.category_id.contribute:
-#                        ctr['comp_deduction'] = amount
-#
-#                    company = 0.0
-#                    employee = 0.0
-#                    if line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'per':
-#                        new_amount = (amount * (line.category_id.contribute_per / (1+line.category_id.contribute_per)))
-#                        company = new_amount
-#                        employee = amount - company
-#
-#                    elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
-#                        company = line.category_id.contribute_per
-#                        employee = amount - company
-
-#                    elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'func':
-#                        company = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, line.slip_id.basic, context)
-#                        employee = amount
-#
-#                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'per':
-#                        company = amount * line.category_id.contribute_per
-#                        employee = amount
-#
-#                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
-#                        company = line.category_id.contribute_per
-#                        employee = amount
-
-#                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'func':
-#                        company = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, line.slip_id.basic, context)
-#                        employee = amount
-#
-#                    ctr['emp_deduction'] = employee
-#                    ctr['comp_deduction'] = company
-#
-#                    self.pool.get('hr.contibution.register.line').create(cr, uid, ctr)
 
             adj_move_id = False
             if total_deduct > 0:

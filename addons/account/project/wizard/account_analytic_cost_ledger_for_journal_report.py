@@ -30,12 +30,12 @@ class account_analytic_cost_ledger_journal_report(osv.osv_memory):
         'date1': fields.date('Start of period', required=True),
         'date2': fields.date('End of period', required=True),
         'journal': fields.many2many('account.analytic.journal', 'ledger_journal_rel', 'ledger_id', 'Journal_id', 'Journals'),
-        }
+    }
 
     _defaults = {
         'date1':time.strftime('%Y-01-01'),
         'date2':time.strftime('%Y-%m-%d')
-        }
+    }
 
     def check_report(self, cr, uid, ids, context=None):
         datas = {}

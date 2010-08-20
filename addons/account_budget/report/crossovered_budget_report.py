@@ -40,8 +40,6 @@ class budget_report(report_sxw.rml_parse):
 
         if not ids:
             ids = self.ids
-#       if not ids:
-#           return []
         if not done:
             done={}
 
@@ -71,7 +69,6 @@ class budget_report(report_sxw.rml_parse):
             if not budget_ids:
                 return []
 
-#            bd_ids = ','.join([str(x) for x in budget_lines])
             self.cr.execute('select distinct(analytic_account_id) from crossovered_budget_lines where id =ANY(%s)',(budget_ids,))
             an_ids=self.cr.fetchall()
 

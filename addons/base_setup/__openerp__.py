@@ -44,7 +44,6 @@
     'update_xml': ['security/ir.model.access.csv',
                    'base_setup_installer.xml',
                    'base_setup_todo.xml',
-#                   'gtk_contact_form.xml'
                    ],
     'demo_xml': ['base_setup_demo.xml'],
     'installable': True,

@@ -57,10 +57,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
 
     def _prop_child(xnode, ns, prop, value):
         """Append a property xml node to xnode, with <prop>value</prop>
-           
+
            And a little smarter than that, it will consider namespace and
            also allow nested properties etc.
-           
+
            :param ns the namespace of the <prop/> node
            :param prop the name of the property
            :param value the value. Can be:
@@ -89,7 +89,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             xnode.appendChild(pe)
 
     def _prop_elem_child(pnode, pns, v, pns_prefix):
-        
+
         if isinstance(v, list):
             for vit in v:
                 _prop_elem_child(pnode, pns, vit, pns_prefix)
@@ -102,8 +102,6 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             elif v[1] in namespaces:
                 ns_prefix="ns"+str(namespaces.index(v[1]))+":"
             else:
-                # namespaces.append(v[1])
-                # nsnum += 1
                 ns_prefix="ns"+str(nsnum)+":"
                 need_ns = True
 

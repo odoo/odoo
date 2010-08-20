@@ -118,19 +118,6 @@ class account_cash_statement(osv.osv):
             res2[statement.id]=encoding_total
         return res2
 
-#    def _default_journal_id(self, cr, uid, context={}):
-
-#        """ To get default journal for the object"
-#        @param name: Names of fields.
-#        @return: journal
-#        """
-#        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-#        journal = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
-#        if journal:
-#            return journal[0]
-#        else:
-#            return False
-
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -374,10 +361,6 @@ class account_cash_statement(osv.osv):
             if not self._equal_balance(cr, uid, ids, st, context):
                 raise osv.except_osv(_('Error !'), _('CashBox Balance is not matching with Calculated Balance !'))
 
-#            if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
-#                raise osv.except_osv(_('Error !'),
-#                        _('The statement balance is incorrect !\n') +
-#                        _('The expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
                 raise osv.except_osv(_('Configuration Error !'),

@@ -31,7 +31,7 @@ class account_move_bank_reconcile(osv.osv_memory):
     _description = "Move bank reconcile"
     _columns = {
        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-              }
+    }
 
     def action_open_window(self, cr, uid, ids, context={}):
         """

@@ -48,24 +48,5 @@
             </field>
         </record>
 
-     <!--   Add in projectboard
-        <record id="act_hr_timesheet_sheet" model="ir.actions.act_window">
-            <field name="name">Timesheets</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('state','&lt;&gt;','done'),('user_id','in',department_users_get())]</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="hr_timesheet_sheet_tree"/>
-        </record>
-    <record id="board_project_timesheet_form" model="ir.ui.view">
-            <field name="name">board.project.timesheet.form</field>
-            <field name="model">board.board</field>
-      <field name="inherit_id" ref="project.board_project_manager_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-        <xpath expr="/form/hpaned/child1" position="inside">
-          <action colspan="4" height="150" name="%(act_hr_timesheet_sheet)d" string="User's timesheets" width="510"/>
-        </xpath>
-            </field>
-        </record>-->
     </data>
 </openerp>

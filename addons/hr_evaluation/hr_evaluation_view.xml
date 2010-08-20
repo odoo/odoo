@@ -201,7 +201,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');black:state in ('wait','progress');gray:state in('done','cancel')" string="Evaluation">
-                    <!--field name="create_date"/-->
                     <field name="employee_id"/>
                     <field name="plan_id"/>
                     <field name="date"/>
@@ -288,10 +287,6 @@
                     <separator string="State" colspan="4"/>
                     <group colspan="4" col="6">
                          <field name="state"/>
-                         <!--<button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
-                        <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" icon="gtk-new"/>
-                        <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
-                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>-->
                     </group>
                 </form>
             </field>

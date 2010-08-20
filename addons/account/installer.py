@@ -80,7 +80,6 @@ class account_installer(osv.osv_memory):
         'sale_tax':lambda *a:0.0,
         'purchase_tax':lambda *a:0.0,
         'company_id': _default_company,
-        #'charts':'configurable',
         'bank_accounts_id':_get_default_accounts
     }
 

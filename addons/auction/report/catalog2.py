@@ -84,11 +84,6 @@ class auction_catalog(report_rml):
         auction_dates_pool = pooler.get_pool(cr.dbname).get('auction.dates')
         for auction in auction_dates_pool.browse(cr, uid, ids, context=context):
             auction_lot_ids = auction_lot_pool.search(cr, uid, [('auction_id', '=', auction.id)])
-            #for lot in auction_lot_pool.browse(cr, uid, auction_lot_ids, context=context):
-            #    ab=pooler.get_pool(cr.dbname).get('auction.lots').read(cr, uid, lot_ids, ['auction_id','name','lot_num','lot_est1','lot_est2'], context)
-            #auction_dates_ids = [x["auction_id"][0] for x in ab]
-
-            # name emelment
             key = 'name'
             categ = doc.createElement(key)
             categ.appendChild(doc.createTextNode(_to_decode(auction.name)))
