@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,10 +15,32 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import account_voucher_unreconcile
+
+{
+    "name": "Project MailGateWay",
+    "version": "1.1",
+    "author": "OpenERP SA",
+    "website": "http://www.openerp.com",
+    "category": "Generic Modules/Projects & Services",
+    "depends": ["project", "mail_gateway"],
+    "description": """This module is an interface that synchronises mails with OpenERP Project Task.
+
+It allows creating tasks as soon as a new mail arrives in our configured mail server. 
+Moreover, it keeps track of all further communications and task states.  
+    """,
+    "init_xml": [],
+    "update_xml": [
+        "project_mailgate_view.xml",
+    ],
+    'demo_xml': [
+    ],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
