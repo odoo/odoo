@@ -119,7 +119,9 @@ class project_close_task(osv.osv_memory):
                 body = u'%s\n%s\n%s\n\n-- \n%s' % (header, description, footer, signature)
                 to_adr.append(context.get('send_manager', '') and close_task.get('manager_email', '') or '')
                 to_adr.append(context.get('send_partner', '') and close_task.get('partner_email', '') or '')
-                email(from_adr, to_adr, subject, body.encode('utf-8'), email_bcc=[from_adr])
+                mail_id = email(from_adr, to_adr, subject, body.encode('utf-8'), email_bcc=[from_adr])
+                if not mail_id:
+                    raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
                 task_obj.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
                 message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
                 self.log(cr, uid, task.id, message)
