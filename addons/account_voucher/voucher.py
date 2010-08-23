@@ -222,7 +222,47 @@ class account_voucher(osv.osv):
         'audit': lambda *a: False,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
     }
-    
+
+    def compute_tax(self, cr, uid, ids, context={}):
+        tax_pool = self.pool.get('account.tax')
+        partner_pool = self.pool.get('res.partner')
+        position_pool = self.pool.get('account.fiscal.position')
+        voucher_line_pool = self.pool.get('account.voucher.line')
+
+        for voucher in self.browse(cr, uid, ids):
+            total = 0.0
+            for line in voucher.payment_ids:
+                total += line.amount
+
+            if voucher.tax_id:
+                tax_id = voucher.tax_id.id
+                tax = [tax_pool.browse(cr, uid, tax_id)]
+                
+                if voucher.partner_id:
+                    partner = partner_pool.browse(cr, uid, voucher.partner_id) or False
+                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                    tax = tax_pool.browse(cr, uid, taxes)
+
+                voucher_total_tax = 0.0
+                voucher_total_amount = 0.0
+                if voucher.tax_id.price_include:
+                    for line in voucher.payment_ids:
+                        total_amount = 0.0
+                        total_tax = 0.0
+                        for tax_line in tax_pool.compute_all(cr, uid, tax, line.amount, 1).get('taxes'):
+                            total_tax += tax_line.get('amount')
+                            total_amount += tax_line.get('price_unit')
+                        voucher_total_tax += total_tax
+                        voucher_line_pool.write(cr, uid, [line.id], {'amount':total_amount})
+                    voucher_total_amount = total
+                else:
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, total, 1).get('taxes'):
+                        voucher_total_tax += tax_line.get('amount')
+                    voucher_total_amount = total + voucher_total_tax
+                self.write(cr, uid, [voucher.id], {'tax_amount':voucher_total_tax, 'amount':voucher_total_amount})
+
+        return True
+                
     def onchange_price(self, cr, uid, ids, payment_ids, tax_id, partner_id=False, context={}):
         tax_pool = self.pool.get('account.tax')
         partner_pool = self.pool.get('res.partner')
@@ -233,33 +273,14 @@ class account_voucher(osv.osv):
             'amount':False
         }
 
-        untax_amount = 0.0
         tax_amount = 0.0
         total = 0.0
 
         for line in payment_ids:
             total += line[2].get('amount')
 
-        if tax_amount:
-            tax_amount = 0.0
-            
-        if tax_id:
-            tax_id = tax_id
-            tax = [tax_pool.browse(cr, uid, tax_id)]
-            
-            if partner_id:
-                partner = partner_pool.browse(cr, uid, partner_id) or False
-                taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
-                tax = tax_pool.browse(cr, uid, taxes)
-
-            for tax_line in tax_pool.compute_all(cr, uid, tax, total, 1).get('taxes'):
-                tax_amount += tax_line.get('amount')
-                untax_amount += tax_line.get('price_unit')
-        else:
-            untax_amount = total
-            
         res.update({
-            'amount':untax_amount,
+            'amount':total,
             'tax_amount':tax_amount
         })
         

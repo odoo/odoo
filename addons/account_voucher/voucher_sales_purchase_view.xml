@@ -44,7 +44,7 @@
                                 <group col="3" colspan="1">
                                     <separator string="Total" colspan="3"/>
                                     <field name="tax_id" on_change="onchange_price(payment_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" on_change="onchange_price(payment_ids, tax_id, partner_id)" nolabel="1"/>
-                                    <label string="" colspan="1"/><field name="amount" string="Total"/>
+                                    <field name="amount" string="Total"/><button icon="terp-stock_format-scientific" name="compute_tax" attrs="{'invisible':[('state','!=','draft')]}" colspan="1" string="Compute TAX" type="object"/>
                                 </group>
                             </group>
                         </page>
