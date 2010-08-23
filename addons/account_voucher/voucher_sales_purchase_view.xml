@@ -17,7 +17,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Information">
-                            <field name="payment_ids" on_change="onchange_price(payment_ids, tax_amount, tax_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="payment_ids" on_change="onchange_price(payment_ids, tax_id, parent.partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Sales Lines" editable="bottom">
                                     <field name="account_id" domain="[('user_type_type','=','income')]" widget="selection"/>
                                     <field name="name"/>
@@ -43,7 +43,7 @@
                                 </group>
                                 <group col="3" colspan="1">
                                     <separator string="Total" colspan="3"/>
-                                    <field name="tax_id" on_change="onchange_price(payment_ids, tax_amount, tax_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" on_change="onchange_price(payment_ids, tax_amount, tax_id)" nolabel="1"/>
+                                    <field name="tax_id" on_change="onchange_price(payment_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" on_change="onchange_price(payment_ids, tax_id, partner_id)" nolabel="1"/>
                                     <label string="" colspan="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
