@@ -607,10 +607,7 @@ class account_voucher(osv.osv):
                     'currency_id':inv.currency_id.id
                 })
             
-            total_amount = 0.0
-            if inv.tax_amount:
-                total_amount = inv.amount + inv.tax_amount
-            
+            total_amount = inv.amount
             if inv.type in ('sale', 'receipt'):
                 move_line.update({
                     'debit':total_amount
@@ -621,6 +618,7 @@ class account_voucher(osv.osv):
                 })
 
             line_ids = []
+            
             master_line = move_line_pool.create(cr, uid, move_line)
             line_ids += [master_line]
             rec_list_ids = []
