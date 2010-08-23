@@ -375,6 +375,7 @@ class account_voucher(osv.osv):
         ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id), (search_type,'>',0)], context=context)
         total = 0.0
         for line in move_line_pool.browse(cr, uid, ids):
+            amount = 0.0
             rs = move_line_pool.default_get(cr, uid, move_line_pool._columns.keys(), context=context)
             rs.update({
                 'name':line.move_id.name,
@@ -382,18 +383,19 @@ class account_voucher(osv.osv):
                 'move_id':line.move_id.id,
                 'move_line_id':line.id,
                 'voucher_id':voucher_id,
+                'amount':amount,
             })
-            amount = 0.0
+            
             if ttype == 'payment':
                 rs.update({
                     'account_id':line.move_id.partner_id.property_account_payable.id,
-                    'amount':line.credit
+                    #'amount':line.credit
                 })
                 amount = line.credit
             elif ttype == 'receipt':
                 rs.update({
                     'account_id':line.move_id.partner_id.property_account_receivable.id,
-                    'amount':line.debit
+                    #'amount':line.debit
                 })
                 amount = line.debit
 
@@ -522,6 +524,7 @@ class account_voucher(osv.osv):
         }
         
     def action_move_line_create(self, cr, uid, ids, *args):
+    
         journal_pool = self.pool.get('account.journal')
         sequence_pool = self.pool.get('ir.sequence')
         move_pool = self.pool.get('account.move')
@@ -571,7 +574,7 @@ class account_voucher(osv.osv):
 
             #create the first line manually
             move_line = {
-                'name':inv.name,
+                'name':inv.name and inv.name or '/',
                 'debit':False,
                 'credit':False,
                 'account_id':inv.account_id.id,
@@ -602,17 +605,16 @@ class account_voucher(osv.osv):
 
             line_ids = []
             line_ids += [move_line_pool.create(cr, uid, move_line)]
-            rec_ids = []
 
             for line in inv.payment_ids:
-                
+                rec_ids = []
                 amount=0.0
 
                 if inv.type in ('payment'):
                     ref = line.ref
                 
                 move_line = {
-                     'name':line.name,
+                     'name':line.name and line.name or '/',
                      'debit':False,
                      'credit':False,
                      'account_id':line.account_id.id or False,
@@ -650,16 +652,24 @@ class account_voucher(osv.osv):
 
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
-                
+
                 if inv.type in ('payment', 'receipt') and line.move_id:
                     rec_ids += [move_line_id]
-                    for move_line in line.move_id.line_id:
-                        if line.account_id.id == move_line.account_id.id:
-                            rec_ids += [move_line.id]
+#                    for move_line in line.move_id.line_id:
+#                        if line.account_id.id == move_line.account_id.id:
+                    if line.move_line_id:
+                        rec_ids += [line.move_line_id.id]
+                        
+                    if rec_ids:
+                        cr.commit()
+                        move_line_pool.reconcile_partial(cr, uid, rec_ids)
 
             if inv.type in ('sale', 'purchase') and inv.tax_amount > 0:
+                name = '/'
+                if not inv.tax_id:
+                    name = inv.tax_id.name
                 move_line = {
-                    'name':inv.tax_id.name,
+                    'name':name,
                     'account_id':False,
                     'move_id':move_id ,
                     'journal_id':inv.journal_id.id,
@@ -686,9 +696,6 @@ class account_voucher(osv.osv):
 
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
-
-            if rec_ids:
-                move_line_pool.reconcile_partial(cr, uid, rec_ids)
             
             rec = {
                 'move_id': move_id
