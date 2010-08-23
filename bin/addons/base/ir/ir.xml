@@ -719,22 +719,44 @@
                 </form>
             </field>
         </record>
+
         <record id="view_view_tree" model="ir.ui.view">
             <field name="name">ir.ui.view.tree</field>
             <field name="model">ir.ui.view</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Views">
+                    <field name="priority"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
                     <field name="xml_id"/>
                     <field name="inherit_id"/>
                     <field name="field_parent"/>
-                    <field name="priority"/>
                 </tree>
             </field>
         </record>
+
+        <record id="view_view_search" model="ir.ui.view">
+            <field name="name">ir.ui.view.search</field>
+            <field name="model">ir.ui.view</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Views">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="model"/>
+                    <field name="inherit_id"/>
+                    <field name="xml_id"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Object" icon="terp-stage" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_ui_view" model="ir.actions.act_window">
             <field name="name">Views</field>
             <field name="type">ir.actions.act_window</field>
