@@ -261,10 +261,10 @@
             <field name="arch" type="xml">
                 <form string="Products">
                     <field name="name" select="1"/>
-                    <field name="category_id" widget='selection' select="1"/>
-                    <field name="description" select="1"/>
-                    <field name="price" select="1"/>
-                    <field name="active" select="1"/>
+                    <field name="category_id" widget="selection"/>
+                    <field name="description" />
+                    <field name="price" />
+                    <field name="active"/>
                 </form>
             </field>
         </record>
@@ -277,11 +277,27 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Products">
-                    <field name="name" select="1"/>
-                    <field name="category_id" select="1"/>
-                    <field name="description" select="1"/>
-                    <field name="price" select="1"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="description"/>
+                    <field name="price"/>
                 </tree>
+            </field>
+        </record>
+
+<!-- Lunch Product Search view  -->
+
+        <record model="ir.ui.view" id="view_lunch_product_search">
+            <field name="name">Products</field>
+            <field name="model">lunch.product</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Products">
+                    <field name="name" />
+                    <field name="category_id" widget="selection"/>
+                    <field name="description" />
+                    <field name="price"/>
+                </search>
             </field>
         </record>
 
@@ -290,6 +306,10 @@
         <record model="ir.actions.act_window" id="action_lunch_product_form">
             <field name="name">Product</field>
             <field name="res_model">lunch.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_lunch_product_tree"/>
+            <field name="search_view_id" ref="view_lunch_product_search"/>
         </record>
 
         <menuitem name="Tools/Lunch/Configuration/Products"
