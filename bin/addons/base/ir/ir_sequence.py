@@ -39,8 +39,8 @@ def _code_get(self, cr, uid, context={}):
 class ir_sequence(osv.osv):
     _name = 'ir.sequence'
     _columns = {
-        'name': fields.char('Sequence Name',size=64, required=True),
-        'code': fields.selection(_code_get, 'Sequence Code',size=64, required=True),
+        'name': fields.char('Name',size=64, required=True),
+        'code': fields.selection(_code_get, 'Code',size=64, required=True),
         'active': fields.boolean('Active'),
         'prefix': fields.char('Prefix',size=64),
         'suffix': fields.char('Suffix',size=64),

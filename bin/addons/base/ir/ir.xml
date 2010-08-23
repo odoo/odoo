@@ -102,7 +102,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="company_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <field name="active" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
@@ -146,11 +146,11 @@
                 <tree string="Sequences">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="company_id"/>
-                    <field name="number_next"/>
-                    <field name="number_increment"/>
                     <field name="prefix"/>
                     <field name="padding"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="number_next"/>
+                    <field name="number_increment"/>
                     <field name="active"/>
                 </tree>
             </field>
