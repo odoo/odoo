@@ -34,6 +34,36 @@ import netsvc
 import datetime
 from tools.translate import _
 import tools
+import logging
+
+EMAIL_PATTERN = re.compile(r'([^()\[\] ,<:\\>@";]+@[^()\[\] ,<:\\>@";]+)') # See RFC822
+def extract_emails(emails_str):
+    """
+    Returns a list of email addresses recognized in a string, ignoring the rest of the string.
+    extract_emails('a@b.com,c@bcom, "John Doe" <d@b.com> , e@b.com') -> ['a@b.com','c@bcom', 'd@b.com', 'e@b.com']"
+    """
+    return EMAIL_PATTERN.findall(emails_str)
+
+
+def extract_emails_from_dict(addresses={}):
+    """
+    Extracts email addresses from a dictionary with comma-separated address string values, handling
+    separately the To, CC, BCC and Reply-To addresses.
+
+    :param addresses: a dictionary of addresses in the form {'To': 'a@b.com,c@bcom; d@b.com;e@b.com' , 'CC': 'e@b.com;f@b.com', ... }
+    :return: a dictionary with a list of separate addresses for each header (To, CC, BCC), with an additional key 'all-recipients'
+             containing all addresses for the 'To', 'CC', 'BCC' entries.
+    """
+    result = {'all-recipients':[]}
+    keys = ['To', 'CC', 'BCC', 'Reply-To']
+    for each in keys:
+        emails = extract_emails(addresses.get(each, u''))
+        while u'' in emails:
+            emails.remove(u'')
+        result[each] = emails
+        if each != 'Reply-To':
+            result['all-recipients'].extend(emails)
+    return result
 
 class email_template_account(osv.osv):
     """
@@ -264,32 +294,9 @@ class email_template_account(osv.osv):
             return False
                       
 #**************************** MAIL SENDING FEATURES ***********************#
-    def split_to_ids(self, ids_as_str):
-        """
-        Identifies email IDs separated by separators
-        and returns a list
-        TODO: Doc this
-        "a@b.com,c@bcom; d@b.com;e@b.com->['a@b.com',...]"
-        """
-        email_sep_by_commas = ids_as_str \
-                                    .replace('; ', ',') \
-                                    .replace(';', ',') \
-                                    .replace(', ', ',')
-        return email_sep_by_commas.split(',')
-    
-    def get_ids_from_dict(self, addresses={}):
-        """
-        TODO: Doc this
-        """
-        result = {'all':[]}
-        keys = ['To', 'CC', 'BCC', 'Reply-To']
-        for each in keys:
-            ids_as_list = self.split_to_ids(addresses.get(each, u''))
-            while u'' in ids_as_list:
-                ids_as_list.remove(u'')
-            result[each] = ids_as_list
-            result['all'].extend(ids_as_list)
-        return result
+
+
+
     
     def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, message_id=None, context=None):
         #TODO: Replace all this with a single email object
@@ -328,7 +335,7 @@ class email_template_account(osv.osv):
                         payload_part['From'] = sender_name + " <" + core_obj.email_id + ">"
                     payload_part['Organization'] = tools.ustr(core_obj.user.company_id.name)
                     payload_part['Date'] = formatdate()
-                    addresses_l = self.get_ids_from_dict(addresses) 
+                    addresses_l = extract_emails_from_dict(addresses) 
                     if addresses_l['To']:
                         payload_part['To'] = u','.join(addresses_l['To'])
                     if addresses_l['CC']:
@@ -368,9 +375,9 @@ class email_template_account(osv.osv):
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
                     return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 try:
-                    serv.sendmail(payload_part['From'], addresses_l['all'], payload_part.as_string())
+                    serv.sendmail(payload_part['From'], addresses_l['all-recipients'], payload_part.as_string())
                 except Exception, error:
-                    logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Server Send Error\nDescription: %s") % (id, error))
+                    logging.getLogger('email_template').error("Mail from Account %s failed. Probable Reason: Server Send Error\n Description: %s", id, error, exc_info=True)
                     return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 #The mail sending is complete
                 serv.close()

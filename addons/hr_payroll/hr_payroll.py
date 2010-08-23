@@ -192,7 +192,6 @@ class payroll_register(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Expanse Journal', required=True),
         'bank_journal_id': fields.many2one('account.journal', 'Bank Journal', required=True),
         'active':fields.boolean('Active', required=False),
-#        'advice_ids':fields.one2many('hr.payroll.advice', 'register_id', 'Bank Advice'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
         'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 4)),
@@ -301,7 +300,6 @@ class payroll_register(osv.osv):
                 }
                 id = advice_line_pool.create(cr, uid, pline, context=context)
 
-        #, 'advice_ids':[(6, 0, [pid])]
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
 
@@ -568,7 +566,6 @@ class company_contribution(osv.osv):
         'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Heads', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
-#        'include_in_salary':fields.boolean('Included in Salary ?', help='If company contribute on this deduction then should company contribution is also deducted from Employee Salary'),
         'gratuity':fields.boolean('Use for Gratuity ?', required=False),
         'line_ids':fields.one2many('company.contribution.line', 'contribution_id', 'Calculations', required=False),
         'register_id':fields.property(
@@ -587,16 +584,6 @@ class company_contribution(osv.osv):
             ('func','Function Calculation'),
         ],'Amount Type', select=True),
         'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
-#        'account_id':fields.property(
-#            'account.account',
-#            type='many2one',
-#            relation='account.account',
-#            string="Account",
-#            method=True,
-#            view_load=True,
-#            help="Expanse account where company expanse will be encoded",
-#            required=False
-#        ),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'active':fields.boolean('Active', required=False),
         'note': fields.text('Description'),
@@ -730,8 +717,6 @@ class hr_payslip(osv.osv):
                 obj[cd] = amount
 
                 contrib = 0.0
-#                if line.category_id.include_in_salary:
-#                    contrib = line.company_contrib
 
                 if line.type == 'allowance':
                     allow += amount

@@ -156,7 +156,6 @@ class account_move_journal(osv.osv_memory):
         res_id = data_pool.browse(cr, uid, result, context=context).res_id
         
         return {
-#            'domain': str([('journal_id', '=', journal_id), ('period_id', '=', period_id)]),
             'name': name,
             'view_type': 'form',
             'view_mode': 'tree,graph,form',

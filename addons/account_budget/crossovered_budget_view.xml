@@ -79,7 +79,6 @@
                             <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
                                 <graph type="bar" string="Lines">
                                     <field name="analytic_account_id" groups="base.group_extended"/>
-                                    <!--<field name="general_budget_id" operator="+" />-->
                                     <field name="planned_amount" operator="+"/>
                                     <field group="True" name="general_budget_id"/>
                                 </graph>
@@ -151,7 +150,6 @@
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
                                 <button string="Done" name="done" states="validate" type="workflow"   icon="gtk-jump-to" />
                                 <button string="Cancel" name="cancel" states="confirm,validate" type="workflow" icon="gtk-cancel"/>
-                                <!--<button string="Set to Draft" name="action_set_to_draft" states="cancel" type="object"/>-->
                             </group>
 
                 </form>
@@ -290,7 +288,6 @@
                                 </form>
                                 <graph type="bar" string="Lines">
                                     <field name="general_budget_id" />
-                                    <!--<field name="analytic_account_id" operator="+"/>-->
                                     <field name="planned_amount" operator="+"/>
                                     <field group="True" name="analytic_account_id"/>
                                 </graph>
@@ -299,16 +296,6 @@
                 </notebook>
             </field>
         </record>
-        <!-- moved from account module -->
-         <!--Budget -->
-        <!--<report
-             id="account_analytic_budget_print"
-            string="Print Budget"
-            model="account.analytic.budget.post"
-            name="account.analytic.budget.print"
-            rml="account/project/report/account_analytic_budget_report.rml"
-            auto="False"
-            menu="False"/>-->
 
     </data>
 </openerp>

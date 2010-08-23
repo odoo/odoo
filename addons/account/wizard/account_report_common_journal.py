@@ -27,7 +27,7 @@ class account_common_journal_report(osv.osv_memory):
     _inherit = "account.common.report"
     _columns = {
         'amount_currency': fields.boolean("With Currency", help="Print Report with the currency column if the currency is different then the company currency"),
-                }
+    }
 
     def _build_context(self, cr, uid, ids, data, context=None):
         if context is None:

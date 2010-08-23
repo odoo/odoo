@@ -68,8 +68,6 @@
 
         </record>
 
-      <!-- <menuitem id="menu_act_hr_timesheet_line_today_form" parent="hr.menu_hr_root" name="Working Hours" />-->
-
         <record id="act_hr_timesheet_line_me_all_form" model="ir.actions.act_window">
             <field name="name">My Working Hours</field>
             <field name="type">ir.actions.act_window</field>
@@ -90,6 +88,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help">This functionality gives you a list of work done by user, product and analytic account (or project). A search tool allows you to make fine-grained analysis.</field>
         </record>
 
     <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>

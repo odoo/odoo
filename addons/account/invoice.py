@@ -319,7 +319,6 @@ class account_invoice(osv.osv):
     }
     _defaults = {
         'type': _get_type,
-        #'date_invoice': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'journal_id': _get_journal,
         'currency_id': _get_currency,
@@ -372,9 +371,6 @@ class account_invoice(osv.osv):
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
-#   def get_invoice_address(self, cr, uid, ids):
-#       res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
-#       return [{}]
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         invoice_addr_id = False
@@ -636,7 +632,6 @@ class account_invoice(osv.osv):
                 ait_obj.create(cr, uid, taxe)
          # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=context)
-#        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 
     def button_compute(self, cr, uid, ids, context=None, set_total=False):
@@ -879,7 +874,7 @@ class account_invoice(osv.osv):
 
             line = self.group_lines(cr, uid, iml, line, inv)
 
-            journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
+            journal_id = inv.journal_id.id 
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
@@ -1321,9 +1316,6 @@ class account_invoice_line(osv.osv):
                 else:
                     app_acc_in = in_acc_cate
                     app_acc_exp = ex_acc_cate
-#            else:
-#                app_acc_in = self.pool.get('account.account').browse(cr,uid,in_pro_id)[0]
-#                app_acc_exp = self.pool.get('account.account').browse(cr,uid,exp_pro_id)[0]
             if app_acc_in.company_id.id != company_id and app_acc_exp.company_id.id != company_id:
                 in_res_id = account_obj.search(cr, uid, [('name','=',app_acc_in.name),('company_id','=',company_id)])
                 exp_res_id = account_obj.search(cr, uid, [('name','=',app_acc_exp.name),('company_id','=',company_id)])

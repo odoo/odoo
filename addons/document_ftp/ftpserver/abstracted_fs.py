@@ -14,7 +14,6 @@ import netsvc
 
 from service import security
 from osv import osv
-#from document.nodes import node_res_dir, node_res_obj
 from document.nodes import get_node_context
 
 def _get_month_name(month):
@@ -74,7 +73,7 @@ class abstracted_fs(object):
                     cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
                     if not cr.fetchone():
                         continue
-    
+
                     cr.execute("SELECT id FROM ir_module_module WHERE name = 'document_ftp' AND state IN ('installed', 'to upgrade') ")
                     res = cr.fetchone()
                     if res and len(res):
@@ -85,8 +84,6 @@ class abstracted_fs(object):
             finally:
                 if cr is not None:
                     cr.close()
-                #if db is not None:
-                #    pooler.close_db(db_name)        
         return self.db_name_list
 
     def ftpnorm(self, ftppath):
@@ -115,7 +112,7 @@ class abstracted_fs(object):
     def ftp2fs(self, path_orig, data):
         raise DeprecationWarning()
 
-    def fs2ftp(self, node):        
+    def fs2ftp(self, node):
         """ Return the string path of a node, in ftp form
         """
         res='/'
@@ -123,7 +120,7 @@ class abstracted_fs(object):
             paths = node.full_path()
             res = '/' + node.context.dbname + '/' +  \
                 _to_decode(os.path.join(*paths))
-            
+
         return res
 
     def validpath(self, path):
@@ -139,7 +136,7 @@ class abstracted_fs(object):
         """ Create a children file-node under node, open it
             @return open node_descriptor of the created node
         """
-        objname = _to_unicode(objname) 
+        objname = _to_unicode(objname)
         cr , node, rem = datacr
         try:
             child = node.child(cr, objname)
@@ -200,7 +197,6 @@ class abstracted_fs(object):
             if len(res):
                 pre = prefix.split('.')
                 prefix=pre[0] + '.v'+str(len(res))+'.'+pre[1]
-            #prefix = prefix + '.'
         return self.create(dir,suffix+prefix,text)
 
 
@@ -210,7 +206,7 @@ class abstracted_fs(object):
         if (not datacr) or datacr == (None, None, None):
             self.cwd = '/'
             self.cwd_node = None
-            return None        
+            return None
         if not datacr[1]:
             raise OSError(1, 'Operation not permitted')
         if datacr[1].type not in  ('collection','database'):
@@ -225,7 +221,7 @@ class abstracted_fs(object):
         cr, node, rem = datacr or (None, None, None)
         if not node:
             raise OSError(1, 'Operation not permited.')
-        
+
         try:
             basename =_to_unicode(basename)
             cdir = node.create_child_collection(cr, basename)
@@ -242,15 +238,15 @@ class abstracted_fs(object):
 
     def get_cr(self, pathname):
         raise DeprecationWarning()
-    
+
     def get_crdata(self, line, mode='file'):
         """ Get database cursor, node and remainder data, for commands
-        
+
         This is the helper function that will prepare the arguments for
         any of the subsequent commands.
         It returns a tuple in the form of:
         @code        ( cr, node, rem_path=None )
-        
+
         @param line An absolute or relative ftp path, as passed to the cmd.
         @param mode A word describing the mode of operation, so that this
                     function behaves properly in the different commands.
@@ -307,7 +303,6 @@ class abstracted_fs(object):
                 raise OSError(2, 'Authentification Required.')
             n = get_node_context(cr, uid, {})
             node = n.get_uri(cr, p_parts[1:])
-            # self._log.debug("get_crdata(abs): %r" % ( (cr, node, rem_path),))
             return (cr, node, rem_path)
         else:
             # we never reach here if cwd_node is not set
@@ -321,7 +316,6 @@ class abstracted_fs(object):
             if node is False and mode not in ('???'):
                 cr.close()
                 raise IOError(errno.ENOENT, 'Path does not exist')
-            # self._log.debug("get_crdata(rel): %r" % ( (cr, node, rem_path),))
             return (cr, node, rem_path)
 
     def get_node_cr_uid(self, node):
@@ -330,15 +324,15 @@ class abstracted_fs(object):
         assert node
         db = pooler.get_db(node.context.dbname)
         return db.cursor(), node.context.uid
-        
+
     def get_node_cr(self, node):
         """ Get the cursor for the database of a node
-        
-        The cursor is the only thing that a node will not store 
+
+        The cursor is the only thing that a node will not store
         persistenly, so we have to obtain a new one for each call.
         """
         return self.get_node_cr_uid(node)[0]
-        
+
     def listdir(self, datacr):
         """List the content of a directory."""
         class false_node(object):
@@ -349,7 +343,7 @@ class abstracted_fs(object):
             uuser = 'root'
             ugroup = 'root'
             type = 'database'
-            
+
             def __init__(self, db):
                 self.path = db
 
@@ -442,7 +436,7 @@ class abstracted_fs(object):
     def getmtime(self, datacr):
         """Return the last modified time as a number of seconds since
         the epoch."""
-        
+
         node = datacr[1]
         if node.write_date or node.create_date:
             dt = (node.write_date or node.create_date)[:19]
@@ -488,12 +482,11 @@ class abstracted_fs(object):
     def get_list_dir(self, datacr):
         """"Return an iterator object that yields a directory listing
         in a form suitable for LIST command.
-        """        
+        """
         if not datacr:
             return None
         elif self.isdir(datacr[1]):
             listing = self.listdir(datacr)
-            #listing.sort()
             return self.format_list(datacr[0], datacr[1], listing)
         # if path is a file or a symlink we return information about it
         elif self.isfile(datacr[1]):
@@ -561,11 +554,11 @@ class abstracted_fs(object):
                 mtime = mname+' '+time.strftime("%d %H:%M", st_mtime)
             except ValueError:
                 mname=_get_month_name(time.strftime("%m"))
-                mtime = mname+' '+time.strftime("%d %H:%M")            
+                mtime = mname+' '+time.strftime("%d %H:%M")
             fpath = node.path
             if isinstance(fpath, (list, tuple)):
                 fpath = fpath[-1]
-            # formatting is matched with proftpd ls output            
+            # formatting is matched with proftpd ls output
             path=_to_decode(fpath)
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
                                                      size, mtime, path)
@@ -608,7 +601,7 @@ class abstracted_fs(object):
             # type + perm
             if self.isdir(node):
                 if 'type' in facts:
-                    type = 'type=dir;'                    
+                    type = 'type=dir;'
                 if 'perm' in facts:
                     perm = 'perm=%s;' %permdir
             else:

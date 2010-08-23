@@ -146,7 +146,6 @@ class audittrail_log(osv.osv):
 
     _columns = {
         "name": fields.char("Resource Name",size=64),
-   #     "name": fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
         "object_id": fields.many2one('ir.model', 'Object'),
         "user_id": fields.many2one('res.users', 'User'),
         "method": fields.char("Method", size=64),

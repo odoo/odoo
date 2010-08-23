@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-		<!--<delete model="ir.actions.report.xml" search="[('model','like','auction.')]"/>-->
 
     <report string="Bailiffs Listing"
 		model="auction.lots"
@@ -20,14 +19,6 @@
 		 id="art2"
 		 multi="1"/>
 
-<!--		<report string="Artists Biography"
-
-		 model="auction.lots"
-		 name="auction.artists"
-		 rml="auction/report/auction_artists.rml"
-		 id="art_auction"
-		 multi="1"/>
--->
     <report string="Bids phones"
 		 model="auction.lots"
 		 name="bids.lots"
@@ -58,27 +49,12 @@
 		 auto="False"
 		 multi="1"/>
 
-<!--	<report string="Catalog with pictures"
-	   	model="auction.lots"
-		name="catelogwithpictures"
-		rml="auction/report/catelogwithpictures.rml"
-		auto="False"
-		multi="1"
-		id="1"/>
--->
 	<report string="Catalog"
 	   	model="auction.lots"
 		name="auction.catelog"
 		rml="auction/report/auction_catelog.rml"
 		auto="False"
 		multi="1"/>
-
-	<!--<report string="Deposit Letter"
-	   	model="auction.lots"
-		name="deposit.seller"
-		rml="auction/report/deposit_seller.rml"
-		auto="False"
-		multi="1"/>-->
 
 	<report string="Lots List"
 	   	model="auction.lots"
@@ -116,19 +92,6 @@
 		auto="False"
 		id="total_result1"
 		multi="1"/>
-<!--		  <report string="Buyer Form"
-		  model="auction.lots"
-		  name="buyer_form_report"
-		  rml="auction/report/buyer_form_report.rml"
-		  auto="False"
-		  multi="1"/>
--->
-<!--		  <report string="Seller form"
-		  model="auction.lots"
-		  name="seller_form_report"
-		  rml="auction/report/seller_form_report.rml"
-		  auto="False"
-		  multi="1"/>-->
 
 	<report string="Buyer Form"
 		id="buyer_form_id"
@@ -146,13 +109,6 @@
 		name="report.auction.deposit"
 		xml="auction/report/deposit.xml"
 		xsl="auction/report/deposit.xsl"/>
-
-		<!--<report
-			id="report_auction_catalog"
-			string="Catalog flagey"
-			model="auction.lots"
-			name="auction.cat_flagy"
-			xsl="'auction/report/catalog2.xsl"/>-->
 
 	<report string="Seller Form"
 		id="seller_lots_3"
@@ -180,15 +136,6 @@
 	    multi="1"/>
 
 
-<!--		<report string="Seller List"
-		 model="auction.lots"
-		 name="report.auction.seller.list"
-		 xml="auction/report/seller_list.xml"
-		 xsl="auction/report/seller_list.xsl"
-		 menu="False"
-		 id="v_seller_list"
-		  multi="1"/>
--->
 	<report string="Bids per lot (phone)"
 		 model="auction.lots"
 		 name="bids.phones.details"
@@ -218,13 +165,6 @@
 		rml="auction/report/auction_buyer_result.rml"
 		multi="1"
 		id="res_w_buyer"/>
-
-		<!--	<wizard
-			id="auction_catalog_flagy"
-			string="Auction Catalog Flagy"
-			model="auction.lots"
-			name="auction.catalog.flagey"
-			keyword="client_print_multi"/>-->
 
 		</data>
 </openerp>

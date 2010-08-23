@@ -181,7 +181,10 @@ class stock_location(osv.osv):
         'chained_journal_id': fields.many2one('stock.journal', 'Chained Journal'),
         'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
         'chained_location_type': fields.selection([('none', 'None'), ('customer', 'Customer'), ('fixed', 'Fixed Location')],
-            'Chained Location Type', required=True),
+            'Chained Location Type', required=True,
+            help="This field is set to determine the destination location.\n" \
+                "If the field is set to 'customer', the location is given by the properties of the partner form.\n"\
+                "If the field is set to 'fixed', the destination location is given by the field Location if link is fixed."),
         'chained_auto_packing': fields.selection(
             [('auto', 'Automatic Move'), ('manual', 'Manual Operation'), ('transparent', 'Automatic No Step Added')],
             'Automatic Move',

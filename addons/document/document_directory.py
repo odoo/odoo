@@ -154,7 +154,6 @@ class document_directory(osv.osv):
     
     def __init__(self, *args, **kwargs):
         super(document_directory, self).__init__(*args, **kwargs)
-        #self._cache = {}
 
     def onchange_content_id(self, cr, uid, ids, ressource_type_id):
         return {}

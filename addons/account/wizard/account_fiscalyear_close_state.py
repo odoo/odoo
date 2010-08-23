@@ -33,7 +33,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
        'fy_id': fields.many2one('account.fiscalyear', \
                                  'Fiscal Year to close', required=True),
        'sure': fields.boolean('Check this box', required=False)
-              }
+    }
 
     def data_save(self, cr, uid, ids, context=None):
         """

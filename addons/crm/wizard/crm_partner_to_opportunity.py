@@ -47,7 +47,6 @@ class crm_partner2opportunity(osv.osv_memory):
         @return : default values of fields.
         """
         partner_obj = self.pool.get('res.partner')
-        #data = context and context.get('active_id', False) or False
         data = context and context.get('active_ids', []) or []
         res = super(crm_partner2opportunity, self).default_get(cr, uid, fields, context=context)
 
