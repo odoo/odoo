@@ -15,12 +15,24 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Workflow">
-                    <field name="name" select="1"/>
-                    <field name="osv" select="1"/>
+                    <field name="name"/>
+                    <field name="osv"/>
                     <field name="on_create"/>
                     <separator colspan="4" string="Activities"/>
                     <field colspan="4" name="activities" nolabel="1"/>
                 </form>
+            </field>
+        </record>
+
+        <record id="view_workflow_search" model="ir.ui.view">
+            <field name="name">workflow.search</field>
+            <field name="model">workflow</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Workflow">
+                    <field name="name"/>
+                    <field name="osv"/>
+                </search>
             </field>
         </record>
 
