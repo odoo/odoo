@@ -1127,11 +1127,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module data">
-                    <field name="module" select="1" />
-                    <field name="name" select="1" />
-                    <field name="model" select="1" />
-                    <field name="res_id" select="1" />
-                    <field name="noupdate" select="2" />
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="noupdate"/>
+                    <newline/>
                     <field name="date_update" />
                     <field name="date_init" />
                 </form>
@@ -1152,6 +1153,27 @@
                 </tree>
             </field>
         </record>
+
+        <record id="view_model_data_search" model="ir.ui.view">
+            <field name="name">ir.model.data.search</field>
+            <field name="model">ir.model.data</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Module Data">
+                    <field name="module"/>
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="noupdate"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Module" icon="terp-stage" domain="[]" context="{'group_by':'module'}"/>
+                        <filter string="Object" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
 
         <record id="action_model_model" model="ir.actions.act_window">
             <field name="name">Objects</field>
