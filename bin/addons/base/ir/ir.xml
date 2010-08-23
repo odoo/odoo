@@ -1058,8 +1058,9 @@
                 <form string="Fields">
                     <group colspan="4" col="4">
                         <field name="name" select="1"/>
-                        <field name="model_id" readonly="1"/>
-                        <field colspan="4" name="field_description"/>
+                        <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                        <field name="field_description"/>
+                        <field name="state"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Properties">
@@ -1070,7 +1071,6 @@
                                 <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
                                 <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                                 <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
-                                <field name="state"/>
                                 <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                             </group>
 
@@ -1100,7 +1100,7 @@
                     <field name="field_description"/>
                     <field name="model_id"/>
                     <field name="ttype"/>
-                    <field name="required"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>

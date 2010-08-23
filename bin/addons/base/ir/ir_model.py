@@ -232,7 +232,24 @@ class ir_model_grid(osv.osv):
     <field name="group_0"/>
     ''' % (view_type,)
         for group in groups_br:
-            xml += '''<field name="group_%d"/>''' % (group.id, )
+            xml += '''<field name="grouDHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 3
+DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 6
+DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 9
+DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 4
+No DHCPOFFERS received.
+No working leases in persistent database - sleeping.
+ * Stopping the Firestarter firewall...
+   ...done.
+ * Starting the Firestarter firewall...
+   ...done.
+                                                                                                                      [ OK ]
+rpa@rpa:~$  * Stopping NTP server ntpd
+   ...done.
+ * Starting NTP server ntpd
+   ...done.
+
+
+p_%d"/>''' % (group.id, )
         xml += '''</%s>''' % (view_type,)
         result['arch'] = xml
         result['fields'] = self.fields_get(cr, uid, cols, context)
@@ -256,7 +273,7 @@ class ir_model_fields(osv.osv):
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
         'translate': fields.boolean('Translate'),
         'size': fields.integer('Size'),
-        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manually Created', required=True, readonly=True, select=1),
+        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', size=256),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
