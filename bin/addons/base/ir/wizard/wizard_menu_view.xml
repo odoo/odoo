@@ -8,12 +8,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Menu">
+                    <separator colspan="4" string="Create Menu"/>
                     <field name="name"/>
                     <field name="menu_id" domain="[('parent_id','&lt;&gt;',False)]"/>
                     <separator colspan="4" string=""/>
                     <label colspan="2" string=""/>
                     <group col="2" colspan="2">
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                        <button special="cancel" string="_Close" icon="gtk-cancel"/>
                         <button name="menu_create" string="Create _Menu" type="object" icon="gtk-ok"/>
                     </group>
                 </form>
