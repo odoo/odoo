@@ -137,6 +137,7 @@
                 </form>
             </field>
         </record>
+
         <record id="sequence_view_tree" model="ir.ui.view">
             <field name="name">ir.sequence.tree</field>
             <field name="model">ir.sequence</field>
@@ -152,6 +153,20 @@
                     <field name="padding"/>
                     <field name="active"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_sequence_search" model="ir.ui.view">
+            <field name="name">ir.sequence.search</field>
+            <field name="model">ir.sequence</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Sequences">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <separator orientation="vertical"/>
+                    <field name="company_id" select="1"/>
+                </search>
             </field>
         </record>
 
@@ -175,11 +190,23 @@
             <field name="arch" type="xml">
                 <form string="Sequence Type">
                     <field name="name" select="1"/>
-                    <field name="code"/>
+                    <field name="code" select="1"/>
                 </form>
             </field>
         </record>
 
+        <record id="sequence_type_tree_view" model="ir.ui.view">
+            <field name="name">ir.sequence.type.tree</field>
+            <field name="model">ir.sequence.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sequence Type">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+        
         <record id="ir_sequence_type" model="ir.actions.act_window">
             <field name="name">Sequence Types</field>
             <field name="type">ir.actions.act_window</field>
