@@ -1061,8 +1061,7 @@
                         <field name="model_id" readonly="1"/>
                         <field colspan="4" name="field_description"/>
                     </group>
-
-                    <notebook>
+                    <notebook colspan="4">
                         <page string="Properties">
                             <group colspan="2" col="2">
                                 <field name="ttype"/>
@@ -1083,7 +1082,7 @@
                                 <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
                             </group>
                         </page>
-                        <page string="Security on Groups">
+                        <page string="Security">
                             <field name="groups" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
