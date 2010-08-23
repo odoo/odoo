@@ -43,6 +43,7 @@ def get_journal(self, cr, uid, context):
     res_obj = [(r1['id'])for r1 in res_obj]
     res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context)
     res = [(r['journal_id']) for r in res]
+    res.insert(0, ('', ''))
     return res
 
 class pos_box_entries(osv.osv_memory):
