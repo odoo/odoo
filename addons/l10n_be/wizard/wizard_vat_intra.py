@@ -120,13 +120,14 @@ class parter_vat_intra(wizard.interface):
                 country = ads.country_id.code
 
         sender_date = time.strftime('%Y-%m-%d')
+        comp_name = data_cmpny.name
         data_file = '<?xml version="1.0"?>\n<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="' + str(company_vat) + '"'
         data_file +=' ControlRef="' + cref + '" MandataireId="' + data['form']['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
         data_file += ' VersionTech="1.3">'
-        data_file +='\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
-        data_file +='\n\t\t\t<Country>' + str(country) +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
+        data_file +='\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+  zip_city +'</CityAndZipCode>'
+        data_file +='\n\t\t\t<Country>' + country +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
 
-        data_comp ='\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t\t\t<Country>'+ str(country) +'</Country>\n\t\t</CompanyInfo>'
+        data_comp ='\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t\t\t<Country>'+ country +'</Country>\n\t\t</CompanyInfo>'
         data_period = '\n\t\t<Period>'+ data['form']['period_code'] +'</Period>' #trimester
 
         error_message = []
@@ -152,9 +153,9 @@ class parter_vat_intra(wizard.interface):
 
         amount_sum = int(amount_sum)
         data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
-        data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n\t</DeclarantList>\n</VatIntra>'
+        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'
         data['form']['msg'] = 'Save the File with '".xml"' extension.'
-        data['form']['file_save'] = base64.encodestring(data_file)
+        data['form']['file_save'] = base64.encodestring(data_file.encode('utf8'))
         return data['form']
 
     states = {
