@@ -10,12 +10,11 @@
                 <form string="Create Menu">
                     <field name="name"/>
                     <field name="menu_id" domain="[('parent_id','&lt;&gt;',False)]"/>
-                    <field name="model_id"/>
                     <separator colspan="4" string=""/>
                     <label colspan="2" string=""/>
                     <group col="2" colspan="2">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="menu_create" string="Create Menu" type="object" icon="gtk-ok"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                        <button name="menu_create" string="Create _Menu" type="object" icon="gtk-ok"/>
                     </group>
                 </form>
             </field>
