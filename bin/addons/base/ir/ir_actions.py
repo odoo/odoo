@@ -754,6 +754,11 @@ class ir_actions_todo(osv.osv):
         'restart': lambda *a: 'always',
     }
     _order="sequence,id"
+
+    def action_open(self, cr, uid, ids, context=None):
+        """ Sets configuration wizard in TODO state"""
+        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
+
 ir_actions_todo()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

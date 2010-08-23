@@ -1532,15 +1532,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form editable="bottom" string="Config Wizard Steps">
-                    <field name="sequence"/>
-                    <field name="action_id" select="1"/>
-                    <field name="restart"/>
-                    <field name="state"/>
-                    <notebook colspan="4">
-                        <page string="Groups">
-                            <field name="groups_id" nolabel="1" colspan="4"/>
-                        </page>
-                    </notebook>
+                    <group colspan="4" col="6">
+                        <field name="sequence"/>
+                        <field name="action_id" select="1"/>
+                        <field name="restart"/>
+                    </group>
+                    <separator string="Groups" colspan="4"/>
+                    <field name="groups_id" nolabel="1" colspan="4"/>
+                    <separator string="State" colspan="4"/>
+                    <group colspan="4" col="4">
+                        <field name="state" colspan="2" readonly="1"/>
+                        <!--TO CHECK: This is working in tree view but not here in form view  -->
+                        <button name="action_id" states="open,skip"
+                            string="Launch" type="action"
+                            icon="gtk-execute"
+                            help="Launch Configuration Wizard" />
+                        <button name="action_open" states="cancel,done"
+                            string="Set as Todo" type="object"
+                            icon="gtk-convert"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -1552,6 +1562,7 @@
             <field name="arch" type="xml">
                 <search string="Search Actions">
                 	<filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','onskip')]" help="Todo State Or (Skip State And Onskip Restart)"/>
+                	<separator orientation="vertical"/>
                     <field name="state"/>
                     <field name="restart"/>
                 </search>
