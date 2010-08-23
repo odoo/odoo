@@ -1059,14 +1059,14 @@
                     <group colspan="4" col="4">
                         <field name="name" select="1"/>
                         <field name="model_id" readonly="1"/>
-                        <field colspan="4" name="field_description" select="2"/>
+                        <field colspan="4" name="field_description"/>
                     </group>
 
                     <notebook>
                         <page string="Properties">
                             <group colspan="2" col="2">
-                                <field name="ttype" select="2"/>
-                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
+                                <field name="ttype"/>
+                                <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
                                 <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
                                 <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
@@ -1076,8 +1076,8 @@
                             </group>
 
                             <group colspan="2" col="2">
-                                <field name="required" select="2"/>
-                                <field name="readonly" select="2"/>
+                                <field name="required"/>
+                                <field name="readonly"/>
                                 <field name="select_level"/>
                                 <field name="translate"/>
                                 <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
@@ -1099,10 +1099,29 @@
                 <tree string="Fields">
                     <field name="name"/>
                     <field name="field_description"/>
+                    <field name="model_id"/>
+                    <field name="ttype"/>
+                    <field name="required"/>
                 </tree>
             </field>
         </record>
 
+        <record id="view_model_fields_search" model="ir.ui.view">
+            <field name="name">ir.model.fields.search</field>
+            <field name="model">ir.model.fields</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Fields">
+                    <field name="name"/>
+                    <field name="field_description"/>
+                    <field name="model_id"/>
+                    <field name="ttype"/>
+                    <field name="required"/>
+                    <field name="readonly"/>
+                </search>
+            </field>
+        </record>
+        
         <record model="ir.ui.view" id="view_model_data_form">
             <field name="name">ir.model.data.form</field>
             <field name="model">ir.model.data</field>
@@ -1612,20 +1631,6 @@
             <field name="context">{'key':'server_action'}</field>
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.menu_custom_action"/>
-
-        <record id="view_model_fields_tree" model="ir.ui.view">
-            <field name="name">ir.model.fields.tree</field>
-            <field name="model">ir.model.fields</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Fields">
-                    <field name="complete_name"/>
-                    <field name="model_id"/>
-                    <field name="name"/>
-                    <field name="field_description"/>
-                </tree>
-            </field>
-        </record>
 
         <record model="ir.actions.act_window" id="action_model_grid_security">
             <field name="name">Access Controls Grid</field>
