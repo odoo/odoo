@@ -939,9 +939,10 @@
             <field name="arch" type="xml">
                 <form string="Model Description">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="model" select="1"/>
-                        <field name="osv_memory" select="1"/>
+                        <field name="name"/>
+                        <field name="model"/>
+                        <field name="osv_memory"/>
+                        <field name="state"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Fields">
@@ -984,10 +985,12 @@
                                     <field name="groups" colspan="4" nolabel="1"/>
                                 </form>
                             </field>
-                            <separator colspan="4" string="Status"/>
-                            <field name="state"/>
-                            <group col="2" colspan="2">
-                                <button colspan="2" name="%(act_menu_create)d" string="Create a Menu" type="action" target="new"/>
+                            <group col="2" colspan="4">
+                                <button colspan="2"
+                                    icon="gtk-justify-fill"
+                                    name="%(act_menu_create)d"
+                                    string="Create a Menu" type="action"
+                                    target="new" />
                             </group>
                         </page>
                         <page string="Access Rights">
@@ -1003,7 +1006,7 @@
                             </field>
                         </page>
                         <page string="Notes">
-                            <field colspan="4" name="info" nolabel="1" select="1"/>
+                            <field colspan="4" name="info" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -1019,10 +1022,32 @@
                 <tree string="Model Description">
                     <field name="name"/>
                     <field name="model"/>
+                    <field name="state"/>
+                    <field name="osv_memory"/>
+                    <button colspan="2"
+                        icon="gtk-justify-fill"
+                        name="%(act_menu_create)d"
+                        string="Create a Menu" type="action"
+                        target="new" />
                 </tree>
             </field>
         </record>
 
+        <record id="view_model_search" model="ir.ui.view">
+            <field name="name">ir.model.search</field>
+            <field name="model">ir.model</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Model Description">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="osv_memory"/>
+                    <field name="state"/>
+                    <field name="access_ids"/>
+                    <field name="info"/>
+                </search>
+            </field>
+        </record>
 
         <!-- fields_description -->
         <record id="view_model_fields_form" model="ir.ui.view">
@@ -1066,7 +1091,6 @@
             </field>
         </record>
 
-
         <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="name">ir.model.fields.tree</field>
             <field name="model">ir.model.fields</field>
@@ -1078,7 +1102,6 @@
                 </tree>
             </field>
         </record>
-
 
         <record model="ir.ui.view" id="view_model_data_form">
             <field name="name">ir.model.data.form</field>

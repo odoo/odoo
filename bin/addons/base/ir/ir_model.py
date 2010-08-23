@@ -68,7 +68,7 @@ class ir_model(osv.osv):
         'model': fields.char('Object', size=64, required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Manually Created',readonly=True),
+        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, method=True, string='In-memory model', type='boolean',
             fnct_search=_search_osv_memory,
