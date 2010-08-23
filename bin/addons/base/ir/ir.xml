@@ -189,8 +189,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sequence Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                 </form>
             </field>
         </record>
@@ -206,7 +206,19 @@
                 </tree>
             </field>
         </record>
-        
+
+        <record id="view_sequence_type_search" model="ir.ui.view">
+            <field name="name">ir.sequence.type.search</field>
+            <field name="model">ir.sequence.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Sequences Type">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                </search>
+            </field>
+        </record>
+
         <record id="ir_sequence_type" model="ir.actions.act_window">
             <field name="name">Sequence Types</field>
             <field name="type">ir.actions.act_window</field>

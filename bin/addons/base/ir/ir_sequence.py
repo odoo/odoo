@@ -27,8 +27,8 @@ import pooler
 class ir_sequence_type(osv.osv):
     _name = 'ir.sequence.type'
     _columns = {
-        'name': fields.char('Sequence Name',size=64, required=True),
-        'code': fields.char('Sequence Code',size=32, required=True),
+        'name': fields.char('Name',size=64, required=True),
+        'code': fields.char('Code',size=32, required=True),
     }
 ir_sequence_type()
 
