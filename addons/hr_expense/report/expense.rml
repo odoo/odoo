@@ -146,7 +146,7 @@
           <para style="terp_default_Centre_8">[[ o.employee_id.name ]] </para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ time.strftime('%d/%m/%Y', time.strptime(o.date, '%Y-%m-%d')) ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(o.date,date = True) ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ o.ref ]]</para>
@@ -186,7 +186,7 @@
       <blockTable colWidths="49.0,204.0,46.0,58.0,23.0,52.0,71.0,21.0" style="Table_expense_line">
         <tr>
           <td>
-            <para style="terp_default_9">[[ time.strftime('%d/%m/%Y', time.strptime(line.date_value, '%Y-%m-%d')) or '' ]]</para>
+            <para style="terp_default_9">[[ formatLang(line.date_value,date = True) ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ line.name or '' ]] [[ line.description or '' ]]</para>
