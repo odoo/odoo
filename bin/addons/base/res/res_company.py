@@ -42,7 +42,7 @@ class multi_company_default(osv.osv):
         'company_dest_id': fields.many2one('res.company', 'Default Company', required=True,
             help='Company to store the current record'),
         'object_id': fields.many2one('ir.model', 'Object', required=True,
-            help='Object affect by this rules'),
+            help='Object affected by this rule'),
         'expression': fields.char('Expression', size=256, required=True,
             help='Expression, must be True to match\nuse context.get or user (browse)'),
         'field_id': fields.many2one('ir.model.fields', 'Field', help='Select field property'),
@@ -162,9 +162,17 @@ class res_company(osv.osv):
     def cache_restart(self, cr):
         self._get_company_children.clear_cache(cr.dbname)
 
-    def create(self, cr, *args, **argv):
+    def create(self, cr, uid, vals, context=None):
+        if not vals.get('name', False) or vals.get('partner_id', False):
+            self.cache_restart(cr)
+            return super(res_company, self).create(cr, uid, vals, context=context)
+        obj_partner = self.pool.get('res.partner')
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name']}, context=context)
+        vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
-        return super(res_company, self).create(cr, *args, **argv)
+        company_id = super(res_company, self).create(cr, uid, vals, context=context)
+        obj_partner.write(cr, uid, partner_id, {'company_id': company_id}, context=context)
+        return company_id
 
     def write(self, cr, *args, **argv):
         self.cache_restart(cr)
