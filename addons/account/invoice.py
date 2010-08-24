@@ -268,7 +268,7 @@ class account_invoice(osv.osv):
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Links to the automatically generated Ledger Postings."),
+        'move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, help="Links to the automatically generated Ledger Postings."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute=dp.get_precision('Account'), string='Untaxed',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
@@ -883,7 +883,7 @@ class account_invoice(osv.osv):
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
             move = {
-                'ref': inv.number,
+                'ref': inv.reference and inv.reference or inv.name,
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': date,
