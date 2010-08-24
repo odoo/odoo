@@ -401,8 +401,6 @@ class account_account(osv.osv):
             'manage this. So if you import from another software system you may have to use the rate at date. ' \
             'Incoming transactions always use the rate at date.', \
             required=True),
-            help="Check this box if you want to print all entries when printing the General Ledger, "\
-            "otherwise it will only print its balance."),
         'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
     }
 
