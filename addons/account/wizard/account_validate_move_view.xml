@@ -14,6 +14,7 @@
                 <field name="journal_id"/>
                 <newline/>
                 <field name="period_id"/>
+                <separator colspan="4"/>
                 <group colspan="4" col="6">
                     <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                     <button icon="terp-camera_test" string="Approve" name="validate_move" type="object"/>
@@ -47,7 +48,7 @@
             <field name="arch" type="xml">
             <form string="Validate Journal Entries">
                 <separator string="Post Journal Entries" colspan="4"/>
-                <image name="gtk-dialog-info"/>
+                <image name="terp-referer"/>
                 <label string="All selected journal entries will be validated and posted. It means you won't be able to modify their accouting fields." colspan="2"/>
                 <separator colspan="4"/>
                 <group colspan="4" col="6">
