@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from datetime import datetime
 from osv import fields, osv, orm
 from tools.translate import _
 from datetime import datetime
 from datetime import timedelta
+from tools.safe_eval import safe_eval
 import pooler 
 import re
 import time
@@ -151,7 +151,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 continue
             else:
                 obj = self.pool.get(obj_name)
-                self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context))
+                self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
         return True
 
     def _create(self, old_create, model, context=None):
@@ -260,12 +260,14 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
 
 
-    def do_check(self, cr, uid, action, obj, context={}):
+    def do_check(self, cr, uid, action, obj, context=None):
         """ check Action
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values """
+        if context is None:
+            context = {}
         ok = True 
         if action.filter_id:
             if action.model_id.model == action.filter_id.model_id:
@@ -275,9 +277,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
                     ok = False
             else:
                 ok = False
-        if hasattr(obj, 'user_id'):
+        if getattr(obj, 'user_id', False):
             ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)
-        if hasattr(obj, 'partner_id'):
+        if getattr(obj, 'partner_id', False):
             ok = ok and (not action.trg_partner_id.id or action.trg_partner_id.id==obj.partner_id.id)
             ok = ok and (
                 not action.trg_partner_categ_id.id or
@@ -287,8 +289,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 )
             )
         state_to = context.get('state_to', False)
-        if hasattr(obj, 'state'):
-            ok = ok and (not action.trg_state_from or action.trg_state_from==obj.state)
+        state = getattr(obj, 'state', False)
+        if state:
+            ok = ok and (not action.trg_state_from or action.trg_state_from==state)
         if state_to:
             ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
         elif action.trg_state_to:
@@ -304,7 +307,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         ok = ok and regex_n
         return ok
 
-    def do_action(self, cr, uid, action, model_obj, obj, context={}):
+    def do_action(self, cr, uid, action, model_obj, obj, context=None):
         """ Do Action
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -312,6 +315,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param action: pass action
             @param model_obj: pass Model object
             @param context: A standard dictionary for contextual values """
+        if context is None:
+            context = {}
 
         if action.server_action_id:
             context.update({'active_id':obj.id, 'active_ids':[obj.id]})
@@ -339,6 +344,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             model_obj.remind_partner(cr, uid, [obj.id], context, attach=action.act_remind_attach)
         if action.act_method:
             getattr(model_obj, 'act_method')(cr, uid, [obj.id], action, context)
+
         emails = []
         if hasattr(obj, 'user_id') and action.act_mail_to_user:
             if obj.user_id and obj.user_id.address_id:
@@ -351,14 +357,14 @@ the rule to mark CC(mail to any other person defined in actions)."),
         emails = filter(None, emails)
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
-            email_from = eval(action.act_email_from, {
-                'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
+            email_from = safe_eval(action.act_email_from, {}, {
+                'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context)
                 'obj' : obj,
             })
             self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_from)
         return True
 
-    def _action(self, cr, uid, ids, objects, scrit=None, context={}):
+    def _action(self, cr, uid, ids, objects, scrit=None, context=None):
         """ Do Action
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -366,10 +372,15 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param ids: List of Basic Action Rule’s IDs,
             @param objects: pass objects
             @param context: A standard dictionary for contextual values """
+        if context is None:
+            context = {}
+
+
         context.update({'action': True})
         if not scrit:
             scrit = []
-        for action in self.browse(cr, uid, ids):
+
+        for action in self.browse(cr, uid, ids, context):
             model_obj = self.pool.get(action.model_id.model)
             for obj in objects:
                 ok = self.do_check(cr, uid, action, obj, context=context)
