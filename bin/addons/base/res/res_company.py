@@ -82,6 +82,7 @@ class res_company(osv.osv):
         'rml_footer2': fields.char('Report Footer 2', size=200),
         'rml_header' : fields.text('RML Header'),
         'rml_header2' : fields.text('RML Internal Header'),
+        'rml_header3' : fields.text('RML Internal Header'),
         'logo' : fields.binary('Logo'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
@@ -190,7 +191,26 @@ class res_company(osv.osv):
             tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
                     'rb') .read().encode('base64')
 
-
+    def _get_header3(self,cr,uid,ids):
+        return """
+<header>
+<pageTemplate>
+    <frame id="first" x1="25" y1="25" width="1070" height="717"/>
+    <pageGraphics>
+        <fill color="black"/>
+        <stroke color="black"/>
+        <setFont name="DejaVu Sans" size="8"/>
+        <drawString x="25" y="725"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <setFont name="DejaVu Sans Bold" size="10"/>
+        <drawString x="490" y="725">[[ company.partner_id.name ]]</drawString>
+        <setFont name="DejaVu Sans" size="8"/>
+        <drawRightString x="1065" y="725"><pageNumber/>/  </drawRightString>
+        <drawString x="1065" y="725"><pageCount/></drawString>
+        <stroke color="#000000"/>
+        <lines>25 720 1085 720</lines>
+    </pageGraphics>
+    </pageTemplate>
+</header>"""
     def _get_header2(self,cr,uid,ids):
         return """
         <header>
@@ -253,6 +273,7 @@ class res_company(osv.osv):
         'currency_id': _get_euro,
         'rml_header':_get_header,
         'rml_header2': _get_header2,
+        'rml_header3': _get_header3,
         'logo':_get_logo
     }
 
