@@ -358,7 +358,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
             email_from = safe_eval(action.act_email_from, {}, {
-                'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context)
+                'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
                 'obj' : obj,
             })
             self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_from)
