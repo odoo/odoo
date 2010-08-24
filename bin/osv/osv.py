@@ -66,7 +66,9 @@ class osv_pool(netsvc.Service):
                     if key in inst[0]:
                         self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
                 if inst.pgcode == errorcodes.NOT_NULL_VIOLATION:
-                    msg = 'Sorry, this record cannot be deleted at the moment because other records still reference it.'
+                    msg = 'The operation cannot be completed, probably due to the following:\n' \
+                          '- deletion: you may be trying to delete a record while other records still reference it\n' \
+                          '- creation/update: a mandatory field is not correctly set'
                     self.logger.debug("IntegrityError", exc_info=True)
                     try:
                         context = inst.pgerror.split('"public".')[1]
