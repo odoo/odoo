@@ -401,7 +401,6 @@ class account_account(osv.osv):
             'manage this. So if you import from another software system you may have to use the rate at date. ' \
             'Incoming transactions always use the rate at date.', \
             required=True),
-        'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
             "otherwise it will only print its balance."),
         'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
@@ -411,7 +410,6 @@ class account_account(osv.osv):
         'type': lambda *a : 'view',
         'reconcile': lambda *a: False,
         'active': lambda *a: True,
-        'check_history': lambda *a: True,
         'currency_mode': lambda *a: 'current',
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
