@@ -268,7 +268,7 @@ class account_invoice(osv.osv):
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, help="Links to the automatically generated Ledger Postings."),
+        'move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, help="Link to the automatically generated Journal Items."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute=dp.get_precision('Account'), string='Untaxed',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
@@ -299,7 +299,7 @@ class account_invoice(osv.osv):
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
-            }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
+            }, help="The Journal Entry of the invoice have been totally reconciled with one or several Journal Entries of payment."),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
@@ -313,7 +313,7 @@ class account_invoice(osv.osv):
             },
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
-        'move_name': fields.char('Ledger Posting', size=64, readonly=True, states={'draft':[('readonly',False)]}),
+        'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
     }

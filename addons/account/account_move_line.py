@@ -435,10 +435,10 @@ class account_move_line(osv.osv):
 
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
-        'blocked': fields.boolean('Litigation', help="You can check this box to mark the entry line as a litigation with the associated partner"),
+        'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
 
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable entries. You can put the limit date for the payment of this entry line."),
+        'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
             store={
                 'account.move': (_get_move_lines, ['date'], 20)
@@ -996,7 +996,7 @@ class account_move_line(osv.osv):
                 if journal.allow_date and period_id:
                     period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
                     if not time.strptime(vals['date'][:10],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'][:10],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
-                        raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
+                        raise osv.except_osv(_('Error'),_('The date of your Journal Entry is not in the defined period!'))
         else:
             return True
 
