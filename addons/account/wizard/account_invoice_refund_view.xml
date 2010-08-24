@@ -7,25 +7,22 @@
             <field name="model">account.invoice.refund</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Refund">
-                    <separator string="This wizard is used to refund the invoice" colspan="4"/>
+                <form string="Refund Invoice">
+                    <separator string="Refund Invoice Options" colspan="4"/>
                     <group colspan="4" >
-                         <label string="Are you sure you want to refund this invoice ?" colspan="2"/>
-                         <newline/>
                          <field name="description"/>
+                         <field name="journal_id"/>
                          <field name="date"/>
                          <field name="period"/>
-                         <field name="journal_id" />
                     </group>
                     <separator colspan="4"/>
                     <group col="4" colspan="4" fill="1">
-                        <label align="0.0" width="300" string="Refund Invoice: creates a refund invoice"/>
-                        <label align="0.0" width="500" colspan="4" string="Cancel Invoice: creates a reverse accounting entries to cancel the invoice"/>
-                        <label align="0.0" width="550" colspan="4" string="Modify Invoice: creates a refund invoice, and new copy of the same invoice ready for editing"/>
+                        <label align="0.0" width="300" string="Refund Invoice: creates the refund invoice, ready for editing."/>
+                        <label align="0.0" width="500" colspan="4" string="Cancel Invoice: creates the refund invoice, validate and reconcile it to cancel the current invoice."/>
+                        <label align="0.0" width="550" colspan="4" string="Modify Invoice: cancels the current invoice and creates a new copy of it ready for editing."/>
                     </group>
                     <separator colspan="4"/>
                     <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-redo" string="Refund Invoice" name="invoice_refund" type="object"/>
                         <button icon="gtk-ok" string="Cancel Invoice" name="invoice_cancel" type="object"/>
