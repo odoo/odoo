@@ -216,7 +216,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 		return ''
 
 report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
-		'addons/account/report/account_aged_partner_balance.rml',parser=aged_trial_report, header=False)
+		'addons/account/report/account_aged_partner_balance.rml',parser=aged_trial_report, header="internal landscape")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
