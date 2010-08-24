@@ -152,9 +152,11 @@ class rml_parse(report_sxw.rml_parse):
 
     def _add_header(self, node, header=1):
         if header==2:
+            print 'header 2'
             rml_head =  self.rml_header2
         else:
-            rml_head =  self.rml_header
+            print 'header 3'
+            rml_head =  self.rml_header2
         rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
         return True
 

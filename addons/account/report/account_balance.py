@@ -57,10 +57,10 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         self.query_get_clause = data['form'].get('query_line', False) or ''
         return super(account_balance, self).set_context(objects, data, new_ids, report_type=report_type)
 
-    def _add_header(self, node, header=1):
-        if header == 0:
-            self.rml_header = ""
-        return True
+    #def _add_header(self, node, header=1):
+    #    if header == 0:
+    #        self.rml_header = ""
+    #    return True
 
     def _get_account(self, data):
         if data['model']=='account.account':
@@ -119,6 +119,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                 result_acc.append(res)
         return result_acc
 
-report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header="internal")
+report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header="external")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
