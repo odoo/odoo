@@ -251,11 +251,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Workflow Instances">
-                    <field name="wkf_id" select="1"/>
-                    <field name="uid" select="2"/>
-                    <field name="res_id" select="1"/>
-                    <field name="res_type" select="1"/>
-                    <field name="state" select="2"/>
+                    <field name="wkf_id" readonly="1"/>
+                    <field name="uid" readonly="1"/>
+                    <field name="res_id" readonly="1"/>
+                    <field name="res_type" readonly="1"/>
+                    <field name="state" readonly="1"/>
                 </form>
             </field>
         </record>
@@ -273,12 +273,27 @@
                 </tree>
             </field>
         </record>
+        <record id="view_workflow_instance_search" model="ir.ui.view">
+            <field name="name">workflow.instance.search</field>
+            <field name="model">workflow.instance</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Workflow Instances">
+                    <field name="wkf_id"/>
+                    <field name="uid"/>
+                    <field name="res_id"/>
+                    <field name="res_type"/>
+                    <field name="state"/>
+                </search>
+            </field>
+        </record>
 
         <record id="action_workflow_instance_form" model="ir.actions.act_window">
             <field name="name">Instances</field>
             <field name="res_model">workflow.instance</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_workflow_instance_tree"/>
+            <field name="search_view_id" ref="view_workflow_instance_search"/>
         </record>
         <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_low_workflow"/>
 
@@ -294,10 +309,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Workflow Workitems">
-                    <field name="act_id" select="1"/>
-                    <field name="subflow_id" select="1"/>
-                    <field name="inst_id" select="1"/>
-                    <field name="state" select="2"/>
+                    <field name="act_id" readonly="1"/>
+                    <field name="subflow_id" readonly="1"/>
+                    <field name="inst_id" readonly="1"/>
+                    <field name="state" readonly="1"/>
                 </form>
             </field>
         </record>
@@ -314,12 +329,26 @@
                 </tree>
             </field>
         </record>
+        <record id="view_workflow_workitem_search" model="ir.ui.view">
+            <field name="name">workflow.workitem.search</field>
+            <field name="model">workflow.workitem</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Workflow Workitems">
+                    <field name="act_id"/>
+                    <field name="subflow_id"/>
+                    <field name="inst_id"/>
+                    <field name="state"/>
+                </search>
+            </field>
+        </record>
 
         <record id="action_workflow_workitem_form" model="ir.actions.act_window">
             <field name="name">Workitems</field>
             <field name="res_model">workflow.workitem</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_workflow_workitem_tree"/>
+            <field name="search_view_id" ref="view_workflow_workitem_search"/>
         </record>
         <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_low_workflow"/>
 

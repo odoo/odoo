@@ -126,8 +126,6 @@
             <field name="context">{'read':'default'}</field>
         </record>
 
-        <menuitem action="act_values_form" id="menu_values_form" parent="next_id_4"/>
-
         <!-- Sequences -->
 
         <record id="sequence_view" model="ir.ui.view">
@@ -276,8 +274,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
+                    <field name="name"/>
+                    <field name="type"/>
                     <field name="usage"/>
                 </form>
             </field>
@@ -293,6 +291,17 @@
                 </tree>
             </field>
         </record>
+        <record id="action_view_search" model="ir.ui.view">
+            <field name="name">ir.actions.actions.search</field>
+            <field name="model">ir.actions.actions</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Action">
+                    <field name="name"/>
+                    <field name="type"/>
+                </search>
+            </field>
+        </record>
 
         <record id="ir_sequence_actions" model="ir.actions.act_window">
             <field name="name">Actions</field>
@@ -300,6 +309,7 @@
             <field name="res_model">ir.actions.actions</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="action_view_tree"/>
+            <field name="search_view_id" ref="action_view_search"/>
         </record>
         <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
@@ -313,8 +323,8 @@
             <field name="arch" type="xml">
                 <form string="Filters">
                     <group colspan="4" >
-                        <field name="name" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="name"/>
+                        <field name="user_id"/>
                         <field name="model_id"/>
                     </group>
                     <group col="4" expand="1">
@@ -335,12 +345,32 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Filters">
-                    <field name="name" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
                     <field name="model_id"/>
                     <field name="domain"/>
                     <field name="context"/>
                 </tree>
+            </field>
+        </record>
+    
+        <!--Filters search view-->
+
+        <record id="ir_filters_view_search" model="ir.ui.view">
+            <field name="name">ir.filters.search</field>
+            <field name="model">ir.filters</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Filters">
+                    <group colspan="4" col="10">
+		              <field name="name"/>
+		              <field name="user_id"/>
+		            </group>
+		            <newline/>
+		            <group expand="0" string="Group By" colspan="4">
+		              <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+		            </group>
+                </search>
             </field>
         </record>
 
@@ -352,6 +382,7 @@
             <field name="res_model">ir.filters</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_filters_view_tree"/>
+            <field name="search_view_id" ref="ir_filters_view_search"/>
         </record>
 
         <!--        Filters view menu-->
@@ -366,8 +397,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report custom">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
+                    <field name="name"/>
+                    <field name="type"/>
                     <field name="report_id"/>
                     <field name="usage"/>
                 </form>
@@ -384,6 +415,23 @@
                 </tree>
             </field>
         </record>
+        <record id="act_report_custom_search_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.custom.search</field>
+            <field name="model">ir.actions.report.custom</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Report custom">
+                    <group colspan="4" col="10">
+                        <field name="name"/>
+                        <field name="type"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+           </field>
+        </record>
 
         <record id="ir_action_report_custom" model="ir.actions.act_window">
             <field name="name">Report Custom</field>
@@ -391,6 +439,7 @@
             <field name="res_model">ir.actions.report.custom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="act_report_custom_view_tree"/>
+            <field name="search_view_id" ref="act_report_custom_search_view"/>
         </record>
         <menuitem action="ir_action_report_custom" id="menu_ir_action_report_custom" parent="base.next_id_6"/>
 
@@ -455,6 +504,26 @@
                 </tree>
             </field>
         </record>
+        <record id="act_report_xml_search_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.xml.search</field>
+            <field name="model">ir.actions.report.xml</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Report xml">
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="model"/>
+                        <field name="type"/>
+                        <field name="report_name"/>
+                        <field name="report_type"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'report_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record id="ir_action_report_xml" model="ir.actions.act_window">
             <field name="name">Report Xml</field>
@@ -462,6 +531,7 @@
             <field name="res_model">ir.actions.report.xml</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="act_report_xml_view_tree"/>
+            <field name="search_view_id" ref="act_report_xml_search_view"/>
         </record>
         <menuitem action="ir_action_report_xml" id="menu_ir_action_report_xml" parent="base.next_id_6"/>
 
@@ -540,11 +610,31 @@
                 </form>
             </field>
         </record>
+        <record id="view_window_action_search" model="ir.ui.view">
+            <field name="name">ir.actions.windows.search</field>
+            <field name="model">ir.actions.act_window</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Open a Window">
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="res_model"/>
+                        <field name="view_type"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="View Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'view_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
         <record id="ir_action_window" model="ir.actions.act_window">
             <field name="name">Window Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.act_window</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_window_action_search"/>
         </record>
         <record id="ir_action_window_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -579,20 +669,38 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wizards">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="wiz_name" select="1"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="wiz_name"/>
                     <field name="multi"/>
-                    <field colspan="4" name="groups_id"/>
+                    <notebook colspan="4">
+                        <page string="Security">
+                            <field colspan="4" name="groups_id" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
-
+        
+        <record id="act_wizard_search_view" model="ir.ui.view">
+            <field name="name">ir.actions.wizard.search</field>
+            <field name="model">ir.actions.wizard</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Wizards">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="wiz_name"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="ir_action_wizard" model="ir.actions.act_window">
             <field name="name">Wizards</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.wizard</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="act_wizard_search_view"/>
         </record>
 
         <menuitem action="ir_action_wizard" id="menu_ir_action_wizard" parent="base.next_id_6"/>
@@ -858,6 +966,24 @@
                 </tree>
             </field>
         </record>
+        <record id="view_attachment_search" model="ir.ui.view">
+            <field name="name">ir.attachment.search</field>
+            <field name="model">ir.attachment</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Attachments">
+                    <group colspan="4" col="10">
+                        <field name="name"/>
+                        <field name="datas_fname"/>
+                        <field name="type"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="File Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record id="action_attachment" model="ir.actions.act_window">
             <field name="name">Attachments</field>
@@ -865,6 +991,7 @@
             <field name="res_model">ir.attachment</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_attachment_search"/>
         </record>
         <menuitem action="action_attachment" id="menu_action_attachment" parent="base.next_id_4"/>
 
