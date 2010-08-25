@@ -27,7 +27,7 @@ class project_account_analytic_line(osv.osv_memory):
      _columns = {
          'from_date': fields.date('From'),
          'to_date': fields.date('To'),
-                }
+     }
 
      def action_open_window(self, cr, uid, ids, context={}):
           mod_obj =self.pool.get('ir.model.data')

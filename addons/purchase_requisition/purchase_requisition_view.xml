@@ -117,10 +117,11 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group col='10' colspan='4'>
-                    <filter icon="terp-camera_test" string="Current" domain="[('state','=','draft,in_progress')]" separator="1" help="Current Purchaes Requisition"/>
-                    <filter icon="terp-check" string="Done" domain="[('state','=','done')]" separator="1" help="Current Purchaes Requisition"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Purchase Requisition"/>
+                    <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
+                    <filter icon="terp-check" string="Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
                     <separator orientation="vertical"/>
-                    <field name="name" string="Requisition Reference"/>
+                    <field name="name"/>
                     <field name="user_id" />
                     <field name="exclusive" />
                 </group>

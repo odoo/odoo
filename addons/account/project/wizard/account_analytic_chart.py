@@ -27,7 +27,7 @@ class account_analytic_chart(osv.osv_memory):
     _columns = {
         'from_date': fields.date('From'),
         'to_date': fields.date('To'),
-        }
+    }
 
     def analytic_account_chart_open_window(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')

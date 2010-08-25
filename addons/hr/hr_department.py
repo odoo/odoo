@@ -125,7 +125,6 @@ class res_users(osv.osv):
                         JOIN hr_department as dept ON dept.id = emp.department_id \
                         WHERE res.user_id = %s AND emp.department_id IS NOT NULL AND dept.manager_id IS NOT NULL', (user_id,))
             ids_dept = [x[0] for x in cr.fetchall()]
-#            ids_dept = obj_dept.search(cr, uid, [('member_ids', 'in', [user_id])], context=context)
             parent_ids = []
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['manager_id'], context=context)
@@ -162,7 +161,6 @@ class res_users(osv.osv):
                             (SELECT emp.id FROM hr_employee \
                                 JOIN resource_resource r ON r.id = emp.resource_id WHERE r.user_id=' + str(user_id) + ') ')
             mgnt_dept_ids = [x[0] for x in cr.fetchall()]
-#            mgnt_dept_ids = obj_dept.search(cr, uid, [('manager_id', '=', user_id)], context=context)
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)], context=context)
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'], context=context)

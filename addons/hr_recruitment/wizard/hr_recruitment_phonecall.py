@@ -68,7 +68,6 @@ class job2phonecall(osv.osv_memory):
         if context is None:
             context = {}
         form = self.read(cr, uid, ids, [], context=context)[0]
-#        form = data['form']
         result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         # Select the view
@@ -88,7 +87,6 @@ class job2phonecall(osv.osv_memory):
                         'categ_id' : form['category_id'],
                         'description' : form['note'],
                         'date' : form['deadline'],
-#                        'section_id' : form['section_id'],
                         'description':job.description,
                         'partner_id':job.partner_id.id,
                         'partner_address_id':job.partner_address_id.id,
@@ -99,8 +97,6 @@ class job2phonecall(osv.osv_memory):
                     }, context=context)
             new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id, context=context)
             vals = {}
-#            if not job.case_id:
-#                vals.update({'phonecall_id' : new_phonecall.id})
             job_case_obj.write(cr, uid, [job.id], vals, context=context)
             job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])

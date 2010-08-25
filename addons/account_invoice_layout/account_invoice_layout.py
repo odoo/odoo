@@ -170,7 +170,6 @@ class account_invoice_line(osv.osv):
     _defaults = {
         'state': 'article',
         'sequence': 0,
-#       'account_id': _default_account
     }
 
 account_invoice_line()
@@ -189,13 +188,6 @@ class one2many_mod2(fields.one2many):
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append( r['id'] )
         return res
-
-#   def copy(self, cr, uid, id, default=None, context=None):
-#       if default is None:
-#           default = {}
-#       default['line_ids'] = False
-#       return super(account_invoice, self).copy(cr, uid, id, default, context)
-
 
 class account_invoice(osv.osv):
 

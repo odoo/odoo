@@ -151,8 +151,6 @@ class account_automatic_reconcile(osv.osv_memory):
                 query = "SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
                 AND state <> 'draft' GROUP BY partner_id \
                 HAVING ABS(SUM(debit-credit)) <> %s AND count(*)>0"%(account_id, 0.0)
-#                query="SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
-#                AND state <> 'draft' GROUP BY partner_id AND debit = credi"%(account_id)
             else:
                 query = "SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
                 AND state <> 'draft' GROUP BY partner_id \

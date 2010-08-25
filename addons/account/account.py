@@ -686,14 +686,6 @@ class account_journal(osv.osv):
                 'sequence_id':seq_id
             })
 
-#        if journal.type in journal_type and not journal.invoice_sequence_id:
-#            res_ids = date_pool.search(cr, uid, [('model','=','ir.sequence'), ('name','=',journal_seq.get(journal.type, 'sale'))])
-#            inv_seq_id = date_pool.browse(cr, uid, res_ids[0]).res_id
-#            inv_seq_id
-#            res.update({
-#                'invoice_sequence_id':inv_seq_id
-#            })
-
         result = self.write(cr, uid, [journal.id], res)
 
         return result
@@ -701,16 +693,6 @@ class account_journal(osv.osv):
     def create(self, cr, uid, vals, context={}):
         journal_id = super(account_journal, self).create(cr, uid, vals, context)
         self.create_sequence(cr, uid, [journal_id], context)
-
-#       journal_name = self.browse(cr, uid, [journal_id])[0].code
-#       periods = self.pool.get('account.period')
-#       ids = periods.search(cr, uid, [('date_stop','>=',time.strftime('%Y-%m-%d'))])
-#       for period in periods.browse(cr, uid, ids):
-#           self.pool.get('account.journal.period').create(cr, uid, {
-#               'name': (journal_name or '')+':'+(period.code or ''),
-#               'journal_id': journal_id,
-#               'period_id': period.id
-#           })
         return journal_id
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -724,7 +706,6 @@ class account_journal(osv.osv):
         if name:
             ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit, context=context)
         if not ids:
-#            ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit, context=context)
             ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
 
         return self.name_get(cr, user, ids, context=context)
@@ -1412,8 +1393,6 @@ class account_move(osv.osv):
                 self.pool.get('account.move.line').write(cr, uid, line_ids, {
                     'journal_id': move.journal_id.id,
                     'period_id': move.period_id.id,
-                    #'tax_code_id': False,
-                    #'tax_amount': False,
                     'state': 'draft'
                 }, context, check=False)
         # Create analytic lines for the valid moves
@@ -1896,8 +1875,6 @@ class account_tax(osv.osv):
                 amount = localdict['result']
             elif tax.type=='balance':
                 amount = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
-#                data['balance'] = cur_price_unit
-
 
             if tax.include_base_amount:
                 cur_price_unit -= amount
@@ -1972,12 +1949,14 @@ class account_model(osv.osv):
         'name': fields.char('Model Name', size=64, required=True, help="This is a model for recurring accounting entries"),
         'ref': fields.char('Reference', size=64),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
         'legend' :fields.text('Legend', readonly=True, size=100),
     }
 
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
     def generate(self, cr, uid, ids, datas={}, context={}):
         move_ids = []
@@ -2250,12 +2229,8 @@ class account_add_tmpl_wizard(osv.osv_memory):
         data= self.read(cr, uid, ids)
         company_id = acc_obj.read(cr, uid, [data[0]['cparent_id']], ['company_id'])[0]['company_id'][0]
         account_template = tmpl_obj.browse(cr, uid, context['tmpl_ids'])
-        #tax_ids = []
-        #for tax in account_template.tax_ids:
-        #    tax_ids.append(tax_template_ref[tax.id])
         vals={
             'name': account_template.name,
-            #'sign': account_template.sign,
             'currency_id': account_template.currency_id and account_template.currency_id.id or False,
             'code': account_template.code,
             'type': account_template.type,
@@ -2264,7 +2239,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
             'shortcut': account_template.shortcut,
             'note': account_template.note,
             'parent_id': data[0]['cparent_id'],
-            # 'tax_ids': [(6,0,tax_ids)], todo!!
             'company_id': company_id,
             }
         new_account = acc_obj.create(cr, uid, vals)
@@ -2581,7 +2555,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 code_acc=str(code_acc) + (str('0'*(dig-code_main)))
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
-                #'sign': account_template.sign,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
                 'type': account_template.type,

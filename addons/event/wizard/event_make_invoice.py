@@ -31,7 +31,6 @@ class event_make_invoice(osv.osv_memory):
 
         'grouped': fields.boolean('Group the invoices'),
         'invoice_date':fields.date('Invoice Date'),
-#        'invoice_ids': fields.char('Invoice Ids', size=128), # Improve me
          }
 
     def view_init(self, cr, uid, fields, context=None):

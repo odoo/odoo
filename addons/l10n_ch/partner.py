@@ -52,24 +52,6 @@ class res_partner_bank(osv.osv):
         'dta_code': fields.char('DTA code', size=5),
     }
 
-#   def _default_value(self, cursor, user, field, context=None):
-#       if field in ('country_id', 'state_id'):
-#           value = False
-#       else:
-#           value = ''
-#       if not context.get('address', False):
-#           return value
-#       for ham, spam, address in context['address']:
-#           if 'type' in address.keys() :
-#               if address['type'] == 'default':
-#                   return address[field]
-#               elif not address['type']:
-#                   value = address[field]
-#           else :
-#               value = False
-#       return value
-
-
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []

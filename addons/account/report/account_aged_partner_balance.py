@@ -181,10 +181,6 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 			## Add for total
 			self.total_account[(i+1)] = self.total_account[(i+1)] + (total and total[0] or 0.0)
 			values['name'] = partner['name']
-			#t = 0.0
-			#for i in range(5)+['direction']:
-			#	t+= float(values.get(str(i), 0.0) or 0.0)
-			#values['total'] = t
 
 			if values['total']:
 				res.append(values)
@@ -217,10 +213,10 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 		    return 'Payable Accounts'
 		elif data['form']['result_selection'] == 'customer_supplier':
 		    return 'Receivable and Payable Accounts'
-		return ''	
+		return ''
 
 report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
-		'addons/account/report/account_aged_partner_balance.rml',parser=aged_trial_report, header=False)
+		'addons/account/report/account_aged_partner_balance.rml',parser=aged_trial_report, header="internal landscape")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

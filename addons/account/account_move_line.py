@@ -29,7 +29,7 @@ import tools
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
-    _description = "Entry Lines"
+    _description = "Journal Items"
 
     def _query_get(self, cr, uid, obj='l', context={}):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
@@ -424,7 +424,7 @@ class account_move_line(osv.osv):
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
-        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2),
+        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
         'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Narration'),
         'ref': fields.char('Ref.', size=64),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
@@ -447,7 +447,7 @@ class account_move_line(osv.osv):
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
-        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True,
+        'state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State', readonly=True,
                                   help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
         'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
@@ -572,7 +572,7 @@ class account_move_line(osv.osv):
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
                 #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
-                # Bank and cash journal can have a payment or receipt transection, and in both type partner account
+                # Bank and cash journal can have a payment or receipt transaction, and in both type partner account
                 # will not be same id payment then payable, and if receipt then receivable
                 #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
                 if jt in ('sale', 'purchase_refund'):
@@ -917,6 +917,9 @@ class account_move_line(osv.osv):
             elif field == 'credit':
                 attrs.append('sum="Total credit"')
 
+            elif field == 'move_id':
+                attrs.append('required="False"')
+
             elif field == 'account_tax_id':
                 attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
                 attrs.append("context=\"{'journal_id':journal_id}\"")
@@ -1155,11 +1158,6 @@ class account_move_line(osv.osv):
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals.get('ref', False),
                     })]
-            #else:
-            #    raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
-
-        #if not 'currency_id' in vals:
-        #    vals['currency_id'] = account.company_id.currency_id.id
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
@@ -1228,11 +1226,6 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        # No needed, related to the job
-        #if not is_new_move and 'date' in vals:
-        #    if context and ('__last_update' in context):
-        #        del context['__last_update']
-        #    self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
         if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:

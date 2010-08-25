@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -36,7 +36,6 @@ class document_ftp_browse(osv.osv_memory):
         if 'url' in fields:
             user_pool = self.pool.get('res.users')
             current_user = user_pool.browse(cr, uid, uid, context=context)
-            # dir_pool = self.pool.get('document.directory')
             data_pool = self.pool.get('ir.model.data')
             aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
             aid = data_pool.browse(cr, uid, aid, context=context).res_id
@@ -45,7 +44,7 @@ class document_ftp_browse(osv.osv_memory):
             if url:
                 url = url[1]
             else:
-                url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT) 
+                url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT)
             res['url'] = 'ftp://%s@%s'%(current_user.login, url)
         return res
 

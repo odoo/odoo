@@ -32,7 +32,7 @@ class auction_lots_auction_move(osv.osv_memory):
     _name = "auction.lots.auction.move"
     _description = __doc__
     _columns= {
-        'auction_id':fields.many2one('auction.dates', 'Auction Date', required=True), 
+        'auction_id':fields.many2one('auction.dates', 'Auction Date', required=True),
     }
 
     def auction_move_set(self, cr, uid, ids, context=None):
@@ -53,24 +53,22 @@ class auction_lots_auction_move(osv.osv_memory):
         for current in self.browse(cr, uid, ids, context):
             if not (current.auction_id and len(context.get('active_ids', []))):
                 return {}
-            
-#           line_ids = auction_bid_line_obj.search(cr, uid, [('lot_id', 'in', context['active_ids'])])
-#           pooler.get_pool(cr.dbname).get('auction.bid_line').unlink(cr, uid, line_ids)
+
             for rec in rec_ids:
                 new_id = auction_lot_history_obj.create(cr, uid, {
-                    'auction_id': rec.auction_id.id, 
-                    'lot_id': rec.id, 
+                    'auction_id': rec.auction_id.id,
+                    'lot_id': rec.id,
                     'price': rec.obj_ret
                     })
                 up_auction = auction_lots_obj.write(cr, uid, [rec.id], {
-                    'auction_id': current.auction_id.id, 
-                    'obj_ret': None, 
-                    'obj_price': None, 
-                    'ach_login': None, 
-                    'ach_uid': None, 
-                    'ach_inv_id': None, 
-                    'sel_inv_id': None, 
-                    'obj_num': None, 
+                    'auction_id': current.auction_id.id,
+                    'obj_ret': None,
+                    'obj_price': None,
+                    'ach_login': None,
+                    'ach_uid': None,
+                    'ach_inv_id': None,
+                    'sel_inv_id': None,
+                    'obj_num': None,
                     'state': 'draft'})
             return {}
 

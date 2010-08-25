@@ -143,11 +143,6 @@ class node_calendar(nodes.node_class):
     def get_domain(self, cr, filters):
         # TODO: doc.
         res = []
-        # dirobj = self.context._dirobj
-        #uid = self.context.uid
-        #ctx = self.context.context.copy()
-        #ctx.update(self.dctx)
-        # calendar_obj = dirobj.pool.get('basic.calendar')
         if not filters:
             return res
         if filters.localName == 'calendar-query':
@@ -217,9 +212,6 @@ class node_calendar(nodes.node_class):
 
         if not domain:
             domain = []
-        #for opr1, opt, opr2 in domain:
-        #    if opr1 == 'type' and opr2 != self.cal_type:
-        #        return []
 
         fil_obj = dirobj.pool.get('basic.calendar')
         ids = fil_obj.search(cr, uid, domain)
@@ -245,7 +237,7 @@ class node_calendar(nodes.node_class):
             # that have been imported. ICS may have had more elements,
             # but only one node can be returned here.
             assert isinstance(res[0], (int, long))
-            fnodes = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self, 
+            fnodes = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self,
                     domain=[('id','=',res[0])], context=ctx)
             return fnodes[0]
         return None

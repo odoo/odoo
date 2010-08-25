@@ -6,13 +6,10 @@
         <menuitem id="menu_finance_receivables" name="Receivables" parent="menu_finance" sequence="1" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="menu_finance_payables" name="Payables" parent="menu_finance" sequence="2" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="menu_finance_bank_and_cash" name="Bank and Cash" parent="menu_finance" sequence="3"/>
-<!--        <menuitem id="menu_accounting" name="Accounting" parent="menu_finance" sequence="5"/>-->
         <menuitem id="menu_finance_periodical_processing" name="Periodical Processing" parent="menu_finance" sequence="8" groups="group_account_user,group_account_manager,base.group_system,group_account_invoice"/>
         <menuitem id="periodical_processing_journal_entries_validation" name="Draft Entries" parent="menu_finance_periodical_processing" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="periodical_processing_reconciliation" name="Reconciliation" parent="menu_finance_periodical_processing"/>
-<!--            <menuitem id="periodical_processing_recurrent_entries" name="Recurrent Entries" parent="menu_finance_periodical_processing"/>-->
         <menuitem id="periodical_processing_invoicing" name="Invoicing" parent="menu_finance_periodical_processing"/>
-<!--            <menuitem id="periodical_processing_end_of_period" name="End of Period" parent="menu_finance_periodical_processing"/>-->
         <menuitem id="menu_finance_charts" name="Charts" parent="menu_finance" sequence="5" groups="base.group_system"/>
         <menuitem id="menu_finance_reporting" name="Reporting" parent="account.menu_finance" sequence="12" groups="base.group_system,group_account_manager,group_account_user"/>
         <menuitem id="menu_finance_reporting_budgets" name="Budgets" parent="menu_finance_reporting"/>
@@ -25,23 +22,12 @@
         <menuitem id="menu_low_level" name="Low Level" parent="menu_finance_accounting" groups="base.group_extended"/>
         <menuitem id="menu_configuration_misc" name="Miscellaneous" parent="menu_finance_configuration"/>
         <menuitem id="base.menu_action_currency_form" parent="menu_configuration_misc" sequence="20"/>
-<!--        <menuitem id="menu_finance_configuration1" name="Configuration" parent="menu_finance" sequence="80"/>-->
-<!--        <menuitem id="base.menu_action_currency_form" parent="menu_finance_configuration" sequence="20"/>-->
-<!--        <menuitem id="menu_finance_accounting1" name="Financial Accounting" parent="menu_finance_configuration" sequence="80"/>-->
-<!--        <menuitem id="menu_analytic_accounting1" name="Analytic Accounting" parent="menu_finance_configuration" sequence="80"/>-->
-
-<!--        <menuitem id="menu_finance_reporting11" name="Reporting" parent="account.menu_finance"  sequence="80"/>-->
         <menuitem id="menu_finance_generic_reporting" name="Generic Reporting" parent="menu_finance_reporting" sequence="100" groups="base.group_system,group_account_manager"/>
-<!--        <menuitem id="menu_finance_legal_statement1" name="Legal Statements" parent="account.menu_finance_reporting" sequence="200"/>-->
-
         <menuitem id="menu_finance_entries" name="Accounting" parent="menu_finance" sequence="4"
         groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="account.menu_finance_recurrent_entries" name="Recurring Entries" parent="menu_finance_periodical_processing" sequence="15"
             groups="base.group_extended"/>
 
-<!--        <menuitem id="menu_finance_periodical_processing11" name="Periodical Processing" parent="account.menu_finance"-->
-<!--            sequence="3"-->
-<!--            groups="group_account_user"/>-->
         <menuitem id="menu_account_end_year_treatments" name="End of Period" parent="menu_finance_periodical_processing" groups="group_account_user,group_account_manager,base.group_system"/>
 
         <menuitem id="menu_finance_statistic_report_statement" name="Statistic Reports" parent="menu_finance_reporting" sequence="300" groups="account.group_account_manager"/>

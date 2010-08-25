@@ -232,14 +232,10 @@ class report_custom(report_rml):
                     emp_id[d] = obj_emp.search(cr, uid, [('user_id', '=', result[d][0])])
                     items = obj_emp.read(cr, uid, emp_id[d], ['id', 'name'])
                     for item in items:
-#                        if item['id'] in done:
-#                            continue
-#                        else:
                         if dept_done==0:
                             emp_xml += emp_create_xml(self, cr, uid, 1, holiday_type, row_id, dept.id, dept.name, som, eom)
                             row_id = row_id +1
                         dept_done=1
-#                        done[item['id']] = 1
                         emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
                         row_id = row_id +1
         # Computing the xml

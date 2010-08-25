@@ -28,6 +28,7 @@
                         <field name="charts"/>
                             <group colspan="4">
                                 <separator col="4" colspan="4" string="Configure Fiscal Year"/>
+                                <field name="company_id" colspan="4" widget="selection" groups="base.group_multi_company"/>
                                 <field name="date_start" on_change="on_change_start_date(date_start)"/>
                                 <field name="date_stop"/>
                                 <field name="period" colspan="4"/>
@@ -84,7 +85,7 @@
                                 <field name="account_payment"/>
                                 <field name="account_followup"/>
                                 <field name="account_voucher"/>
-                                <field name="account_voucher_payment"/>
+<!--                                <field name="account_voucher_payment"/>-->
                             </group>
                         </group>
                     </group>

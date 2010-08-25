@@ -962,6 +962,19 @@ class calendar_event(osv.osv):
 
         return {'value': value}
 
+    def unlink_events(self, cr, uid, ids, context=None):
+        """
+        This function deletes event which are linked with the event with recurrent_uid
+                (Removes the events which refers to the same UID value)
+        """
+        if not context:
+            context = {}
+        for event_id in ids:
+            cr.execute('select id from %s  where recurrent_uid=%s' % (self._table, event_id))
+            r_ids = map(lambda x: x[0], cr.fetchall())
+            self.unlink(cr, uid, r_ids, context=context)
+        return True
+
     def _set_rrulestring(self, cr, uid, id, name, value, arg, context=None):
         """
         Sets values of fields that defines event recurrence from the value of rrule string
@@ -1074,6 +1087,10 @@ class calendar_event(osv.osv):
                 else:
                     result[event] = self.compute_rule_string(cr, uid, {'freq': datas.get('rrule_type').upper(), 'interval': 1}, context=context)
 
+        for id, myrule in result.items():
+            #Remove the events generated from recurrent event
+            if not myrule:
+                self.unlink_events(cr, uid, [id], context=context)
         return result
 
     _columns = {
@@ -1268,8 +1285,6 @@ true, it will allow you to hide the event alarm information without removing it.
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 #                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
-#                if start_date and start_date <= event_date:
-#                        start_date = event_date
                 start_date = event_date
                 if not data['rrule']:
                     if start_date and (event_date < start_date):
@@ -1547,23 +1562,25 @@ true, it will allow you to hide the event alarm information without removing it.
         @return: True
         """
         res = False
-        for event_id in ids:
+        for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
+            event_id = event_datas['id']
             if isinstance(event_id, (int, long)):
-                res = super(calendar_event, self).unlink(cr, uid, event_id)
+                res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
-                continue
-            event_id, date_new = event_id.split('-')
-            event_id = [int(event_id)]
-            for record in self.read(cr, uid, event_id, ['date', 'rrule', 'exdate'], context=context):
-                if record['rrule']:
+                self.unlink_events(cr, uid, [event_id], context=context)
+            else:
+                str_event, date_new = event_id.split('-')
+                event_id = int(str_event)
+                if event_datas['rrule']:
                     # Remove one of the recurrent event
                     date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
-                    exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + date_new
-                    res = self.write(cr, uid, event_id, {'exdate': exdate})
+                    exdate = (event_datas['exdate'] and (event_datas['exdate'] + ',')  or '') + date_new
+                    res = self.write(cr, uid, [event_id], {'exdate': exdate})
                 else:
-                    res = super(calendar_event, self).unlink(cr, uid, event_id)
-                    self.pool.get('res.alarm').do_alarm_unlink(cr, uid, event_id, self._name)
+                    res = super(calendar_event, self).unlink(cr, uid, [event_id], context=context)
+                    self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
+                    self.unlink_events(cr, uid, [event_id], context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -1822,7 +1839,6 @@ class res_users(osv.osv):
                     ('state', '=', 'accepted'), ('user_id', 'in', ids)
                     ])
 
-       # result = cr.dictfetchall()
         for attendee_data in attendee_obj.read(cr, uid, attendee_ids, ['user_id']):
             user_id = attendee_data['user_id']
             status = 'busy'

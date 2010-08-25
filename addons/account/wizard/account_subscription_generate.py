@@ -29,10 +29,10 @@ class account_subscription_generate(osv.osv_memory):
     _description = "Subscription Compute"
     _columns = {
        'date': fields.date('Date', required=True),
-              }
+    }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
-                }
+    }
     def action_generate(self, cr, uid, ids, context={}):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')

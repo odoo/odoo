@@ -57,7 +57,6 @@
             <field name="view_mode">tree,graph</field>
             <field name="domain">[('state','=','open')]</field>
         </record>
-<!--        <menuitem action="action_analytic_account_tree" id="menu_action_analytic_account_tree" parent="account.next_id_40"/>-->
 
         <record id="account_analytic_line_to_invoice_view_form" model="ir.ui.view">
             <field name="name">report.account.analytic.line.to.invoice</field>
@@ -134,7 +133,6 @@
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="account_analytic_line_to_invoice_view_filter"/>
         </record>
-<!--        <menuitem action="action_account_analytic_line_to_invoice" id="account_analytic_lines_to_invoice_report" parent="account.next_id_40"/>-->
 
         <act_window domain="[('account_id', '=', active_id),('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]" id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice" name="Lines to Invoice" res_model="account.analytic.line" src_model="account.analytic.account"/>
 
