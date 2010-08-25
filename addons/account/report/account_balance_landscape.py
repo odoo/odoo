@@ -395,6 +395,6 @@ class account_balance_landscape(rml_parse.rml_parse):
     def total_cr(self):
         return self.cr_total
 
-report_sxw.report_sxw('report.account.account.balance.landscape', 'account.account', 'addons/account/report/account_balance_landscape.rml', parser=account_balance_landscape, header=False)
+report_sxw.report_sxw('report.account.account.balance.landscape', 'account.account', 'addons/account/report/account_balance_landscape.rml', parser=account_balance_landscape, header="internal landscape")
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
