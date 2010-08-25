@@ -31,6 +31,7 @@
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
+        "security/ir.model.access.csv",
         'marketing_campaign_mailchimp_view.xml',
         'wizard/create_list_view.xml',
     ],
