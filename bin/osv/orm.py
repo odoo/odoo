@@ -3827,7 +3827,7 @@ class orm(orm_template):
                     # Allowing inherits'ed field for server side sorting
                     inherited_tables, inherit_join = self._inherits_join_calc(o, tables, where_clause)
                     if inherited_tables:
-                        inherited_sort_table = inherited_tables[0]
+                        inherited_sort_table = inherited_tables[-1]
                         order_by = inherited_sort_table + '.' + order
 
         limit_str = limit and ' limit %d' % limit or ''
