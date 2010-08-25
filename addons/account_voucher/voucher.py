@@ -196,7 +196,7 @@ class account_voucher(osv.osv):
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
         #'amount': fields.function(_compute_total, method=True, type='float', digits=(14,2), string='Total', store=True),
         'amount': fields.float('Total', digits=(16, 2), readonly=True, states={'draft':[('readonly',False)]}),
-        'tax_amount':fields.float('Tax Amount', digits=(14,4), readonly=True, states={'draft':[('readonly',False)]}),
+        'tax_amount':fields.float('Tax Amount', digits=(14,2), readonly=True, states={'draft':[('readonly',False)]}),
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
@@ -222,27 +222,65 @@ class account_voucher(osv.osv):
         'audit': lambda *a: False,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
     }
-    
-    def onchange_price(self, cr, uid, ids, payment_ids, tax_amount, tax_id, context={}):
+
+    def compute_tax(self, cr, uid, ids, context={}):
+        tax_pool = self.pool.get('account.tax')
+        partner_pool = self.pool.get('res.partner')
+        position_pool = self.pool.get('account.fiscal.position')
+        voucher_line_pool = self.pool.get('account.voucher.line')
+
+        for voucher in self.browse(cr, uid, ids):
+            total = 0.0
+            for line in voucher.payment_ids:
+                total += line.amount
+
+            if voucher.tax_id:
+                tax_id = voucher.tax_id.id
+                tax = [tax_pool.browse(cr, uid, tax_id)]
+                
+                if voucher.partner_id:
+                    partner = partner_pool.browse(cr, uid, voucher.partner_id) or False
+                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                    tax = tax_pool.browse(cr, uid, taxes)
+
+                voucher_total_tax = 0.0
+                voucher_total_amount = 0.0
+                if voucher.tax_id.price_include:
+                    for line in voucher.payment_ids:
+                        total_amount = 0.0
+                        total_tax = 0.0
+                        for tax_line in tax_pool.compute_all(cr, uid, tax, line.amount, 1).get('taxes'):
+                            total_tax += tax_line.get('amount')
+                            total_amount += tax_line.get('price_unit')
+                        voucher_total_tax += total_tax
+                        voucher_line_pool.write(cr, uid, [line.id], {'amount':total_amount})
+                    voucher_total_amount = total
+                else:
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, total, 1).get('taxes'):
+                        voucher_total_tax += tax_line.get('amount')
+                    voucher_total_amount = total + voucher_total_tax
+                self.write(cr, uid, [voucher.id], {'tax_amount':voucher_total_tax, 'amount':voucher_total_amount})
+
+        return True
+                
+    def onchange_price(self, cr, uid, ids, payment_ids, tax_id, partner_id=False, context={}):
+        tax_pool = self.pool.get('account.tax')
+        partner_pool = self.pool.get('res.partner')
+        position_pool = self.pool.get('account.fiscal.position')
+
         res = {
             'tax_amount':False,
             'amount':False
         }
-        tax_pool = self.pool.get('account.tax')
+
+        tax_amount = 0.0
         total = 0.0
-        
+
         for line in payment_ids:
             total += line[2].get('amount')
-        
-        if tax_id:
-            tax = tax_pool.browse(cr, uid, tax_id)
-            if tax.type == 'percent':
-                tax_amount = total * tax_amount and tax_amount or tax.amount
-            if tax.type == 'fixed':
-                tax_amount = tax_amount and tax_amount or tax.amount
 
         res.update({
-            'amount':total + tax_amount,
+            'amount':total,
             'tax_amount':tax_amount
         })
         
@@ -333,10 +371,10 @@ class account_voucher(osv.osv):
             })
         
         default = {
-            'value':{},
+            'value':{'payment_ids':[],'amount':0.0},
             'context':context,
         }
-        if not partner_id or not ttype:
+        if not partner_id:
             if ids:
                 line_ids = line_pool.search(cr, uid, [('voucher_id','=',ids[0])])
                 if line_ids:
@@ -375,6 +413,7 @@ class account_voucher(osv.osv):
         ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id), (search_type,'>',0)], context=context)
         total = 0.0
         for line in move_line_pool.browse(cr, uid, ids):
+            amount = 0.0
             rs = move_line_pool.default_get(cr, uid, move_line_pool._columns.keys(), context=context)
             rs.update({
                 'name':line.move_id.name,
@@ -382,18 +421,19 @@ class account_voucher(osv.osv):
                 'move_id':line.move_id.id,
                 'move_line_id':line.id,
                 'voucher_id':voucher_id,
+                'amount':amount,
             })
-            amount = 0.0
+            
             if ttype == 'payment':
                 rs.update({
-                    'account_id':line.move_id.partner_id.property_account_payable.id,
-                    'amount':line.credit
+                    'account_id':line.account_id, #line.move_id.partner_id.property_account_payable.id,
+                    #'amount':line.credit
                 })
                 amount = line.credit
             elif ttype == 'receipt':
                 rs.update({
                     'account_id':line.move_id.partner_id.property_account_receivable.id,
-                    'amount':line.debit
+                    #'amount':line.debit
                 })
                 amount = line.debit
 
@@ -461,7 +501,7 @@ class account_voucher(osv.osv):
 
     def proforma_voucher(self, cr, uid, ids, context={}):
         self.action_move_line_create(cr, uid, ids)
-        self.write(cr, uid, ids, {'state':'posted'})
+        #self.write(cr, uid, ids, )
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context={}):
@@ -479,10 +519,6 @@ class account_voucher(osv.osv):
             if voucher.move_id:
                 move_pool.button_cancel(cr, uid, [voucher.move_id.id])
                 move_pool.unlink(cr, uid, [voucher.move_id.id])
-
-            line_ids = voucher_line_pool.search(cr, uid, [('voucher_id','=',voucher.id), ('is_tax','=',True)])
-            if line_ids:
-                voucher_line_pool.unlink(cr, uid, line_ids)
 
         res = {
             'state':'cancel',
@@ -522,6 +558,7 @@ class account_voucher(osv.osv):
         }
         
     def action_move_line_create(self, cr, uid, ids, *args):
+    
         journal_pool = self.pool.get('account.journal')
         sequence_pool = self.pool.get('ir.sequence')
         move_pool = self.pool.get('account.move')
@@ -571,7 +608,7 @@ class account_voucher(osv.osv):
 
             #create the first line manually
             move_line = {
-                'name':inv.name,
+                'name':inv.name and inv.name or '/',
                 'debit':False,
                 'credit':False,
                 'account_id':inv.account_id.id,
@@ -590,29 +627,33 @@ class account_voucher(osv.osv):
                     'amount_currency':amount_currency,
                     'currency_id':inv.currency_id.id
                 })
-
+            
+            total_amount = inv.amount
             if inv.type in ('sale', 'receipt'):
                 move_line.update({
-                    'debit':inv.amount
+                    'debit':total_amount
                 })
             elif inv.type == 'purchase':
                 move_line.update({
-                    'credit':inv.amount
-                })            
+                    'credit':total_amount
+                })
 
             line_ids = []
-            line_ids += [move_line_pool.create(cr, uid, move_line)]
-            rec_ids = []
-
+            
+            master_line = move_line_pool.create(cr, uid, move_line)
+            line_ids += [master_line]
+            rec_list_ids = []
+            line_total = 0.0
+            
             for line in inv.payment_ids:
-                
+                rec_ids = []
                 amount=0.0
 
                 if inv.type in ('payment'):
                     ref = line.ref
                 
                 move_line = {
-                     'name':line.name,
+                     'name':line.name and line.name or '/',
                      'debit':False,
                      'credit':False,
                      'account_id':line.account_id.id or False,
@@ -638,6 +679,7 @@ class account_voucher(osv.osv):
                         'analytic_account_id':line.account_analytic_id.id
                     })
 
+                line_total += line.amount
                 if inv.type in ('sale', 'receipt'):
                     move_line.update({
                         'credit': line.amount or False
@@ -650,16 +692,21 @@ class account_voucher(osv.osv):
 
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
-                
+
                 if inv.type in ('payment', 'receipt') and line.move_id:
                     rec_ids += [move_line_id]
-                    for move_line in line.move_id.line_id:
-                        if line.account_id.id == move_line.account_id.id:
-                            rec_ids += [move_line.id]
+                    if line.move_line_id:
+                        rec_ids += [line.move_line_id.id]
+                    
+                    if rec_ids:
+                        rec_list_ids.append(rec_ids)
 
             if inv.type in ('sale', 'purchase') and inv.tax_amount > 0:
+                name = '/'
+                if not inv.tax_id:
+                    name = inv.tax_id.name
                 move_line = {
-                    'name':inv.tax_id.name,
+                    'name':name,
                     'account_id':False,
                     'move_id':move_id ,
                     'journal_id':inv.journal_id.id,
@@ -687,19 +734,35 @@ class account_voucher(osv.osv):
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
 
-            if rec_ids:
-                move_line_pool.reconcile_partial(cr, uid, rec_ids)
-            
+            if line_total != inv.amount and inv.type in ('payment', 'receipt'):
+                name = '/'
+
+                move_line = {
+                    'name':name,
+                    'account_id':False,
+                    'move_id':move_id ,
+                    'journal_id':inv.journal_id.id,
+                    'period_id':inv.period_id.id,
+                    'partner_id':inv.partner_id.id,
+                    'ref':ref,
+                    'date':inv.date
+                }
+                account_id = False
+                
             rec = {
-                'move_id': move_id
+                'move_id': move_id,
+                'state':'posted'
             }
-            
-            message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirm")
-            self.log(cr, uid, inv.id, message)
             
             self.write(cr, uid, [inv.id], rec)
             move_pool.post(cr, uid, [move_id], context={})
-            
+            for rec_ids in rec_list_ids:
+                move_line_pool.reconcile_partial(cr, uid, rec_ids)
+
+            inv = self.browse(cr, uid, inv.id)
+            name = inv.name and inv.name or inv.number
+            message = _('Voucher ') + " '" + str(name) + "' "+ _("is confirm")
+            self.log(cr, uid, inv.id, message)
         return True
 
     def _convert_ref(self, cr, uid, ref):
@@ -760,7 +823,7 @@ class account_voucher_line(osv.osv):
 
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
-        'name':fields.char('Description', size=256, required=True),
+        'name':fields.char('Description', size=256),
         'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'amount':fields.float('Amount'),
@@ -781,20 +844,6 @@ class account_voucher_line(osv.osv):
     _defaults = {
         'name': lambda *a: '/'
     }
-
-#    def create(self, cr, user, vals, context={}):
-#        """
-#        Create a new record for a model account_voucher_line
-#        @param cr: A database cursor
-#        @param user: ID of the user currently logged in
-#        @param vals: provides data for new record
-#        @param context: context arguments, like lang, time zone
-#        
-#        @return: Returns an id of the new record
-#        """
-#        if vals.get('account_id')
-#        res_id = super(account_voucher_line, self).create(cr, user, vals, context)
-#        return res_id
 
     def onchange_move_line_id(self, cr, user, ids, move_line_id, context={}):
         """

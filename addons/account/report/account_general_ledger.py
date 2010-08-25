@@ -240,6 +240,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         return 'Date'
 
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/account_general_ledger.rml', parser=general_ledger, header='internal')
-report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/account_general_ledger_landscape.rml', parser=general_ledger, header='internal')
+report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/account_general_ledger_landscape.rml', parser=general_ledger, header='internal landscape')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
