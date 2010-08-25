@@ -110,7 +110,7 @@ class _date_format(str, _format):
         if self.val:
             if getattr(self,'name', None):
                 date = datetime.strptime(self.name, DT_FORMAT)
-                return date.strftime(str(self.lang_obj.date_format)) 
+                return date.strftime(str(self.lang_obj.date_format))
         return self.val
 
 class _dttime_format(str, _format):
@@ -263,10 +263,11 @@ class rml_parse(object):
 #                    return str(value)
 
             if not isinstance(value, time.struct_time):
-                try:
-                    date = datetime.datetime(str(value), parse_format)
-                except:# sometimes it takes converted values into value, so we dont need conversion.
-                    return str(value)
+                return time.strftime(date_format, time.strptime(value, parse_format))
+#                try:
+#                    date = datetime.datetime(str(value), parse_format)
+#                except:# sometimes it takes converted values into value, so we dont need conversion.
+#                    return str(value)
             else:
                 date = datetime(*value.timetuple()[:6])
             return date.strftime(date_format)
