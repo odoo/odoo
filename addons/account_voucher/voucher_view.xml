@@ -12,13 +12,10 @@
                     <field name="reference"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
-                    <field name="account_id"/>
+                    <field name="period_id" invisible="context.get('visible', False)"/>
                     <field name="amount" sum="Total Amount"/>
-                    <field name="period_id"/>
                     <field name="state"/>
-                    <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
-                    <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
-                    <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
+                    <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
                 </tree>
             </field>
         </record>
@@ -131,6 +128,7 @@
                 </search>
             </field>
         </record>
+
         <record id="view_voucher_filter_new" model="ir.ui.view">
             <field name="name">account.voucher.select</field>
             <field name="model">account.voucher</field>
@@ -139,16 +137,14 @@
                 <search string="Search Vouchers">
                     <group col='8' colspan='4'>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-check" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
                         <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
-                        <field name="number" select='1'/>
-                        <field name="account_id" select="1"/>
-                        <field name="partner_id" select='1'/>
                         <field name="date" select='1'/>
+                        <field name="number" select='1'/>
+                        <field name="partner_id" select='1'/>
                     </group>
                     <newline/>
                     <group col='8' colspan='4'>
@@ -159,8 +155,7 @@
                     <group expand="0" string="Group By..." colspan="12" col="10">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type', 'set_visible':True}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
                         <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                     <newline/>

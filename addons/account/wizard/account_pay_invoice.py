@@ -161,6 +161,7 @@ class account_invoice_pay(osv.osv_memory):
             writeoff_account_id = context['write_off']['writeoff_acc_id']
             writeoff_journal_id = context['write_off']['writeoff_journal_id']
             comment = context['write_off']['comment']
+            context['analytic_id'] = context['write_off']['analytic_id']
 
         amount = data['amount']
 
