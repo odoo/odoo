@@ -218,7 +218,7 @@ class browse_record(object):
                 raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
             for result_line in field_values:
-                if len(str(result_line['id']).split('-')) > 1:
+                if not isinstance(result_line['id'], (int, long)) and len(str(result_line['id']).split('-')) > 1:
                     result_line['id'] = int(str(result_line['id']).split('-')[0])
                 new_data = {}
                 for field_name, field_column in fields_to_fetch:
