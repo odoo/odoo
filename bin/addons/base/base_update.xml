@@ -81,6 +81,8 @@
                             <field name="company_id" widget="selection" readonly="0"
                                     context="{'user_id': self, 'user_preference': 1}"/>
                             <field name="view" readonly="0"/>
+                            <label string="" colspan="2"/>
+                            <field name="menu_tips" colspan="2"/>
                             <newline/>
                             <separator colspan="4" string="Preferences"/>
                         </page>
@@ -119,7 +121,9 @@
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field name="context_lang"/>
                             <field name="context_tz"/>
-                            <field name="view" readonly="0" />
+                            <field name="view" readonly="0"/>
+                            <field name="menu_tips" colspan="2"/>
+                            <label string="" colspan="2"/>
                             <group colspan="2" col="2">
                                 <separator string="Signature" colspan="2"/>
                                 <field colspan="2" name="signature" nolabel="1"/>
