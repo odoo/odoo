@@ -2,13 +2,13 @@
 <openerp>
     <data>
 
-            <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28" groups="base.group_system,base.group_tool_manager,base.group_tool_user"/>
+            <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
             <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools"
-                        groups="base.group_tool_manager,base.group_tool_user,base.group_system" sequence="2"/>
+                        groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user" sequence="2"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
                  groups="base.group_tool_manager,base.group_tool_user,base.group_system"
                  parent="menu_surveys" />
-            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
+            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user"/>
             <menuitem name="Reporting" parent="base.menu_tools"
                 id="base.menu_lunch_reporting" sequence="6"/>
             <menuitem name="Surveys" id="menu_reporting" parent="base.menu_lunch_reporting" sequence="2"/>
@@ -1176,7 +1176,7 @@
 
         <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
             action="action_view_survey_name" parent="menu_answer_surveys"
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system" icon="STOCK_INDEX"/>
+            groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user" icon="STOCK_INDEX"/>
 
     </data>
 </openerp>
