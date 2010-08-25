@@ -175,5 +175,12 @@
             </xpath>
         </field>
     </record>
+	<act_window
+            domain="[('requisition_id', '=', active_id)]"
+            id="act_res_partner_2_purchase_order"
+            name="Purchase orders"
+            res_model="purchase.order"
+            src_model="purchase.requisition"/>
+    
     </data>
 </openerp>
