@@ -60,7 +60,7 @@
         'res/partner/wizard/partner_sms_send_view.xml',
         'res/partner/wizard/partner_wizard_spam_view.xml',
         'res/partner/wizard/partner_clear_ids_view.xml',
-#        'res/partner/wizard/partner_wizard_ean_check_view.xml',
+        'res/partner/wizard/partner_wizard_ean_check_view.xml',
         'res/partner/partner_data.xml',
         'res/ir_property_view.xml',
         'security/base_security.xml',
