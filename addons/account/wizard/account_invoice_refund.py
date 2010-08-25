@@ -80,6 +80,7 @@ class account_invoice_refund(osv.osv_memory):
             period = False
             description = False
             company = self.pool.get('res.users').browse(cr, uid, uid).company_id
+            journal_id = form.get('journal_id', False)
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
                     raise osv.except_osv(_('Error !'), _('Can not %s draft/proforma/cancel invoice.') % (mode))
@@ -88,7 +89,8 @@ class account_invoice_refund(osv.osv_memory):
                 else:
                     period = inv.period_id and inv.period_id.id or False
 
-                journal_id = form.get('journal_id', False)
+                if not journal_id:
+                    journal_id = inv.journal_id.id
 
                 if form['date'] :
                     date = form['date']
