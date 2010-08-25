@@ -864,7 +864,7 @@ class account_move_line(osv.osv):
         fields = {}
         flds = []
         title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
-        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
+        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write" colors="red:state==\'draft\';black:state==\'valid\'">\n\t''' % (title)
 
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
@@ -907,8 +907,8 @@ class account_move_line(osv.osv):
             if common_fields.get(field) == total:
                 fields.get(field).append(None)
 
-            if field=='state':
-                state = 'colors="red:state==\'draft\'"'
+#            if field=='state':
+#                state = 'colors="red:state==\'draft\'"'
 
             attrs = []
             if field == 'debit':

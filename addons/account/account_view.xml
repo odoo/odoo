@@ -874,7 +874,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line" editable="top" on_write="on_create_write">
+                <tree colors="red:state in ('draft');black:state in ('valid')" string="Account Entry Line" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"/>
                     <field name="move_id"/>
@@ -1775,7 +1775,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line">
+                <tree colors="red:state in ('draft');black:state in ('valid')" string="Account Entry Line">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="statement_id" string="St."/>
