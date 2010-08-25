@@ -64,9 +64,6 @@ class purchase_requisition(osv.osv):
         return True
 
     def tender_in_progress(self, cr, uid, ids, context=None):
-        for quotations in self.browse(cr, uid, ids):
-            if not quotations.purchase_ids:
-                raise osv.except_osv(_('Purchase order required'),('You should have atleast one purchase order line defined for this tender'))
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
         for (id,name) in self.name_get(cr, uid, ids):
                     message = _('Tender') + " '" + name + "' "+ _(" is In Progress")
