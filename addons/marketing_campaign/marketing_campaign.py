@@ -325,8 +325,8 @@ class marketing_campaign_activity(osv.osv):
 
     _action_types = [
         ('email', 'E-mail'),
-        ('paper', 'Paper'),
-        ('action', 'Action'),
+        ('report', 'Report'),
+        ('action', 'Custom Action'),
         # TODO implement the subcampaigns.
         # TODO implement the subcampaign out. disallow out transitions from
         # subcampaign activities ?
@@ -346,13 +346,17 @@ class marketing_campaign_activity(osv.osv):
                                  "The expression may use the following [browsable] variables:\n"
                                  "   - activity: the campaign activity\n"
                                  "   - workitem: the campaign workitem\n" 
-                                 "   - object: the object this campaign item represents\n"
+                                 "   - resource: the resource object this campaign item represents\n"
                                  "   - transitions: list of campaign transitions outgoing from this activity\n"
                                  "...- re: Python regular expression module"),
         'type': fields.selection(_action_types, 'Type', required=True,
-                                  help="Describe type of action to be performed on the Activity.Eg : Send email,Send paper.."),
-        'email_template_id': fields.many2one('email.template','The e-mail to send when this activity is activated'),
-        'report_id': fields.many2one('ir.actions.report.xml', 'The report to generate when this activity is activated', ),
+                                  help="""The type of action to execute when an item enters this activity, such as:
+   - Email: send an email using a predefined email template
+   - Report: print an existing Report defined on the resource item and save it into a specific directory
+   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record
+  """),
+        'email_template_id': fields.many2one('email.template', "Email Template", help='The e-mail to send when this activity is activated'),
+        'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
         'report_directory_id': fields.many2one('document.directory','Directory',
                                 help="This folder is used to store the generated reports"),
         'server_action_id': fields.many2one('ir.actions.server', string='Action',
@@ -363,11 +367,11 @@ class marketing_campaign_activity(osv.osv):
         'from_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_to_id',
                                             'Previous Activities'),
-        'variable_cost': fields.float('Variable Cost'),
-        'revenue': fields.float('Revenue'),
+        'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section"),
+        'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section"),
         'signal': fields.char('Signal', size=128,
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
-        'keep_if_condition_not_met': fields.boolean('Keep as cancelled when condition not met',
+        'keep_if_condition_not_met': fields.boolean('Keep as cancelled',
                                                     help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")
     }
 
@@ -564,6 +568,7 @@ class marketing_campaign_workitem(osv.osv):
             'activity': activity,
             'workitem': workitem,
             'object': object_id,
+            'resource': object_id, 
             'transitions': activity.to_ids,
             're': re,
         }
@@ -688,7 +693,7 @@ class marketing_campaign_workitem(osv.osv):
                                  wi_obj.res_id)
             }
 
-        elif wi_obj.activity_id.type == 'paper':
+        elif wi_obj.activity_id.type == 'report':
             datas = {
                 'ids': [wi_obj.res_id],
                 'model': wi_obj.object_id.model
