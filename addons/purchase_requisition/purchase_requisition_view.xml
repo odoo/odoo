@@ -15,6 +15,17 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="purchase_order_search_inherit">
+        <field name="name">purchase.order.list.select.inherit</field>
+        <field name="type">form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="/search/group/filter[@string='To Invoice']" position="after">
+             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]" separator="1"/>
+            </xpath>
+        </field>
+    </record>
     <record model="ir.ui.view" id="view_purchase_requisition_form">
         <field name="name">purchase.requisition.form</field>
         <field name="type">form</field>
