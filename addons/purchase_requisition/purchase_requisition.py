@@ -40,6 +40,7 @@ class purchase_requisition(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
         'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
     _defaults = {
