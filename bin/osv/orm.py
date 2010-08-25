@@ -1921,12 +1921,12 @@ class orm_memory(orm_template):
         self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
-        default = []
-        for f in self._columns.keys():
-            if not f in vals:
-                default.append(f)
-        if len(default):
-            vals.update(self.default_get(cr, user, default, context))
+
+        # override defaults with the provided values, never allow the other way around
+        defaults = self.default_get(cr, user, [], context)
+        defaults.update(vals)
+        vals = defaults
+
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -3394,7 +3394,9 @@ class orm(orm_template):
                     if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
                         default_values[dv] = [(6, 0, default_values[dv])]
 
-            vals.update(default_values)
+            # override defaults with the provided values, never allow the other way around
+            default_values.update(vals)
+            vals = default_values
 
         tocreate = {}
         for v in self._inherits:
