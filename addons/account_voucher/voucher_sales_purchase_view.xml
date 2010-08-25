@@ -44,7 +44,7 @@
                                 <group col="3" colspan="1">
                                     <separator string="Total" colspan="3"/>
                                     <field name="tax_id" on_change="onchange_price(payment_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" on_change="onchange_price(payment_ids, tax_id, partner_id)" nolabel="1"/>
-                                    <field name="amount" string="Total"/><button icon="terp-stock_format-scientific" name="compute_tax" attrs="{'invisible':[('state','!=','draft')]}" colspan="1" string="Compute TAX" type="object"/>
+                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
@@ -60,7 +60,7 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
+                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
                         <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma,recheck"  icon="gtk-cancel"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>

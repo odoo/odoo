@@ -96,8 +96,21 @@
                     <notebook colspan="4">
                         <page string="Payment Information">
 <!--                            <field name="payment_ids" on_change="onchange_price(payment_ids, 0.0, False)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">-->
-                            <field name="payment_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
-                                <tree string="Payment Lines" editable="bottom">
+                            <field name="payment_ids" on_change="onchange_price(payment_ids, 0.0, False)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                                <tree string="Invoices and outstanding payments" editable="bottom">
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'type':parent.type, 'partner_id':parent.partner_id}" on_change="onchange_move_line_id(move_line_id)" domain="[('account_id.type','=','receivable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id), ('debit','>',0)]"/>
+                                    <field name="account_id"  domain="[('type','=','receivable')]"/>
+                                    <field name="date_original"/>
+                                    <field name="date_due"/>
+                                    <field name="amount_original"/>
+                                    <field name="amount_unreconciled" sum="Open Balance"/>
+                                    <field name="amount" sum="Payment"/>
+                                </tree>
+                            </field>
+                            <separator string="Previous Unreconcile balance" colspan="4"/>
+                            <field name="pre_line"/>
+                            <field name="line_cr_ids" colspan="4" nolabel="1" readonly="1" attrs="{'invisible': [('pre_line','=',False)]}">
+                                <tree string="Credits" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'type':parent.type, 'partner_id':parent.partner_id}" on_change="onchange_move_line_id(move_line_id)" domain="[('account_id.type','=','receivable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id), ('debit','>',0)]"/>
                                     <field name="account_id"  domain="[('type','=','receivable')]"/>
                                     <field name="date_original"/>
