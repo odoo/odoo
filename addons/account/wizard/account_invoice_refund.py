@@ -36,6 +36,7 @@ class account_invoice_refund(osv.osv_memory):
        'period': fields.many2one('account.period', 'Force period'),
        'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the refund invoice that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
        'description': fields.char('Description', size=128, required=True),
+       'filter_refund': fields.selection([('modify', 'Modify'), ('refund', 'Refund'), ('cancel', 'Cancel')], "Refund Type", required=True, help='Refund invoice base on this type'),
     }
 
     def _get_journal(self, cr, uid, context=None):
@@ -50,7 +51,8 @@ class account_invoice_refund(osv.osv_memory):
 
     _defaults = {
         'date': time.strftime('%Y-%m-%d'),
-        'journal_id': _get_journal
+        'journal_id': _get_journal,
+        'filter_refund': 'modify',
     }
 
     def compute_refund(self, cr, uid, ids, mode='refund', context=None):
@@ -66,6 +68,8 @@ class account_invoice_refund(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         wf_service = netsvc.LocalService('workflow')
+        inv_tax_obj = self.pool.get('account.invoice.tax')
+        inv_line_obj = self.pool.get('account.invoice.line')
 
         if context is None:
             context = {}
@@ -153,10 +157,9 @@ class account_invoice_refund(osv.osv_memory):
                                     'journal_id', 'period_id'], context=context)
                         invoice = invoice[0]
                         del invoice['id']
-                        invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'], context=context)
+                        invoice_lines = inv_line_obj.read(cr, uid, invoice['invoice_line'], context=context)
                         invoice_lines = inv_obj._refund_cleanup_lines(cr, uid, invoice_lines)
-                        tax_lines = self.pool.get('account.invoice.tax').read(
-                                                        cr, uid, invoice['tax_line'], context=context)
+                        tax_lines = inv_tax_obj.read(cr, uid, invoice['tax_line'], context=context)
                         tax_lines = inv_obj._refund_cleanup_lines(cr, uid, tax_lines)
 
                         invoice.update({
@@ -196,13 +199,8 @@ class account_invoice_refund(osv.osv_memory):
             return result
 
     def invoice_refund(self, cr, uid, ids, context=None):
-        return self.compute_refund(cr, uid, ids, 'refund', context=context)
-
-    def invoice_cancel(self, cr, uid, ids, context=None):
-        return self.compute_refund(cr, uid, ids, 'cancel', context=context)
-
-    def invoice_modify(self, cr, uid, ids, context=None):
-        return self.compute_refund(cr, uid, ids, 'modify', context=context)
+        data_refund = self.read(cr, uid, ids, [] ,context=context)[0]['filter_refund']
+        return self.compute_refund(cr, uid, ids, data_refund, context=context)
 
 account_invoice_refund()
 
