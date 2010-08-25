@@ -179,6 +179,8 @@ class procurement_order(osv.osv):
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
                     'origin': procurement.name,
                     'date_end': procurement.date_planned,
+                    'warehouse_id':procurement.purchase_id and procurement.purchase_id.warehouse_id.id,
+                    'company_id':procurement.company_id.id,
                     'line_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,
