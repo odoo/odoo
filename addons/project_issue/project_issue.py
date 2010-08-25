@@ -314,7 +314,7 @@ class project_issue(crm.crm_case, osv.osv):
 
         mailgate_pool = self.pool.get('email.server.tools')
 
-        subject = msg.get('subject')
+        subject = msg.get('subject') or _('No Title')
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
@@ -332,6 +332,7 @@ class project_issue(crm.crm_case, osv.osv):
         res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
+        context.update({'state_to' : 'draft'})
         res = self.create(cr, uid, vals, context)
         message = _('An Issue created') + " '" + subject + "' " + _("from Mailgate.")
         self.log(cr, uid, res, message)
