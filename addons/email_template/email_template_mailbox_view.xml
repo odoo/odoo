@@ -80,18 +80,24 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Mailboxes">
-                    <filter icon="terp-mail-message-new" string="Drafts" name="draft" domain="[('folder','=','drafts')]"/>
+                    <filter icon="terp-document-new" string="Drafts" name="draft" domain="[('folder','=','drafts')]"/>
                     <filter icon="terp-mail-" string="Outbox" name="outbox" domain="[('folder','=','outbox')]"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-jump-to-ltr" string="Sent" domain="[('folder','=','sent')]"/>
+                    <filter icon="terp-camera_test" string="Sent" domain="[('folder','=','sent')]"/>
                     <filter icon="terp-mail_delete" string="Trash" domain="[('folder','=','trash')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-stop" string="Not Applicable" domain="[('state','=','na')]"/>
-                    <filter icon="terp-gtk-jump-to-ltr" string="Sending" domain="[('state','=','sending')]"/>
+                    <filter icon="terp-personal+" string="Personal Emails" name="personal" domain="[('account_id.company','=','no')]"/>
+                    <filter icon="terp-go-home" string="Company Emails" name="company" domain="[('account_id.company','=','yes')]"/>
                     <separator orientation="vertical"/>
-                    <field name="email_from" select="1"/>
-                    <field name="email_to" select="1"/>
-                    <field name="subject" select="1"/>
+                    <field name="subject"/>
+                    <field name="email_from"/>
+                    <field name="user">
+                        <filter icon="terp-personal"
+                            string="My Emails" name="myemails"
+                            domain="[('account_id.user','=', uid)]" />
+                    </field>
+                    <newline/>
+                    <field name="email_to"/>
+                    <field name="date_mail"/>
                </search>
            </field>
         </record>
