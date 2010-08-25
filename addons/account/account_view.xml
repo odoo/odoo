@@ -925,16 +925,16 @@
 
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Accounting Documents"/>
-                                <field name="invoice"/>
-                                <field name="move_id" required="False"/>
-                                <field name="statement_id"/>
+                                <field name="invoice" readonly="True"/>
+                                <field name="move_id" readonly="True"/>
+                                <field name="statement_id" readonly="True"/>
                             </group>
 
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Dates"/>
                                 <field name="date" select="1"/>
                                 <field name="date_maturity"/>
-                                <field name="date_created"/>
+                                <field name="date_created" readonly="True"/>
                             </group>
 
                             <group col="2" colspan="2">
@@ -1044,13 +1044,13 @@
             <field name="arch" type="xml">
                 <search string="Search Entry Lines">
                     <group col='10' colspan='4'>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Entry Lines"/>
+                        <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Entry Lines"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
+                        <filter icon="terp-camera_test" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Entry Lines"/>
                         <filter icon="terp-stock_symbol-selection" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Entry Lines"/>
                         <separator orientation="vertical"/>
                         <filter
-                            icon="terp-stock_symbol-selection"
+                            icon="terp-dolar_ok!"
                             string="Unreconciled"
                             domain="[('reconcile_id','=',False), ('account_id.type','in',['receivable', 'payable'])]" help="Unreconciled Journal Items"
                             name="unreconciled"/>
@@ -1289,13 +1289,12 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Entries"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Entries"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-stock_zoom" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="ref" select="1"/>
                         <field name="name" select="1"/>
                         <field name="partner_id" select='1'/>
                         <field name="date" select='1'/>
-                        <field name="narration" select="1"/>
                     </group>
                     <newline/>
                     <group col='8' colspan='4'>
@@ -1551,6 +1550,7 @@
                     <field name="name" select="1"/>
                     <field name="ref" select="1"/>
                     <field name="journal_id" select="1"/>
+                    <field name="company_id" select="1" widget='selection'/>
                     <field colspan="4" nolabel="1" name="lines_id" height="250" widget="one2many_list"/>
                     <separator string="Legend" colspan="4"/>
                     <field name="legend" colspan="4" nolabel="1"/>
@@ -1568,6 +1568,7 @@
                 <tree string="Entry Model">
                     <field name="name"/>
                     <field name="journal_id"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -2234,7 +2235,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem parent="account.account_template_folder" action="action_wizard_multi_chart" id="menu_wizard"/>
+        <menuitem name="New Company Financial Setting" parent="account.account_template_folder" action="account.action_account_configuration_installer" id="menu_wizard"/>
 
         <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>

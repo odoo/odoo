@@ -44,7 +44,7 @@ class hr_analytic_timesheet(osv.osv):
     _order = "id desc"
     _columns = {
         'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade', required=True),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='account.analytic.account', store=True),
+        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='res.partner', store=True),
     }
 
     def unlink(self, cr, uid, ids, context=None):

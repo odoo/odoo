@@ -392,6 +392,6 @@ class account_balance(report_sxw.rml_parse):
     def total_cr(self):
         return self.cr_total
 
-report_sxw.report_sxw('report.account.balance.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=False)
+report_sxw.report_sxw('report.account.balance.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header="internal")
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

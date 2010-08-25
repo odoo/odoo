@@ -196,7 +196,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
 
 report_sxw.report_sxw('report.account.balancesheet.horizontal', 'account.account',
     'addons/account/report/account_balance_sheet_horizontal.rml',parser=report_balancesheet_horizontal,
-    header='internal')
+    header='internal landscape')
 
 report_sxw.report_sxw('report.account.balancesheet', 'account.account',
     'addons/account/report/account_balance_sheet.rml',parser=report_balancesheet_horizontal,
