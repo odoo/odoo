@@ -99,10 +99,10 @@
     self.set_to_zero(cr, uid, [ref('lunch_cashbox_clean_0')], {'active_ids': [ref('lunch_cashbox_cashbox0')]})
       	  
 - |
-  I check that the Total on the "Employee Cashbox" is 0.0
+  I check that the Total on the "Employee Cashbox" is -5.50
 -
   !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
-    - sum_remain == 0.00
+    - sum_remain == -5.50
       
 - |
   I cancel the order "LU002"
@@ -126,5 +126,5 @@
   I check that the Total on the "Employee Cashbox" is -2.75
 -
   !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
-    - sum_remain == -2.75
+    - sum_remain == -5.50
         
