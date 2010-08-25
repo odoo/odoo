@@ -10,34 +10,71 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Connect Events to Actions">
-                    <field name="name" select="1" required="1"/>
-                    <newline/>
-                    <group col="2" colspan="2">
-                        <separator string="Action Source" colspan="2"/>
-                        <field name="model_id" on_change="onchange_object_id(model_id)"/>
-                        <field name="model" select="1" required="1"/>
-                        <field name="res_id"/>
-                        <field name="key2" select="2" required="1"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Action To Launch" colspan="2"/>
-                        <field name="action_id" on_change="onchange_action_id(action_id)"/>
-                        <field name="value_unpickle" required="1"/>
-                        <field name="object" readonly="1"/>
-                    </group>
+                    <field name="name" required="1"/>
+                    <field name="model_id" on_change="onchange_object_id(model_id)"/>
+                    <field name="action_id" on_change="onchange_action_id(action_id)"/>
+                    <field name="key2" required="1"/>
+                    <field name="object" readonly="1"/>
+                    <field name="res_id"/>
+                    <field name="value_unpickle"/>
+                    <field name="meta_unpickle"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </form>
             </field>
         </record>
+        
+        <record id="values_view_tree_action" model="ir.ui.view">
+            <field name="name">ir.values.tree.action</field>
+            <field name="model">ir.values</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Client Actions">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="action_id"/>
+                    <field name="key2"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="values_view_search_action" model="ir.ui.view">
+            <field name="name">ir.values.search.action</field>
+            <field name="model">ir.values</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Client Actions">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="key2"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="act_values_form_action" model="ir.actions.act_window">
-            <field name="name">Connect Actions To Client Events</field>
+            <field name="name">Client Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.values</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="values_view_form_action"/>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="values_view_search_action"/>
             <field name="domain">[('key','=','action')]</field>
             <field name="context">{'read':'default','default_object':1}</field>
         </record>
+        
+        <record model="ir.actions.act_window.view" id="action_values_tree_view">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="values_view_tree_action"/>
+	        <field name="act_window_id" ref="act_values_form_action"/>
+	    </record>
+	
+	    <record model="ir.actions.act_window.view" id="action_values_form_view">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="values_view_form_action"/>
+	        <field name="act_window_id" ref="act_values_form_action"/>
+	    </record>
 
         <menuitem action="act_values_form_action" id="menu_values_form_action" parent="base.menu_custom_action"/>
 
@@ -1556,10 +1593,10 @@
             <field name="arch" type="xml">
                 <form string="Server Action">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="model_id" select="1"/>
-                        <field name="state" select="1"/>
-                        <field name="sequence" select="2"/>
+                        <field name="name"/>
+                        <field name="model_id"/>
+                        <field name="state"/>
+                        <field name="sequence"/>
                         <field name="condition"/>
                     </group>
                     <notebook colspan="4">
@@ -1570,12 +1607,12 @@
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
                             <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
-                            <field name="trigger_obj_id" select="2" context="{'key':''}" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','trigger')]}"/>
-                            <field name="trigger_name" select="2" attrs="{'required':[('state','=','trigger')]}"/>
+                            <field name="trigger_obj_id" context="{'key':''}" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','trigger')]}"/>
+                            <field name="trigger_name" attrs="{'required':[('state','=','trigger')]}"/>
                         </page>
                         <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
                             <separator colspan="4" string="Client Action Configuration"/>
-                            <field name="action_id" select="2" attrs="{'required':[('state','=','client_action')]}"/>
+                            <field name="action_id" attrs="{'required':[('state','=','client_action')]}"/>
                         </page>
                         <page string="Email Configuration" attrs="{'invisible':[('state','!=','email')]}">
                             <separator colspan="4" string="Email Configuration"/>
@@ -1594,9 +1631,9 @@
                         </page>
                         <page string="Create / Write / Copy" attrs="{'invisible':[('state','!=','object_create'), ('state','!=','object_write'), ('state','!=','object_copy')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                            <field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_copy'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
+                            <field name="srcmodel_id" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_copy'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
                             <field name="copy_object" on_change="change_object(copy_object, state)" select="2" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_write'), ('state','!=','object_create'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
-                            <field name="fields_lines" nolabel="1" select="2" colspan="4">
+                            <field name="fields_lines" nolabel="1" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
                                     <field name="type"/>
@@ -1641,6 +1678,25 @@
                 </tree>
             </field>
         </record>
+        
+        <record id="view_server_action_search" model="ir.ui.view">
+            <field name="name">ir.actions.server.search</field>
+            <field name="model">ir.actions.server</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Server Actions">
+                    <group col="10" colspan="4">
+	                    <field name="name"/>
+	                    <field name="state"/>
+	                    <field name="model_id"/>
+	                </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4" col="4">
+	                   <filter string="Action Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record id="action_server_action" model="ir.actions.act_window">
             <field name="name">Server Actions</field>
@@ -1649,6 +1705,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
+            <field name="search_view_id" ref="view_server_action_search"/>
             <field name="context">{'key':'server_action'}</field>
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.menu_custom_action"/>
