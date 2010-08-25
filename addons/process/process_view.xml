@@ -15,10 +15,10 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process">
-                <group colspan="4" string="Details">
-                    <field name="name" select="1"/>
+                <group colspan="4" col="6">
+                    <field name="name"/>
+                    <field name="model_id"/>
                     <field name="active"/>
-                    <field name="model_id" select="1"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Nodes">
@@ -180,80 +180,50 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Node">
-                <group colspan="4" string="Details">
-                    <field name="name" select="1"/>
-                    <field name="flow_start"/>
+                <group colspan="4" col="6">
+                    <field name="name"/>
                     <field name="process_id"/>
                     <newline/>
+                    <field name="kind" select="1"/>
+                    <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
+                    <field name="flow_start"/>
+                </group>
+                <separator string="Properties" colspan="4"/>
+                <group colspan="4" col="6">
                     <field name="model_id" select="1"/>
                     <field name="menu_id"/>
-                    <newline/>
-                    <field name="kind" select="1"/>
                     <field name="help_url" widget="url"/>
-                    <field name="model_states"/>
-                    <field name="subflow_id" attrs="{'readonly':[('kind','=','state')]}"/>
                 </group>
-                <notebook colspan="4">
-                    <page string="Outgoing Transitions">
-                        <field name="transition_out" colspan="4" nolabel="1">
-                            <tree string="Transitions">
+                <separator string="Conditions" colspan="4"/>
+                <field name="model_states"/>
+                <field name="condition_ids" nolabel="1" colspan="4">
+	                <tree string="Other Conditions" editable="1">
+	                    <field name="name"/>
+	                    <field name="model_id"/>
+	                    <field name="model_states"/>
+	                </tree>
+                </field>
+                <separator string="Transitions" colspan="4"/>
+                <group colspan="4" col="4">
+                    <group colspan="2" col="2">
+                        <field name="transition_in" nolabel="1">
+                            <tree string="Incoming Transitions">
                                 <field name="name"/>
                                 <field name="target_node_id"/>
                             </tree>
-                            <form string="Transition">
-                                <group colspan="4" string="Details">
-                                    <field name="name"/>
-                                    <newline/>
-                                    <field name="target_node_id" domain="[('process_id', '=', parent.process_id)]"/>
-                                </group>
-                                <notebook colspan="4">
-                                    <page string="Buttons">
-                                        <field name="action_ids" colspan="4" nolabel="1">
-                                            <tree string="Actions">
-                                                <field name="name"/>
-                                                <field name="state"/>
-                                                <field name="action"/>
-                                            </tree>
-                                            <form string="Actions">
-                                                <field name="name" colspan="4"/>
-                                                <newline/>
-                                                <field name="state"/>
-                                                <field name="action"/>
-                                            </form>
-                                        </field>
-                                    </page>
-                                    <page string="Roles Required">
-                                        <field name="role_ids" colspan="4" nolabel="1"/>
-                                    </page>
-                                    <page string="Roles from Workflow">
-                                        <field name="transition_ids" colspan="4" nolabel="1"/>
-                                    </page>
-                                    <page string="Extra Information">
-                                        <field name="note" colspan="4" nolabel="1"/>
-                                    </page>
-                                </notebook>
-                            </form>
                         </field>
-                    </page>
-                    <page string="Conditions">
-                        <field name="condition_ids" nolabel="1" colspan="4">
-                            <tree string="Conditions">
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="transition_out" nolabel="1">
+                            <tree string="Outgoing Transitions">
                                 <field name="name"/>
-                                <field name="model_id"/>
-                                <field name="model_states"/>
+                                <field name="source_node_id"/>
                             </tree>
-                            <form string="Condition">
-                                <field name="name"/>
-                                <field name="model_id"/>
-                                <newline/>
-                                <field name="model_states" colspan="4"/>
-                            </form>
                         </field>
-                    </page>
-                    <page string="Extra Information">
-                        <field name="note" nolabel="1" colspan="4"/>
-                    </page>
-                </notebook>
+                    </group>
+                </group>
+                <separator string="Notes" colspan="4"/>        
+                <field name="note" nolabel="1" colspan="4"/>
             </form>
         </field>
     </record>
