@@ -28,32 +28,27 @@
                                     <field name="body_html" nolabel="1" colspan="4" />
                                 </page>
                             </notebook>
+                            <separator colspan="4" string="" />
+                            <group col="4" colspan="4">
+                                <field name="state" readonly="1" string="State"/>
+                                <button name="send_this_mail" type="object" string="Send Mail" icon="terp-mail-message-new"/>
+                            </group>
                         </page>
 
                         <page string="Attachments">
-                            <group col="4">
-                                <separator colspan="4" string="Attachments" />
-                                <field name="attachments_ids" colspan="4" nolabel="1" />
-                            </group>
+                            <separator colspan="4" string="Attachments" />
+                            <field name="attachments_ids" colspan="4" nolabel="1" />
                         </page>
                         <page string="Advanced">
-                            <group col="4">
-                                <field name="account_id" colspan="2" />
-                                <field name="server_ref" colspan="2" />
-                                <field name="mail_type" colspan="2" />
-                                <field name="folder" colspan="2" select="2"/>
-                                <field name="message_id" select="2"/>
-                                <separator string="History" colspan="4" />
-                                <field name="history" nolabel="1" colspan="4"/>
-                            </group>
+                            <field name="account_id" colspan="2" />
+                            <field name="server_ref" colspan="2" />
+                            <field name="mail_type" colspan="2" />
+                            <field name="folder" colspan="2" select="2"/>
+                            <field name="message_id" select="2"/>
+                            <separator string="History" colspan="4" />
+                            <field name="history" nolabel="1" colspan="4"/>
                         </page>
                     </notebook>
-                    <separator colspan="4" string="" />
-                    <group col="4" colspan="4">
-                        <field name="state" readonly="1" />
-                        <button name="complete_mail" type="object" string="Download Full Mail"  states="read,unread" />
-                        <button name="send_this_mail" type="object" string="Send Mail" />
-                    </group>
                 </form>
             </field>
         </record>

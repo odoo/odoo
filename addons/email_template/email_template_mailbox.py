@@ -171,8 +171,7 @@ class email_template_mailbox(osv.osv):
                             ('na', 'Not Applicable'),
                             ('sending', 'Sending'),
                             ], 'Status', required=True),
-            'date_mail':fields.datetime(
-                            'Rec/Sent Date'),
+            'date_mail':fields.datetime('Rec/Sent Date', help="Date on which Email Sent or Received"),
             'history':fields.text(
                             'History', 
                             readonly=True, 
