@@ -52,6 +52,15 @@ class purchase_requisition(osv.osv):
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
 
+    def copy(self, cr, uid, id, default=None,context={}):
+        if not default:
+            default = {}
+        default.update({
+            'state':'draft',
+            'purchase_ids':[],
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
+        })
+        return super(purchase_requisition, self).copy(cr, uid, id, default, context)
     def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids):
