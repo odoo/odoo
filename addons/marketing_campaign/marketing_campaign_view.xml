@@ -17,11 +17,20 @@
         <field name="arch" type="xml">
             <form string="Campaign">
                 <group colspan="4" col="6">
-                    <field name="name" select="1"/>
-                    <field name="object_id" select="1"/>
-                    <field name="mode"/>
-                    <field name="fixed_cost"/>
-                    <field name="partner_field_id"/>
+                    <group colspan="2" col="2">
+                        <separator string="Campaign" colspan="2" />
+                        <field name="name" select="1"/>
+                        <field name="mode"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Resource" colspan="2" />
+                        <field name="object_id" select="1"/>
+                        <field name="partner_field_id"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Cost" colspan="2" />
+                        <field name="fixed_cost"/>
+                    </group>
                 </group>
                 <field name="activity_ids" nolabel = "1" colspan="4" default_get="{'default_object_id': object_id}" />
                 <separator string="Status" colspan="4" />
@@ -45,6 +54,7 @@
                 <field name="name" select="1"/>
                 <field name="object_id" select="1"/>
                 <field name="mode"/>
+                <field name="fixed_cost"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -296,9 +306,9 @@
         <field name="arch" type="xml">
             <tree string="Activities">
                 <field name="name" select="1"/>
-                <field name="start"/>
                 <field name="condition"/>
                 <field name="type"/>
+                <field name="start"/>
             </tree>
         </field>
     </record>
