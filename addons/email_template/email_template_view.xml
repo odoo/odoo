@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <!-- Email Template PReview -->
+
+        <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
+    
+        <!-- Email Template Preview -->
         <record model="ir.ui.view" id="email_template_preview_form">
             <field name="name">email_template.preview.form</field>
             <field name="model">email_template.preview</field>
@@ -186,6 +189,9 @@
         <menuitem name="E-MAIL Templates" id="menu_email_template_all"
             parent="menu_email_template_configuration" action="action_email_template_tree_all" />
 
+        <!-- Email Template menu in Tools -->
+        <menuitem name="E-MAIL Templates" id="menu_email_template_all_tools"
+            parent="menu_email_template_config_tools" action="action_email_template_tree_all" />
     </data>
 </openerp>
 

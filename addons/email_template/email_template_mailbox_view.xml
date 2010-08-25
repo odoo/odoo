@@ -116,6 +116,15 @@
             parent="menu_email_template"
             action="action_email_template_mailbox" />
 
+        <!-- Mailbox menu in Tools -->
+        <menuitem name="Email Template" id="menu_email_template_tools"
+            parent="base.menu_tools" />
+
+        <menuitem name="Emails"
+            id="menu_email_template_mails_tools"
+            parent="menu_email_template_tools"
+            action="action_email_template_mailbox" />
+
     </data>
 </openerp>
 
