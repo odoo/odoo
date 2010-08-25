@@ -189,8 +189,9 @@
                <filter icon="terp-check" string="Running" name="running" domain="[('state','=','running')]"/>
                <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                <separator orientation="vertical"/>
-               <filter icon="terp-go-month" string="Create After Sync" domain="[('sync_mode','=','create_date')]"/>
-               <filter icon="terp-go-month" string="Modified after Sync" domain="[('sync_mode','=','write_date')]"/>
+               <filter icon="terp-project" string="Newly Created" domain="[('sync_mode','=','create_date')]"/>
+               <filter icon="terp-project" string="Newly Modified" domain="[('sync_mode','=','write_date')]"/>
+               <filter icon="terp-project" string="All" domain="[('sync_mode','=','all')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
                <field name="campaign_id" select="1"/>
