@@ -33,7 +33,7 @@ view_form="""<?xml version="1.0"?>
         <field name="name" width="200"/>
         <field name="code"/>
         <field name="data" colspan="4"/>
-        <label string="You have to import a .CSV file wich is encoded in UTF-8.\n
+        <label string="You have to import a .CSV file which is encoded in UTF-8.\n
 Please check that the first line of your file is one of the following:" colspan="4" align="0.0"/>
         <label string="type,name,res_id,src,value" colspan="4"/>
         <label string="module,type,name,res_id,src,value" colspan="4"/>

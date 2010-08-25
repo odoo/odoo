@@ -103,10 +103,12 @@ class ExportService(object):
     
     _services = {}
     _groups = {}
+    _logger = logging.getLogger('web-services')
     
     def __init__(self, name, audience=''):
         ExportService._services[name] = self
         self.__name = name
+        self._logger.info("Exported service registered: %s" % name)
 
     def joinGroup(self, name):
         ExportService._groups.setdefault(name, {})[self.__name] = self
