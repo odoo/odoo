@@ -253,6 +253,7 @@ class rml_parse(object):
             date_format = self.lang_dict['date_format']
             parse_format = DT_FORMAT
             if date_time:
+                value=value.split('.')[0]
                 date_format = date_format + " " + self.lang_dict['time_format']
                 parse_format = DHM_FORMAT
 
