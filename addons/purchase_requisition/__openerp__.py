@@ -32,6 +32,7 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : ["wizard/purchase_requisition_partner_view.xml",
+                    "purchase_requisition_data.xml",
                     "purchase_requisition_view.xml",
                     "purchase_requisition_report.xml",
                     "security/ir.model.access.csv","purchase_requisition_sequence.xml"
