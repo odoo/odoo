@@ -26,8 +26,9 @@
     "depends" : ['marketing_campaign'],
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
-    "description": """
-    """,
+    "description": """    
+    This module provides integration of the mailchimp.com marketing campaign and mailing-list service, connecting via Mailchimp's WebServices API.
+    You can define multiple Mailchimp accounts and then use them as you wish through a new type of activity, providing direct connection to your Mailchimp Lists.""",
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
