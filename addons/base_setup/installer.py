@@ -104,11 +104,11 @@ class base_setup_installer(osv.osv_memory):
             return ['document_ftp']
         return None
 
-#    def _if_misc_tools(self, cr, uid, ids, context=None):
-#        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
-#               .view == 'simple':
-#            return ['lunch']
-#        return None
+    def _if_misc_tools(self, cr, uid, ids, context=None):
+        interface = self.pool.get('res.users').browse(cr, uid, uid, context=context).view
+        if interface == 'simple' or interface =='extended' :
+            return ['lunch','idea','survey']
+        return Nonee
 
     def onchange_moduleselection(self, cr, uid, ids, *args):
         closed, total = self.get_current_progress(cr, uid)
