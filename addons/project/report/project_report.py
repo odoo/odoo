@@ -41,7 +41,7 @@ class report_project_task_user(osv.osv):
         'hours_effective': fields.float('Effective Hours', readonly=True),
         'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
         'remaining_hours': fields.float('Remaining Hours', readonly=True),
-        'progress': fields.float('Progress', readonly=True),
+        'progress': fields.float('Progress', readonly=True, group_operator='avg'),
         'total_hours': fields.float('Total Hours', readonly=True),
         'closing_days': fields.float('Days to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the task"),
