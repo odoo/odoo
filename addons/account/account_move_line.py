@@ -550,7 +550,10 @@ class account_move_line(osv.osv):
         currency = 0.0
         account_id = False
         partner_id = False
+        invoice = False
         for line in unrec_lines:
+            if line.invoice:
+                invoice = line.invoice
             if line.state <> 'valid':
                 raise osv.except_osv(_('Error'),
                         _('Entry "%s" is not valid !') % line.name)
@@ -558,6 +561,7 @@ class account_move_line(osv.osv):
             debit += line['debit']
             currency += line['amount_currency'] or 0.0
             account_id = line['account_id']['id']
+            account_type = line['account_id']['type']
             partner_id = (line['partner_id'] and line['partner_id']['id']) or False
         writeoff = debit - credit
         # Ifdate_p in context => take this date
@@ -604,6 +608,14 @@ class account_move_line(osv.osv):
             else:
                 libelle='Write-Off'
 
+            cur_obj = self.pool.get('res.currency')
+            cur_id = False
+            amount_cur = 0.00
+
+            if context.get('company_currency_id',False) != context.get('currency_id',False):
+                amount_cur = cur_obj.compute(cr, uid, context.get('company_currency_id',False), context.get('currency_id',False), abs(writeoff), context=context)
+                cur_id = context.get('currency_id',False)
+
             writeoff_lines = [
                 (0, 0, {
                     'name':libelle,
@@ -612,8 +624,8 @@ class account_move_line(osv.osv):
                     'account_id':account_id,
                     'date':date,
                     'partner_id':partner_id,
-                    'currency_id': account.currency_id.id or False,
-                    'amount_currency': account.currency_id.id and -currency or 0.0
+                    'currency_id': cur_id or (account.currency_id.id or False),
+                    'amount_currency': amount_cur or (account.currency_id.id and -currency or 0.0)
                 }),
                 (0, 0, {
                     'name':libelle,
@@ -622,7 +634,9 @@ class account_move_line(osv.osv):
                     'account_id':writeoff_acc_id,
                     'analytic_account_id': context.get('analytic_id', False),
                     'date':date,
-                    'partner_id':partner_id
+                    'partner_id':partner_id,
+                    'currency_id': cur_id or (account.currency_id.id or False),
+                    'amount_currency': amount_cur or (account.currency_id.id and -currency or 0.0)
                 })
             ]
 
@@ -633,8 +647,20 @@ class account_move_line(osv.osv):
                 'state': 'draft',
                 'line_id': writeoff_lines
             })
-
             writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
+            if account_id == writeoff_acc_id:
+                writeoff_line_ids = [writeoff_line_ids[1]]
+
+            if invoice:
+                if (invoice.type == 'out_invoice') or (invoice.type == 'in_invoice'):
+                    condition_1 = (account_type == 'payable' and writeoff > 0.0)
+                    condition_2 = (account_type == 'receivable' and writeoff < 0.0)
+                else:
+                    condition_1 = (account_type == 'payable' and writeoff < 0.0)
+                    condition_2 = (account_type == 'receivable' and writeoff > 0.0)
+                if condition_1 or condition_2:
+                    writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', 'in', (account_id,writeoff_acc_id))])
+                    self.pool.get('account.move.line').write(cr ,uid, writeoff_line_ids, {'name':_('Currency Profit/Loss')})
             ids += writeoff_line_ids
 
         r_id = self.pool.get('account.move.reconcile').create(cr, uid, {

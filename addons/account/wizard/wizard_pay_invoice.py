@@ -65,15 +65,15 @@ def _pay_and_reconcile(self, cr, uid, data, context):
         amount = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, amount, context=ctx)
         currency_id = journal.currency.id
         # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
-        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
+        context.update({'amount_currency':form['amount'],'currency_id':currency_id,'company_currency_id':invoice.company_id.currency_id.id})
     
-    if invoice.company_id.currency_id.id<>invoice.currency_id.id:
+    if not journal.currency and invoice.company_id.currency_id.id<>invoice.currency_id.id:
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, invoice.currency_id.id, invoice.company_id.currency_id.id, amount, context=ctx)
         currency_id = invoice.currency_id.id
         # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
-        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
-        
+        context.update({'amount_currency':form['amount'],'currency_id':currency_id,'company_currency_id':invoice.company_id.currency_id.id})
+
     # Take the choosen date
     if form.has_key('comment'):
         context.update({'date_p':form['date'],'comment':form['comment']})

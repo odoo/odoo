@@ -107,41 +107,34 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         for inv in data_inv:
             debit = credit = 0.0
-            context.update({'date':inv.date_invoice})
             context_unreconciled=context.copy()
+            # If one of the invoice line is not in the currency of the invoice,
+            # we use the currency of the company to compute the residual amount.
+            # All the lines must use the same currency source (company or invoice)
+            fromcompany = False
             for lines in inv.move_lines:
-                debit_tmp = lines.debit
-                credit_tmp = lines.credit
+                if lines.currency_id.id <> inv.currency_id.id:
+                    fromcompany = True
+                    break
+
+            for lines in inv.move_lines:
                 # If currency conversion needed
-                if inv.company_id.currency_id.id <> inv.currency_id.id:
-                    # If invoice paid, compute currency amount according to invoice date
-                    # otherwise, take the line date
-                    if not inv.reconciled:
-                        context.update({'date':lines.date})
+                if fromcompany:
                     context_unreconciled.update({'date':lines.date})
                     # If amount currency setted, compute for debit and credit in company currency
-                    if lines.amount_currency < 0:
-                        credit_tmp=abs(cur_obj.compute(cr, uid, lines.currency_id.id, inv.company_id.currency_id.id, lines.amount_currency, round=False,context=context_unreconciled))
-                    elif lines.amount_currency > 0:
-                        debit_tmp=abs(cur_obj.compute(cr, uid, lines.currency_id.id, inv.company_id.currency_id.id, lines.amount_currency, round=False,context=context_unreconciled))
-                    # Then, recomput into invoice currency to avoid rounding trouble !
-                    debit += cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, debit_tmp, round=False,context=context)
-                    credit += cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, credit_tmp, round=False,context=context)
+                    if lines.credit:
+                        credit += abs(cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, lines.credit, round=False,context=context_unreconciled))
+                    else:
+                        debit += abs(cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, lines.debit, round=False,context=context_unreconciled))
                 else:
-                    debit+=debit_tmp
-                    credit+=credit_tmp
-                    
-            if not inv.amount_total:
-                result = 0.0
-            elif inv.type in ('out_invoice','in_refund'):
+                    debit += lines.debit > 0 and abs(lines.amount_currency) or  0.00
+                    credit += lines.credit > 0 and abs(lines.amount_currency) or  0.00
+            if inv.type in ('out_invoice','in_refund'):
                 amount = credit-debit
-                result = inv.amount_total - amount
             else:
                 amount = debit-credit
-                result = inv.amount_total - amount
-            # Use is_zero function to avoid rounding trouble => should be fixed into ORM
-            res[inv.id] = not self.pool.get('res.currency').is_zero(cr, uid, inv.company_id.currency_id,result) and result or 0.0
-            
+            result = inv.amount_total - amount
+            res[inv.id] =  self.pool.get('res.currency').round(cr, uid, inv.currency_id, result)
         return res
 
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
@@ -191,7 +184,6 @@ class account_invoice(osv.osv):
                     temp_lines = map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
                 lines += [x for x in temp_lines if x not in lines]
                 src.append(m.id)
-                
             lines = filter(lambda x: x not in src, lines)
             result[invoice.id] = lines
         return result
@@ -992,10 +984,12 @@ class account_invoice(osv.osv):
                    'WHERE move_id in %s',
                    ((move_id, invoice.move_id.id),))
         lines = line.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
+
         for l in lines+invoice.payment_ids:
             if l.account_id.id==src_account_id:
                 line_ids.append(l.id)
                 total += (l.debit or 0.0) - (l.credit or 0.0)
+
         if (not round(total,int(config['price_accuracy']))) or writeoff_acc_id:
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
