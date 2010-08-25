@@ -107,9 +107,11 @@
         </record>
 
         <!--======================================== MENUS ========================================-->
-        <menuitem name="MailBox" id="menu_email_template_mailbox_all_main2" parent="menu_email_template" />
-        <menuitem name="Personal Mails" id="menu_email_template_personal_mails" parent="menu_email_template_mailbox_all_main2" action="action_email_template_mailbox"/>
-        <menuitem name="Company Mails" id="menu_email_template_company_mails" parent="menu_email_template_mailbox_all_main2" action="action_email_template_mailbox"/>
+
+        <menuitem name="Emails"
+            id="menu_email_template_personal_mails"
+            parent="menu_email_template"
+            action="action_email_template_mailbox" />
 
     </data>
 </openerp>
