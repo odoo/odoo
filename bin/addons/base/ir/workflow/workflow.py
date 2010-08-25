@@ -146,11 +146,17 @@ class wkf_transition(osv.osv):
     _columns = {
         'trigger_model': fields.char('Trigger Object', size=128),
         'trigger_expr_id': fields.char('Trigger Expression', size=128),
-        'signal': fields.char('Signal (button Name)', size=64),
-        'role_id': fields.many2one('res.roles', 'Role Required'),
-        'condition': fields.char('Condition', required=True, size=128),
-        'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade'),
-        'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True, ondelete='cascade'),
+        'signal': fields.char('Signal (button Name)', size=64, 
+                              help="When the operation of transition comes from a button pressed in the client form, "\
+                              "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
+        'role_id': fields.many2one('res.roles', 'Role Required', 
+                                   help="The role that a user must have to validate this transition."),
+        'condition': fields.char('Condition', required=True, size=128, 
+                                 help="Expression to be satisfied if we want the transition done."),
+        'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade',
+                                    help="Source activity. When this activity is over, the condition is tested to determine if we can start the ACT_TO activity."),
+        'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True, ondelete='cascade',
+                                  help="The destination activity."),
         'wkf_id': fields.related('act_from','wkf_id', type='many2one', relation='workflow', string='Workflow', select=True),
     }
     _defaults = {
