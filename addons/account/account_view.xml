@@ -874,7 +874,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line" editable="top" on_write="on_create_write">
+                <tree colors="red:state in ('draft');black:state in ('valid')" string="Account Entry Line" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"/>
                     <field name="move_id"/>
@@ -926,7 +926,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Accounting Documents"/>
                                 <field name="invoice" readonly="True"/>
-                                <field name="move_id" readonly="True"/>
+                                <field name="move_id" required="False"/>
                                 <field name="statement_id" readonly="True"/>
                             </group>
 
@@ -1775,7 +1775,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line">
+                <tree colors="red:state in ('draft');black:state in ('valid')" string="Account Entry Line">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="statement_id" string="St."/>
@@ -1818,9 +1818,9 @@
 
         <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_move_line" name="Journal Items" res_model="account.move.line" src_model="account.journal"/>
 
-        <act_window context="{'search_default_reconcile_id':False}" domain="[('partner_id', '=', active_id),('reconcile_id','=',False),('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 
-        <act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>

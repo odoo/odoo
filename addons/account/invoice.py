@@ -874,7 +874,7 @@ class account_invoice(osv.osv):
 
             line = self.group_lines(cr, uid, iml, line, inv)
 
-            journal_id = inv.journal_id.id 
+            journal_id = inv.journal_id.id
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
@@ -1496,12 +1496,18 @@ class account_invoice_tax(osv.osv):
     def amount_change(self, cr, uid, ids, amount, currency_id=False, company_id=False, date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
-        company_currency=False
+        company_currency = False
+        tax_amount = self.read(cr, uid, ids[0], ['tax_amount'])['tax_amount']
+        tax_sign=1
+        if tax_amount < 0:
+            tax_sign = -1
+        elif tax_amount == 0:
+            tax_sign = 0
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
-        return {'value': {'tax_amount':amount}}
+            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*tax_sign, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+        return {'value': {'tax_amount': amount}}
 
     _order = 'sequence'
     _defaults = {

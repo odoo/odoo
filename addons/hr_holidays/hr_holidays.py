@@ -108,7 +108,7 @@ class hr_holidays_status(osv.osv):
     _defaults = {
         'color_name': 'red',
         'active': True,
-        }
+    }
 
 hr_holidays_status()
 
@@ -147,7 +147,7 @@ class hr_holidays(osv.osv):
         'category_id': fields.many2one('hr.employee.category', "Category", help='Category Of employee'),
         'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Holiday Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category'),
         'manager_id2': fields.many2one('hr.employee', 'Second Validator', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
-            }
+    }
 
     _defaults = {
         'employee_id': _employee_get ,
@@ -156,7 +156,7 @@ class hr_holidays(osv.osv):
         'allocation_type': 'employee',
         'user_id': lambda obj, cr, uid, context: uid,
         'holiday_type': 'employee'
-        }
+    }
 
     def _create_resource_leave(self, cr, uid, vals, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
@@ -452,7 +452,7 @@ class resource_calendar_leaves(osv.osv):
     _description = "Leave Detail"
     _columns = {
         'holiday_id': fields.many2one("hr.holidays", "Holiday"),
-        }
+    }
 
 resource_calendar_leaves()
 

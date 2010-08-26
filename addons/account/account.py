@@ -595,7 +595,7 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True,help="Name of the journal"),
         'code': fields.char('Code', size=16,required=True,help="Code of the journal"),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'),('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'),('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
@@ -2624,13 +2624,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view_multi')])
         data = data_pool.browse(cr, uid, data_id[0])
-        ref_acc_bank = data.res_id
+        view_id_cur = data.res_id
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
         current_num = 1
         for line in obj_multi.bank_accounts_id:
             #create the account_account for this bank journal
-            tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
+            tmp = line.acc_name
             dig = obj_multi.code_digits
             if ref_acc_bank.code:
                 try:
@@ -2638,7 +2638,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 except Exception,e:
                     new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)),'0')) + str(current_num)
             vals = {
-                'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
+                'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': new_code,
                 'type': 'other',

@@ -65,9 +65,8 @@
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="base.group_extended"/>
                             <newline/>
                             <field name="price_subtotal"/>
-
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','!=',False),('company_id', '=', parent.company_id)]"/>
+                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -501,7 +500,7 @@
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 
-        <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id]}" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
         <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 
