@@ -2624,13 +2624,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view_multi')])
         data = data_pool.browse(cr, uid, data_id[0])
-        ref_acc_bank = data.res_id
+        view_id_cur = data.res_id
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
         current_num = 1
         for line in obj_multi.bank_accounts_id:
             #create the account_account for this bank journal
-            tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
+            tmp = line.acc_name
             dig = obj_multi.code_digits
             if ref_acc_bank.code:
                 try:
@@ -2638,7 +2638,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 except Exception,e:
                     new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)),'0')) + str(current_num)
             vals = {
-                'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
+                'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': new_code,
                 'type': 'other',
