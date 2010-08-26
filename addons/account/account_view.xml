@@ -449,10 +449,9 @@
                     <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
-                    <field name="balance_end"/>
+                    <field name="balance_end" invisible="1"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
-                    <button type="object" string="Confirm" name="button_confirm_cash" states="open" icon="terp-gtk-go-back-rtl"/>
+                    <button type="object" string="Confirm" name="button_confirm_bank" states="draft" icon="terp-camera_test"/>
                     <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
                 </tree>
             </field>
