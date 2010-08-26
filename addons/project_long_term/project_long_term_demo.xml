@@ -23,7 +23,8 @@
         <record id="res_users_manager0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
-            <field name="name">Anthony on Project OpenERP Integration</field>
+            <field name="name">Anthony</field>
+			<field name="context_project_id" ref="project.project_project_9"/>            
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="[(6, 0, [])]" name="roles_id"/>
@@ -53,9 +54,10 @@
         <record id="res_users_user0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
-            <field name="name"> Olivier on Project OpenERP Integration as analysit</field>
+            <field name="name">Olivier as analysit</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
+            <field name="context_project_id" ref="project.project_project_9"/>   
             <field eval="[(6, 0, [])]" name="roles_id"/>
             <field eval="[(6, 0, [])]" name="rules_id"/>
             <field eval="1" name="active"/>
@@ -67,7 +69,8 @@
         <record id="res_users_user1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
-            <field name="name">Quentin on Project OpenERP Integration as a developer</field>
+            <field name="name">Quentin as developer</field>
+			<field name="context_project_id" ref="project.project_project_9"/>              
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="[(6, 0, [])]" name="roles_id"/>
