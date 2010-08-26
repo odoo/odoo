@@ -8,14 +8,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               	<form string="Compute Scheduling of Phases">
-              		<group width="410" height="160">
+              		<group width="410" height="180">
                         <group colspan="4" col="4">
                            <separator colspan="4" string="This wizard will schedule phases for all or specified project" />
                             <newline />
-                            <field name="target_project" colspan="4"/>
+                            <field name="target_project"   align="3.0" colspan="4"/>
 		                </group>
-                        <group colspan="4" col="6" attrs="{'invisible':[('target_project','=','all')]}">
-                            <field name="project_id"/>
+						 <newline />		                
+                        <group colspan="4" col="4" attrs="{'invisible':[('target_project','=','all')]}">
+                            <field name="project_id" colspan="4" align="3.0" widget="selection" />
                         </group>
                         <separator colspan="4"/>
                         <group colspan="4" col="6"> <!-- Improve me -->
