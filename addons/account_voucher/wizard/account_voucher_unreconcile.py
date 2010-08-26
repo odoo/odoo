@@ -47,9 +47,11 @@ class account_voucher_unreconcile(osv.osv_memory):
             for line in voucher.move_ids:
                 if line.reconcile_id:
                     recs = [line.reconcile_id.id]
-            
-            for rec in recs:
-                reconcile_pool.unlink(cr, uid, rec)
+                if line.reconcile_partial_id:
+                    recs = [line.reconcile_partial_id.id]
+                
+            #for rec in recs:
+            reconcile_pool.unlink(cr, uid, recs)
             
             if res.remove:
                 voucher_pool.cancel_voucher(cr, uid, [context.get('active_id')], context)

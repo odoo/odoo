@@ -44,6 +44,9 @@ class account_move_line(osv.osv):
 account_move_line()
 
 class account_voucher(osv.osv):
+    def _get_type(self, cr, uid, ids, context={}):
+        return context.get('type')
+        
     def _get_period(self, cr, uid, context={}):
         if context.get('period_id', False):
             return context.get('period_id')
@@ -81,6 +84,12 @@ class account_voucher(osv.osv):
     _order = "date desc, id desc"
     _rec_name = 'number'
     _columns = {
+        'type':fields.selection([
+            ('sale','Sale'),
+            ('purchase','Purchase'),
+            ('payment','Payment'),
+            ('receipt','Receipt'),
+        ],'Type'),
         'name':fields.char('Memo', size=256, readonly=True, states={'draft':[('readonly',False)]}),
         'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -110,7 +119,7 @@ class account_voucher(osv.osv):
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
-        'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Journal Items', readonly=True, states={'draft':[('readonly',False)]}),
+        'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Journal Items', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
         'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
         'pay_now':fields.selection([
@@ -119,11 +128,14 @@ class account_voucher(osv.osv):
         ],'Payment', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_id':fields.many2one('account.tax', 'Tax', readonly=True, states={'draft':[('readonly',False)]}),
         'pre_line':fields.boolean('Previous Payments ?', required=False),
+        'date_due': fields.date('Due Date'),
+        'term_id':fields.many2one('account.payment.term', 'Term', required=False),
     }
     _defaults = {
         'period_id': _get_period,
         'journal_id':_get_journal,
         'currency_id': _get_currency,
+        'type':_get_type,
         'state': lambda *a: 'draft',
         'pay_now':lambda *a: 'pay_later',
         'name': lambda *a: '',
@@ -196,9 +208,23 @@ class account_voucher(osv.osv):
         return {
             'value':res
         }
-
+    
+    def onchange_term_id(self, cr, uid, ids, term_id, amount):
+        term_pool = self.pool.get('account.payment.term')
+        terms = False
+        due_date = False
+        default = {'date_due':False}
+        if term_id and amount:
+            terms = term_pool.compute(cr, uid, term_id, amount)
+        if terms:
+            due_date = terms[-1][0]
+            default.update({
+                'date_due':due_date
+            })
+        return {'value':default}
+        
     def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id=False, price=0.0, context={}):
-        """
+        """price
         Returns a dict that contains new values and context
     
         @param partner_id: latest value from user input for field partner_id
@@ -215,28 +241,35 @@ class account_voucher(osv.osv):
         partner_pool = self.pool.get('res.partner')
         journal_pool = self.pool.get('account.journal')
         default = {
-            'value':{'line_ids':[], 'line_dr_ids':[], 'line_cr_ids':[], 'pre_line': 0},
+            'value':{'line_ids':[], 'line_dr_ids':[], 'line_cr_ids':[], 'pre_line': False},
         }
 
-        # TODO: improve this if possible !
         if not partner_id:
-            if ids:
-                line_ids = line_pool.search(cr, uid, [('voucher_id','=',ids[0])])
-                if line_ids:
-                    line_pool.unlink(cr, uid, line_ids)
+            return default
+
+        if not partner_id and ids:
+            line_ids = line_pool.search(cr, uid, [('voucher_id','=',ids[0])])
+            if line_ids:
+                line_pool.unlink(cr, uid, line_ids)
             return default
 
         journal = journal_pool.browse(cr, uid, journal_id)
         partner = partner_pool.browse(cr, uid, partner_id)
         account_id = False
+        term_id = False
         if journal.type in ('sale','sale_refund'):
             account_id = partner.property_account_receivable.id
         elif journal.type in ('purchase', 'purchase_refund','expense'):
+            term_id = partner.property_payment_term.id
+            if term_id:
+                vals = self.onchange_term_id(cr, uid, ids, term_id, price)
+                default['value'].update(vals.get('value'))
             account_id = partner.property_account_payable.id
         else:
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
         default['value'].update({
-            'account_id':account_id
+            'account_id':account_id,
+            'term_id':term_id
         })
         if journal.type not in ('cash', 'bank'):
             return default
@@ -296,11 +329,10 @@ class account_voucher(osv.osv):
             }
         }
 
-    # TODO
     def onchange_journal(self, cr, uid, ids, journal_id):
         return {}
 
-    def proforma_voucher(self, cr, uid, ids, context={}):
+    def proforma_voucher(self, cr, uid, ids):
         self.action_move_line_create(cr, uid, ids)
         return True
 
@@ -384,8 +416,10 @@ class account_voucher(osv.osv):
             #create the first line manually
             debit = 0.0
             credit = 0.0
-            # TODO: to improve to select debit or credit
-            if True:
+            # TODO: is there any other alternative then the voucher type ??
+            if inv.type in ('purchase', 'payment'):
+                credit = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
+            elif inv.type in ('sale', 'receipt'):
                 debit = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
             move_line = {
                 'name':inv.name or '/',
@@ -549,7 +583,7 @@ class account_voucher_line(osv.osv):
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher', required=1),
         'name':fields.char('Description', size=256),
-        'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
+        'account_id':fields.many2one('account.account','Account', required=True),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'amount':fields.float('Amount'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Cr/Dr'),
