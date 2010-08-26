@@ -302,13 +302,14 @@
                                 <field name="state"/>
                                 <field name="residual"/>
                                 <group col="7" colspan="4" groups="base.group_user">
-                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-check" groups="account.group_account_user"/>
-                                    <button name="invoice_open" states="draft,proforma2" string="Create" icon="terp-document-new"/>
+                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
+                                    <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
+
+                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-gtk-media-pause" groups="account.group_account_user"/>
+                                    <button name="invoice_open" states="draft,proforma2" string="Create" icon="terp-camera_test"/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
                                     <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="terp-dolar_ok!"/>
                                     <button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
-                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
-                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                                 </group>
                             </group>
                         </page>
@@ -354,15 +355,15 @@
                 <search string="Search Invoice">
                    <group col="10" colspan="4">
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
-                        <filter icon="terp-check" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
-                        <filter icon="terp-check" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Invoices"/>
+                        <filter icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
+                        <filter icon="terp-camera_test" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Invoices"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
                         <field name="number"/>
                         <field name="partner_id"/>
-                        <field name="user_id" select="1" default="uid" widget="selection" string="Responsible">
-                            <filter domain="[('user_id','=',uid)]" help="Responsible" icon="terp-partner" separator="1"/>
+                        <field name="user_id" select="1" default="uid" widget="selection" string="Salesman">
+                            <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" separator="1"/>
                         </field>
                         <field name="origin"/>
                         <field name="amount_total"/>
@@ -370,14 +371,14 @@
                     <newline/>
                     <group col="10" colspan="4">
                         <field name="journal_id" widget="selection" select='1'/>
-                        <field name="period_id" select='1'/>
+                        <field name="period_id" select='1' string="Period"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>

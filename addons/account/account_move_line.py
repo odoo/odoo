@@ -305,6 +305,7 @@ class account_move_line(osv.osv):
         ml = self.browse(cr, uid, id, context)
         return map(lambda x: x.id, ml.move_id.line_id)
 
+    # TODO: this is false, it does not uses draft and closed periods
     def _balance(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res={}
         # TODO group the foreach in sql
@@ -344,9 +345,9 @@ class account_move_line(osv.osv):
         result = []
         for line in self.browse(cr, uid, ids, context):
             if line.ref:
-                result.append((line.id, (line.name or '')+' ('+line.ref+')'))
+                result.append((line.id, (line.move_id.name or '')+' ('+line.ref+')'))
             else:
-                result.append((line.id, line.name))
+                result.append((line.id, line.move_id.name))
         return result
 
     def _balance_search(self, cursor, user, obj, name, args, domain=None, context=None):
@@ -426,7 +427,7 @@ class account_move_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
         'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
         'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Narration'),
-        'ref': fields.char('Ref.', size=64),
+        'ref': fields.related('move_id', 'ref', string='Reference', type='char', size=64, store=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
@@ -435,10 +436,10 @@ class account_move_line(osv.osv):
 
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
-        'blocked': fields.boolean('Litigation', help="You can check this box to mark the entry line as a litigation with the associated partner"),
+        'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
 
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable entries. You can put the limit date for the payment of this entry line."),
+        'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
             store={
                 'account.move': (_get_move_lines, ['date'], 20)
@@ -456,8 +457,8 @@ class account_move_line(osv.osv):
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-#TODO: remove this
-        'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
+        #TODO: remove this
+        #'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
 
     }
@@ -864,7 +865,7 @@ class account_move_line(osv.osv):
         fields = {}
         flds = []
         title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
-        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
+        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write" colors="red:state==\'draft\';black:state==\'valid\'">\n\t''' % (title)
 
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
@@ -907,8 +908,8 @@ class account_move_line(osv.osv):
             if common_fields.get(field) == total:
                 fields.get(field).append(None)
 
-            if field=='state':
-                state = 'colors="red:state==\'draft\'"'
+#            if field=='state':
+#                state = 'colors="red:state==\'draft\'"'
 
             attrs = []
             if field == 'debit':
@@ -996,7 +997,7 @@ class account_move_line(osv.osv):
                 if journal.allow_date and period_id:
                     period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
                     if not time.strptime(vals['date'][:10],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'][:10],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
-                        raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
+                        raise osv.except_osv(_('Error'),_('The date of your Journal Entry is not in the defined period!'))
         else:
             return True
 
