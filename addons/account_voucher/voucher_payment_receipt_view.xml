@@ -62,7 +62,7 @@
             <field name="name">Vendor Payment</field>
             <field name="res_model">account.voucher.open</field>
             <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash'])]</field>
             <field name="context">{'journal_type':'bank', 'type':'payment'}</field>
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
@@ -154,7 +154,7 @@
             <field name="name">Sales Payment</field>
             <field name="res_model">account.voucher.open</field>
             <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash'])]</field>
             <field name="context">{'journal_type':'bank', 'type':'receipt'}</field>
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
