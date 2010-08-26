@@ -71,7 +71,7 @@ class expression(object):
             raise ValueError('Bad domain expression: %r' % (exp,))
         self.__exp = exp
         self.__field_tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
-        self.__all_tables = []
+        self.__all_tables = set()
         self.__joins = []
         self.__main_table = None # 'root' table. set by parse()
         self.__DUMMY_LEAF = (1, '=', 1) # a dummy leaf that must not be parsed or sql generated
@@ -106,7 +106,7 @@ class expression(object):
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
         self.__main_table = table
-        self.__all_tables.append(table)
+        self.__all_tables.add(table)
 
         i = -1
         while i + 1<len(self.__exp):
@@ -129,7 +129,7 @@ class expression(object):
                     working_table = main_table.pool.get(main_table._inherit_fields[fargs[0]][0])
                     if working_table not in self.__all_tables:
                         self.__joins.append('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]))
-                        self.__all_tables.append(working_table)
+                        self.__all_tables.add(working_table)
                     main_table = working_table
 
             field = working_table._columns.get(fargs[0], False)

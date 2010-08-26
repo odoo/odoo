@@ -2192,6 +2192,9 @@ class orm(orm_template):
         :param tables: list of table._table names enclosed in double quotes as returned
                         by _where_calc()
         :param where_clause: current list of WHERE clause params
+        :return: (table, where_clause, qualified_field) where ``table`` and ``where_clause`` are the updated
+                 versions of the parameters, and ``qualified_field`` is the qualified name of ``field``
+                 in the form ``table.field``, to be referenced in queries. 
         """
         current_table = self
         while field in current_table._inherit_fields and not field in current_table._columns:
@@ -2199,7 +2202,7 @@ class orm(orm_template):
             parent_table = self.pool.get(parent_model_name)
             self._inherits_join_add(parent_model_name, tables, where_clause)
             current_table = parent_table
-        return (tables, where_clause)
+        return (tables, where_clause, '"%s".%s' % (current_table._table, field))
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:
@@ -3824,11 +3827,8 @@ class orm(orm_template):
             elif (o in self._inherit_fields):
                 parent_obj = self.pool.get(self._inherit_fields[o][0])
                 if getattr(parent_obj._columns[o], '_classic_read'):
-                    # Allowing inherits'ed field for server side sorting
-                    inherited_tables, inherit_join = self._inherits_join_calc(o, tables, where_clause)
-                    if inherited_tables:
-                        inherited_sort_table = inherited_tables[-1]
-                        order_by = inherited_sort_table + '.' + order
+                    # Allowing inherits'ed field for server side sorting, if they can be sorted by the dbms
+                    inherited_tables, inherit_join, order_by = self._inherits_join_calc(o, tables, where_clause)
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
