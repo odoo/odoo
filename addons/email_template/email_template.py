@@ -123,7 +123,7 @@ class email_template(osv.osv):
 
     _columns = {
         'name' : fields.char('Name', size=100, required=True),
-        'object_name':fields.many2one('ir.model', 'Model'),
+        'object_name':fields.many2one('ir.model', 'Resource'),
         'model_int_name':fields.char('Model Internal Name', size=200,),
         'from_account':fields.many2one(
                    'email_template.account',
@@ -132,7 +132,7 @@ class email_template(osv.osv):
         'def_to':fields.char(
                  'Recipient (To)',
                  size=250,
-                 help="The default recipient of email." 
+                 help="The Recipient of email. " 
                  "Placeholders can be used here."),
         'def_cc':fields.char(
                  'CC',
@@ -151,12 +151,12 @@ class email_template(osv.osv):
                          " Placeholders can be used here."),
         'message_id':fields.char('Message-ID', 
                     size=250, 
-                    help="The Message-ID header value, if you need to"
-                         "specify it, for example to automatically recognize the replies later."
-                        " Placeholders can be used here."),
-        'track_campaign_item':fields.boolean('Track campaign items',
-                                help="Enable this if you want the outgoing e-mails to include a tracking"
-                                " marker that makes it possible to identify the replies an link them back to the campaign item"), 
+                    help="Specify the Message-ID SMTP header to use in outgoing emails. Please note that this overrides the Resource tracking option! Placeholders can be used here."),
+        'track_campaign_item':fields.boolean('Resource Tracking',
+                                help="Enable this is you wish to include a special \
+tracking marker in outgoing emails so you can identify replies and link \
+them back to the corresponding resource record. \
+This is useful for CRM leads for example"), 
         'lang':fields.char(
                    'Language',
                    size=250,
@@ -164,9 +164,9 @@ class email_template(osv.osv):
                    " Placeholders can be used here. "
                    "eg. ${object.partner_id.lang}"),
         'def_subject':fields.char(
-                  'Default Subject',
+                  'Subject',
                   size=200,
-                  help="The default subject of email."
+                  help="The subject of email."
                   " Placeholders can be used here.",
                   translate=True),
         'def_body_text':fields.text(
@@ -201,10 +201,12 @@ class email_template(osv.osv):
         'ref_ir_act_window':fields.many2one(
                     'ir.actions.act_window',
                     'Window Action',
+                    help="Action that will open this email template on Resource records", 
                     readonly=True),
         'ref_ir_value':fields.many2one(
                    'ir.values',
                    'Wizard Button',
+                   help="Button in the side bar of the form view of this Resource that will invoke the Window Action", 
                    readonly=True),
         'allowed_groups':fields.many2many(
                   'res.groups',
@@ -636,9 +638,13 @@ class email_template(osv.osv):
             'mail_type':'multipart/alternative',
         }
 
+        if template['message_id']:
+            # use provided message_id with placeholders
+            mailbox_values.update({'message_id': get_value(cursor, user, record_id, template['message_id'], template, context)})
+
         if template['track_campaign_item']:
             # get appropriate message-id 
-            mailbox_values.update(message_id=tools.misc.generate_tracking_message_id(record_id))
+            mailbox_values.update({'message_id': tools.misc.generate_tracking_message_id(record_id)})
 
         if not mailbox_values['account_id']:
             raise Exception("Unable to send the mail. No account linked to the template.")
