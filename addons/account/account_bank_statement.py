@@ -396,28 +396,15 @@ class account_bank_statement(osv.osv):
         return True
 
     def onchange_journal_id(self, cursor, user, statement_id, journal_id, context=None):
-        if not journal_id:
-            return {'value': {'currency': False}}
-
         account_journal_obj = self.pool.get('account.journal')
         res_users_obj = self.pool.get('res.users')
-        res_currency_obj = self.pool.get('res.currency')
-
         cursor.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s AND NOT state = %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cursor.fetchone()
         balance_start = res and res[0] or 0.0
-
-        currency_id = account_journal_obj.browse(cursor, user, journal_id,
-                context=context).currency.id
-        if not currency_id:
-            currency_id = res_users_obj.browse(cursor, user, user,
-                    context=context).company_id.currency_id.id
-        currency = res_currency_obj.name_get(cursor, user, [currency_id],
-                context=context)[0]
-        return {'value': {'balance_start': balance_start, 'currency': currency}}
+        return {'value': {'balance_start': balance_start}}
 
     def unlink(self, cr, uid, ids, context=None):
         stat = self.read(cr, uid, ids, ['state'])
