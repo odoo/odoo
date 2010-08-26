@@ -241,6 +241,18 @@ class marketing_campaign_segment(osv.osv):
         'sync_mode': lambda *a: 'create_date',
     }
 
+    def _check_model(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.campaign_id.object_id.model != obj.ir_filter_id.model_id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_model, _('Model of filter must be same as resource model of Campaign '), ['ir_filter_id,campaign_id']),
+    ]
+
     def state_running_set(self, cr, uid, ids, *args):
         segment = self.browse(cr, uid, ids[0])
         vals = {'state': 'running'}
