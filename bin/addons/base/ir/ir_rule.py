@@ -103,16 +103,18 @@ class ir_rule(osv.osv):
                             JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
                             WHERE u_rel.uid = %s) OR r.global)""", (model_name, uid))
         ids = map(lambda x: x[0], cr.fetchall())
-        for rule in self.browse(cr, uid, ids):
-            for group in rule.groups:
-                group_rule.setdefault(group.id, []).append(rule.id)
-            if not rule.groups:
-              global_rules.append(rule.id)
-        dom = self.domain_create(cr, uid, global_rules)
-        dom += ['|'] * (len(group_rule)-1)
-        for value in group_rule.values():
-            dom += self.domain_create(cr, uid, value)
-        return dom
+        if ids:
+            for rule in self.browse(cr, uid, ids):
+                for group in rule.groups:
+                    group_rule.setdefault(group.id, []).append(rule.id)
+                if not rule.groups:
+                  global_rules.append(rule.id)
+            dom = self.domain_create(cr, uid, global_rules)
+            dom += ['|'] * (len(group_rule)-1)
+            for value in group_rule.values():
+                dom += self.domain_create(cr, uid, value)
+            return dom
+        return []
 
     def clear_cache(self, cr, uid):
         cr.execute("""SELECT DISTINCT m.model

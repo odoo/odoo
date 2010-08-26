@@ -42,7 +42,7 @@ class multi_company_default(osv.osv):
         'company_dest_id': fields.many2one('res.company', 'Default Company', required=True,
             help='Company to store the current record'),
         'object_id': fields.many2one('ir.model', 'Object', required=True,
-            help='Object affect by this rules'),
+            help='Object affected by this rule'),
         'expression': fields.char('Expression', size=256, required=True,
             help='Expression, must be True to match\nuse context.get or user (browse)'),
         'field_id': fields.many2one('ir.model.fields', 'Field', help='Select field property'),
@@ -82,6 +82,7 @@ class res_company(osv.osv):
         'rml_footer2': fields.char('Report Footer 2', size=200),
         'rml_header' : fields.text('RML Header'),
         'rml_header2' : fields.text('RML Internal Header'),
+        'rml_header3' : fields.text('RML Internal Header'),
         'logo' : fields.binary('Logo'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
@@ -161,9 +162,17 @@ class res_company(osv.osv):
     def cache_restart(self, cr):
         self._get_company_children.clear_cache(cr.dbname)
 
-    def create(self, cr, *args, **argv):
+    def create(self, cr, uid, vals, context=None):
+        if not vals.get('name', False) or vals.get('partner_id', False):
+            self.cache_restart(cr)
+            return super(res_company, self).create(cr, uid, vals, context=context)
+        obj_partner = self.pool.get('res.partner')
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name']}, context=context)
+        vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
-        return super(res_company, self).create(cr, *args, **argv)
+        company_id = super(res_company, self).create(cr, uid, vals, context=context)
+        obj_partner.write(cr, uid, partner_id, {'company_id': company_id}, context=context)
+        return company_id
 
     def write(self, cr, *args, **argv):
         self.cache_restart(cr)
@@ -190,7 +199,26 @@ class res_company(osv.osv):
             tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
                     'rb') .read().encode('base64')
 
-
+    def _get_header3(self,cr,uid,ids):
+        return """
+<header>
+<pageTemplate>
+    <frame id="first" x1="25" y1="25" width="1070" height="717"/>
+    <pageGraphics>
+        <fill color="black"/>
+        <stroke color="black"/>
+        <setFont name="DejaVu Sans" size="8"/>
+        <drawString x="25" y="725"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <setFont name="DejaVu Sans Bold" size="10"/>
+        <drawString x="490" y="725">[[ company.partner_id.name ]]</drawString>
+        <setFont name="DejaVu Sans" size="8"/>
+        <drawRightString x="1065" y="725"><pageNumber/>/  </drawRightString>
+        <drawString x="1065" y="725"><pageCount/></drawString>
+        <stroke color="#000000"/>
+        <lines>25 720 1085 720</lines>
+    </pageGraphics>
+    </pageTemplate>
+</header>"""
     def _get_header2(self,cr,uid,ids):
         return """
         <header>
@@ -253,6 +281,7 @@ class res_company(osv.osv):
         'currency_id': _get_euro,
         'rml_header':_get_header,
         'rml_header2': _get_header2,
+        'rml_header3': _get_header3,
         'logo':_get_logo
     }
 

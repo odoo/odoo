@@ -174,6 +174,7 @@ class rml_parse(object):
         self.localcontext.update(context)
         self.rml_header = user.company_id.rml_header
         self.rml_header2 = user.company_id.rml_header2
+        self.rml_header3 = user.company_id.rml_header3
         self.logo = user.company_id.logo
         self.name = name
         self._node = None
@@ -293,10 +294,12 @@ class rml_parse(object):
         return text
 
     def _add_header(self, rml_dom, header='external'):
-        if header=='external':
-            rml_head =  self.rml_header
-        else:
+        if header=='internal':
             rml_head =  self.rml_header2
+        elif header=='internal landscape':
+            rml_head =  self.rml_header3
+        else:
+            rml_head =  self.rml_header
 
         head_dom = etree.XML(rml_head)
         for tag in head_dom:
@@ -321,7 +324,7 @@ class rml_parse(object):
                 self.localcontext.update({'name_space' :common.sxw_namespace})
 
 class report_sxw(report_rml, preprocess.report):
-    def __init__(self, name, table, rml=False, parser=rml_parse, header=True, store=False):
+    def __init__(self, name, table, rml=False, parser=rml_parse, header='external', store=False):
         report_rml.__init__(self, name, table, rml, '')
         self.name = name
         self.parser = parser
@@ -348,6 +351,7 @@ class report_sxw(report_rml, preprocess.report):
                     for key,arg in argv.items():
                         setattr(self, key, arg)
             report_xml = a(title=title, report_type=report_type, report_rml_content=rml, name=title, attachment=False, header=self.header)
+        report_xml.header = self.header
         report_type = report_xml.report_type
         if report_type in ['sxw','odt']:
             fnct = self.create_source_odt

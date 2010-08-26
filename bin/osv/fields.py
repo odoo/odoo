@@ -299,7 +299,7 @@ class many2one(_column):
     def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
         result = {}
         for id in ids:
-            result[id] = obj.datas[id][name]
+            result[id] = obj.datas[id].get(name, False)
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):

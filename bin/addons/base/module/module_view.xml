@@ -40,20 +40,21 @@
                 <search string="Search modules">
                     <group col='10' colspan='4'>
                         <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                        <filter icon="terp-dialog-close" string="Uninstalled" domain="[('state', 'in', ['uninstalled', 'uninstallable'])]"/>
+                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable'])]"/>
                         <filter icon="terp-gtk-jump-to-ltr" string="To be upgraded" domain="[('state','in', ['to upgrade', 'to remove', 'to install'])]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-camera_test" string="Certified" domain="[('certificate','&lt;&gt;', False)]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="category_id"/>
+                        <field name="description"/>
+                        <field name="dependencies_id"/>
                         <field name="state"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
-                        <filter string="Category" icon="terp-personal" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
                         <separator orientation="vertical"/>
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                </search>
@@ -148,6 +149,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state=='to upgrade' or state=='to install';red:state=='uninstalled';grey:state=='uninstallable';black:state=='installed'" string="Modules">
                     <field name="name"/>
+                    <field name="category_id"/>
                     <field name="shortdesc"/>
                     <field name="author"/>
                     <field name="installed_version"/>

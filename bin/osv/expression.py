@@ -71,7 +71,7 @@ class expression(object):
             raise ValueError('Bad domain expression: %r' % (exp,))
         self.__exp = exp
         self.__field_tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
-        self.__all_tables = set()
+        self.__all_tables = []
         self.__joins = []
         self.__main_table = None # 'root' table. set by parse()
         self.__DUMMY_LEAF = (1, '=', 1) # a dummy leaf that must not be parsed or sql generated
@@ -106,7 +106,7 @@ class expression(object):
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
         self.__main_table = table
-        self.__all_tables.add(table)
+        self.__all_tables.append(table)
 
         i = -1
         while i + 1<len(self.__exp):
@@ -129,7 +129,7 @@ class expression(object):
                     working_table = main_table.pool.get(main_table._inherit_fields[fargs[0]][0])
                     if working_table not in self.__all_tables:
                         self.__joins.append('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]))
-                        self.__all_tables.add(working_table)
+                        self.__all_tables.append(working_table)
                     main_table = working_table
 
             field = working_table._columns.get(fargs[0], False)
@@ -281,7 +281,7 @@ class expression(object):
                 else:
                     def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
                         if context is None:
-                            context = {}
+                            context = {}                        
                         c = context.copy()
                         c['active_test'] = False
                         dict_op = {'not in':'!=','in':'='}
@@ -289,10 +289,9 @@ class expression(object):
                             right = list(right)
                         if (not isinstance(right,list)) and operator in ['not in','in']:
                             operator = dict_op[operator]
-                            
                         res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)
                         if not res_ids:
-                             return ('id','=',0)
+                           return ('id','=',0)
                         else:
                             right = map(lambda x: x[0], res_ids)
                             return (left, 'in', right)
@@ -306,7 +305,6 @@ class expression(object):
                             if not isinstance(ele, basestring): 
                                 m2o_str = False
                                 break
-
                     if m2o_str:
                         self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
             else:

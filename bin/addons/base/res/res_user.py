@@ -93,13 +93,19 @@ class roles(osv.osv):
     _name = "res.roles"
     _columns = {
         'name': fields.char('Role Name', size=64, required=True),
-        'parent_id': fields.many2one('res.roles', 'Parent', select=True),
+        'parent_id': fields.many2one('res.roles', 'Parent', select=True,
+            help="The parent role can be used to construct a hierarchy of roles. Parent roles inherit from the roles of their descendants."),
         'child_id': fields.one2many('res.roles', 'parent_id', 'Children'),
         'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
-    }
-    _defaults = {
+        'description': fields.text('Description', help="Description of this role and where it is relevant in workflows and processes"),
+        'workflow_transition_ids': fields.one2many('workflow.transition', 'role_id', 'Workflow Transitions',
+            help="The workflow transitions associated with this role"),
     }
     def check(self, cr, uid, ids, role_id):
+        """Verifies that the role with id ``role_id`` is granted directly or indirectly to a
+           user that possesses the roles with ids ``ids``. Indirectly means that one of the
+           roles with id in ``ids`` is an ancestor role of the role with id ``role_id``.
+        """
         if role_id in ids:
             return True
         cr.execute('select parent_id from res_roles where id=%s', (role_id,))
@@ -254,6 +260,8 @@ class users(osv.osv):
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
+        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to display tips on each menu action"),
+
     }
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
@@ -343,6 +351,7 @@ class users(osv.osv):
         'company_ids': _get_companies,
         'groups_id': _get_group,
         'address_id': False,
+        'menu_tips':True
     }
 
     @tools.cache()
@@ -350,7 +359,7 @@ class users(osv.osv):
         return self._get_company(cr, uid, context=context, uid2=uid2)
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
+    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):

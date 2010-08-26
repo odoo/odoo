@@ -186,18 +186,18 @@ class browse_record(object):
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
             if col._prefetch:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                ffields = filter(lambda x: x[1]._classic_write, self._table._columns.items())
+                fields_to_fetch = filter(lambda x: x[1]._classic_write, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
                 # complete the field list with the inherited fields which are classic or many2one
-                ffields += filter(lambda x: x[1]._classic_write, inherits)
+                fields_to_fetch += filter(lambda x: x[1]._classic_write, inherits)
             # otherwise we fetch only that field
             else:
-                ffields = [(name, col)]
+                fields_to_fetch = [(name, col)]
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
-            # read the data
-            fffields = map(lambda x: x[0], ffields)
-            datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
+            # read the results
+            field_names = map(lambda x: x[0], fields_to_fetch)
+            field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
             if self._fields_process:
                 lang = self._context.get('lang', 'en_US') or 'en_US'
                 lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])
@@ -205,74 +205,68 @@ class browse_record(object):
                     raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
                 lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,lang_obj_ids[0])
 
-                for n, f in ffields:
-                    if f._type in self._fields_process:
-                        for d in datas:
-                            d[n] = self._fields_process[f._type](d[n])
-                            if d[n]:
-                                d[n].set_value(self._cr, self._uid, d[n], self, f, lang_obj)
+                for field_name, field_column in fields_to_fetch:
+                    if field_column._type in self._fields_process:
+                        for result_line in field_values:
+                            result_line[field_name] = self._fields_process[field_column._type](result_line[field_name])
+                            if result_line[field_name]:
+                                result_line[field_name].set_value(self._cr, self._uid, result_line[field_name], self, field_column, lang_obj)
 
-
-            if not datas:
+            if not field_values:
                 # Where did those ids come from? Perhaps old entries in ir_model_dat?
-                self.__logger.warn("No datas found for ids %s in %s",
-                                   ids, self)
+                self.__logger.warn("No field_values found for ids %s in %s", ids, self)
                 raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
-            for data in datas:
-                if len(str(data['id']).split('-')) > 1:
-                    data['id'] = int(str(data['id']).split('-')[0])
+            for result_line in field_values:
                 new_data = {}
-                for n, f in ffields:
-                    if f._type in ('many2one', 'one2one'):
-                        if data[n]:
-                            obj = self._table.pool.get(f._obj)
-                            compids = False
-                            if type(data[n]) in (type([]),type( (1,) )):
-                                ids2 = data[n][0]
+                for field_name, field_column in fields_to_fetch:
+                    if field_column._type in ('many2one', 'one2one'):
+                        if result_line[field_name]:
+                            obj = self._table.pool.get(field_column._obj)
+                            if isinstance(result_line[field_name], (list,tuple)):
+                                value = result_line[field_name][0]
                             else:
-                                ids2 = data[n]
-                            if ids2:
+                                value = result_line[field_name]
+                            if value:
                                 # FIXME: this happen when a _inherits object
                                 #        overwrite a field of it parent. Need
                                 #        testing to be sure we got the right
                                 #        object and not the parent one.
-                                if not isinstance(ids2, browse_record):
-                                    new_data[n] = browse_record(self._cr,
-                                        self._uid, ids2, obj, self._cache,
+                                if not isinstance(value, browse_record):
+                                    new_data[field_name] = browse_record(self._cr,
+                                        self._uid, value, obj, self._cache,
                                         context=self._context,
                                         list_class=self._list_class,
                                         fields_process=self._fields_process)
                                 else:
-                                    new_data[n] = ids2
+                                    new_data[field_name] = value
                             else:
-                                new_data[n] = browse_null()
+                                new_data[field_name] = browse_null()
                         else:
-                            new_data[n] = browse_null()
-                    elif f._type in ('one2many', 'many2many') and len(data[n]):
-                        new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
-                    elif f._type in ('reference'):
-                        if data[n]:
-                            if isinstance(data[n], browse_record):
-                                new_data[n] = data[n]
+                            new_data[field_name] = browse_null()
+                    elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
+                        new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(field_column._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
+                    elif field_column._type in ('reference'):
+                        if result_line[field_name]:
+                            if isinstance(result_line[field_name], browse_record):
+                                new_data[field_name] = result_line[field_name]
                             else:
-                                ref_obj, ref_id = data[n].split(',')
+                                ref_obj, ref_id = result_line[field_name].split(',')
                                 ref_id = long(ref_id)
                                 obj = self._table.pool.get(ref_obj)
-                                compids = False
-                                new_data[n] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                new_data[field_name] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
                         else:
-                            new_data[n] = browse_null()
+                            new_data[field_name] = browse_null()
                     else:
-                        new_data[n] = data[n]
-                self._data[data['id']].update(new_data)
+                        new_data[field_name] = result_line[field_name]
+                self._data[result_line['id']].update(new_data)
 
         if not name in self._data[self._id]:
             #how did this happen?
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
-                    "Ffields: %s, datas: %s"%(fffields, datas))
+                    "Fields to fetch: %s, Field values: %s"%(field_names, field_values))
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
-                    "Data: %s, Table: %s"%(self._data[self._id], self._table))
+                    "Cached: %s, Table: %s"%(self._data[self._id], self._table))
             raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
         return self._data[self._id][name]
 
@@ -1050,9 +1044,10 @@ class orm_template(object):
     def default_get(self, cr, uid, fields_list, context=None):
         """
         Returns default values for the fields in fields_list.
+
         :param fields_list: list of fields to get the default values for (example ['field1', 'field2',])
         :type fields_list: list
-        :param context: usual context dictionary - it may contains keys in the form ``default_XXX`` 
+        :param context: usual context dictionary - it may contains keys in the form ``default_XXX``,
                         where XXX is a field name to set or override a default value.
         :return: dictionary of the default values (set on the object model class, through user preferences, or in the context)
         """
@@ -1926,12 +1921,12 @@ class orm_memory(orm_template):
         self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
-        default = []
-        for f in self._columns.keys():
-            if not f in vals:
-                default.append(f)
-        if len(default):
-            vals.update(self.default_get(cr, user, default, context))
+
+        # override defaults with the provided values, never allow the other way around
+        defaults = self.default_get(cr, user, [], context)
+        defaults.update(vals)
+        vals = defaults
+
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -2085,13 +2080,21 @@ class orm(orm_template):
         if not fields:
             fields = self._columns.keys()
 
-        (where_clause, where_params, tables) = self._where_calc(cr, uid, domain, context=context)
-        dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, 'read', context=context)
-        where_clause = where_clause + dom[0]
-        where_params = where_params + dom[1]
-        for t in dom[2]:
-            if t not in tables:
-                tables.append(t)
+        # compute the where, order by, limit and offset clauses
+        (where_clause, where_clause_params, tables) = self._where_calc(cr, uid, domain, context=context)
+
+        # apply direct ir.rules from current model
+        self._apply_ir_rules(cr, uid, where_clause, where_clause_params, tables, 'read', context=context)
+
+        # then apply the ir.rules from the parents (through _inherits), adding the appropriate JOINs if needed
+        for inherited_model in self._inherits:
+            previous_tables = list(tables)
+            if self._apply_ir_rules(cr, uid, where_clause, where_clause_params, tables, 'read', model_name=inherited_model, context=context):
+                # if some rules were applied, need to add the missing JOIN for them to make sense, passing the previous
+                # list of table in case the inherited table was not in the list before (as that means the corresponding 
+                # JOIN(s) was(were) not present)
+                self._inherits_join_add(inherited_model, previous_tables, where_clause)
+                tables = list(set(tables).union(set(previous_tables)))
 
         # Take care of adding join(s) if groupby is an '_inherits'ed field
         groupby_list = groupby
@@ -2135,7 +2138,7 @@ class orm(orm_template):
             gb = ' group by '+groupby
         else:
             gb = ''
-        cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + gb + limit_str + offset_str, where_params)
+        cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + gb + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
@@ -2144,7 +2147,6 @@ class orm(orm_template):
             alldata[r['id']] = r
             del r['id']
         data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or ['id'], context=context)
-        today = datetime.date.today()
         for d in data:
             if groupby:
                 d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
@@ -2153,33 +2155,49 @@ class orm(orm_template):
                         d['__context'] = {'group_by':groupby_list[1:]}
             if groupby and fget.has_key(groupby):
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
-                   dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
-                   days = calendar.monthrange(dt.year, dt.month)[1]
+                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
+                    days = calendar.monthrange(dt.year, dt.month)[1]
 
-                   d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
-                   d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
-                                    (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
+                    d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
+                    d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
+                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
         return data
 
+    def _inherits_join_add(self, parent_model_name, tables, where_clause):
+        """
+        Add missing table SELECT and JOIN clause for reaching the parent table (no duplicates)
+
+        :param parent_model_name: name of the parent model for which the clauses should be added
+        :param tables: list of table._table names enclosed in double quotes as returned
+                       by _where_calc()
+        :param where_clause: current list of WHERE clause params
+        """
+        inherits_field = self._inherits[parent_model_name]
+        parent_model = self.pool.get(parent_model_name)
+        parent_table_name = parent_model._table
+        quoted_parent_table_name = '"%s"' % parent_table_name
+        if quoted_parent_table_name not in tables:
+            tables.append(quoted_parent_table_name)
+            where_clause.append('("%s".%s = %s.id)' % (self._table, inherits_field, parent_table_name))
+        return (tables, where_clause)
+
     def _inherits_join_calc(self, field, tables, where_clause):
         """
-            Adds missing table select and join clause(s) for reaching
-            the field coming from an '_inherits' parent table.
+        Adds missing table select and join clause(s) for reaching
+        the field coming from an '_inherits' parent table (no duplicates).
 
-            :param tables: list of table._table names enclosed in double quotes as returned
-                           by _where_calc()
-
+        :param tables: list of table._table names enclosed in double quotes as returned
+                        by _where_calc()
+        :param where_clause: current list of WHERE clause params
         """
         current_table = self
         while field in current_table._inherit_fields and not field in current_table._columns:
-            parent_table = self.pool.get(current_table._inherit_fields[field][0])
-            parent_table_name = parent_table._table
-            if '"%s"'%parent_table_name not in tables:
-                tables.append('"%s"'%parent_table_name)
-                where_clause.append('(%s.%s = %s.id)' % (current_table._table, current_table._inherits[parent_table._name], parent_table_name))
+            parent_model_name = current_table._inherit_fields[field][0]
+            parent_table = self.pool.get(parent_model_name)
+            self._inherits_join_add(parent_model_name, tables, where_clause)
             current_table = parent_table
         return (tables, where_clause)
 
@@ -3376,7 +3394,9 @@ class orm(orm_template):
                     if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
                         default_values[dv] = [(6, 0, default_values[dv])]
 
-            vals.update(default_values)
+            # override defaults with the provided values, never allow the other way around
+            default_values.update(vals)
+            vals = default_values
 
         tocreate = {}
         for v in self._inherits:
@@ -3706,6 +3726,29 @@ class orm(orm_template):
             raise except_orm(_('AccessError'), _('Bad query.'))
         return True
 
+    def _apply_ir_rules(self, cr, uid, where_clause, where_clause_params, tables, mode='read', model_name=None, context=None):
+        """Add what's missing in ``where_clause``, ``where_params``, ``tables`` to implement
+           all appropriate ir.rules (on the current object but also from it's _inherits parents)
+
+           :param where_clause: list with current elements of the WHERE clause (strings)
+           :param where_clause_params: list with parameters for ``where_clause``
+           :param tables: list with double-quoted names of the tables that are joined
+                          in ``where_clause``
+           :param model_name: optional name of the model whose ir.rules should be applied (default:``self._name``)
+                              This could be useful for inheritance for example, but there is no provision to include
+                              the appropriate JOIN for linking the current model to the one referenced in model_name. 
+           :return: True if additional clauses where applied.
+        """
+        added_clause, added_params, added_tables  = self.pool.get('ir.rule').domain_get(cr, uid, model_name or self._name, mode, context=context)
+        if added_clause:
+            where_clause += added_clause
+            where_clause_params += added_params
+            for table in added_tables:
+                if table not in tables:
+                    tables.append(table)
+            return True
+        return False
+
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
         """
@@ -3754,12 +3797,19 @@ class orm(orm_template):
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
         (where_clause, where_clause_params, tables) = self._where_calc(cr, user, args, context=context)
-        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
-        where_clause += dom[0]
-        where_clause_params += dom[1]
-        for t in dom[2]:
-            if t not in tables:
-                tables.append(t)
+
+        # apply direct ir.rules from current model
+        self._apply_ir_rules(cr, user, where_clause, where_clause_params, tables, 'read', context=context)
+
+        # then apply the ir.rules from the parents (through _inherits), adding the appropriate JOINs if needed
+        for inherited_model in self._inherits:
+            previous_tables = list(tables)
+            if self._apply_ir_rules(cr, user, where_clause, where_clause_params, tables, 'read', model_name=inherited_model, context=context):
+                # if some rules were applied, need to add the missing JOIN for them to make sense, passing the previous
+                # list of table in case the inherited table was not in the list before (as that means the corresponding
+                # JOIN(s) was(were) not present)
+                self._inherits_join_add(inherited_model, previous_tables, where_clause)
+                tables = list(set(tables).union(set(previous_tables)))
 
         where = where_clause
 
@@ -3775,13 +3825,10 @@ class orm(orm_template):
                 parent_obj = self.pool.get(self._inherit_fields[o][0])
                 if getattr(parent_obj._columns[o], '_classic_read'):
                     # Allowing inherits'ed field for server side sorting
-                    inherited_tables, inherit_join = self._inherits_join_calc(o,[],[]) # dry run to determine parent
+                    inherited_tables, inherit_join = self._inherits_join_calc(o, tables, where_clause)
                     if inherited_tables:
-                        inherited_sort_table = inherited_tables[0]
+                        inherited_sort_table = inherited_tables[-1]
                         order_by = inherited_sort_table + '.' + order
-                        if inherited_sort_table not in tables:
-                            # add the missing join
-                            self._inherits_join_calc(o, tables, where_clause)
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
