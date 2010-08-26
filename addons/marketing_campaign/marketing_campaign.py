@@ -549,6 +549,33 @@ class marketing_campaign_workitem(osv.osv):
                 res[wi.id] = ng[0][1]
         return res
 
+    def _resource_search(self, cr, uid, obj, name, args, domain=None, context=None):
+        """Returns id of workitem whose resource_name matches  with the given name"""
+        if context is None:
+            context = {}
+        if not len(args):
+            return []
+
+        condition = []
+        final_ids = []
+
+        cr.execute("""select w.id, w.res_id, m.model  \
+                                from marketing_campaign_workitem w \
+                                    left join marketing_campaign_activity a on (a.id=w.activity_id)\
+                                    left join marketing_campaign c on (c.id=a.campaign_id)\
+                                    left join ir_model m on (m.id=c.object_id)
+                                    """)
+        res = cr.fetchall()
+        for id, res_id, model in res:
+            model_pool = self.pool.get(model)
+            for arg in args:
+                if arg[1] == 'ilike':
+                    condition.append((model_pool._rec_name, 'ilike', arg[2]))
+            res_ids = model_pool.search(cr, uid, condition, context=context)
+            if res_id in res_ids:
+                final_ids.append(id)
+        return [('id', 'in', final_ids)]
+
     _columns = {
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment', readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity','Activity',
@@ -556,9 +583,9 @@ class marketing_campaign_workitem(osv.osv):
         'campaign_id': fields.related('activity_id', 'campaign_id',
              type='many2one', relation='marketing.campaign', string='Campaign', readonly=True),
         'object_id': fields.related('activity_id', 'campaign_id', 'object_id',
-             type='many2one', relation='ir.model', string='Ressource', select=1, readonly=True),
+             type='many2one', relation='ir.model', string='Resource', select=1, readonly=True),
         'res_id': fields.integer('Resource ID', select=1, readonly=True),
-        'res_name': fields.function(_res_name_get, method=True, string='Resource Name', type="char", size=64),
+        'res_name': fields.function(_res_name_get, method=True, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
         'state': fields.selection([('todo', 'To Do'),
