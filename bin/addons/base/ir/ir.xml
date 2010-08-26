@@ -1392,12 +1392,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Translations">
+                    <field name="lang"/>
+                    <field name="type"/>
                     <field name="name"/>
                     <field name="res_id"/>
-                    <field name="type"/>
-                    <field name="lang"/>
-                    <field name="src"/>
-                    <field name="value"/>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2">
+		                    <separator string="Source Term" colspan="2"/>
+		                    <field name="src" nolabel="1" height="400"/>
+	                    </group>
+	                    <group colspan="2" col="2">
+		                    <separator string="Tranlsation Term" colspan="2"/>
+		                    <field name="value" nolabel="1" height="400"/>
+		                </group>
+	                </group>
                 </form>
             </field>
         </record>
