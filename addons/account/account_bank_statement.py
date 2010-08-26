@@ -405,8 +405,8 @@ class account_bank_statement(osv.osv):
 
         cursor.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
-                WHERE journal_id = %s \
-                ORDER BY date DESC,id DESC LIMIT 1', (journal_id,))
+                WHERE journal_id = %s AND NOT state = %s \
+                ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cursor.fetchone()
         balance_start = res and res[0] or 0.0
 
