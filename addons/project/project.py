@@ -792,32 +792,7 @@ class config_compute_remaining(osv.osv_memory):
 
 config_compute_remaining()
 
-class message(osv.osv):
-    _name = "project.message"
-    _description = "Message"
 
-    _columns = {
-        'subject': fields.char('Subject', size=128, required="True"),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
-        'date': fields.date('Date', required=1),
-        'user_id': fields.many2one('res.users', 'User', required="True"),
-        'description': fields.text('Description'),
-    }
-
-    def _default_project(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if 'project_id' in context and context['project_id']:
-            return int(context['project_id'])
-        return False
-
-    _defaults = {
-        'user_id': lambda self,cr,uid,ctx: uid,
-        'date': time.strftime('%Y-%m-%d'),
-        'project_id': _default_project
-    }
-
-message()
 class account_analytic_account(osv.osv):
 
     _inherit = 'account.analytic.account'
