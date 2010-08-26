@@ -874,7 +874,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line" editable="top" on_write="on_create_write">
+                <tree colors="red:state in ('draft');black:state in ('valid')" string="Account Entry Line" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"/>
                     <field name="move_id"/>
@@ -926,7 +926,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Accounting Documents"/>
                                 <field name="invoice" readonly="True"/>
-                                <field name="move_id" readonly="True"/>
+                                <field name="move_id" required="False"/>
                                 <field name="statement_id" readonly="True"/>
                             </group>
 
@@ -1059,7 +1059,7 @@
                         <field name="date" select='1'/>
                         <field name="account_id" select='1'/>
                         <field name="partner_id" select='1'>
-                            <filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-partner" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
+                            <filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
                         </field>
                     </group>
                     <newline/>
@@ -1775,7 +1775,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line">
+                <tree colors="red:state in ('draft');black:state in ('valid')" string="Account Entry Line">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="statement_id" string="St."/>

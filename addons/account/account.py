@@ -401,9 +401,6 @@ class account_account(osv.osv):
             'manage this. So if you import from another software system you may have to use the rate at date. ' \
             'Incoming transactions always use the rate at date.', \
             required=True),
-        'check_history': fields.boolean('Display History',
-            help="Check this box if you want to print all entries when printing the General Ledger, "\
-            "otherwise it will only print its balance."),
         'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
     }
 
@@ -411,7 +408,6 @@ class account_account(osv.osv):
         'type': lambda *a : 'view',
         'reconcile': lambda *a: False,
         'active': lambda *a: True,
-        'check_history': lambda *a: True,
         'currency_mode': lambda *a: 'current',
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
@@ -599,7 +595,7 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True,help="Name of the journal"),
         'code': fields.char('Code', size=16,required=True,help="Code of the journal"),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'),('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'),('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
