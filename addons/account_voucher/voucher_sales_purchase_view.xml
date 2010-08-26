@@ -8,18 +8,17 @@
             <field name="arch" type="xml">
                 <form string="Sales Receipt">
                     <group col="6" colspan="4">
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, type, journal_id)" string="Customer"/>
-                        <field name="journal_id"  domain="[('type','=','sale')]" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, journal_id)" string="Customer"/>
+                        <field name="journal_id"  domain="[('type','=','sale')]" widget="selection" on_change="onchange_journal(journal_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="4"/>
-                        <field name="date" select="1" on_change="onchange_date(date)"/>
-                        <field name="type" on_change="onchange_journal(journal_id,type)" invisible="True"/> <!-- Type is given by menu, not by journal ? yes-->
+                        <field name="date" on_change="onchange_date(date)"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Information">
-                            <field name="payment_ids" on_change="onchange_price(payment_ids, tax_id, parent.partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, parent.partner_id)" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Sales Lines" editable="bottom">
-                                    <field name="account_id" domain="[('user_type_type','=','income')]" widget="selection"/>
+                                    <field name="account_id" domain="[('user_type.report_type','=','income')]" widget="selection"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="account_analytic_id" groups="base.group_extended"/>
@@ -32,10 +31,10 @@
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
-                                    <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id, type)" required="1"/>
+                                    <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
                                     <field name="account_id" 
-                                         attrs="{'invisible':[('type','!=','view'),('pay_now','!=','pay_now')]}"
-                                          domain="[('user_type_type','=','asset'), ('type','!=','view')]"/>
+                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"
+                                          domain="[('user_type.report_type','=','asset')]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
                                     <field name="reference"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
@@ -43,8 +42,8 @@
                                 </group>
                                 <group col="3" colspan="1">
                                     <separator string="Total" colspan="3"/>
-                                    <field name="tax_id" on_change="onchange_price(payment_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" on_change="onchange_price(payment_ids, tax_id, partner_id)" nolabel="1"/>
-                                    <field name="amount" string="Total"/><button icon="terp-stock_format-scientific" name="compute_tax" attrs="{'invisible':[('state','!=','draft')]}" colspan="1" string="Compute TAX" type="object"/>
+                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" on_change="onchange_price(line_ids, tax_id, partner_id)" nolabel="1"/>
+                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
@@ -60,9 +59,8 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
-                        <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma,recheck"  icon="gtk-cancel"/>
+                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
+                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
@@ -99,12 +97,12 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Bill Information">
-                            <field name="payment_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Voucher Lines" editable="bottom">
                                     <field name="stype" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="ref" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="amount"/>
-                                    <field name="account_id" domain="[('user_type_type','=','expense'), ('type','!=','view')]"/>
+                                    <field name="account_id" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"/>
                                     <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="account_analytic_id"/>
                                 </tree>
@@ -133,8 +131,7 @@
                     <group col="10" colspan="4">
                         <field name="state"/>
                         <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
-                        <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma,recheck"  icon="gtk-cancel"/>
+                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>

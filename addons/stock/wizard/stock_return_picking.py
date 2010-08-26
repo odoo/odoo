@@ -30,27 +30,31 @@ class stock_return_picking(osv.osv_memory):
     _description = 'Return Picking'
 
     def default_get(self, cr, uid, fields, context):
-        """ 
+        """
          To get default values for the object.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param fields: List of fields for which we want default values 
-         @param context: A standard dictionary 
-         @return: A dictionary which of fields with values. 
-        """ 
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+         @return: A dictionary with default values for all field in ``fields``
+        """
         res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')
         pick = pick_obj.browse(cr, uid, record_id)
-        for m in [line for line in pick.move_lines]:
-            res['return%s'%(m.id)] = m.product_qty
-            if pick.invoice_state=='invoiced':
-                res['invoice_state'] = '2binvoiced'
-            else:
-                res['invoice_state'] = 'none'
+        if pick:
+            if 'invoice_state' in fields:
+                if pick.invoice_state=='invoiced':
+                    res['invoice_state'] = '2binvoiced'
+                else:
+                    res['invoice_state'] = 'none'
+            for line in pick.move_lines:
+                return_id = 'return%s'%(line.id)
+                if return_id in fields:
+                    res[return_id] = line.product_qty
         return res
-    
+
     def view_init(self, cr, uid, fields_list, context=None):
         """ 
          Creates view dynamically and adding fields at runtime.
