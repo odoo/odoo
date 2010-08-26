@@ -48,6 +48,7 @@
         'module/module_web_view.xml',
         'module/module_data.xml',
         'module/module_report.xml',
+        'module/wizard/base_module_import_view.xml',
         'res/res_request_view.xml',
         'res/res_lang_view.xml',
         'res/res_log_view.xml',
@@ -62,9 +63,11 @@
         'res/partner/wizard/partner_clear_ids_view.xml',
         'res/partner/wizard/partner_wizard_ean_check_view.xml',
         'res/partner/partner_data.xml',
+
         'res/ir_property_view.xml',
         'security/base_security.xml',
         'maintenance/maintenance_view.xml',
+
         'security/ir.model.access.csv'
 
     ],
