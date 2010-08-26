@@ -90,7 +90,7 @@
             <field name="arch" type="xml">
                 <form string="Vendor Bills">
                     <group col="6" colspan="4">
-                        <field name="partner_id" string="Vendor" on_change="onchange_partner_id(partner_id, journal_id, amount)"/>
+                        <field name="partner_id" required="1" string="Vendor" on_change="onchange_partner_id(partner_id, journal_id, amount)"/>
                         <field name="journal_id" domain="[('type','=','purchase')]" widget="selection" select="1" on_change="onchange_journal(journal_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="4"/>

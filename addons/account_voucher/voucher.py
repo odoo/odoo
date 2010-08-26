@@ -222,8 +222,8 @@ class account_voucher(osv.osv):
                 'date_due':due_date
             })
         return {'value':default}
-        
-    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id=False, price=0.0, context={}):
+    
+    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id=False, price=0.0, ttype=False, context={}):
         """price
         Returns a dict that contains new values and context
     
@@ -273,8 +273,14 @@ class account_voucher(osv.osv):
         })
         if journal.type not in ('cash', 'bank'):
             return default
-
-        ids = move_line_pool.search(cr, uid, [('account_id.type','in', ('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
+        
+        account_type = 'receivable'
+        if ttype == 'payment':
+            account_type = 'payable'
+        else:
+            account_type = 'receivable'
+            
+        ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
         moves = move_line_pool.browse(cr, uid, ids)
         total_credit = price or 0.0
         total_debit = 0.0
@@ -308,7 +314,11 @@ class account_voucher(osv.osv):
                 default['value']['line_cr_ids'].append(rs)
             else:
                 default['value']['line_dr_ids'].append(rs)
+            
+            if ttype == 'payment' and len(default['value']['line_cr_ids']) > 0:
                 default['value']['pre_line'] = 1
+            elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
+                default['value']['pre_line'] = 1                
 
         return default
 
@@ -384,6 +394,14 @@ class account_voucher(osv.osv):
         }
 
     def action_move_line_create(self, cr, uid, ids, *args):
+    
+        def _get_payment_term_lines(term_id, amount):
+            term_pool = self.pool.get('account.payment.term')
+            if term_id and amount:
+                terms = term_pool.compute(cr, uid, term_id, amount)
+                return terms
+            return False
+    
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
         analytic_pool = self.pool.get('account.analytic.line')
@@ -412,7 +430,7 @@ class account_voucher(osv.osv):
             }
             move_id = move_pool.create(cr, uid, move)
             company_currency = inv.account_id.company_id.currency_id.id
-
+            
             #create the first line manually
             debit = 0.0
             credit = 0.0
@@ -421,20 +439,40 @@ class account_voucher(osv.osv):
                 credit = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
             elif inv.type in ('sale', 'receipt'):
                 debit = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
-            move_line = {
-                'name':inv.name or '/',
-                'debit':debit,
-                'credit':credit,
-                'account_id':inv.account_id.id,
-                'move_id':move_id ,
-                'journal_id':inv.journal_id.id,
-                'period_id':inv.period_id.id,
-                'partner_id':inv.partner_id.id,
-                'currency_id':inv.currency_id.id,
-                'date':inv.date
-            }
-
-            master_line = move_line_pool.create(cr, uid, move_line)
+            
+            if inv.type == 'purchase' and inv.term_id and _get_payment_term_lines(inv.term_id.id, credit or debit):
+                terms = _get_payment_term_lines(inv.term_id.id, credit or debit)
+                for term in terms:
+                    due_date = term[0]
+                    amount = term[1]
+                    move_line = {
+                        'name':inv.name or '/',
+                        'debit':0.0,
+                        'credit':amount,
+                        'date_maturity':due_date,
+                        'account_id':inv.account_id.id,
+                        'move_id':move_id ,
+                        'journal_id':inv.journal_id.id,
+                        'period_id':inv.period_id.id,
+                        'partner_id':inv.partner_id.id,
+                        'currency_id':inv.currency_id.id,
+                        'date':inv.date
+                    }
+                    master_line = move_line_pool.create(cr, uid, move_line)
+            else:
+                move_line = {
+                    'name':inv.name or '/',
+                    'debit':debit,
+                    'credit':credit,
+                    'account_id':inv.account_id.id,
+                    'move_id':move_id ,
+                    'journal_id':inv.journal_id.id,
+                    'period_id':inv.period_id.id,
+                    'partner_id':inv.partner_id.id,
+                    'currency_id':inv.currency_id.id,
+                    'date':inv.date
+                }
+                master_line = move_line_pool.create(cr, uid, move_line)
 
             rec_list_ids = []
             line_total = debit - credit
@@ -581,7 +619,7 @@ class account_voucher_line(osv.osv):
         return res
 
     _columns = {
-        'voucher_id':fields.many2one('account.voucher', 'Voucher', required=1),
+        'voucher_id':fields.many2one('account.voucher', 'Voucher', required=1, ondelete='cascade'),
         'name':fields.char('Description', size=256),
         'account_id':fields.many2one('account.account','Account', required=True),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
@@ -650,7 +688,11 @@ class account_voucher_line(osv.osv):
         elif journal.type in ('purchase', 'expense', 'sale_refund'):
             account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
         elif partner_id:
-            account_id = partner_pool.browse(cr, user, partner_id, context=context).property_account_receivable.id
+            partner = partner_pool.browse(cr, user, partner_id, context=context)
+            if context.get('type') == 'payment':
+                account_id = partner.property_account_payable.id
+            elif context.get('type') == 'receipt':
+                account_id = partner.property_account_receivable.id
 
         if (not account_id) and 'account_id' in fields_list:
             raise osv.except_osv(_('Invalid Error !'), _('Please change partner and try again !'))

@@ -8,24 +8,50 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, type, journal_id)"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, type)" string="Customer"/>
+                        <field name="journal_id"
+                            domain="[('type','in',['bank', 'cash'])]"
+                            widget="selection" select="1"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount)"
+                            string="Payment Method"/>
+                        <field name="amount"/>
+                        <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="4"/>
-                        <field name="journal_id" domain="[('type','in',['bank', 'cash'])]" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
-                        <field name="account_id" domain="[('type','=','other')]" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
-                        <field name="number"/>
+                        <field name="account_id"
+                            domain="[('type','=','other')]"
+                            widget="selection"
+                            on_change="onchange_account(account_id)"
+                            invisible="True"/>
+                        <field name="pre_line" invisible="1"/>
                         <field name="type" invisible="True"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_ids" on_change="onchange_price(line_ids, False, False)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, False, False)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
                                 <tree string="Payment Lines" editable="bottom">
-                                    <field name="amount"/>
-                                    <field name="account_id"/>
-                                    <field name="account_analytic_id"/>
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                        on_change="onchange_move_line_id(move_line_id)"
+                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        />
+                                    <field name="account_id"  domain="[('type','=','payable')]"/>
+                                    <field name="date_original" readonly="1"/>
+                                    <field name="date_due" readonly="1"/>
+                                    <field name="amount_original" readonly="1"/>
+                                    <field name="amount_unreconciled" sum="Open Balance" readonly="1"/>
+                                    <field name="amount" sum="Payment"/>
+                                </tree>
+                            </field>
+                            <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
+                                <tree string="Credits" editable="bottom">
+                                    <field name="move_line_id"/>
+                                    <field name="account_id"  domain="[('type','=','receivable')]"/>
+                                    <field name="date_original"/>
+                                    <field name="amount_original"/>
+                                    <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
-                                <separator string="Narration" colspan="2"/>
+                                <separator string="Internal Notes" colspan="2"/>
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
@@ -33,7 +59,6 @@
                                 <field name="reference" select="1"/>
                                 <field name="date" select="1" on_change="onchange_date(date)"/>
                                 <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
-                                <field name="type" on_change="onchange_journal(journal_id,type)"/>
                             </group>
                         </page>
                         <page string="Journal Items">
@@ -76,7 +101,7 @@
             <field name="arch" type="xml">
                 <form string="Sales Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount)" string="Customer"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, type)" string="Customer"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
@@ -95,7 +120,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
+                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
                                 <tree string="Invoices and outstanding transactions" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"

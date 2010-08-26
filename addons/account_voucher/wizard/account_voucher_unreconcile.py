@@ -46,9 +46,9 @@ class account_voucher_unreconcile(osv.osv_memory):
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
-                    recs = [line.reconcile_id.id]
+                    recs += [line.reconcile_id.id]
                 if line.reconcile_partial_id:
-                    recs = [line.reconcile_partial_id.id]
+                    recs += [line.reconcile_partial_id.id]
                 
             #for rec in recs:
             reconcile_pool.unlink(cr, uid, recs)
