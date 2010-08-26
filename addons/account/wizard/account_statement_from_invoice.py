@@ -64,10 +64,10 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 amount = -line.credit
 
             if line.amount_currency:
-                amount = currency_obj.compute(cr, user, line.currency_id.id,
+                amount = currency_obj.compute(cr, uid, line.currency_id.id,
                     statement.currency.id, line.amount_currency, context=ctx)
             elif (line.invoice and line.invoice.currency_id.id <> statement.currency.id):
-                amount = currency_obj.compute(cr, user, line.invoice.currency_id.id,
+                amount = currency_obj.compute(cr, uid, line.invoice.currency_id.id,
                     statement.currency.id, amount, context=ctx)
 
             reconcile_id = statement_reconcile_obj.create(cr, uid, {
