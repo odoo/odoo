@@ -75,8 +75,14 @@ class project_close_task(osv.osv_memory):
     }
 
     def close(self, cr, uid, ids, context=None):
+        data=self.read(cr,uid,ids)[0]
+        description=""
+        user_name= self.pool.get('res.users').browse(cr, uid, uid).name
+        description=user_name +"   At   " + time.strftime('%Y-%m-%d %H:%M:%S')
+        description+"\n"+"======================="
+        description=description+ "\n "+"Closed task:\n"+data['description']
         if 'task_id' in context:
-            self.pool.get('project.task').write(cr, uid, [context['task_id']], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+            self.pool.get('project.task').write(cr, uid, [context['task_id']], {'description':description,'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         return {}
 
     def confirm(self, cr, uid, ids, context=None):
