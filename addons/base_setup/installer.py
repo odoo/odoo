@@ -110,6 +110,12 @@ class base_setup_installer(osv.osv_memory):
             return ['lunch','idea','survey']
         return None
 
+    def _if_account(self, cr, uid, ids, context=None):
+        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
+               .view == 'simple':
+            return ['account_voucher']
+        return None
+
     def onchange_moduleselection(self, cr, uid, ids, *args):
         closed, total = self.get_current_progress(cr, uid)
 
