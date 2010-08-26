@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import wizard_update_module # base_module_update
 import wizard_module_upgrade
 import wizard_configuration
 import wizard_module_lang_install
