@@ -71,17 +71,24 @@ class project_close_task(osv.osv_memory):
     _defaults = {
        'manager_email': _get_manager_email,
        'partner_email': _get_partner_email,
-       'description': _get_desc,
     }
 
     def close(self, cr, uid, ids, context=None):
-        data=self.read(cr,uid,ids)[0]
-        description=""
-        user_name= self.pool.get('res.users').browse(cr, uid, uid).name
-        description=user_name +" At " + time.strftime('%Y-%m-%d %H:%M:%S')
-        description=description+"\n"+"======================="+ "\n"+"Closed task:\n"+data['description']
+        data = self.read(cr,uid,ids)[0]
+        notes=data['description'] or ''
+        task_pool = self.pool.get('project.task')
+        user_name = self.pool.get('res.users').browse(cr, uid, uid).name
+        description = _("Closed By ") + user_name + _(" At ") + time.strftime('%Y-%m-%d %H:%M:%S')
+        description += "\n" + "=======================" + "\n"  + notes
         if 'task_id' in context:
-            self.pool.get('project.task').write(cr, uid, [context['task_id']], {'description':description,'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+            task = task_pool.browse(cr, uid, context['task_id'])
+            description = task.description and task.description  + "\n\n" + description
+            task_pool.write(cr, uid, [task.id], {
+                    'description': description,
+                    'state': 'done', 
+                    'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 
+                    'remaining_hours': 0.0
+            })
         return {}
 
     def confirm(self, cr, uid, ids, context=None):

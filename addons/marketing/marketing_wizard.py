@@ -32,7 +32,7 @@ class marketing_installer(osv.osv_memory):
         'marketing_campaign_mailchimp':fields.boolean('Mailchimp Integration',
             help="This modules integrate mailchimp.com's service with OpenERP to automate mass mailings."),
         'crm_profiling':fields.boolean('Profiling Tools',
-            help="Helps you to perform segmentation within partners and design questionaires.")
+            help="Helps you to perform segmentation within partners and design segmentation questionnaires")
     }
 marketing_installer()
 

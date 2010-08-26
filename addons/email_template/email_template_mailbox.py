@@ -171,8 +171,7 @@ class email_template_mailbox(osv.osv):
                             ('na', 'Not Applicable'),
                             ('sending', 'Sending'),
                             ], 'Status', required=True),
-            'date_mail':fields.datetime(
-                            'Rec/Sent Date'),
+            'date_mail':fields.datetime('Rec/Sent Date', help="Date on which Email Sent or Received"),
             'history':fields.text(
                             'History', 
                             readonly=True, 
@@ -183,6 +182,24 @@ class email_template_mailbox(osv.osv):
         'state': lambda * a: 'na',
         'folder': lambda * a: 'outbox',
     } 
+
+    def unlink(self, cr, uid, ids, context=None):
+        """
+        It just changes the folder of the item to "Trash", if it is no in Trash folder yet, 
+        or completely deletes it if it is already in Trash.
+        """
+        if not context:
+            context = {}
+        to_update = []
+        to_remove = []
+        for mail in self.browse(cr, uid, ids, context=context):
+            if mail.folder == 'trash':
+                to_remove.append(mail.id)
+            else:
+                to_update.append(mail.id)
+        # Changes the folder to trash
+        self.write(cr, uid, to_update, {'folder': 'trash'}, context=context)
+        return super(email_template_mailbox, self).unlink(cr, uid, to_remove, context=context)
 
 email_template_mailbox()
 

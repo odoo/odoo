@@ -18,25 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import requisition
 
-
-{
-    "name" : "Accounting and Financial Management",
-    "version" : "1.1",
-    "depends" : ["account"],
-    "author" : "Tiny",
-    "category": 'Generic Modules/Accounting',
-    "description": """Taxes to countries 
-    """,
-    'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-      "account_tax_country.xml"
-    ],
-    'demo_xml': [
-       
-    ],
-    'installable': True,
-    'active': False,
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
