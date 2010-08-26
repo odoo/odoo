@@ -71,7 +71,7 @@ class wizard_update_module(wizard.interface):
             'actions': [],
             'result': {'type': 'form', 'arch': arch, 'fields': fields,
                 'state': [
-                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('end', 'Close', 'gtk-cancel'),
                     ('update', 'Check new modules', 'gtk-ok', True)
                 ]
             }
