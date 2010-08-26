@@ -131,7 +131,7 @@ class res_users(osv.osv):
                 parent_ids = map(lambda x: x['manager_id'][0], data_dept)
                 cr.execute('SELECT res.user_id FROM hr_employee AS emp JOIN resource_resource AS res ON res.id=emp.resource_id \
                         WHERE emp.id IN %s', (tuple(parent_ids),))
-                parent_ids = [x[0] for x in cr.fetchall()]
+                parent_ids = [x[0] for x in cr.fetchall() if x[0]]
             result[user_id] = parent_ids
         return result
 
