@@ -15,7 +15,7 @@
             <newline/>
             <group colspan="6" >
                 <button special="cancel" string="Close" icon="gtk-cancel"/>
-                <button name="action_module_open" string="Import module" type="object" icon="gtk-ok"/>
+                <button name="importzip" string="Import module" type="object" icon="gtk-ok"/>
             </group>
              </form>
             </field>
@@ -37,6 +37,30 @@
        parent="menu_management"
        sequence="1"/>
 
+        <record id="view_base_module_import_msg" model="ir.ui.view">
+            <field name="name">Module Import Message</field>
+            <field name="model">base.module.import.msg</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Message">
+            <label string="Module successfully imported !"/>
+            <separator string="" colspan="4"/>
+            <newline/>
+            <group>
+            <button name="action_module_open" string="Close" type="object" icon="gtk-cancel"/>
+            </group>
+            </form>
+            </field>
+        </record>
 
+        <record id="action_view_base_module_import_msg" model="ir.actions.act_window">
+            <field name="name">Module Import Message</field>
+            <field name="res_model">base.module.import.msg</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_base_module_import"/>
+            <field name="target">new</field>
+        </record>
     </data>
 </openerp>
+
