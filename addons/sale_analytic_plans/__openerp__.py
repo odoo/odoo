@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Sales Analytic Distribution Management',
     'version': '1.0',
@@ -27,7 +26,7 @@
     'description': """
     The base module to manage analytic distribution and sales orders.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['sale', 'account_analytic_plans'],
     'init_xml': [],

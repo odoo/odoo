@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-17 19:14+0000\n"
-"Last-Translator: Andreas Porevopoulos <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 07:31+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: l10n_chart_gr <l10n_chart_gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:55+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -94,12 +94,14 @@ msgid "Stockable Stock"
 msgstr "Αποθηκεύσιμο Απόθεμα"
 
 #. module: mrp
-#: field:mrp.procurement,origin:0 field:mrp.production,origin:0
+#: field:mrp.procurement,origin:0
+#: field:mrp.production,origin:0
 msgid "Origin"
 msgstr "Προέλευση"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_configuration view:res.company:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_configuration
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Ρυθμίσεις"
 
@@ -179,7 +181,8 @@ msgstr "Αυτόματη Τροφοδοσία"
 
 #. module: mrp
 #: wizard_field:change_production_qty,confirm,product_qty:0
-#: field:mrp.bom,product_qty:0 field:mrp.production,product_qty:0
+#: field:mrp.bom,product_qty:0
+#: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "Ποσ. Προϊόντος"
@@ -267,7 +270,8 @@ msgid "Internal Ref."
 msgstr "Εσωτερικές Παρ."
 
 #. module: mrp
-#: view:mrp.procurement:0 field:mrp.procurement,state:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,state:0
 #: field:mrp.production,state:0
 msgid "Status"
 msgstr "Κατάσταση"
@@ -309,19 +313,22 @@ msgstr "Αποθηκεύσιμο Προς Αποθήκευση"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_action view:mrp.production:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
+#: view:mrp.production:0
 msgid "Production Orders"
 msgstr "Εντολές Παραγωγής"
 
 #. module: mrp
-#: rml:bom.structure:0 field:mrp.procurement,product_qty:0
+#: rml:bom.structure:0
+#: field:mrp.procurement,product_qty:0
 #: rml:mrp.production.order:0
 #: wizard_field:product.product.procurement,init,qty:0
 msgid "Quantity"
 msgstr "Ποσότητα"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Not urgent"
 msgstr "Όχι επείγον"
 
@@ -367,7 +374,8 @@ msgid "Scheduled Date"
 msgstr "Προγραμματισμένη Ημερομηνία"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Urgent"
 msgstr "Επείγον"
 
@@ -482,7 +490,8 @@ msgid "Stockable Product Stock"
 msgstr "Απόθεμα Αποθηκεύσιμου Προϊόντος"
 
 #. module: mrp
-#: field:mrp.bom,product_uos:0 field:mrp.production.product.line,product_uos:0
+#: field:mrp.bom,product_uos:0
+#: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
 msgstr "ΜοΠ Προϊόντος"
 
@@ -605,8 +614,10 @@ msgid "Waiting"
 msgstr "Σε Αναμονή"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_routing field:mrp.bom,routing_id:0
-#: field:mrp.production,routing_id:0 view:mrp.routing:0
+#: model:ir.model,name:mrp.model_mrp_routing
+#: field:mrp.bom,routing_id:0
+#: field:mrp.production,routing_id:0
+#: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
 msgstr "Γραμμή Παραγωγής"
@@ -679,7 +690,8 @@ msgid "Production orders"
 msgstr "Εντολές Παραγωγής"
 
 #. module: mrp
-#: field:mrp.bom,child_complete_ids:0 field:mrp.bom,child_ids:0
+#: field:mrp.bom,child_complete_ids:0
+#: field:mrp.bom,child_ids:0
 msgid "BoM Hyerarchy"
 msgstr "Ιεραρχία Κ.Υ."
 
@@ -705,7 +717,8 @@ msgid "Security Days"
 msgstr "Ημέρες Ασφαλείας"
 
 #. module: mrp
-#: view:mrp.production:0 field:mrp.production,cycle_total:0
+#: view:mrp.production:0
+#: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
 msgstr "Σύννολο Κύκλων"
 
@@ -766,7 +779,9 @@ msgid "Production done"
 msgstr "Παραγωγή ολοκληρώθηκε"
 
 #. module: mrp
-#: rml:bom.structure:0 field:mrp.bom,code:0 field:mrp.routing,code:0
+#: rml:bom.structure:0
+#: field:mrp.bom,code:0
+#: field:mrp.routing,code:0
 #: field:mrp.workcenter,code:0
 msgid "Code"
 msgstr "Κωδικός"
@@ -778,7 +793,8 @@ msgstr "Αρ. Ωρών"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0
+#: field:mrp.property.group,name:0
 msgid "Property Group"
 msgstr "Ομάδα Χαρακτηριστικών"
 
@@ -793,12 +809,14 @@ msgid "References"
 msgstr "Παραπομπές"
 
 #. module: mrp
-#: wizard_button:change_production_qty,confirm,end:0 view:mrp.procurement:0
+#: wizard_button:change_production_qty,confirm,end:0
+#: view:mrp.procurement:0
 #: selection:mrp.procurement,state:0
 #: wizard_button:mrp.procurement.compute,init,end:0
 #: wizard_button:mrp.procurement.compute.all,init,end:0
 #: wizard_button:mrp.procurement.orderpoint.compute,init,end:0
-#: view:mrp.production:0 wizard_button:mrp.workcenter.load,init,end:0
+#: view:mrp.production:0
+#: wizard_button:mrp.workcenter.load,init,end:0
 #: wizard_button:product.product.procurement,init,end:0
 #: wizard_button:product_price,init,end:0
 msgid "Cancel"
@@ -882,10 +900,14 @@ msgid "Nbr of cycle"
 msgstr "Αρ. Κύκλου"
 
 #. module: mrp
-#: field:mrp.bom,name:0 field:mrp.procurement,name:0
-#: rml:mrp.production.order:0 field:mrp.production.product.line,name:0
-#: field:mrp.property,name:0 field:mrp.routing,name:0
-#: field:mrp.routing.workcenter,name:0 field:stock.warehouse.orderpoint,name:0
+#: field:mrp.bom,name:0
+#: field:mrp.procurement,name:0
+#: rml:mrp.production.order:0
+#: field:mrp.production.product.line,name:0
+#: field:mrp.property,name:0
+#: field:mrp.routing,name:0
+#: field:mrp.routing.workcenter,name:0
+#: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
 msgstr "Όνομα"
 
@@ -998,7 +1020,8 @@ msgid "Notes"
 msgstr "Σημειώσεις"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:0
+#: model:ir.model,name:mrp.model_mrp_bom
+#: view:mrp.bom:0
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
 msgstr "Κατάσταση Υλικών"
@@ -1059,7 +1082,8 @@ msgid "Sale Ref"
 msgstr "Παρ. Πώλησης"
 
 #. module: mrp
-#: field:mrp.procurement,priority:0 field:mrp.production,priority:0
+#: field:mrp.procurement,priority:0
+#: field:mrp.production,priority:0
 #: rml:mrp.production.order:0
 msgid "Priority"
 msgstr "Προτεραιότητα"
@@ -1088,7 +1112,8 @@ msgstr "Εργαλείο"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
-msgid "Location where the system will look for products used in raw materials."
+msgid ""
+"Location where the system will look for products used in raw materials."
 msgstr "Τοποθεσία όπου το σύστημα θα αναζητά πρώτες ύλες."
 
 #. module: mrp
@@ -1125,7 +1150,8 @@ msgid "Max Quantity"
 msgstr "Μέγ. Ποσότητα"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_procurement view:mrp.procurement:0
+#: model:ir.model,name:mrp.model_mrp_procurement
+#: view:mrp.procurement:0
 msgid "Procurement"
 msgstr "Προμήθειες"
 
@@ -1177,7 +1203,8 @@ msgid "Procurement for raw materials."
 msgstr "Προμήθεια για α' ύλες."
 
 #. module: mrp
-#: view:mrp.procurement:0 field:mrp.procurement,note:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,note:0
 #: rml:mrp.production.order:0
 msgid "Note"
 msgstr "Σημείωση"
@@ -1203,8 +1230,10 @@ msgid "Define a routing to describe the manufacturing steps."
 msgstr "Ορίστε μια γραμμή παραγωγής για να περιγράψετε τις φάσεις παραγωγής."
 
 #. module: mrp
-#: field:mrp.bom,active:0 field:mrp.routing,active:0
-#: field:mrp.workcenter,active:0 field:stock.warehouse.orderpoint,active:0
+#: field:mrp.bom,active:0
+#: field:mrp.routing,active:0
+#: field:mrp.workcenter,active:0
+#: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr "Ενεργό"
 
@@ -1217,18 +1246,23 @@ msgstr "Προμήθεια Προϊόντων"
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action_prop
-#: view:mrp.bom:0 field:mrp.bom,property_ids:0 view:mrp.procurement:0
-#: field:mrp.procurement,property_ids:0 view:mrp.property:0
+#: view:mrp.bom:0
+#: field:mrp.bom,property_ids:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,property_ids:0
+#: view:mrp.property:0
 msgid "Properties"
 msgstr "Χαρακτηριστικά"
 
 #. module: mrp
-#: field:mrp.procurement,date_planned:0 field:mrp.production,date_planned:0
+#: field:mrp.procurement,date_planned:0
+#: field:mrp.production,date_planned:0
 msgid "Scheduled date"
 msgstr "Προγραμματισμένη Ημερ/νία"
 
 #. module: mrp
-#: view:mrp.procurement:0 view:mrp.production:0
+#: view:mrp.procurement:0
+#: view:mrp.production:0
 msgid "Extra Information"
 msgstr "Επιπλέον Πληροφορίες"
 
@@ -1278,7 +1312,8 @@ msgid "Change Product Qty."
 msgstr "Αλλαγή Ποσ. Προϊόντος"
 
 #. module: mrp
-#: selection:mrp.procurement,state:0 selection:mrp.production,state:0
+#: selection:mrp.procurement,state:0
+#: selection:mrp.production,state:0
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
 
@@ -1325,15 +1360,18 @@ msgid "Capacity per Cycle"
 msgstr "Ισχύς ανά Κύκλο"
 
 #. module: mrp
-#: field:mrp.bom,product_id:0 field:mrp.procurement,product_id:0
-#: field:mrp.production,product_id:0 rml:mrp.production.order:0
+#: field:mrp.bom,product_id:0
+#: field:mrp.procurement,product_id:0
+#: field:mrp.production,product_id:0
+#: rml:mrp.production.order:0
 #: field:mrp.production.product.line,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
 msgstr "Προϊόν"
 
 #. module: mrp
-#: view:mrp.production:0 field:mrp.production,hour_total:0
+#: view:mrp.production:0
+#: field:mrp.production,hour_total:0
 msgid "Total Hours"
 msgstr "Σύνολο Ωρών"
 
@@ -1348,7 +1386,8 @@ msgid "Product BoM Structure"
 msgstr "Δομή Κ.Υ. Προϊόντος"
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0 field:mrp.production,product_uom:0
+#: field:mrp.bom,product_uom:0
+#: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
@@ -1376,13 +1415,15 @@ msgstr ""
 "Αποθήκευση"
 
 #. module: mrp
-#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
+#: help:mrp.bom,date_start:0
+#: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
 msgstr ""
 "Εγκυρότητα της Κ.Υ. ή του συστατικού. Αφήστε το κενό αν είναι πάντα έγκυρο."
 
 #. module: mrp
-#: field:mrp.procurement,product_uos:0 field:mrp.production,product_uos:0
+#: field:mrp.procurement,product_uos:0
+#: field:mrp.production,product_uos:0
 msgid "Product UoS"
 msgstr "ΜοΠ Προϊόντος"
 
@@ -1394,12 +1435,14 @@ msgstr "ΜοΜ Προϊόντος"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: field:mrp.production.workcenter.line,workcenter_id:0
-#: field:mrp.routing.workcenter,workcenter_id:0 view:mrp.workcenter:0
+#: field:mrp.routing.workcenter,workcenter_id:0
+#: view:mrp.workcenter:0
 msgid "Workcenter"
 msgstr "Κέντρο Εργασίας"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Very Urgent"
 msgstr "Πολύ Επείγον"
 
@@ -1439,7 +1482,8 @@ msgid "Stockable Order Request"
 msgstr "Αίτηση Παραγγελίας Αποθηκεύσιμων"
 
 #. module: mrp
-#: view:mrp.production:0 view:mrp.production.product.line:0
+#: view:mrp.production:0
+#: view:mrp.production.product.line:0
 msgid "Scheduled Products"
 msgstr "Προγραμματισμένα Προϊόντα"
 
@@ -1467,7 +1511,8 @@ msgstr "Αν ο τύπος προϊόντος είναι Αποθηκεύσιμ�
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
-#: view:mrp.production:0 rml:mrp.production.order:0
+#: view:mrp.production:0
+#: rml:mrp.production.order:0
 msgid "Work Orders"
 msgstr "Εντολές Εργασίας"
 
@@ -1707,7 +1752,8 @@ msgid "plus"
 msgstr "plus"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0 field:mrp.procurement,bom_id:0
+#: field:mrp.bom.revision,bom_id:0
+#: field:mrp.procurement,bom_id:0
 msgid "BoM"
 msgstr "Κ.Υ."
 
@@ -1751,7 +1797,8 @@ msgid "last indice"
 msgstr "last indice"
 
 #. module: mrp
-#: field:mrp.bom,revision_ids:0 view:mrp.bom.revision:0
+#: field:mrp.bom,revision_ids:0
+#: view:mrp.bom.revision:0
 msgid "BoM Revisions"
 msgstr "Αναθεωρήσεις ΚΥ"
 
@@ -1761,12 +1808,14 @@ msgid "Retry"
 msgstr "Νέα προσπάθεια"
 
 #. module: mrp
-#: selection:mrp.procurement,state:0 selection:mrp.production,state:0
+#: selection:mrp.procurement,state:0
+#: selection:mrp.production,state:0
 msgid "Draft"
 msgstr "Πρόχειρη"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Normal"
 msgstr "Κανονική"
 
@@ -1789,7 +1838,8 @@ msgstr "Αιτία Προμήθειας"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
 msgid "An entry is being made from billing material to routing."
-msgstr "Δημιουργείται κατχώρηση από την κατάσταση υλικών στη γραμμή παραγωγής"
+msgstr ""
+"Δημιουργείται κατχώρηση από την κατάσταση υλικών στη γραμμή παραγωγής"
 
 #. module: mrp
 #: help:mrp.workcenter,timesheet_id:0
@@ -1820,8 +1870,11 @@ msgid "from stock"
 msgstr "από απόθεμα"
 
 #. module: mrp
-#: view:mrp.bom:0 view:mrp.property:0 view:mrp.property.group:0
-#: view:mrp.routing:0 view:mrp.routing.workcenter:0
+#: view:mrp.bom:0
+#: view:mrp.property:0
+#: view:mrp.property.group:0
+#: view:mrp.routing:0
+#: view:mrp.routing.workcenter:0
 msgid "General Information"
 msgstr "Γενικές Πληροφορίες"
 
@@ -1874,10 +1927,14 @@ msgid "Change Product Qty"
 msgstr "Αλλαγή Ποσ. Προϊόντος"
 
 #. module: mrp
-#: field:mrp.bom.revision,description:0 view:mrp.property:0
-#: field:mrp.property,description:0 field:mrp.property.group,description:0
-#: view:mrp.routing:0 field:mrp.routing,note:0
-#: field:mrp.routing.workcenter,note:0 view:mrp.workcenter:0
+#: field:mrp.bom.revision,description:0
+#: view:mrp.property:0
+#: field:mrp.property,description:0
+#: field:mrp.property.group,description:0
+#: view:mrp.routing:0
+#: field:mrp.routing,note:0
+#: field:mrp.routing.workcenter,note:0
+#: view:mrp.workcenter:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "Περιγραφή"
@@ -1937,7 +1994,8 @@ msgid "On Stock"
 msgstr "On Stock"
 
 #. module: mrp
-#: field:mrp.bom,sequence:0 rml:mrp.production.order:0
+#: field:mrp.bom,sequence:0
+#: rml:mrp.production.order:0
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0
 msgid "Sequence"
@@ -1997,58 +2055,79 @@ msgstr "Εβδομαδιαία απόκλιση αξίας αποθέματος"
 msgid "Stock value variation"
 msgstr "Απόκλιση αξίας αποθέματος"
 
+#. module: mrp
+#: view:board.board:0
+msgid "Next production orders"
+msgstr ""
+
+#, python-format
 #~ msgid "Warning !"
 #~ msgstr "Προειδοποίηση!"
 
+#, python-format
 #~ msgid "Product Quantity"
 #~ msgstr "Ποσότητα Προϊόντος"
 
+#, python-format
 #~ msgid "Hours Cost"
 #~ msgstr "Κόστος Ωρών"
 
+#, python-format
 #~ msgid "Couldn't find bill of material for product"
 #~ msgstr "Αδύνατη η εύρεση συνταγολόγιου για αυτό το προϊόν"
 
+#, python-format
 #~ msgid ""
 #~ "The production is in \"%s\" state. You can not change the production "
 #~ "quantity anymore"
 #~ msgstr ""
-#~ "Η παραγωγή είναι σε κατάσταση \"%s\". Δεν μπορείτε να αλλάξετε την "
-#~ "ποσότητα παραγωγής άλλο"
+#~ "Η παραγωγή είναι σε κατάσταση \"%s\". Δεν μπορείτε να αλλάξετε την ποσότητα "
+#~ "παραγωγής άλλο"
 
 #~ msgid "UoM"
 #~ msgstr "ΜοΜ"
 
+#, python-format
 #~ msgid "No supplier defined for this product !"
 #~ msgstr "Δεν ορίστηκε προμηθευτής για το προϊόν!"
 
+#, python-format
 #~ msgid "Product name"
 #~ msgstr "Όνομα προϊόντος"
 
+#, python-format
 #~ msgid "products"
 #~ msgstr "products"
 
+#, python-format
 #~ msgid "Workcenter name"
 #~ msgstr "Όνομα κέντρου εργασίας"
 
+#, python-format
 #~ msgid "Product Standard Price"
 #~ msgstr "Καθορισμένη Τιμή Προϊόντος"
 
+#, python-format
 #~ msgid "from stock: products assigned."
 #~ msgstr "from stock: products assigned."
 
+#, python-format
 #~ msgid "from stock and no minimum orderpoint rule defined"
 #~ msgstr "from stock and no minimum orderpoint rule defined"
 
+#, python-format
 #~ msgid "No BoM defined for this product !"
 #~ msgstr "Δεν έχει οριστεί Κ.Υ. για το Προϊόν!"
 
+#, python-format
 #~ msgid "Invalid action !"
 #~ msgstr "Άκυρη ενέργεια!"
 
+#, python-format
 #~ msgid "SUBTOTAL"
 #~ msgstr "Υποσύνολο"
 
+#, python-format
 #~ msgid "Unit Product Price"
 #~ msgstr "Τιμή Τεμαχίου Προϊόντος"
 
@@ -2058,23 +2137,29 @@ msgstr "Απόκλιση αξίας αποθέματος"
 #~ msgid "Create Procurement"
 #~ msgstr "Δημιουργία Προμηθειών"
 
+#, python-format
 #~ msgid "Product uom"
 #~ msgstr "ΜοΜ Προϊόντος"
 
+#, python-format
 #~ msgid "Cycles Cost"
 #~ msgstr "Κόστος Κύκλων"
 
+#, python-format
 #~ msgid "No address defined for the supplier"
 #~ msgstr "Δεν έχει οριστεί διεύθυνση συνεργάτη"
 
 #~ msgid "Production workcenters used"
 #~ msgstr "Κέντρα παραγωγής που χρησιμοποιήθηκαν"
 
+#, python-format
 #~ msgid "Product quantity"
 #~ msgstr "Ποσ. προϊόντος"
 
+#, python-format
 #~ msgid "TOTAL"
 #~ msgstr "ΣΥΝΟΛΟ"
 
+#, python-format
 #~ msgid "Product supplier"
 #~ msgstr "Ππομηθευτής προϊόντος"

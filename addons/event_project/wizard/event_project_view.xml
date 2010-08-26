@@ -8,7 +8,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Retro-Planning">
-                    <field name="project_id" />
+                    <field name="project_id" colspan="4"/>
+                    <field name="date_start"/>
+                    <field name="date"/>
                     <separator string="" colspan="4"/>
                     <group colspan="4" col="6">
                         <button  icon="gtk-close" special="cancel" string="Close"/>

@@ -68,11 +68,13 @@
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
 -
-  I check that one procurement is generated.
+  I check that procurement is generated.
 -
   !python {model: procurement.order}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','=','confirmed')])
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
     assert proc_ids, _('No Procurements!')
 - 
   I run the scheduler.
@@ -87,4 +89,4 @@
   !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.search(cr, uid, [('state','=','exception'),('product_id','=',ref('sale.product_product_table0'))])
-    assert proc_ids, _('No Procurements are in exception state for the table!')
+    assert not proc_ids, _('There is no procurement in exception state!')

@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Issue Management in Project Management',
     'version': '1.0',
@@ -28,13 +27,12 @@
     'description': """
         This module provide Issues/Bugs Management in Project
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'crm',
         'project',
         'hr_timesheet_sheet',
-        'resource'
     ],
     'init_xml': [
         'project_issue_data.xml'
@@ -51,8 +49,9 @@
     'test': [
       'test/convert_issue_to_task.yml',
       'test/test_project_issue_states.yml'
-            ],
+    ],
     'installable': True,
     'active': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

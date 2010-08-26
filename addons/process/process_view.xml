@@ -128,11 +128,30 @@
         </field>
     </record>
 
+    <record id="view_process_filter" model="ir.ui.view">
+            <field name="name">process.process.filter</field>
+            <field name="model">process.process</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Process">
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="model_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="4">
+                        <filter string="Object" icon="terp-personal" domain="[]" context="{'group_by':'model_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
     <record model="ir.actions.act_window" id="action_process_form">
         <field name="name">Process</field>
         <field name="res_model">process.process</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_process_filter" />
     </record>
     <menuitem
         id="menu_process_form"
@@ -239,11 +258,32 @@
         </field>
     </record>
 
+    <record id="view_process_node_filter" model="ir.ui.view">
+        <field name="name">process.node.filter</field>
+        <field name="model">process.node</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search ProcessNode">
+                <group col="10" colspan="4">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="kind" />
+                </group>
+                <newline/>
+                <group expand="0" string="Group By..." colspan="4" col="4">
+                    <filter string="Object" icon="terp-personal" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Kind Of Node" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'kind'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_process_node_form">
         <field name="name">Process Nodes</field>
         <field name="res_model">process.node</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_process_node_filter" />
     </record>
 
     <menuitem
@@ -272,7 +312,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Transition">
-                <group string="Details">
+                <group>
                     <field name="name" select="1"/>
                     <newline/>
                     <field name="source_node_id" select="1"/>
@@ -308,11 +348,32 @@
         </field>
     </record>
 
+    <record id="view_process_transition_filter" model="ir.ui.view">
+        <field name="name">process.transition.filter</field>
+        <field name="model">process.transition</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Process Transition">
+                <group col="10" colspan="4">
+                    <field name="name"/>
+                    <field name="source_node_id"/>
+                    <field name="target_node_id" />
+                </group>
+                <newline/>
+                <group expand="0" string="Group By..." colspan="4" col="4">
+                    <filter string="Source Node" icon="terp-personal" domain="[]" context="{'group_by':'source_node_id'}"/>
+                    <filter string="Target Node" icon="terp-personal" domain="[]" context="{'group_by':'target_node_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_process_transition_form">
         <field name="name">Process Transitions</field>
         <field name="res_model">process.transition</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_process_transition_filter" />
     </record>
     <menuitem
         id="menu_process_transition_form"

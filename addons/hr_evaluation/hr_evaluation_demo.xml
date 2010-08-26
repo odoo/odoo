@@ -210,28 +210,6 @@
     </data>
 
     <data>
-        <!--record id="survey_question_7" model="survey.question">
-            <field name="in_visible_answer_type">1</field>
-            <field name="validation_type">do_not_validate</field>
-            <field name="comment_valid_type">do_not_validate</field>
-            <field name="make_comment_field_err_msg">Please enter a comment.</field>
-            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
-            <field eval="0" name="comment_column"/>
-            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field eval="0" name="rating_allow_one_column_require"/>
-            <field name="req_error_msg">This question requires an answer.</field>
-            <field eval="2" name="sequence"/>
-            <field name="question">Process</field>
-            <field eval="0" name="is_require_answer"/>
-            <field name="type">comment</field>
-            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field eval="0" name="make_comment_field"/>
-            <field eval="0" name="in_visible_menu_choice"/>
-            <field name="page_id" ref="survey_page_2"/>
-            <field name="comment_label">Other</field>
-            <field eval="0" name="in_visible_rating_weight"/>
-            <field eval="0" name="allow_comment"/>
-        </record-->
     </data>
 
     <data>
@@ -536,7 +514,7 @@
             <field name="descriptive_text">* The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-evaluation and a starting point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.
 Once the form had been filled, the employee send it to his supervisor.
 
-* It is the primary responsibility of the supervisor to gather the necessary input from     the appropriate sources of feedback (internal and/or external customers, peers). In case of collaboration with Tiny Belgium, the supervisor must receive completed evaluation form from the employee's Belgian project manager.
+* It is the primary responsibility of the supervisor to gather the necessary input from     the appropriate sources of feedback (internal and/or external customers, peers). In case of collaboration with OpenERP SA Belgium, the supervisor must receive completed evaluation form from the employee's Belgian project manager.
 
 * The supervisor synthesizes and integrates all input into the completed appraisal. He motivates his evaluation in the ad hoc fields.
 
@@ -587,49 +565,6 @@ Once the form had been filled, the employee send it to his supervisor.
         </record>
     </data>
 
-    <!--data>
-        <record id="survey_question_42" model="survey.question">
-            <field name="in_visible_answer_type">1</field>
-            <field name="validation_type">do_not_validate</field>
-            <field name="comment_valid_type">do_not_validate</field>
-            <field name="make_comment_field_err_msg">Please enter a comment.</field>
-            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
-            <field eval="0" name="comment_column"/>
-            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field eval="0" name="rating_allow_one_column_require"/>
-            <field name="req_error_msg">This question requires an answer.</field>
-            <field eval="3" name="sequence"/>
-            <field name="question">Evaluation Process</field>
-            <field eval="0" name="is_require_answer"/>
-            <field name="type">descriptive_text</field>
-            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
-            <field name="descriptive_text">1). At the outset of the appraisal time period:
-
-     * It is the joint responsibility of the employee and the supervisor (appraiser) to establish a feasible work plan for the coming year, including major employee responsibilities and corresponding benchmarks against which results will be evaluated.
-
-     * Critical or key elements of performance and professional development needs (if any), should also be noted at this time
-
-2). At the conclusion of the appraisal time period:
-
-     * The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-evaluation and a starting point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.
-Once the form had been filled, the employee send it to his supervisor.
-
-     * It is the primary responsibility of the supervisor to gather the necessary input from the appropriate sources of feedback (internal and/or external customers, peers). In case of collaboration with Tiny Belgium, the supervisor must receive completed evaluation form from the employee's Belgian project manager.
-
-     * The supervisor synthesizes and integrates all input into the completed appraisal. He motivates his evaluation in the ad hoc fields.
-
-     * The employee may choose to offer comments or explanation regarding the completed review.
-
-     * The supervisor send the form to the HR department in India and in Belgium.
-</field>
-            <field eval="0" name="make_comment_field"/>
-            <field eval="1" name="in_visible_menu_choice"/>
-            <field name="page_id" ref="hr_evaluation.survey_page_1"/>
-            <field name="comment_label">Other</field>
-            <field eval="1" name="in_visible_rating_weight"/>
-            <field eval="0" name="allow_comment"/>
-        </record>
-    </data-->
 
     <data>
         <record id="survey_question_17_1" model="survey.question">
@@ -1589,16 +1524,6 @@ Once the form had been filled, the employee send it to his supervisor.
         </record>
     </data>
 
-<!--    <data noupdate="1">-->
-<!--        <record id="survey_request_1" model="survey.request">-->
-<!--            <field name="state">waiting_answer</field>-->
-<!--            <field name="survey_id" ref="hr_evaluation.survey_2"/>-->
-<!--            <field name="user_id" ref="base.user_root"/>-->
-<!--            <field name="email">fp@tinyerp.com</field>-->
-<!--            <field name="date_deadline">2010-02-21</field>-->
-<!--        </record>-->
-<!--    </data>-->
-
     <data noupdate="1">
         <record id="hr_evaluation_plan_managersevaluationplan0" model="hr_evaluation.plan">
             <field eval="1" name="active"/>
@@ -1672,28 +1597,6 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="wait"/>
         </record>
     </data>
-    
-<!--    <data noupdate="1">-->
-<!--        <record id="hr_evaluation_interview_1" model="survey.request">-->
-<!--            <field name="state">waiting_answer</field>-->
-<!--            <field name="survey_id" ref="hr_evaluation.survey_2"/>-->
-<!--            <field name="user_id" ref="base.user_root"/>-->
-<!--            <field name="email">fp@tinyerp.com</field>-->
-<!--            <field name="date_deadline">2010-02-21</field>-->
-<!--        </record>-->
-<!--    </data>-->
-<!--    <data noupdate="1">-->
-<!--        <record id="hr_evaluation_evaluation_0" model="hr_evaluation.evaluation">-->
-<!--            <field name="rating">0</field>-->
-<!--            <field name="employee_id" ref="hr.employee1"/>-->
-<!--            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>-->
-<!--            <field name="state">draft</field>-->
-<!--            <field eval="[(6,0,[ref('hr_evaluation_interview_1')])]" name="survey_request_ids"/>-->
-<!--            <field name="date">2010-01-21</field>-->
-<!--            <field name="phase_id" ref="hr_evaluation_plan_phase_sendtomanagers0"/>-->
-<!--            <field name="manager_id" ref="base.user_root"/>-->
-<!--        </record>-->
-<!--    </data>-->
 
 		<data>
 		  <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">

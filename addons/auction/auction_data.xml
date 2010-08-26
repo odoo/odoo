@@ -1,98 +1,272 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-	<record model="account.account" id="auction_income_view">
-		<field name="name">Auction Adjudications</field>
-		<field name="code">0</field>
-		<field name="type">view</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" type="list">
-			<value search="[('type','=','view')]" model="account.account"/>
-		</field>
-	</record>
+	
+	
+	<!-- Auction lots category data -->
+	
+    <record model="aie.category" id="aie_category_anti_view">
+        <field name="name">Antiques</field>
+        <field name="code">ANTI</field>
+    </record>
+    
+    <record model="aie.category" id="aie_category_paint_view">
+        <field name="name">Painting</field>
+        <field name="code">PAINT</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
+    
+    <record model="aie.category" id="aie_category_furn_view">
+        <field name="name">Furnitures</field>
+        <field name="code">FURN</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
+    
+   <record model="aie.category" id="aie_category_pcg_view">
+        <field name="name">Porcelain, Ceramics, Glassmaking, ...</field>
+        <field name="code">PCG</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
 
-	<record model="account.account" id="auction_expense_view">
-		<field name="name">Auction Adjudication Expenses</field>
-		<field name="code">0</field>
-		<field name="type">view</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" type="list">
-			<value search="[('type','=','view')]" model="account.account"/>
-		</field>
-	</record>
+   <record model="aie.category" id="aie_category_sbe_view">
+        <field name="name">Sculpture, bronze, eso</field>
+        <field name="code">SBE</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>    
+    
+     <record model="aie.category" id="aie_category_clock_view">
+        <field name="name">Clocks and watches</field>
+        <field name="code">CLW</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>  
+    
+    <record model="aie.category" id="aie_category_caob_view">
+        <field name="name">Collectible and art objects</field>
+        <field name="code">COAO</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+   <record model="aie.category" id="aie_category_engr_view">
+        <field name="name">Engravings</field>
+        <field name="code">ENGR</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>       
+    
+    <record model="aie.category" id="aie_category_gart_view">
+        <field name="name">Graphic Arts</field>
+        <field name="code">GART</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_light_view">
+        <field name="name">Lightings</field>
+        <field name="code">LGT</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>   
+    
+    <record model="aie.category" id="aie_category_metal_view">
+        <field name="name">Metal Ware</field>
+        <field name="code">MW</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_mini_view">
+        <field name="name">Miniatures</field>
+        <field name="code">MAT</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>  
+    
+    <record model="aie.category" id="aie_category_collect_view">
+        <field name="name">Collections</field>
+        <field name="code">CLT</field>
+        <field name="parent_id" ref="aie_category_mini_view"/>
+    </record>    
+    
+    <record model="aie.category" id="aie_category_mi_view">
+        <field name="name">Musical Instruments</field>
+        <field name="code">MI</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_owm_view">
+        <field name="name">Old weapons and militaria</field>
+        <field name="code">OWM</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_oart_view">
+        <field name="name">Oriental Arts</field>
+        <field name="code">OART</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_chf_view">
+        <field name="name">Chineese furnitures</field>
+        <field name="code">CHF</field>
+        <field name="parent_id" ref="aie_category_oart_view"/>
+    </record>    
+    
+    <record model="aie.category" id="aie_category_othr_view">
+        <field name="name">Others</field>
+        <field name="code">OTR</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_pst_view">
+        <field name="name">Posters</field>
+        <field name="code">PST</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_rel_view">
+        <field name="name">Religiosa</field>
+        <field name="code">REL</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_sin_view">
+        <field name="name">Scientific Instruments</field>
+        <field name="code">SIN</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+        
+    <record model="aie.category" id="aie_category_tin_view">
+        <field name="name">Tin</field>
+        <field name="code">TIN</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_cwa_view">
+        <field name="name">Copper wares</field>
+        <field name="code">CWA</field>
+        <field name="parent_id" ref="aie_category_tin_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_ty_view">
+        <field name="name">Toys</field>
+        <field name="code">TY</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_vrs_view">
+        <field name="name">Verreries</field>
+        <field name="code">VRS</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_wne_view">
+        <field name="name">Wine</field>
+        <field name="code">WNE</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record> 
+    
+    <!--  -->
 
-	<record model="account.account" id="auction_income">
-		<field name="name">Auction Adjudications</field>
-		<field name="code">7x*</field>
-		<field name="type">income</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="[auction_income_view]"/>
-	</record>
-	<record model="account.account" id="auction_expense">
-		<field name="name">Auction Adjudication Expenses</field>
-		<field name="code">6x*</field>
-		<field name="type">expense</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="[auction_expense_view]"/>
-	</record>
+    <record model="aie.category" id="aie_category_con_view">
+        <field name="name">Contemporary Art</field>
+        <field name="code">CONTEM</field>
+    </record>
+    
+    <record model="aie.category" id="aie_category_con_art_view">
+        <field name="name">Arts</field>
+        <field name="code">ARTS</field>
+        <field name="parent_id" ref="aie_category_con_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_con_curi_view">
+        <field name="name">Curiosa</field>
+        <field name="code">CRS</field>
+        <field name="parent_id" ref="aie_category_con_view"/>
+    </record> 
+    
+    <record model="aie.category" id="aie_category_con_ome_view">
+        <field name="name">Other Media</field>
+        <field name="code">OME</field>
+        <field name="parent_id" ref="aie_category_con_view"/>
+    </record> 
+       
+    <record model="aie.category" id="aie_category_con_pht_view">
+        <field name="name">Photo</field>
+        <field name="code">PHT</field>
+        <field name="parent_id" ref="aie_category_con_view"/>
+    </record>     
+    
+    <record model="aie.category" id="aie_category_con_paint_view">
+        <field name="name">Painting</field>
+        <field name="code">CPAINT</field>
+        <field name="parent_id" ref="aie_category_con_view"/>
+    </record>  
+    
+    <record model="aie.category" id="aie_category_con_scul_view">
+        <field name="name">Sculpture</field>
+        <field name="code">SCUL</field>
+        <field name="parent_id" ref="aie_category_con_view"/>
+    </record>      
 
-	<record model="account.account" id="auction_income_costs">
-		<field name="name">Auction Buyer Costs</field>
-		<field name="code">7x*</field>
-		<field name="type">tax</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="[auction_income_view]"/>
-	</record>
-	<record model="account.account" id="auction_expense_costs">
-		<field name="name">Auction Seller Costs</field>
-		<field name="code">6x*</field>
-		<field name="type">tax</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="[auction_expense_view]"/>
-	</record>
+    <record model="aie.category" id="aie_category_con_cshe_view">
+        <field name="name">Shows</field>
+        <field name="code">CSHW</field>
+        <field name="parent_id" ref="aie_category_con_view"/>
+    </record>  
+    
+    <record model="aie.category" id="aie_category_jew_view">
+        <field name="name">Jewelry</field>
+        <field name="code">JWL</field>
+        <field name="parent_id" ref="aie_category_con_view"/>
+    </record>
+    
+    <!--  -->
 
-	<record model="account.tax" id="tax_buyer_author">
-		<field name="name">Author rights (4%)</field>
-		<field name="type">percent</field>
-		<field name="applicable_type">code</field>
-		<field name="amount">0.04</field>
-		<field name="domain">sabam</field>
-		<field name="account_collected_id" ref="auction_income_costs"/>
-		<field name="account_paid_id" ref="auction_income_costs"/>
-		<field name="python_applicable">result = (price_unit&gt;=1250)</field>
-	</record>
-	<record model="account.tax" id="tax_buyer">
-		<field name="name">Buyer Costs (20%)</field>
-		<field name="type">percent</field>
-		<field name="amount">0.20</field>
-		<field name="domain">auction</field>
-		<field name="account_collected_id" ref="auction_income_costs"/>
-		<field name="account_paid_id" ref="auction_income_costs"/>
-	</record>
-	<record model="account.tax" id="tax_seller">
-		<field name="name">Seller Costs (12%)</field>
-		<field name="type">percent</field>
-		<field name="amount">-0.12</field>
-		<field name="domain">auction</field>
-		<field name="account_collected_id" ref="auction_expense_costs"/>
-		<field name="account_paid_id" ref="auction_expense_costs"/>
-	</record>
+    <record model="aie.category" id="aie_category_uncla_view">
+        <field name="name">Unclassifieds</field>
+        <field name="code">UNCLASS</field>
+    </record>
+    
+    <record model="aie.category" id="aie_category_afrart_view">
+        <field name="name">African Arts</field>
+        <field name="code">AFART</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
+    
+    <record model="aie.category" id="aie_category_argen_view">
+        <field name="name">Argenterie</field>
+        <field name="code">ARGENT</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
+    
+    <record model="aie.category" id="aie_category_artfrom_view">
+        <field name="name">Art from the Ivory Coast</field>
+        <field name="code">ARTFORM</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
+    
+    <record model="aie.category" id="aie_category_afrec_view">
+        <field name="name">African Arts</field>
+        <field name="code">AFRART</field>
+        <field name="parent_id" ref="aie_category_artfrom_view"/>
+    </record>
+    
+   <record model="aie.category" id="aie_category_book_view">
+        <field name="name">Books, manuscripts, eso.</field>
+        <field name="code">BME</field>
+         <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
+    
+   <record model="aie.category" id="aie_category_carpet_view">
+        <field name="name">Carpet and textilles</field>
+        <field name="code">CARPTEX</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
+    
+    <record model="aie.category" id="aie_category_cartoon_view">
+        <field name="name">Cartoons</field>
+        <field name="code">CATOON</field>
+        <field name="parent_id" ref="aie_category_anti_view"/>
+    </record>
+    
+    <!-- End Of Auction Lots Category -->
 
-	<ir_set>
-		<field name="keys" eval="[('meta','res.partner'),('name','auction.seller.costs')]"/>
-		<field name="args" eval="[]"/>
-		<field name="name">account.seller.costs</field>
-		<field name="value" eval="tax_seller"/>
-		<field name="meta" eval="{'type':'many2one', 'string':'Seller Costs', 'relation':'account.tax'}"/>
-	</ir_set>
-
-
-
-	<record id="product.product_product_pc2" model="product.product">
-		<field name="list_price">770.0</field>
-		<field name="standard_price">700.0</field>
-
-	</record>
+	
 
 </data>
 </openerp>

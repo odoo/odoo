@@ -22,10 +22,10 @@
 {
     "name": "Long Term Project Management",
     "version": "1.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Generic Modules/Projects & Services",
-    "depends": ["project", "resource"],
+    "depends": ["resource", "project"],
     "description": """
 
         Long Term Project management module that tracks planning, scheduling, resources allocation.
@@ -40,22 +40,21 @@
     "init_xml": [],
     "demo_xml": ["project_long_term_demo.xml"],
     "test": [
-              'test/schedule_project_phases.yml',
-              'test/schedule_project_tasks.yml',
-              'test/schedule_phase_tasks.yml'
-              ],
+          'test/schedule_project_phases.yml',
+          'test/schedule_project_tasks.yml',
+          'test/schedule_phase_tasks.yml'
+    ],
     "update_xml": [
         "security/ir.model.access.csv",
-        "project_long_term_wizard.xml" ,
         "wizard/project_schedule_tasks_view.xml",
         "project_long_term_view.xml",
         "project_long_term_workflow.xml",
         "wizard/project_compute_phases_view.xml",
         "wizard/project_compute_tasks_view.xml",
-
     ],
     'installable': True,
     'active': False,
     'certificate': None,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

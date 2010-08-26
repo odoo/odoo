@@ -34,7 +34,6 @@ from report.interface import report_int
 from pychart import *
 
 theme.use_color = 1
-#theme.scale = 2
 random.seed(0)
 
 class external_pdf(render):

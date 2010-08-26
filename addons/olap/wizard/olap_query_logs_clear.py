@@ -26,7 +26,7 @@ class olap_query_logs_clear(osv.osv_memory):
     _description = "Olap Query Logs Clear"
 
     _columns = {
-        'user_name':fields.char('User', size=64, required=True, readonly=True), 
+        'user_name':fields.char('User', size=64, required=True, readonly=True),
     }
 
     def _getdata(self, cr, uid, context={}):
@@ -35,7 +35,7 @@ class olap_query_logs_clear(osv.osv_memory):
 
     _defaults = {
         'user_name': _getdata
-            }
+    }
 
     def clear_logs(self, cr, uid, part, context={}):
         """
@@ -52,11 +52,11 @@ class olap_query_logs_clear(osv.osv_memory):
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         value = {
-            'view_type': 'form', 
-            'view_mode': 'form', 
-            'res_model': 'olap.query.logs.clear.msg', 
-            'views': [(id2, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')], 
-            'type': 'ir.actions.act_window', 
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'olap.query.logs.clear.msg',
+            'views': [(id2, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')],
+            'type': 'ir.actions.act_window',
             'target': 'new'
         }
         return value

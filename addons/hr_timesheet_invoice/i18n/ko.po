@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 16:32+0000\n"
+"PO-Revision-Date: 2010-08-03 06:21+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:11+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
@@ -93,9 +93,8 @@ msgid ""
 "costs in this analytic account: timesheets, expenses, ...You can configure "
 "an automatic invoice rate on analytic accounts."
 msgstr ""
-"이 필드를 체크하면, 귀하의 플랜이 분석계정 (타임시트, 비용)의 비용에 기초하"
-"여 인보이스를 자동 생성합니다. 분석 계정 상의 자동 인보이스 요율을 구성할 수 "
-"있습니다."
+"이 필드를 체크하면, 귀하의 플랜이 분석계정 (타임시트, 비용)의 비용에 기초하여 인보이스를 자동 생성합니다. 분석 계정 상의 자동 "
+"인보이스 요율을 구성할 수 있습니다."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,name:0
@@ -250,9 +249,7 @@ msgstr "통화"
 msgid ""
 "Complete this field only if you want to force to use a specific product. "
 "Keep empty to use the real product that comes from the cost."
-msgstr ""
-"특정 상품을 사용하도록 하려면 이 필드를 완성하십시오. 원가로부터 도출되는 실"
-"제 상품을 이용하려면 비워 두십시오."
+msgstr "특정 상품을 사용하도록 하려면 이 필드를 완성하십시오. 원가로부터 도출되는 실제 상품을 이용하려면 비워 두십시오."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced
@@ -581,41 +578,257 @@ msgstr "인보이스 리포트로의 분석 라인"
 msgid "UoM"
 msgstr ""
 
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_date_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_date_my
+msgid "My daily timesheets by account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.user:0
+msgid "Timesheet by user"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_all
+msgid "Timesheet by Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_invoice
+msgid "Costs to invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user_my
+msgid "My Timesheet of the Month"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_random_timesheet_lines_board
+#: model:ir.model,name:report_timesheet_invoice.model_random_timesheet_lines
+msgid "Random Timesheet Lines"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_account_analytic_account_2_report_timehsheet_account
+msgid "Timesheets"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timehsheet_account
+msgid "Timesheets per account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:0
+msgid "Timesheets to invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_date_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_date_all
+msgid "Daily Timesheet by Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,name:0 field:report.random.timesheet,name:0
+msgid "Description"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_account
+#: view:report_timesheet.account:0
+msgid "Timesheet per account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:report_timesheet.module_meta_information
+msgid "Timesheet - Reporting"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:0
+msgid "Timesheet by invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.ui.menu,name:report_timesheet_invoice.next_id_69
+msgid "This Month"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_my
+msgid "My timesheets by account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_random_timesheet
+msgid "Random Timesheet Report"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,user_id:0
+#: field:report.random.timesheet,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report.random.timesheet:0
+msgid "Random Timesheets"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet by account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+msgid "Random Timesheets Lines"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,account_id:0
+msgid "Project"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user_all
+msgid "Timesheet by User"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_invoice_stat_all
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_invoice_all
+msgid "Timesheet by Invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_random_timesheet_board
+msgid "Random Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,general_account_id:0
+msgid "General Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_invoice_stat_my
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_invoice_my
+msgid "My timesheets to invoice"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_account_date
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet per account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,description:report_timesheet.module_meta_information
+msgid ""
+"Module to add timesheet views like\n"
+"    All Month, Timesheet By User, Timesheet Of Month, Timesheet By Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,analytic_account_id:0
+#: field:report.random.timesheet,analytic_account_id:0
+#: field:report_timesheet.account,account_id:0
+#: field:report_timesheet.account.date,account_id:0
+msgid "Analytic Account"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: field:report_timesheet.invoice,manager_id:0
+msgid "Manager"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat
+#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user
+msgid "Timesheet by user (this month)"
+msgstr ""
+
+#, python-format
 #~ msgid "Analytic account incomplete"
 #~ msgstr "불완전 분석 계정"
 
+#, python-format
 #~ msgid "Analytic Account incomplete"
 #~ msgstr "불완전 분석 계정"
 
+#, python-format
 #~ msgid "Partner incomplete"
 #~ msgstr "불완전 파트너"
 
+#, python-format
 #~ msgid "Data Insufficient!"
 #~ msgstr "데이터 부족 !"
 
+#, python-format
 #~ msgid "Error !"
 #~ msgstr "에러!"
 
+#, python-format
 #~ msgid "You can not modify an invoiced analytic line!"
 #~ msgstr "인보이스된 분석 라인을 수정할 수는 없습니다."
 
+#, python-format
 #~ msgid "Invoices"
 #~ msgstr "인보이스"
 
+#, python-format
 #~ msgid "Error"
 #~ msgstr "에러"
 
+#, python-format
 #~ msgid "Please fill in the Address field in the Partner: %s."
 #~ msgstr "파트너의 주소 필드를 채우십시오:%s"
 
+#, python-format
 #~ msgid "Balance product needed"
 #~ msgstr "필요한 밸런스 상품"
 
+#, python-format
 #~ msgid "No Records Found for Report!"
 #~ msgstr "리포트를 위한 레코드가 없음!"
 
+#, python-format
 #~ msgid "At least one line has no product !"
 #~ msgstr "한 라인 이상에 상품이 없습니다!"
 
+#, python-format
 #~ msgid "Please fill a Balance product in the wizard"
 #~ msgstr "위저드의 밸런스 상품을 기재하십시오."

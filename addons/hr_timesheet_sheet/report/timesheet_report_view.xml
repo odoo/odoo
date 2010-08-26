@@ -18,7 +18,7 @@
             <field name="model">timesheet.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Timesheet">
+                <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('cancel')" string="Timesheet">
                     <field name="date_current" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="user_id" invisible="1"/>
@@ -76,7 +76,7 @@
                       <field name="user_id" />
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By...">
+                    <group expand="0" string="Group By...">
                         <filter string="User" name="User_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
                         <separator orientation="vertical"/>
@@ -96,7 +96,7 @@
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." groups="base.group_extended">
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                         <field name="general_account_id"/>
                         <field name="to_invoice" widget="selection"/>
                         <separator orientation="vertical"/>
@@ -121,7 +121,7 @@
             <field name="context">{'search_default_month':1,'search_default_User_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_report_search"/>
         </record>
-        <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all" 
-                parent="hr_timesheet.menu_hr_reporting_timesheet" sequence="1"/>
+        <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all"
+                parent="hr_timesheet.menu_hr_reporting_timesheet" sequence="1" groups="base.group_hr_manager"/>
     </data>
 </openerp>

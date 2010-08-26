@@ -5,7 +5,7 @@
     	<menuitem
         id="menu_finance_belgian_statement"
         name="Belgium Statements"
-        parent="account.menu_finance_legal_statement"/>
+        parent="account.menu_finance_legal_statement" groups="account.group_account_manager"/>
 
     	<record id="view_vat_declaration" model="ir.ui.view">
             <field name="name">Vat Declaraion</field>
@@ -38,7 +38,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 				<form string="Save xml">
-					<group height="200" width="310">
+					<group height="200" width="400">
 						<separator colspan="2" string="Note: "/><newline/>
 							<label string="Save the File with '.xml' extension." colspan="2" align="0.0"/><newline/>
 								<field name="name"/><newline/>
@@ -67,7 +67,8 @@
 	        name="Periodical VAT Declaration"
 	        parent="menu_finance_belgian_statement"
 	        action="action_vat_declaration"
-	        id="l10_be_vat_declaration"/>
+	        id="l10_be_vat_declaration"
+            groups="account.group_account_manager"/>
 
     </data>
 </openerp>

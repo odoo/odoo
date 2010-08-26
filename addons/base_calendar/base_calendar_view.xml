@@ -76,13 +76,26 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Invitation details">
-                    <field name="email" string="Invitation To"/>
-                    <field name="user_id" string="Internal User" />
-                    <field name="partner_address_id" string="Contact" />
-                    <field name="role" />
+                    <field name="sent_by_uid" string="Invitation From" />
+                    <field name="role" string="My Role"/>
+                    <field name="cutype" string="Invitation type"/>
                     <field name="state" />
-                    <field name="cutype" invisible="1"/>
-                    <field name="rsvp" invisible="1"/>
+                    <field name="rsvp" string="Required to Join"/>
+                    <button name="do_tentative" states="needs-action,declined,accepted"
+                                string="Uncertain" type="object"
+                                icon="terp-crm" />
+                    <button name="do_accept" string="Accept"
+                        states="needs-action,tentative,declined"
+                        type="object" icon="gtk-apply" />
+                    <button name="do_decline" string="Decline"
+                        states="needs-action,tentative,accepted"
+                        type="object" icon="gtk-cancel" />
+                    <button
+                        name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                        string="Delegate" type="action"
+                        icon="gtk-sort-descending"
+                        states="needs-action,tentative,declined,accepted"
+                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                 </tree>
             </field>
         </record>
@@ -95,15 +108,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invitations">
+                   <filter icon="terp-camera_test" name="toreview" string="To Review"
+                       domain="[('state','=', 'needs-action')]"
+                       separator="1" help="Invitations To Review" />
                    <filter icon="terp-check" string="Accepted"
                        domain="[('state','=', 'accepted')]"
                        separator="1" help="Accepted Invitations" />
                    <filter icon="terp-dialog-close" string="Declined"
                        domain="[('state','=', 'declined')]"
                        separator="1" help="Declined Invitations" />
+                   <filter icon="gtk-sort-descending" string="Delegated"
+                       domain="[('state','=', 'delegated')]"
+                       separator="1" help="Delegated Invitations" />
                    <separator orientation="vertical"/>
                    <field name="email" select='1'/>
-                   <field name="sent_by_uid" select="1"/>
+                   <field name="user_id" select="1"/>
                    <separator orientation="vertical"/>
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
@@ -138,7 +157,7 @@
 
         <!-- Calenadar's menu -->
           <menuitem id="base.menu_calendar_configuration" name="Calendar"
-            parent="base.menu_base_config" sequence="15" />
+            parent="base.menu_base_config" sequence="6" groups="base.group_system" />
 
         <!-- Invitation menu -->
 
@@ -182,7 +201,7 @@
             </field>
         </record>
         <record id="action_res_alarm_view" model="ir.actions.act_window">
-            <field name="name">Available Alarms</field>
+            <field name="name">Alarms</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.alarm</field>
             <field name="view_type">form</field>

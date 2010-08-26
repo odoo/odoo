@@ -81,7 +81,7 @@ def compute_working_calendar(cr, uid, calendar_id, context=None):
        """
 
         pool = pooler.get_pool(cr.dbname)
-        resource_week_obj = pool.get('resource.calendar.week')
+        resource_attendance_obj = pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""
         week_days = {"0": "mon", "1": "tue", "2": "wed","3": "thu", "4": "fri", "5": "sat", "6": "sun"}
@@ -89,8 +89,8 @@ def compute_working_calendar(cr, uid, calendar_id, context=None):
         wk_time = {}
         wktime_list = []
         wktime_cal = []
-        week_ids = resource_week_obj.search(cr, uid, [('calendar_id', '=', calendar_id)], context=context)
-        weeks = resource_week_obj.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'], context=context)
+        week_ids = resource_attendance_obj.search(cr, uid, [('calendar_id', '=', calendar_id)], context=context)
+        weeks = resource_attendance_obj.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'], context=context)
         # Convert time formats into appropriate format required
         # and create a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
         for week in weeks:
@@ -120,4 +120,5 @@ def compute_working_calendar(cr, uid, calendar_id, context=None):
         if non_working:
             wktime_cal.append((non_working[:-1], time_range))
         return wktime_cal
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

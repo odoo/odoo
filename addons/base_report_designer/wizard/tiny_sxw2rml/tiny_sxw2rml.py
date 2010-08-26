@@ -22,7 +22,7 @@
 ##############################################################################
 #!/usr/bin/python
 """
-Tiny SXW2RML - The Open ERP's report engine
+Tiny SXW2RML - The OpenERP's report engine
 
 Tiny SXW2RMLis part of the Tiny report project.
 Tiny Report is a module that allows you to render high quality PDF document
@@ -44,6 +44,7 @@ import zipfile
 import xml.dom.minidom
 from reportlab.lib.units import toLength
 import base64
+import copy
 
 class DomApiGeneral:
     """General DOM API utilities."""
@@ -289,8 +290,6 @@ class PyOpenOffice(object):
     def oo_replace(self,content):
         regex = [
             (r"<para[^>]*/>", ""),
-            #(r"<text:ordered-list.*?>(.*?)</text:ordered-list>", "$1"),
-            #(r"<text:unordered-list.*?>(.*?)</text:unordered-list>", "$1"),
             (r"<para(.*)>(.*?)<text:line-break[^>]*/>", "<para$1>$2</para><para$1>"),
         ]
         for key,val in regex:

@@ -26,10 +26,8 @@ class report_pos_order(osv.osv):
     _name = "report.pos.order"
     _description = "Point of Sale Orders Statistics"
     _auto = False
-    _columns ={
+    _columns = {
         'date': fields.date('Date Order', readonly=True),
-        'date_validation': fields.date('Date Confirm', readonly=True),
-        'date_payment': fields.date('Date Confirm', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
@@ -41,8 +39,6 @@ class report_pos_order(osv.osv):
                                     ('advance','Advance'),
                                    ('paid', 'Paid'), ('done', 'Done'), ('invoiced', 'Invoiced'), ('cancel', 'Cancel')],
                                   'State'),
-        'state_2': fields.function([('to_verify', 'To Verify'), ('accepted', 'Accepted'),
-            ('refused', 'Refused')], string='State'),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
         'total_discount':fields.float('Total Discount', readonly=True),
@@ -50,53 +46,48 @@ class report_pos_order(osv.osv):
         'shop_id':fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
-        'product_qty':fields.float('# of Qty', readonly=True),
+        'product_qty':fields.integer('# of Qty', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal'),
-        'statement_journal_id': fields.many2one('account.journal','Cash Register'),
         'delay_validation': fields.integer('Delay Validation'),
         'delay_payment': fields.integer('Delay Payment'),
+        'date_validation': fields.date('Validation Date', required=True),
+        'date_payment': fields.date('Payment Date', required=True),
     }
     _order = 'date desc'
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_pos_order')
         cr.execute("""
             create or replace view report_pos_order as (
-                select el.*,
-
-                    (select 1) as nbr,
-                    to_date(to_char(po.date_order, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
-                    po.date_validation as date_validation,
-                    po.date_payment as date_payment,
-                    to_char(po.date_order, 'YYYY') as year,
-                    to_char(po.date_order, 'MM') as month,
-                    to_char(po.date_order, 'YYYY-MM-DD') as day,
-                    (date(po.date_order)-date(po.date_validation)) as delay_validation,
-                    (date(po.date_order)-date(po.date_payment)) as delay_payment,
-                    po.partner_id as partner_id,
-                    po.state as state,
-                    po.state_2 as state_2,
-                    po.user_id as user_id,
-                    po.shop_id as shop_id,
-                    po.company_id as company_id,
-                    po.sale_journal as journal_id,
-                    aj.id as statement_journal_id
-
-                from
-                    pos_order as po,account_bank_statement_line absl,account_journal as aj,
-                    ( select pl.id as id,
-                        pl.product_id as product_id,
-                        pl.qty as product_qty,
-                        sum(pl.qty * pl.price_unit)- sum(pl.qty * pl.price_ded) as price_total,
-                        sum(pl.qty * pl.price_ded) as total_discount,
-                        ((sum(pl.qty * pl.price_unit)-sum(pl.qty * pl.price_ded))/sum(pl.qty)*count(pl.qty))::decimal(16,2) as average_price,
-                        pl.order_id
-                    from
-                        pos_order_line as pl
-                        left join product_template pt on (pt.id=pl.product_id)
-                    group by
-                        pl.id,pl.order_id, pl.qty,pl.product_id)  el
-                where po.id = el.order_id and absl.pos_statement_id = po.id and aj.name = absl.journal_id
-                )
-            """)
+                select
+                    min(l.id) as id,
+                    count(*) as nbr,
+                    to_date(to_char(s.date_order, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
+                    sum(l.qty * u.factor) as product_qty,
+                    sum(l.qty * l.price_unit) as price_total,
+                    sum(l.qty * l.price_ded) as total_discount,
+                    (sum(l.qty*l.price_unit)/sum(l.qty * u.factor))::decimal(16,2) as average_price,
+                    sum(cast(to_char(date_trunc('day',s.date_validation) - date_trunc('day',s.date_order),'DD') as int)) as delay_validation,
+                    sum(cast(to_char(date_trunc('day',s.date_payment) - date_trunc('day',s.date_order),'DD') as int)) as delay_payment,
+                    to_char(s.date_order, 'YYYY') as year,
+                    to_char(s.date_order, 'MM') as month,
+                    to_char(s.date_order, 'YYYY-MM-DD') as day,
+                    s.partner_id as partner_id,
+                    s.state as state,
+                    s.user_id as user_id,
+                    s.shop_id as shop_id,
+                    s.company_id as company_id,
+                    s.sale_journal as journal_id,
+                    l.product_id as product_id,
+                    s.date_validation,
+                    s.date_payment
+                from pos_order_line as l
+                    left join pos_order s on (s.id=l.order_id)
+                    left join product_template pt on (pt.id=l.product_id)
+                    left join product_uom u on (u.id=pt.uom_id)
+                group by
+                    to_char(s.date_order, 'dd-MM-YYYY'),to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),
+                    to_char(s.date_order, 'YYYY-MM-DD'), s.partner_id,s.state,
+                    s.user_id,s.shop_id,s.company_id,s.sale_journal,l.product_id,s.date_validation,
+                    s.date_payment)""")
 
 report_pos_order()

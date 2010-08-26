@@ -22,7 +22,7 @@
 
 {
     'name': 'Integrated Document Management System',
-    'version': '1.99',
+    'version': '1.1',
     'category': 'Generic Modules/Others',
     'description': """This is a complete document management system:
     * User Authentication
@@ -38,7 +38,7 @@
     - After installing this module PDF's are no longer stored into the database,
       but in the servers rootpad like /server/bin/filestore.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['process','board', 'knowledge'],
     'init_xml': [],
@@ -46,18 +46,18 @@
         'security/document_security.xml',
         'document_view.xml',
         'document_data.xml',
-        'wizard/document_configuration_view.xml',
+#        'wizard/document_configuration_view.xml',
         'security/ir.model.access.csv',
         'report/document_report_view.xml',
         'board_document_view.xml',
     ],
     'demo_xml': [ 'document_demo.xml','board_document_demo.xml'],
     'test': [
-        'test/document_test.yml',
+        'test/document_test2.yml',
     ],
     'installable': True,
     'active': False,
-    'certificate': None,
+    'certificate': '0070515416461',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

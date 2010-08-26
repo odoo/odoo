@@ -72,7 +72,7 @@ class procurement_order(osv.osv):
         'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
-            "This is automatically completed by Open ERP."),
+            "This is automatically completed by OpenERP."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
         'date_planned': fields.datetime('Scheduled date', required=True),
         'date_close': fields.datetime('Date Closed'),
@@ -228,7 +228,14 @@ class procurement_order(osv.osv):
         return False
 
     def check_produce_service(self, cr, uid, procurement, context=[]):
-        return True
+        """ Checks project_mrp install or not.
+         @return: True or False"""
+        obj_module = self.pool.get('ir.module.module')
+        module_id = obj_module.search(cr, uid, [('name', '=', 'project_mrp'),('state', '=', 'installed')])
+        if module_id:
+            return True
+        cr.execute('update procurement_order set message=%s where id=%s', (_('Project_mrp module not installed !'), procurement.id))
+        return False
 
     def check_produce_product(self, cr, uid, procurement, context=[]):
         """ Finds BoM of a product if not found writes exception message.
@@ -284,8 +291,7 @@ class procurement_order(osv.osv):
             if not procurement.product_id.seller_ids:
                 cr.execute('update procurement_order set message=%s where id=%s', (_('No supplier defined for this product !'), procurement.id))
                 return False
-            partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id and partner_id.sequence])
-            partner = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].name or False
+            partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
@@ -312,7 +318,7 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Procurement Order(s), it should not be less than 1!'))
+                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity in Procurement Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -344,6 +350,10 @@ class procurement_order(osv.osv):
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context={}):
+        """
+           This method may be overrided by objects that override procurement.order
+           for computing their own purpose
+        @return: True"""
         return True
 
     def _check_make_to_stock_product(self, cr, uid, procurement, context={}):
@@ -357,10 +367,13 @@ class procurement_order(osv.osv):
             if not (procurement.move_id.state in ('done','assigned','cancel')):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
-                if not cr.fetchone()[0]:                    
+                if not cr.fetchone()[0]:
                     cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock and no minimum orderpoint rule defined.'), procurement.id))
                     message = _('Procurement ') + " '" + procurement.name + "' "+ _("has an exception.") + _('Not enough stock and no minimum orderpoint rule defined.')
                     self.log(cr, uid, procurement.id, message)
+            if procurement.state=='exception' and procurement.message=='':
+                cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock '), procurement.id))
+
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
@@ -465,7 +478,7 @@ class stock_warehouse_orderpoint(osv.osv):
     """
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
-    
+
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
@@ -475,10 +488,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','=','product')]),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_min_qty': fields.float('Min Quantity', required=True,
-            help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
+            help="When the virtual stock goes belong the Min Quantity, OpenERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'product_max_qty': fields.float('Max Quantity', required=True,
-            help="When the virtual stock goes belong the Max Quantity, Open ERP generates "\
+            help="When the virtual stock goes belong the Max Quantity, OpenERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),
@@ -495,8 +508,8 @@ class stock_warehouse_orderpoint(osv.osv):
     }
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
-    ]   
-    
+    ]
+
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         """ Finds location id for changed warehouse.
         @param warehouse_id: Changed id of warehouse.

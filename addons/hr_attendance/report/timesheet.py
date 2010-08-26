@@ -37,6 +37,7 @@ def to_hour(h):
 class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
+        obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
         start_date = DateTime.strptime(datas['form']['init_date'], '%Y-%m-%d')
         end_date = DateTime.strptime(datas['form']['end_date'], '%Y-%m-%d')
         first_monday = start_date - DateTime.RelativeDateTime(days=start_date.day_of_week)
@@ -47,7 +48,7 @@ class report_custom(report_rml):
         user_xml = []
 
         for employee_id in ids:
-            emp = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, [employee_id], ['id', 'name'])[0]
+            emp = obj_emp.read(cr, uid, [employee_id], ['id', 'name'])[0]
             monday, n_monday = first_monday, first_monday + one_week
             stop, week_xml = False, []
             user_repr = '''

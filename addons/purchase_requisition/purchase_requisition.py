@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,9 @@
 ##############################################################################
 
 import time
+import netsvc
 
 from osv import fields,osv
-from osv import orm
-import netsvc
 from tools.translate import _
 
 class purchase_requisition(osv.osv):
@@ -39,7 +38,7 @@ class purchase_requisition(osv.osv):
         'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', required=True, help="Purchase Tender (exclusive):On the confirmation of a purchase order, it cancels the remaining purchase order.Multiple Requisitions:It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
+        'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
@@ -119,7 +118,7 @@ class purchase_requisition_line(osv.osv):
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition.line', context=c),
-                }
+    }
 purchase_requisition_line()
 
 class purchase_order(osv.osv):
@@ -129,10 +128,14 @@ class purchase_order(osv.osv):
     }
     def wkf_confirm_order(self, cr, uid, ids, context={}):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context)
+        proc_obj=self.pool.get('procurement.order')
         for po in self.browse(cr, uid, ids, context):
             if po.requisition_id and (po.requisition_id.exclusive=='exclusive'):
                 for order in po.requisition_id.purchase_ids:
                     if order.id<>po.id:
+                        proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
+                        if proc_ids and po.state=='confirmed':
+                            proc_obj.wirte(cr,uid,proc_ids,{'purchase_id':po.id})
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
                     self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
@@ -155,14 +158,17 @@ product_product()
 class procurement_order(osv.osv):
 
     _inherit = 'procurement.order'
-
+    _columns = {
+        'requisition_id' : fields.many2one('purchase.requisition','Latest Requisition')
+    }
     def make_po(self, cr, uid, ids, context=None):
         sequence_obj = self.pool.get('ir.sequence')
         res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         for proc_id, po_id in res.items():
             procurement = self.browse(cr, uid, proc_id)
+            requisition_id=False
             if procurement.product_id.purchase_requisition:
-                self.pool.get('purchase.requisition').create(cr, uid, {
+                requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
                     'origin': procurement.name,
                     'date_end': procurement.date_planned,
@@ -174,6 +180,7 @@ class procurement_order(osv.osv):
                     })],
                     'purchase_ids': [(6,0,[po_id])]
                 })
+            self.write(cr,uid,proc_id,{'requisition_id':requisition_id})
         return res
 
 procurement_order()

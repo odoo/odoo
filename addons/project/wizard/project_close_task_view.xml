@@ -12,13 +12,17 @@
               		  <separator string="" colspan="4"/>
               		  <group colspan="4" col="6">
               		  <newline/>
-		              <field name="email"/>
+		              <field name="manager_email" invisible="not context.get('send_manager',False)"/>
+		              <newline/>
+		              <field name="partner_email" invisible="not context.get('send_partner',False)"/>
 		              <newline/>
 		              <field name="description" />
 		              </group>
-		              <group colspan="4" col="6">
-		            		<button  icon="gtk-cancel" special="cancel" string="_Close"/>
-		            		<button icon="gtk-ok" name="confirm" string="Send Mail" type="object"/>
+		              <separator string="" colspan="6"/>
+		              <group colspan="6" col="6">
+		            		<button icon="gtk-ok" name="confirm" string="Send and Close" type="object"/>
+		            		<button  icon="gtk-ok" string="Close" name="close" type="object"/>
+		            		<button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
 		              </group>
 			  	</form>
             </field>

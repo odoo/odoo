@@ -33,14 +33,14 @@
                     <field name="company_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="location_id" invisible="1"/>
-                    <field name="nbr"/>
+                    <field name="nbr" sum="# of Lines"/>
                     <field name="quantity" sum="# of Products"/>
-                    <field name="price_average" avg="Average Price"/>
+                    <field name="price_average" sum="Average Price"/>
                     <field name="price_total" sum="Total Price"/>
-                    <field name="price_standard" sum="Products Costs"/>
+                    <field name="price_standard" sum="Products Value"/>
                     <field name="negociation" widget="progressbar"/>
-                    <field name="delay"/>
-                    <field name="delay_pass"/>
+                    <field name="delay" sum="Days to Validate"/>
+                    <field name="delay_pass" sum="Days to Deliver"/>
                 </tree>
             </field>
         </record>
@@ -142,10 +142,11 @@
 
 
     <record id="action_purchase_order_report_all" model="ir.actions.act_window">
-        <field name="name">Purchase Orders</field>
+        <field name="name">Purchase Analysis</field>
         <field name="res_model">purchase.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_purchase_order_tree"></field>
         <field name="context">{'search_default_month':1,'search_default_group_partner_id':1,'search_default_group_product_id': 1, 'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
     </record>
 

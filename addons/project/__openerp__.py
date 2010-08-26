@@ -23,11 +23,11 @@
 {
     "name": "Project Management",
     "version": "1.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Generic Modules/Projects & Services",
-    "depends": ["product", "analytic", "process", "mail_gateway","board"],
-    "description": """Project management module that track multi-level projects, tasks,
+    "depends": ["product", "analytic", "board"],
+    "description": """Project management module tracks multi-level projects, tasks,
 work done on tasks, eso. It is able to render planning, order tasks, eso.
  Dashboard for project members that includes:
     * List of my open tasks
@@ -41,9 +41,7 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         "wizard/project_task_delegate_view.xml",
         "security/ir.model.access.csv",
         "project_data.xml",
-        "project_wizard.xml",
         "project_view.xml",
-        "project_report.xml",
         "process/task_process.xml",
         "project_installer.xml",
         "res_partner_view.xml",
@@ -57,8 +55,9 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         'board_project_demo.xml',
     ],
     'test':[
-            'test/test_project.yml'
-            ],
+        'test/test_project.yml',
+        'test/test_project_delegation.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0075116868317',

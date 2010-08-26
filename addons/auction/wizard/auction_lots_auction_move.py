@@ -28,22 +28,14 @@ import tools
 import wizard
 
 class auction_lots_auction_move(osv.osv_memory):
-    
+    """Auction Move"""
     _name = "auction.lots.auction.move"
-    _description = "Auction move "
+    _description = __doc__
     _columns= {
-        'auction_id':fields.many2one('auction.dates', 'Auction Date', required=True), 
+        'auction_id':fields.many2one('auction.dates', 'Auction Date', required=True),
     }
-    
-#    def _top(self, cr, uid, ids, context={}):
-#        refs = self.pool.get('auction.lots')
-#        rec_ids = refs.browse(cr, uid, context['active_ids'])
-#        for rec in rec_ids:
-#            if not rec.auction_id:
-#                raise osv.except_osv('Error !', 'You can not move a lot that has no auction date')
-#        return {}
-    
-    def auction_move_set(self, cr, uid, ids, context={}):
+
+    def auction_move_set(self, cr, uid, ids, context=None):
         """
         This Function update auction date on auction lots to given auction date.
         erase the auction lots's object adjudication price and its buyer and change state to draft.
@@ -52,32 +44,31 @@ class auction_lots_auction_move(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of auction lots auction move’s IDs.
         """
-        refs = self.pool.get('auction.lots')
+        if not context:
+            context={}
         auction_bid_line_obj = self.pool.get('auction.bid_line')
         auction_lot_history_obj = self.pool.get('auction.lot.history')
         auction_lots_obj = self.pool.get('auction.lots')
-        rec_ids = refs.browse(cr, uid, context['active_ids'])
-        for datas in self.read(cr, uid, ids):
-            if not (datas['auction_id'] and len(context['active_ids'])) :
+        rec_ids =  auction_lots_obj.browse(cr, uid, context.get('active_ids', []))
+        for current in self.browse(cr, uid, ids, context):
+            if not (current.auction_id and len(context.get('active_ids', []))):
                 return {}
-            
-#           line_ids = auction_bid_line_obj.search(cr, uid, [('lot_id', 'in', context['active_ids'])])
-#           pooler.get_pool(cr.dbname).get('auction.bid_line').unlink(cr, uid, line_ids)
+
             for rec in rec_ids:
                 new_id = auction_lot_history_obj.create(cr, uid, {
-                    'auction_id': rec.auction_id.id, 
-                    'lot_id': rec.id, 
+                    'auction_id': rec.auction_id.id,
+                    'lot_id': rec.id,
                     'price': rec.obj_ret
                     })
                 up_auction = auction_lots_obj.write(cr, uid, [rec.id], {
-                    'auction_id':datas['auction_id'], 
-                    'obj_ret': None, 
-                    'obj_price': None, 
-                    'ach_login': None, 
-                    'ach_uid': None, 
-                    'ach_inv_id': None, 
-                    'sel_inv_id': None, 
-                    'obj_num': None, 
+                    'auction_id': current.auction_id.id,
+                    'obj_ret': None,
+                    'obj_price': None,
+                    'ach_login': None,
+                    'ach_uid': None,
+                    'ach_inv_id': None,
+                    'sel_inv_id': None,
+                    'obj_num': None,
                     'state': 'draft'})
             return {}
 

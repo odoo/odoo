@@ -29,7 +29,7 @@
                 <form string="Account Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4" height="160" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
+                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
                         </child1>
                         <child2>
                             <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged receivables"/>
@@ -49,7 +49,8 @@
             <field name="view_id" ref="board_account_form"/>
         </record>
 
-        <menuitem icon="terp-graph" id="menu_dashboard_acc" name="Dashboard" sequence="2" parent="account.menu_finance_reporting"/>
+        <menuitem id="menu_dashboard_acc" name="Dashboard" sequence="2" parent="account.menu_finance_reporting" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem action="open_board_account" icon="terp-graph" id="menu_board_account" parent="menu_dashboard_acc" sequence="1"/>
+        <menuitem icon="terp-account" id="account.menu_finance" name="Accounting" sequence="13" action="open_board_account"/>
     </data>
 </openerp>

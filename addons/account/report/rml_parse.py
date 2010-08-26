@@ -41,6 +41,7 @@ class rml_parse(report_sxw.rml_parse):
         })
 
     def comma_me(self,amount):
+        #print "#" + str(amount) + "#"
         if not amount:
             amount = 0.0
         if  type(amount) is float :
@@ -97,6 +98,7 @@ class rml_parse(report_sxw.rml_parse):
             try:
                 Stringer = str.encode("utf-16")
             except UnicodeDecodeError:
+                print "UTF_16 Error"
                 Stringer = str
             else:
                 return Stringer
@@ -104,7 +106,6 @@ class rml_parse(report_sxw.rml_parse):
             return Stringer
         return Stringer
     def explode_this(self,chaine,length):
-        #chaine = self.repair_string(chaine)
         chaine = rstrip(chaine)
         ast = list(chaine)
         i = length
@@ -124,6 +125,7 @@ class rml_parse(report_sxw.rml_parse):
                 Stringer = elem.encode("utf-8")
             except UnicodeDecodeError:
                 to_reencode = elem + ast[i+1]
+                print str(to_reencode)
                 Good_char = to_reencode.decode('utf-8')
                 UnicodeAst.append(Good_char)
                 i += i +2
@@ -135,43 +137,16 @@ class rml_parse(report_sxw.rml_parse):
         return "".join(UnicodeAst)
 
     def ReencodeAscii(self,str):
+        print sys.stdin.encoding
         try:
             Stringer = str.decode("ascii")
         except UnicodeEncodeError:
+            print "REENCODING ERROR"
             return str.encode("ascii")
         except UnicodeDecodeError:
+            print "DECODING ERROR"
             return str.encode("ascii")
 
         else:
             return Stringer
 
-    def _add_header(self, node, header=1):
-        if header==2:
-            rml_head =  self.rml_header2
-        else:
-            rml_head =  self.rml_header
-        rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
-        return True
-
-    # def _add_header(self, node):
-    #   rml_head = tools.file_open('specific_param/report/header/corporate_rml_header_ch.rml').read()
-    #   head_dom = xml.dom.minidom.parseString(rml_head)
-    #   #for frame in head_dom.getElementsByTagName('frame'):
-    #   #   frame.parentNode.removeChild(frame)
-    #   node2 = head_dom.documentElement
-    #   for tag in node2.childNodes:
-    #       if tag.nodeType==tag.ELEMENT_NODE:
-    #           found = self._find_node(node, tag.localName)
-    #   #       rml_frames = found.getElementsByTagName('frame')
-    #           if found:
-    #               if tag.hasAttribute('position') and (tag.getAttribute('position')=='inside'):
-    #                   found.appendChild(tag)
-    #               else:
-    #                   found.parentNode.replaceChild(tag, found)
-    #   #       for frame in rml_frames:
-    #   #           tag.appendChild(frame)
-    #   return True
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -30,7 +30,7 @@ class account_use_model(osv.osv_memory):
     _description = 'Use model'
     _columns = {
         'model': fields.many2many('account.model', 'account_use_model_relation', 'account_id', 'model_id', 'Account Model'),
-        }
+    }
 
     def create_entries(self, cr, uid, ids, context=None):
         account_model_obj = self.pool.get('account.model')
@@ -92,7 +92,7 @@ class account_use_model(osv.osv_memory):
             'views': [(resource_id,'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            }
+        }
 
     def open_moves(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')

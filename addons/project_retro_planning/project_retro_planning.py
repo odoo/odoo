@@ -27,21 +27,25 @@ from osv import fields, osv
 class project_project(osv.osv):
     _inherit = 'project.project'
 
-    def write(self, cr, uid, ids,vals, *args, **kwargs):
-        if 'date' in vals and vals['date']:
+    def write(self, cr, uid, ids, vals, *args, **kwargs):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        if vals.get('date', False):
             data_project = self.browse(cr, uid, ids)
             for prj in data_project:
                 new_end_date = date(*time.strptime(vals['date'],'%Y-%m-%d')[:3])
                 if prj.date:
                     old_end_date = date(*time.strptime(prj.date,'%Y-%m-%d')[:3])
                     for task in prj.tasks:
-                        start_dt = (datetime(*time.strptime(task.date_start,'%Y-%m-%d  %H:%M:%S')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
-                        if task.date_deadline:
-                            deadline_dt = (datetime(*time.strptime(task.date_deadline,'%Y-%m-%d  %H:%M:%S')[:6])+(c-d)).strftime('%Y-%m-%d %H:%M:%S')
-                            self.pool.get('project.task').write(cr, uid, task.id, {'date_start':start_dt, 'date_deadline':deadline_dt})
-                        else:
-                            self.pool.get('project.task').write(cr, uid, task.id, {'date_start':start_dt})
+                        if task.date_start:
+                            start_dt = (date(*time.strptime(str(task.date_start),'%Y-%m-%d  %H:%M:%S')[:3])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
+                            if task.date_deadline:
+                                deadline_dt = (datetime(*time.strptime(str(task.date_deadline),'%Y-%m-%d')[:3])+(new_end_date-old_end_date)).strftime('%Y-%m-%d')
+                                self.pool.get('project.task').write(cr, uid, [task.id], {'date_start':start_dt, 'date_deadline':deadline_dt})
+                            else:
+                                self.pool.get('project.task').write(cr, uid, [task.id], {'date_start':start_dt})
         return super(project_project,self).write(cr, uid, ids, vals, *args, **kwargs)
 
 project_project()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

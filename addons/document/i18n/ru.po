@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-06-22 14:24+0000\n"
-"Last-Translator: Чистый <klaider@yandex.ru>\n"
+"PO-Revision-Date: 2010-08-25 08:03+0000\n"
+"Last-Translator: devcode <klaider@yandex.ru>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-23 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-08-26 03:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -36,8 +36,6 @@ msgstr ""
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
@@ -151,7 +149,8 @@ msgid "File Information"
 msgstr "Информация о файле"
 
 #. module: document
-#: field:document.directory,file_ids:0 view:ir.attachment:0
+#: field:document.directory,file_ids:0
+#: view:ir.attachment:0
 msgid "Files"
 msgstr "Файлы"
 
@@ -161,7 +160,8 @@ msgid "Stored Filename"
 msgstr ""
 
 #. module: document
-#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0
+#: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Последние изменения пользователя"
 
@@ -215,7 +215,8 @@ msgid "Directory Type"
 msgstr "Тип папки"
 
 #. module: document
-#: field:document.directory,group_ids:0 field:ir.attachment,group_ids:0
+#: field:document.directory,group_ids:0
+#: field:ir.attachment,group_ids:0
 msgid "Groups"
 msgstr "Группы"
 
@@ -250,7 +251,8 @@ msgid "Notes"
 msgstr "Примечания"
 
 #. module: document
-#: view:ir.attachment:0 field:ir.attachment,index_content:0
+#: view:ir.attachment:0
+#: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr ""
 
@@ -310,13 +312,14 @@ msgid "Integrated Document Management System"
 msgstr ""
 
 #. module: document
-#: field:report.document.user,directory:0
-#: field:report.files.partner,directory:0
+#: field:document.directory.content,directory_id:0
+#: field:ir.attachment,parent_id:0
 msgid "Directory"
 msgstr "Папка"
 
 #. module: document
-#: field:report.document.user,user_id:0 field:report.document.wall,user_id:0
+#: field:document.directory,user_id:0
+#: field:ir.attachment,user_id:0
 msgid "Owner"
 msgstr "Владелец"
 
@@ -343,7 +346,8 @@ msgid "Content Type"
 msgstr "Тип данных"
 
 #. module: document
-#: view:document.directory:0 view:ir.attachment:0
+#: view:document.directory:0
+#: view:ir.attachment:0
 msgid "Security"
 msgstr "Безопасность"
 
@@ -380,7 +384,8 @@ msgid "Domain"
 msgstr "Домен"
 
 #. module: document
-#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0
+#: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Дата изменения"
 
@@ -441,7 +446,7 @@ msgid "Cancel"
 msgstr "Отмена"
 
 #. module: document
-#: field:report.document.user,partner:0 field:report.files.partner,partner:0
+#: field:ir.attachment,partner_id:0
 msgid "Partner"
 msgstr "Партнер"
 

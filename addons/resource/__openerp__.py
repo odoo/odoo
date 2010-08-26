@@ -19,11 +19,10 @@
 #
 ##############################################################################
 
-
 {
     "name" : "Resource",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category" : "Generic Modules/Projects & Services",
     "website" : "http://www.openerp.com",
     "description": """
@@ -34,12 +33,11 @@
      It also manages the leaves of every resource.
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process'],
+    'depends': ['process'],
     'init_xml': [],
     'update_xml': [
-        #'security/resource_security.xml',
         'security/ir.model.access.csv',
         'resource_view.xml',
     ],
@@ -49,4 +47,5 @@
     'active': False,
     'certificate': None,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 
 class project_installer(osv.osv_memory):
@@ -26,7 +27,8 @@ class project_installer(osv.osv_memory):
 
     _columns = {
         # Project Management
-        'project_long_term': fields.boolean('Long Term Planning',
+        'project_long_term': fields.boolean(
+        'Long Term Planning',
             help="Enables long-term projects tracking, including "
                  "multiple-phase projects and resource allocation handling."),
         'project_wiki': fields.boolean('Specifications in a Wiki',
@@ -35,7 +37,7 @@ class project_installer(osv.osv_memory):
             help="Tracks and helps employees encode and validate timesheets "
                  "and attendance."),
         'hr_timesheet_invoice': fields.boolean('Invoice Based on Hours',
-            help="Helps generate invoice based on based on human resources "
+            help="Helps generate invoice based on human resources "
                  "costs and general expenses."),
         'account_budget': fields.boolean('Budgets',
             help="Helps accountants manage analytic and crossover budgets."),
@@ -49,12 +51,14 @@ class project_installer(osv.osv_memory):
             help="Implements and tracks the concepts and task types defined "
                  "in the SCRUM methodology."),
         'project_gtd': fields.boolean('Getting Things Done',
-            help="Embeds the Getting Things Done concepts into OpenERP's "
+            help="Embeds the 'Getting Things Done concepts' into OpenERP's "
                  "project management."),
         }
+
     _defaults={
-             'project_crm': True,
-               }
+        'project_crm': True,
+    }
+
 project_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

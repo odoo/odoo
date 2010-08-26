@@ -23,7 +23,7 @@ import time
 from report import report_sxw
 from osv import osv
 import pooler
-
+from tools.translate import _
 class product_pricelist(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(product_pricelist, self).__init__(cr, uid, name, context=context)
@@ -44,7 +44,6 @@ class product_pricelist(report_sxw.rml_parse):
         qtys = 1
 
         for i in range(1,6):
-#            if form['qty'+str(i)] > 0 and form['qty'+str(i)] not in vals.values():
             vals['qty'+str(qtys)] = form['qty'+str(i)]
             qtys += 1
         lst.append(vals)
@@ -85,11 +84,11 @@ class product_pricelist(report_sxw.rml_parse):
             product_ids=pool.get('product.product').search(self.cr, self.uid, [('id','in',pro_ids),('categ_id','=',cat['id'])])
             products = []
             for product in pool.get('product.product').read(self.cr, self.uid, product_ids, ['name','code']):
-                val={
-                         'id':product['id'],
-                         'name':product['name'],
-                         'code':product['code']
-                         }
+                val = {
+                     'id':product['id'],
+                     'name':product['name'],
+                     'code':product['code']
+                }
                 i = 1
                 for qty in self.quantity:
                     if qty == 0:

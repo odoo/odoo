@@ -32,7 +32,7 @@ class product_product(osv.osv):
         @return: dictionary which contains information regarding stock input account, stock output account and stock journal
         """           
         product_obj = self.pool.get('product.product').browse(cr, uid, product_id, False)
-        
+        res = super(product_product,self).get_product_accounts(cr, uid, product_id, context)
         stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
         if not stock_input_acc:
             stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
@@ -43,7 +43,6 @@ class product_product(osv.osv):
 
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
         
-        res = {}
         res.update({'stock_account_input': stock_input_acc})
         res.update({'stock_account_output': stock_output_acc})
         res.update({'stock_journal': journal_id})  
@@ -63,11 +62,12 @@ class product_product(osv.osv):
         """
         res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
         bom_obj = self.pool.get('mrp.bom')
+        change = context.get('change_parent_price', False)
         def _compute_price(bom):
             price = 0.0
-            if bom.bom_id :
-                if bom.bom_id.bom_lines :
-                    for bom_line in bom.bom_id.bom_lines :
+            if bom.bom_id and change:
+                if bom.bom_id.bom_lines:
+                    for bom_line in bom.bom_id.bom_lines:
                         prod_price = self.read(cr, uid, bom_line.product_id.id, ['standard_price'])['standard_price']
                         price += bom_line.product_qty * prod_price
 

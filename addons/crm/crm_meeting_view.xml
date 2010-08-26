@@ -13,8 +13,8 @@
         <field name="context">{'object_id':'crm.meeting'}</field>
     </record>
 
-     <menuitem action="crm_meeting_categ_action" name="Categories"
-        id="menu_crm_case_meeting-act" parent="menu_crm_config_meeting" />
+     <menuitem action="crm_meeting_categ_action" name="Categories of Meeting"
+        id="menu_crm_case_meeting-act" parent="base.menu_calendar_configuration" sequence="1"/>
 
     <!-- CRM Meetings Form View -->
 
@@ -32,6 +32,7 @@
                         groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
                     <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+                    <newline/>
                     <field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="duration" widget="float_time"
@@ -107,6 +108,7 @@
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Assignment"/>
                             <field name="user_id" />
+                            <field name="organizer" groups="base.group_extended"/>
                             <field name="section_id" widget="selection"
                                 groups="base.group_extended"/>
                         </group><group col="2" colspan="2">
@@ -154,7 +156,9 @@
                         <field name="attendee_ids" colspan="4"
                             nolabel="1" widget="one2many" mode="tree,form">
                             <tree string="Invitation details" editable="top">
-                                <field name="email" />
+                                <field name="sent_by_uid" string="From"/>
+                                <field name="user_id" string="To"/>
+                                <field name="email" string="Mail TO"/>
                                 <field name="role" select="1" />
                                 <field name="state" />
                             </tree>
@@ -294,8 +298,8 @@
                            <field name="partner_id" select="1" />
                            <field name="section_id" select="1" widget="selection">
                                <filter icon="terp-personal+"
-                                   domain="[('section_id','=',context.get('section_id',False))]"
-                                   help="My Sale Team" />
+                                   domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                                   help="My Sales Team(s)" />
                            </field>
                            <field name="user_id" select="1"/>
                        </group>
@@ -343,19 +347,6 @@
                 </field>
         </record>
 
-        <!-- Calendar Attendee Tree View -->
-
-        <record id="attendee_tree_view_inherit" model="ir.ui.view">
-                <field name="name">calendar.attendee.tree.inherit</field>
-                <field name="model">calendar.attendee</field>
-                <field name="type">tree</field>
-                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_tree_view"/>
-                <field name="arch" type="xml">
-                    <field name="role" position="after">
-                        <field name="categ_id" string="Event Type"/>
-                    </field>
-                </field>
-        </record>
 
     </data>
 </openerp>

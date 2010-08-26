@@ -22,7 +22,7 @@
 {
     "name" : "Olap Schemes Management",
     "version" : "0.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "depends" : ["base"],
     "category" : "Generic Modules/Olap",
@@ -46,8 +46,7 @@
         "data/olap_security.xml",
         'security/ir.model.access.csv'
     ],
-    "demo_xml" : ["data/olap_demo.xml"
-                 ],
+    "demo_xml" : ["data/olap_demo.xml"],
     "active": False,
     "installable": True
 }

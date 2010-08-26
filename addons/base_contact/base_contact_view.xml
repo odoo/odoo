@@ -53,7 +53,7 @@
                                <group colspan="4" col="4">
                                    <field name="sequence_contact" />
                                    <field name="function"/>
-                                   <field name="name"/> 
+                                   <field name="name" on_change="onchange_name(name,address_id)"/> 
                                    <field name="address_id"/>                                   
                                    <field name="date_start" />
                                    <field name="date_stop" />
@@ -72,8 +72,8 @@
                             <tree string="Functions and Addresses">
                                 <field name="sequence_contact" string="Seq."/>
                                 <field name="function"/>
-                                <field name="name"/>
-                                <field name="address_id"/>
+                                <field name="name" on_change="onchange_partner(name)"/> 
+								<field name="address_id" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(address_id)"/>
                                 <field name="phone"/>
                                 <field name="fax"/>
                                 <field name="extension"/>
@@ -180,7 +180,6 @@
                             <form string="Contacts">
                             <group colspan="4" col="4">
                                 <field name="sequence_partner"/>
-                                <field name="name"/>
                                 <field name="contact_id"/>
                                 <field name="function"/>
                             </group>

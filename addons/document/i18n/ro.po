@@ -1,24 +1,23 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* document
+#	* document
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-02-04 06:27+0000\n"
+"PO-Revision-Date: 2010-08-03 03:30+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:18+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 04:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
-#: field:report.document.user,create_date:0
-#: field:report.files.partner,create_date:0
+#: field:document.directory,create_date:0
 msgid "Date Created"
 msgstr "Data creării"
 
@@ -71,9 +70,7 @@ msgid "Auto Configure Directory"
 msgstr ""
 
 #. module: document
-#: field:report.document.file,file_size:0
-#: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
+#: field:ir.attachment,file_size:0
 msgid "File Size"
 msgstr "Mărime fişier"
 
@@ -154,7 +151,8 @@ msgid "File Information"
 msgstr ""
 
 #. module: document
-#: view:report.document.user:0
+#: field:document.directory,file_ids:0
+#: view:ir.attachment:0
 msgid "Files"
 msgstr "Fişiere"
 
@@ -164,7 +162,8 @@ msgid "Stored Filename"
 msgstr ""
 
 #. module: document
-#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0
+#: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr ""
 
@@ -203,7 +202,7 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: model:ir.ui.menu,name:document.menu_action_view_my_document
+#: model:ir.ui.menu,name:document.menu_document
 msgid "Document Management"
 msgstr "Managementul documentelor"
 
@@ -213,12 +212,13 @@ msgid "Link"
 msgstr ""
 
 #. module: document
-#: field:report.document.user,type:0 field:report.files.partner,type:0
+#: view:document.directory:0
 msgid "Directory Type"
 msgstr "Tip de director"
 
 #. module: document
-#: field:document.directory,group_ids:0 field:ir.attachment,group_ids:0
+#: field:document.directory,group_ids:0
+#: field:ir.attachment,group_ids:0
 msgid "Groups"
 msgstr ""
 
@@ -252,7 +252,8 @@ msgid "Notes"
 msgstr "Note"
 
 #. module: document
-#: view:ir.attachment:0 field:ir.attachment,index_content:0
+#: view:ir.attachment:0
+#: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr ""
 
@@ -312,13 +313,14 @@ msgid "Integrated Document Management System"
 msgstr ""
 
 #. module: document
-#: field:report.document.user,directory:0
-#: field:report.files.partner,directory:0
+#: field:document.directory.content,directory_id:0
+#: field:ir.attachment,parent_id:0
 msgid "Directory"
 msgstr "Director"
 
 #. module: document
-#: field:report.document.user,user_id:0 field:report.document.wall,user_id:0
+#: field:document.directory,user_id:0
+#: field:ir.attachment,user_id:0
 msgid "Owner"
 msgstr "Deținător"
 
@@ -345,7 +347,8 @@ msgid "Content Type"
 msgstr ""
 
 #. module: document
-#: view:document.directory:0 view:ir.attachment:0
+#: view:document.directory:0
+#: view:ir.attachment:0
 msgid "Security"
 msgstr ""
 
@@ -382,7 +385,8 @@ msgid "Domain"
 msgstr ""
 
 #. module: document
-#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0
+#: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr ""
 
@@ -443,7 +447,7 @@ msgid "Cancel"
 msgstr ""
 
 #. module: document
-#: field:report.document.user,partner:0 field:report.files.partner,partner:0
+#: field:ir.attachment,partner_id:0
 msgid "Partner"
 msgstr "Partener"
 

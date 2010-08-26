@@ -15,9 +15,23 @@
 
      <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages"
         groups="base.group_extended" sequence="0"
-        parent="menu_crm_config_lead" />
+        parent="base.menu_crm_config_lead" />
 
 
+        <!-- Lead/Opportunity Categories Action -->
+
+        <record id="crm_lead_categ_action" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">crm.case.categ</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm_case_categ_tree-view"/>
+            <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
+        </record>
+
+        <menuitem action="crm_lead_categ_action"
+            id="menu_crm_lead_categ" name="Categories"
+            parent="base.menu_crm_config_lead" sequence="1"/>
+        
         <!--  Resource Type Form View -->
         <record id="crm_lead_resource_act" model="ir.actions.act_window">
             <field name="name">Lead Sources</field>
@@ -31,7 +45,7 @@
       <menuitem action="crm_lead_resource_act"
             id="menu_crm_lead_resource_act" name="Lead Sources"
             groups="base.group_extended" sequence="2"
-            parent="menu_crm_config_lead" />
+            parent="base.menu_crm_config_lead" />
 
         <!-- CRM Lead Form View  -->
         <record model="ir.ui.view" id="crm_case_form_view_leads">
@@ -43,19 +57,18 @@
                 <group colspan="4" col="7">
                     <field name="name" required="1" string="Name"/>
                     <field name="priority"/>
-                    <field name="date_deadline"/>
                     <button
                          name="convert_opportunity"
                          string="Convert to Opportunity"
                          help="Convert to Opportunity"
                          icon="gtk-index"
+                         colspan="2"
                          type="object"/>
                     <newline />
-                    <field name="section_id" colspan="1"
-                        widget="selection" />
+                    <field name="section_id" widget="selection" />
                     <field name="user_id" />
-                    <field name="stage_id" widget="selection"
-                        domain="[('object_id.model', '=', 'crm.lead')]" />
+                    <field name="stage_id"
+                        domain="[('section_id','=',section_id), ('object_id.model', '=', 'crm.lead')]" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string="Previous"
                             states="open,pending" type="object"
@@ -92,7 +105,7 @@
                         <field name="mobile"/>
                         <newline/>
                         <separator string="Links" colspan="4" col="3"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)"/>
                         <button
                             name="%(action_crm_lead2partner)d"
                             icon="gtk-index" type="action"
@@ -155,12 +168,19 @@
                         <field name="day_close"/>
                     </group>
                  </page>
-                 <page string="Emails" groups="base.group_extended">
+                 <page string="History" groups="base.group_extended">
                    <group colspan="4">
-                       <field colspan="4" name="email_cc" string="CC" widget="char" size="512"/>
+                       <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
                    </group>
-                    <!-- TODO-->
-                    <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
+                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                        <tree string="Communication history">
+                            <field name="display_text" string="History Information"/>
+                            <button
+                                string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
+                                name="%(crm.action_crm_send_mail)d"
+                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                icon="terp-mail-replied" type="action" />
+                        </tree>
                         <form string="Communication history">
                             <group col="4" colspan="4">
                                 <field name="email_from"/>
@@ -168,37 +188,36 @@
                                 <field name="email_to" widget="char" size="512"/>
                                 <field name="email_cc" widget="char" size="512"/>
                                 <field name="name" colspan="4" widget="char" size="512"/>
+                                <field name="history" invisible="1"/>
                             </group>
                             <notebook colspan="4">
                                 <page string="Details">
-                                    <field name="description" colspan="4" nolabel="1"/>
+                                    <group attrs="{'invisible': [('history', '!=', True)]}">
+                                        <field name="description" colspan="4" nolabel="1" height="250"/>
+                                        <button colspan="4"
+                                            string="Reply"
+                                            name="%(crm.action_crm_send_mail)d"
+                                            context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                            icon="terp-mail-replied" type="action" />
+                                    </group>
+                                    <group attrs="{'invisible': [('history', '=', True)]}">
+                                        <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                    </group>
                                 </page>
                                 <page string="Attachments">
                                     <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                 </page>
                             </notebook>
-                            <button colspan="4"
-                            string="Reply"
-                            name="%(crm.action_crm_send_mail)d"
-                            context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                            icon="gtk-undo" type="action" />
                         </form>
-                        <tree string="Communication history">
-                            <field name="date"/>
-                            <field name="email_from" />
-                            <field name="email_to"/>
-                            <field name="description"/>
-                        </tree>
                     </field>
                     <button colspan="2" string="Send New Email"
                         name="%(crm.action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
-                        icon="gtk-go-forward" type="action" />
-                    <button colspan="2" string="Forward to Partner"
+                        icon="terp-mail-message-new" type="action" />
+                    <button colspan="2" string="Forward"
                         name="%(crm_lead_forward_to_partner_act)d"
-                        icon="gtk-go-forward" type="action" />
+                        icon="terp-mail-forward" type="action" />
                  </page>
-
                 </notebook>
             </form>
         </field>
@@ -224,7 +243,7 @@
                 <field name="type_id" invisible="1"/>
                 <field name="referred" invisible="1"/>
 
-                <field name="stage_id"/>
+                <field name="stage_id" />
                 <button name="stage_previous" string="Previous Stage"
                     states="open,pending" type="object" icon="gtk-go-back" />
                 <button name="stage_next" string="Next Stage"
@@ -310,27 +329,13 @@
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
-                        domain="[('section_id.user_id','=',uid)]"
-                        help="My Sales Team"/>
+                        domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                        help="My Sales Team(s)"/>
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="[]"
                         help="Show Sales Team"/>
                 </field>
-                <newline/>
-                <group  expand="0" string="Extended options..." groups="base.group_extended">
-                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                      <separator orientation="vertical"/>
-                      <field name="country_id" context="{'invisible_country': False}">
-                          <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
-                      </field>
-                      <separator orientation="vertical"/>
-                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <newline/>
-                      <field name="create_date" string="Creation Date"/>
-                      <field name="date_closed"/>
-                </group>
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
@@ -343,6 +348,20 @@
                     <separator orientation="vertical"/>
                     <filter string="Creation" icon="terp-go-month"
                         domain="[]" context="{'group_by':'create_date'}" />
+                </group>
+                <newline/>
+                <group  expand="0" string="Extended Filters..." groups="base.group_extended">
+                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                      <separator orientation="vertical"/>
+                      <field name="country_id" context="{'invisible_country': False}">
+                          <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                      </field>
+                      <separator orientation="vertical"/>
+                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                      <newline/>
+                      <field name="create_date" string="Creation Date"/>
+                      <field name="date_closed"/>
                 </group>
            </search>
         </field>

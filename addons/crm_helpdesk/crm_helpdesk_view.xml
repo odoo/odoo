@@ -36,7 +36,6 @@
                             states="open,pending"
                             string="Send Reminder" type="object"
                             icon="gtk-go-forward" />
-                        <field name="som"/>
                         <field name="date" select="1"/>
                         <field name="date_deadline"/>
                     </group>
@@ -66,8 +65,7 @@
                             </group>
 
                             <separator colspan="4" string="Notes"/>
-                            <field name="description" colspan="4"
-                                nolabel="1" widget="text_tag" readonly="1" />
+                            <field name="description" colspan="4" nolabel="1" />
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1"/>
@@ -93,44 +91,54 @@
                                     icon="gtk-convert" />
                             </group>
                         </page>
-                        <page string="Emails" groups="base.group_extended">
+                        <page string="History" groups="base.group_extended">
                             <group colspan="4">
-                                <field colspan="4" name="email_cc" string="CC"/>
+                                <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                                <tree string="Communication history">
+                                    <field name="display_text" string="History Information"/>
+                                    <button
+                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
+                                        name="%(crm.action_crm_send_mail)d"
+                                        context="{'mail':'reply', 'model': 'crm.helpdesk', 'include_original' : True}"
+                                        icon="terp-mail-replied" type="action" />
+                                </tree>
                                 <form string="Communication history">
-                                    <group col="6" colspan="4">
-                                        <field name="date"/>
-                                        <field name="email_to"/>
+                                    <group col="4" colspan="4">
                                         <field name="email_from"/>
+                                        <field name="date"/>
+                                        <field name="email_to" widget="char" size="512"/>
+                                        <field name="email_cc" widget="char" size="512"/>
+                                        <field name="name" colspan="4" widget="char" size="512"/>
+                                        <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <field name="description" colspan="4" nolabel="1"/>
+                                            <group attrs="{'invisible': [('history', '!=', True)]}">
+                                                <field name="description" colspan="4" nolabel="1" height="250"/>
+                                                <button colspan="4"
+                                                    string="Reply"
+                                                    name="%(crm.action_crm_send_mail)d"
+                                                    context="{'mail':'reply', 'model': 'crm.helpdesk', 'include_original' : True}"
+                                                    icon="terp-mail-replied" type="action" />
+                                             </group>
+                                            <group attrs="{'invisible': [('history', '=', True)]}">
+                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                            </group>
                                         </page>
                                         <page string="Attachments">
                                             <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                         </page>
                                     </notebook>
-                                    <button colspan="4"
-                                    string="Reply to Last Email"
-                                    name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'reply', 'model': 'crm.helpdesk'}"
-                                    icon="gtk-undo" type="action" />
                                 </form>
-                                <tree string="Communication history">
-                                    <field name="date"/>
-                                    <field name="email_from" />
-                                    <field name="email_to"/>
-                                    <field name="description"/>
-                                </tree>
                             </field>
                             <button colspan="4" string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.helpdesk'}"
-                                icon="gtk-go-forward" type="action" />
+                                icon="terp-mail-message-new" type="action" />
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="Extra Info" groups="base.group_extended">
                             <group colspan="2" col="2">
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
@@ -151,19 +159,6 @@
                                 <field colspan="4" name="ref"/>
                                 <field colspan="4" name="ref2"/>
                             </group>
-                            <field colspan="4" name="log_ids" nolabel="1">
-                                <tree string="Logs">
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </tree>
-                                <form string="Logs">
-                                    <separator string="Action Information" colspan="4"/>
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </form>
-                            </field>
                         </page>
                     </notebook>
                 </form>
@@ -178,7 +173,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Helpdesk Support Tree"
-                    colors="black:state=='open';blue:state=='pending';grey:state in ('cancel','close')">
+                    colors="black:state=='open';blue:state=='pending';gray:state in ('cancel','close')">
                     <field name="name" string="Query" />
                     <field name="partner_id" string="Partner"/>
                     <field name="date" string="Date"/>
@@ -186,7 +181,6 @@
                     <field name="user_id"/>
                     <field name="section_id"/>
                     <field name="priority"/>
-                    <field name="som" invisible="1"/>
                     <field name="state"/>
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
@@ -250,7 +244,7 @@
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id" select="1" widget="selection" string="Sales Team">
                         <filter icon="terp-personal+"
-                            domain="[('section_id','=',context.get('section_id',False))]"
+                            domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My section" />
                     </field>
                     <newline/>
@@ -269,9 +263,6 @@
                             context="{'group_by':'state'}" />
                         <filter string="Priority" icon="terp-rating-rated"
                             domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="State of Mind"
-                            icon="terp-face-plain"
-                            domain="[]" context="{'group_by':'som'}" />
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month"
                            domain="[]" help="Request Date"

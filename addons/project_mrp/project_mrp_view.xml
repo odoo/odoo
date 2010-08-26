@@ -13,18 +13,18 @@
             </field>
         </record>
         
-	  <record id="view_product_task_form" model="ir.ui.view">
+  	<record id="view_product_task_form" model="ir.ui.view">
             <field name="name">product.form.view.inherit</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
-                    <field name="user_id" attrs="{'readonly':[('type','!=','service')]}"/>
                     <field name="project_id" attrs="{'readonly':[('type','!=','service')]}" />
                 </field>
             </field>
         </record>
+    
     </data>
 </openerp>
         

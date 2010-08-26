@@ -4,27 +4,27 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-05-12 20:13+0000\n"
-"Last-Translator: Grzegorz Grzelak (Cirrus.pl) <Unknown>\n"
+"PO-Revision-Date: 2010-08-08 05:42+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:14+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 04:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "New Holidays Request"
-msgstr "Nowy wniosek o urlop"
+msgstr "Nowy wniosek urlopowy"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_all_holiday
 msgid "All Holidays Requests"
-msgstr "Wszystkie wnioski o urlop"
+msgstr "Wszystkie wnioski urlopowe"
 
 #. module: hr_holidays
 #: constraint:ir.actions.act_window:0
@@ -34,12 +34,12 @@ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 #. module: hr_holidays
 #: field:hr.holidays.per.user,remaining_leaves:0
 msgid "Remaining Leaves"
-msgstr "Pozostało dni wolnych"
+msgstr "Pozostało dni urlopu"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
 msgid "Requests Awaiting for Validation"
-msgstr "Wnioski oczekujące na zatwierdzenie"
+msgstr "Wnioski urlopowe - czekające na zatwierdzenie"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -79,7 +79,7 @@ msgstr "Ustaw na projekt"
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidays0
 msgid "Holidays"
-msgstr "Dni wolne od pracy"
+msgstr "Urlopy"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -137,7 +137,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday
 msgid "My Holidays Requests"
-msgstr "Moje wnioski o urlop"
+msgstr "Moje wnioski urlopowe"
 
 #. module: hr_holidays
 #: field:hr.holidays,notes:0
@@ -150,7 +150,7 @@ msgstr "Uwagi"
 #: field:hr.holidays.log,holiday_status:0
 #: field:hr.holidays.per.user,holiday_status:0
 msgid "Holiday's Status"
-msgstr "Stan dni wolnych"
+msgstr "Rodzaj urlopu"
 
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_refusedrequest0
@@ -180,12 +180,12 @@ msgstr "Urlop został ustawiony w kalendarzu"
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Holiday status"
-msgstr "Stan urlopu"
+msgstr "Rodzaje urlopu"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
 msgid "Holidays Status"
-msgstr "Stany urlopów"
+msgstr "Rodzaje urlopu"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_to:0
@@ -200,7 +200,7 @@ msgstr "Dozwolone urlopy"
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_legaldeclaration0
 msgid "Legal Declaration Document to declare new employee"
-msgstr ""
+msgstr "Formalny dokument deklaracji składanej przez nowego pracownika"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -215,7 +215,7 @@ msgstr "Urlopy na użytkownika"
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Define holiday status"
-msgstr "Zdefiniuj stan urlopu"
+msgstr "Zdefiniuj rodzaj urlopu"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary,init,holiday_type:0
@@ -239,7 +239,7 @@ msgstr "Potwierdź"
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
 msgid "My Awaiting Confirmation Holidays Requests"
-msgstr "Moje wnioski o urlop oczekujące na potwierdzenie"
+msgstr "Moje wnioski urlopowe - czekające na zatwierdzenie"
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -271,7 +271,7 @@ msgstr "Pracownik dostaje urlop"
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
-msgstr ""
+msgstr "Jasno-łososiowy"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -286,7 +286,7 @@ msgstr "Liczba wnioskowanych dni urlopu"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 msgid "My Holiday Requests"
-msgstr "Moje wnioski o urlop"
+msgstr "Moje wnioski urlopowe"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -299,7 +299,7 @@ msgstr "Liczba dni"
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Holiday Status"
-msgstr "Stan urlopu"
+msgstr "Rodzaj urlopu"
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary,init:0
@@ -320,7 +320,7 @@ msgstr "Jego zwierzchnik zaaprobował wniosek"
 #. module: hr_holidays
 #: model:process.transition,note:hr_holidays.process_transition_holidaysdefrequest0
 msgid "If holidays available, employee can take it and fill it."
-msgstr ""
+msgstr "Jeśli urlop jest dostępny, to pracownik może o niego wnioskować"
 
 #. module: hr_holidays
 #: wizard_view:hr.holidays.summary.employee,notify:0
@@ -330,7 +330,7 @@ msgstr "Musisz wybrać co najmniej jednego pracownika. Spróbuj ponownie."
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_validate
 msgid "My Validated Holidays Requests"
-msgstr ""
+msgstr "Moje wnioski urlopowe - zatwierdzone"
 
 #. module: hr_holidays
 #: wizard_field:hr.holidays.summary.employee,init,emp:0
@@ -357,7 +357,7 @@ msgstr "Pozwól przekroczyć limit"
 #. module: hr_holidays
 #: field:hr.holidays.log,holiday_user_id:0
 msgid "Holidays user"
-msgstr ""
+msgstr "Użytkownik urlopu"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -456,7 +456,7 @@ msgstr "Czarny"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_refuse
 msgid "My Refused Holidays Requests"
-msgstr "Moje odrzucone wnioski o urlop"
+msgstr "Moje wnioski urlopowe - odrzucone"
 
 #. module: hr_holidays
 #: model:process.transition,name:hr_holidays.process_transition_setholiday0
@@ -466,7 +466,7 @@ msgstr "Ustaw urlop"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_draft
 msgid "My Draft Holidays Requests"
-msgstr "Moje projekty wniosków urlopowych"
+msgstr "Moje wnioski urlopowe - projekty"
 
 #. module: hr_holidays
 #: field:hr.holidays.per.user,max_leaves:0
@@ -491,7 +491,7 @@ msgstr "Moje wnioski urlopowe"
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
 msgid "Color of the status"
-msgstr "Kolor stanu"
+msgstr "Kolor dla rodzaju"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary,init,holiday_type:0
@@ -567,7 +567,7 @@ msgstr "Wnioski urlopowe."
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_action_holiday_waiting
 msgid "Holidays Requests Awaiting for Validation"
-msgstr "Wnioski urlopowe oczekujące na zatwierdzenie"
+msgstr "Wnioski urlopowe - czekające na zatwierdzenie"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -601,7 +601,7 @@ msgstr "Zatwierdzony"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_refuse
 msgid "My Holidays Request Refused"
-msgstr "Moje odrzucone wnioski o urlop"
+msgstr "Moje wnioski urlopowe - odrzucone"
 
 #. module: hr_holidays
 #: constraint:ir.model:0
@@ -658,7 +658,7 @@ msgstr "Wybierz typ urlopu"
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0
 msgid "Case"
-msgstr "Przypadek"
+msgstr "Sprawa"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_user_id:0
@@ -688,7 +688,7 @@ msgstr "Czerwony"
 #. module: hr_holidays
 #: model:ir.module.module,shortdesc:hr_holidays.module_meta_information
 msgid "Human Resources: Holidays management"
-msgstr "Zasoby ludzkie: zarządzanie urlopami"
+msgstr "Kadry: Urlopy"
 
 #. module: hr_holidays
 #: model:process.process,name:hr_holidays.process_process_holidaysprocess0
@@ -703,7 +703,7 @@ msgstr "Musisz wybrac co najmniej jeden dział. Spróbuj ponownie."
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_validate
 msgid "My Holidays Request Validated"
-msgstr "Moje zatwierdzone wnioski urlopowe"
+msgstr "Moje wnioski urlopowe - zatwierdzone"
 
 #. module: hr_holidays
 #: field:hr.holidays.log,holiday_req_id:0

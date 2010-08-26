@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="sale.group_sale_user"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,base.group_partner_manager"/>
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
@@ -79,11 +79,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales orders">
-                    <field name="date_order"/>
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="partner_shipping_id"/>
                     <field name="user_id" />
+                    <field name="date_order"/>
+                    <field name="partner_shipping_id"/>
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
@@ -92,15 +92,6 @@
                 </tree>
             </field>
         </record>
-
-        <act_window name="Partial Invoice"
-           res_model="sale.advance.payment.inv"
-           src_model="sale.order"
-           view_mode="form"
-           target="new"
-           key2="client_action_multi"
-           id="action_view_sale_advance_payment_inv"/>
-
 
         <record id="view_order_form" model="ir.ui.view">
             <field name="name">sale.order.form</field>
@@ -125,7 +116,7 @@
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
-                                groups="base.group_extended"/>
+                                groups="base.group_extended" domain="[('parent_id','!=',False)]" />
                             <newline/>
                             <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
@@ -142,6 +133,7 @@
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, True)"
                                                 />
                                                 <field groups="product.group_uos" name="product_uos_qty"/>
+                                                <field groups="product.group_uos" name="product_uos"/>
                                             <field name="product_uom"
                                                 on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
                                             <field
@@ -164,19 +156,19 @@
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state"/>
                                                 <field name="invoiced"/>
+                                                <group attrs="{'invisible':[('invoiced','=',True)]}">
                                                 <button colspan="1"
-                                                    name="%(action_view_sale_order_line_make_invoice)d"
+                                                    name="create_sale_order_line_invoice"
                                                     states="confirmed"
-                                                    string="Make Invoice"
-                                                    type="action"
+                                                    string="Create Invoice"
+                                                    type="object"
                                                     icon="terp-document-new" />
+                                                 </group>
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
-<!--                                            <separator colspan="4" string="Properties"/>-->
-<!--                                            <field colspan="4" name="property_ids" nolabel="1"/>-->
                                         </page>
                                         <page string="Notes">
                                             <field colspan="4" name="notes" nolabel="1"/>
@@ -204,7 +196,7 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute" attrs="{'invisible':[('state','!=','draft')]}"/>
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>
@@ -264,22 +256,26 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]" help="Sale Orders that haven't yet be confirmed"/>
                     <filter icon="terp-check" string="Sales" domain="[('state','in',('manual','progress'))]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('state','=','manual')]"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sale Orders ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="user_id" select="1">
+                          <filter domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>
+                    </field>
+
                     <field name="date_order" select="1" string="Order date" />
                     <newline/>
                     <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     </group>
                </search>
             </field>
@@ -292,6 +288,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help">The sale order manages the invoicing, the product fullfilment and the
+delivery processes. OpenERP can handle products, services and
+consumables so that a sale order can trigger tasks, manufacturing
+orders, purchases, etc. It support several invoicing methods according
+to your configuration: from the sale order, from the pickings, etc.
+            </field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
 
@@ -396,25 +398,23 @@
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                             <separator colspan="4" string="States"/>
                             <field name="state"/>
-                            <button colspan="1"
-                              name="%(action_view_sale_order_line_make_invoice)d"
-                              string="Make Invoice"
-                              type="action"
-                              icon="terp-document-new" />
-                            <group col="2" colspan="2">
-                                <button name="button_done"
-                                    states="confirmed,exception"
-                                    string="Done" type="object"
-                                    icon="gtk-jump-to" />
+                            <group col="3" colspan="2">
+                                <button colspan="1"
+                                  name="create_sale_order_line_invoice"
+                                  string="Create Invoice"
+                                  type="object"
+                                  icon="terp-document-new"
+                                  attrs="{'invisible': ['|',('state', 'in', ('draft','cancel')),('invoiced', '=', 1)]}"/>
                                 <button name="button_cancel"
-                                    states="confirmed,exception"
                                     string="Cancel" type="object"
-                                    icon="gtk-cancel" />
+                                    icon="gtk-cancel"
+                                    attrs="{'invisible': ['|',('state', 'not in', ('confirmed', 'exception')),('invoiced', '=', 1)]}"/>
+                                <button name="button_done"
+                                    string="Done" type="object"
+                                    icon="gtk-jump-to"
+                                    attrs="{'invisible': ['|',('state', 'not in', ('confirmed','exception')),('invoiced', '=', 0)]}"/>
                             </group>
                         </page>
-<!--                        <page string="Properties" groups="base.group_extended">-->
-<!--                            <field name="property_ids" nolabel="1"/>-->
-<!--                        </page>-->
                         <page string="Invoice Lines" groups="base.group_extended">
                             <field colspan="4" name="invoice_lines" nolabel="1"/>
                         </page>
@@ -432,13 +432,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1" help="Sale Order Lines ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
+                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sale Order Lines related to a Sale Order of mine"/>
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
@@ -460,20 +460,23 @@
                     <filter icon="terp-accessories-archiver" string="Shipped"
                         domain="[('state','=','done')]"
                         name="unshipped"
+                        help="Sale Order Lines that are in 'done' state"
                         />
                     <filter icon="terp-dolar_ok!" string="Uninvoiced" name="uninvoiced"
                         domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"
+                        help="Sale Order Lines that are confirmed, done or in exception state and haven't yet been invoiced"
                         />
-                    <filter icon="terp-dolar" string="Sale Order"
+                    <filter icon="terp-check" string="Confirmed"
                         domain="[('state','=','confirmed')]"
                         name="sale order"
+                        help="Confirmed Sale Order Lines"
                         />
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
+                        <filter icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
                     </field>
                     <newline />
                     <group expand="0" string="Group By..." colspan="9" col="8">
@@ -492,7 +495,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
+            <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
+            <field name="help">Lines to invoice opens a search view with sales order and their status.</field>
         </record>
 
         <record id="action_order_line_tree3" model="ir.actions.act_window">

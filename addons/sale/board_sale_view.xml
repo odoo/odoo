@@ -5,23 +5,6 @@
             <field name="name">Sales</field>
         </record>
 
-	  <!--  <record model="ir.actions.act_window" id="board_crm_case_categ_phone_incoming0">
-	        <field name="res_model">crm.phonecall</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">tree,calendar</field>
-	        <field name="view_id" ref="crm.crm_case_phone_tree_view"/>
-	        <field name="domain">[('user_id','=',uid)]</field>
-	        <field name="context" eval="{'default_state':'open'}"/>
-	        <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-	    </record>
-		<record model="ir.actions.act_window" id="board_crm_case_categ_meet">
-	        <field name="res_model">crm.meeting</field>
-	        <field name="view_mode">tree,form,gantt</field>
-	        <field name="view_id" ref="crm.crm_case_tree_view_meet"/>
-	        <field name="domain">[('user_id','=',uid)]</field>
-	        <field name="domain">[('date','&gt;=',time.strftime('%Y-%m-%d')),('date','&lt;=',(datetime.datetime.today() + datetime.timedelta(days=2)).strftime('%Y-%m-%d'))]</field>
-	        <field name="context" eval="{'default_state':'open'}"/>
-	    </record>-->
         <record id="board_sales_manager_form" model="ir.ui.view">
             <field name="name">board.sales.manager.form</field>
             <field name="model">board.board</field>
@@ -50,8 +33,8 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_sales_manager_form"/>
         </record>
-		<menuitem icon="terp-graph" id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
+		<menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
         <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_dasboard" sequence="0"/>
-
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,base.group_partner_manager" action="open_board_sales_manager"/>
     </data>
 </openerp>

@@ -7,14 +7,14 @@
             <field name="model">account.unreconcile</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Unreconciliation">
-			    <separator string="Unreconciliation transactions" colspan="4"/>
-			    <image name="gtk-dialog-info"/>
-			    <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable" colspan="2"/>
-			    <separator colspan="4"/>
+            <form string="Unreconciliation">
+                <separator string="Unreconciliate transactions" colspan="4"/>
+                <image name="terp-referer"/>
+                <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disabled" colspan="2"/>
+                <separator colspan="4"/>
                     <group colspan="4" col="6">
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="gtk-ok" string="Unreconcile" name="trans_unrec" type="object" default_focus="1"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" string="Unreconcile" name="trans_unrec" type="object" default_focus="1"/>
                    </group>
                </form>
             </field>
@@ -29,7 +29,7 @@
            <field name="target">new</field>
         </record>
 
-		<record model="ir.values" id="account_unreconcile_values">
+        <record model="ir.values" id="account_unreconcile_values">
             <field name="model_id" ref="account.model_account_move_line" />
             <field name="object" eval="1" />
             <field name="name">Unreconcile Entries</field>
@@ -44,31 +44,31 @@
             <field name="model">account.unreconcile.reconcile</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Unreconciliation">
-			    <separator string="Unreconciliation transactions" colspan="4"/>
-			    <image name="gtk-dialog-info"/>
-			    <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable" colspan="2"/>
-			    <separator colspan="4"/>
+            <form string="Unreconciliation">
+                <separator string="Unreconciliation transactions" colspan="4"/>
+                <image name="gtk-dialog-info"/>
+                <label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable" colspan="2"/>
+                <separator colspan="4"/>
                     <group colspan="4" col="6">
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="gtk-ok" string="Unreconcile" name="trans_unrec_reconcile" type="object" default_focus="1"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" string="Unreconcile" name="trans_unrec_reconcile" type="object" default_focus="1"/>
                    </group>
                </form>
             </field>
         </record>
 
-		<record id="action_account_unreconcile_reconcile" model="ir.actions.act_window">
+        <record id="action_account_unreconcile_reconcile" model="ir.actions.act_window">
             <field name="name">Unreconcile Entries</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.unreconcile.reconcile</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="account_unreconcile_reconcile_view"/>
-	        <field name="context">{'record_id' : active_id}</field>
+            <field name="context">{'record_id' : active_id}</field>
             <field name="target">new</field>
-    	</record>
+        </record>
 
-		<record model="ir.values" id="account_unreconcile_reconcile_values">
+        <record model="ir.values" id="account_unreconcile_reconcile_values">
             <field name="model_id" ref="account.model_account_move_reconcile" />
             <field name="object" eval="1" />
             <field name="name">Unreconcile Entries</field>

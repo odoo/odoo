@@ -2,19 +2,15 @@
 <openerp>
 <data noupdate="0">
 
-    <record id="group_sale_manager" model="res.groups">
-        <field name="name">Sale / Manager</field>
+    <record id="base.group_sale_manager" model="res.groups">
+        <field name="name">Sales / Manager</field>
     </record>
-    <record id="group_sale_user" model="res.groups">
-        <field name="name">Sale / Salesman</field>
+    <record id="base.group_sale_salesman" model="res.groups">
+        <field name="name">Sales / User</field>
     </record>
 
-    <record model='ir.ui.menu' id='menu_action_shop_form'>
-        <field name="groups_id" eval="[(6,0,[ref('group_sale_manager')])]"/>
-    </record>
-    
     <record model="ir.ui.menu" id="base.menu_base_partner">
-        <field eval="[(4, ref('sale.group_sale_user'))]" name="groups_id"/>
+        <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
     </record>
 
     <record model="ir.rule" id="sale_order_comp_rule">

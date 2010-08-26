@@ -47,8 +47,8 @@ class base_setup_config_choice(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         user_ids = user_obj.search(cr, uid, [])
         users = user_obj.browse(cr, uid, user_ids)
-        user_str = '\n'.join(map(lambda x: '    - %s: %s / %s' % (x.name, x.login, x.password), users))
-        return _('The following users have been installed on your database: \n')+ user_str
+        user_str = '\n'.join(map(lambda x: '    - %s :\n\t\tLogin : %s \n\t\tPassword : %s' % (x.name, x.login, x.password), users))
+        return _('The following users have been installed : \n')+ user_str
 
     _columns = {
         'installed_users':fields.text('Installed Users', readonly=True),

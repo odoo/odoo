@@ -43,7 +43,7 @@ Three reports are available:
     3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.
 
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
@@ -63,7 +63,6 @@ Three reports are available:
     ],
     'demo_xml': ['crossovered_budget_demo.xml'],
     'test':[
-#            'test/account_budget_spread.yml',
             'test/account_budget.yml',
             ],
     'installable': True,

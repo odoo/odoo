@@ -19,11 +19,8 @@
 #
 ##############################################################################
 
-import base64
 
 from osv import osv, fields
-from osv.orm import except_orm
-import urlparse
 
 import os
 import nodes
@@ -39,20 +36,27 @@ class document_directory(osv.osv):
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
-        'file_type': fields.char('Content Type', size=32),
         'domain': fields.char('Domain', size=128, help="Use a domain if you want to apply an automatic filter on visible resources."),
         'user_id': fields.many2one('res.users', 'Owner'),
         'storage_id': fields.many2one('document.storage', 'Storage'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
-        'parent_id': fields.many2one('document.directory', 'Parent Item'),
+        'parent_id': fields.many2one('document.directory', 'Parent Directory', select=1),
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
-        'type': fields.selection([('directory','Static Directory'),('ressource','Other Resources')], 'Type', required=True),
-        'ressource_type_id': fields.many2one('ir.model', 'Directories Mapped to Objects',
-            help="Select an object here and Open ERP will create a mapping for each of these " \
-                 "objects, using the given domain, when browsing through FTP."),
+        'type': fields.selection([ 
+            ('directory','Static Directory'),
+            ('ressource','Folders per resource'),
+            ],
+            'Type', required=True, select=1,
+            help="Defines directory's behaviour."),
+        
+        'ressource_type_id': fields.many2one('ir.model', 'Resource model',
+            help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
+        'resource_find_all': fields.boolean('Find all resources', required=True,
+                help="If true, all attachments that match this resource will " \
+                    " be located. If false, only ones that have this as parent." ),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
             help="If you put an object here, this directory template will appear bellow all of these objects. " \
                  "Don't put a parent directory if you select a parent model."),
@@ -60,7 +64,7 @@ class document_directory(osv.osv):
         'ressource_tree': fields.boolean('Tree Structure',
             help="Check this if you want to use the same tree structure as the object selected in the system."),
         'dctx_ids': fields.one2many('document.directory.dctx', 'dir_id', 'Context fields'),
-        'company_id': fields.many2one('res.company', 'Company'),        
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
 
@@ -99,10 +103,12 @@ class document_directory(osv.osv):
         'type': lambda *args: 'directory',
         'ressource_id': lambda *a: 0,        
         'storage_id': _get_def_storage,
+        'resource_find_all': True,
     }
     _sql_constraints = [
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
-        ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!')
+        ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!'),
+        ('dir_parented', 'check(parent_id IS NOT NULL OR storage_id IS NOT NULL)', 'Directory must have a parent or a storage')
     ]
     def name_get(self, cr, uid, ids, context={}):
         res = []
@@ -132,30 +138,6 @@ class document_directory(osv.osv):
         _parent(dir_id, path)
         return path
 
-    def ol_get_resource_path(self, cr, uid, dir_id, res_model, res_id):
-        # this method will be used in process module
-        # to be need test and Improvement if resource dir has parent resource (link resource)
-        path=[]
-        def _parent(dir_id,path):
-            parent=self.browse(cr, uid, dir_id)
-            if parent.parent_id and not parent.ressource_parent_type_id:
-                _parent(parent.parent_id.id,path)
-                path.append(parent.name)
-            else:
-                path.append(parent.name)
-                return path
-
-        directory=self.browse(cr,uid,dir_id)
-        model_ids=self.pool.get('ir.model').search(cr, uid, [('model','=',res_model)])
-        if directory:
-            _parent(dir_id,path)
-            path.append(self.pool.get(directory.ressource_type_id.model).browse(cr, uid, res_id).name)
-            #user=self.pool.get('res.users').browse(cr,uid,uid)
-            #return "ftp://%s:%s@localhost:%s/%s/%s"%(user.login,user.password,config.get('ftp_server_port',8021),cr.dbname,'/'.join(path))
-            # No way we will return the password!
-            return "ftp://user:pass@host:port/test/this"
-        return False
-
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
@@ -169,9 +151,9 @@ class document_directory(osv.osv):
     _constraints = [
         (_check_recursion, 'Error! You can not create recursive Directories.', ['parent_id'])
     ]
+    
     def __init__(self, *args, **kwargs):
-        res = super(document_directory, self).__init__(*args, **kwargs)
-        #self._cache = {}
+        super(document_directory, self).__init__(*args, **kwargs)
 
     def onchange_content_id(self, cr, uid, ids, ressource_type_id):
         return {}
@@ -190,48 +172,32 @@ class document_directory(osv.osv):
         """
         if not context:
                 context = {}
-        lang = context.get('lang',False)
-        if not lang:
-            user = self.pool.get('res.users').browse(cr, uid, uid)
-            lang = user.context_lang 
-            context['lang'] = lang
             
-        try: #just instrumentation
-                return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
-        except Exception,e:
-                print "exception: ",e
-                raise
+        return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
+    def get_dir_permissions(self, cr, uid, ids ):
+        """Check what permission user 'uid' has on directory 'id'
+        """
+        assert len(ids) == 1
+        id = ids[0]
+        
+        cr.execute( "SELECT count(dg.item_id) AS needs, count(ug.uid) AS has " \
+                " FROM document_directory_group_rel dg " \
+                "   LEFT OUTER JOIN res_groups_users_rel ug " \
+                "   ON (dg.group_id = ug.gid AND ug.uid = %s) " \
+                " WHERE dg.item_id = %s ", (uid, id))
+        needs, has = cr.fetchone()
+        if needs and not has:
+            return 1  # still allow to descend into.
+        else:
+            return 15
 
     def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
         """ try to locate the node in uri,
             Return a tuple (node_dir, remaining_path)
         """
-        return (nodes.node_database(context=ncontext), uri)         
+        return (nodes.node_database(context=ncontext), uri)
         
-    def old_code():
-        if not uri:
-            return node_database(cr, uid, context=context)
-        turi = tuple(uri)
-        node = node_class(cr, uid, '/', False, context=context, type='database')
-        for path in uri[:]:
-            if path:
-                node = node.child(path)
-                if not node:
-                    return False
-        oo = node.object and (node.object._name, node.object.id) or False
-        oo2 = node.object2 and (node.object2._name, node.object2.id) or False
-        return node
-
-    def ol_get_childs(self, cr, uid, uri, context={}):
-        node = self.get_object(cr, uid, uri, context)
-        if uri:
-            children = node.children()
-        else:
-            children= [node]
-        result = map(lambda node: node.path_get(), children)
-        return result
-
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default ={}
@@ -273,6 +239,8 @@ class document_directory(osv.osv):
         if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
             raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
+
+    # TODO def unlink(...
 
 document_directory()
 

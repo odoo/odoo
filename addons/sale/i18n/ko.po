@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 12:29+0000\n"
+"PO-Revision-Date: 2010-08-03 06:42+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:08+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -70,7 +70,8 @@ msgid "Steps To Deliver a Sale Order"
 msgstr "판매 주문 전달을 위한 단계들"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,qtty:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,qtty:0
+#: rml:sale.order:0
 msgid "Quantity"
 msgstr "수량"
 
@@ -80,7 +81,8 @@ msgid "You invoice has been successfully created !"
 msgstr "인보이스가 생성되었습니다 !"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Automatic Declaration"
 msgstr "자동 선언"
 
@@ -136,9 +138,7 @@ msgstr "소계"
 msgid ""
 "Whenever confirm button is clicked, the draft state is moved to manual. that "
 "is, quotation is moved to  sale order."
-msgstr ""
-"확정 버튼이 클릭될 때 마다, 초안 상태가 매뉴얼로 이동합니다. 즉, 견적이 판매 "
-"주문으로 이동합니다."
+msgstr "확정 버튼이 클릭될 때 마다, 초안 상태가 매뉴얼로 이동합니다. 즉, 견적이 판매 주문으로 이동합니다."
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
@@ -157,7 +157,9 @@ msgid "Manual Designation"
 msgstr "매뉴얼 목적지"
 
 #. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
 msgstr "노트"
@@ -168,7 +170,8 @@ msgid "Invoice after delivery"
 msgstr "배송 뒤 인보이스"
 
 #. module: sale
-#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "세금"
 
@@ -183,7 +186,8 @@ msgid "Shipping Policy"
 msgstr "선적 정책"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
 msgstr ""
 
@@ -228,7 +232,8 @@ msgid "Procurement is created after confirmation of sale order."
 msgstr "판매 주문 확정 후에 조달이 생성됩니다."
 
 #. module: sale
-#: field:sale.order,project_id:0 field:sale.shop,project_id:0
+#: field:sale.order,project_id:0
+#: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "분석 계정"
 
@@ -276,10 +281,9 @@ msgid ""
 "choose if you invoice based on ordered or shipped quantities. If the product "
 "is a service, shipped quantities means hours spent on the associated tasks."
 msgstr ""
-"판매 주문은 자동적으로 인보이스 제안서 (초안 인보이스)를 생성합니다. 주문과 "
-"배송 수량이 일치하지 않을 수도 있습니다. 귀하는 주문 또는 선적 수량 중 인보이"
-"스의 토대가 될 오브젝트를 선택할 수 있습니다. 서비스 상품의 경우, 선적 수량"
-"은 관련 작업에 소요된 시간을 의미합니다."
+"판매 주문은 자동적으로 인보이스 제안서 (초안 인보이스)를 생성합니다. 주문과 배송 수량이 일치하지 않을 수도 있습니다. 귀하는 주문 "
+"또는 선적 수량 중 인보이스의 토대가 될 오브젝트를 선택할 수 있습니다. 서비스 상품의 경우, 선적 수량은 관련 작업에 소요된 시간을 "
+"의미합니다."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -318,7 +322,8 @@ msgid "Invoice Based on Sales Orders"
 msgstr "판매 주문에 기초한 인보이스"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
 msgid "Sale Shop"
 msgstr "판매 샵"
 
@@ -333,7 +338,8 @@ msgid "Order N°"
 msgstr "주문 N°"
 
 #. module: sale
-#: field:sale.order,order_line:0 view:sale.order.line:0
+#: field:sale.order,order_line:0
+#: view:sale.order.line:0
 msgid "Order Lines"
 msgstr "주문 라인"
 
@@ -343,7 +349,8 @@ msgid "Disc.(%)"
 msgstr "Disc.(%)"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "인보이스 라인"
@@ -364,8 +371,7 @@ msgid ""
 "Packing list is created when 'Assign' is being clicked after confirming the "
 "sale order. This transaction moves the sale order to packing list."
 msgstr ""
-"판매 주문을 확정한 뒤, '할당'을 클릭하면 포장 리스트가 생성됩니다. 이 트랜젝"
-"션은 판매 주문을 포잘 리스트로 이동합니다."
+"판매 주문을 확정한 뒤, '할당'을 클릭하면 포장 리스트가 생성됩니다. 이 트랜젝션은 판매 주문을 포잘 리스트로 이동합니다."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree8
@@ -383,9 +389,7 @@ msgstr "선적 주소:"
 msgid ""
 "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
 "will automatic create after delivery."
-msgstr ""
-"선적 정책을 '배송 뒤 자동 인보이스'로 선택하면, 배송 뒤 인보이스를 자동 생성"
-"합니다."
+msgstr "선적 정책을 '배송 뒤 자동 인보이스'로 선택하면, 배송 뒤 인보이스를 자동 생성합니다."
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
@@ -440,13 +444,15 @@ msgid "Order Reference"
 msgstr "주문 참조"
 
 #. module: sale
-#: selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
 #: selection:sale.order.line,state:0
 msgid "Done"
 msgstr "완료"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0 field:sale.shop,pricelist_id:0
+#: field:sale.order,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "가격리스트"
 
@@ -615,7 +621,8 @@ msgid "Taxes :"
 msgstr "세금:"
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "인보이스됨"
 
@@ -766,7 +773,8 @@ msgid "Direct Delivery"
 msgstr "직접 배송"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "속성"
@@ -788,8 +796,7 @@ msgid ""
 "Invoice is created when 'Create Invoice' is being clicked after confirming "
 "the sale order. This transaction moves the sale order to invoices."
 msgstr ""
-"판매 주문을 확정한 뒤, '인보이스 생성'을 클릭하면 인보이스가 생성됩니다. 이 "
-"트랜젝션은 판매 주문을 인보이스로 이동합니다."
+"판매 주문을 확정한 뒤, '인보이스 생성'을 클릭하면 인보이스가 생성됩니다. 이 트랜젝션은 판매 주문을 인보이스로 이동합니다."
 
 #. module: sale
 #: view:sale.order:0
@@ -798,7 +805,8 @@ msgstr "계산"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
 msgid "Shop"
 msgstr "샵"
 
@@ -849,7 +857,8 @@ msgid "Delivery Order Only"
 msgstr "배송주문 만"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Sales order lines"
 msgstr "판매 주문 라인"
 
@@ -864,7 +873,8 @@ msgid "Sales"
 msgstr "판매"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Qty"
 msgstr "수량"
 
@@ -879,7 +889,8 @@ msgid "Other data"
 msgstr "기타 데이터"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,amount:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,amount:0
+#: rml:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "유닛 가격"
@@ -905,7 +916,8 @@ msgstr "인보이스"
 #: model:process.transition.action,name:sale.process_transition_action_cancel1
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: wizard_button:sale.advance_payment_inv,init,end:0
-#: view:sale.config.picking_policy:0 view:sale.order.line:0
+#: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
 #: wizard_button:sale.order.line.make_invoice,init,end:0
 #: wizard_button:sale.order.make_invoice,init,end:0
 msgid "Cancel"
@@ -922,7 +934,8 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "UoM"
 msgstr "UoM"
 
@@ -936,9 +949,7 @@ msgstr ""
 msgid ""
 "Confirming the packing list moves them to delivery order. This can be done "
 "by clicking on 'Validate' button."
-msgstr ""
-"포장 리스트를 확정하면 배송 주문이 생성됩니다. 이를 위해서는 '검증' 버튼을 클"
-"릭하십시오."
+msgstr "포장 리스트를 확정하면 배송 주문이 생성됩니다. 이를 위해서는 '검증' 버튼을 클릭하십시오."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1035,7 +1046,8 @@ msgid "Ordering Contact"
 msgstr "주문 접촉"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order.line,name:0
+#: rml:sale.order:0
+#: field:sale.order.line,name:0
 msgid "Description"
 msgstr "설명"
 
@@ -1092,7 +1104,8 @@ msgid ""
 msgstr "주문 또는 견적을 요청한 이의 이름과 주소"
 
 #. module: sale
-#: field:sale.order,partner_id:0 field:sale.order.line,order_partner_id:0
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "고객"
 
@@ -1104,7 +1117,8 @@ msgstr "구매 가격리스트"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
 msgstr "판매 주문"
@@ -1131,7 +1145,8 @@ msgid "Total amount"
 msgstr "총 금액"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order,date_order:0
+#: rml:sale.order:0
+#: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "주문 날짜"
 
@@ -1158,9 +1173,8 @@ msgid ""
 "and simple methods to deliver products to the customer in one or two "
 "operations by the worker."
 msgstr ""
-"디폴트로, 시스템은 귀하의 창고와 파트너 위치에 있는 상품들의 복잡한 라우팅과 "
-"결오를 관리할 수 있습니다. 이것은 작업자의 한 두 가지 오퍼레이션을 통해 고객"
-"에게 상품을 전달할 가장 일반적이고 간편한 방식을 구성하게 됩니다."
+"디폴트로, 시스템은 귀하의 창고와 파트너 위치에 있는 상품들의 복잡한 라우팅과 결오를 관리할 수 있습니다. 이것은 작업자의 한 두 가지 "
+"오퍼레이션을 통해 고객에게 상품을 전달할 가장 일반적이고 간편한 방식을 구성하게 됩니다."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -1214,11 +1228,11 @@ msgid ""
 "The same sale order may have been invoiced in several times (by line for "
 "example)."
 msgstr ""
-"이 판매 주문을 위해 생성된 인보이스들의 목록입니다. 동일한 판매 주문이 여러 "
-"차례 인보이스들을 생성할 수도 있습니다 (가령, 라인 별)."
+"이 판매 주문을 위해 생성된 인보이스들의 목록입니다. 동일한 판매 주문이 여러 차례 인보이스들을 생성할 수도 있습니다 (가령, 라인 별)."
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "States"
 msgstr "상태"
 
@@ -1238,7 +1252,8 @@ msgid "Error: Invalid ean code"
 msgstr "에러: 유효하지 않은 EAN 코드"
 
 #. module: sale
-#: field:sale.order,picked_rate:0 field:sale.order,shipped:0
+#: field:sale.order,picked_rate:0
+#: field:sale.order,shipped:0
 msgid "Picked"
 msgstr "인수됨"
 
@@ -1309,6 +1324,205 @@ msgstr "케이스 통계"
 msgid "Top ten sales of the month"
 msgstr "월간 10대 판매량"
 
+#. module: sale
+#: field:report.sale.order.category,price_average:0
+#: field:report.sale.order.product,price_average:0
+msgid "Average Price"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_created
+msgid "Report of Created Sale Order"
+msgstr ""
+
+#. module: sale
+#: view:report.sale.order.category:0
+msgid "Sales Orders by category"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_6
+#: model:ir.report.custom,title:sale.ir_report_custom_6
+msgid "Monthly cumulated sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_product
+msgid "Sales Orders by Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu1
+msgid "Monthly Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_product_tree
+#: model:ir.model,name:sale.model_report_turnover_per_product
+#: view:report.turnover.per.product:0
+msgid "Turnover Per Product"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_82
+msgid "All Months"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,price_total:0
+#: field:report.sale.order.product,price_total:0
+msgid "Total Price"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_category
+msgid "Sales Orders by Categories"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_sale_list
+#: model:ir.ui.menu,name:sale.menu_report_order_sale_list
+msgid "Sales of the Month"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_product
+msgid "Sales by Product (this month)"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_4
+#: model:ir.report.custom,title:sale.ir_report_custom_4
+msgid "Monthly sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_category_all
+#: view:report.sale.order.category:0
+msgid "Sales by Category of Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu3
+msgid "Monthly Cumulated Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,quantity:0
+#: field:report.sale.order.product,quantity:0
+msgid "# of Products"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_product_all
+#: view:report.sale.order.product:0
+msgid "Sales by Product"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_81
+msgid "This Month"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,category_id:0
+msgid "Categories"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_created_sale_order_dashboard
+msgid "Created Sale Orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_80
+msgid "Reporting"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_month_tree
+#: model:ir.model,name:sale.model_report_turnover_per_month
+#: view:report.turnover.per.month:0
+msgid "Turnover Per Month"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu2
+msgid "Daily Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_83
+msgid "Graphs"
+msgstr ""
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "Manual in progress"
+msgstr "진행 중 매뉴얼"
+
+#. module: sale
+#: field:report.turnover.per.month,turnover:0
+#: field:report.turnover.per.product,turnover:0
+msgid "Total Turnover"
+msgstr ""
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "In progress"
+msgstr "진행 중"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_category
+msgid "Sales by Category of Product (this month)"
+msgstr ""
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_5
+#: model:ir.report.custom,title:sale.ir_report_custom_5
+msgid "Daily sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,name:0
+#: field:report.sale.order.product,name:0
+#: field:report.turnover.per.month,name:0
+msgid "Month"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,count:0
+#: field:report.sale.order.product,count:0
+msgid "# of Lines"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.created,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: sale
+#: view:report.sale.order.created:0
+msgid "Created Sales orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_so_pipeline
+#: view:sale.order:0
+msgid "Sales by State"
+msgstr ""
+
 #~ msgid "Customer Ref."
 #~ msgstr "고객 참조"
 
@@ -1318,67 +1532,58 @@ msgstr "월간 10대 판매량"
 #~ msgid "Shop name"
 #~ msgstr "샵 이름"
 
+#, python-format
 #~ msgid ""
 #~ "You cannot make an advance on a sale order that is defined as 'Automatic "
 #~ "Invoice after delivery'."
-#~ msgstr ""
-#~ "'배송 뒤 자동 인보이스'로 정의된 판매 주문에 대해 선급금을 처리할 수 없습"
-#~ "니다."
+#~ msgstr "'배송 뒤 자동 인보이스'로 정의된 판매 주문에 대해 선급금을 처리할 수 없습니다."
 
+#, python-format
 #~ msgid "Error !"
 #~ msgstr "에러 !"
 
+#, python-format
 #~ msgid "You must first cancel all invoices attached to this sale order."
 #~ msgstr "판매 주문에 첨부된 모든 인보이스를 먼저 취소하십시오."
 
+#, python-format
 #~ msgid "Invalid action !"
 #~ msgstr "유효하지 않은 액션 !"
 
 #~ msgid ""
 #~ "Gives the state of the quotation or sale order. The exception state is "
-#~ "automatically set when a cancel operation occurs in the invoice "
-#~ "validation (Invoice Exception) or in the packing list process (Shipping "
-#~ "Exception). The 'Waiting Schedule' state is set when the invoice is "
-#~ "confirmed but waiting for the scheduler to be on the date 'Date Ordered'."
+#~ "automatically set when a cancel operation occurs in the invoice validation "
+#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
+#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+#~ "for the scheduler to be on the date 'Date Ordered'."
 #~ msgstr ""
-#~ "인용 상태 또는 판매 주문을 제공합니다. 예외 상태는 인보이스 검증 또는 포"
-#~ "장 리스트 프로세스 (선적 예외)에서 취소 오퍼레이션이 발생할 때, 자동적으"
-#~ "로 설정됩니다. '스케줄 대기' 상태는 인보이스가 확정되었지만, 스케줄러가 "
-#~ "'주문 날짜'에 이를 때를 기다릴 때 설정됩니다."
+#~ "인용 상태 또는 판매 주문을 제공합니다. 예외 상태는 인보이스 검증 또는 포장 리스트 프로세스 (선적 예외)에서 취소 오퍼레이션이 발생할 "
+#~ "때, 자동적으로 설정됩니다. '스케줄 대기' 상태는 인보이스가 확정되었지만, 스케줄러가 '주문 날짜'에 이를 때를 기다릴 때 설정됩니다."
 
 #~ msgid "Number packages"
 #~ msgstr "패키지 수"
 
 #~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery "
-#~ "operations.\n"
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
 #~ "  - The 'Pay before delivery' choice will first generate the invoice and "
 #~ "then generate the packing order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the packing order "
-#~ "directly and wait for the user to manually click on the 'Invoice' button "
-#~ "to generate the draft invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
 #~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
 #~ "invoice based on sale order after all packing lists have been finished.\n"
 #~ "  - The 'Invoice from the packings' choice is used to create an invoice "
 #~ "during the packing process."
 #~ msgstr ""
 #~ "선적 정책은 인보이스와 배송 오퍼레이션을 동기화하는데 이용됩니다. \n"
-#~ "    - '배송 전 지불'로 선택하면, 인보이스를 먼저 생성하고 난 뒤, 이 인보이"
-#~ "스의 결제 뒤에 포장 주문을 생성합니다. \n"
-#~ "    - '선적 및 매뉴얼 인보이스'를 선택하면, 곧 바로 포장 주문을 생성하고, "
-#~ "사용자가 인보이스 초안을 생성하기 위해 '인보이스' 버튼을 클릭할 때를 기다"
-#~ "립니다. \n"
-#~ "    - '배송 뒤, 주문에 기초한 인보이스'를 선택하면, 모든 포장 리스트가 완"
-#~ "료된 뒤 판매 주문에 기초하여 인보이스 초안을 생성합니다.  \n"
-#~ "    - '포장으로부터 인보이스'를 선택하면, 포장 프로세스 중에 인보이스를 생"
-#~ "성합니다."
+#~ "    - '배송 전 지불'로 선택하면, 인보이스를 먼저 생성하고 난 뒤, 이 인보이스의 결제 뒤에 포장 주문을 생성합니다. \n"
+#~ "    - '선적 및 매뉴얼 인보이스'를 선택하면, 곧 바로 포장 주문을 생성하고, 사용자가 인보이스 초안을 생성하기 위해 '인보이스' "
+#~ "버튼을 클릭할 때를 기다립니다. \n"
+#~ "    - '배송 뒤, 주문에 기초한 인보이스'를 선택하면, 모든 포장 리스트가 완료된 뒤 판매 주문에 기초하여 인보이스 초안을 "
+#~ "생성합니다.  \n"
+#~ "    - '포장으로부터 인보이스'를 선택하면, 포장 프로세스 중에 인보이스를 생성합니다."
 
-#~ msgid "Manual in progress"
-#~ msgstr "진행 중 매뉴얼"
-
-#~ msgid "In progress"
-#~ msgstr "진행 중"
-
+#, python-format
 #~ msgid "Could not cancel sale order !"
 #~ msgstr "판매 주문을 취소하지 못했습니다 !"
 
@@ -1394,28 +1599,31 @@ msgstr "월간 10대 판매량"
 #~ msgid ""
 #~ "If you don't have enough stock available to deliver all at once, do you "
 #~ "accept partial shippings or not."
-#~ msgstr ""
-#~ "한꺼번에 모두 배송할 충분한 스톡이 없다면, 부분 배송을 할 것인지 아닌 지"
-#~ "를 결정."
+#~ msgstr "한꺼번에 모두 배송할 충분한 스톡이 없다면, 부분 배송을 할 것인지 아닌 지를 결정."
 
+#, python-format
 #~ msgid "Error"
 #~ msgstr "에러"
 
+#, python-format
 #~ msgid "You must first cancel all packings attached to this sale order."
 #~ msgstr "이 판매 주문에 첨부된 모든 포장들을 먼저 취소하십시오."
 
 #~ msgid "Product UOS"
 #~ msgstr "상품 UOS"
 
+#, python-format
 #~ msgid "Could not cancel this sale order !"
 #~ msgstr "이 판매 주문을 취소하지 못했습니다 !"
 
-#~ msgid ""
-#~ "You can not cancel a sale order line that has already been invoiced !"
+#, python-format
+#~ msgid "You can not cancel a sale order line that has already been invoiced !"
 #~ msgstr "이미 인보이스가 발행된 판매 주문은 취소할 수 없습니다 !"
 
+#, python-format
 #~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
 #~ msgstr "이미 확정된 판매 주문은 삭제할 수 없습니다 !"
 
+#, python-format
 #~ msgid "invalid mode for test_state"
 #~ msgstr "test_state에 유효하지 않은 모드"

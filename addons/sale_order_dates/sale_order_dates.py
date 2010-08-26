@@ -19,9 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields, osv
 import time
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+from osv import fields, osv
+
 class sale_order_dates(osv.osv):
     _inherit = 'sale.order'
     _name = 'sale.order'
@@ -45,7 +48,7 @@ class sale_order_dates(osv.osv):
         for order in self.browse(cr, uid, ids):
             dates_list = []
             for line in order.order_line:
-                dt=DateTime.strptime(order.date_order, '%Y-%m-%d') + DateTime.RelativeDateTime(days=line.delay or 0.0)
+                dt = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
                 dt_s = dt.strftime('%Y-%m-%d')
                 dates_list.append(dt_s)
             if dates_list:
@@ -57,7 +60,7 @@ class sale_order_dates(osv.osv):
         'requested_date': fields.date('Requested Date'),
         'effective_date': fields.function(_get_effective_date, method=True, type='date', store=True,string='Effective Date'),
     }
-sale_order_dates()
 
+sale_order_dates()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

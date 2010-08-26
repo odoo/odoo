@@ -38,10 +38,11 @@ class account_journal_select(osv.osv_memory):
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
         cr.execute('select journal_id, period_id from account_journal_period where id=%s', (context['active_id'],))
-        journal_id, period_id = cr.fetchone()
-
-        result['domain'] = str([('journal_id', '=', journal_id), ('period_id', '=', period_id)])
-        result['context'] = str({'journal_id': journal_id, 'period_id': period_id})
+        res = cr.fetchone()
+        if res:
+            journal_id, period_id = res
+            result['domain'] = str([('journal_id', '=', journal_id), ('period_id', '=', period_id)])
+            result['context'] = str({'journal_id': journal_id, 'period_id': period_id})
         return result
 
 

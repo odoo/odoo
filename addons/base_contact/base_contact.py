@@ -45,9 +45,9 @@ class res_partner_contact(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Last Name', size=30, required=True),
-        'first_name': fields.char('First Name', size=30),
-        'mobile': fields.char('Mobile', size=30),
+        'name': fields.char('Last Name', size=64, required=True),
+        'first_name': fields.char('First Name', size=64),
+        'mobile': fields.char('Mobile', size=64),
         'title': fields.many2one('res.partner.title','Title'),
         'website': fields.char('Website', size=120),
         'lang_id': fields.many2one('res.lang', 'Language'),
@@ -203,7 +203,7 @@ class res_partner_job(osv.osv):
         'address_id': fields.many2one('res.partner.address', 'Address', \
                         help='Address which is linked to the Partner'), # TO Correct: domain=[('partner_id', '=', name)]
         'contact_id': fields.many2one('res.partner.contact','Contact', required=True, ondelete='cascade'),
-        'function': fields.char('Partner Function', size=34, help="Function of this contact with this partner"),
+        'function': fields.char('Partner Function', size=64, help="Function of this contact with this partner"),
         'sequence_contact': fields.integer('Contact Seq.',help='Order of\
                      importance of this address in the list of addresses of the linked contact'),
         'sequence_partner': fields.integer('Partner Seq.',help='Order of importance\
@@ -223,6 +223,9 @@ class res_partner_job(osv.osv):
         'sequence_contact' : lambda *a: 0,
         'state': lambda *a: 'current',
     }
+    
+    def onchange_name(self, cr, uid, ids, address_id='', name='', context=None):    
+        return {'value': {'address_id': address_id}, 'domain':{'partner_id':'name'}}     
     
     def onchange_partner(self, cr, uid, _, partner_id, context=None):
         """

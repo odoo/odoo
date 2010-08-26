@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+
 from osv import osv,fields
 
 class account_coda(osv.osv):
@@ -37,7 +38,7 @@ class account_coda(osv.osv):
         'date': time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr,uid,context: uid,
     }
-    
+
 account_coda()
 
 class account_bank_statement(osv.osv):
@@ -45,7 +46,7 @@ class account_bank_statement(osv.osv):
     _columns = {
         'coda_id':fields.many2one('account.coda', 'Coda'),
     }
-    
+
 account_bank_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="account_aged_balance_view" model="ir.ui.view">
+            <field name="name">Aged Partner Balance</field>
+            <field name="model">account.aged.trial.balance</field>
+            <field name="type">form</field>
+            <!--<field name="inherit_id" ref="account_common_report_view" />-->
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <field name="chart_account_id" widget='selection'/>
+                    <field name="fiscalyear_id"/>
+                    <newline/>
+                    <field name="date_from"/>
+                    <field name="period_length"/>
+                    <newline/>
+                    <field name="result_selection"/>
+                    <field name="direction_selection"/>
+                    <field name="journal_ids"/>
+                    <newline/>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
+                        <button icon="gtk-print" name="check_report" string="Print" type="object" colspan="2" default_focus="1"/>
+                     </group>
+                </form>
+            </field>
+        </record>
+
+         <record id="action_account_aged_balance_view" model="ir.actions.act_window">
+             <field name="name">Aged Partner Balance</field>
+             <field name="res_model">account.aged.trial.balance</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_aged_balance_view"/>
+             <field name="context">{'record_id':active_id}</field>
+             <field name="target">new</field>
+            <field name="help">Aged Partner Balance is a more detailed report of your receivables by intervals. When opening that report, OpenERP asks for the name of the company, the fiscal period and the size of the interval to be analyzed (in days). OpenERP then calculates a table of credit balance by period. So if you request an interval of 30 days OpenERP generates an analysis of creditors for the past month, past two months, and so on. </field>
+       </record>
+
+        <menuitem icon="STOCK_PRINT"
+            name="Aged Partner Balance"
+            action="action_account_aged_balance_view"
+            id="menu_aged_trial_balance"
+            parent="account.next_id_22"/>
+
+    </data>
+</openerp>

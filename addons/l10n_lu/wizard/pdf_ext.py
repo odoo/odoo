@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -64,7 +64,7 @@ def extract_keys(lines):
     keys = []
     for line in lines:
         if line.startswith('/V'):
-            pass #print 'value',line
+            pass
         elif line.startswith('/T'):
             key = line[7:-2]
             key = ''.join(key.split('\x00'))
@@ -85,7 +85,6 @@ def write_fields(out, fields):
     for key in fields:
 	    value = fields[key]
 	    write_field(out, key, value)
-#        write_field(out, key+"a", value) # pour copie-carbone sur autres pages
     out.write(TAIL)
 
 def extract_keys_from_pdf(filename):

@@ -1,3 +1,25 @@
+
+# -*- coding: utf-8 -*-
+##############################################################################
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#
+##############################################################################
+
 from osv import fields,osv
 import tools
 from crm import crm
@@ -52,7 +74,7 @@ class project_issue_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'user_id2':fields.many2one('res.users', 'Assigned To', readonly=True),
+        'user_id2':fields.many2one('res.users', 'Assignee', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
@@ -66,17 +88,17 @@ class project_issue_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'opening_date': fields.date('Opening Date', readonly=True),
+        'opening_date': fields.date('Date of Opening', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
-        'date_closed': fields.date('Closed Date', readonly=True),
+        'date_closed': fields.date('Date of Closing', readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue')]"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
         'nbr': fields.integer('# of Issues', readonly=True),
-        'working_hours_open': fields.float('# Working Open Hours', readonly=True),
-        'working_hours_close': fields.float('# Working Closing Hours', readonly=True),
-        'delay_open': fields.float('Avg opening Delay', digits=(16,2), readonly=True, group_operator="avg",
+        'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True),
+        'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True),
+        'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
-        'delay_close': fields.float('Avg Closing Delay', digits=(16,2), readonly=True, group_operator="avg",
+        'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
         'company_id' : fields.many2one('res.company', 'Company'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
@@ -126,8 +148,7 @@ class project_issue_report(osv.osv):
                     project_issue c
                 WHERE c.categ_id IN (select res_id from ir_model_data WHERE model = 'crm.case.categ' and name='bug_categ')
             )""")
+
 project_issue_report()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -53,7 +53,7 @@ class purchase_order(osv.osv):
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
                 'amount_total': 0.0,
-                            }
+            }
             val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
@@ -81,7 +81,7 @@ class purchase_order(osv.osv):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
-            res[purchase.id] = False
+            res[purchase.id] = time.strftime('%Y-%m-%d %H:%M:%S')
             if purchase.order_line:
                 min_date=purchase.order_line[0].date_planned
                 for line in purchase.order_line:
@@ -294,14 +294,14 @@ class purchase_order(osv.osv):
                 if manager and not (manager.id in managers):
                     managers.append(manager.id)
             for manager_id in managers:
-                request.create(cr, uid,
-                      {'name' : "Purchase amount over the limit",
+                request.create(cr, uid,{
+                       'name' : "Purchase amount over the limit",
                        'act_from' : uid,
                        'act_to' : manager_id,
                        'body': 'Somebody has just confirmed a purchase with an amount over the defined limit',
                        'ref_partner_id': po.partner_id.id,
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
-                       })
+                })
     def inv_line_create(self, cr, uid, a, ol):
         return (0, False, {
             'name': ol.name,
@@ -311,7 +311,7 @@ class purchase_order(osv.osv):
             'product_id': ol.product_id.id or False,
             'uos_id': ol.product_uom.id or False,
             'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
-            'account_analytic_id': ol.account_analytic_id.id,
+            'account_analytic_id': ol.account_analytic_id.id or False,
         })
 
     def action_cancel_draft(self, cr, uid, ids, *args):
@@ -344,7 +344,7 @@ class purchase_order(osv.osv):
                     if not a:
                         raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
                 else:
-                    a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
+                    a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category').id
                 fpos = o.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
                 il.append(self.inv_line_create(cr, uid, a, ol))
@@ -425,6 +425,7 @@ class purchase_order(osv.osv):
                 'invoice_state': istate,
                 'purchase_id': order.id,
                 'company_id': order.company_id.id,
+                'move_lines' : [],
             })
             todo_moves = []
             for order_line in order.order_line:
@@ -520,21 +521,20 @@ class purchase_order(osv.osv):
             order_infos = new_order[0]
             if not order_infos:
                 order_infos.update({
-                'origin': porder.origin,
-                'date_order': time.strftime('%Y-%m-%d'),
-                'partner_id': porder.partner_id.id,
-                'partner_address_id': porder.partner_address_id.id,
-                'dest_address_id': porder.dest_address_id.id,
-                'warehouse_id': porder.warehouse_id.id,
-                'location_id': porder.location_id.id,
-                'pricelist_id': porder.pricelist_id.id,
-                'state': 'draft',
-                'order_line': {},
-                'notes': '%s' % (porder.notes or '',),
-                'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
+                    'origin': porder.origin,
+                    'date_order': time.strftime('%Y-%m-%d'),
+                    'partner_id': porder.partner_id.id,
+                    'partner_address_id': porder.partner_address_id.id,
+                    'dest_address_id': porder.dest_address_id.id,
+                    'warehouse_id': porder.warehouse_id.id,
+                    'location_id': porder.location_id.id,
+                    'pricelist_id': porder.pricelist_id.id,
+                    'state': 'draft',
+                    'order_line': {},
+                    'notes': '%s' % (porder.notes or '',),
+                    'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
                 })
             else:
-                #order_infos['name'] += ', %s' % porder.name
                 if porder.notes:
                     order_infos['notes'] = (order_infos['notes'] or '') + ('\n%s' % (porder.notes,))
                 if porder.origin:
@@ -720,7 +720,7 @@ purchase_order_line()
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Latest Requisition'),
+        'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
     }
 
     def action_po_assign(self, cr, uid, ids, context={}):
@@ -745,23 +745,24 @@ class procurement_order(osv.osv):
         po_obj = self.pool.get('purchase.order')
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
-            partner = procurement.product_id.seller_ids[0].name
+            partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
+            seller_qty = procurement.product_id.seller_qty
+            seller_delay = int(procurement.product_id.seller_delay)
             partner_id = partner.id
-            partner_rec = procurement.product_id.seller_ids[0]
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
 
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
-            if procurement.product_id.seller_ids[0].qty:
-                qty = max(qty,partner_rec.qty)
+            if seller_qty:
+                qty = max(qty,seller_qty)
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
-            newdate = newdate - partner_rec.delay
+            newdate = newdate - seller_delay
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})

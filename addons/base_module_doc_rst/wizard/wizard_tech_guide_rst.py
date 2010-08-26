@@ -141,10 +141,10 @@ class RstDoc(object):
             "      <br />",
             """    <link rel="stylesheet" href="../_static/hide_objects_in_sidebar.css" type="text/css" />""",
             "",
-            """.. tip:: This module is part of the Open ERP software, the leading Open Source """,
-            """  enterprise management system. If you want to discover Open ERP, check our """,
+            """.. tip:: This module is part of the OpenERP software, the leading Open Source """,
+            """  enterprise management system. If you want to discover OpenERP, check our """,
             """  `screencasts <http://openerp.tv>`_ or download """,
-            """  `Open ERP <http://openerp.com>`_ directly.""",
+            """  `OpenERP <http://openerp.com>`_ directly.""",
             "",
             ".. raw:: html",
             "",
@@ -282,9 +282,6 @@ class RstDoc(object):
                        title,
                        '#' * len(title),
                        "",
-                       #".. index::",
-                       #"  single: %s object" % (obj_name),
-                       #".. ",
                       ]
 
                 for field in obj['fields']:
@@ -292,11 +289,6 @@ class RstDoc(object):
                            "",
                            write_field(field),
                            "",
-                           #".. index::",
-                           #"  single: %s field" % (field[0]),
-                           #".. ",
-                           #"",
-                           #"",
                           ]
                     slo.extend(slf)
                 sl.extend(slo)
@@ -498,11 +490,6 @@ class wizard_tech_guide_rst(wizard.interface):
             msg = "Object %s not found" % (obj)
             logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
             return ""
-
-##     def _object_doc(self, cr, uid, obj):
-##         pool = pooler.get_pool(cr.dbname)
-##         modobj = pool.get(obj)
-##         return modobj.__doc__
 
     states = {
         'init': {

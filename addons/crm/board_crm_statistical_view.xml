@@ -4,53 +4,69 @@
         <!--
          Board for statistical view of the sections
          -->
-        <record model="ir.ui.view" id="view_crm_lead_stage_graph1">
-            <field name="name">Leads By Stage - Graph</field>
-            <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Leads By Stage" type="pie">
-                    <field name="stage_id"/>
-                    <field name="nbr" operator="+"/>
-                </graph>
-            </field>
-        </record>
 
-        <record model="ir.ui.view" id="view_crm_opportunity_categ_graph">
-            <field name="name">report.crm.opportunity.categ.graph</field>
+         <record model="ir.ui.view" id="view_crm_opportunity_categ_graph">
+            <field name="name">Opportunities By Categories - Graph</field>
             <field name="model">crm.lead.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Opportunity by Sales Team and Categories" type="bar" orientation="horizontal">
+                <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
                     <field name="categ_id"/>
                     <field name="nbr" operator="+"/>
                 </graph>
             </field>
         </record>
 
-        <act_window name="Opportunities By Categories"
-            domain="[('state','!=','done'),('state','!=','cancel')]"
-            res_model="crm.lead.report"
-            view_type="form"
-            view_mode="graph,tree,form"
-            view_id="view_crm_opportunity_categ_graph"
-            id="act_oppor_categ"/>
+        <record model="ir.ui.view" id="view_crm_opportunity_stage_graph">
+            <field name="name">Opportunities By Stage - Graph</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities By Stage" type="pie">
+                    <field name="stage_id"/>
+                    <field name="nbr" operator="+"/>
+                </graph>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_crm_opportunity_user_stage_graph">
+            <field name="name">Opportunities By Stage Per User - Graph</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities By Stage" type="bar">
+                    <field name="stage_id"/>
+                    <field name="planned_revenue" operator="+"/>
+                    <field name="user_id" group="True"/>
+                </graph>
+            </field>
+        </record>
 
-        <record model="ir.actions.act_window" id="act_leads_state">
+        <record model="ir.actions.act_window" id="act_oppor_categ">
+            <field name="res_model">Opportunities By Categories</field>
             <field name="res_model">crm.lead.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
-            <field name="view_id" ref="view_crm_lead_stage_graph1"/>
+            <field name="view_id" ref="view_crm_opportunity_categ_graph"/>
             <field name="domain">[('state','!=','done'),('state','!=','cancel')]</field>
         </record>
 
-        <act_window name="Leads Of The Month By User"
-            domain="[('month','=',time.strftime('%%m')),('state','!=','cancel')]"
-            res_model="crm.lead.report"
-            view_type="form"
-            view_mode="graph,tree,form"
-            view_id="view_crm_lead_stage_graph1"
-            id="act_leads_month_user"/>
+        <record model="ir.actions.act_window" id="act_opportunity_stage">
+            <field name="res_model">crm.lead.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+            <field name="view_id" ref="view_crm_opportunity_stage_graph"/>
+            <field name="domain">[('state','!=','done'),('state','!=','cancel')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_oppor_stage_user">
+            <field name="res_model">Planned revenue by user and stage</field>
+            <field name="res_model">crm.lead.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree,form</field>
+            <field name="view_id" ref="view_crm_opportunity_user_stage_graph"/>
+            <field name="domain">[('state','!=','cancel')]</field>
+        </record>
 
         <record model="ir.ui.view" id="board_crm_statistical_form">
             <field name="name">CRM - Statistical Dashboard Form</field>
@@ -68,8 +84,8 @@
                                 width="250"/>
 
                             <action
-                                string="Leads By Stage"
-                                name="%(act_leads_state)d"
+                                string="Opportunities By Stage"
+                                name="%(act_opportunity_stage)d"
                                 height="200"
                                 colspan="4"/>
 
@@ -77,8 +93,8 @@
                         <child2>
 
                             <action
-                                string="Leads Of The Month By User"
-                                name="%(act_leads_month_user)d"
+                                string="Planned Revenue by Stage and User"
+                                name="%(act_oppor_stage_user)d"
                                 colspan="4"/>
 
                         </child2>
@@ -96,7 +112,7 @@
             <field name="view_id" ref="board_crm_statistical_form"/>
         </record>
 
-	    <menuitem icon="terp-graph" id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
+	    <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
 
         <menuitem
             name="Statistics Dashboard" parent="board.menu_dasboard"

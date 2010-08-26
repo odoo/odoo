@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="0">
+	<data>
 	
 	
-    <record id="group_event_manager" model="res.groups">
-        <field name="name">EVENT / Manager</field>
+    <record id="base.group_marketing_manager" model="res.groups">
+        <field name="name">Marketing / Manager</field>
+    </record>
+    <record id="base.res_groups_email_template_admin" model="res.groups">
+        <field name="name">Marketing / User</field>
     </record>
 
-    <record id="group_event_subscriber" model="res.groups">
-        <field name="name">EVENT / Subscriber</field>
+    <record id="base.group_sale_manager" model="res.groups">
+        <field name="name">Sales / Manager</field>
     </record>
-    
-<!--		<record id="menu_event_config" model="ir.ui.menu">-->
-<!--			<field name="groups_id" eval="[(6,0,[ref('crm.group_crm_manager'), ref('base.group_extended')])]"/>-->
-<!--		</record>-->
-<!---->
-<!--		<record id="menu_report_event" model="ir.ui.menu">-->
-<!--			<field name="groups_id" eval="[(6,0,[ref('crm.group_crm_manager'), ref('base.group_extended')])]"/>-->
-<!--		</record>-->
+
+    <record id="base.group_sale_salesman" model="res.groups">
+        <field name="name">Sales / User</field>
+    </record>
+  
 
 	</data>
 </openerp>

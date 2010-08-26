@@ -19,7 +19,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
 import ir
 
@@ -31,9 +30,10 @@ class sale_advance_payment_inv(osv.osv_memory):
         'amount': fields.float('Unit Price', size=(16, 2), required=True),
         'qtty': fields.float('Quantity', size=(16, 2), required=True),
     }
-    _default = {
-        'qtty' : lambda *a: 1
-               }
+    _defaults = {
+        'qtty': 1.0
+    }
+
     def create_invoices(self, cr, uid, ids, context={}):
         """
              To create invoices.
@@ -64,8 +64,8 @@ class sale_advance_payment_inv(osv.osv_memory):
                         _("You cannot make an advance on a sale order \
                              that is defined as 'Automatic Invoice after delivery'."))
                 val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
-                        uom = False, partner_id = sale.partner_id.id, fiscal_position = sale.fiscal_position.id)
-                line_id =obj_lines.create(cr, uid, {
+                        uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
+                line_id = obj_lines.create(cr, uid, {
                     'name': val['value']['name'],
                     'account_id': val['value']['account_id'],
                     'price_unit': sale_adv_obj.amount,
@@ -79,7 +79,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 })
                 create_ids.append(line_id)
                 inv = {
-                    'name': sale.name,
+                    'name': sale.client_order_ref or sale.name,
                     'origin': sale.name,
                     'type': 'out_invoice',
                     'reference': False,
@@ -92,7 +92,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'comment': '',
                     'payment_term':sale.payment_term.id,
                     'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
-                    }
+                }
 
                 inv_id = inv_obj.create(cr, uid, inv)
 
@@ -121,15 +121,15 @@ class sale_advance_payment_inv(osv.osv_memory):
 
         context.update({'invoice_id':list_inv})
 
-        return {#'invoice_ids':list_inv,
-                'name': 'Open Invoice',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'sale.open.invoice',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context':context
-                }
+        return {
+            'name': 'Open Invoice',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'sale.open.invoice',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context':context
+        }
 
 sale_advance_payment_inv()
 
@@ -168,7 +168,6 @@ class sale_open_invoice(osv.osv_memory):
             tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
             tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
         return {
-#            'domain': "[('id','in', ["+','.join(map(str, invoices))+"])]", # TODO
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'form,tree',
@@ -179,9 +178,6 @@ class sale_open_invoice(osv.osv_memory):
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
          }
-
-
-
 
 sale_open_invoice()
 

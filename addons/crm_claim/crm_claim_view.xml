@@ -3,7 +3,7 @@
     <data>
 
         <menuitem id="menu_config_claim" name="Claim"
-            groups="base.group_extended"
+            groups="base.group_extended,base.group_system"
             parent="base.menu_base_config" sequence="6" />
 
         <!-- Claims categories  -->
@@ -47,7 +47,7 @@
         </record>
 
          <menuitem action="crm_claim_resource_act" name="Resource Type"
-                id="menu_crm_claim_stage_act"
+                id="menu_crm_claim_type_act"
                 parent="menu_config_claim" />
 
         <!-- Claims    -->
@@ -57,7 +57,7 @@
             <field name="model">crm.claim</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Claims" colors="blue:state=='pending';black:state=='open';grey:state in ('close', 'cancel')">
+                <tree string="Claims" colors="blue:state=='pending';black:state=='open';gray:state in ('close', 'cancel')">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
@@ -67,7 +67,6 @@
                     <field name="date_closed" string="Closure Date"/>
                     <field name="categ_id" string="Type" select="1"/>
                     <field name="stage_id" invisible="1"/>
-                    <field name="som" invisible="1"/>
                     <field name="state"/>
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
@@ -125,7 +124,9 @@
                                     <field name="section_id" widget="selection"/>
                                     <label string="Stage: " align="1.0"/>
                                     <group colspan="1" col="3">
-                                        <field name="stage_id" select="1" nolabel="1"/>
+                                        <field name="stage_id" nolabel="1"
+                                            on_change="onchange_stage_id(stage_id)"
+                                            domain="[('section_id','=',section_id), ('object_id.model', '=', 'crm.claim')]" />
                                         <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
                                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                                     </group>
@@ -162,64 +163,60 @@
                                     type="object" icon="gtk-convert" />
                                 </group>
                             </page>
-                            <page string="Emails" groups="base.group_extended">
+                            <page string="History" groups="base.group_extended">
                                 <group colspan="4">
-                                    <field colspan="4" name="email_cc" string="CC"/>
+                                    <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                                 </group>
-                                <field name="message_ids" colspan="4" nolabel="1" mode="form,tree" height="280">
+                                <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                                    <tree string="Communication history">
+                                        <field name="display_text" string="History Information"/>
+                                        <button
+                                            string="Reply"
+                                            name="%(crm.action_crm_send_mail)d"
+                                            context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
+                                            icon="terp-mail-replied" type="action" attrs="{'invisible': [('history', '!=', True)]}" />
+                                    </tree>
                                     <form string="Communication history">
-                                        <group col="6" colspan="4">
-                                            <field name="date"/>
-                                            <field name="email_to"/>
+                                        <group col="4" colspan="4">
                                             <field name="email_from"/>
+                                            <field name="date"/>
+                                            <field name="email_to" widget="char" size="512"/>
+                                            <field name="email_cc" widget="char" size="512"/>
+                                            <field name="name" colspan="4" widget="char" size="512"/>
+                                            <field name="history" invisible="1"/>
                                         </group>
                                         <notebook colspan="4">
                                             <page string="Details">
-                                                <field name="description" colspan="4" nolabel="1"/>
+                                                <group attrs="{'invisible': [('history', '!=', True)]}">
+                                                    <field name="description" colspan="4" nolabel="1" height="250"/>
+                                                    <button colspan="4"
+                                                        string="Reply"
+                                                        name="%(crm.action_crm_send_mail)d"
+                                                        context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
+                                                        icon="terp-mail-replied" type="action" />
+                                                </group>
+                                                <group attrs="{'invisible': [('history', '=', True)]}">
+                                                    <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                                </group>
                                             </page>
                                             <page string="Attachments">
                                                 <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                             </page>
                                         </notebook>
-                                        <button colspan="4"
-                                        string="Reply to Last Email"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'crm.lead'}"
-                                        icon="terp-mail-replied" type="action" />
                                     </form>
-                                    <tree string="Communication history">
-                                        <field name="date"/>
-                                        <field name="email_from" />
-                                        <field name="email_to"/>
-                                        <field name="description"/>
-                                    </tree>
                                 </field>
                                 <button colspan="4" string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.claim'}"
                                 icon="terp-mail-message-new" type="action" />
                             </page>
-                            <page string="History" groups="base.group_extended">
+                            <page string="Extra Info" groups="base.group_extended">
                                 <field name="id" select="1"/>
                                 <field name="active"/>
                                 <field name="canal_id"/>
-                                <field name="som"/>
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
                                 <field name="date_closed"/>
-                                <field name="log_ids" nolabel="1" colspan="4">
-                                    <tree string="Logs">
-                                        <field name="name" colspan="4"/>
-                                        <field name="date"/>
-                                        <field name="user_id"/>
-                                    </tree>
-                                    <form string="Logs">
-                                        <separator string="Action Information" colspan="4"/>
-                                        <field name="name" colspan="4"/>
-                                        <field name="date"/>
-                                        <field name="user_id"/>
-                                    </form>
-                                </field>
                             </page>
                         </notebook>
                     </group>
@@ -319,10 +316,6 @@
                        <filter string="Closure" icon="terp-go-month"
                            domain="[]" help="Date Closed"
                            context="{'group_by':'date_closed'}" />
-                       <separator orientation="vertical"/>
-                        <filter string="State of Mind"
-                            icon="terp-face-plain"
-                            domain="[]" context="{'group_by':'som'}" />
                    </group>
                </search>
            </field>

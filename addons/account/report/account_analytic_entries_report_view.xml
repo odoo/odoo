@@ -35,24 +35,24 @@
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
               <group col="10" colspan="12">
-	            	<filter icon="terp-go-year" string="  365 Days  "
-		                    domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-		                    help="Analytic Entries of last 365 days"/>
-	                <filter icon="terp-go-month" string="   30 Days   "
-	                		name="month"
-	                		domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                		help="Analytic Entries of last 30 days"/>
-	                <filter icon="terp-go-week"
-	                        string="    7 Days    "
-	                        separator="1"
-	                        domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                        help="Analytic Entries during last 7 days"/>
-	                <separator orientation="vertical"/>
-	                <field name="product_id" />
-	                <field name="user_id" widget="selection">
-	                <filter icon="terp-gtk-jump-to-ltr" domain="[('user_id','=',uid)]" help="My Entries"/>
-	                </field>
-	            </group>
+                    <filter icon="terp-go-year" string="  365 Days  "
+                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                            help="Analytic Entries of last 365 days"/>
+                    <filter icon="terp-go-month" string="   30 Days   "
+                            name="month"
+                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                            help="Analytic Entries of last 30 days"/>
+                    <filter icon="terp-go-week"
+                            string="    7 Days    "
+                            separator="1"
+                            domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Analytic Entries during last 7 days"/>
+                    <separator orientation="vertical"/>
+                    <field name="product_id" />
+                    <field name="user_id" widget="selection">
+                    <filter icon="terp-gtk-jump-to-ltr" domain="[('user_id','=',uid)]" help="My Entries"/>
+                    </field>
+                </group>
                 <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
@@ -71,16 +71,16 @@
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended options..." groups="base.group_extended">
-					<field name="currency_id" widget="selection"/>
-					<field name="general_account_id" widget="selection"/>
-					<field name="product_uom_id" widget="selection"/>
-					<field name="journal_id" widget="selection"/>
-					<separator orientation="vertical"/>
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <field name="currency_id" widget="selection"/>
+                    <field name="general_account_id" widget="selection"/>
+                    <field name="product_uom_id" widget="selection"/>
+                    <field name="journal_id" widget="selection"/>
+                    <separator orientation="vertical"/>
                     <field name="name"/>
-					<field name="account_id"/>
-					<field name="company_id" widget="selection" groups="base.group_multi_company"/>
-        		</group>
+                    <field name="account_id"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                </group>
             </search>
         </field>
     </record>
@@ -90,7 +90,7 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Analytic Entries Analysis" type="bar">
-             	<field name="user_id"/>
+                 <field name="user_id"/>
                 <field name="amount" operator="+"/>
                 <field name="unit_amount" operator="+"/>
                 <field name="amount_currency" operator="+"/>
@@ -104,9 +104,10 @@
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_entries_report_search"/>
+        <field name="help">A tool search lets you know statistics on your analytics records that match your needs.</field>
     </record>
 
-    <menuitem action="action_analytic_entries_report" id="menu_action_analytic_entries_report" parent="account.menu_finance_statistic_report_statement"  sequence="4"/>
+    <menuitem action="action_analytic_entries_report" id="menu_action_analytic_entries_report" parent="account.menu_finance_statistic_report_statement" sequence="4" groups="base.group_extended"/>
 
 </data>
 </openerp>

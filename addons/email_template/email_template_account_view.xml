@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-        <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
-        <menuitem name="Emails" id="base.menu_emails" parent="base.menu_tools" sequence="5"/>
+        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17" groups="base.group_system,base.res_groups_email_template_admin"/>
+        <menuitem name="Emails" id="base.menu_emails" parent="base.marketing_menu" sequence="5"/>
         <menuitem name="Email Template" id="menu_email_template" parent="base.menu_emails"/>
 
         <record model="ir.ui.view" id="email_template_account_form">
@@ -24,7 +24,7 @@
                                 <field name="smtpssl" select="2" colspan="2" />
                                 <field name="smtptls" select="2" colspan="2" />
                             </group>
-                            <button name="check_outgoing_connection" type="object" string="Check Outgoing Connection" />
+                            <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" />
                             <separator string="User Information" colspan="4" />
                             <group col="2" colspan="2">
                                 <field name="email_id" select="1" on_change="on_change_emailid(name,email_id)" colspan="2" />
@@ -54,7 +54,7 @@
             <field name="model">email_template.account</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="SMTP Server">
+                <tree  colors="blue:state in ('draft');black:state in ('suspended','approved')" string="SMTP Server">
                     <field name="name" select="2" />
                     <field name="email_id" select="2" />
                     <field name="smtpuname" select="2" />
@@ -96,9 +96,9 @@
             <field name="search_view_id" ref="view_email_template_account_search"/>
         </record>
 
-        <menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" sequence="20"/>
-        <menuitem name="Emails" id="menu_email_template_configuration" parent="base.menu_lunch_survey_root" />
+        <menuitem name="Configuration" parent="base.marketing_menu"
+         id="base.menu_marketing_config_root" sequence="20" groups="base.group_system"/>
+        <menuitem name="Emails" id="menu_email_template_configuration" parent="base.menu_marketing_config_root" />
 
         <menuitem name="Email Accounts" id="menu_email_template_account_all" parent="menu_email_template_configuration" action="action_email_template_account_tree_all"/>
 

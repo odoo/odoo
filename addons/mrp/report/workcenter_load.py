@@ -30,7 +30,6 @@ import StringIO
 
 
 theme.use_color = 1
-#theme.scale = 2
 random.seed(0)
 
 #
@@ -173,7 +172,6 @@ class report_custom(report_int):
             ar.add_plot(bar_plot.T(label=workcenter['name'], data=data, fill_style=f, hcol=workcenter_num+1, cluster=(workcenter_num, len(res))))
             workcenter_num += 1
 
-        #plot = bar_plot.T(label=workcenter['name'], data=data, hcol=1, fill_style=fill_style.white, cluster=(color_index,len(ids)))
         if (not data) or (len(data[0]) <= 1):
             ar = self._empty_graph(time.strftime('%Y-%m-%d'))
         ar.draw(can)

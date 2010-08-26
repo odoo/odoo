@@ -7,7 +7,7 @@
         <field name="model">hr.holidays.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leaves Statistics">
+            <tree colors="blue:state in ('draft');black:state in ('confirm','refuse','validate');gray:state in('cancel')" string="Leaves Statistics">
                 <field name="date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="category_id" invisible="1"/>
@@ -56,13 +56,13 @@
 	                	help = "Draft and Confirmed leaves"/>
 	               	<filter string="Validated" icon="terp-camera_test" domain="[('state','=','validate')]"
 	               		help = "Pending Leaves"/>
-                  <filter icon="terp-gtk-stop" string="Cancelled" domain="[('state','=','cancel')]"/>
+                  <filter icon="gtk-cancel" string="Cancelled" domain="[('state','=','cancel')]"/>
 					<separator orientation="vertical"/>
                     <field name="department_id"/>
 					<field name="employee_id"/>
 	            </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="0" string="Group By..." colspan="10" col="12">
                     <filter string="Department" name="department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-personal" string="Employee" name="Employee" context="{'group_by':'employee_id'}"
@@ -80,7 +80,7 @@
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
+                <group expand="0" string="Extended Filters..." colspan="10" col="12">
                     <field name="holiday_status_id"/>
                     <field name="category_id"/>
                     <separator orientation="vertical"/>

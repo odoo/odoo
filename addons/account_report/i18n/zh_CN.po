@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 07:14+0000\n"
+"PO-Revision-Date: 2010-08-02 22:13+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:55+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_report
@@ -31,7 +31,7 @@ msgstr "选择一个PDF文件"
 #. module: account_report
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+msgstr "在动作定义使用了无效的模块名。"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -61,12 +61,12 @@ msgstr "其它"
 #. module: account_report
 #: view:account.report.report:0
 msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "余额(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: rml:print.indicators:0
 msgid "Tabular Summary"
-msgstr "一览表"
+msgstr "表格摘要"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -128,7 +128,7 @@ msgstr "指标过去的记录"
 #. module: account_report
 #: view:account.report.report:0
 msgid "credit(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "贷方(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -200,7 +200,7 @@ msgstr "选择标准"
 #. module: account_report
 #: view:account.report.report:0
 msgid "debit(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "借方(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -254,7 +254,7 @@ msgstr "正常"
 #. module: account_report
 #: view:account.report.report:0
 msgid "Example: (balance(['6','45'],-1) - credit(['7'])) / report('RPT1')"
-msgstr ""
+msgstr "例子: (balance(['6','45'],-1) - credit(['7'])) / report('RPT1')"
 
 #. module: account_report
 #: field:account.report.report,active:0
@@ -289,7 +289,7 @@ msgstr "表达式:"
 #. module: account_report
 #: view:account.report.report:0
 msgid "report('REPORT_CODE')"
-msgstr ""
+msgstr "报表('REPORT_CODE')"
 
 #. module: account_report
 #: field:account.report.report,expression:0
@@ -316,7 +316,7 @@ msgstr "代码"
 #. module: account_report
 #: field:account.report.history,tmp:0
 msgid "temp"
-msgstr ""
+msgstr "temp"
 
 #. module: account_report
 #: field:account.report.history,period_id:0
@@ -331,7 +331,7 @@ msgstr "普通"
 #. module: account_report
 #: view:account.report.report:0
 msgid "Legend of operators"
-msgstr "操作说明"
+msgstr "操作员说明"
 
 #. module: account_report
 #: wizard_button:print.indicators,init,end:0
@@ -349,7 +349,7 @@ msgstr "子项"
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: account_report
 #: help:account.report.report,goodness_limit:0
@@ -367,7 +367,7 @@ msgstr "打印指标"
 #. module: account_report
 #: view:account.report.report:0
 msgid "+ - * / ( )"
-msgstr ""
+msgstr "+ - * / ( )"
 
 #. module: account_report
 #: rml:accounting.report:0
@@ -407,12 +407,12 @@ msgstr "其它报表"
 msgid ""
 "Note: The second arguement 'fiscalyear' and 'period' are optional "
 "arguements.If the value is -1,previous fiscalyear or period is considered."
-msgstr "备注:第二参数‘会计年度’和‘会计期间’是可选参数.如果值为-1会计年度或会计期间是以前的."
+msgstr "备注:第二参数‘会计年度’和‘会计期间’是可选参数. 如果值为-1会计年度或会计期间是以前的."
 
 #. module: account_report
 #: rml:print.indicators:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_fiscal
@@ -423,7 +423,7 @@ msgstr "财务报表"
 #. module: account_report
 #: selection:print.indicators,init,select_base:0
 msgid "Based on Fiscal Periods"
-msgstr "基于会计会计期间"
+msgstr "基于会计期间"
 
 #. module: account_report
 #: model:ir.actions.report.xml,name:account_report.report_print_indicators
@@ -457,7 +457,7 @@ msgstr "选择标准"
 #. module: account_report
 #: view:account.report.report:0
 msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
-msgstr ""
+msgstr "税号(['ACCOUNT_TAX_CODE',],period)"
 
 #. module: account_report
 #: field:account.report.history,fiscalyear_id:0
@@ -512,7 +512,7 @@ msgstr "金额"
 #. module: account_report
 #: rml:print.indicators:0
 msgid "1cm 27.7cm 20cm 27.7cm"
-msgstr ""
+msgstr "1cm 27.7cm 20cm 27.7cm"
 
 #. module: account_report
 #: model:ir.module.module,description:account_report.module_meta_information

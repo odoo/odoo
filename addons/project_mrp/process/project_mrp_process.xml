@@ -36,7 +36,7 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A task is created to provide the service.&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="mrp.process_process_serviceproductprocess0"/>
+            <field name="process_id" ref="procurement.process_process_serviceproductprocess0"/>
             <field name="subflow_id" ref="project.process_process_tasksprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -67,7 +67,7 @@
             <field eval="&quot;&quot;&quot;Order Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If procurement method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_mrptask0"/>
-            <field model="process.node" name="source_node_id" ref="mrp.process_node_serviceonorder0"/>
+            <field model="process.node" name="source_node_id" ref="procurement.process_node_serviceonorder0"/>
         </record>
 
     </data>

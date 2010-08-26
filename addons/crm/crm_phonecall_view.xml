@@ -38,13 +38,14 @@
         <field name="model">crm.phonecall</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)">
+            <tree colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
                 <field name="date" string="Date"/>
                 <field name="name" string="Call Summary"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_contact"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
+                <field name="categ_id" string="Type"/>
                 <button string="Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"
@@ -69,17 +70,14 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Phone Call">
-                <group colspan="4" col="7">
-                    <field name="name" string="Summary"/>
-                    <field name="date" string="Planned Date"/>
-                    <field name="user_id"/>
-                    <button string="Schedule a Meeting"
-                        name="action_make_meeting"
-                        icon="gtk-redo"
-                        type="object" />
+                 <group colspan="6" col="7">
+                    <field name="name" string="Summary" required="1"/>
+                    <field name="partner_phone" required="1"/>
+                    <field name="duration" widget="float_time" required="1"/>
+                    <button string="Schedule a Meeting" name="action_make_meeting" icon="gtk-redo" type="object"/>
 
-                    <field name="partner_phone"/>
-                    <field name="duration"/>
+                    <field name="date" string="Date" required="1"/>
+                    <field name="user_id"/>
                     <field name="section_id" colspan="1" widget="selection" />
                     <button string="Convert to Opportunity"
                         name="%(phonecall2opportunity_act)d"
@@ -92,6 +90,7 @@
                     type="action"  />
 
                 </group>
+
                 <group col="3" colspan="2">
                     <separator colspan="3" string="Contacts" />
                     <field name="partner_id"
@@ -109,6 +108,9 @@
                 </group>
                 <group col="2" colspan="2">
                     <separator colspan="2" string="Categorization" />
+                    <field name="categ_id" widget="selection"
+                        domain="[('object_id.model', '=', 'crm.phonecall')]"
+                        string="Type" />
                     <field name="priority"/>
                     <field name="opportunity_id"/>
                 </group>
@@ -146,15 +148,15 @@
             <form string="Phone Call">
                 <group colspan="4" col="7">
                     <field name="name" string="Summary" required="1"/>
-                    <field name="date" string="Planned Date" required="1"/>
-                    <field name="user_id"/>
+                    <field name="partner_phone"/>
+                    <field name="duration" widget="float_time"/>
                     <button string="Schedule a Meeting"
                         name="action_make_meeting"
                         icon="gtk-redo"
                         type="object" />
 
-                    <field name="partner_phone"/>
-                    <field name="duration"/>
+                    <field name="date" string="Date" required="1"/>
+                    <field name="user_id"/>
                     <field name="section_id" colspan="1" widget="selection" />
                     <button string="Convert to Opportunity"
                         name="%(phonecall2opportunity_act)d"
@@ -184,6 +186,9 @@
                 </group>
                 <group col="2" colspan="2">
                     <separator colspan="2" string="Categorization" />
+                    <field name="categ_id" widget="selection"
+                        domain="[('object_id.model', '=', 'crm.phonecall')]"
+                        string="Type" />
                     <field name="priority"/>
                     <field name="opportunity_id"/>
                 </group>
@@ -211,6 +216,9 @@
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                 <field name="partner_phone"/>
                 <field name="user_id"/>
+                <field name="categ_id" widget="selection"
+                	domain="[('object_id.model', '=', 'crm.phonecall')]"
+                	string="Type" />
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <button string="Opportunity"
@@ -275,8 +283,8 @@
                <field name="section_id"
                    select="1" widget="selection" string="Sales Team">
                    <filter icon="terp-personal+"
-                       domain="[('section_id','=',context.get('section_id',False))]"
-                       help="My Sale Team" />
+                       domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                       help="My Sales Team(s)" />
                </field>
                <newline/>
                <group expand="0" string="Group By..." colspan="4">

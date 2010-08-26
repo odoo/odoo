@@ -24,17 +24,18 @@
     "name": "In-Project Messaging System",
     "version": "1.0",
     "depends": ["project"],
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "description": """
-    This module provides the functionality to send messages within a project.'
-    A user can send messages individually to other user also he can broadcast
+    This module provides the functionality to send messages within a project.
+    A user can send messages individually to other user. He can even broadcast
     it to all the users.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
-    'update_xml': [],
+    'update_xml': ['project_messages_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

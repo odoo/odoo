@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                    <field name="pricelist_id" position="before">
-                       <field name="location_id" context="{'location': self}" domain="[]"/>
+                       <field name="location_id" context="{'location': self}"/>
                        <separator orientation="vertical"/>
                    </field>
             </field>
@@ -32,8 +32,6 @@
                 </form>
             </field>
         </record>
-
-
 
         <record id="view_template_property_form" model="ir.ui.view">
             <field name="name">product.template.stock.property.form.inherit</field>
@@ -62,9 +60,8 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace">
-                    <label string="Cost Price" align="1.0"/>
-                    <group col="2" colspan="1">
-                        <field name="standard_price" readonly="True" nolabel="1"/>
+                    <group col="4" colspan="2">
+                        <field name="standard_price" readonly="True"/>
                         <button name="%(action_view_change_standard_price)d" string="Change Price" type="action" icon="gtk-execute"/>
                     </group>
                 </field>
@@ -135,7 +132,6 @@
                 </field>
             </field>
         </record>
-
 
     </data>
 </openerp>

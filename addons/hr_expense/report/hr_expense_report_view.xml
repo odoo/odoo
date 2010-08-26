@@ -7,9 +7,10 @@
         <field name="model">hr.expense.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Expenses Analysis">
+            <tree colors="blue:state in ('draft');black:state in ('confirm','accepted','invoiced','paid');gray:state in('cancelled')" string="Expenses Analysis">
                 <field name="date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
+                <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
@@ -51,28 +52,28 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Expenses Analysis">
-            	<group>
-            		<filter icon="terp-go-year" string="  365 Days  "
-	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-	                    help="Expenses during last 7 year"/>
-	                <filter icon="terp-go-month" string="   30 Days   "
-	                    name="month"
-	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                    help="Expenses during last month"/>
-		            <filter icon="terp-go-week" string="    7 Days    " separator="1"
-	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" help="Expenses during last 7 days"/>
-	                <separator orientation="vertical"/>
+              <group>
+                <filter icon="terp-go-year" string="  365 Days  "
+                      domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                      help="Expenses during last 7 year"/>
+                  <filter icon="terp-go-month" string="   30 Days   "
+                      name="month"
+                      domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                      help="Expenses during last month"/>
+                <filter icon="terp-go-week" string="    7 Days    " separator="1"
+                      domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" help="Expenses during last 7 days"/>
+                  <separator orientation="vertical"/>
                     <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Expenses"/>
                     <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]"
-		                help = "Confirm Expenses"/>
+                    help = "Confirm Expenses"/>
                     <filter string="Accepted" icon="terp-camera_test" domain="[('state','=','accepted')]"
-	                    help = "Accepted Expenses"/>
+                      help = "Accepted Expenses"/>
                     <separator orientation="vertical"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
-				</group>
-				<newline/>
-                <group expand="1" string="Group By...">
+        </group>
+        <newline/>
+                <group expand="0" string="Group By...">
                     <filter string="Employee" name="employee" icon="terp-personal" context="{'group_by':'employee_id'}"/>
                     <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>

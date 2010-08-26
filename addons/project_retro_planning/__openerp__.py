@@ -24,9 +24,9 @@
     'version': '0.1',
     'category': 'Generic Modules/Projects & Services',
     'description': """
-        - If deadline date of project is changed
-          then the deadline date for all the tasks will change to the same  """,
-    'author': 'Tiny',
+        - If end date of project is changed
+          then the deadline date and start date for all the tasks will change accordingly  """,
+    'author': 'OpenERP SA',
     'depends': ['base', 'project'],
     'init_xml': [],
     'update_xml': [],

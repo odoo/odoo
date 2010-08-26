@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import datetime
 from resource.faces import *
 from new import classobj
@@ -33,7 +34,7 @@ class project_compute_tasks(osv.osv_memory):
     _description = 'Project Compute Tasks'
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', required=True)
-                }
+    }
 
     def compute_date(self, cr, uid, ids, context=None):
         """
@@ -73,11 +74,12 @@ class project_compute_tasks(osv.osv_memory):
                     if resource.get('calendar_id', False):
                        leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id[0], resource['calendar_id'] and resource['calendar_id'][0] or False)
                     time_efficiency = resource.get('time_efficiency')
-                resources.append(classobj((user.name.encode('utf8')), (Resource,), {'__doc__': user.name,
-                                                                        '__name__': user.name,
-                                                                        'vacation': tuple(leaves),
-                                                                        'efficiency': time_efficiency
-                                                                        }))
+                resources.append(classobj((user.name.encode('utf8')), (Resource,), {
+                                                                '__doc__': user.name,
+                                                                '__name__': user.name,
+                                                                'vacation': tuple(leaves),
+                                                                'efficiency': time_efficiency
+                                                            }))
             priority_dict = {'0': 1000, '1': 800, '2': 500, '3': 300,'4': 100}
             # Create dynamic no of tasks with the resource specified
             def create_tasks(j, eff, priorty=500, obj=None):
@@ -131,12 +133,15 @@ class project_compute_tasks(osv.osv_memory):
                     ctx = context.copy()
                     ctx.update({'scheduler': True})
                     user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
-                    task_pool.write(cr, uid, [tasks[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                                                         'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                                                         'user_id': user_id[0]},
-                                                                         context=ctx)
+                    task_pool.write(cr, uid, [tasks[loop_no-1].id], {
+                                                         'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                         'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                         'user_id': user_id[0]
+                                                    }, context=ctx)
+
                 loop_no +=1
         return {}
 
 project_compute_tasks()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

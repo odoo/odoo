@@ -3,9 +3,8 @@
 - 
   !record {model: project.project, id: project_project_retroplanning0}:
     company_id: base.main_company
-    date: '2010-06-11'
+    date: !eval time.strftime('%Y-%m-%d')
     name: Retro Planning
-    
     
 - 
   Create task 'Plan all projects'
@@ -19,12 +18,11 @@
     project_id: project_project_retroplanning0
     remaining_hours: 24.0
     state: draft
-  
 -
   Check if task deadline_date and start_date changes upon changing its project's end_date 
 -
   !python {model: project.project}: |
-    from datetime import datetime, date
+    from datetime import datetime, date, timedelta
     import time
     data_project = self.browse(cr,uid,[ref("project_project_retroplanning0")])
     prj = data_project[0]
@@ -32,17 +30,18 @@
     if prj.date:
     	old_end_date = date(*time.strptime(prj.date,'%Y-%m-%d')[:3])
     if old_end_date:
-    	new_end_date = date(*time.strptime('2010-06-10','%Y-%m-%d')[:3])
+    	new_end_date = date.today()+timedelta(1)
     	res={}
     	for task in prj.tasks:
     		start_dt = (datetime(*time.strptime(task.date_start,'%Y-%m-%d  %H:%M:%S')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
     		deadline_dt=''
             if task.date_deadline:
-           		deadline_dt = (datetime(*time.strptime(task.date_deadline,'%Y-%m-%d')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d')
+           	    deadline_dt = (datetime(*time.strptime(task.date_deadline,'%Y-%m-%d')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d')
            	res[task.id]=[start_dt,deadline_dt]
-    self.write(cr, uid, [ref("project_project_retroplanning0")], {'date':'2010-06-10'})
+    self.write(cr, uid, [ref("project_project_retroplanning0")], {'date' : (datetime.now()+timedelta(1)).strftime('%Y-%m-%d')})
     data_project = self.browse(cr,uid,[ref("project_project_retroplanning0")])
     prj = data_project[0]
+    
     for task in prj.tasks:
         assert task.date_start == res[task.id][0], "task start date differs, expected %s, got %s"%(res[task.id][0], task.date_start)
         assert task.date_deadline == res[task.id][1], "task deadline date differs, expected %s, got %s"%(res[task.id][1], task.date_deadline)

@@ -50,7 +50,7 @@
         	            <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/> 						                    
                     </group>
                      <newline/>
-	    			<group expand="0" string="Extended options..." groups="base.group_extended">
+	    			<group expand="0" string="Extended Filters..." groups="base.group_extended">
 	                    <field name="date" string="Date Invoiced"/>
 	                    <separator orientation="vertical"/>
 	                    <field name="partner_id" widget="selection"/>
@@ -89,6 +89,6 @@
 
 		<menuitem name="Invoice Report" id="menu_report_account_invoice_product" parent="account.menu_finance_reporting"/>
 
-		<menuitem name="Invoice" id="menu_report_account_invoice_reoirt" parent="menu_report_account_invoice_product" action="action_report_account_invoice_report"/>
+		<menuitem name="Invoice" id="menu_report_account_invoice_reoirt" parent="menu_report_account_invoice_product" action="action_report_account_invoice_report" groups="account.group_account_manager"/>
 	</data>
 </openerp>

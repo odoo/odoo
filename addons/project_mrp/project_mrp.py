@@ -51,7 +51,7 @@ project_task()
 class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
-        'user_id': fields.many2one('res.users', 'Responsible', ondelete='set null',help='Project Manager'),
+
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null',)
     }
 product_product()    

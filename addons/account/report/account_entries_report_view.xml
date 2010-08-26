@@ -6,29 +6,29 @@
         <field name="model">account.entries.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Entries Analysis">
+            <tree colors="blue:state in ('draft');black:state in ('posted')" string="Entries Analysis">
                 <field name="date" invisible="1"/>
                 <field name="date_created" invisible="1"/>
                 <field name="date_maturity" invisible="1"/>
                 <field name="ref" invisible="1"/>
+                <field name="nbr" sum="# of Entries "/>
+                <field name="quantity" sum="# of Products Qty "/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="balance"/>
                 <field name="state" invisible="1"/>
-                <field name="state_2" invisible="1"/>
-                <field name="year"  invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
+                <field name="year"  invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="account_id" invisible="1"/>
-                <field name="analytic_account_id" invisible="1"/>
+                <field name="fiscalyear_id" invisible="1"/>
                 <field name="period_id" invisible="1"/>
                 <field name="user_type" invisible="1"/>
                 <field name="type" invisible="1"/>
-                <field name="nbr" sum="# of Items"/>
-                <field name="quantity" sum="# of Products Qty "/>
-                <field name="debit" sum="# of Lines "/>
-                <field name="credit" sum="# of Amount "/>
-                <field name="balance" sum="# of Amount "/>
            </tree>
         </field>
     </record>
@@ -38,8 +38,10 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Entries Analysis" type="bar">
-                 <field name="account_id"/>
-                 <field name="balance"/>
+                <field name="partner_id"/>
+                <field name="debit" operator="+"/>
+                <field name="credit" operator="+"/>
+                <field name="balance" operator="+"/>
              </graph>
          </field>
     </record>
@@ -50,23 +52,24 @@
         <field name="arch" type="xml">
             <search string="Entries Analysis">
                 <group colspan="10" col="12">
-                <filter icon="terp-go-year" string="This Year"
-                                domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                                help="Tasks performed in this year"/>
-                <filter icon="terp-go-month" string="This Month"
-                        name="month"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks performed in this month"/>
-                <filter icon="terp-go-week"
-                        string="7 Days"
-                        separator="1"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks during last 7 days"/>
+	                <filter icon="terp-go-year" string="This Year"
+	                		name="year"
+							domain="[('period_id','in','current_year')]"        				
+	                        help="Entries created in current year"/>
+	                <filter icon="terp-go-month" string="This Month"
+	                        name="period"
+	                        domain="[('period_id','in','current_period')]"
+	                        help="Entries created in current period"/>
                     <separator orientation="vertical"/>
                     <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft entries"/>
                     <filter string="Posted" icon="terp-camera_test" domain="[('state','=','posted')]" help = "Posted entries"/>
                     <separator orientation="vertical"/>
+                    <filter string="Reconciled" icon="terp-document-new" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
+                    <filter string="Unreconciled" icon="terp-stock_symbol-selection" domain="[('reconcile_id','=',False)]" help = "Unreconciled entries"/>
+                    <separator orientation="vertical"/>
                     <field name="account_id"/>
+                    <field name="journal_id"/>
+                    <field name="period_id"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
@@ -79,45 +82,43 @@
                     <separator orientation="vertical"/>
                     <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Analytic" name="analytic_account" icon="terp-folder-orange" context="{'group_by':'analytic_account_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
                     <filter string="Fiscal Year" icon="terp-go-month" context="{'group_by':'fiscalyear_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-go-today" context="{'group_by':'date'}"/>
+                    <newline/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                  </group>
                  <newline/>
-                 <group expand="0" string="Extended options..." groups="base.group_extended">
-                    <field name="journal_id"/>
-                    <field name="fiscalyear_id"/>
+                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <field name="journal_id" widget="selection"/>
                     <field name="period_id"/>
+                    <field name="fiscalyear_id"/>
                     <separator orientation="vertical"/>
-                    <field name="analytic_account_id"/>
                     <separator orientation="vertical"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
                     <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <newline/>
-                    <field name="date"/>
                     <field name="date_created"/>
+                	<field name="date"/>
                     <field name="date_maturity"/>
                  </group>
             </search>
         </field>
     </record>
     <record id="action_account_entries_report_all" model="ir.actions.act_window">
-        <field name="name">Accounting Analysis</field>
+        <field name="name">Entries Analysis</field>
         <field name="res_model">account.entries.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_profit': 1,'search_default_group_account':1,'search_default_group_month': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_profit': 1,'search_default_group_account':1,'search_default_group_journal':1,'search_default_group_month': 1, 'group_by_no_leaf':1,'group_by':[], 'search_default_year':1, 'search_default_period':1}</field>
+        <field name="help">A tool search lets you know statistics on your different financial accounts that match your needs.</field>
     </record>
     <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all" parent="account.menu_finance_statistic_report_statement" sequence="2"/>
 </data>

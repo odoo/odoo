@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-15 20:48+0000\n"
-"Last-Translator: Andreas Porevopoulos <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 08:31+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:08+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -72,7 +72,8 @@ msgid "Steps To Deliver a Sale Order"
 msgstr "Βήματα για την παράδοση μιάς εντολής πώλησης"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,qtty:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,qtty:0
+#: rml:sale.order:0
 msgid "Quantity"
 msgstr "Ποσότητα"
 
@@ -82,7 +83,8 @@ msgid "You invoice has been successfully created !"
 msgstr "Το τιμολόγιο σας έχει δημιουργηθεί με επιτυχία!"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Automatic Declaration"
 msgstr "Αυτόματη Δήλωση"
 
@@ -161,7 +163,9 @@ msgid "Manual Designation"
 msgstr "Χειροκίνητος Προσδιορισμός"
 
 #. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
 msgstr "Σημειώσεις"
@@ -172,7 +176,8 @@ msgid "Invoice after delivery"
 msgstr "Τιμολόγιο κατόπιν παράδοσης"
 
 #. module: sale
-#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Φόροι"
 
@@ -187,7 +192,8 @@ msgid "Shipping Policy"
 msgstr "Πολτική Μεταφορών"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
 msgstr "Ακυρώθηκε"
 
@@ -229,10 +235,12 @@ msgstr "Όλα Αμέσως"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
 msgid "Procurement is created after confirmation of sale order."
-msgstr "Οι προμήθειες δημιουργούνται κατόπιν επιβεβαίωσης της εντολής πώλησης."
+msgstr ""
+"Οι προμήθειες δημιουργούνται κατόπιν επιβεβαίωσης της εντολής πώλησης."
 
 #. module: sale
-#: field:sale.order,project_id:0 field:sale.shop,project_id:0
+#: field:sale.order,project_id:0
+#: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Αναλυτικός Λογαριασμός"
 
@@ -323,7 +331,8 @@ msgid "Invoice Based on Sales Orders"
 msgstr "Τιμολόγια βάσει εντολών πώλησης"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
 msgid "Sale Shop"
 msgstr "Κατάστημα Πώλησης"
 
@@ -338,7 +347,8 @@ msgid "Order N°"
 msgstr "Αρ. Εντολής"
 
 #. module: sale
-#: field:sale.order,order_line:0 view:sale.order.line:0
+#: field:sale.order,order_line:0
+#: view:sale.order.line:0
 msgid "Order Lines"
 msgstr "Γραμμές Εντολής"
 
@@ -348,7 +358,8 @@ msgid "Disc.(%)"
 msgstr "Εκπτ.(%)"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Γραμμές Τιμολογίου"
@@ -446,13 +457,15 @@ msgid "Order Reference"
 msgstr "Παραπομπή Εντολής"
 
 #. module: sale
-#: selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
 #: selection:sale.order.line,state:0
 msgid "Done"
 msgstr "Εκπληρωμένο"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0 field:sale.shop,pricelist_id:0
+#: field:sale.order,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Τιμοκατάλογος"
 
@@ -625,7 +638,8 @@ msgid "Taxes :"
 msgstr "Φόροι:"
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Τιμολογημένα"
 
@@ -780,7 +794,8 @@ msgid "Direct Delivery"
 msgstr "Απευθείας Παράδοση"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Ιδιότητες"
@@ -813,7 +828,8 @@ msgstr "Υπολογισμός"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
 msgid "Shop"
 msgstr "Κατάστημα"
 
@@ -876,7 +892,8 @@ msgid "Delivery Order Only"
 msgstr "Μόνον Εντολή Παράδοσης"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Sales order lines"
 msgstr "Γραμμές εντολών πώλησης"
 
@@ -891,7 +908,8 @@ msgid "Sales"
 msgstr "Πωλήσεις"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Qty"
 msgstr "Ποσότητα"
 
@@ -906,7 +924,8 @@ msgid "Other data"
 msgstr "Άλλες πληροφορίες"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,amount:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,amount:0
+#: rml:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Τιμή Μονάδας"
@@ -932,7 +951,8 @@ msgstr "Τιμολόγιο"
 #: model:process.transition.action,name:sale.process_transition_action_cancel1
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: wizard_button:sale.advance_payment_inv,init,end:0
-#: view:sale.config.picking_policy:0 view:sale.order.line:0
+#: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
 #: wizard_button:sale.order.line.make_invoice,init,end:0
 #: wizard_button:sale.order.make_invoice,init,end:0
 msgid "Cancel"
@@ -955,7 +975,8 @@ msgstr ""
 "'Ημερομηνία Παραγγελίας'."
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "UoM"
 msgstr "1η ΜΜ"
 
@@ -1070,7 +1091,8 @@ msgid "Ordering Contact"
 msgstr "Επαφή Τιμολογίου"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order.line,name:0
+#: rml:sale.order:0
+#: field:sale.order.line,name:0
 msgid "Description"
 msgstr "Περιγραφή"
 
@@ -1129,7 +1151,8 @@ msgstr ""
 "προσφορά."
 
 #. module: sale
-#: field:sale.order,partner_id:0 field:sale.order.line,order_partner_id:0
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Πελάτης"
 
@@ -1141,7 +1164,8 @@ msgstr "Τιμοκατάλογοι Αγορών"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
 msgstr "Εντολή Πώλησης"
@@ -1168,7 +1192,8 @@ msgid "Total amount"
 msgstr "Συνολικό ποσό"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order,date_order:0
+#: rml:sale.order:0
+#: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Ημερομηνία Εντολής"
 
@@ -1257,7 +1282,8 @@ msgstr ""
 "παράδειγμα σε γραμμή)."
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "States"
 msgstr "Καταστάσεις"
 
@@ -1277,7 +1303,8 @@ msgid "Error: Invalid ean code"
 msgstr "Σφάλμα: Άκυρος κώδικας ΕΑΝ"
 
 #. module: sale
-#: field:sale.order,picked_rate:0 field:sale.order,shipped:0
+#: field:sale.order,picked_rate:0
+#: field:sale.order,shipped:0
 msgid "Picked"
 msgstr "Picked"
 
@@ -1489,10 +1516,22 @@ msgid "Graphs"
 msgstr "Γραφήματα"
 
 #. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "Manual in progress"
+msgstr "Χειροκίνητη λειτουργία σε εξέλιξη"
+
+#. module: sale
 #: field:report.turnover.per.month,turnover:0
 #: field:report.turnover.per.product,turnover:0
 msgid "Total Turnover"
 msgstr "Συνολικός τζίρος"
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "In progress"
+msgstr "Σε εξέλιξη"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_category_tree
@@ -1544,28 +1583,26 @@ msgstr "Πωλήσεις κατα Κατάσταση"
 #~ msgid "Shop name"
 #~ msgstr "Όνομα Καταστήματος"
 
+#, python-format
 #~ msgid "Error !"
 #~ msgstr "Σφάλμα!"
 
+#, python-format
 #~ msgid "You must first cancel all invoices attached to this sale order."
 #~ msgstr ""
-#~ "Θα πρέπει πρώτα να ακυρώσετε τα επισυναπτόμενα τιμολόγια αυτής της "
-#~ "εντολής πώλησης."
+#~ "Θα πρέπει πρώτα να ακυρώσετε τα επισυναπτόμενα τιμολόγια αυτής της εντολής "
+#~ "πώλησης."
 
+#, python-format
 #~ msgid "Invalid action !"
 #~ msgstr "Άκυρη ενέργεια!"
-
-#~ msgid "Manual in progress"
-#~ msgstr "Χειροκίνητη λειτουργία σε εξέλιξη"
 
 #~ msgid "Number packages"
 #~ msgstr "Αριθμοδότηση συσκευασιών"
 
+#, python-format
 #~ msgid "Could not cancel sale order !"
 #~ msgstr "Αδύνατη η ακύρωση της εντολής πώλησης!"
-
-#~ msgid "In progress"
-#~ msgstr "Σε εξέλιξη"
 
 #~ msgid "Canceled"
 #~ msgstr "Ακυρωμένο"
@@ -1573,6 +1610,7 @@ msgstr "Πωλήσεις κατα Κατάσταση"
 #~ msgid "Quantity (UOS)"
 #~ msgstr "Ποσότητα (2η ΜΜ)"
 
+#, python-format
 #~ msgid "invalid mode for test_state"
 #~ msgstr "άκυρη κατάσταση για test_state"
 
@@ -1586,9 +1624,11 @@ msgstr "Πωλήσεις κατα Κατάσταση"
 #~ "Εάν δεν έχετε αρκετό διαθέσιμο απόθεμα για ολοκληρωμένη παράδοση, "
 #~ "συμφωνείται για μερική παράδοση ή όχι."
 
+#, python-format
 #~ msgid "Error"
 #~ msgstr "Σφάλμα"
 
+#, python-format
 #~ msgid "You must first cancel all packings attached to this sale order."
 #~ msgstr ""
 #~ "Θα πρέπει πρώτα να ακυρώσετε τις επισυναπτόμενες φορτώσεις για την εντολή "
@@ -1597,30 +1637,33 @@ msgstr "Πωλήσεις κατα Κατάσταση"
 #~ msgid "Product UOS"
 #~ msgstr "2η ΜΜ Προϊόντος"
 
+#, python-format
 #~ msgid "Could not cancel this sale order !"
 #~ msgstr "Αδύνατη η ακύρωση αυτής της εντολής πώλησης!"
 
-#~ msgid ""
-#~ "You can not cancel a sale order line that has already been invoiced !"
+#, python-format
+#~ msgid "You can not cancel a sale order line that has already been invoiced !"
 #~ msgstr ""
 #~ "Δεν μπορείτε να ακυρώσετε μιά γραμμή εντολής πώλησης εάν έχει τιμολογηθεί!"
 
+#, python-format
 #~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
 #~ msgstr "Αδύνατη η διαγραφή Εντολής(λών) Πώλησης που έχουν ήδη επιβεβαιωθεί!"
 
 #~ msgid ""
 #~ "Gives the state of the quotation or sale order. The exception state is "
-#~ "automatically set when a cancel operation occurs in the invoice "
-#~ "validation (Invoice Exception) or in the packing list process (Shipping "
-#~ "Exception). The 'Waiting Schedule' state is set when the invoice is "
-#~ "confirmed but waiting for the scheduler to be on the date 'Date Ordered'."
+#~ "automatically set when a cancel operation occurs in the invoice validation "
+#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
+#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+#~ "for the scheduler to be on the date 'Date Ordered'."
 #~ msgstr ""
 #~ "Gives the state of the quotation or sale order. The exception state is "
-#~ "automatically set when a cancel operation occurs in the invoice "
-#~ "validation (Invoice Exception) or in the packing list process (Shipping "
-#~ "Exception). The 'Waiting Schedule' state is set when the invoice is "
-#~ "confirmed but waiting for the scheduler to be on the date 'Date Ordered'."
+#~ "automatically set when a cancel operation occurs in the invoice validation "
+#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
+#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+#~ "for the scheduler to be on the date 'Date Ordered'."
 
+#, python-format
 #~ msgid ""
 #~ "You cannot make an advance on a sale order that is defined as 'Automatic "
 #~ "Invoice after delivery'."
@@ -1629,25 +1672,23 @@ msgstr "Πωλήσεις κατα Κατάσταση"
 #~ "Invoice after delivery'."
 
 #~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery "
-#~ "operations.\n"
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
 #~ "  - The 'Pay before delivery' choice will first generate the invoice and "
 #~ "then generate the packing order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the packing order "
-#~ "directly and wait for the user to manually click on the 'Invoice' button "
-#~ "to generate the draft invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
 #~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
 #~ "invoice based on sale order after all packing lists have been finished.\n"
 #~ "  - The 'Invoice from the packings' choice is used to create an invoice "
 #~ "during the packing process."
 #~ msgstr ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery "
-#~ "operations.\n"
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
 #~ "  - The 'Pay before delivery' choice will first generate the invoice and "
 #~ "then generate the packing order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the packing order "
-#~ "directly and wait for the user to manually click on the 'Invoice' button "
-#~ "to generate the draft invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
 #~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
 #~ "invoice based on sale order after all packing lists have been finished.\n"
 #~ "  - The 'Invoice from the packings' choice is used to create an invoice "

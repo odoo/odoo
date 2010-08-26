@@ -22,7 +22,7 @@
 from osv import fields, osv
 from tools import config
 import time
-
+from tools.translate import _
 import decimal_precision as dp
 
 
@@ -37,110 +37,26 @@ STATE = [
 ]
 
 STATE_PRIOR = {
-        'none' : 0,
-        'canceled' : 1,
-        'old' : 2,
-        'waiting' : 3,
-        'invoiced' : 4,
-        'free' : 6,
-        'paid' : 7
-        }
-
-#~ REQUETE = '''SELECT partner, state FROM (
-#~ SELECT members.partner AS partner,
-#~ CASE WHEN MAX(members.state) = 0 THEN 'none'
-#~ ELSE CASE WHEN MAX(members.state) = 1 THEN 'canceled'
-#~ ELSE CASE WHEN MAX(members.state) = 2 THEN 'old'
-#~ ELSE CASE WHEN MAX(members.state) = 3 THEN 'waiting'
-#~ ELSE CASE WHEN MAX(members.state) = 4 THEN 'invoiced'
-#~ ELSE CASE WHEN MAX(members.state) = 6 THEN 'free'
-#~ ELSE CASE WHEN MAX(members.state) = 7 THEN 'paid'
-#~ END END END END END END END END
-    #~ AS state FROM (
-#~ SELECT partner,
-    #~ CASE WHEN MAX(inv_digit.state) = 4 THEN 7
-    #~ ELSE CASE WHEN MAX(inv_digit.state) = 3 THEN 4
-    #~ ELSE CASE WHEN MAX(inv_digit.state) = 2 THEN 3
-    #~ ELSE CASE WHEN MAX(inv_digit.state) = 1 THEN 1
-#~ END END END END
-#~ AS state
-#~ FROM (
-    #~ SELECT p.id as partner,
-    #~ CASE WHEN ai.state = 'paid' THEN 4
-    #~ ELSE CASE WHEN ai.state = 'open' THEN 3
-    #~ ELSE CASE WHEN ai.state = 'proforma' THEN 2
-    #~ ELSE CASE WHEN ai.state = 'draft' THEN 2
-    #~ ELSE CASE WHEN ai.state = 'cancel' THEN 1
-#~ END END END END END
-#~ AS state
-#~ FROM res_partner p
-#~ JOIN account_invoice ai ON (
-    #~ p.id = ai.partner_id
-#~ )
-#~ JOIN account_invoice_line ail ON (
-    #~ ail.invoice_id = ai.id
-#~ )
-#~ JOIN membership_membership_line ml ON (
-    #~ ml.account_invoice_line  = ail.id
-#~ )
-#~ WHERE ml.date_from <= '%s'
-#~ AND ml.date_to >= '%s'
-#~ GROUP BY
-#~ p.id,
-#~ ai.state
-    #~ )
-    #~ AS inv_digit
-    #~ GROUP by partner
-#~ UNION
-#~ SELECT p.id AS partner,
-    #~ CASE WHEN  p.free_member THEN 6
-    #~ ELSE CASE WHEN p.associate_member IN (
-        #~ SELECT ai.partner_id FROM account_invoice ai JOIN
-        #~ account_invoice_line ail ON (ail.invoice_id = ai.id AND ai.state = 'paid')
-        #~ JOIN membership_membership_line ml ON (ml.account_invoice_line = ail.id)
-        #~ WHERE ml.date_from <= '%s'
-        #~ AND ml.date_to >= '%s'
-    #~ )
-    #~ THEN 5
-#~ END END
-#~ AS state
-#~ FROM res_partner p
-#~ WHERE p.free_member
-#~ OR p.associate_member > 0
-#~ UNION
-#~ SELECT p.id as partner,
-    #~ MAX(CASE WHEN ai.state = 'paid' THEN 2
-    #~ ELSE 0
-    #~ END)
-#~ AS state
-#~ FROM res_partner p
-#~ JOIN account_invoice ai ON (
-    #~ p.id = ai.partner_id
-#~ )
-#~ JOIN account_invoice_line ail ON (
-    #~ ail.invoice_id = ai.id
-#~ )
-#~ JOIN membership_membership_line ml ON (
-    #~ ml.account_invoice_line  = ail.id
-#~ )
-#~ WHERE ml.date_from < '%s'
-#~ AND ml.date_to < '%s'
-#~ AND ml.date_from <= ml.date_to
-#~ GROUP BY
-#~ p.id
-#~ )
-#~ AS members
-#~ GROUP BY members.partner
-#~ )
-#~ AS final
-#~ %s
-#~ '''
+    'none' : 0,
+    'canceled' : 1,
+    'old' : 2,
+    'waiting' : 3,
+    'invoiced' : 4,
+    'free' : 6,
+    'paid' : 7
+}
 
 class membership_line(osv.osv):
     '''Member line'''
 
     def _check_membership_date(self, cr, uid, ids, context=None):
-        '''Check if membership product is not in the past'''
+        """Check if membership product is not in the past
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Membership Line IDs
+        @param context: A standard dictionary for contextual values
+        """
 
         cr.execute('''
          SELECT MIN(ml.date_to - ai.date_invoice)
@@ -158,7 +74,15 @@ class membership_line(osv.osv):
         return True
 
     def _state(self, cr, uid, ids, name, args, context=None):
-        '''Compute the state lines'''
+        """Compute the state lines
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Membership Line IDs
+        @param name: Field Name
+        @param context: A standard dictionary for contextual values
+        @param return: Dictionary of state Value
+        """
         res = {}
         for line in self.browse(cr, uid, ids):
             cr.execute('''
@@ -200,17 +124,21 @@ class membership_line(osv.osv):
     _description = __doc__
     _name = 'membership.membership_line'
     _columns = {
-            'partner': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=1),
-            'date_from': fields.date('From', readonly=True),
-            'date_to': fields.date('To', readonly=True),
-            'date_cancel' : fields.date('Cancel date'),
-            'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
-            'state': fields.function(_state, method=True, string='State', type='selection', selection=STATE),
-            }
+        'partner': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=1),
+        'membership_id': fields.many2one('product.product', string="Membership", required=True),
+        'date_from': fields.date('From', readonly=True),
+        'date_to': fields.date('To', readonly=True),
+        'date_cancel' : fields.date('Cancel date'),
+        'date': fields.date('Join Date'),
+        'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
+        'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
+        'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
+        'state': fields.function(_state, method=True, string='State', type='selection', selection=STATE),
+    }
     _rec_name = 'partner'
     _order = 'id desc'
     _constraints = [
-            (_check_membership_date, 'Error, this membership product is out of date', [])
+        (_check_membership_date, 'Error, this membership product is out of date', [])
     ]
 
 membership_line()
@@ -221,35 +149,47 @@ class Partner(osv.osv):
     _inherit = 'res.partner'
 
     def _get_partner_id(self, cr, uid, ids, context=None):
-       
-        data_inv = self.pool.get('membership.membership_line').browse(cr, uid, ids, context)
+        member_line_obj = self.pool.get('membership.membership_line')
+        res_obj =  self.pool.get('res.partner')
+        data_inv = member_line_obj.browse(cr, uid, ids, context)
         list_partner = []
         for data in data_inv:
             list_partner.append(data.partner.id)
         ids2 = list_partner
         while ids2:
-            ids2 = self.pool.get('res.partner').search(cr, uid, [('associate_member','in',ids2)], context=context)
+            ids2 = res_obj.search(cr, uid, [('associate_member','in',ids2)], context=context)
             list_partner += ids2
         return list_partner
 
     def _get_invoice_partner(self, cr, uid, ids, context=None):
-        data_inv = self.pool.get('account.invoice').browse(cr, uid, ids, context)
+        inv_obj = self.pool.get('account.invoice')
+        res_obj = self.pool.get('res.partner')
+        data_inv = inv_obj.browse(cr, uid, ids, context)
         list_partner = []
         for data in data_inv:
             list_partner.append(data.partner_id.id)
         ids2 = list_partner
         while ids2:
-            ids2 = self.pool.get('res.partner').search(cr, uid, [('associate_member','in',ids2)], context=context)
+            ids2 = res_obj.search(cr, uid, [('associate_member','in',ids2)], context=context)
             list_partner += ids2
         return list_partner
 
     def _membership_state(self, cr, uid, ids, name, args, context=None):
+        """This Function return Membership State For Given Partner.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Partner IDs
+        @param name: Field Name
+        @param context: A standard dictionary for contextual values
+        @param return: Dictionary of Membership state Value
+        """
         res = {}
         for id in ids:
             res[id] = 'none'
         today = time.strftime('%Y-%m-%d')
         for id in ids:
-            partner_data = self.browse(cr,uid,id)
+            partner_data = self.browse(cr, uid, id)
             if partner_data.membership_cancel and today > partner_data.membership_cancel:
                 res[id] = 'canceled'
                 continue
@@ -299,28 +239,28 @@ class Partner(osv.osv):
                 res_state = self._membership_state(cr, uid, [partner_data.associate_member.id], name, args, context)
                 res[id] = res_state[partner_data.associate_member.id]
         return res
-    
+
     def _membership_date(self, cr, uid, ids, name, args, context=None):
-        
-        '''Return  date of membership'''
-        
+
+        """Return  date of membership"""
+
         name = name[0]
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
-        
+
         for partner in self.browse(cr, uid, ids):
-            
+
             if partner.associate_member:
                  partner_id = partner.associate_member.id
             else:
                  partner_id = partner.id
-                    
-            res[partner.id]={
-                             'membership_start': False,
-                             'membership_stop': False,
-                             'membership_cancel': False
-                             }        
-            
+
+            res[partner.id] = {
+                 'membership_start': False,
+                 'membership_stop': False,
+                 'membership_cancel': False
+            }
+
             if name == 'membership_start':
                 line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
                             limit=1, order='date_from')
@@ -328,13 +268,13 @@ class Partner(osv.osv):
                         res[partner.id]['membership_start'] = member_line_obj.read(cr, uid, line_id[0],
                                 ['date_from'])['date_from']
 
-            if name == 'membership_stop':        
+            if name == 'membership_stop':
                 line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
                             limit=1, order='date_to desc')
                 if line_id1:
                       res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, line_id1[0],
                                 ['date_to'])['date_to']
-            if name == 'membership_cancel':     
+            if name == 'membership_cancel':
                 if partner.membership_state == 'canceled':
                     line_id2 = member_line_obj.search(cr, uid, [('partner', '=', partner.id)],limit=1, order='date_cancel')
                     if line_id2:
@@ -355,14 +295,13 @@ class Partner(osv.osv):
     _columns = {
         'associate_member': fields.many2one('res.partner', 'Associate member'),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
-        'member': fields.boolean('Member'),
         'free_member': fields.boolean('Free member'),
         'membership_amount': fields.float(
                     'Membership amount', digits=(16, 2),
                     help='The price negociated by the partner'),
         'membership_state': fields.function(
                     __get_membership_state, method = True,
-                    string = 'Current membership state', type = 'selection',
+                    string = 'Current Membership State', type = 'selection',
                     selection = STATE ,store = {
                         'account.invoice':(_get_invoice_partner,['state'], 10),
                         'membership.membership_line':(_get_partner_id,['state'], 10),
@@ -404,6 +343,8 @@ class Partner(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids):
+        """Check  Recursive  for Associated Members.
+        """
         level = 100
         while len(ids):
             cr.execute('select distinct associate_member from res_partner where id IN %s',(tuple(ids),))
@@ -426,21 +367,78 @@ class Partner(osv.osv):
         default['member_lines'] = []
         return super(Partner, self).copy(cr, uid, id, default, context)
 
+    def create_membership_invoice(self, cr, uid, ids, product_id=None, datas=None, context=None):
+        """ Create Customer Invoice of Membership for partners.
+        @param datas: datas has dictionary value which consist Id of Membership product and Cost Amount of Membership.
+                      datas = {'membership_product_id': None, 'amount':None}
+        """
+        invoice_obj = self.pool.get('account.invoice')
+        product_obj = self.pool.get('product.product')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        invoice_tax_obj = self.pool.get('account.invoice.tax')
+        product_id = product_id or datas.get('membership_product_id',False)
+        amount = datas.get('amount', 0.0)
+        if not context:
+            context={}
+        invoice_list = []
+        if type(ids) in (int,long,):
+            ids = [ids]
+        for partner in self.browse(cr, uid, ids, context=context):
+            account_id = partner.property_account_receivable and partner.property_account_receivable.id or False
+            fpos_id = partner.property_account_position and partner.property_account_position.id or False
+            addr = self.address_get(cr, uid, [partner.id], ['invoice'])
+            if partner.free_member:
+                raise osv.except_osv(_('Error !'),
+                        _("Partner is a free Member."))
+            if not addr.get('invoice', False):
+                raise osv.except_osv(_('Error !'),
+                        _("Partner doesn't have an address to make the invoice."))
+            quantity = 1
+            line_value =  {
+                'product_id' : product_id,
+            }
+
+            line_dict = invoice_line_obj.product_id_change(cr, uid, {},
+                            product_id, False, quantity, '', 'out_invoice', partner.id, fpos_id, price_unit=amount, context=context)
+            line_value.update(line_dict['value'])
+            if line_value.get('invoice_line_tax_id', False):
+                tax_tab = [(6, 0, line_value['invoice_line_tax_id'])]
+                line_value['invoice_line_tax_id'] = tax_tab
+
+            invoice_id = invoice_obj.create(cr, uid, {
+                'partner_id' : partner.id,
+                'address_invoice_id': addr.get('invoice', False),
+                'account_id': account_id,
+                'fiscal_position': fpos_id or False
+                }
+            )
+            line_value['invoice_id'] = invoice_id
+            invoice_line_id = invoice_line_obj.create(cr, uid, line_value, context=context)
+            invoice_obj.write(cr, uid, invoice_id, {'invoice_line':[(6,0,[invoice_line_id])]}, context=context)
+            invoice_list.append(invoice_id)
+            if line_value['invoice_line_tax_id']:
+                tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
+                for tax in tax_value:
+                       invoice_tax_obj.create(cr, uid, tax, context=context)
+        return invoice_list
+
 Partner()
 
 class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
-            'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
-            }
+        'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
+    }
 product_template()
 
 class Product(osv.osv):
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        model_obj = self.pool.get('ir.model.data')
+
         if ('product' in context) and (context['product']=='membership_product'):
-            model_data_ids_form = self.pool.get('ir.model.data').search(cr,user,[('model','=','ir.ui.view'),('name','in',['membership_products_form','membership_products_tree'])])
-            resource_id_form = self.pool.get('ir.model.data').read(cr, user, model_data_ids_form, fields=['res_id','name'])
+            model_data_ids_form = model_obj.search(cr,user,[('model','=','ir.ui.view'),('name','in',['membership_products_form','membership_products_tree'])])
+            resource_id_form = model_obj.read(cr, user, model_data_ids_form, fields=['res_id','name'])
             dict_model={}
             for i in resource_id_form:
                 dict_model[i['name']]=i['res_id']
@@ -453,15 +451,14 @@ class Product(osv.osv):
     '''Product'''
     _inherit = 'product.product'
     _columns = {
-            'membership': fields.boolean('Membership', help='Specify if this product is a membership product'),
-            'membership_date_from': fields.date('Date from'),
-            'membership_date_to': fields.date('Date to'),
-#           'member_price':fields.float('Member Price'),
-            }
+        'membership': fields.boolean('Membership', help='Specify if this product is a membership product'),
+        'membership_date_from': fields.date('Date from', help='Active Membership since this date'),
+        'membership_date_to': fields.date('Date to', help='Expired date of Membership'),
+    }
 
     _defaults = {
-            'membership': lambda *args: False
-            }
+        'membership': lambda *args: False
+    }
 Product()
 
 
@@ -488,6 +485,8 @@ class account_invoice_line(osv.osv):
     _inherit='account.invoice.line'
 
     def write(self, cr, uid, ids, vals, context=None):
+        """Overrides orm write method
+        """
         if not context:
             context={}
         res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
@@ -503,6 +502,9 @@ class account_invoice_line(osv.osv):
                         date_from = line.invoice_id.date_invoice
                     line_id = member_line_obj.create(cr, uid, {
                         'partner': line.invoice_id.partner_id.id,
+                        'membership_id': line.product_id.id,
+                        'member_price': line.price_unit,
+                        'date': time.strftime('%Y-%m-%d'),
                         'date_from': date_from,
                         'date_to': date_to,
                         'account_invoice_line': line.id,
@@ -513,6 +515,8 @@ class account_invoice_line(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, context=None):
+        """Remove Membership Line Record for Account Invoice Line
+        """
         if not context:
             context={}
         member_line_obj = self.pool.get('membership.membership_line')
@@ -522,10 +526,13 @@ class account_invoice_line(osv.osv):
         return super(account_invoice_line, self).unlink(cr, uid, ids, context=context)
 
     def create(self, cr, uid, vals, context={}):
+        """Overrides orm create method
+        """
         result = super(account_invoice_line, self).create(cr, uid, vals, context)
         line = self.browse(cr, uid, result)
+        member_line_obj = self.pool.get('membership.membership_line')
         if line.invoice_id.type == 'out_invoice':
-            member_line_obj = self.pool.get('membership.membership_line')
+
             ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',line.id)])
             if line.product_id and line.product_id.membership and not ml_ids:
                 # Product line is a membership product
@@ -534,11 +541,14 @@ class account_invoice_line(osv.osv):
                 if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                     date_from = line.invoice_id.date_invoice
                 line_id = member_line_obj.create(cr, uid, {
-                    'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
-                    'date_from': date_from,
-                    'date_to': date_to,
-                    'account_invoice_line': line.id,
-                    })
+                            'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
+                            'membership_id': line.product_id.id,
+                            'member_price': line.price_unit,
+                            'date': time.strftime('%Y-%m-%d'),
+                            'date_from': date_from,
+                            'date_to': date_to,
+                            'account_invoice_line': line.id,
+                        })
         return result
 
 account_invoice_line()

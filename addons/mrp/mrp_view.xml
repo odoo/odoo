@@ -3,14 +3,15 @@
     <data>
 
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager" sequence="8"/>
+            groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"/>
+            <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
-<!--        <menuitem name="Control" id="menu_mrp_control" parent="base.menu_mrp_root"  sequence="3" />-->
         <menuitem name="Master Data"
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
+                  groups="mrp.group_mrp_manager,base.group_system"
                   sequence="5" />
 
         <!--
@@ -41,7 +42,7 @@
             id="menu_mrp_configuration"
             name="Configuration"
             parent="base.menu_mrp_root"
-            groups="group_mrp_manager"
+            groups="base.group_system"
             sequence="50" />
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
@@ -71,7 +72,7 @@
                 </form>
             </field>
         </record>
-     
+
         <record id="view_mrp_property_search" model="ir.ui.view">
             <field name="name">mrp.property.search</field>
             <field name="model">mrp.property</field>
@@ -90,8 +91,8 @@
                </search>
             </field>
         </record>
-           
-        
+
+
         <record id="mrp_property_action" model="ir.actions.act_window">
             <field name="name">Properties</field>
             <field name="type">ir.actions.act_window</field>
@@ -109,10 +110,11 @@
             action="mrp_property_action"
             id="menu_mrp_property_action"
             parent="menu_mrp_property"
-            groups="base.group_extended" />
+            groups="base.group_extended,base.group_system" />
         <menuitem
             action="mrp_property_group_action"
             id="menu_mrp_property_group_action"
+            groups="base.group_system"
             parent="menu_mrp_property"/>
 
         <!--
@@ -155,10 +157,10 @@
                             <group col="4" colspan="4">
                                 <field name="capacity_per_cycle"/>
                                 <newline/>
-                                <field name="time_cycle"/>
+                                <field name="time_cycle" widget="float_time"/>
                                 <field name="time_efficiency"/>
-                                <field name="time_start"/>
-                                <field name="time_stop"/>
+                                <field name="time_start" widget="float_time"/>
+                                <field name="time_stop" widget="float_time"/>
                             </group>
                         </page>
                         <page string="Analytic Accounting" groups="base.group_extended">
@@ -173,7 +175,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Search Views -->
 
         <record id="view_mrp_workcenter_search" model="ir.ui.view">
@@ -204,6 +206,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
+            <field name="help">Work Centers are units of manufacture consisting of one or several people and/or machines that can be considered as a unit for the purposes of forecasting capacity and planning.</field>
         </record>
 
         <!--
@@ -235,7 +238,7 @@
                     <field name="sequence" select="1"/>
                     <field name="workcenter_id" select="1"/>
                     <field name="cycle_nbr"/>
-                    <field name="hour_nbr"/>
+                    <field name="hour_nbr" widget="float_time"/>
                     <separator colspan="4" string="Description"/>
                     <field colspan="4" name="note" nolabel="1"/>
                 </form>
@@ -278,9 +281,8 @@
             <field name="res_model">mrp.routing</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
+            <field name="help">Routings define the assembly operations to be done in work centers for manufacturing a certain product. They are usually attached to bills of materials which will define the assembly of products required for manufacture or for finished products.</field>
         </record>
- <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
-                  sequence="100" />-->
         <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="40" />
         <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="30"/>
 
@@ -299,8 +301,8 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1" string="Reference" groups="base.group_extended"/>
                         <newline/>
-                        <field name="product_uom"/>
                         <field name="product_qty"/>
+                        <field name="product_uom"/>
                         <field name="routing_id" groups="base.group_extended"/>
                         <newline/>
                         <field name="product_uos" groups="product.group_uos"/>
@@ -314,8 +316,8 @@
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
-                                    <field name="product_uom"/>
                                     <field name="product_qty"/>
+                                    <field name="product_uom"/>
                                     <field name="name" invisible="1"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
@@ -364,7 +366,7 @@
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-                        
+
                    </group>
                 </search>
             </field>
@@ -398,6 +400,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
+            <field name="help">Master Bills of Materials are documents that describe the list of raw materials used to make a finished product. You can generate documents for a product manufacturing (defining each manufacturing step) or you could define a single multi-level bill of materials.</field>
         </record>
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
             <field name="name">Bill of Material Components</field>
@@ -405,18 +408,16 @@
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','!=',False)]</field>
+            <field name="help">Bills of materials Components are components and sub-product used to create master bills of materials.</field>
         </record>
 
         <!-- BOM menus -->
 
-  <!--      <menuitem name="Bill of Materials"
-                  id="menu_mrp_bom"
-                  parent="menu_mrp_bom"
-                  sequence="50" />-->
         <menuitem
             action="mrp_bom_form_action"
             id="menu_mrp_bom_form_action"
             parent="menu_mrp_bom"
+            groups="mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
             sequence="10"/>
         <menuitem
             action="mrp_bom_form_action2"
@@ -474,13 +475,10 @@
         Procurement
         -->
 
-        <menuitem action="procurement.procurement_action" id="menu_mrp_procurement_action"
+        <menuitem action="procurement.procurement_action" id="base.menu_mrp_procurement_action"
                   parent="mrp.menu_mrp_manufacturing" sequence="3" />
-<!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
-<!--                  parent="mrp.menu_mrp_control" sequence="1" />-->
-
-         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="3"/>
-        <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
+        <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
+        <menuitem action="procurement.action_compute_schedulers" id="base.mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager"/>
 
         <!--
         Order Point
@@ -496,7 +494,7 @@
             <field name="model">mrp.production</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
+                <tree colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
@@ -590,7 +588,7 @@
 
                             <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
-                                <tree string="Products to Consume">
+                                <tree colors="blue:state in ('draft');black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM"/>
@@ -609,7 +607,7 @@
 
                             <field colspan="2" name="move_lines2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                                        widget="one2many_list" mode="tree,form" height="275">
-                                   <tree string="Consumed Products" editable="bottom" colors="red:scraped==True">
+                                   <tree colors="red:scraped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                     <field name="product_uom" readonly="1" string="UOM"/>
@@ -649,7 +647,7 @@
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc."/>
-                                    <field name="state" invisible="1"/>                                    
+                                    <field name="state" invisible="1"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -659,7 +657,7 @@
 
                             <field colspan="2" name="move_created_ids2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                                        widget="one2many_list" mode="tree,form" height="275">
-                                   <tree string="Finished Products" editable="bottom" colors="red:scraped==True">
+                                   <tree colors="red:scraped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                     <field name="product_uom" readonly="1" string="UOM"/>
@@ -762,8 +760,9 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_Current':1}</field>
+            <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, OpenERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="1"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
 
         <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
             <field name="name">Manufacturing Orders Planning</field>
@@ -772,6 +771,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
+            <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials or BoM) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, OpenERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
         </record>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
@@ -880,9 +880,17 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
+            <data>
                 <xpath expr="/form/notebook/page/field[@name='move_id']" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                 </xpath>
+                <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
+					<group colspan="4"  groups="base.group_extended">
+					<separator colspan="4" string="Properties" />
+					<field colspan="4" name="property_ids" nolabel="1"/>
+	                 </group>
+                </xpath>
+               </data>
             </field>
         </record>
         <act_window
@@ -902,7 +910,7 @@
             src_model="product.product"/>
 
         <!-- Menu for Resource for MRP-->
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="3"/>
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" groups="mrp.group_mrp_user" sequence="3" />
 
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
             groups="base.group_extended"

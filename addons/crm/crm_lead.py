@@ -19,23 +19,28 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
-from datetime import datetime, timedelta
+from osv import fields, osv
+from datetime import datetime
 import crm
-import math
 import time
 import mx.DateTime
 from tools.translate import _
 from crm import crm_case
-import collections
 import binascii
 import tools
 
-class crm_lead(osv.osv, crm_case):
+
+CRM_LEAD_PENDING_STATES = (
+    crm.AVAILABLE_STATES[2][0], # Cancelled
+    crm.AVAILABLE_STATES[3][0], # Done
+    crm.AVAILABLE_STATES[4][0], # Pending
+)
+
+class crm_lead(crm_case, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead"
-    _order = "priority, id desc"
+    _order = "date_action, priority, id desc"
     _inherit = ['mailgate.thread','res.partner.address']
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
@@ -95,19 +100,21 @@ class crm_lead(osv.osv, crm_case):
         return res
 
     _columns = {
+        # Overridden from res.partner.address:
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', 
+            select=True, help="Optional linked partner, usually after conversion of the lead"),
+        
         # From crm.case
+        'id': fields.integer('ID'),
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="E-mail address of the contact"),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which this case belongs to.\
-                             Defines responsible user and e-mail address for the mail gateway.'),
+                        select=True, help='Sales team to which this case belongs to. Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
-        'email_cc': fields.text('Watchers Emails', size=252 , help="These \
-addresses will receive a copy of the future e-mail communication between partner \
-and users"),
+        'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
 
@@ -128,9 +135,7 @@ and users"),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.lead')]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage'),
         'user_id': fields.many2one('res.users', 'Salesman',help='By Default Salesman is Administrator when create New User'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -143,8 +148,9 @@ and users"),
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
+        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
+        'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
 
     _defaults = {
@@ -157,7 +163,21 @@ and users"),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
-    
+
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case IDs
+        @param add: Id of Partner's address
+        @email: Partner's email ID
+        """
+        if not add:
+            return {'value': {'email_from': False, 'country_id': False}}
+        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+        return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
+
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer
@@ -166,10 +186,20 @@ and users"),
         @param ids: List of case's Ids
         @param *args: Give Tuple Value
         """
+        old_state = self.read(cr, uid, ids, ['state'])[0]['state']
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        if old_state == 'draft':
+            stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
+            if stage_id:
+                value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
+            else:
+                value = {}
+            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+            self.write(cr, uid, ids, value)
+
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Lead ') + " '" + name + "' "+ _("is Open.")
+            type = self.browse(cr, uid, id).type or 'Lead'
+            message = (_('The ') + type.title()) + " '" + name + "' "+ _("has been Opened.")
             self.log(cr, uid, id, message)
         return res
 
@@ -184,8 +214,10 @@ and users"),
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Lead ') + " '" + name + "' "+ _("is Closed.")
-            self.log(cr, uid, id, message)
+            lead = self.browse(cr, uid, id)
+            if lead.type == 'lead':
+                message = _('The Lead') + " '" + name + "' "+ _("has been Closed.")
+                self.log(cr, uid, id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
@@ -201,12 +233,13 @@ and users"),
         context.update({'active_ids': ids})
 
         data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')
         value = {}
 
         view_id = False
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+
         for case in self.browse(cr, uid, ids):
             context.update({'active_id': case.id})
             if not case.partner_id:
@@ -232,7 +265,7 @@ and users"),
                         'name': _('Create Opportunity'),
                         'view_type': 'form',
                         'view_mode': 'form,tree',
-                        'res_model': 'crm.lead2opportunity',
+                        'res_model': 'crm.lead2opportunity.action',
                         'view_id': False,
                         'context': context,
                         'views': [(view_id, 'form')],
@@ -311,7 +344,6 @@ and users"),
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
-        msg_from = msg['from']
         if msg.get('priority'):
             vals['priority'] = msg.get('priority')
 
@@ -334,8 +366,8 @@ and users"),
         # previous state, so we have to loop:
         for case in self.browse(cr, uid, ids, context=context):
             values = dict(vals)
-            if case.state == crm.AVAILABLE_STATES[4][0]: #pending
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #open
+            if case.state in CRM_LEAD_PENDING_STATES:
+                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
 
         return res

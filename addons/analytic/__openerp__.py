@@ -19,18 +19,18 @@
 #
 ##############################################################################
 
-
 {
     "name" : "Analytic Account",
     "version": "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
     "depends" : ["base", "decimal_precision"],
     "description": """Module for defining analytic accounting object.
     """,
     "init_xml" : [],
-    "update_xml": ["security/ir.model.access.csv",
+    "update_xml": ['security/analytic_security.xml',
+                   "security/ir.model.access.csv",
     ],
     'demo_xml': [
     ],

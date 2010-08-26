@@ -58,9 +58,9 @@
                     <field name="employee_id"/>
 		            </group>
 		            <newline/>
-	                <group expand="1" string="Group By..." colspan="10" col="12">
+	                <group expand="0" string="Group By..." colspan="10" col="12">
 	                    <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
-	                    <filter icon="terp-personal" string="Employee" 
+	                    <filter icon="terp-personal" string="Employee"
                           name="user" context="{'group_by':'employee_id'}"
 	                        help="Leaves by employee"/>
                         <separator orientation="vertical"/>
@@ -71,7 +71,7 @@
 	                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
 	                </group>
 	                <newline/>
-	                <group expand="0" string="Extended options..." colspan="10" col="12">
+	                <group expand="0" string="Extended Filters..." colspan="10" col="12">
                     <field name="holiday_status_id" widget="selection"/>
                 	<field name="department_id" widget="selection"/>
 	                </group>

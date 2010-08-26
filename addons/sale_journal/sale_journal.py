@@ -43,19 +43,19 @@ class sale_journal(osv.osv):
     _name = 'sale_journal.sale.journal'
     _description = 'Sale Journal'
     _columns = {
-        'name': fields.char('Journal', size=64, required=True),
-        'code': fields.char('Code', size=16, required=True),
-        'user_id': fields.many2one('res.users', 'Responsible', required=True),
-        'date': fields.date('Journal date', required=True),
+        'name': fields.char('Journal', size=64, required=True, states={'close':[('readonly',True)]}),
+        'code': fields.char('Code', size=16, required=True, states={'close':[('readonly',True)]}),
+        'user_id': fields.many2one('res.users', 'Responsible', required=True, states={'close':[('readonly',True)]}),
+        'date': fields.date('Journal date', required=True, states={'close':[('readonly',True)]}),
         'date_created': fields.date('Creation date', readonly=True, required=True),
-        'date_validation': fields.date('Validation date', readonly=True),
-        'sale_stats_ids': fields.one2many("sale.journal.report", "journal_id", 'Sale Stats', readonly=True),
+        'date_close': fields.date('Close date ', readonly=True),
+        'sale_stats_ids': fields.one2many("sale.journal.report", "journal_id", 'Sale stats', readonly=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
             ('cancel','Cancel'),
             ('confirm','Confirm'),
-            ('done','Done'),
+            ('close','Close'),
         ], 'State', required=True, readonly=True),
         'note': fields.text('Note'),
     }
@@ -105,12 +105,17 @@ class sale_journal(osv.osv):
         return True
 
     def button_close(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
+        self.write(cr, uid, ids, {'state':'close', 'date_close':time.strftime('%Y-%m-%d')})
         for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is closed")
                 self.log(cr, uid, id, message)
         return True
-    
+    def button_reset(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'draft'})
+        for (id,name) in self.name_get(cr, uid, ids):
+                    message = _('Sale orders of Journal') + " '" + name + "' "+ _("is in draft state")
+                    self.log(cr, uid, id, message)
+        return True
     def copy(self, cr, uid, id, default=None, context=None):
         """Overrides orm copy method
         @param self: The object pointer
@@ -137,13 +142,14 @@ class picking_journal(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible', required=True),
         'date': fields.date('Journal date', required=True),
         'date_created': fields.date('Creation date', readonly=True, required=True),
-        'date_validation': fields.date('Validation date', readonly=True),
+        'date_close': fields.date('Close date', readonly=True),
         'picking_stats_ids': fields.one2many("sale.journal.picking.report", "journal_id", 'Journal Stats', readonly=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
             ('cancel','Cancel'),
-            ('done','Done'),
+            ('close','Close'),
+            ('confirm','Confirm'),
         ], 'Creation date', required=True, readonly=True),
         'note': fields.text('Note'),
     }
@@ -161,19 +167,36 @@ class picking_journal(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_cancel', cr)
         return True
-   
+
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'})
         return True
-    
+
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
-    
+
     def button_close(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
+        self.write(cr, uid, ids, {'state':'close', 'date_close':time.strftime('%Y-%m-%d')})
         return True
-    
+
+    def button_reset(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'draft'})
+        for (id,name) in self.name_get(cr, uid, ids):
+                    message = _('Sale orders of Journal') + " '" + name + "' "+ _("is in draft state")
+                    self.log(cr, uid, id, message)
+        return True
+
+    def button_picking_confirm(self, cr, uid, ids, context={}):
+
+        self.write(cr, uid, ids, {'state':'confirm'})
+        for id in ids:
+            pick_ids = self.pool.get('stock.picking').search(cr, uid, [('journal_id','=',id)])
+            for pickid in pick_ids:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+        return True
+
     def copy(self, cr, uid, id, default=None, context=None):
         """Overrides orm copy method
         @param self: The object pointer
@@ -188,7 +211,7 @@ class picking_journal(osv.osv):
             default = {}
         default.update({'picking_stats_ids': []})
         return super(picking_journal, self).copy(cr, uid, id, default=default, context=context)
-    
+
 picking_journal()
 
 #==============================================
@@ -213,7 +236,7 @@ res_partner()
 class picking(osv.osv):
     _inherit = "stock.picking"
     _columns = {
-        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal',  domain=[('state','!=', 'done')]),
+        'journal_id': fields.many2one('sale_journal.picking.journal', 'Picking Journal',  domain=[('state','!=', 'close')],help="Picking Journal"),
         'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal'),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
     }
@@ -222,7 +245,7 @@ picking()
 class sale(osv.osv):
     _inherit = "sale.order"
     _columns = {
-        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', domain=[('state','!=', 'done')]),
+        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', domain=[('state','not in', ('done', 'draft''cancel'))]),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')
     }
     def action_ship_create(self, cr, uid, ids, *args):
@@ -241,5 +264,7 @@ class sale(osv.osv):
             itype = self.pool.get('res.partner').browse(cr, uid, part).property_invoice_type.id
             result['value']['invoice_type_id'] = itype
         return result
+
 sale()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

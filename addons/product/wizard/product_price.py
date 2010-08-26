@@ -44,18 +44,14 @@ class product_price_list(osv.osv_memory):
     }
 
     def print_report(self, cr, uid, ids, context=None):
-
         """
-              To get the date and print the report
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-             @return : return report
+        To get the date and print the report
+        @return : return report
         """
         datas = {'ids': context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5'], context)
         res = res and res[0] or {}
+        price_dict = self.pool.get('product.pricelist').price_get(cr, uid, [res['price_list']], 1, 1.0)
         datas['form'] = res
         return {
             'type': 'ir.actions.report.xml',

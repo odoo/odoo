@@ -24,7 +24,7 @@
     "name" : "Miscellaneous Tools",
     "version" : "1.0",
     "depends" : ["base"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category" : "Tools",
     "description": """Installs tools for lunch,survey,subscription and audittrail
     module

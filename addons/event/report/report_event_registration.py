@@ -43,6 +43,7 @@ class report_event_registration(osv.osv):
         'type': fields.many2one('event.type', 'Event Type'),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
+        'speaker_id':fields.many2one('res.partner', 'Speaker', readonly=True),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -50,6 +51,7 @@ class report_event_registration(osv.osv):
         initialize the sql view for the event registration
         cr -- the cursor
         """
+        tools.drop_view_if_exists(cr, 'report_event_registration')
         cr.execute("""
          create or replace view report_event_registration as (
                 select
@@ -57,6 +59,7 @@ class report_event_registration(osv.osv):
                 c.event_id as event_id,
                 e.date_begin as date,
                 e.user_id as user_id,
+                e.main_speaker_id as speaker_id,
                 to_char(e.date_begin, 'YYYY') as year,
                 to_char(e.date_begin, 'MM') as month,
                 to_char(e.date_begin, 'YYYY-MM-DD') as day,
@@ -75,7 +78,7 @@ class report_event_registration(osv.osv):
                group by
                     to_char(e.date_begin, 'YYYY'),
                     to_char(e.date_begin, 'MM'),
-                    t.id, e.id, e.date_begin,
+                    t.id, e.id, e.date_begin,e.main_speaker_id,
                     e.register_max, e.type, e.state, c.event_id, e.user_id,
                     to_char(e.date_begin, 'YYYY-MM-DD')
                 )""")

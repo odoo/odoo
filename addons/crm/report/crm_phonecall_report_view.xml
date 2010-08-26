@@ -9,7 +9,7 @@
             <field name="model">crm.phonecall.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-               <tree string="Phone calls">
+               <tree colors="blue:state in ('draft');black:state in ('open','pending','done');gray:state in ('cancel') " string="Phone calls">
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="section_id" invisible="1"/>
@@ -75,13 +75,9 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="8">
-                           <!--  <filter string="This Year" name="This Year" icon="terp-hr"
-                               domain="[('name','=',time.localtime()[0])]"/>-->
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
 
-                           <!-- <filter string="This Month" name="This Year" icon="terp-hr"
-                               domain="[('month','=',time.strftime('%%m'))]" />-->
                        <filter string="This Month" icon="terp-go-month" name="This Month"
                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
 
@@ -145,7 +141,7 @@
                   </group>
 
                    <newline/>
-                   <group  expand="0" string="Extended options..."  groups="base.group_extended">
+                   <group  expand="0" string="Extended Filters..."  groups="base.group_extended">
                       <field name="partner_id"/>
                         <separator orientation="vertical"/>
                         <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
@@ -171,6 +167,7 @@
             <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_phonecall_tree"/>
             <field name="search_view_id" ref="view_report_crm_phonecall_filter"/>
+            <field name="help">Get an anlysis of Phone Calls number and delay to close, stage, user suits to different groups for a global or a fine grained analysis.</field>
         </record>
 
            <record model="ir.actions.act_window.view" id="action_report_crm_phonecall_tree">

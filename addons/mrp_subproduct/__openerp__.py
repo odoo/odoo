@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -32,12 +32,16 @@ Without this module:
 With this module:
     A + B + C -> D + E
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'mrp'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'mrp_subproduct_view.xml'],
+    'update_xml': [
+       'security/ir.model.access.csv',
+       'mrp_subproduct_view.xml'
+    ],
     'demo_xml': [],
+    'test': ['test/mrp_subproduct.yml'],
     'installable': True,
     'active': False,
     'certificate': '0050060616733',

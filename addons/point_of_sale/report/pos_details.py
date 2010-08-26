@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -28,9 +27,9 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_invoice(self,inv_id,user):
         res={}
-        self.cr.execute("select name from account_invoice as ac where id = %d" %(inv_id))
-        res = self.cr.fetchone()
-        if res:
+        if inv_id:
+            self.cr.execute("select name from account_invoice as ac where id = %d" %(inv_id))
+            res = self.cr.fetchone()
             return res[0]
         else:
             return  ''
@@ -97,17 +96,6 @@ class pos_details(report_sxw.rml_parse):
         self.total_paid=res3[0]
         return res3[0] or False
 
-#    def _get_qty_total(self, objects):
-#        #code for the sum of qty_total
-#        return reduce(lambda acc, object:
-#                                        acc + reduce(
-#                                                lambda sum_qty, line:
-#                                                        sum_qty + line.qty,
-#                                                object.lines,
-#                                                0),
-#                                    objects,
-#                                    0)
-
     def _get_sum_discount(self, objects):
         #code for the sum of discount value
         return reduce(lambda acc, object:
@@ -120,18 +108,6 @@ class pos_details(report_sxw.rml_parse):
                                     0.0)
 
     def _get_payments(self, form,user, ignore_gift=False):
-#        gift_journal_id = None
-#        if ignore_gift:
-#            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
-#            if len(config_journal_ids):
-#                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
-#                gift_journal_id = config_journal.journal_id.id
-#
-#        result = {}
-#        for obj in objects:
-#            for payment in obj.statement_ids:
-#                result[payment.journal_id] = result.get(payment.journal_id, 0.0) + payment.amount
-#        return result
         statement_line_obj = self.pool.get("account.bank.statement.line")
         gift_journal_id = None
         if ignore_gift:
@@ -201,13 +177,6 @@ class pos_details(report_sxw.rml_parse):
         temp.update({'amount':temp2})
         return [temp] or False
 
-#    def _get_period(self, form):
-#        min_date = form['date_start']
-#        max_date = form['date_end']
-#        if min_date == max_date:
-#            return '%s' % min_date
-#        else:
-#            return '%s - %s' % (min_date, max_date)
     def _get_period(self, form):
         return form['date_start']
 

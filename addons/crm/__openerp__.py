@@ -24,24 +24,24 @@
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
-    'description': """The generic Open ERP Customer Relationship Management
+    'description': """The generic OpenERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
 leads, opportunities, meeting, phonecall etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
-Open ERP ensures that all cases are successfully tracked by users, customers and
+OpenERP ensures that all cases are successfully tracked by users, customers and
 suppliers. It can automatically send reminders, escalate the request, trigger
 specific methods and lots of other actions based on your own enterprise rules.
 
 The greatest thing about this system is that users don't need to do anything
-special. They can just send email to the request tracker. Open ERP will take
+special. They can just send email to the request tracker. OpenERP will take
 care of thanking them for their message, automatically routing it to the
 appropriate staff, and make sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
-between mails and Open ERP. 
+between mails and OpenERP. 
 Create dashboard for CRM that includes:
     * My Leads (list)
     * Leads by Stage (graph)
@@ -50,7 +50,7 @@ Create dashboard for CRM that includes:
     * My Cases (list)
     * Jobs Tracking (graph)
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'base',
@@ -83,8 +83,11 @@ Create dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_send_email_view.xml',
+        'wizard/crm_forward_to_partner_view.xml',
+        'wizard/crm_custom_create_menu_view.xml',
+        'wizard/crm_merge_opportunities_view.xml',
+
         'crm_view.xml',
 
         'crm_action_rule_view.xml',

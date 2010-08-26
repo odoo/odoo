@@ -1,6 +1,26 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+    <!-- Idea Categories Search View-->
+    <record model="ir.ui.view" id="view_idea_category_search">
+        <field name="name">idea.category.search</field>
+        <field name="model">idea.category</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Ideas Categories">
+                <group col="10" colspan="4">
+                    <field name="name" string="Category"/>
+                    <field name="parent_id" widget="selection"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By..." colspan="14">
+                    <filter string="Parent Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
 
     <!-- Idea Category Form View -->
     <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
@@ -41,10 +61,11 @@
         <field name="res_model">idea.category</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_idea_category_search"/>
     </record>
 
     <menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" sequence="20"/>
+         id="base.menu_lunch_survey_root" sequence="20" groups="base.group_system"/>
 
     <menuitem name="Ideas" parent="base.menu_lunch_survey_root" id="menu_ideas" sequence="3"/>
 
@@ -239,7 +260,7 @@
         <field name="model">idea.idea</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-        <tree string="Ideas">
+        <tree colors="blue:state in ('draft');black:state in ('open','close');gray:state in('cancel')" string="Ideas">
             <field name="title"/>
             <field name="category_id" />
             <field name="created_date"/>
@@ -362,7 +383,7 @@
     <menuitem name="Idea" parent="base.menu_lunch_reporting" id="menu_idea_reporting" sequence="3"/>
 
     <menuitem name="Vote Statistics" parent="menu_idea_reporting"
-        id="menu_idea_vote_stat" action="action_idea_vote_stat" />
+        id="menu_idea_vote_stat" action="action_idea_vote_stat" groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
 
     <!-- Vote For Idea Action  -->
     <record model="ir.actions.act_window" id="action_idea_vote">

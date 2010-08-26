@@ -23,13 +23,13 @@
 {
     "name": "Human Resources: Holidays management",
     "version": "1.5",
-    "author": "Tiny & Axelor",
+    "author": "OpenERP SA & Axelor",
     "category": "Generic Modules/Human Resources",
     "website": "http://www.openerp.com",
     "description": """Human Ressources: Holidays tracking and workflow
 
     This module allows you to manage leaves and leaves requests.
-    Implements a dashboard for human resource management that includes.     
+    Implements a dashboard for human resource management that includes.
         * My Leaves
         * My Expenses
     Note that:
@@ -48,7 +48,7 @@
             for example, you maybe will do it for the user 'admin'
             .
 """,
-    'author': 'Tiny & Axelor',
+    'author': 'OpenERP SA & Axelor',
     'website': 'http://www.openerp.com',
     'depends': ['hr', 'crm', 'process', 'resource'],
     'init_xml': [],
@@ -63,7 +63,6 @@
         'wizard/hr_holidays_summary_department_view.xml',
         'wizard/hr_holidays_summary_employees_view.xml',
         'board_hr_holidays_view.xml',
-        #'process/hr_holidays_process.xml'
         ],
     'demo_xml': ['hr_holidays_demo.xml',],
     'test': ['test/test_hr_holiday.yml'],

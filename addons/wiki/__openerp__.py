@@ -28,9 +28,10 @@ The base module to manage documents(wiki)
 
 keep track for the wiki groups, pages, and history
     """,
-    'author': 'Tiny & Axelor',
+    'author': 'OpenERP SA & Axelor',
     'website': 'http://openerp.com',
     'depends': ['knowledge'],
+    'web_depends': ['widget_wiki'],
     'init_xml': [],
     'update_xml': [
         'wizard/wiki_wiki_page_open_view.xml',
@@ -40,6 +41,7 @@ keep track for the wiki groups, pages, and history
         'wiki_view.xml',
         'data/wiki_quickstart.xml',
         'data/wiki_main.xml',
+        'security/wiki_security.xml',
         'security/ir.model.access.csv'
     ],
     'demo_xml': [],

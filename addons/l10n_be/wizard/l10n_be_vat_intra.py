@@ -33,7 +33,7 @@ class partner_vat_intra(osv.osv_memory):
 
     def _get_xml_data(self, cr, uid, context=None):
         if context.get('file_save', False):
-            return base64.encodestring(context['file_save'])
+            return base64.encodestring(context['file_save'].encode('utf8'))
         return ''
 
     def _get_europe_country(self, cursor, user, context=None):
@@ -64,7 +64,7 @@ class partner_vat_intra(osv.osv_memory):
         'country_ids': _get_europe_country,
         'file_save': _get_xml_data,
         'name': 'vat_Intra.xml',
-                }
+    }
 
     def create_xml(self, cursor, user, ids, context=None):
         obj_user = self.pool.get('res.users')
@@ -72,7 +72,6 @@ class partner_vat_intra(osv.osv_memory):
         obj_sequence = self.pool.get('ir.sequence')
         obj_partner = self.pool.get('res.partner')
         obj_partner_add = self.pool.get('res.partner.address')
-        obj_country = self.pool.get('res.country')
         mod_obj = self.pool.get('ir.model.data')
         street = zip_city = country = p_list = data_clientinfo = ''
         error_message = list_partner = []
@@ -111,13 +110,14 @@ class partner_vat_intra(osv.osv_memory):
             if ads.country_id:
                 country = ads.country_id.code
 
+        comp_name = data_cmpny.name
         sender_date = time.strftime('%Y-%m-%d')
         data_file = '<?xml version="1.0"?>\n<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="' + str(company_vat) + '"'
-        data_file +=' ControlRef="' + cref + '" MandataireId="' + data['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
+        data_file += ' ControlRef="' + cref + '" MandataireId="' + data['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
         data_file += ' VersionTech="1.3">'
-        data_file +='\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
-        data_file +='\n\t\t\t<Country>' + str(country) +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
-        data_comp ='\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t\t\t<Country>'+ str(country) +'</Country>\n\t\t</CompanyInfo>'
+        data_file += '\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>'
+        data_file += '\n\t\t\t<Country>' + country +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
+        data_comp = '\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t\t\t<Country>'+ country +'</Country>\n\t\t</CompanyInfo>'
         data_period = '\n\t\t<Period>'+ data['period_code'] +'</Period>' #trimester
         p_id_list = obj_partner.search(cursor, user, [('vat','!=',False)])
         if not p_id_list:
@@ -144,7 +144,7 @@ class partner_vat_intra(osv.osv_memory):
             data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+row['vat'][2:] +'</VATNum>\n\t\t\t\t<Country>'+row['vat'][:2] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Code>'+str(intra_code) +'</Code>\n\t\t</ClientList>'
         amount_sum = int(amount_sum)
         data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
-        data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n\t</DeclarantList>\n</VatIntra>'
+        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'
         model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)
         resource_id = mod_obj.read(cursor, user, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context['file_save'] = data_file

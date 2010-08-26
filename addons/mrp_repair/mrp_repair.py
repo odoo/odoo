@@ -41,7 +41,7 @@ class mrp_repair(osv.osv):
         @param field_name: Name of field.
         @param arg: Argument
         @param context: A standard dictionary for contextual values
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         res = {}
         cur_obj = self.pool.get('res.currency')
@@ -59,7 +59,7 @@ class mrp_repair(osv.osv):
         """ Calculates taxed amount.
         @param field_name: Name of field.
         @param arg: Argument
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         res = {}
         cur_obj = self.pool.get('res.currency')
@@ -82,7 +82,7 @@ class mrp_repair(osv.osv):
         """ Calculates total amount.
         @param field_name: Name of field.
         @param arg: Argument
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         res = {}
         untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context)
@@ -167,7 +167,7 @@ class mrp_repair(osv.osv):
     def onchange_product_id(self, cr, uid, ids, product_id=None):
         """ On change of product sets some values.
         @param product_id: Changed product
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         return {'value': {
                     'prodlot_id': False,
@@ -183,7 +183,7 @@ class mrp_repair(osv.osv):
         destination location, partner and partner address.
         @param prod_id: Id of product in current record.
         @param move_id: Changed move.
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         data = {}
         data['value'] = {}
@@ -210,11 +210,11 @@ class mrp_repair(osv.osv):
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, address_id):
-        """ On change of partner sets the values of partner address, 
+        """ On change of partner sets the values of partner address,
         partner invoice address and pricelist.
         @param part: Changed id of partner.
         @param address_id: Address id from current record.
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         part_obj = self.pool.get('res.partner')
         pricelist_obj = self.pool.get('product.pricelist')
@@ -240,7 +240,7 @@ class mrp_repair(osv.osv):
         destination location, move and guarantee limit.
         @param lot: Changed id of production lot.
         @param product_id: Product id from current record.
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         prodlot_obj = self.pool.get('stock.production.lot')
         move_obj = self.pool.get('stock.move')
@@ -275,7 +275,7 @@ class mrp_repair(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         """ Cancels repair order when it is in 'Draft' state.
         @param *arg: Arguments
-        @return: True        
+        @return: True
         """
         if not len(ids):
             return False
@@ -292,7 +292,7 @@ class mrp_repair(osv.osv):
         """ Repair order state is set to 'To be invoiced' when invoice method
         is 'Before repair' else state becomes 'Confirmed'.
         @param *arg: Arguments
-        @return: True        
+        @return: True
         """
         mrp_line_obj = self.pool.get('mrp.repair.line')
         for o in self.browse(cr, uid, ids):
@@ -305,7 +305,7 @@ class mrp_repair(osv.osv):
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels repair order.
-        @return: True        
+        @return: True
         """
         ok=True
         mrp_line_obj = self.pool.get('mrp.repair.line')
@@ -320,7 +320,7 @@ class mrp_repair(osv.osv):
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
         """ Creates invoice(s) for repair order.
         @param group: It is set to true when group invoice is to be generated.
-        @return: Invoice Ids.        
+        @return: Invoice Ids.
         """
         res = {}
         invoices_group = {}
@@ -328,7 +328,7 @@ class mrp_repair(osv.osv):
         inv_obj = self.pool.get('account.invoice')
         repair_line_obj = self.pool.get('mrp.repair.line')
         repair_fee_obj = self.pool.get('mrp.repair.fee')
-        for repair in self.browse(cr, uid, ids, context=context):            
+        for repair in self.browse(cr, uid, ids, context=context):
             res[repair.id] = False
             if repair.state in ('draft','cancel') or repair.invoice_id:
                 continue
@@ -372,7 +372,7 @@ class mrp_repair(osv.osv):
                             name = operation.name
 
                         if operation.product_id.property_account_income:
-                            account_id = operation.product_id.property_account_income
+                            account_id = operation.product_id.property_account_income.id
                         elif operation.product_id.categ_id.property_account_income_categ:
                             account_id = operation.product_id.categ_id.property_account_income_categ.id
                         else:
@@ -382,14 +382,14 @@ class mrp_repair(osv.osv):
                             'invoice_id': inv_id,
                             'name': name,
                             'origin': repair.name,
-                            'account_id': account_id, 
+                            'account_id': account_id,
                             'quantity': operation.product_uom_qty,
                             'invoice_line_tax_id': [(6,0,[x.id for x in operation.tax_id])],
                             'uos_id': operation.product_uom.id,
                             'price_unit': operation.price_unit,
                             'price_subtotal': operation.product_uom_qty*operation.price_unit,
                             'product_id': operation.product_id and operation.product_id.id or False
-                            })
+                        })
                         repair_line_obj.write(cr, uid, [operation.id], {'invoiced': True, 'invoice_line_id': invoice_line_id})
                 for fee in repair.fees_lines:
                     if fee.to_invoice == True:
@@ -401,58 +401,56 @@ class mrp_repair(osv.osv):
                             'invoice_id': inv_id,
                             'name': name,
                             'origin': repair.name,
-                            'account_id': a,
+                            'account_id': account_id,
                             'quantity': fee.product_uom_qty,
                             'invoice_line_tax_id': [(6,0,[x.id for x in fee.tax_id])],
                             'uos_id': fee.product_uom.id,
                             'product_id': fee.product_id and fee.product_id.id or False,
                             'price_unit': fee.price_unit,
                             'price_subtotal': fee.product_uom_qty*fee.price_unit
-                            })
+                        })
                         repair_fee_obj.write(cr, uid, [fee.id], {'invoiced': True, 'invoice_line_id': invoice_fee_id})
                 res[repair.id] = inv_id
-        #self.action_invoice_end(cr, uid, ids)
         return res
 
     def action_repair_ready(self, cr, uid, ids, context=None):
         """ Writes repair order state to 'Ready'
-        @return: True        
+        @return: True
         """
         self.write(cr, uid, ids, {'state': 'ready'})
         return True
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
         """ Writes repair order state to 'Exception in invoice'
-        @return: True        
+        @return: True
         """
         self.write(cr, uid, ids, {'state': 'invoice_except'})
         return True
 
     def action_repair_start(self, cr, uid, ids, context=None):
         """ Writes repair order state to 'Under Repair'
-        @return: True        
+        @return: True
         """
         self.write(cr, uid, ids, {'state': 'under_repair'})
         return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
         """ Writes repair order state to 'Ready' if invoice method is Before repair.
-        @return: True        
+        @return: True
         """
         for order in self.browse(cr, uid, ids):
             val = {}
             if (order.invoice_method == 'b4repair'):
                 val['state'] = 'ready'
             else:
-                #val['state'] = 'done'
                 pass
             self.write(cr, uid, [order.id], val)
         return True
 
     def action_repair_end(self, cr, uid, ids, context=None):
-        """ Writes repair order state to 'To be invoiced' if invoice method is 
+        """ Writes repair order state to 'To be invoiced' if invoice method is
         After repair else state is set to 'Ready'.
-        @return: True        
+        @return: True
         """
         for order in self.browse(cr, uid, ids):
             val = {}
@@ -462,7 +460,6 @@ class mrp_repair(osv.osv):
             elif (not order.invoiced and order.invoice_method=='b4repair'):
                 val['state'] = 'ready'
             else:
-                #val['state'] = 'done'
                 pass
             self.write(cr, uid, [order.id], val)
         return True
@@ -473,7 +470,7 @@ class mrp_repair(osv.osv):
 
     def action_repair_done(self, cr, uid, ids, context=None):
         """ Creates stock move and picking for repair order.
-        @return: Picking ids.        
+        @return: Picking ids.
         """
         res = {}
         move_obj = self.pool.get('stock.move')
@@ -496,7 +493,6 @@ class mrp_repair(osv.osv):
                     'state': 'done',
                 })
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id})
-
             if repair.deliver_bool:
                 pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
                 picking = pick_obj.create(cr, uid, {
@@ -509,23 +505,20 @@ class mrp_repair(osv.osv):
                     'invoice_state': 'none',
                     'type': 'out',
                 })
-                wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
-
                 move_id = move_obj.create(cr, uid, {
                     'name': repair.name,
                     'picking_id': picking,
                     'product_id': repair.product_id.id,
                     'product_qty': 1.0,
                     'product_uom': repair.product_id.uom_id.id,
-                    #'product_uos_qty': line.product_uom_qty,
-                    #'product_uos': line.product_uom.id,
                     'prodlot_id': repair.prodlot_id and repair.prodlot_id.id or False,
                     'address_id': repair.address_id and repair.address_id.id or False,
                     'location_id': repair.location_id.id,
                     'location_dest_id': repair.location_dest_id.id,
                     'tracking_id': False,
-                    'state': 'assigned',    # FIXME done ?
+                    'state': 'assigned',
                 })
+                wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
                 self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
                 res[repair.id] = picking
             else:
@@ -537,7 +530,7 @@ mrp_repair()
 
 
 class ProductChangeMixin(object):
-    def product_id_change(self, cr, uid, ids, pricelist, product, uom=False, 
+    def product_id_change(self, cr, uid, ids, pricelist, product, uom=False,
                           product_uom_qty=0, partner_id=False, guarantee_limit=False):
         """ On change of product it sets product quantity, tax account, name,
         uom of product, unit price and price subtotal.
@@ -581,7 +574,7 @@ class ProductChangeMixin(object):
                         'message':
                             "Couldn't find a pricelist line matching this product and quantity.\n"
                             "You have to change either the product, the quantity or the pricelist."
-                    }
+                     }
                 else:
                     result.update({'price_unit': price, 'price_subtotal': price*product_uom_qty})
 
@@ -601,7 +594,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         """ Calculates amount.
         @param field_name: Name of field.
         @param arg: Argument
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         res = {}
         cur_obj=self.pool.get('res.currency')
@@ -679,17 +672,17 @@ mrp_repair_line()
 class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.fee'
     _description = 'Repair Fees Line'
-    
+
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
         default.update({'invoice_line_id': False, 'invoiced': False})
         return super(mrp_repair_fee, self).copy_data(cr, uid, id, default, context)
-    
+
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         """ Calculates amount.
         @param field_name: Name of field.
         @param arg: Argument
-        @return: Dictionary of values.        
+        @return: Dictionary of values.
         """
         res = {}
         cur_obj = self.pool.get('res.currency')

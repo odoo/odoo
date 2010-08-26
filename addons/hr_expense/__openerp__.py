@@ -38,7 +38,7 @@
     the invoice on timesheet module so that you will be able to automatically
     re-invoice your customer's expenses if your work by project.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['hr', 'account'],
     'init_xml': [],
@@ -54,9 +54,8 @@
         ],
     'demo_xml': [
         'hr_expense_demo.xml',
-#       'hr.expense.expense.csv'
         ],
-    'test': ['test/test_hr_expense.yml'],            
+    'test': ['test/test_hr_expense.yml'],
     'installable': True,
     'active': False,
     'certificate': '0062479841789',

@@ -23,11 +23,11 @@ from crm import crm
 from osv import fields, osv
 import time
 
-class crm_helpdesk(osv.osv, crm.crm_case):
+class crm_helpdesk(crm.crm_case, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
-    _description = "Helpdesk Cases"
+    _description = "Helpdesk"
     _order = "id desc"
     _inherit = ['mailgate.thread']
     _columns = {
@@ -49,9 +49,7 @@ class crm_helpdesk(osv.osv, crm.crm_case):
             'partner_id': fields.many2one('res.partner', 'Partner'), 
             'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"), 
-            'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
- will receive a copy of the future" \
-" communication between partner and users by email"), 
+            'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"), 
             'email_from': fields.char('Email', size=128, help="These people will receive email."), 
             'date': fields.datetime('Date'), 
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128), 
@@ -63,11 +61,6 @@ class crm_helpdesk(osv.osv, crm.crm_case):
             'planned_cost': fields.float('Planned Costs'), 
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
             'probability': fields.float('Probability (%)'), 
-            'som': fields.many2one('res.partner.som', 'State of Mind', \
-                            help="The minds states allow to define a value scale which represents" \
-                                "the partner mentality in relation to our services.The scale has" \
-                                "to be created with a factor for each level from 0" \
-                                "(Very dissatisfied) to 10 (Extremely satisfied)."), 
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"), 
@@ -77,8 +70,7 @@ class crm_helpdesk(osv.osv, crm.crm_case):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-            'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-            'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+            'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {

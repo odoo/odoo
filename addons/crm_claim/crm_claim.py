@@ -22,12 +22,13 @@
 from osv import fields, osv
 from crm import crm
 import time
-class crm_claim(osv.osv, crm.crm_case):
+
+class crm_claim(crm.crm_case, osv.osv):
     """
     Crm claim
     """
     _name = "crm.claim"
-    _description = "Claim Cases"
+    _description = "Claim"
     _order = "id desc"
     _inherit = ['mailgate.thread']
     _columns = {
@@ -51,12 +52,6 @@ class crm_claim(osv.osv, crm.crm_case):
                       "canall which is this opportunity source."), 
         'planned_revenue': fields.float('Planned Revenue'), 
         'planned_cost': fields.float('Planned Costs'), 
-        'som': fields.many2one('res.partner.som', 'State of Mind', \
-                        help="The minds states allow to define a value scale "\
-                            "which represents the partner mentality in "\
-                            "relation to our services.The scale has to be "\
-                            "created with a factor for each level from 0 "\
-                            "(Very dissatisfied) to 10 (Extremely satisfied)"), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"), 
@@ -74,22 +69,19 @@ class crm_claim(osv.osv, crm.crm_case):
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                 # domain="[('partner_id','=',partner_id)]"
                                  ), 
-        'email_cc': fields.text('Watchers Emails', size=252, help="These people will receive a copy of the future communication between partner and users by email"), 
+        'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
         'partner_name': fields.char("Employee's Name", size=64), 
         'partner_mobile': fields.char('Mobile', size=32), 
         'partner_phone': fields.char('Phone', size=32), 
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
-                         ('object_id.model', '=', 'crm.claim')]"), 
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage'), 
         'probability': fields.float('Probability (%)'), 
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
@@ -123,7 +115,6 @@ class crm_claim(osv.osv, crm.crm_case):
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
         data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
-        print data
         return {'value': data}
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):

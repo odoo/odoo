@@ -28,7 +28,7 @@
     Multicompany module is for managing a multicompany environment.
     This module is the base module for other multicompany modules.
     """,
-    'author': 'Tiny,SYLEAM',
+    'author': 'OpenERP SA,SYLEAM',
     'website': 'http://www.openerp.com/',
     'depends': [
         'base',
@@ -38,7 +38,6 @@
     'init_xml': [],
     'update_xml': [
         'res_company_view.xml'
-        #'security/ir.model.access.csv',
     ],
     'demo_xml': [
         'multi_company_demo.xml'

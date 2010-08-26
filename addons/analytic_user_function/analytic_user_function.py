@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -54,7 +54,7 @@ class hr_analytic_timesheet(osv.osv):
     # Look in account, if no value for the user => look in parent until there is no more parent to look
     # Take the first found... if nothing found => return False
     def _get_related_user_account_recursiv(self, cr, uid, user_id, account_id):
-        
+
         temp=self.pool.get('analytic_user_funct_grid').search(cr, uid, [('user_id', '=', user_id),('account_id', '=', account_id) ])
         account=self.pool.get('account.analytic.account').browse(cr, uid, account_id)
         if temp:
@@ -64,21 +64,19 @@ class hr_analytic_timesheet(osv.osv):
                 return self._get_related_user_account_recursiv(cr, uid, user_id, account.parent_id.id)
             else:
                 return False
-                
-                
+
+
     def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0):
-        #{'value': {'to_invoice': False, 'amount': (-162.0,), 'product_id': 7, 'general_account_id': (5,)}}
         res = {}
         if not (account_id):
             #avoid a useless call to super
-            return res 
+            return res
 
         if not (user_id):
             return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id)
 
         #get the browse record related to user_id and account_id
         temp = self._get_related_user_account_recursiv(cr, uid, user_id, account_id)
-        # temp = self.pool.get('analytic_user_funct_grid').search(cr, uid, [('user_id', '=', user_id),('account_id', '=', account_id) ])
         if not temp:
             #if there isn't any record for this user_id and account_id
             return super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id)
@@ -100,9 +98,9 @@ class hr_analytic_timesheet(osv.osv):
                                 'for this product: "%s" (id:%d)') % \
                                 (r.product_id.name, r.product_id.id,))
             # Compute based on pricetype
-            amount_unit = self.on_change_unit_amount(cr, uid, ids, 
+            amount_unit = self.on_change_unit_amount(cr, uid, ids,
                 r.product_id.id, unit_amount, r.product_id.uom_id.id)['value']['amount']
-                
+
             amount = unit_amount *  amount_unit
             res ['value']['amount']= - round(amount, 2)
             res ['value']['general_account_id']= a
@@ -112,19 +110,18 @@ class hr_analytic_timesheet(osv.osv):
         res = {}
         if not (user_id):
             #avoid a useless call to super
-            return res 
+            return res
 
         #get the old values from super
         res = super(hr_analytic_timesheet, self).on_change_user_id(cr, uid, ids, user_id)
 
         if account_id:
             #get the browse record related to user_id and account_id
-            # temp = self.pool.get('analytic_user_funct_grid').search(cr, uid, [('user_id', '=', user_id),('account_id', '=', account_id) ])
             temp = self._get_related_user_account_recursiv(cr, uid, user_id, account_id)
             if temp:
                 #add the value from the new relation analytic_user_funct_grid
                 r = self.pool.get('analytic_user_funct_grid').browse(cr, uid, temp)[0]
-                res['value']['product_id'] = r.product_id.id    
+                res['value']['product_id'] = r.product_id.id
 
                 #the change of product has to impact the amount, uom and general_account_id
                 a = r.product_id.product_tmpl_id.property_account_expense.id
@@ -136,9 +133,9 @@ class hr_analytic_timesheet(osv.osv):
                                     'for this product: "%s" (id:%d)') % \
                                     (r.product_id.name, r.product_id.id,))
                 # Compute based on pricetype
-                amount_unit = self.on_change_unit_amount(cr, uid, ids, 
+                amount_unit = self.on_change_unit_amount(cr, uid, ids,
                     r.product_id.id, unit_amount, r.product_id.uom_id.id)['value']['amount']
-                        
+
                 amount = unit_amount * amount_unit
                 res ['value']['amount']= - round(amount, 2)
                 res ['value']['general_account_id']= a

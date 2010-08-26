@@ -1,24 +1,24 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from report import report_sxw
 
@@ -37,7 +37,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
                 'get_user':self._get_user,
                 'get_sub_total':self._get_sub_total,
                 'get_net_total_starting':self._get_net_total_starting,
-                })
+        })
     def _get_user(self,line_ids):
         sql = "select name from res_users where id = %d"%(line_ids['create_uid'])
         self.cr.execute(sql)
@@ -109,7 +109,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         total_starting_bal = 0.0
         sql = """ SELECT abs.id,abs.balance_end_real as net_total FROM account_bank_statement as abs
                     WHERE to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date
-                    and abs.state IN ('confirm','open') 
+                    and abs.state IN ('confirm','open')
                     and abs.user_id = %d"""%(user.id)
         self.cr.execute(sql)
         res = self.cr.dictfetchall()

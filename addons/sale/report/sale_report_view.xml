@@ -20,13 +20,13 @@
                 <field name="categ_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_uom_qty" sum="# of Qty"/>
-                <field name="shipped_qty_1"/>
-                <field name="uom_name" invisible="context.get('set_visible',False)"/>
-                <field name="price_average" avg="Average Price"/>
+                <field name="shipped_qty_1" sum="Shipped Qty"/>
+                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
+                <field name="price_average" sum="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
-                <field name="delay" avg="Commitment Delay"/>
+                <field name="delay" sum="Commitment Delay"/>
                 <field name="state" invisible="1"/>
-                <field name="analytic_account_id" invisible="1"/>
+                <field name="analytic_account_id" invisible="1" groups="base.group_extended"/>
             </tree>
         </field>
     </record>
@@ -104,7 +104,7 @@
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended options..." groups="base.group_extended">
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="date"/>
                     <field name="date_confirm"/>
                     <separator orientation="vertical"/>
@@ -122,7 +122,9 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_order_product_search"/>
+        <field name="view_id" ref="view_order_product_tree"/>
         <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="help">With Sales Analysis consult your sales total amount suits to different group criteria (salesman, partner, product, etc.)</field>
     </record>
 
     <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11"/>
@@ -134,6 +136,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1, 'search_default_group_product':1, 'search_default_group_partner':1, 'search_default_done':1, 'search_default_out': 1, 'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="help">Shipments Analysis opens a search views with all your shipments (in and out quantities), their total value, planned and actual dates. You can sort out your analysis on different groups to get fine grained analysis.</field>
     </record>
     <menuitem action="action_stock_move_report_so" id="menu_action_stock_move_report_so" parent="base.next_id_64" sequence="25"/>
 

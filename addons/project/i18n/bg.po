@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-05-15 08:53+0000\n"
+"PO-Revision-Date: 2010-08-03 09:13+0000\n"
 "Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:52+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -202,7 +202,9 @@ msgstr ""
 "Очаквано време за да валидирате извършената от назначения потребител работа."
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "Бележки"
@@ -218,7 +220,8 @@ msgid "Analysis"
 msgstr ""
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -242,12 +245,14 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "Отменено"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr ""
 
@@ -311,7 +316,8 @@ msgid "Extra Info"
 msgstr "Допълнителна информация"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr ""
 
@@ -389,7 +395,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr ""
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "Вид"
 
@@ -416,7 +423,9 @@ msgid "Medium"
 msgstr "Средно"
 
 #. module: project
-#: field:report.closed.task,remaining_hours:0
+#: view:config.compute.remaining:0
+#: field:config.compute.remaining,remaining_hours:0
+#: field:project.task,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Оставащи часове"
 
@@ -431,7 +440,8 @@ msgid "Planned Time"
 msgstr ""
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr ""
@@ -482,17 +492,20 @@ msgid "Template"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Настройка"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "Проекти"
 
@@ -522,7 +535,7 @@ msgid "User: %(user_id)s"
 msgstr "Потребител: %(user_id)s"
 
 #. module: project
-#: field:report.closed.task,delay_hours:0
+#: field:project.task,delay_hours:0
 msgid "Delay Hours"
 msgstr "Часове забавяне"
 
@@ -544,17 +557,20 @@ msgstr "Невалиден XML за преглед на архитектурат
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "Проекти"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "Задачи"
 
@@ -601,7 +617,7 @@ msgid "Status: %(state)s"
 msgstr "Статус: %(state)s"
 
 #. module: project
-#: view:report.closed.task:0
+#: view:project.task:0
 msgid "Planned"
 msgstr "Планирани"
 
@@ -642,7 +658,8 @@ msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "Чернова"
 
@@ -657,8 +674,10 @@ msgid "Project Manager"
 msgstr ""
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "Изчакване"
@@ -681,7 +700,8 @@ msgid "Project Time Unit"
 msgstr ""
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr ""
 
@@ -781,7 +801,7 @@ msgid "Delegated To"
 msgstr ""
 
 #. module: project
-#: field:report.closed.task,date_close:0
+#: field:project.task,date_close:0
 msgid "Date Closed"
 msgstr "Дата на приключване"
 
@@ -854,8 +874,10 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "Готово"
@@ -864,7 +886,8 @@ msgstr "Готово"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -886,7 +909,7 @@ msgid "ID: %(task_id)s"
 msgstr "ID: %(task_id)s"
 
 #. module: project
-#: selection:report.closed.task,state:0
+#: selection:project.task,state:0
 msgid "In Progress"
 msgstr "В прогрес"
 
@@ -909,7 +932,7 @@ msgid "Parent Task"
 msgstr "Родителска задача"
 
 #. module: project
-#: view:report.closed.task:0
+#: view:project.task:0
 msgid "Delay"
 msgstr "Закъснение"
 
@@ -944,7 +967,7 @@ msgid "New title of your own task to validate the work done."
 msgstr ""
 
 #. module: project
-#: field:report.closed.task,progress:0
+#: field:project.task,progress:0
 msgid "Progress (%)"
 msgstr "Напредък (%)"
 
@@ -1042,7 +1065,8 @@ msgid "Template of Projects"
 msgstr ""
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "Последователност"
 
@@ -1104,7 +1128,8 @@ msgid "Delegate your task to the other user"
 msgstr ""
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr ""
 
@@ -1158,7 +1183,8 @@ msgid "My Planning"
 msgstr ""
 
 #. module: project
-#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr ""
 

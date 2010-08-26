@@ -45,50 +45,61 @@
         	<field name="search_view_id" ref="account.view_account_invoice_report_search"/>
          </record>
 
-		<record model="ir.ui.view" id="crm.board_crm_form">
-			<field name="name">CRM - Dashboard Form</field>
-			<field name="model">board.board</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Connecting Dashboard">
-					<hpaned>
-						<child1>
-							<action
-								string="My Opportunities"
-								name="%(crm.act_my_leads)d"
-								colspan="4"
-								height="150"
-								width="510"/>
-
-							<action
-								string="My Meetings"
-								name="%(crm.act_my_meetings)d"
-								height="150"
-								colspan="4"/>
-							<action
-								string="My Quotations"
-								name="%(action_quotation_for_sale_crm)d"
-								colspan="4"
-								height="150"
-								width="510"/>
-						</child1>
-						<child2>
-							<action
-                                string="Revenues by stage"
-                                name="%(crm.act_my_leads_stage)d"
-                                colspan="4"/>
-                            <action
-                                string="My Sales Pipeline"
-                                name="%(crm.act_sales_pipeline)d"
-                                colspan="4"/>
-                             <action
-                                string="Turnover By Months"
-                                name="%(action_turnover_by_month)d"
-                                colspan="4"/>
-                        </child2>
-                    </hpaned>
-                </form>
+        <record model="ir.ui.view" id="board_crm_form_inherit_child1">
+            <field name="name">board.crm.form.inherit.child1</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="crm.board_crm_form"/>
+            <field name="arch" type="xml">
+	            <xpath expr="/form/hpaned/child1/action[@name='%(crm.act_my_meetings)d']" position="after">
+		            <action
+		                string="My Quotations"
+		                name="%(action_quotation_for_sale_crm)d"
+		                colspan="4"
+		                height="150"
+		                width="510"/>
+	            </xpath>        
             </field>
         </record>
+        
+         <record model="ir.ui.view" id="board_crm_form_inherit_child2">
+            <field name="name">board.crm.form.inherit.child2</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="crm.board_crm_form"/>
+            <field name="arch" type="xml">
+	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="after">
+		            <action
+		                string="Turnover By Months"
+		                name="%(action_turnover_by_month)d"
+		                colspan="4"/>
+	            </xpath>  
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="board_crm_form_inherit_replace1">
+            <field name="name">board.crm.form.inherit.replace1</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="crm.board_crm_form"/>
+            <field name="arch" type="xml">
+	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="attributes">          
+	                <attribute name="string">My Sales Pipeline</attribute>
+	            </xpath>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="board_crm_form_inherit_replace2">
+            <field name="name">board.crm.form.inherit.replace2</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="crm.board_crm_form"/>
+            <field name="arch" type="xml">
+	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_my_oppor_stage)d']" position="attributes">          
+	                <attribute name="string">Revenue by stage</attribute>
+	            </xpath>
+            </field>
+        </record>
+        
     </data>
 </openerp>
