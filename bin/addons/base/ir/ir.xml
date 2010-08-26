@@ -790,7 +790,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Role">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="parent_id"/>
                     <separator string="Description" colspan="4"/>
                     <field name="description" nolabel="1" colspan="4"/>
@@ -820,6 +820,18 @@
                 </tree>
             </field>
         </record>
+        <record id="view_roles_search" model="ir.ui.view">
+            <field name="name">res.roles.search</field>
+            <field name="model">res.roles</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Role">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                </search>
+            </field>
+        </record>
+                    
         <record id="action_res_roles" model="ir.actions.act_window">
             <field name="name">Roles Structure</field>
             <field name="type">ir.actions.act_window</field>
@@ -836,6 +848,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.roles</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_roles_search"/>
         </record>
         <menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="menu_action_res_roles"/>
 
