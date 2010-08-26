@@ -119,7 +119,7 @@ class res_users(osv.osv):
         result = {}
         obj_dept = self.pool.get('hr.department')
         for user_id in ids:
-            emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', user_id)])
+            emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', user_id)], context=context)
             cr.execute('SELECT emp.department_id FROM hr_employee AS emp \
                         JOIN resource_resource AS res ON res.id = emp.resource_id \
                         JOIN hr_department as dept ON dept.id = emp.department_id \
