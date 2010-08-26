@@ -2469,15 +2469,24 @@ class orm(orm_template):
                             elif not f.required and f_pg_notnull == 1:
                                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
                                 cr.commit()
+
+                            # Verify index
                             indexname = '%s_%s_index' % (self._table, k)
                             cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
                             res2 = cr.dictfetchall()
                             if not res2 and f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
                                 cr.commit()
+                                if f._type == 'text':
+                                    # FIXME: for fields.text columns we should try creating GIN indexes instead (seems most suitable for an ERP context)
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, "Adding (b-tree) index for text column '%s' in table '%s'."\
+                                        "This is probably useless (does not work for fulltext search) and prevents INSERTs of long texts because there is a length limit for indexable btree values!\n"\
+                                        "Use a search view instead if you simply want to make the field searchable." % (k, f._type, self._table))
                             if res2 and not f.select:
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
                                 cr.commit()
+                                logger.notifyChannel('orm', netsvc.LOG_WARNING, "Dropping index for column '%s' of type '%s' in table '%s' as it is not required anymore" % (k, f._type, self._table))
+
                             if isinstance(f, fields.many2one):
                                 ref = self.pool.get(f._obj)._table
                                 if ref != 'ir_actions':
