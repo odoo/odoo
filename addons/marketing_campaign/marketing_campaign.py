@@ -245,6 +245,8 @@ class marketing_campaign_segment(osv.osv):
         if not context:
             context = {}
         for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.ir_filter_id:
+                return True
             if obj.campaign_id.object_id.model != obj.ir_filter_id.model_id:
                 return False
         return True
@@ -252,6 +254,19 @@ class marketing_campaign_segment(osv.osv):
     _constraints = [
         (_check_model, _('Model of filter must be same as resource model of Campaign '), ['ir_filter_id,campaign_id']),
     ]
+
+    def onchange_campaign_id(self, cr, uid, ids, campaign_id):
+        res = {'domain':{'ir_filter_id':[]}}
+        campaign_pool = self.pool.get('marketing.campaign')
+        if campaign_id:
+            campaign = campaign_pool.browse(cr, uid, campaign_id)
+            model_name = self.pool.get('ir.model').read(cr, uid, [campaign.object_id.id], ['model'])
+            if model_name:
+                mod_name = model_name[0]['model']
+                res['domain'] = {'ir_filter_id': [('model_id', '=', mod_name)]}
+        else:
+            res['value'] = {'ir_filter_id': False}
+        return res
 
     def state_running_set(self, cr, uid, ids, *args):
         segment = self.browse(cr, uid, ids[0])
