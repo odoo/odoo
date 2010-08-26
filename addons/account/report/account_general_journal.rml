@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="general_journal.pdf">
-  <template pageSize="(596.0,842.0)" title="General Journal" author="OpenERP" allowSplitting="20">
+  <template pageSize="(596.0,842.0)" title="General Journal" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="42.0" width="540" height="758"/>
 			<pageGraphics>
@@ -242,8 +242,8 @@
 	        		<td><para style="terp_tblheader_Details_Centre">End Date</para></td>
 	        	</tr>
 	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ get_start_date(data)]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[get_end_date(data) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True)]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
