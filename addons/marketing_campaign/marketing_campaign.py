@@ -264,6 +264,7 @@ class marketing_campaign_segment(osv.osv):
             if model_name:
                 mod_name = model_name[0]['model']
                 res['domain'] = {'ir_filter_id': [('model_id', '=', mod_name)]}
+                res['context'] = {'default_model_id': model_name[0]['model']}
         else:
             res['value'] = {'ir_filter_id': False}
         return res
