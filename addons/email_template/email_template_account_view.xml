@@ -12,18 +12,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email Account Configuration">
-                    <group colspan="4">
+                    <group colspan="2">
                         <field name="name" select="1" />
-                        <field name="auto_delete" />
                     </group>
                     <notebook colspan="4">
                         <page string="Outgoing">
                             <separator string="Server Information" colspan="4" />
-                            <group colspan="4">
-                                <field name="smtpserver" select="1" colspan="2" />
-                                <field name="smtpport" select="2" colspan="2" />
-                                <field name="smtpssl" select="2" colspan="2" />
-                                <field name="smtptls" select="2" colspan="2" />
+                            <group colspan="4" col="4">
+                                <field name="smtpserver" select="1"/>
+                                <field name="smtpport" select="2" />
+                                <field name="smtpssl" select="2" />
+                                <field name="smtptls" select="2" />
+                                <field name="auto_delete" />
                             </group>
                             <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" />
                             <separator string="User Information" colspan="4" />

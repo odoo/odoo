@@ -80,6 +80,8 @@ class email_template_account(osv.osv):
         'name': fields.char('Description',
                         size=64, required=True,
                         readonly=True, select=True,
+                        help="The description is used as the Sender name along with the provided From Email, \
+unless it is already specified in the From Email, e.g: John Doe <john@doe.com>", 
                         states={'draft':[('readonly', False)]}),
         'auto_delete': fields.boolean('Auto Delete', size=64, readonly=True, 
                                       help="Permanently delete emails after sending", 
