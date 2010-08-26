@@ -25,6 +25,7 @@ from datetime import datetime, date
 
 from tools.translate import _
 from osv import fields, osv
+from tools import email_send as email
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -701,10 +702,12 @@ class config_compute_remaining(osv.osv_memory):
 
     _columns = {
         'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Put here the remaining hours required to close the task."),
+        'email':fields.boolean('Email',  help="If True then send a email of assigned user and description"),
     }
 
     _defaults = {
-        'remaining_hours': _get_remaining
+        'remaining_hours': _get_remaining,
+        'email':lambda *a : True,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -736,10 +739,12 @@ class config_compute_remaining(osv.osv_memory):
             return res
 
     def compute_hours(self, cr, uid, ids, context=None):
+        data=self.read(cr,uid,ids)[0]
         if context is None:
             context = {}
         task_obj = self.pool.get('project.task')
         request = self.pool.get('res.request')
+        user_obj=self.pool.get('res.users')
         if 'active_id' in context:
             remaining_hrs = self.browse(cr,uid,ids)[0].remaining_hours
             task_obj.write(cr,uid,context['active_id'],{'remaining_hours':remaining_hrs})
@@ -758,6 +763,26 @@ class config_compute_remaining(osv.osv_memory):
                         'ref_doc2': 'project.project,%d' % project.id,
                     })
                 task_obj.write(cr, uid, [task.id], {'state': 'open'})
+                if data['email']:
+                    if not task.user_id.user_email: 
+                        raise osv.except_osv(_('Error'), _("Couldn't send mail because email address is not configured!"))
+                    else:
+                        val = {
+                            'name': task.name,
+                            'user_id': task.user_id.name,
+                            'task_id': "%d/%d" % (project.id, task.id),
+                            'state': task.state
+                            }
+                        subject = "Reopen Task '%s' " % task.name
+                        user_email= user_obj.browse(cr, uid, uid).address_id.email 
+                        signature=user_obj.browse(cr, uid, uid).signature                   
+                        header = (project.warn_header or '') % val
+                        footer = (project.warn_footer or '') % val
+                        body = u'%s\n%s\n%s\n\n-- \n%s' % (header, task.description, footer, signature)                        
+                        mail_id = email(user_email,[task.user_id.user_email], subject, body.encode('utf-8'), email_bcc=[user_email])
+                        if not mail_id:
+                            raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
+                    
         return {
             'type': 'ir.actions.act_window_close',
         }
