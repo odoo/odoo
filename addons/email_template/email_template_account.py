@@ -189,25 +189,7 @@ class email_template_account(osv.osv):
          'Error: You are not allowed to have more than 1 account.',
          [])
     ]
-    
-    def on_change_emailid(self, cursor, user, ids, name=None, email_id=None, context=None):
-        """
-        Called when the email ID field changes.
-        
-        UI enhancement
-        Writes the same email value to the smtpusername
-        and incoming username
-        """
-        #TODO: Check and remove the write. Is it needed?
-        self.write(cursor, user, ids, {'state':'draft'}, context=context)
-        return {
-                'value': {
-                          'state': 'draft',
-                          'smtpuname':email_id,
-                          'isuser':email_id
-                          }
-                }
-    
+
     def get_outgoing_server(self, cursor, user, ids, context=None):
         """
         Returns the Out Going Connection (SMTP) object

@@ -27,7 +27,7 @@
                             <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" />
                             <separator string="User Information" colspan="4" />
                             <group col="2" colspan="2">
-                                <field name="email_id" select="1" on_change="on_change_emailid(name,email_id)" colspan="2" />
+                                <field name="email_id" select="1" colspan="2" />
                                 <field name="smtppass" password="True" colspan="2" />
                                 <field name="company" select="2" colspan="2" />
                             </group>
@@ -72,15 +72,16 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Accounts">
-                    <filter icon="terp-personal" string="My Accounts" name="my" domain="[('user','=',uid)]"/>
-                    <filter icon="terp-personal+" string="Personal Accounts" domain="[('company','=','no')]"/>
-                    <filter icon="terp-go-home" string="Company Accounts" domain="[('company','=','yes')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-camera_test" string="Approved" domain="[('state','=','approved')]"/>
                     <filter icon="terp-emblem-important" string="Suspended" domain="[('state','=','suspended')]"/>
                     <separator orientation="vertical"/>
+                    <filter icon="terp-go-home" string="Company Accounts" domain="[('company','=','yes')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="user" select="1">
+                        <filter icon="terp-personal" help="My Accounts" name="my" domain="[('user','=',uid)]"/>
+                    </field>
                     <field name="name" select="1"/>
-                    <field name="user" select="1"/>
                     <field name="email_id" select="1"/>
                </search>
            </field>
