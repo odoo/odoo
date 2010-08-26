@@ -100,7 +100,7 @@ class email_template_mailbox(osv.osv):
     def historise(self, cr, uid, ids, message='', context=None):
         for id in ids:
             history = self.read(cr, uid, id, ['history'], context).get('history', '')
-            self.write(cr, uid, id, {'history':history or '' + "\n" + time.strftime("%Y-%m-%d %H:%M:%S") + ": " + tools.ustr(message)}, context)
+            self.write(cr, uid, id, {'history': (history or '' )+ "\n" + time.strftime("%Y-%m-%d %H:%M:%S") + ": " + tools.ustr(message)}, context)
     
     _columns = {
             'email_from':fields.char(
