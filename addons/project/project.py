@@ -746,8 +746,11 @@ class config_compute_remaining(osv.osv_memory):
         request = self.pool.get('res.request')
         user_obj=self.pool.get('res.users')
         if 'active_id' in context:
+            user_name = self.pool.get('res.users').browse(cr, uid, uid).name
+            description = _("Reopen By ") + user_name + _(" At ") + time.strftime('%Y-%m-%d %H:%M:%S')
+            description += "\n" + "=================================" + "\n"      
             remaining_hrs = self.browse(cr,uid,ids)[0].remaining_hours
-            task_obj.write(cr,uid,context['active_id'],{'remaining_hours':remaining_hrs})
+            task_obj.write(cr,uid,context['active_id'],{'remaining_hours':remaining_hrs,'description':description})
         if context.get('button_reactivate', False):
             tasks = task_obj.browse(cr, uid, [context['active_id']], context=context)
             for task in tasks:
