@@ -368,16 +368,15 @@ class account_bank_statement(osv.osv):
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
 
-                if st.journal_id.entry_posted:
-                    account_move_obj.write(cr, uid, [move_id], {'state': 'posted'})
-
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
             done.append(st.id)
 
             next_number = obj_seq.get(cr, uid, 'account.bank.statement')
             if not st.name == '/':
                 next_number = st.name + '/' + next_number[-1:]
-                account_move_obj.write(cr, uid, [move_id], {'state': 'posted', 'name': next_number})
+                account_move_obj.write(cr, uid, [move_id], {'name': next_number})
+
+            account_move_obj.write(cr, uid, [move_id], {'state': 'posted'}) # Bank statements will not consider boolean on journal entry_posted
             self.write(cr, uid, [st.id], {'name': next_number}, context=context)
 
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
