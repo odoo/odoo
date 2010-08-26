@@ -550,22 +550,22 @@ class marketing_campaign_workitem(osv.osv):
         return res
 
     _columns = {
-        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment'),
+        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment', readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity','Activity',
-             required=True),
+             required=True, readonly=True),
         'campaign_id': fields.related('activity_id', 'campaign_id',
              type='many2one', relation='marketing.campaign', string='Campaign', readonly=True),
         'object_id': fields.related('activity_id', 'campaign_id', 'object_id',
-             type='many2one', relation='ir.model', string='Object', select=1),
-        'res_id': fields.integer('Resource ID', select=1, readonly=1),
+             type='many2one', relation='ir.model', string='Ressource', select=1, readonly=True),
+        'res_id': fields.integer('Resource ID', select=1, readonly=True),
         'res_name': fields.function(_res_name_get, method=True, string='Resource Name', type="char", size=64),
-        'date': fields.datetime('Execution Date', help='If date is not set, this workitem have to be run manually'),
-        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
+        'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
         'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')], 'State'),
+                                   ('cancelled', 'Cancelled')], 'State', readonly=True),
 
-        'error_msg' : fields.text('Error Message')
+        'error_msg' : fields.text('Error Message', readonly=True)
     }
     _defaults = {
         'state': lambda *a: 'todo',
