@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <document filename="HipHop.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Partner Balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
-
     </pageTemplate>
   </template>
   <stylesheet>
@@ -152,7 +151,7 @@
     <paraStyle name="P10" fontName="Helvetica" alignment="CENTER"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="8.0" leading="10"/>
     <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P12a" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P12a" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="P12b" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P13" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Times-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -210,8 +209,8 @@
 	        		<td><para style="terp_tblheader_General_Centre">End Date</para></td>
 	        	</tr>
 	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[ get_end_date(data) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
