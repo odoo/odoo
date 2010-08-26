@@ -260,6 +260,8 @@ class users(osv.osv):
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
+        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to display tips on each menu action"),
+
     }
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
@@ -349,6 +351,7 @@ class users(osv.osv):
         'company_ids': _get_companies,
         'groups_id': _get_group,
         'address_id': False,
+        'menu_tips':True
     }
 
     @tools.cache()
@@ -356,7 +359,7 @@ class users(osv.osv):
         return self._get_company(cr, uid, context=context, uid2=uid2)
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
+    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):

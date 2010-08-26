@@ -218,8 +218,6 @@ class browse_record(object):
                 raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
             for result_line in field_values:
-                if len(str(result_line['id']).split('-')) > 1:
-                    result_line['id'] = int(str(result_line['id']).split('-')[0])
                 new_data = {}
                 for field_name, field_column in fields_to_fetch:
                     if field_column._type in ('many2one', 'one2one'):
@@ -1923,12 +1921,12 @@ class orm_memory(orm_template):
         self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
-        default = []
-        for f in self._columns.keys():
-            if not f in vals:
-                default.append(f)
-        if len(default):
-            vals.update(self.default_get(cr, user, default, context))
+
+        # override defaults with the provided values, never allow the other way around
+        defaults = self.default_get(cr, user, [], context)
+        defaults.update(vals)
+        vals = defaults
+
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -3396,7 +3394,9 @@ class orm(orm_template):
                     if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
                         default_values[dv] = [(6, 0, default_values[dv])]
 
-            vals.update(default_values)
+            # override defaults with the provided values, never allow the other way around
+            default_values.update(vals)
+            vals = default_values
 
         tocreate = {}
         for v in self._inherits:
@@ -3827,7 +3827,7 @@ class orm(orm_template):
                     # Allowing inherits'ed field for server side sorting
                     inherited_tables, inherit_join = self._inherits_join_calc(o, tables, where_clause)
                     if inherited_tables:
-                        inherited_sort_table = inherited_tables[0]
+                        inherited_sort_table = inherited_tables[-1]
                         order_by = inherited_sort_table + '.' + order
 
         limit_str = limit and ' limit %d' % limit or ''
