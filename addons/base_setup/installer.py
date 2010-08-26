@@ -108,7 +108,7 @@ class base_setup_installer(osv.osv_memory):
         interface = self.pool.get('res.users').browse(cr, uid, uid, context=context).view
         if interface == 'simple' or interface =='extended' :
             return ['lunch','idea','survey']
-        return Nonee
+        return None
 
     def onchange_moduleselection(self, cr, uid, ids, *args):
         closed, total = self.get_current_progress(cr, uid)
