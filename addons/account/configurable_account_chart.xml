@@ -470,6 +470,8 @@
             <field name="name">OTAX X</field>
             <field eval="0.0" name="amount"/>
             <field name="type">percent</field>
+            <field name="account_collected_id" ref="conf_ova"/>
+            <field name="account_paid_id" ref="conf_ova"/>
             <field name="base_code_id" ref="tax_code_purch_X"/>
             <field name="tax_code_id" ref="tax_code_output_X"/>
             <field name="ref_base_code_id" ref="tax_code_purch_X"/>
@@ -482,6 +484,8 @@
             <field name="name">OTAX O</field>
             <field eval="0.0" name="amount"/>
             <field name="type">percent</field>
+            <field name="account_collected_id" ref="conf_ova"/>
+            <field name="account_paid_id" ref="conf_ova"/>
             <field name="base_code_id" ref="tax_code_purch_O"/>
             <field name="tax_code_id" ref="tax_code_output_O"/>
             <field name="ref_base_code_id" ref="tax_code_purch_O"/>
@@ -524,6 +528,8 @@
             <field name="name">ITAX X</field>
             <field eval="0.0" name="amount"/>
             <field name="type">percent</field>
+            <field name="account_collected_id" ref="conf_iva"/>
+            <field name="account_paid_id" ref="conf_iva"/>
             <field name="base_code_id" ref="tax_code_sales_X"/>
             <field name="tax_code_id" ref="tax_code_input_X"/>
             <field name="ref_base_code_id" ref="tax_code_sales_X"/>
@@ -536,6 +542,8 @@
             <field name="name">ITAX O</field>
             <field eval="0.0" name="amount"/>
             <field name="type">percent</field>
+            <field name="account_collected_id" ref="conf_iva"/>
+            <field name="account_paid_id" ref="conf_iva"/>
             <field name="base_code_id" ref="tax_code_sales_O"/>
             <field name="tax_code_id" ref="tax_code_input_O"/>
             <field name="ref_base_code_id" ref="tax_code_sales_O"/>

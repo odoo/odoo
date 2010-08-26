@@ -461,12 +461,14 @@
         <record id="sequence_sale_journal" model="ir.sequence">
             <field name="name">Sale Journal</field>
             <field name="code">account.journal</field>
-            <field name="prefix"/>
+            <field eval="3" name="padding"/>
+            <field name="prefix">%(year)s/</field>
         </record>
         <record id="sequence_purchase_journal" model="ir.sequence">
             <field name="name">Purchase Journal</field>
             <field name="code">account.journal</field>
-            <field name="prefix"/>
+            <field eval="3" name="padding"/>
+            <field name="prefix">%(year)s/</field>
         </record>
 
         <!--
