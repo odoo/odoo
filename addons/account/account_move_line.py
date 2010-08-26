@@ -305,6 +305,7 @@ class account_move_line(osv.osv):
         ml = self.browse(cr, uid, id, context)
         return map(lambda x: x.id, ml.move_id.line_id)
 
+    # TODO: this is false, it does not uses draft and closed periods
     def _balance(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res={}
         # TODO group the foreach in sql
@@ -344,9 +345,9 @@ class account_move_line(osv.osv):
         result = []
         for line in self.browse(cr, uid, ids, context):
             if line.ref:
-                result.append((line.id, (line.name or '')+' ('+line.ref+')'))
+                result.append((line.id, (line.move_id.name or '')+' ('+line.ref+')'))
             else:
-                result.append((line.id, line.name))
+                result.append((line.id, line.move_id.name))
         return result
 
     def _balance_search(self, cursor, user, obj, name, args, domain=None, context=None):
@@ -456,8 +457,8 @@ class account_move_line(osv.osv):
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-#TODO: remove this
-        'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
+        #TODO: remove this
+        #'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
 
     }
