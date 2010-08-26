@@ -482,7 +482,7 @@ class account_cash_statement(osv.osv):
                         context=context):
                     if line.state <> 'valid':
                         raise osv.except_osv(_('Error !'),
-                                _('Ledger Posting line "%s" is not valid') % line.name)
+                                _('Journal Item "%s" is not valid') % line.name)
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
