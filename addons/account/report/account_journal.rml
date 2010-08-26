@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="print_journal.pdf">
-  <template pageSize="(595.0,842.0)" title="Print Journal" author="OpenERP" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Journal" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -189,7 +189,7 @@
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
-          <para style="terp_header_Centre">Print Journal</para>
+          <para style="terp_header_Centre">Journal</para>
         </td>
       </tr>
     </blockTable>
@@ -221,8 +221,8 @@
 	        		<td><para style="terp_tblheader_Details_Centre">End Date</para></td>
 	        	</tr>
 	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[ get_end_date(data) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
@@ -246,7 +246,7 @@
      <para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="40.0,65.0,50.0,62.0,174.0,57.0,61.0,40.0" style="Table1" repeatRows="1">[[  display_currency(data) == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="40.0,65.0,50.0,62.0,154.0,58.0,60.0,60.0" style="Table1" repeatRows="1">[[  display_currency(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="P10a">Date</para></td>
         <td><para style="P10">Voucher No</para></td>
