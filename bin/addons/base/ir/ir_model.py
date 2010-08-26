@@ -232,24 +232,7 @@ class ir_model_grid(osv.osv):
     <field name="group_0"/>
     ''' % (view_type,)
         for group in groups_br:
-            xml += '''<field name="grouDHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 3
-DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 6
-DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 9
-DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 4
-No DHCPOFFERS received.
-No working leases in persistent database - sleeping.
- * Stopping the Firestarter firewall...
-   ...done.
- * Starting the Firestarter firewall...
-   ...done.
-                                                                                                                      [ OK ]
-rpa@rpa:~$  * Stopping NTP server ntpd
-   ...done.
- * Starting NTP server ntpd
-   ...done.
-
-
-p_%d"/>''' % (group.id, )
+            xml += '''<field name="group_%d"/>''' % (group.id, )
         xml += '''</%s>''' % (view_type,)
         result['arch'] = xml
         result['fields'] = self.fields_get(cr, uid, cols, context)

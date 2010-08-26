@@ -93,7 +93,7 @@ class move_module_wizard(wizard.interface):
                 'arch': ask_form,
                 'fields': ask_fields,
                 'state': [
-                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('end', 'Close', 'gtk-cancel'),
                     ('import', 'Import module', 'gtk-ok', True)
                 ]
             }

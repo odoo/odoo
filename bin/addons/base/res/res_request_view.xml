@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <form string="Requests">
                     <group colspan="4" col="6">
-	                    <field name="name"/>
+	                    <field name="name" colspan="4"/>
 	                    <field name="create_date" string="Request Date"/>
 	                    <newline/>
 	                	<field name="act_from"/>
@@ -38,7 +38,7 @@
                             <separator colspan="4" string="Description"/>
                             <newline/>
                             <field colspan="4" name="body" nolabel="1"/>
-                            <group col="4" colspan="4">
+                            <group col="5" colspan="4">
                                 <field name="state"/>
                                 <button name="request_close" states="waiting,draft,active" string="End of Request" type="object"/>
                                 <button name="request_send" states="draft,active" string="Send" type="object"/>

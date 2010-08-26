@@ -34,10 +34,8 @@ view_form_end = """<?xml version="1.0"?>
 
 view_form = """<?xml version="1.0"?>
 <form string="System Upgrade">
-    <image name="gtk-dialog-info" colspan="2"/>
     <group colspan="2" col="4">
     <separator string="System Upgrade" colspan="4"/>
-        <label align="0.0" string="Choose a language to install:" colspan="4"/>
         <field name="lang" colspan="4" required="1"/>
         <label align="0.0" string="Note that this operation may take a few minutes." colspan="4"/>
     </group>
@@ -55,6 +53,7 @@ class wizard_lang_install(wizard.interface):
 
     fields_form = {
         'lang': {'string':'Language', 'type':'selection', 'selection':tools.scan_languages(),
+                 'help': 'Choose a language to install.',
         },
     }
 
@@ -63,7 +62,7 @@ class wizard_lang_install(wizard.interface):
             'actions': [],
             'result': {'type': 'form', 'arch': view_form, 'fields': fields_form,
                 'state': [
-                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('end', 'Close', 'gtk-cancel'),
                     ('start', 'Start installation', 'gtk-ok', True)
                 ]
             }

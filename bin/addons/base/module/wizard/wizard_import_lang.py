@@ -27,18 +27,23 @@ from tempfile import TemporaryFile
 
 view_form="""<?xml version="1.0"?>
 <form string="Import language">
-    <image name="gtk-dialog-info" colspan="2"/>
-    <group colspan="2" col="4">
-        <separator string="Import New Language" colspan="4"/>
-        <field name="name" width="200"/>
-        <field name="code"/>
-        <field name="data" colspan="4"/>
-        <label string="You have to import a .CSV file which is encoded in UTF-8.\n
-Please check that the first line of your file is one of the following:" colspan="4" align="0.0"/>
-        <label string="type,name,res_id,src,value" colspan="4"/>
-        <label string="module,type,name,res_id,src,value" colspan="4"/>
-        <label string="You can also import .po files." colspan="4" align="0.0"/>
-    </group>
+    <notebook colspan="4">
+        <page string="Import Data">
+            <group colspan="2" col="4">
+                <separator string="Import New Language" colspan="4"/>
+                <field name="name" width="200"/>
+                <field name="code"/>
+                <field name="data" colspan="4"/>
+            </group>
+        </page>
+        <page string="Help">
+            <label string="You have to import a .CSV file which is encoded in UTF-8.\n
+    Please check that the first line of your file is one of the following:" colspan="4" align="0.0"/>
+            <label string="type,name,res_id,src,value" colspan="4"/>
+            <label string="module,type,name,res_id,src,value" colspan="4"/>
+            <label string="You can also import .po files." colspan="4" align="0.0"/>
+        </page>
+    </notebook>
 </form>"""
 
 fields_form={
@@ -69,7 +74,7 @@ class wizard_import_lang(wizard.interface):
             'actions': [],
             'result': {'type': 'form', 'arch': view_form, 'fields': fields_form,
                 'state':[
-                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('end', 'Close', 'gtk-cancel'),
                     ('finish', 'Ok', 'gtk-ok', True)
                 ]
             }
