@@ -218,8 +218,6 @@ class browse_record(object):
                 raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
             for result_line in field_values:
-                if len(str(result_line['id']).split('-')) > 1:
-                    result_line['id'] = int(str(result_line['id']).split('-')[0])
                 new_data = {}
                 for field_name, field_column in fields_to_fetch:
                     if field_column._type in ('many2one', 'one2one'):
@@ -1923,12 +1921,12 @@ class orm_memory(orm_template):
         self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
-        default = []
-        for f in self._columns.keys():
-            if not f in vals:
-                default.append(f)
-        if len(default):
-            vals.update(self.default_get(cr, user, default, context))
+
+        # override defaults with the provided values, never allow the other way around
+        defaults = self.default_get(cr, user, [], context)
+        defaults.update(vals)
+        vals = defaults
+
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -2103,7 +2101,7 @@ class orm(orm_template):
         if groupby:
             if groupby and isinstance(groupby, list):
                 groupby = groupby[0]
-            tables, where_clause = self._inherits_join_calc(groupby,tables,where_clause)
+            tables, where_clause, qfield = self._inherits_join_calc(groupby,tables,where_clause)
 
         if len(where_clause):
             where_clause = ' where '+string.join(where_clause, ' and ')
@@ -2194,6 +2192,9 @@ class orm(orm_template):
         :param tables: list of table._table names enclosed in double quotes as returned
                         by _where_calc()
         :param where_clause: current list of WHERE clause params
+        :return: (table, where_clause, qualified_field) where ``table`` and ``where_clause`` are the updated
+                 versions of the parameters, and ``qualified_field`` is the qualified name of ``field``
+                 in the form ``table.field``, to be referenced in queries. 
         """
         current_table = self
         while field in current_table._inherit_fields and not field in current_table._columns:
@@ -2201,7 +2202,7 @@ class orm(orm_template):
             parent_table = self.pool.get(parent_model_name)
             self._inherits_join_add(parent_model_name, tables, where_clause)
             current_table = parent_table
-        return (tables, where_clause)
+        return (tables, where_clause, '"%s".%s' % (current_table._table, field))
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:
@@ -2468,15 +2469,24 @@ class orm(orm_template):
                             elif not f.required and f_pg_notnull == 1:
                                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
                                 cr.commit()
+
+                            # Verify index
                             indexname = '%s_%s_index' % (self._table, k)
                             cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
                             res2 = cr.dictfetchall()
                             if not res2 and f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
                                 cr.commit()
+                                if f._type == 'text':
+                                    # FIXME: for fields.text columns we should try creating GIN indexes instead (seems most suitable for an ERP context)
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, "Adding (b-tree) index for text column '%s' in table '%s'."\
+                                        "This is probably useless (does not work for fulltext search) and prevents INSERTs of long texts because there is a length limit for indexable btree values!\n"\
+                                        "Use a search view instead if you simply want to make the field searchable." % (k, f._type, self._table))
                             if res2 and not f.select:
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
                                 cr.commit()
+                                logger.notifyChannel('orm', netsvc.LOG_WARNING, "Dropping index for column '%s' of type '%s' in table '%s' as it is not required anymore" % (k, f._type, self._table))
+
                             if isinstance(f, fields.many2one):
                                 ref = self.pool.get(f._obj)._table
                                 if ref != 'ir_actions':
@@ -3396,7 +3406,9 @@ class orm(orm_template):
                     if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
                         default_values[dv] = [(6, 0, default_values[dv])]
 
-            vals.update(default_values)
+            # override defaults with the provided values, never allow the other way around
+            default_values.update(vals)
+            vals = default_values
 
         tocreate = {}
         for v in self._inherits:
@@ -3824,11 +3836,8 @@ class orm(orm_template):
             elif (o in self._inherit_fields):
                 parent_obj = self.pool.get(self._inherit_fields[o][0])
                 if getattr(parent_obj._columns[o], '_classic_read'):
-                    # Allowing inherits'ed field for server side sorting
-                    inherited_tables, inherit_join = self._inherits_join_calc(o, tables, where_clause)
-                    if inherited_tables:
-                        inherited_sort_table = inherited_tables[0]
-                        order_by = inherited_sort_table + '.' + order
+                    # Allowing inherits'ed field for server side sorting, if they can be sorted by the dbms
+                    inherited_tables, inherit_join, order_by = self._inherits_join_calc(o, tables, where_clause)
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''

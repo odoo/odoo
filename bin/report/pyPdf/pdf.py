@@ -50,7 +50,6 @@ import utils
 import warnings
 from generic import *
 from utils import readNonWhitespace, readUntilWhitespace, ConvertFunctionsToVirtualList
-from sets import ImmutableSet
 
 ##
 # This class supports writing PDF files out, given pages produced by another
@@ -987,8 +986,8 @@ class PageObject(DictionaryObject):
 
         # Combine /ProcSet sets.
         newResources[NameObject("/ProcSet")] = ArrayObject(
-            ImmutableSet(originalResources.get("/ProcSet", ArrayObject()).getObject()).union(
-                ImmutableSet(page2Resources.get("/ProcSet", ArrayObject()).getObject())
+            frozenset(originalResources.get("/ProcSet", ArrayObject()).getObject()).union(
+                frozenset(page2Resources.get("/ProcSet", ArrayObject()).getObject())
             )
         )
 

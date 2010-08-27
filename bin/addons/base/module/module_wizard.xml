@@ -14,11 +14,11 @@
                 <form col="3" string="Export language">
                     <notebook>
                         <page string="Export Data">
-                            <group col="2" fill="0" states="choose">
+                            <group col="2" colspan="4" fill="0" states="choose">
                                 <separator colspan="2" string="Export translation file"/>
-                                <field name="lang" width="300"/>
+                                <field name="lang" required="1"/>
                                 <field name="format" required="1"/>
-                                <field height="200" name="modules" width="500"/>
+                                <field height="200" name="modules" nolabel="1" colspan="4"/>
                                 <field invisible="1" name="state"/>
                             </group>
                             <group col="1" fill="0" states="get">
@@ -37,7 +37,7 @@
                     </notebook>
 
                     <group col="2" colspan="3" fill="0">
-                        <button icon="gtk-cancel" name="act_cancel" special="cancel" states="choose" string="Cancel" type="object"/>
+                        <button icon="gtk-cancel" name="act_cancel" special="cancel" states="choose" string="Close" type="object"/>
                         <button icon="gtk-ok" name="act_getfile" states="choose" string="Get file" type="object"/>
                         <button icon="gtk-close" name="act_destroy" special="cancel" states="get" string="Close" type="object"/>
                     </group>
@@ -67,14 +67,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form col="3" string="Update Translations">
-                    <image name="gtk-dialog-info"/>
-                    <group col="2" fill="0" height="500">
-                        <field name="lang" width="300"/>
-                    </group>
+                    <field name="lang"/>
                     <label align="0.0" colspan="4" string="This wizard will detect new terms in the application so that you can update them manually."/>
                     <separator colspan="4"/>
                     <group col="2" colspan="4" fill="0">
-                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="Cancel" type="object"/>
+                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="Close" type="object"/>
                         <button icon="gtk-ok" name="act_update" string="Update" type="object"/>
                     </group>
                 </form>

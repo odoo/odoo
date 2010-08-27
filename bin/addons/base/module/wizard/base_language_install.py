@@ -65,3 +65,5 @@ class base_language_install_msg(osv.osv_memory):
     _description = "Install Language"
 
 base_language_install_msg()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

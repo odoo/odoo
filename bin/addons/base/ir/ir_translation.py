@@ -64,20 +64,30 @@ class ir_translation(osv.osv):
 
     def _auto_init(self, cr, context={}):
         super(ir_translation, self)._auto_init(cr, context)
+
+        # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree. 
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (lang, type, name, src)')
+        if cr.fetchone():
+            #temporarily removed: cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
+            cr.execute('DROP INDEX ir_translation_ltns')
             cr.commit()
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
+        if cr.fetchone():
+            #temporarily removed: cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
+            cr.execute('DROP INDEX ir_translation_lts')
+            cr.commit()
+
+        # add separate hash index on src (no size limit on values), as postgres 8.1+ is able to combine separate indexes
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_src_hash_idx',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation using hash (src)')
 
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltn',))
         if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (lang, type, name)')
+            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
 
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
-            cr.commit()
+
 
     @tools.cache(skiparg=3, multi='ids')
     def _get_ids(self, cr, uid, name, tt, lang, ids):
