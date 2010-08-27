@@ -222,6 +222,11 @@ class account_bank_statement(osv.osv):
                 raise osv.except_osv(_('Configuration Error !'),
                         _('Please verify that an account is defined in the journal.'))
 
+            if not st.name == '/':
+                next_number = st.name
+            else:
+                next_number = obj_seq.get(cr, uid, 'account.bank.statement')
+
             for line in st.move_line_ids:
                 if line.state <> 'valid':
                     raise osv.except_osv(_('Error !'),
@@ -230,14 +235,14 @@ class account_bank_statement(osv.osv):
             # In line we get reconcile_id on bank.ste.rec.
             # in bank stat.rec we get line_new_ids on bank.stat.rec.line
             for move in st.line_ids:
-                context.update({'date':move.date})
+                context.update({'date': move.date})
                 move_id = account_move_obj.create(cr, uid, {
                     'journal_id': st.journal_id.id,
                     'period_id': st.period_id.id,
                     'date': move.date,
                 }, context=context)
                 account_bank_statement_line_obj.write(cr, uid, [move.id], {
-                    'move_ids': [(4,move_id, False)]
+                    'move_ids': [(4, move_id, False)]
                 })
                 if not move.amount:
                     continue
@@ -367,16 +372,11 @@ class account_bank_statement(osv.osv):
                             account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
+                move_name = next_number + '/' + str(move.sequence)
+                account_move_obj.write(cr, uid, [move_id], {'name': move_name, 'state': 'posted'}) # Bank statements will not consider boolean on journal entry_posted
 
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
             done.append(st.id)
-
-            if not st.name == '/':
-                next_number = st.name
-                account_move_obj.write(cr, uid, [move_id], {'name': next_number})
-            else:
-                next_number = obj_seq.get(cr, uid, 'account.bank.statement')
-            account_move_obj.write(cr, uid, [move_id], {'state': 'posted'}) # Bank statements will not consider boolean on journal entry_posted
             self.write(cr, uid, [st.id], {'name': next_number}, context=context)
 
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
