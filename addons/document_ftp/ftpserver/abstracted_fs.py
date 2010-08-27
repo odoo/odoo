@@ -74,7 +74,7 @@ class abstracted_fs(object):
                     if not cr.fetchone():
                         continue
 
-                    cr.execute("SELECT id FROM ir_module_module WHERE name = 'document_ftp' AND state IN ('installed', 'to-install', 'to upgrade') ")
+                    cr.execute("SELECT id FROM ir_module_module WHERE name = 'document_ftp' AND state IN ('installed', 'to install', 'to upgrade') ")
                     res = cr.fetchone()
                     if res and len(res):
                         self.db_name_list.append(db_name)
