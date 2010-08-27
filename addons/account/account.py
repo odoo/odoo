@@ -1051,21 +1051,25 @@ class account_move(osv.osv):
         return result
 
     def _search_amount(self, cr, uid, obj, name, args, context):
-        ids = []
-        cr.execute('select move_id,sum(debit) from account_move_line group by move_id')
-        result = dict(cr.fetchall())
-
-        for item in args:
-            if item[1] == '>=':
-                res = [('id', 'in', [k for k,v in result.iteritems() if v >= item[2]])]
+        ids = set()
+        for cond in args:
+            amount = cond[2]
+            if isinstance(cond[2],(list,tuple)):
+                if cond[1] in ['in','not in']:
+                    amount = tuple(cond[2])
+                else:
+                    continue
             else:
-                res = [('id', 'in', [k for k,v in result.iteritems() if v <= item[2]])]
-            ids += res
-
-        if not ids:
-            return [('id', '>', '0')]
-
-        return ids
+                if cond[1] in ['=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of']:
+                    continue
+            
+            cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]) ,(amount,))
+            res_ids = set(id[0] for id in cr.fetchall())
+            ids = ids and (ids & res_ids) or res_ids
+        if ids:
+            return [('id','in',tuple(ids))]
+        else:    
+            return [('id', '=', '0')]
 
     _columns = {
         'name': fields.char('Number', size=64, required=True),
