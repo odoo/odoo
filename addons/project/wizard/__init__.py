@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import project_close_task
+import project_task_close
 import project_task_delegate
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

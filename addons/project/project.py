@@ -487,18 +487,17 @@ class task(osv.osv):
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
 
-    def do_close(self, cr, uid, ids, *args):
-        mail_send = False
-        mod_obj = self.pool.get('ir.model.data')
-        request = self.pool.get('res.request')
-        tasks = self.browse(cr, uid, ids)
-        task_id = ids[0]
-        cntx = {}
-        if len(args):
-            cntx = args[0]
-        for task in tasks:
+    def do_close(self, cr, uid, ids, context=None):
+        """
+        Close Task
+        """
+        if context is None:
+            context = {}
+        request_pool = self.pool.get('res.request')
+        for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
             if project:
+                # Send request to project manager
                 if project.warn_manager and project.user_id and (project.user_id.id != uid):
                     request.create(cr, uid, {
                         'name': _("Task '%s' closed") % task.name,
@@ -509,12 +508,7 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
-                elif (project.warn_manager or project.warn_customer) and cntx.get('mail_send',True):
-                    cntx.update({'send_manager': project.warn_manager, 'send_partner': project.warn_customer})
-                    mail_send = True
-            message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
-            self.log(cr, uid, task.id, message)
-
+                
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
                     reopen = True
@@ -523,24 +517,10 @@ class task(osv.osv):
                             reopen = False
                     if reopen:
                         self.do_reopen(cr, uid, [parent_id.id])
-        if mail_send:
-            model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_project_close_task')])
-            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
-            cntx.update({'task_id': task_id})
-            return {
-                'name': _('Email Send to Customer'),
-                'view_type': 'form',
-                'context': cntx, # improve me
-                'view_mode': 'tree,form',
-                'res_model': 'close.task',
-                'views': [(resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'nodestroy': True
-            }
-        else:
-            self.write(cr, uid, [task_id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
-        return False
+            self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+            message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
+            self.log(cr, uid, task.id, message)
+        return True
 
     def do_reopen(self, cr, uid, ids, *args):
         request = self.pool.get('res.request')
