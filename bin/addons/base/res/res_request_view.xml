@@ -76,11 +76,23 @@
                 </search>
             </field>
         </record>    
+        <record id="res_request_calendar_view" model="ir.ui.view">
+            <field name="name">res.request.calendar</field>
+            <field name="model">res.request</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Requests" date_start="create_date" color="act_to">
+                    <field name="name"/>
+                    <field name="act_to"/>
+                </calendar>
+            </field>
+        </record>
         <record id="res_request-act" model="ir.actions.act_window">
             <field name="name">Requests</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.request</field>
             <field name="view_id" eval="False"/>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="res_request_search_view"/>
         </record>
         <menuitem id="next_id_12" name="Requests" parent="base.next_id_4"/>
