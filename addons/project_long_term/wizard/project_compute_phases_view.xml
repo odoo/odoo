@@ -8,21 +8,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               	<form string="Compute Scheduling of Phases">
-              		<group width="410" height="180">
-                        <group colspan="4" col="4">
-                           <separator colspan="4" string="This wizard will schedule phases for all or specified project" />
-                            <newline />
-                            <field name="target_project" colspan="4"/>
-		                </group>
-						 <newline />		                
-                        <group colspan="4" col="6" attrs="{'invisible':[('target_project','=','all')]}">
-						 <label string="Project:"  align="1.0"/>                        
-                            <field name="project_id" nolabel="1"  colspan="2"  widget="selection" />
-                        </group>
+                    <group colspan="4" col="4">
+                        <separator colspan="4" string="Compute Scheduling of phases for all or specified project" />
+                        <field name="target_project" colspan="4"/>
+                        <field name="project_id" widget="selection" colspan="4" attrs="{'invisible':[('target_project','=','all')], 'required':[('target_project','!=','all')]}"/>
                         <separator colspan="4"/>
-                        <group colspan="4" col="6"> <!-- Improve me -->
-	                        <button  icon="gtk-close" special="cancel" string="Close"/>
-	                        <button icon="gtk-ok" name="check_selection" string="_Compute" type="object"/>
+                        <group colspan="2" col="2">
+                        </group>
+                        <group colspan="2" col="2"> <!-- Improve me -->
+	                        <button  icon="gtk-close" special="cancel" string="_Close"/>
+	                        <button icon="gtk-ok" name="check_selection" string="C_ompute" type="object"/>
                         </group>
 		            </group>
 			  	</form>
