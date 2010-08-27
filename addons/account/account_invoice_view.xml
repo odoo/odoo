@@ -65,9 +65,8 @@
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="base.group_extended"/>
                             <newline/>
                             <field name="price_subtotal"/>
-
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','!=',False),('company_id', '=', parent.company_id)]"/>
+                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
