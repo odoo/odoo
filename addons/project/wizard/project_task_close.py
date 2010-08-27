@@ -67,6 +67,12 @@ class project_task_close(osv.osv_memory):
             res.update({'partner_email': partner.address[0].email})
         return res
 
+    def done(self, cr, uid, ids, context=None):
+        task_pool = self.pool.get('project.task')
+        task_id = context.get('active_id', False)
+        res = task_pool.do_close(cr, uid, [task_id], context=context)
+        return res
+
     def confirm(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -79,7 +85,7 @@ class project_task_close(osv.osv_memory):
         for data in self.browse(cr, uid, ids, context=context):
             res = task_pool.do_close(cr, uid, [task.id], context=context)
             if res:
-                # Send Acknowledgement by Email to Manager and Customer
+                # Send Warn Message by Email to Manager and Customer
                 if data.manager_warn and not data.manager_email:
                     raise osv.except_osv(_('Error'), _("Please specify the email address of Project Manager."))
 

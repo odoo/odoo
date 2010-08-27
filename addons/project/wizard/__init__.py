@@ -21,6 +21,7 @@
 
 import project_task_close
 import project_task_delegate
+import project_task_reevaluate
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -522,10 +522,11 @@ class task(osv.osv):
             self.log(cr, uid, task.id, message)
         return True
 
-    def do_reopen(self, cr, uid, ids, *args):
+    def do_reopen(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         request = self.pool.get('res.request')
-        tasks = self.browse(cr, uid, ids)
-        for task in tasks:
+        for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
             if project and project.warn_manager and project.user_id.id and (project.user_id.id != uid):
                 request.create(cr, uid, {
@@ -672,105 +673,6 @@ class project_work(osv.osv):
 
 project_work()
 
-class config_compute_remaining(osv.osv_memory):
-    _name='config.compute.remaining'
-
-    def _get_remaining(self,cr, uid, context=None):
-        if context and 'active_id' in context:
-            return self.pool.get('project.task').browse(cr, uid, context['active_id'], context=context).remaining_hours
-        return False
-
-    _columns = {
-        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Put here the remaining hours required to close the task."),
-        'email':fields.boolean('Email',  help="If True then send a email of assigned user and description"),
-    }
-
-    _defaults = {
-        'remaining_hours': _get_remaining,
-        'email':lambda *a : True,
-    }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-            users_obj = self.pool.get('res.users')
-            obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
-            tm = obj_tm and obj_tm.name or 'Hours'
-
-            res = super(config_compute_remaining, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
-
-            if tm in ['Hours','Hour']:
-                return res
-
-            eview = etree.fromstring(res['arch'])
-
-            def _check_rec(eview):
-                if eview.attrib.get('widget','') == 'float_time':
-                    eview.set('widget','float')
-                for child in eview:
-                    _check_rec(child)
-                return True
-
-            _check_rec(eview)
-
-            res['arch'] = etree.tostring(eview)
-
-            for f in res['fields']:
-                if 'Hours' in res['fields'][f]['string']:
-                    res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
-            return res
-
-    def compute_hours(self, cr, uid, ids, context=None):
-        data=self.read(cr,uid,ids)[0]
-        if context is None:
-            context = {}
-        task_obj = self.pool.get('project.task')
-        request = self.pool.get('res.request')
-        user_obj=self.pool.get('res.users')
-        if 'active_id' in context:
-            user_name = self.pool.get('res.users').browse(cr, uid, uid).name
-            description = _("Reopen By ") + user_name + _(" At ") + time.strftime('%Y-%m-%d %H:%M:%S')
-            description += "\n" + "=================================" + "\n"      
-            remaining_hrs = self.browse(cr,uid,ids)[0].remaining_hours
-            task_obj.write(cr,uid,context['active_id'],{'remaining_hours':remaining_hrs,'description':description})
-        if context.get('button_reactivate', False):
-            tasks = task_obj.browse(cr, uid, [context['active_id']], context=context)
-            for task in tasks:
-                project = task.project_id
-                if project and project.warn_manager and project.user_id.id and (project.user_id.id != uid):
-                    request.create(cr, uid, {
-                        'name': _("Task '%s' set in progress") % task.name,
-                        'state': 'waiting',
-                        'act_from': uid,
-                        'act_to': project.user_id.id,
-                        'ref_partner_id': task.partner_id.id,
-                        'ref_doc1': 'project.task,%d' % task.id,
-                        'ref_doc2': 'project.project,%d' % project.id,
-                    })
-                task_obj.write(cr, uid, [task.id], {'state': 'open'})
-                if data['email']:
-                    if not task.user_id.user_email: 
-                        raise osv.except_osv(_('Error'), _("Couldn't send mail because email address is not configured!"))
-                    else:
-                        val = {
-                            'name': task.name,
-                            'user_id': task.user_id.name,
-                            'task_id': "%d/%d" % (project.id, task.id),
-                            'state': task.state
-                            }
-                        subject = "Reopen Task '%s' " % task.name
-                        user_email= user_obj.browse(cr, uid, uid).address_id.email 
-                        signature=user_obj.browse(cr, uid, uid).signature                   
-                        header = (project.warn_header or '') % val
-                        footer = (project.warn_footer or '') % val
-                        body = u'%s\n%s\n%s\n\n-- \n%s' % (header, task.description, footer, signature)                        
-                        mail_id = email(user_email,[task.user_id.user_email], subject, body.encode('utf-8'), email_bcc=[user_email])
-                        if not mail_id:
-                            raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
-                    
-        return {
-            'type': 'ir.actions.act_window_close',
-        }
-
-config_compute_remaining()
 class account_analytic_account(osv.osv):
 
     _inherit = 'account.analytic.account'
