@@ -21,7 +21,6 @@
 
 import wizard_module_upgrade
 import wizard_configuration
-import wizard_module_lang_install
 import add_new
 import wizard_export_lang
 import wizard_import_lang
@@ -29,6 +28,7 @@ import wizard_update_translations
 
 import base_module_import
 import base_module_update
+import base_language_install
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
