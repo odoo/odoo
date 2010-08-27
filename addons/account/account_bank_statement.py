@@ -615,6 +615,26 @@ class account_bank_statement_line(osv.osv):
             else:
                 account_id = part.property_account_receivable.id
             res['value']['account_id'] = account_id
+
+        if not line or (line and not line[0].amount):
+            res_users_obj = self.pool.get('res.users')
+            res_currency_obj = self.pool.get('res.currency')
+            company_currency_id = res_users_obj.browse(cursor, user, user,
+                    context=context).company_id.currency_id.id
+            if not currency_id:
+                currency_id = company_currency_id
+
+            cursor.execute('SELECT sum(debit-credit) \
+                FROM account_move_line \
+                WHERE (reconcile_id is null) \
+                    AND partner_id = %s \
+                    AND account_id=%s', (partner_id, account_id))
+            pgres = cursor.fetchone()
+            balance = pgres and pgres[0] or 0.0
+
+            balance = res_currency_obj.compute(cursor, user, company_currency_id,
+                currency_id, balance, context=context)
+            res['value']['amount'] = balance
         return res
 
     def _reconcile_amount(self, cursor, user, ids, name, args, context=None):
