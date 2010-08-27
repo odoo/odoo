@@ -55,12 +55,6 @@
         </record>
         <menuitem action="action_wizard_lang_export" id="menu_wizard_lang_export" parent="menu_translation_export"/>
 
-        <record id="wizard_lang_import" model="ir.actions.wizard">
-            <field name="name">Import a Translation File</field>
-            <field name="wiz_name">module.lang.import</field>
-        </record>
-        <menuitem action="wizard_lang_import" id="menu_wizard_lang_import" parent="menu_translation_export" type="wizard"/>
-
          <record id="wizard_update_translations" model="ir.ui.view">
             <field name="name">Update Translations</field>
             <field name="model">wizard.module.update_translations</field>

@@ -23,12 +23,12 @@ import wizard_module_upgrade
 import wizard_configuration
 import add_new
 import wizard_export_lang
-import wizard_import_lang
 import wizard_update_translations
 
 import base_module_import
 import base_module_update
 import base_language_install
+import base_import_language
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
