@@ -20,8 +20,6 @@
 ##############################################################################
 
 import wizard_module_upgrade
-import wizard_configuration
-import add_new
 import wizard_export_lang
 import wizard_update_translations
 
