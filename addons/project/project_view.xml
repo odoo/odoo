@@ -328,7 +328,7 @@
                     <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                     <field name="user_id"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" invisible="context.get('set_visible',False)"/>
+                    <field name="remaining_hours" widget="float_time" avg="Remaining Hours" invisible="context.get('set_visible',False)"/>
                     <field name="date_deadline" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
                         states="draft,open,pending"
