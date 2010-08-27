@@ -644,7 +644,7 @@ class node_dir(node_database):
         if (not self.parent) and ndir_node:
             if not dbro.parent_id:
                 raise IOError(errno.EPERM, "Cannot move the root directory!")
-            self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
+            self.parent = self.context.get_dir_node(cr, dbro.parent_id)
             assert self.parent
 
         if self.parent != ndir_node:
@@ -1187,7 +1187,7 @@ class node_file(node_class):
         return ''
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
-        if ndir_node.context != self.context:
+        if ndir_node and ndir_node.context != self.context:
             raise NotImplementedError("Cannot move files between contexts")
 
         if (not self.check_perms(8)) and ndir_node.check_perms(2):
@@ -1205,11 +1205,11 @@ class node_file(node_class):
 
         if (not self.parent):
             # there *must* be a parent node for this one
-            self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
+            self.parent = self.context.get_dir_node(cr, dbro.parent_id)
             assert self.parent
         
         ret = {}
-        if self.parent != ndir_node:
+        if ndir_node and self.parent != ndir_node:
             if not (isinstance(self.parent, node_dir) and isinstance(ndir_node, node_dir)):
                 logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
                 raise NotImplementedError('Cannot move files between dynamic folders')
