@@ -835,7 +835,7 @@ class account_period(osv.osv):
         'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': 'draft',
     }
     _order = "date_start"
 
