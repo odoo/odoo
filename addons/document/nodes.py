@@ -121,7 +121,7 @@ class node_context(object):
         if fbro.parent_id:
             parent = self.get_dir_node(cr, fbro.parent_id)
 
-        return node_file(fbro.name,parent,self,fbro)
+        return node_file(fbro.name, parent, self, fbro)
 
 
 class node_descriptor(object):
