@@ -126,15 +126,10 @@
     <blockTable colWidths="269.0,269.0" style="Table_Address_detail">
       <tr>
         <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]]</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.zip or '' ]] [[ picking.address_id and picking.address_id.city or '']]</para>
-          
+
           <para style="terp_default_2">
             <font color="white"> </font>
           </para>
@@ -142,15 +137,7 @@
             <font color="white"> </font>
           </para>
         </td>
-      </tr>
-      <tr>
         <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">[[ picking.address_id and 'Shipping Address :' or removeParentNode('para') ]] </para>
           <para style="terp_default_9">[[ (  picking.address_id and picking.address_id.title) or '' ]] [[ (picking.address_id and picking.address_id.name) or '' ]] </para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.street) or '' ]] </para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.zip) or '' ]] [[ (picking.address_id and picking.address_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
@@ -273,8 +260,8 @@
         <para style="terp_default_2">
         <font color="white"> </font>
       </para>
-  
-  </section>    
+
+  </section>
 	<para style="terp_default_Bold_9">[[ ([line for line in picking.move_lines if (line.state == 'draft'  or line.state=='waiting' )])  and 'Non Assigned Products:' or removeParentNode('para') ]]</para>
     <section>
       <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state == 'draft' or line.state=='waiting')],'move_lines') ]]</para>

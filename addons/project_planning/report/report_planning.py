@@ -18,5 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import report_planning
+
+import time
+
+from report import report_sxw
+
+class report_planning(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context=None):
+        super(report_planning, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+        })
+
+report_sxw.report_sxw('report.report_account_analytic.planning.print','report_account_analytic.planning','addons/project_planning/report/report_planning.rml',parser=report_planning, header='internal')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
