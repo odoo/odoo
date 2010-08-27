@@ -219,7 +219,7 @@ class account_invoice(osv.osv):
 
     _name = "account.invoice"
     _description = 'Invoice'
-    _order = "id"
+    _order = "id desc"
 
     _columns = {
         'name': fields.char('Description', size=64, select=True, readonly=True, states={'draft':[('readonly',False)]}),
