@@ -119,7 +119,7 @@ class res_users(osv.osv):
         result = {}
         obj_dept = self.pool.get('hr.department')
         for user_id in ids:
-            emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', user_id)])
+            emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', user_id)], context=context)
             cr.execute('SELECT emp.department_id FROM hr_employee AS emp \
                         JOIN resource_resource AS res ON res.id = emp.resource_id \
                         JOIN hr_department as dept ON dept.id = emp.department_id \
@@ -130,8 +130,8 @@ class res_users(osv.osv):
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['manager_id'], context=context)
                 parent_ids = map(lambda x: x['manager_id'][0], data_dept)
                 cr.execute('SELECT res.user_id FROM hr_employee AS emp JOIN resource_resource AS res ON res.id=emp.resource_id \
-                        WHERE emp.id IN %s', (tuple(parent_ids),))
-                parent_ids = [x[0] for x in cr.fetchall() if x[0]]
+                        WHERE emp.id IN %s AND res.user_id IS NOT NULL', (tuple(parent_ids),))
+                parent_ids = [x[0] for x in cr.fetchall()]
             result[user_id] = parent_ids
         return result
 

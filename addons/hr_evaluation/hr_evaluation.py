@@ -274,10 +274,10 @@ class survey_request(osv.osv):
     _inherit = "survey.request"
     _columns = {
         'is_evaluation': fields.boolean('Is Evaluation?'),
-        }
+    }
     _defaults = {
         'state': 'waiting_answer',
-        }
+    }
 
 survey_request()
 
