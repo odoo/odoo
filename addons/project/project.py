@@ -574,6 +574,40 @@ class task(osv.osv):
         self.write(cr, uid, ids, {'state': 'draft'})
         return True
 
+    def do_delegate(self, cr, uid, task_id, delegate_data={}, context=None):
+        """
+        Delegate Task to another users.
+        """
+        if context is None:
+            context = {}
+        task = self.browse(cr, uid, task_id, context=context)
+        new_task_id = self.copy(cr, uid, task.id, {
+            'name': delegate_data['name'],
+            'user_id': delegate_data['user_id'],
+            'planned_hours': delegate_data['planned_hours'],
+            'remaining_hours': delegate_data['planned_hours'],
+            'parent_ids': [(6, 0, [task.id])],
+            'state': 'draft',
+            'description': delegate_data['new_task_description'] or '',
+            'child_ids': [],
+            'work_ids': []
+        }, context)
+        newname = delegate_data['prefix'] or ''
+        self.write(cr, uid, [task.id], {
+            'remaining_hours': delegate_data['planned_hours_me'],
+            'planned_hours': delegate_data['planned_hours_me'] + (task.effective_hours or 0.0),
+            'name': newname,
+        }, context)
+        if delegate_data['state'] == 'pending':
+            self.do_pending(cr, uid, [task.id], context)
+        else:
+            self.do_close(cr, uid, [task.id], context)
+        user_pool = self.pool.get('res.users')
+        delegrate_user = user_pool.browse(cr, uid, delegate_data['user_id'], context=context)
+        message = _('Task ') + " '" + delegate_data['name'] + "' "+ _("is Delegated to User:") +" '"+ delegrate_user.name +"' "
+        self.log(cr, uid, task.id, message)
+        return True
+
     def do_pending(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'pending'})
         for (id, name) in self.name_get(cr, uid, ids):
