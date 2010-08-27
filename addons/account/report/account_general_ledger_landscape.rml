@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-   <template pageSize="(1120.5,767.8)" title="General Ledger" author="Openerp" allowSplitting="20" >
+   <template pageSize="(1120.5,767.8)" title="General Ledger" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20" >
     <pageTemplate id="first">
       <frame id="first" x1="22.0" y1="31.0" width="1080" height="680"/>
 			<pageGraphics>
-		
+
 			</pageGraphics>
     </pageTemplate>
   </template>
@@ -128,12 +128,12 @@
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="6,-1" stop="6,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="7,0" stop="7,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#cccccc" start="7,0" stop="7,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="7,0" stop="7,0"/>     
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="7,0" stop="7,0"/>
     </blockTableStyle>
      <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
       <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
-    </blockTableStyle>    
+    </blockTableStyle>
      <blockTableStyle id="Table_Company_Name">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -202,11 +202,11 @@
     </para>
       <blockTable colWidths="200.0,130.0,200.0,150.0,150.0,100.0,110.0" style="Table2">
       <tr>
-      <td><para style="terp_tblheader_General_Centre">[[ data['model']=='account.account' and 'Company' or removeParentNode('para') ]]</para>        
-      	<para style="terp_tblheader_General_Centre"> [[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para></td>       
+      <td><para style="terp_tblheader_General_Centre">[[ data['model']=='account.account' and 'Company' or removeParentNode('para') ]]</para>
+      	<para style="terp_tblheader_General_Centre"> [[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
        	<td><para style="terp_tblheader_General_Centre">Journals</para></td>
-		<td><para style="terp_tblheader_General_Centre">Display Account</para></td>        
+		<td><para style="terp_tblheader_General_Centre">Display Account</para></td>
         <td><para style="terp_tblheader_General_Centre">Filter By  [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
          <td><para style="terp_tblheader_General_Centre">Entries Sorted By</para></td>
         <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
@@ -216,28 +216,28 @@
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or '' ]]</para></td>
        <td> <para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]] </para></td>
 		<td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_movement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
-		
+
         <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
 				<tr>
 	               <td><para style="terp_tblheader_General_Centre">Start Date</para></td>
-	        		<td><para style="terp_tblheader_General_Centre">End Date</para></td>        	
-	        	</tr>        	
+	        		<td><para style="terp_tblheader_General_Centre">End Date</para></td>
+	        	</tr>
 	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[get_end_date(data) ]]</para></td>        	
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
 				<tr>
 			        <td><para style="terp_tblheader_General_Centre">Start Period</para></td>
-			        <td><para style="terp_tblheader_General_Centre">End Period</para></td>      	
-	        	</tr>        	
+			        <td><para style="terp_tblheader_General_Centre">End Period</para></td>
+	        	</tr>
 	        	<tr>
 			        <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
 			        <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
 	        	</tr>
-        	 </blockTable>        	 
+        	 </blockTable>
         	</td>
         <td><para style="terp_default_Centre_8">[[ get_sortby(data) ]]</para></td>
 	<td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
@@ -282,7 +282,7 @@
 					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
 					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
 			  			<td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]]</u></para></td>
-			  			<td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o, data['form']) +o.currency_id.code or '' ]]</u></para></td>                
+			  			<td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o, data['form']) +o.currency_id.code or '' ]]</u></para></td>
 		   			</tr>
 	    		</blockTable>
 	    	</td>
