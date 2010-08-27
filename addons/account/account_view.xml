@@ -85,11 +85,6 @@
             Period
         -->
 
-        <record id="res_role_period" model="res.roles">
-            <field eval="&quot;&quot;&quot;Period&quot;&quot;&quot;" name="name"/>
-            <field name="description">Assign this role to the persons that should have the rights to re-open a closed period.</field>
-        </record>
-
         <record id="view_account_period_form" model="ir.ui.view">
             <field name="name">account.period.form</field>
             <field name="model">account.period</field>
@@ -105,7 +100,7 @@
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
                     <field name="state" select="1"/>
-                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert"/>
+                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert" groups="account.group_account_manager"/>
                 </form>
             </field>
         </record>

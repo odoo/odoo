@@ -883,13 +883,10 @@ class account_period(osv.osv):
         return ids
 
     def action_draft(self, cr, uid, ids, *args):
-        users_roles = self.pool.get('res.users').browse(cr, uid, uid).roles_id
-        for role in users_roles:
-            if role.name=='Period':
-                mode = 'draft'
-                for id in ids:
-                    cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
-                    cr.execute('update account_period set state=%s where id=%s', (mode, id))
+        mode = 'draft'
+        for id in ids:
+            cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
+            cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context={}, limit=80):
