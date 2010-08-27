@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Account Balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="35.0" y1="35.0" width="525" height="772"/>
     </pageTemplate>
@@ -20,7 +20,7 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
 	<lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
     </blockTableStyle>
-         
+
     <blockTableStyle id="Table8">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -116,7 +116,7 @@
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-		<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>  
+		<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Account_Balance_Content">
       <blockAlignment value="LEFT"/>
@@ -208,11 +208,11 @@
     </para>
     <para style="P11">
       <font color="white"> </font>
-    </para>    
+    </para>
     <blockTable colWidths="130.0,80.0,100.0,140.0,90.0" style="Table8">
       <tr>
-        <td><para style="terp_tblheader_General_Centre">[[ data['model']=='account.account' and 'Company'or removeParentNode('para') ]]</para>        
-      	<para style="terp_tblheader_General_Centre"> [[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para></td>       
+        <td><para style="terp_tblheader_General_Centre">[[ data['model']=='account.account' and 'Company'or removeParentNode('para') ]]</para>
+      	<para style="terp_tblheader_General_Centre"> [[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para></td>
         <td>
           <para style="terp_tblheader_General_Centre">Fiscal Year</para>
         </td>

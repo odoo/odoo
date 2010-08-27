@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Tax Code" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="700"/>
        <header>
@@ -11,22 +11,22 @@
 				<!--COL 1-->
 				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
 				<drawRightString x="20cm" y="28.1cm">Accounting Entries-[[ company.currency_id.name ]]</drawRightString>
-				
+
 				<!-- Header -->
-				
-				
+
+
 				<setFont name="Helvetica" size="9"/>
 				<drawString x="1.0cm" y="1cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-				
+
 
 			    <lineMode width="0.7"/>
 				<lines>1cm 27.7cm 20cm 27.7cm</lines>
 				<setFont name="Helvetica" size="8"/>
-			
+
 			</pageGraphics>
-		</header>   
+		</header>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -48,7 +48,7 @@
 	  <lineStyle kind="LINEBELOW" colorName="#000000" start="4,0" stop="4,0"/>
 	  <lineStyle kind="LINEBELOW" colorName="#000000" start="5,0" stop="5,0"/>
 	  <lineStyle kind="LINEBELOW" colorName="#000000" start="6,0" stop="6,0"/>
-	  	  
+
 	  <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="0,-1"/>
 	  <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,1" stop="1,-1"/>
 	  <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,1" stop="2,-1"/>
@@ -119,7 +119,7 @@
     <para style="terp_tblheader_Details">
     <font color="white"></font>
     </para>
-    <para style="terp_tblheader_Details">[[ o.name ]]</para> 
+    <para style="terp_tblheader_Details">[[ o.name ]]</para>
     <para style="terp_tblheader_Details">
     <font color="white"></font>
     </para>
