@@ -493,7 +493,7 @@ class task(osv.osv):
         """
         if context is None:
             context = {}
-        request_pool = self.pool.get('res.request')
+        request = self.pool.get('res.request')
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
             if project:
