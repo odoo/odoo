@@ -41,8 +41,8 @@ class survey_send_invitation(osv.osv_memory):
                                 'survey_id', "Answer", required=1),
         'send_mail': fields.boolean('Send mail for new user'),
         'send_mail_existing': fields.boolean('Send reminder for existing user'),
-        'mail_subject': fields.char('Subject', size=256, required=1),
-        'mail_subject_existing': fields.char('Subject', size=256, required=1),
+        'mail_subject': fields.char('Subject', size=256),
+        'mail_subject_existing': fields.char('Subject', size=256),
         'mail_from': fields.char('From', size=256, required=1),
         'mail': fields.text('Body')
     }
