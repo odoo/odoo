@@ -791,8 +791,6 @@ class config_compute_remaining(osv.osv_memory):
         }
 
 config_compute_remaining()
-
-
 class account_analytic_account(osv.osv):
 
     _inherit = 'account.analytic.account'

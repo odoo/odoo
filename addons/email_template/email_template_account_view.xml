@@ -18,16 +18,17 @@
                     <notebook colspan="4">
                         <page string="Outgoing">
                             <separator string="Server Information" colspan="4" />
-                            <group colspan="4">
-                                <field name="smtpserver" select="1" colspan="2" />
-                                <field name="smtpport" select="2" colspan="2" />
-                                <field name="smtpssl" select="2" colspan="2" />
-                                <field name="smtptls" select="2" colspan="2" />
+                            <group colspan="4" col="4">
+                                <field name="smtpserver" select="1"/>
+                                <field name="smtpport" select="2" />
+                                <field name="smtpssl" select="2" />
+                                <field name="smtptls" select="2" />
+                                <field name="auto_delete" />
                             </group>
                             <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" />
                             <separator string="User Information" colspan="4" />
                             <group col="2" colspan="2">
-                                <field name="email_id" select="1" on_change="on_change_emailid(name,email_id)" colspan="2" />
+                                <field name="email_id" select="1" colspan="2" />
                                 <field name="smtppass" password="True" colspan="2" />
                                 <field name="company" select="2" colspan="2" />
                             </group>
@@ -72,15 +73,16 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Accounts">
-                    <filter icon="terp-personal" string="My Accounts" name="my" domain="[('user','=',uid)]"/>
-                    <filter icon="terp-personal+" string="Personal Accounts" domain="[('company','=','no')]"/>
-                    <filter icon="terp-go-home" string="Company Accounts" domain="[('company','=','yes')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-camera_test" string="Approved" domain="[('state','=','approved')]"/>
                     <filter icon="terp-emblem-important" string="Suspended" domain="[('state','=','suspended')]"/>
                     <separator orientation="vertical"/>
+                    <filter icon="terp-go-home" string="Company Accounts" domain="[('company','=','yes')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="user" select="1">
+                        <filter icon="terp-personal" help="My Accounts" name="my" domain="[('user','=',uid)]"/>
+                    </field>
                     <field name="name" select="1"/>
-                    <field name="user" select="1"/>
                     <field name="email_id" select="1"/>
                </search>
            </field>
@@ -99,7 +101,7 @@
         <menuitem name="Configuration" parent="base.marketing_menu"
             id="base.menu_marketing_config_root" sequence="20" groups="base.group_system"/>
 
-        <menuitem name="Emails" id="menu_email_template_configuration" parent="base.menu_marketing_config_root" />
+        <menuitem name="Email Template" id="menu_email_template_configuration" parent="base.menu_marketing_config_root" />
 
         <menuitem name="Email Accounts" id="menu_email_template_account_all" parent="menu_email_template_configuration" action="action_email_template_account_tree_all"/>
 
@@ -110,7 +112,7 @@
         <menuitem name="Configuration" parent="base.menu_tools"
               id="base.menu_lunch_survey_root" sequence="20" />
 
-        <menuitem name="Emails" id="menu_email_template_config_tools"
+        <menuitem name="Email Template" id="menu_email_template_config_tools"
             parent="base.menu_lunch_survey_root" />
 
         <menuitem name="Email Accounts" id="menu_email_account_all_tools"

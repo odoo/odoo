@@ -33,7 +33,7 @@
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': ['project_messages_view.xml'],
-    'demo_xml': ['project_message_data.xml'],
+    'demo_xml': [],
     'installable': True,
     'active': False,
 }
