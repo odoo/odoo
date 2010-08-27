@@ -371,11 +371,11 @@ class account_bank_statement(osv.osv):
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
             done.append(st.id)
 
-            next_number = obj_seq.get(cr, uid, 'account.bank.statement')
             if not st.name == '/':
-                next_number = st.name + '/' + next_number[-1:]
+                next_number = st.name
                 account_move_obj.write(cr, uid, [move_id], {'name': next_number})
-
+            else:
+                next_number = obj_seq.get(cr, uid, 'account.bank.statement')
             account_move_obj.write(cr, uid, [move_id], {'state': 'posted'}) # Bank statements will not consider boolean on journal entry_posted
             self.write(cr, uid, [st.id], {'name': next_number}, context=context)
 

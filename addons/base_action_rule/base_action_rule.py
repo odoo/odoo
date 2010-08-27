@@ -181,10 +181,12 @@ the rule to mark CC(mail to any other person defined in actions)."),
         for action_rule in self.browse(cr, uid, ids, context=context):
             model = action_rule.model_id.model
             obj_pool = self.pool.get(model)
-            obj_pool.__setattr__('create', self._create(obj_pool.create, model, context=context))
-            obj_pool.__setattr__('write', self._write(obj_pool.write, model, context=context))
-        return True
+            if not hasattr(obj_pool, 'base_action_ruled'):
+                obj_pool.create = self._create(obj_pool.create, model, context=context)
+                obj_pool.write = self._write(obj_pool.write, model, context=context)
+                obj_pool.base_action_ruled = True
 
+        return True
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context)
         self._register_hook(cr, uid, [res_id], context=context)        

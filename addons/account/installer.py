@@ -319,15 +319,15 @@ class account_installer(osv.osv_memory):
             seq_sale = {
                         'name': 'Sale Journal',
                         'code': 'account.journal',
-                        'prefix': 'INV/',
-                        'padding': 4
+                        'prefix': '%(year)s/',
+                        'padding': 3
                         }
             seq_id_sale = obj_sequence.create(cr, uid, seq_sale)
             seq_purchase = {
                         'name': 'Purchase Journal',
                         'code': 'account.journal',
-                        'prefix': 'VEN/',
-                        'padding': 4
+                        'prefix': '%(year)s/',
+                        'padding': 3
                         }
             seq_id_purchase = obj_sequence.create(cr, uid, seq_purchase)
         else:
