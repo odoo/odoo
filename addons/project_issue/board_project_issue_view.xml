@@ -7,7 +7,7 @@
             <field name="res_model">project.issue</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('state','in',['draft','open'])]</field>
+            <field name="domain">[('state','in',['draft','open'])]</field>
            <field name="view_id" ref="project_issue.project_issue_tree_view"/>
         </record>
 
@@ -16,7 +16,7 @@
             <field name="res_model">project.issue</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('state','=','pending')]</field>
+            <field name="domain">[('state','=','pending')]</field>
            <field name="view_id" ref="project_issue.project_issue_tree_view"/>
         </record>
 
@@ -25,7 +25,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph</field>
-            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="domain">[]</field>
             <field name="view_id" ref="project_issue.view_project_issue_report_graph"/>
         </record>
 
@@ -47,7 +47,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph</field>
-            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="domain">[]</field>
             <field name="view_id" ref="view_project_issue_graph_stage"/>
         </record>
 

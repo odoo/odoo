@@ -190,7 +190,7 @@ class hr_expense_expense(osv.osv):
             invoice_obj.button_compute(cr, uid, [inv_id], {'type': 'in_invoice'}, set_total=True)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
-            
+
             self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
             res = inv_id
         return res
@@ -201,7 +201,7 @@ class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
         'hr_expense_ok': fields.boolean('Can Constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
-                }
+    }
 
 product_product()
 
@@ -235,7 +235,7 @@ class hr_expense_line(osv.osv):
     _defaults = {
         'unit_quantity': 1,
         'date_value': time.strftime('%Y-%m-%d'),
-        }
+    }
     _order = "sequence"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
