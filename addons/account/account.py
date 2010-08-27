@@ -1075,7 +1075,7 @@ class account_move(osv.osv):
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State', required=True, readonly=True,
                                   help='When new account move is created the state will be \'Draft\'. When all the payments are done it will be in \'Posted\' state.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
-        'to_check': fields.boolean('To Be Verified'),
+        'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
