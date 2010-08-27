@@ -175,9 +175,11 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="14">
-                    <filter string="Vote date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
-                    <filter string="Idea" icon="terp-idea" domain="[]" context="{'group_by':'idea_id'}"/>
                     <filter string="User" name="user" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Idea" icon="terp-idea" domain="[]" context="{'group_by':'idea_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Vote date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                 </group>
             </search>
         </field>
@@ -217,7 +219,7 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Vote" groups="base.group_extended">
+                <page string="History" groups="base.group_extended">
                     <field name="vote_ids" nolabel="1" colspan="4" readonly="True">
                         <tree string="Votes">
                             <field name="user_id"/>
@@ -285,10 +287,9 @@
         <field name="arch" type="xml">
             <search string="Ideas">
                 <group col="10" colspan="4">
-                    <filter icon="terp-document-new" string="Draft"
-                        domain="[('state','=','draft')]" help="Draft Ideas" />
-                    <filter icon="terp-camera_test" string="Open"
-                        domain="[('state','=','open')]" help="Open Ideas" />
+                    <filter icon="terp-document-new" string="Current" domain="[('state','in', ('draft', 'open'))]" help="Draft and Open Ideas"/>
+                    <filter icon="terp-check" string="Accepted"
+                        domain="[('state','=','close')]" help="Accepted Ideas" />
                     <separator orientation="vertical"/>
                     <field name="title" select="1"/>
                     <field name="category_id" select="1"/>
@@ -309,7 +310,6 @@
         <field name="res_model">idea.idea</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{"search_default_user_id":uid}</field>
         <field name="search_view_id" ref="view_idea_idea_search"/>
     </record>
 

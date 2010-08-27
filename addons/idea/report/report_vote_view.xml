@@ -40,7 +40,6 @@
                              separator="1"
                              domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                              help="Idea Vote created last 7 days"/>
-                        <separator orientation="vertical"/>
                          <filter icon="terp-go-today"
                              string="    Today    "
                              name="today"
@@ -51,6 +50,7 @@
                         <filter icon="terp-camera_test"
                             string="Open"
                             domain="[('idea_state','=',('open'))]"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-camera_test"
                             string="Accepted"
                             domain="[('idea_state','=',('close'))]"/>
@@ -60,11 +60,13 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="10" col="12">
+                        <filter string="Creater" icon="terp-personal" context="{'group_by':'creater_id'}"/>
+                        <filter string="User" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Idea" icon="terp-personal" context="{'group_by':'idea_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Category" icon="terp-stock_symbol-selection" context="{'group_by':'category_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="User" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
-                        <filter string="Creater" icon="terp-personal" context="{'group_by':'creater_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'idea_state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
