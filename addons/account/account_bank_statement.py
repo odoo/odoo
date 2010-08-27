@@ -201,6 +201,7 @@ class account_bank_statement(osv.osv):
         res_users_obj = self.pool.get('res.users')
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
+        account_analytic_line_obj = self.pool.get('account.analytic.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         obj_seq = self.pool.get('ir.sequence')
 
@@ -235,6 +236,10 @@ class account_bank_statement(osv.osv):
             # In line we get reconcile_id on bank.ste.rec.
             # in bank stat.rec we get line_new_ids on bank.stat.rec.line
             for move in st.line_ids:
+                if move.analytic_account_id:
+                    if not st.journal_id.analytic_journal_id:
+                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (st.journal_id.name,))
+
                 context.update({'date': move.date})
                 move_id = account_move_obj.create(cr, uid, {
                     'journal_id': st.journal_id.id,
@@ -273,6 +278,7 @@ class account_bank_statement(osv.osv):
                     'journal_id': st.journal_id.id,
                     'period_id': st.period_id.id,
                     'currency_id': st.currency.id,
+                    'analytic_account_id': move.analytic_account_id and move.analytic_account_id.id or False
                 }
 
                 amount = res_currency_obj.compute(cr, uid, st.currency.id,
@@ -294,7 +300,28 @@ class account_bank_statement(osv.osv):
                                 account=acc_cur)
                     val['amount_currency'] = amount_cur
 
-                torec.append(account_move_line_obj.create(cr, uid, val , context=context))
+                move_line_id = account_move_line_obj.create(cr, uid, val , context=context)
+                torec.append(move_line_id)
+
+                if move.analytic_account_id:
+                    anal_val = {}
+                    amt = (val['credit'] or  0.0) - (val['debit'] or 0.0)
+                    anal_val = {
+                        'name': val['name'],
+                        'ref': val['ref'],
+                        'date': val['date'],
+                        'amount': amt,
+                        'account_id': val['analytic_account_id'],
+                        'currency_id': val['currency_id'],
+                        'general_account_id': val['account_id'],
+                        'journal_id': st.journal_id.analytic_journal_id.id,
+                        'period_id': val['period_id'],
+                        'user_id': uid,
+                        'move_id': move_line_id
+                                }
+                    if val.get('amount_currency', False):
+                        anal_val['amount_currency'] = val['amount_currency']
+                    account_analytic_line_obj.create(cr, uid, anal_val, context=context)
 
                 if move.reconcile_id and move.reconcile_id.line_new_ids:
                     for newline in move.reconcile_id.line_new_ids:
@@ -675,6 +702,7 @@ class account_bank_statement_line(osv.osv):
             select=True, required=True, ondelete='cascade'),
         'reconcile_id': fields.many2one('account.bank.statement.reconcile',
             'Reconcile'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_ids': fields.many2many('account.move',
             'account_bank_statement_line_move_rel', 'move_id','statement_id',
             'Moves'),
