@@ -1090,6 +1090,23 @@
             </field>
         </record>
 
+        <record id="action_account_moves_all_a" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
+        </record>
+
+        <menuitem
+            action="action_account_moves_all_a"
+            icon="STOCK_JUSTIFY_FILL"
+            id="menu_action_account_moves_all"
+            parent="account.menu_finance_entries"
+            sequence="4"
+            groups="group_account_user,group_account_manager,base.group_system"
+        />
+
         <record id="action_move_line_select" model="ir.actions.act_window">
             <field name="name">Entry Lines</field>
             <field name="res_model">account.move.line</field>
