@@ -399,7 +399,7 @@ class account_bank_statement(osv.osv):
                             account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
-                move_name = next_number + '/' + str(move.sequence)
+                move_name = next_number + ' - ' + str(move.sequence)
                 account_move_obj.write(cr, uid, [move_id], {'name': move_name, 'state': 'posted'}) # Bank statements will not consider boolean on journal entry_posted
 
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
