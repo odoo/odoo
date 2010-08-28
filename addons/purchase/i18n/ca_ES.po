@@ -78,6 +78,7 @@ msgstr "Compra confirmada"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Excepció de factura"
 
@@ -128,6 +129,7 @@ msgstr "Aprova compra"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Aprovada"
 
@@ -281,6 +283,7 @@ msgstr "UdM del producte errònia!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Confirmada"
 
@@ -307,6 +310,7 @@ msgstr "Demana pressupost"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "En espera"
 
@@ -389,6 +393,7 @@ msgstr "Acció no vàlida!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Realitzada"
 
@@ -449,6 +454,7 @@ msgstr "Aprova comanda de compra després de confirmació"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Excepció d'enviament"
 
@@ -571,11 +577,7 @@ msgstr "Comanda de compra"
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!' % s['state']))\n"
-"\n"
-"        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support \n"
-"        # automatically sending subflow.delete upon deletion\n"
-"        wf_service = netsvc.LocalService(\"workflow"
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr ""
 
 #. module: purchase

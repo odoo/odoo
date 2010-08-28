@@ -78,6 +78,7 @@ msgstr "Vahvistettu ostotilaus"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Poikkeus laskussa"
 
@@ -128,6 +129,7 @@ msgstr "Hyväksy ostotilaus"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Hyväksytty"
 
@@ -281,6 +283,7 @@ msgstr "Väärä tuotteen mittayksikkö!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Vahvistettu"
 
@@ -307,6 +310,7 @@ msgstr "Tarjouspyyntö"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Odottaa"
 
@@ -389,6 +393,7 @@ msgstr "Virheellinen toiminto!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Valmis"
 
@@ -449,6 +454,7 @@ msgstr "Hyväksy ostotilaus vahvistuksen jälkeen"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Poikkeus toimituksessa"
 
@@ -571,11 +577,7 @@ msgstr "Ostotilaus"
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!' % s['state']))\n"
-"\n"
-"        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support \n"
-"        # automatically sending subflow.delete upon deletion\n"
-"        wf_service = netsvc.LocalService(\"workflow"
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr ""
 
 #. module: purchase

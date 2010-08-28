@@ -78,6 +78,7 @@ msgstr "Kinnitatud ost"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Arve erand"
 
@@ -128,6 +129,7 @@ msgstr "Kiida ost heaks"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Heaks kiidetud"
 
@@ -281,6 +283,7 @@ msgstr "Vale toote MÜ!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Kinnitatud"
 
@@ -307,6 +310,7 @@ msgstr "Noteerimisnõue"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Ootel"
 
@@ -389,6 +393,7 @@ msgstr "Vigane toiming!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Valmis"
 
@@ -449,6 +454,7 @@ msgstr "Kiida ostukorraldus heaks peale kinnitamist"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Tarne erand"
 
@@ -571,11 +577,7 @@ msgstr "Ostukorraldus"
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!' % s['state']))\n"
-"\n"
-"        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support \n"
-"        # automatically sending subflow.delete upon deletion\n"
-"        wf_service = netsvc.LocalService(\"workflow"
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr ""
 
 #. module: purchase
