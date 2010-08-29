@@ -56,9 +56,9 @@
                             </group>
                             <group col="2" colspan="1">
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="reference" select="1"/>
                                 <field name="date" select="1" on_change="onchange_date(date)"/>
                                 <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                <field name="number"/>
                             </group>
                         </page>
                         <page string="Journal Items">
