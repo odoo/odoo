@@ -97,9 +97,9 @@ class account_voucher(osv.osv):
 
         'line_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'line_cr_ids':fields.one2many('account.voucher.line','voucher_id','Credits',
-            domain=[('type','=','cr')], context={'default_type':'cr'}),
+            domain=[('type','=','cr')], context={'default_type':'cr'}, readonly=True, states={'draft':[('readonly',False)]}),
         'line_dr_ids':fields.one2many('account.voucher.line','voucher_id','Debits',
-            domain=[('type','=','dr')], context={'default_type':'dr'}),
+            domain=[('type','=','dr')], context={'default_type':'dr'}, readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
