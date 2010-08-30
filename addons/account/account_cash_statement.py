@@ -77,7 +77,7 @@ class account_cash_statement(osv.osv):
         """
         res ={}
         for statement in self.browse(cr, uid, ids):
-            amount_total=0.0
+            amount_total = 0.0
 
             if statement.journal_id.type not in('cash'):
                 continue
@@ -273,8 +273,6 @@ class account_cash_statement(osv.osv):
                 'balance_start': balance_start
             })
             return res
-
-
         res = super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context)
         return res
 
@@ -499,8 +497,7 @@ class account_cash_statement(osv.osv):
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
 
-                if st.journal_id.entry_posted:
-                    account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
+                account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
             done.append(st.id)
 
         vals = {
