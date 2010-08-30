@@ -523,7 +523,9 @@ form: module.record_id""" % (xml_id,)
         m_l = map(escape, escape_re.split(rec.get("name",'').encode('utf8')))
 
         values = {'parent_id': False}
-        if rec.get('parent', False) is False:
+        if rec.get('parent', False) is False and len(m_l) > 1:
+            # No parent attribute specified and the menu name has several menu components, 
+            # try to determine the ID of the parent according to menu path
             pid = False
             res = None
             values['name'] = m_l[-1]
@@ -542,9 +544,13 @@ form: module.record_id""" % (xml_id,)
                     pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
             values['parent_id'] = pid
         else:
+            # The parent attribute was specified, if non-empty determine its ID, otherwise
+            # explicitly make a top-level menu
             if rec.get('parent'):
                 menu_parent_id = self.id_get(cr, 'ir.ui.menu', rec.get('parent',''))
-            else: # we get here with <menuitem parent="">, explicit clear of parent
+            else:
+                # we get here with <menuitem parent="">, explicit clear of parent, or
+                # if no parent attribute at all but menu name is not a menu path
                 menu_parent_id = False
             values = {'parent_id': menu_parent_id}
             if rec.get('name'):
