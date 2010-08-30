@@ -57,6 +57,10 @@
                         <filter icon="terp-gtk-stop"
                             string="Refused"
                             domain="[('idea_state','=',('cancel'))]"/>
+                        <separator orientation="vertical"/>
+                        <field name="idea_id" string="Idea"/>
+                        <field name="creater_id" string="Creater"/>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="10" col="12">
@@ -67,7 +71,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Category" icon="terp-stock_symbol-selection" context="{'group_by':'category_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'idea_state'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" name="State" context="{'group_by':'idea_state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
@@ -83,7 +87,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_report_vote_search"/>
-            <field name="context">{'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_User':1,'search_default_State':1,'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
         <menuitem action="action_report_vote_all" id="menu_report_vote_all" parent="menu_idea_reporting" sequence="1" groups="base.group_tool_manager,base.group_system"/>
