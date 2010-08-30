@@ -210,7 +210,7 @@ class stock_location(osv.osv):
         'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock"),
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock"),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared for every companies'),
-        'scrap_location': fields.boolean('Scrap Location', help='Check this box if the current location is a place for destroyed items'),
+        'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
     }
     _defaults = {
         'active': True,
