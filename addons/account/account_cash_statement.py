@@ -302,7 +302,7 @@ class account_cash_statement(osv.osv):
         if statement.name and statement.name == '/':
             number = self.pool.get('ir.sequence').get(cr, uid, 'account.cash.statement')
             vals.update({
-                'name':number
+                'name': number
             })
 
         cr.execute("select id from account_bank_statement where journal_id=%s and user_id=%s and state=%s order by id desc limit 1", (statement.journal_id.id, uid, 'confirm'))
@@ -496,8 +496,8 @@ class account_cash_statement(osv.osv):
                         account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
-
-                account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
+                move_name = st.name + ' - ' + str(move.sequence)
+                account_move_obj.write(cr, uid, [move_id], {'state':'posted', 'name': move_name})
             done.append(st.id)
 
         vals = {
