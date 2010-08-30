@@ -538,7 +538,7 @@ class account_account(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
-            
+
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
             if move_lines:
@@ -1149,7 +1149,7 @@ class account_move(osv.osv):
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
         return True
-    
+
     def button_validate(self, cursor, user, ids, context=None):
         def _get_chart_account(cursor, user, account):
             if account.parent_id:
@@ -1157,7 +1157,7 @@ class account_move(osv.osv):
             else:
                 chart_account = account
             return chart_account
-            
+
         for move in self.browse(cursor, user, ids):
             lines = move.line_id
             if lines:
@@ -1167,7 +1167,7 @@ class account_move(osv.osv):
                 parent_right = ref_chart_account.parent_right
                 result = True
                 for line in lines[1:]:
-                   if not(line.account_id.parent_left > parent_left and line.account_id.parent_left < parent_right):
+                   if not (line.account_id.parent_left > parent_left and line.account_id.parent_left < parent_right):
                          raise osv.except_osv(_('Error !'), _('You cannot validate a move unless accounts in its entry lines are in same Chart Of Accounts !'))
         return self.post(cursor, user, ids, context=context)
 
