@@ -209,13 +209,17 @@ class users(osv.osv):
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
     def _email_get(self, cr, uid, ids, name, arg, context=None):
-        return dict([(user.id, user.address_id.email) for user in self.browse(cr, uid, ids, context=context)])
+        # perform this as superuser because the current user is allowed to read users, and that includes
+        # the email, even without any direct read access on the res_partner_address object.
+        return dict([(user.id, user.address_id.email) for user in self.browse(cr, 1, ids)]) # no context to avoid potential security issues as superuser
 
     def _email_set(self, cr, uid, ids, name, value, arg, context=None):
         if not isinstance(ids,list):
             ids = [ids]
         address_obj = self.pool.get('res.partner.address')
         for user in self.browse(cr, uid, ids, context=context):
+            # perform this as superuser because the current user is allowed to write to the user, and that includes
+            # the email even without any direct write access on the res_partner_address object.
             if user.address_id:
                 address_obj.write(cr, 1, user.address_id.id, {'email': value or None}) # no context to avoid potential security issues as superuser
             else:
