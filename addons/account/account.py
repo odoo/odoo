@@ -1454,7 +1454,7 @@ class account_tax_code(osv.osv):
 
     This code is used for some tax declarations.
     """
-    def _sum(self, cr, uid, ids, name, args, context,where ='', where_params=()):
+    def _sum(self, cr, uid, ids, name, args, context, where ='', where_params=()):
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if context.get('based_on', 'invoices') == 'payments':
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
@@ -1678,37 +1678,37 @@ class account_tax(osv.osv):
 
         return super(account_tax, self).search(cr, uid, args, offset, limit, order, context, count)
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         res = []
-        for record in self.read(cr, uid, ids, ['description','name'], context):
+        for record in self.read(cr, uid, ids, ['description','name'], context=context):
             name = record['description'] and record['description'] or record['name']
             res.append((record['id'],name ))
         return res
 
-    def _default_company(self, cr, uid, context={}):
+    def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
-        'applicable_type': lambda *a: 'true',
-        'type': lambda *a: 'percent',
-        'amount': lambda *a: 0,
-        'price_include': lambda *a: 0,
-        'active': lambda *a: 1,
-        'type_tax_use': lambda *a: 'all',
-        'sequence': lambda *a: 1,
-        'tax_group': lambda *a: 'vat',
-        'ref_tax_sign': lambda *a: 1,
-        'ref_base_sign': lambda *a: 1,
-        'tax_sign': lambda *a: 1,
-        'base_sign': lambda *a: 1,
-        'include_base_amount': lambda *a: False,
+        'python_compute': '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
+        'python_compute_inv': '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
+        'applicable_type': 'true',
+        'type': 'percent',
+        'amount': 0,
+        'price_include': 0,
+        'active': 1,
+        'type_tax_use': 'all',
+        'sequence': 1,
+        'tax_group': 'vat',
+        'ref_tax_sign': 1,
+        'ref_base_sign': 1,
+        'tax_sign': 1,
+        'base_sign': 1,
+        'include_base_amount': False,
         'company_id': _default_company,
     }
     _order = 'sequence'
