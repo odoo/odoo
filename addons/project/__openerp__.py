@@ -31,16 +31,14 @@
 work done on tasks, eso. It is able to render planning, order tasks, eso.
  Dashboard for project members that includes:
     * List of my open tasks
-    * List of messages
     * Members list of project
-    * Issues
     """,
     "init_xml": [],
     "update_xml": [
         "security/project_security.xml",
         "wizard/project_task_delegate_view.xml",
-        "wizard/project_task_review.xml",
-        "wizard/project_close_task_view.xml",        
+        "wizard/project_task_close_view.xml",
+        "wizard/project_task_reevaluate_view.xml",
         "security/ir.model.access.csv",
         "project_data.xml",
         "project_view.xml",

@@ -422,7 +422,7 @@ class marketing_campaign_activity(osv.osv):
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
 
-    def _process_wi_paper(self, cr, uid, activity, workitem, context=None):
+    def _process_wi_report(self, cr, uid, activity, workitem, context=None):
         service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
         (report_data, format) = service.create(cr, uid, [], {}, {})
         attach_vals = {

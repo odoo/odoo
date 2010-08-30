@@ -24,7 +24,7 @@ class backlog_create_task(osv.osv_memory):
     _name = 'project.scrum.backlog.create.task'
     _description = 'Create Tasks from Product Backlogs'
     _columns = {
-        'user_id': fields.many2one('res.users', 'Assign To')
+        'user_id': fields.many2one('res.users', 'Assign To', help="Resposible user who can work on task")
     }
 
     def do_create(self, cr, uid, ids, context=None):
