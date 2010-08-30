@@ -346,7 +346,7 @@
             <field name="type">sale</field>
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
-            <field name="invoice_sequence_id" ref="seq_type_out_invoice"/>
+            <field name="invoice_sequence_id" ref="seq_out_invoice"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
             <field name="user_id" ref="base.user_root"/>
@@ -357,6 +357,7 @@
             <field name="type">sale_refund</field>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
+            <field name="invoice_sequence_id" ref="seq_out_refund"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
             <field name="user_id" ref="base.user_root"/>
@@ -368,7 +369,7 @@
             <field name="type">purchase</field>
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
-            <field name="invoice_sequence_id" ref="seq_type_in_invoice"/>
+            <field name="invoice_sequence_id" ref="seq_in_invoice"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
             <field name="user_id" ref="base.user_root"/>
@@ -379,6 +380,7 @@
             <field name="type">purchase_refund</field>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
+            <field name="invoice_sequence_id" ref="seq_in_refund"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
             <field name="user_id" ref="base.user_root"/>

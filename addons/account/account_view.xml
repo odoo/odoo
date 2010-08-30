@@ -104,7 +104,7 @@
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
                     <field name="state" select="1"/>
-                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert"/>
+                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert" groups="account.group_account_manager"/>
                 </form>
             </field>
         </record>
@@ -242,8 +242,8 @@
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_currency_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="type"/>
                 </tree>
             </field>
@@ -520,6 +520,7 @@
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
                                     <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id,'currency_id': parent.currency,'journal_id':parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field name="ref"/>
@@ -668,7 +669,6 @@
                     <field name="period_id"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
-                    <field name="reconcile_id"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                 </tree>
@@ -711,9 +711,9 @@
                 <tree string="Account Tax Code" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="sum"/>
                     <field name="sum_period"/>
-                    <field name="company_id"/>
+                    <field name="sum"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -858,11 +858,13 @@
             <field name="view_id" ref="view_tax_code_tree"/>
             <field name="help">Chart of Taxes is a tree view reflecting the structure of the Tax Cases (or tax codes) and shows the current tax situation. The tax chart represents the amount of each area of the tax declaration for your country. It’s presented in a hierarchical structure, which can be modified to fit your needs.</field>
         </record>
+
+        <!--
         <menuitem
             action="action_tax_code_tree"
             id="menu_action_tax_code_tree"
             parent="menu_finance_charts"
-            sequence="12"/>
+            sequence="12"/> --> <!-- move to wizard -->
 
         <!--
     Entries lines
@@ -1070,8 +1072,11 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Account"  icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
-                        <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Extended options...">
@@ -1084,6 +1089,23 @@
                 </search>
             </field>
         </record>
+
+        <record id="action_account_moves_all_a" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
+        </record>
+
+        <menuitem
+            action="action_account_moves_all_a"
+            icon="STOCK_JUSTIFY_FILL"
+            id="menu_action_account_moves_all"
+            parent="account.menu_finance_entries"
+            sequence="4"
+            groups="group_account_user,group_account_manager,base.group_system"
+        />
 
         <record id="action_move_line_select" model="ir.actions.act_window">
             <field name="name">Entry Lines</field>
@@ -1347,9 +1369,9 @@
             res_model="account.move.line"
             src_model="account.move"/>
 
-	    <record id="account.act_account_move_to_account_move_line_open" model="ir.actions.act_window">
-	        <field eval="[(6,0,[ref('account.group_accounting_accountant')])]" name="groups_id"/>
-	    </record>
+      <record id="account.act_account_move_to_account_move_line_open" model="ir.actions.act_window">
+          <field eval="[(6,0,[ref('account.group_accounting_accountant')])]" name="groups_id"/>
+      </record>
 
         <record id="action_move_line_search" model="ir.actions.act_window">
             <field name="name">Entry Lines</field>
@@ -1412,6 +1434,7 @@
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id)]" name="account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
                                     <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'date':date}" name="reconcile_id"/>
                                 </form>
@@ -1818,9 +1841,9 @@
 
         <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_move_line" name="Journal Items" res_model="account.move.line" src_model="account.journal"/>
 
-        <act_window context="{'search_default_reconcile_id':False}" domain="[('partner_id', '=', active_id),('reconcile_id','=',False),('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 
-        <act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>
@@ -2364,6 +2387,7 @@
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
                                     <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id,'currency_id': parent.currency,'journal_id':parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field name="ref"/>

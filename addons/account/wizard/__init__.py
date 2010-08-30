@@ -48,6 +48,7 @@ import account_open_closed_fiscalyear
 import account_compare_account_balance_report
 import account_invoice_state
 import account_chart
+import account_tax_chart
 #TODO: remove this file no moe used
 # also remove related view fiel
 
