@@ -499,8 +499,7 @@ class account_cash_statement(osv.osv):
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
 
-                if st.journal_id.entry_posted:
-                    account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
+                account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
             done.append(st.id)
 
         vals = {
