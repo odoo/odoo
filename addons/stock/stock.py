@@ -562,7 +562,7 @@ class stock_picking(osv.osv):
             '),
             
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for Picking. Default it takes current date"),
+                 method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed. Will be set to date of actual processing if not specified"),
         'date': fields.datetime('Order Date', help="Date of Order"),
         'date_done': fields.datetime('Date Done', help="Date of Completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
