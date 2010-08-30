@@ -168,7 +168,15 @@ class stock_location(osv.osv):
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the stock location without removing it."),
-        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True),
+        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True,
+        help=' * The \'Supplier Location\' Source of products received from suppliers. \
+            \n* The \'View \' Shows that the location is only an organizational node for the hierarchical structure, and can be involved in stock moves itself. \
+            \n* The \'Internal Location\' Locations for your own stock,.\
+            \n* The \'Customer Location\' Destination for products sent to customers.\
+            \n* The \'Inventory\' The counterpart for inventory operations used to correct stock levels,. \
+            \n* The \'Procurement\' The counterpart for procurement operations when you dont yet know the source (supplier or production). Products in this location should be zero after the scheduler run completes. \
+            \n* The \'Production\' The counterpart for production operations; receipt of raw material and sending finished products. \
+            '),
         'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
 
