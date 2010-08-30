@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,13 +24,13 @@ import tools
 import pooler
 import cStringIO
 
-class update_translations(osv.osv_memory):
+class base_update_translations(osv.osv_memory):
     def _get_languages(self, cr, uid, context):
         lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
         ids=lang_obj.search(cr, uid, ['&', ('active', '=', True), ('translatable', '=', True),])
         langs=lang_obj.browse(cr, uid, ids)
         return [(lang.code, lang.name) for lang in langs]
-   
+
     def _get_lang_name(self, cr, uid, lang_code):
         lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
         ids=lang_obj.search(cr, uid, [('code', '=', lang_code)])
@@ -50,9 +50,9 @@ class update_translations(osv.osv_memory):
         buf.close()
         return {'type': 'ir.actions.act_window_close'}
 
-    _name = 'wizard.module.update_translations'
+    _name = 'base.update.translations'
     _columns = {
         'lang': fields.selection(_get_languages, 'Language', required=True),
     }
 
-update_translations()
+base_update_translations()

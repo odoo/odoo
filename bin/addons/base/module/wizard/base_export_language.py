@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,7 +27,7 @@ from osv import fields,osv
 from tools.translate import _
 from tools.misc import get_iso_codes
 
-class wizard_export_lang(osv.osv_memory):
+class base_export_language(osv.osv_memory):
 
     def _get_languages(self, cr, uid, context):
         lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
@@ -67,7 +67,7 @@ class wizard_export_lang(osv.osv_memory):
         buf.close()
         return self.write(cr, uid, ids, {'state':'get', 'data':out, 'advice':this.advice, 'name':this.name}, context=context)
 
-    _name = "wizard.module.lang.export"
+    _name = "base.export.language"
     _columns = {
             'name': fields.char('Filename', 16, readonly=True),
             'lang': fields.selection(_get_languages, 'Language', help='To export a new language, do not select a language.'), # not required: unset = new language
@@ -82,7 +82,7 @@ class wizard_export_lang(osv.osv_memory):
     _defaults = { 'state': lambda *a: 'choose',
                   'name': lambda *a: 'lang.tar.gz'
                 }
-wizard_export_lang()
+base_export_language()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

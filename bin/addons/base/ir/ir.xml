@@ -23,7 +23,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="values_view_tree_action" model="ir.ui.view">
             <field name="name">ir.values.tree.action</field>
             <field name="model">ir.values</field>
@@ -37,7 +37,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="values_view_search_action" model="ir.ui.view">
             <field name="name">ir.values.search.action</field>
             <field name="model">ir.values</field>
@@ -50,7 +50,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="act_values_form_action" model="ir.actions.act_window">
             <field name="name">Client Actions</field>
             <field name="type">ir.actions.act_window</field>
@@ -61,14 +61,14 @@
             <field name="domain">[('key','=','action')]</field>
             <field name="context">{'read':'default','default_object':1}</field>
         </record>
-        
+
         <record model="ir.actions.act_window.view" id="action_values_tree_view">
 	        <field name="sequence" eval="1"/>
 	        <field name="view_mode">tree</field>
 	        <field name="view_id" ref="values_view_tree_action"/>
 	        <field name="act_window_id" ref="act_values_form_action"/>
 	    </record>
-	
+
 	    <record model="ir.actions.act_window.view" id="action_values_form_view">
 	        <field name="sequence" eval="2"/>
 	        <field name="view_mode">form</field>
@@ -353,7 +353,7 @@
                 </tree>
             </field>
         </record>
-    
+
         <!--Filters search view-->
 
         <record id="ir_filters_view_search" model="ir.ui.view">
@@ -628,7 +628,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="ir_action_window" model="ir.actions.act_window">
             <field name="name">Window Actions</field>
             <field name="type">ir.actions.act_window</field>
@@ -681,7 +681,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="act_wizard_search_view" model="ir.ui.view">
             <field name="name">ir.actions.wizard.search</field>
             <field name="model">ir.actions.wizard</field>
@@ -694,7 +694,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="ir_action_wizard" model="ir.actions.act_window">
             <field name="name">Wizards</field>
             <field name="type">ir.actions.act_window</field>
@@ -831,7 +831,7 @@
                 </search>
             </field>
         </record>
-                    
+
         <record id="action_res_roles" model="ir.actions.act_window">
             <field name="name">Roles Structure</field>
             <field name="type">ir.actions.act_window</field>
@@ -1297,7 +1297,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_model_data_form">
             <field name="name">ir.model.data.form</field>
             <field name="model">ir.model.data</field>
@@ -1510,7 +1510,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="edit_menu_access_search" model="ir.ui.view">
             <field name="name">ir.ui.menu.search</field>
             <field name="model">ir.ui.menu</field>
@@ -1522,7 +1522,7 @@
 	            </search>
 	        </field>
 	    </record>
-                        
+
         <record id="grant_menu_access" model="ir.actions.act_window">
             <field name="name">Manage Menus</field>
             <field name="res_model">ir.ui.menu</field>
@@ -1676,7 +1676,7 @@
                 </search>
             </field>
         </record>
-                    
+
         <record id="ir_access_act" model="ir.actions.act_window">
             <field name="name">Access Controls List</field>
             <field name="res_model">ir.model.access</field>
@@ -1868,7 +1868,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_server_action_search" model="ir.ui.view">
             <field name="name">ir.actions.server.search</field>
             <field name="model">ir.actions.server</field>
@@ -1973,13 +1973,5 @@
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
-        <wizard id="wizard_configuration" model="ir.module.module" name="module.configuration" string="Start Configuration"/>
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
-                parent="next_id_11" groups="base.group_extended" sequence="20"/>
-
-        <menuitem
-            action="wizard_configuration" name="Start Configuration"
-            id="menu_configurator_module" parent="next_id_11"
-            type="wizard"/>
     </data>
 </openerp>
