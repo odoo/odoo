@@ -186,7 +186,7 @@ class stock_location(osv.osv):
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
-        'chained_journal_id': fields.many2one('stock.journal', 'Chained Journal'),
+        'chained_journal_id': fields.many2one('stock.journal', 'Chaining Journal',help="Inventory Journal in which the chained move will be written, if the Chaining Type is not Transparent (no journal is used if left empty)"),
         'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
         'chained_location_type': fields.selection([('none', 'None'), ('customer', 'Customer'), ('fixed', 'Fixed Location')],
             'Chained Location Type', required=True,
@@ -195,18 +195,18 @@ class stock_location(osv.osv):
                 "If the field is set to 'fixed', the destination location is given by the field Location if link is fixed."),
         'chained_auto_packing': fields.selection(
             [('auto', 'Automatic Move'), ('manual', 'Manual Operation'), ('transparent', 'Automatic No Step Added')],
-            'Automatic Move',
+            'Chaining Type',
             required=True,
             help="This is used only if you select a chained location type.\n" \
                 "The 'Automatic Move' value will create a stock move after the current one that will be "\
                 "validated automatically. With 'Manual Operation', the stock move has to be validated "\
                 "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
             ),
-        'chained_picking_type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', help="Shipping type specify of the chained move, goods coming in or going out."),
-        'chained_company_id': fields.many2one('res.company', 'Chained Company', help='Set here the belonging company of the chained move'),
-        'chained_delay': fields.integer('Chained lead time (days)'),
+        'chained_picking_type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', help="Shipping Type of the Picking List that will contain the chained move (leave empty to automatically detect the type based on the source and destination locations)."),
+        'chained_company_id': fields.many2one('res.company', 'Chained Company', help='The company the Picking List containing the chained move will belong to (leave empty to use the default company determination rules'),
+        'chained_delay': fields.integer('Chaining Lead Time',help="Delay between original move and chained move in days"),
         'address_id': fields.many2one('res.partner.address', 'Location Address'),
-        'icon': fields.selection(tools.icons, 'Icon', size=64),
+        'icon': fields.selection(tools.icons, 'Icon', size=64,help="Icon show in  hierarchical tree view"),
 
         'comment': fields.text('Additional Information'),
         'posx': fields.integer('Corridor (X)'),
