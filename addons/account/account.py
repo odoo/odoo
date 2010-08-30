@@ -1059,13 +1059,13 @@ class account_move(osv.osv):
             else:
                 if cond[1] in ['=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of']:
                     continue
-            
+
             cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]) ,(amount,))
             res_ids = set(id[0] for id in cr.fetchall())
             ids = ids and (ids & res_ids) or res_ids
         if ids:
             return [('id','in',tuple(ids))]
-        else:    
+        else:
             return [('id', '=', '0')]
 
     _columns = {
@@ -1467,13 +1467,15 @@ class account_tax_code(osv.osv):
                         AND ((invoice.state = \'paid\') \
                             OR (invoice.id IS NULL)) \
                             GROUP BY line.tax_code_id',
-                                (parent_ids,)+where_params)
+                                (parent_ids,) + where_params)
         else:
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
-                    FROM account_move_line AS line \
+                    FROM account_move_line AS line, \
+                    account_move AS move \
                     WHERE line.tax_code_id IN %s '+where+' \
+                    AND move.id = line.move_id \
                     GROUP BY line.tax_code_id',
-                       (parent_ids,)+where_params)
+                       (parent_ids,) + where_params)
         res=dict(cr.fetchall())
         for record in self.browse(cr, uid, ids, context):
             def _rec_get(record):
@@ -1484,7 +1486,12 @@ class account_tax_code(osv.osv):
             res[record.id] = round(_rec_get(record), self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
         return res
 
-    def _sum_year(self, cr, uid, ids, name, args, context):
+    def _sum_year(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
+        move_state = ('posted', )
+        if 'state' in context and context['state'] == 'all':
+            move_state = ('draft', 'posted', )
         if 'fiscalyear_id' in context and context['fiscalyear_id']:
             fiscalyear_id = context['fiscalyear_id']
         else:
@@ -1494,12 +1501,17 @@ class account_tax_code(osv.osv):
         if fiscalyear_id:
             pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
             if pids:
-                where = ' and period_id IN %s'
-                where_params = (tuple(pids),)
+                where = ' AND line.period_id IN %s AND move.state IN %s '
+                where_params = (tuple(pids), move_state)
         return self._sum(cr, uid, ids, name, args, context,
                 where=where, where_params=where_params)
 
     def _sum_period(self, cr, uid, ids, name, args, context):
+        if context is None:
+            context = {}
+        move_state = ('posted', )
+        if 'state' in context and context['state'] == 'all':
+            move_state = ('draft', 'posted', )
         if 'period_id' in context and context['period_id']:
             period_id = context['period_id']
         else:
@@ -1508,7 +1520,7 @@ class account_tax_code(osv.osv):
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
         return self._sum(cr, uid, ids, name, args, context,
-                where=' and line.period_id=%s', where_params=(period_id,))
+                where=' AND line.period_id=%s AND move.state IN %s', where_params=(period_id, move_state))
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
