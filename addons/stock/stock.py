@@ -553,12 +553,12 @@ class stock_picking(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
             ], 'State', readonly=True, select=True,
-            help=' * The \'Draft\' state is used when a user not confirmed yet and will not be scheduled until confirmed picking. \
-            \n* The \'Confirmed \' state is still waiting for the availability of products. \
-            \n* The \'Available\' state is  products reserved, simply waiting for confirmation.\
-            \n* The \'Waiting\'  state is used waiting for another move to proceed before it becomes automatically available. (e.g. in Make-To-Order flows).\
-            \n* The \'Done\' has been processed, cant be modified or cancelled anymore. \
-            \n* The \'Cancelled\' has been cancelled, cant be confirmed anymore. \
+            help=' * The \'Draft\' Not confirmed yet and will not be scheduled until confirmed picking. \
+            \n* The \'Confirmed \' Still waiting for the availability of products. \
+            \n* The \'Available\' Products reserved, simply waiting for confirmation.\
+            \n* The \'Waiting\'  Waiting for another move to proceed before it becomes automatically available. (e.g. in Make-To-Order flows).\
+            \n* The \'Done\' Has been processed, can not be modified or cancelled anymore. \
+            \n* The \'Cancelled\' Has been cancelled, can not be confirmed anymore. \
             '),
             
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
