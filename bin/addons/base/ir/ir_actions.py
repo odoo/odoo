@@ -756,6 +756,21 @@ class ir_actions_todo(osv.osv):
         'restart': lambda *a: 'always',
     }
     _order="sequence,id"
+
+    def action_launch(self, cr, uid, ids, context=None):
+        """ Launch Action of Wizard"""
+        if context is None:
+            context = {}
+        wizard_id = ids and ids[0] or False
+        wizard = self.browse(cr, uid, wizard_id, context=context)
+        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, ['name', 'view_type', 'view_mode', 'res_model', 'context', 'views', 'type'], context=context)
+        res.update({'target':'new', 'nodestroy': True})
+        return res
+
+    def action_open(self, cr, uid, ids, context=None):
+        """ Sets configuration wizard in TODO state"""
+        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
+
 ir_actions_todo()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

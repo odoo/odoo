@@ -28,6 +28,7 @@
                     <separator colspan="4" string="Property"/>
                     <field name="name" select="1"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <separator colspan="4" string="Field Information"/>
                     <field colspan="4" name="fields_id" select="1"/>
                     <field colspan="4" name="type"/>
                     <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('integer', 'integer_big', 'boolean'))]}">
@@ -48,6 +49,7 @@
                     <group colspan="4" attrs="{'invisible' : [('type', '!=', 'binary')]}">
                         <field colspan="4" name="value_binary" />
                     </group>
+                    <separator colspan="4" string="Resource"/>
                     <field colspan="4" name="res_id" groups="base.group_extended"/>
                 </form>
             </field>
