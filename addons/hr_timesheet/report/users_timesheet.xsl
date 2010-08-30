@@ -59,7 +59,7 @@
 	</xsl:template>
 
 	<xsl:template name="story">
-		<para style="title" t="1">Timesheet</para>
+		<para style="title" t="1">Employees Timesheet</para>
 		<spacer length="1cm" />
 		<blockTable>
 			<xsl:attribute name="style">month</xsl:attribute>
