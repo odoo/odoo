@@ -118,6 +118,16 @@
                                <xsl:value-of select="."/>
                                </font></para>
                        </xsl:when>
+                       <xsl:when test="@tree='undefined'">
+                            <para>
+                                <xsl:attribute name="leftIndent">
+                                    <xsl:value-of select="@space"/>
+                                </xsl:attribute>
+                                <font fontName="Helvetica-Bold" fontSize="9" color="gray">
+                                    <xsl:value-of select="."/>
+                                </font>
+                            </para>
+                       </xsl:when>
 
 						<xsl:otherwise>
 							<para>
