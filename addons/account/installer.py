@@ -84,7 +84,7 @@ class account_installer(osv.osv_memory):
     }
 
     def on_change_tax(self, cr, uid, id, tax):
-        return{'value':{'purchase_tax':tax}}
+        return {'value':{'purchase_tax':tax}}
 
     def on_change_start_date(self, cr, uid, id, start_date):
         if start_date:
