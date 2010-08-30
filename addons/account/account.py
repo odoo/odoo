@@ -1167,7 +1167,7 @@ class account_move(osv.osv):
                 parent_right = ref_chart_account.parent_right
                 result = True
                 for line in lines[1:]:
-                   if not (line.account_id.parent_left > parent_left and line.account_id.parent_left < parent_right):
+                   if not (line.account_id.parent_left >= parent_left and line.account_id.parent_left <= parent_right):
                          raise osv.except_osv(_('Error !'), _('You cannot validate a move unless accounts in its entry lines are in same Chart Of Accounts !'))
         return self.post(cursor, user, ids, context=context)
 
