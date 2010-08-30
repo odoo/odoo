@@ -18,15 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
 
 class account_chart(osv.osv_memory):
     """
-    For Chart of Accounrs
+    For Chart of Accounts
     """
     _name = "account.chart"
-    _description = "chart"
+    _description = "Account chart"
     _columns = {
        'fiscalyear': fields.many2one('account.fiscalyear', \
                                     'Fiscal year',  \
@@ -37,11 +38,9 @@ class account_chart(osv.osv_memory):
 
     def _get_fiscalyear(self, cr, uid, context=None):
         """Return default Fiscalyear value"""
-        fiscalyear_obj = self.pool.get('account.fiscalyear')
-        fiscalyear = fiscalyear_obj.find(cr, uid)
-        return fiscalyear
+        return self.pool.get('account.fiscalyear').find(cr, uid)
 
-    def account_chart_open_window(self, cr, uid, ids, context={}):
+    def account_chart_open_window(self, cr, uid, ids, context=None):
         """
         Opens chart of Accounts
         @param cr: the current row, from the database cursor,
@@ -51,6 +50,8 @@ class account_chart(osv.osv_memory):
         """
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
+        if context is None:
+            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
         id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
@@ -65,6 +66,7 @@ class account_chart(osv.osv_memory):
         'fiscalyear': _get_fiscalyear,
         'target_move': 'all'
     }
+
 account_chart()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

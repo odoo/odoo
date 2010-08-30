@@ -6,19 +6,16 @@
             <field name="model">account.voucher</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open','proforma','posted','recheck','audit')" string="Voucher Entries">
+                <tree colors="blue:state in ('draft');gray:state in ('cancel')" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
-                    <field name="account_id"/>
+                    <field name="period_id" invisible="context.get('visible', False)"/>
                     <field name="amount" sum="Total Amount"/>
-                    <field name="period_id"/>
                     <field name="state"/>
-                    <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
-                    <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
-                    <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
+                    <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
                 </tree>
             </field>
         </record>
@@ -38,7 +35,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                            <field name="payment_ids" colspan="4" nolabel="1" height="180">
+                            <field name="line_ids" colspan="4" nolabel="1" height="180">
                                 <tree string="Voucher Lines" editable="top">
                                     <field name="name" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="account_id"/>
@@ -82,8 +79,7 @@
                     <group col="10" colspan="4">
                         <field name="state"/>
                         <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
-                        <button name="recheck_voucher" string="Approve" states="recheck" icon="terp-check"/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma,recheck"  icon="gtk-cancel"/>
+                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
@@ -131,6 +127,7 @@
                 </search>
             </field>
         </record>
+
         <record id="view_voucher_filter_new" model="ir.ui.view">
             <field name="name">account.voucher.select</field>
             <field name="model">account.voucher</field>
@@ -139,28 +136,27 @@
                 <search string="Search Vouchers">
                     <group col='8' colspan='4'>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-check" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
                         <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
-                        <field name="number" select='1'/>
-                        <field name="account_id" select="1"/>
-                        <field name="partner_id" select='1'/>
                         <field name="date" select='1'/>
-                    </group>
-                    <newline/>
-                    <group col='8' colspan='4'>
+                        <field name="number" select='1'/>
+                        <field name="partner_id" select='1'/>
                         <field name="journal_id" widget="selection" select="1"/>
                         <field name="period_id" select="1"/>
                     </group>
+<!--                    <newline/>-->
+<!--                    <group col='8' colspan='4'>-->
+<!--                        <field name="journal_id" widget="selection" select="1"/>-->
+<!--                        <field name="period_id" select="1"/>-->
+<!--                    </group>-->
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type', 'set_visible':True}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
                         <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                     <newline/>
@@ -196,18 +192,6 @@
             <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
         <menuitem action="action_voucher_list" id="menu_encode_entries_by_voucher" parent="account.menu_finance_entries" sequence="6"/>
-
-        <record model="ir.ui.view" id="view_account_journal_form_inherit">
-            <field name="name">account.journal.form.inherit</field>
-            <field name="model">account.journal</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="account.view_account_journal_form"/>
-            <field name="arch" type="xml">
-                <field name="allow_date" position="after">
-                    <field name="max_amount" select="1"/>
-                </field>
-            </field>
-        </record>
 
         <act_window
             domain="[('journal_id','=',active_id)]"

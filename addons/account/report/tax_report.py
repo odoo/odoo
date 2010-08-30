@@ -217,6 +217,6 @@ class tax_report(rml_parse.rml_parse):
 
 
 report_sxw.report_sxw('report.account.vat.declaration', 'account.tax.code',
-	'addons/account/report/tax_report.rml', parser=tax_report, header=True)
+	'addons/account/report/tax_report.rml', parser=tax_report, header="internal")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

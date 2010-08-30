@@ -344,7 +344,7 @@ class crm_lead(crm_case, osv.osv):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
-        if msg.get('priority'):
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')
 
         maps = {

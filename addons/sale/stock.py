@@ -35,7 +35,7 @@ stock_move()
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _columns = {
-        'sale_id': fields.many2one('sale.order', 'Sale Order', ondelete='set null', select=True, readonly=True),
+        'sale_id': fields.many2one('sale.order', 'Sale Order', ondelete='set null', select=True),
     }
     _defaults = {
         'sale_id': False
