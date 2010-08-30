@@ -75,7 +75,6 @@ module named account_voucher.
         'wizard/account_journal_select_view.xml',
         'wizard/account_change_currency_view.xml',
         'wizard/account_validate_move_view.xml',
-        'wizard/account_pay_invoice_view.xml',
         'wizard/account_unreconcile_view.xml',
         'wizard/account_report_general_ledger_view.xml',
         'wizard/account_invoice_state_view.xml',
