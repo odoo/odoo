@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by Accounts">
                     <field name="sheet_id" select="1"/>
-                    <field name="name" select="1"/>
+                    <field name="name" select="1" groups="base.group_extended"/>
                     <field name="total" sum="Total"/>
                     <field name="invoice_rate"/>
                 </form>
@@ -53,43 +53,13 @@
             <field name="arch" type="xml">
                 <tree string="Timesheet by Accounts">
                     <field name="sheet_id"/>
-                    <field name="name"/>
+                    <field name="name" groups="base.group_extended"/>
                     <field name="total" sum="Total"/>
                     <field name="invoice_rate"/>
                 </tree>
             </field>
         </record>
-<!--
-        <record id="hr_timesheet_day_form" model="ir.ui.view">
-            <field name="name">hr.timesheet.day.form</field>
-            <field name="model">hr_timesheet_sheet.sheet.day</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Timesheet by Days">
-                    <field name="sheet_id" select="1"/>
-                    <field name="name" select="1"/>
-                    <field name="total_timesheet"/>
-                    <field name="total_attendance" groups="hr_attendance.group_hr_attendance"/>
-                    <field name="total_difference" groups="hr_attendance.group_hr_attendance"/>
-                </form>
-            </field>
-        </record>
 
-        <record id="hr_timesheet_day_tree" model="ir.ui.view">
-            <field name="name">hr.timesheet.day.tree</field>
-            <field name="model">hr_timesheet_sheet.sheet.day</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Timesheet by Days">
-                    <field name="sheet_id"/>
-                    <field name="name"/>
-                    <field name="total_timesheet" sum="Total Timesheet"/>
-                    <field name="total_attendance" sum="Total Attendance" groups="hr_attendance.group_hr_attendance"/>
-                    <field name="total_difference" sum="Total Difference" groups="hr_attendance.group_hr_attendance"/>
-                </tree>
-            </field>
-        </record>
--->
         <record id="hr_timesheet_sheet_form" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
@@ -227,15 +197,14 @@
 
         <!--Time Tracking menu in project Management-->
         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
-          <menuitem
+        <menuitem
              id="base.menu_project_management_time_tracking"
              name="Time Tracking"
              parent="base.menu_main_pm" sequence="5"/>
-         <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
+        <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
               sequence="5"/>
-        <!--<menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>-->
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
-            groups="base.group_hr_manager" sequence="1"/>
+             sequence="1"/>
 
         <!--
             Company inheritancy
@@ -322,8 +291,6 @@
         </record>
 
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_day" name="Timesheet by Account" res_model="hr_timesheet_sheet.sheet.account" src_model="hr_timesheet_sheet.sheet"/>
-<!--         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_account" name="Timesheet by Day" res_model="hr_timesheet_sheet.sheet.day" src_model="hr_timesheet_sheet.sheet"/>  -->
-
 
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet" name="Timesheet Lines" res_model="hr.analytic.timesheet" src_model="hr_timesheet_sheet.sheet"/>
 

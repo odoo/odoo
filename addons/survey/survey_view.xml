@@ -2,15 +2,15 @@
 <openerp>
     <data>
 
-            <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28" groups="base.group_system,base.group_survey_manager,base.group_survey_user"/>
+            <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28" groups="base.group_system,base.group_tool_manager,base.group_tool_user"/>
             <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools"
-                        groups="base.group_survey_manager,base.group_survey_user,base.group_system" sequence="2"/>
+                        groups="base.group_tool_manager,base.group_tool_user,base.group_system" sequence="2"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
-                 groups="base.group_survey_manager,base.group_survey_user,base.group_system"
+                 groups="base.group_tool_manager,base.group_tool_user,base.group_system"
                  parent="menu_surveys" />
-            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_survey_manager,base.group_survey_user,base.group_system"/>
+            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
             <menuitem name="Reporting" parent="base.menu_tools"
-                id="base.menu_lunch_reporting" groups="base.group_survey_manager" sequence="6"/>
+                id="base.menu_lunch_reporting" sequence="6"/>
             <menuitem name="Surveys" id="menu_reporting" parent="base.menu_lunch_reporting" sequence="2"/>
         <!--
             Survey
@@ -291,7 +291,7 @@
 
         <menuitem name="Surveys" id="menu_survey_form"
             action="action_survey_form1" parent="menu_define_survey"
-            groups="base.group_survey_manager,base.group_survey_user,base.group_system"/>
+            groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
 
         <!--
             Survey Pages
@@ -491,7 +491,7 @@
 
         <menuitem name="Pages" id="menu_survey_page_form1"
             action="action_survey_page_form" parent='menu_define_survey'
-            groups="base.group_survey_manager,base.group_survey_user,base.group_system"/>
+            groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
@@ -691,10 +691,6 @@
             <field name="view_id" ref="survey_question_tree"></field>
              <field name="search_view_id" ref="survey_question_search"/>
         </record>
-
-<!--        <menuitem name="Survey Question" id="menu_survey_question_form1"-->
-<!--            action="action_survey_question_form" parent='menu_define_survey'-->
-<!--            groups="group_survey_manager"/>-->
 
         <record model="ir.ui.view" id="survey_question_wizard_test">
             <field name="name">survey_question_wizard_test</field>
@@ -1057,7 +1053,6 @@
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
                     <field name="user_id" on_change="on_change_user(user_id)"/>
-<!--                    <field name="email"/>-->
                      <field name="response" readonly="1"/>
                     <group colspan="4" col="6">
                      <field name="state"/>
@@ -1116,7 +1111,7 @@
 
         <menuitem name="Survey Requests" id="menu_survey_type_form1"
             action="action_survey_request_tree" parent='menu_answer_surveys'
-            groups="base.group_survey_manager,base.group_survey_user,base.group_system"/>
+            groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
 
         <!--
             Survey Type
@@ -1154,10 +1149,6 @@
             <field name="view_id" ref="survey_type_tree"></field>
         </record>
 
-        <!--menuitem name="Survey Types" id="menu_survey_type_form1"
-            action="action_survey_type_form" parent='menu_survey_config'
-            groups="group_survey_manager"/-->
-
         <act_window domain="[('survey_id', '=', active_id)]"
             id="act_survey_pages"
             name="Survey Pages"
@@ -1183,15 +1174,9 @@
             res_model="survey.answer"
             src_model="survey.question"/>
 
-        <!--act_window domain="[('survey_id', '=', active_id)]"
-            id="act_survey_response"
-            name="Survey Answer"
-            res_model="survey.response"
-            src_model="survey"/-->
-
         <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
             action="action_view_survey_name" parent="menu_answer_surveys"
-            groups="base.group_survey_manager,base.group_survey_user,base.group_system" icon="STOCK_INDEX"/>
+            groups="base.group_tool_manager,base.group_tool_user,base.group_system" icon="STOCK_INDEX"/>
 
     </data>
 </openerp>

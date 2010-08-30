@@ -30,10 +30,10 @@ class account_common_account_report(osv.osv_memory):
                                             ('bal_solde','With balance is not equal to 0'),
                                             ],'Display accounts', required=True),
 
-                }
+    }
     _defaults = {
         'display_account': 'bal_all',
-                }
+    }
 
     def pre_print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:

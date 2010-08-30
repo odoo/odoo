@@ -108,7 +108,7 @@ class hr_holidays_status(osv.osv):
     _defaults = {
         'color_name': 'red',
         'active': True,
-        }
+    }
 
 hr_holidays_status()
 
@@ -147,7 +147,7 @@ class hr_holidays(osv.osv):
         'category_id': fields.many2one('hr.employee.category', "Category", help='Category Of employee'),
         'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Holiday Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category'),
         'manager_id2': fields.many2one('hr.employee', 'Second Validator', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
-            }
+    }
 
     _defaults = {
         'employee_id': _employee_get ,
@@ -156,7 +156,7 @@ class hr_holidays(osv.osv):
         'allocation_type': 'employee',
         'user_id': lambda obj, cr, uid, context: uid,
         'holiday_type': 'employee'
-        }
+    }
 
     def _create_resource_leave(self, cr, uid, vals, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
@@ -327,7 +327,7 @@ class hr_holidays(osv.osv):
                      }
                 self._create_resource_leave(cr, uid, vals)
             elif record.holiday_type == 'category' and record.type == 'remove':
-                emp_ids = obj_emp.search(cr, uid, [('category_id', '=', record.category_id.id)])
+                emp_ids = obj_emp.search(cr, uid, [('category_ids', '=', record.category_id.id)])
                 for emp in obj_emp.browse(cr, uid, emp_ids):
                     vals = {
                        'name': record.name,
@@ -430,20 +430,6 @@ class hr_holidays(osv.osv):
                 self.holidays_confirm(cr, uid, holiday_ids)
                 self.holidays_validate(cr, uid, holiday_ids)
 
-            #if record.holiday_status_id.categ_id and record.date_from and record.date_to and record.employee_id:
-#            if record.holiday_status_id.categ_id and record.date_from and record.date_to:
-#                vals={}
-#                vals['name']=record.name
-#                vals['categ_id']=record.holiday_status_id.categ_id.id
-#                epoch_c = time.mktime(time.strptime(record.date_to,'%Y-%m-%d %H:%M:%S'))
-#                epoch_d = time.mktime(time.strptime(record.date_from,'%Y-%m-%d %H:%M:%S'))
-#                diff_day = (epoch_c - epoch_d)/(3600*24)
-#                vals['duration'] = (diff_day) * 8
-#                vals['note'] = record.notes
-##                vals['user_id'] = record.user_id.id
-#                vals['date'] = record.date_from
-#                if record.holiday_type=='employee':
-#                    vals['user_id'] = record.user_id.id
             if record.holiday_status_id.categ_id and record.date_from and record.date_to and record.employee_id:
                 diff_day = self._get_number_of_days(record.date_from, record.date_to)
                 vals = {
@@ -466,7 +452,7 @@ class resource_calendar_leaves(osv.osv):
     _description = "Leave Detail"
     _columns = {
         'holiday_id': fields.many2one("hr.holidays", "Holiday"),
-        }
+    }
 
 resource_calendar_leaves()
 

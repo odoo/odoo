@@ -110,7 +110,6 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     (order_id,invoice_id) values (%s,%s)', (order.id, res))
         return {}
 
-
 sale_order_line_make_invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -378,7 +378,6 @@ property or property parameter."),
      }
     _defaults = {
         'state': 'needs-action',
-        'user_id': lambda self, cr, uid, ctx: uid,
         'role': 'req-participant',
         'rsvp':  True,
         'cutype': 'individual',
@@ -419,7 +418,11 @@ property or property parameter."),
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
-        if event_obj.user_id or event_obj.organizer_id:
+        if event_obj.organizer:
+            event_org = event.add('organizer')
+            event_org.params['CN'] = [event_obj.organizer]
+            event_org.value = 'MAILTO:' + (event_obj.organizer)
+        elif event_obj.user_id or event_obj.organizer_id:
             event_org = event.add('organizer')
             organizer = event_obj.organizer_id
             if not organizer:
@@ -959,6 +962,19 @@ class calendar_event(osv.osv):
 
         return {'value': value}
 
+    def unlink_events(self, cr, uid, ids, context=None):
+        """
+        This function deletes event which are linked with the event with recurrent_uid
+                (Removes the events which refers to the same UID value)
+        """
+        if not context:
+            context = {}
+        for event_id in ids:
+            cr.execute('select id from %s  where recurrent_uid=%s' % (self._table, event_id))
+            r_ids = map(lambda x: x[0], cr.fetchall())
+            self.unlink(cr, uid, r_ids, context=context)
+        return True
+
     def _set_rrulestring(self, cr, uid, id, name, value, arg, context=None):
         """
         Sets values of fields that defines event recurrence from the value of rrule string
@@ -1071,6 +1087,10 @@ class calendar_event(osv.osv):
                 else:
                     result[event] = self.compute_rule_string(cr, uid, {'freq': datas.get('rrule_type').upper(), 'interval': 1}, context=context)
 
+        for id, myrule in result.items():
+            #Remove the events generated from recurrent event
+            if not myrule:
+                self.unlink_events(cr, uid, [id], context=context)
         return result
 
     _columns = {
@@ -1108,9 +1128,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
         'recurrent_uid': fields.integer('Recurrent ID'),
         'recurrent_id': fields.datetime('Recurrent ID date'),
-        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, \
-                         string='Timezone', store=True),
+        'vtimezone': fields.selection(_tz_get, size=64, string='Timezone'),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
+        'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
         'freq': fields.selection([('None', 'No Repeat'), \
                                 ('secondly', 'Secondly'), \
@@ -1147,6 +1167,14 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'active': fields.boolean('Active', help="If the active field is set to \
 true, it will allow you to hide the event alarm information without removing it.")
     }
+    def default_organizer(self, cr, uid, context=None):
+        user_pool = self.pool.get('res.users')
+        user = user_pool.browse(cr, uid, uid, context=context)
+        res = user.name
+        if user.user_email:
+            res += " <%s>" %(user.user_email)
+        return res
+
     _defaults = {
             'state': 'tentative',
             'class': 'public',
@@ -1156,7 +1184,7 @@ true, it will allow you to hide the event alarm information without removing it.
             'interval': 1,
             'active': 1,
             'user_id': lambda self, cr, uid, ctx: uid,
-            'organizer_id': lambda self, cr, uid, ctx: uid,
+            'organizer': default_organizer,
     }
 
     def open_event(self, cr, uid, ids, context=None):
@@ -1199,33 +1227,6 @@ true, it will allow you to hide the event alarm information without removing it.
 
         return value
 
-    def modify_this(self, cr, uid, event_id, defaults, real_date, context=None, *args):
-        """Modifies only one event record out of virtual recurrent events
-        and creates new event as a specific instance of a Recurring Event",
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param event_id: Id of Recurring Event
-        @param real_date: Date of event recurrence that is being modified
-        @param context: A standard dictionary for contextual values
-        @param *args: Get Tupple Value
-        """
-
-        event_id = base_calendar_id2real_id(event_id)
-        datas = self.read(cr, uid, event_id, context=context)
-        defaults.update({
-                        'recurrent_uid': base_calendar_id2real_id(datas['id']),
-                        'recurrent_id': defaults.get('date') or real_date,
-                        'rrule_type': 'none',
-                        'rrule': ''
-                        })
-        exdate = datas['exdate'] and datas['exdate'].split(',') or []
-        if real_date and defaults.get('date'):
-            exdate.append(real_date)
-        self.write(cr, uid, event_id, {'exdate': ','.join(exdate)}, context=context)
-        new_id = self.copy(cr, uid, event_id, default=defaults, context=context)
-        return new_id
-
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
         Modifies the recurring event
@@ -1235,7 +1236,6 @@ true, it will allow you to hide the event alarm information without removing it.
         @param context: A standard dictionary for contextual values
         @return: True
         """
-
         for event_id in event_ids:
             event_id = base_calendar_id2real_id(event_id)
 
@@ -1270,9 +1270,10 @@ true, it will allow you to hide the event alarm information without removing it.
         else:
             ids = select
         result = []
+        recur_dict = []
         if ids and (base_start_date or base_until_date):
-            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, \
-                            m.exdate, m.exrule from " + self._table + \
+            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, m.duration, \
+                            m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
                             " m where m.id in ("\
                             + ','.join(map(lambda x: str(x), ids))+")")
 
@@ -1284,8 +1285,6 @@ true, it will allow you to hide the event alarm information without removing it.
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 #                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
-#                if start_date and start_date <= event_date:
-#                        start_date = event_date
                 start_date = event_date
                 if not data['rrule']:
                     if start_date and (event_date < start_date):
@@ -1293,8 +1292,16 @@ true, it will allow you to hide the event alarm information without removing it.
                     if until_date and (event_date > until_date):
                         continue
                     idval = real_id2base_calendar_id(data['id'], data['date'])
-                    result.append(idval)
-                    count += 1
+                    if not data['recurrent_id']:
+                        result.append(idval)
+                        count += 1
+                    else:
+                        ex_id = real_id2base_calendar_id(data['recurrent_uid'], data['recurrent_id'])
+                        ls = base_calendar_id2real_id(ex_id, with_date=data and data.get('duration', 0) or 0)
+                        if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
+                            if ls[1] == data['recurrent_id']:
+                                result.append(idval)
+                        recur_dict.append(ex_id)
                 else:
                     exdate = data['exdate'] and data['exdate'].split(',') or []
                     rrule_str = data['rrule']
@@ -1329,7 +1336,7 @@ true, it will allow you to hide the event alarm information without removing it.
                         result.append(idval)
                         count += 1
         if result:
-            ids = result
+            ids = list(set(result)-set(recur_dict))
         if isinstance(select, (str, int, long)):
             return ids and ids[0] or False
         return ids
@@ -1390,7 +1397,6 @@ true, it will allow you to hide the event alarm information without removing it.
 
         return rrule_string
 
-
     def search(self, cr, uid, args, offset=0, limit=100, order=None,
             context=None, count=False):
         """
@@ -1424,8 +1430,6 @@ true, it will allow you to hide the event alarm information without removing it.
 
         return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
 
-
-
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         """
         Overrides orm write method.
@@ -1444,22 +1448,28 @@ true, it will allow you to hide the event alarm information without removing it.
         else:
             select = ids
         new_ids = []
+        res = False
         for event_id in select:
+            real_event_id = base_calendar_id2real_id(event_id)
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
                 if data.get('rrule'):
-                    real_date = data.get('date')
+                    data.update({
+                        'recurrent_uid': real_event_id,
+                        'recurrent_id': data.get('date'),
+                        'rrule_type': 'none',
+                        'rrule': ''
+                        })
                     data.update(vals)
-                    new_id = self.modify_this(cr, uid, event_id, data, \
-                                                real_date, context)
+                    new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
-            event_id = base_calendar_id2real_id(event_id)
-            if not event_id in new_ids:
-                new_ids.append(event_id)
+            if not real_event_id in new_ids:
+                new_ids.append(real_event_id)
 
-        res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
+        if new_ids:
+            res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
                 or (vals.has_key('date') or vals.has_key('duration') or vals.has_key('date_deadline')):
             # change alarm details
@@ -1552,23 +1562,25 @@ true, it will allow you to hide the event alarm information without removing it.
         @return: True
         """
         res = False
-        for event_id in ids:
+        for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
+            event_id = event_datas['id']
             if isinstance(event_id, (int, long)):
-                res = super(calendar_event, self).unlink(cr, uid, event_id)
+                res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
-                continue
-            event_id, date_new = event_id.split('-')
-            event_id = [int(event_id)]
-            for record in self.read(cr, uid, event_id, ['date', 'rrule', 'exdate']):
-                if record['rrule']:
+                self.unlink_events(cr, uid, [event_id], context=context)
+            else:
+                str_event, date_new = event_id.split('-')
+                event_id = int(str_event)
+                if event_datas['rrule']:
                     # Remove one of the recurrent event
-                    date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
+                    date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
-                    exdate = (record['exdate'] and (record['exdate'] + ',') or '') + ''.join((re.compile('\d')).findall(date_new)) + 'Z'
-                    res = self.write(cr, uid, event_id, {'exdate': exdate})
+                    exdate = (event_datas['exdate'] and (event_datas['exdate'] + ',')  or '') + date_new
+                    res = self.write(cr, uid, [event_id], {'exdate': exdate})
                 else:
-                    res = super(calendar_event, self).unlink(cr, uid, event_id)
-                    self.pool.get('res.alarm').do_alarm_unlink(cr, uid, event_id, self._name)
+                    res = super(calendar_event, self).unlink(cr, uid, [event_id], context=context)
+                    self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
+                    self.unlink_events(cr, uid, [event_id], context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -1827,7 +1839,6 @@ class res_users(osv.osv):
                     ('state', '=', 'accepted'), ('user_id', 'in', ids)
                     ])
 
-       # result = cr.dictfetchall()
         for attendee_data in attendee_obj.read(cr, uid, attendee_ids, ['user_id']):
             user_id = attendee_data['user_id']
             status = 'busy'

@@ -23,8 +23,7 @@
 import time
 import base64
 
-from osv import fields
-from osv import osv
+from osv import fields, osv
 from tools.translate import _
 
 def str2date(date_str):
@@ -53,7 +52,7 @@ class account_coda_import(osv.osv_memory):
             'coda': fields.binary('Coda File', required=True),
             'note':fields.text('Log'),
     }
-    
+
     def coda_parsing(self, cr, uid, ids, context=None):
 
         journal_obj=self.pool.get('account.journal')
@@ -65,10 +64,10 @@ class account_coda_import(osv.osv_memory):
         statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
         account_coda_obj = self.pool.get('account.coda')
         mod_obj = self.pool.get('ir.model.data')
-        
+
         if not context:
             context = {}
-            
+
         data = self.read(cr, uid, ids)[0]
 
         codafile = data['coda']
@@ -86,7 +85,7 @@ class account_coda_import(osv.osv_memory):
         str_not=''
         str_not1=''
 
-        bank_statements=[]
+        bank_statements = []
         bank_statement = {}
         recordlist = base64.decodestring(codafile).split('\n')
         recordlist.pop()
@@ -196,8 +195,8 @@ class account_coda_import(osv.osv_memory):
             try:
                 bk_st_id =bank_statement_obj.create(cr, uid, {
                     'journal_id': statement['journal_id'],
-                    'date':time.strftime('%Y-%m-%d', time.strptime(statement['date'], "%y/%m/%d")),
-                    'period_id':statement['period_id'] or period,
+                    'date': time.strftime('%Y-%m-%d', time.strptime(statement['date'], "%y/%m/%d")),
+                    'period_id': statement['period_id'] or period,
                     'balance_start': statement["balance_start"],
                     'balance_end_real': statement["balance_end_real"],
                     'state': 'draft',
@@ -209,17 +208,18 @@ class account_coda_import(osv.osv_memory):
                     reconcile_id = False
                     if line['toreconcile']:
                         name = line['name'][:3] + '/' + line['name'][3:7] + '/' + line['name'][7:]
-                        rec_id = pool.get('account.move.line').search(cr, uid, [('name','=', name),('reconcile_id','=',False),('account_id.reconcile','=',True)])
+                        rec_id = pool.get('account.move.line').search(cr, uid, [('name', '=', name), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
                         if rec_id:
                             reconcile_id = statement_reconcile_obj.create(cr, uid, {
                                 'line_ids': [(6, 0, rec_id)]
                                 }, context=context)
-                        if mv.partner_id:
-                            line['partner_id'] = mv.partner_id.id
-                            if line['amount'] < 0 :
-                                line['account_id'] = mv.partner_id.property_account_payable.id
-                            else :
-                                line['account_id'] = mv.partner_id.property_account_receivable.id
+                            mv = pool.get('account.move.line').browse(cr, uid, rec_id[0], context=context)
+                            if mv.partner_id:
+                                line['partner_id'] = mv.partner_id.id
+                                if line['amount'] < 0 :
+                                    line['account_id'] = mv.partner_id.property_account_payable.id
+                                else :
+                                    line['account_id'] = mv.partner_id.property_account_receivable.id
                     str_not1 = ''
                     if line.has_key('contry_name') and line.has_key('cntry_number'):
                         str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"], line["cntry_number"], line["free_comm"]+line['extra_note'], line["val_date"][0], line["entry_date"][0])
@@ -242,13 +242,13 @@ class account_coda_import(osv.osv_memory):
 
             except osv.except_osv, e:
                 cr.rollback()
-                nb_err+=1
+                nb_err += 1
                 err_log += '\n Application Error : ' + str(e)
                 raise # REMOVEME
 
             except Exception, e:
                 cr.rollback()
-                nb_err+=1
+                nb_err += 1
                 err_log += '\n System Error : '+str(e)
                 raise # REMOVEME
             except :
@@ -260,34 +260,34 @@ class account_coda_import(osv.osv_memory):
         err_log += '\nNumber of error :'+ str(nb_err) +'\n'
 
         account_coda_obj.create(cr, uid, {
-            'name':codafile,
+            'name': codafile,
             'statement_ids': [(6, 0, bkst_list,)],
-            'note':str_log1+str_not+std_log+err_log,
-            'journal_id':data['journal_id'],
-            'date':time.strftime("%Y-%m-%d"),
-            'user_id':uid,
-            })
+            'note': str_log1+str_not+std_log+err_log,
+            'journal_id': data['journal_id'],
+            'date': time.strftime("%Y-%m-%d"),
+            'user_id': uid,
+        })
         test=''
-        test=str_log1 + std_log + err_log
-        self.write(cr, uid, ids, {'note':test}, context=context)
-        extraction= { 'statment_ids':bkst_list}
-        context.update({ 'statment_ids':bkst_list})
+        test = str_log1 + std_log + err_log
+        self.write(cr, uid, ids, {'note': test}, context=context)
+        extraction = { 'statment_ids': bkst_list}
+        context.update({ 'statment_ids': bkst_list})
         model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'account_coda_note_view')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        
+
         return {
-                'name': _('Result'),
-                'res_id': ids[0],
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'account.coda.import',
-                'view_id': False,
-                'target':'new',
-                'views': [(resource_id, 'form')],
-                'context': context,
-                'type': 'ir.actions.act_window',
+            'name': _('Result'),
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.coda.import',
+            'view_id': False,
+            'target': 'new',
+            'views': [(resource_id, 'form')],
+            'context': context,
+            'type': 'ir.actions.act_window',
         }
-        
+
     def action_open_window(self, cr, uid, data, context=None):
         if not context:
             cotext = {}
@@ -300,7 +300,7 @@ class account_coda_import(osv.osv_memory):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
-        
+
 account_coda_import()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

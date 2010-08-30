@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="vat_report_view" model="ir.ui.view">
+            <field name="name">VAT Declaration Report</field>
+            <field name="model">vat.declaration.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Print Tax Statements">
+	               <field name="tax_code_id" widget="selection"/>
+	               <field name="period_id" widget="selection"/>
+	               <separator colspan="4"/>
+                    <group colspan="4" col="6">
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="print_vat_declaration_report" string="Print Tax Statements" type="object" icon="gtk-ok"/>
+                    </group>
+	             </form>
+            </field>
+        </record>
+
+        <record id="action_vat_report" model="ir.actions.act_window">
+            <field name="name">VAT Declaration Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">vat.declaration.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="vat_report_view"/>
+            <field name="target">new</field>
+        </record>
+
+       <menuitem id="legal_lu" parent="account.menu_finance_legal_statement" name="Luxembourg"/>
+       <menuitem name="VAT Declaration" id="legal_lu_vat" parent="legal_lu" action="action_vat_report"/>
+
+    </data>
+</openerp>

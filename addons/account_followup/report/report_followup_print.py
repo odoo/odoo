@@ -92,7 +92,7 @@ class report_rappel(report_sxw.rml_parse):
         return text
 
 report_sxw.report_sxw('report.account_followup.followup.print',
-        'res.partner', 'addons/account_followup/report/rappel.rml',
+        'res.partner', 'addons/account_followup/report/report_followp_print.rml',
         parser=report_rappel)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

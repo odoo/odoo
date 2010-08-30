@@ -18,15 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
-from osv import osv
-from osv import fields
 
-import netsvc
 import time
+
+from osv import fields, osv
 from tools.translate import _
-class product_margin(osv.osv_memory):
 
+class product_margin(osv.osv_memory):
     _name = 'product.margin'
     _description = 'Product Margin'
     _columns = {
@@ -39,9 +37,9 @@ class product_margin(osv.osv_memory):
         ],'Invoice State', select=True, required=True),
     }
     _defaults = {
-        'from_date':  lambda *a:time.strftime('%Y-01-01'),
-        'to_date':lambda *a:time.strftime('%Y-12-31'),
-        'invoice_state': lambda *a:"open_paid",
+        'from_date': time.strftime('%Y-01-01'),
+        'to_date': time.strftime('%Y-12-31'),
+        'invoice_state': "open_paid",
     }
     def action_open_window(self, cr, uid, ids, context=None):
         """
@@ -77,3 +75,5 @@ class product_margin(osv.osv_memory):
         }
 
 product_margin()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

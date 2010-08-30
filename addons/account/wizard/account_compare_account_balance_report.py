@@ -32,7 +32,7 @@ class account_compare_account_balance_report(osv.osv_memory):
     _description = 'Account Balance Report'
     _columns = {
         'fiscalyear': fields.many2many('account.fiscalyear', 'account_fiscalyear_rel','account_id','fiscalyear_id','Fiscal year', help='Keep empty for all open fiscal year'),
-        'select_account': fields.many2one('account.account','Select Reference Account(for  % comparision)',help='Keep empty for comparision to its parent'),
+        'select_account': fields.many2one('account.account','Select Reference Account(for  % comparision)',help='Keep empty for comparison to its parent'),
         'account_choice': fields.selection([('all','All accounts'),
                                             ('bal_zero','With balance is not equal to 0'),
                                             ('moves','With movements')],'Show Accounts'),
@@ -46,13 +46,13 @@ class account_compare_account_balance_report(osv.osv_memory):
         'periods': fields.many2many('account.period', 'period_account_balance_rel',
                                     'report_id', 'period_id', 'Periods',
                                     help='Keep empty for all open fiscal year'),
-        }
+    }
 
     _defaults={
         'compare_pattern': 'none',
         'account_choice': 'moves',
         'period_manner': 'actual',
-        }
+    }
 
     def check(self, cr, uid, ids, context=None):
         data={}

@@ -2,27 +2,19 @@
 <openerp>
     <data>
 
-        <!--menuitem id="base.menu_crm_config_sales" name="Sales"
-            parent="base.menu_base_config" sequence="1"/-->
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_system,base.group_extended,base.group_sale_manager,base.group_sale_salesman"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_system,base.group_sale_manager,base.group_sale_salesman"/>
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
-            parent="base.menu_base_config" sequence="2" groups="base.group_extended,base.group_system"/>
+            parent="base.menu_base_config" sequence="1" groups="base.group_extended,base.group_system"/>
 
-        <!--menuitem id="menu_crm_config_meeting" name="Meeting"
-            parent="base.menu_base_config" sequence="4"/-->
+        <menuitem id="base.menu_sale_config_sales" name="Sales"
+            parent="base.menu_base_config" sequence="0" groups="base.group_system,base.group_extended"/>
 
         <menuitem id="menu_crm_config_phonecall" name="Phone Call"
             parent="base.menu_base_config" sequence="5" groups="base.group_extended,base.group_system"/>
 
         <menuitem id="base.next_id_64" name="Reporting"
             parent="base.menu_base_partner" sequence="11" />
-
-        <!--menuitem action="crm_custom_create_menu_action"
-            id="crm_case_create_custom_menu"
-            parent="base.menu_crm_config_sales"
-            groups="base.group_extended"
-            name="Create Menu for Custom Cases" /-->
 
 
         <!-- Case Sections Form View -->
@@ -91,7 +83,7 @@
 
         <menuitem action="crm_case_section_act"
             id="menu_crm_case_section_act" sequence="4"
-            parent="base.menu_crm_config_lead" />
+            parent="base.menu_sale_config_sales" />
 
 
         <!-- CRM Stage Tree View -->
@@ -330,7 +322,7 @@
 
        <menuitem action="crm_segmentation_tree-act"
             id="menu_crm_segmentation-act"
-            groups="base.group_extended,base.group_system" sequence="2"
+            groups="base.group_extended" sequence="2"
             parent="base.menu_base_action_rule" />
 
         <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">

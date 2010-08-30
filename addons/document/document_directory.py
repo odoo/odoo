@@ -19,11 +19,8 @@
 #
 ##############################################################################
 
-import base64
 
 from osv import osv, fields
-from osv.orm import except_orm
-import urlparse
 
 import os
 import nodes
@@ -141,30 +138,6 @@ class document_directory(osv.osv):
         _parent(dir_id, path)
         return path
 
-    def ol_get_resource_path(self, cr, uid, dir_id, res_model, res_id):
-        # this method will be used in process module
-        # to be need test and Improvement if resource dir has parent resource (link resource)
-        path=[]
-        def _parent(dir_id,path):
-            parent=self.browse(cr, uid, dir_id)
-            if parent.parent_id and not parent.ressource_parent_type_id:
-                _parent(parent.parent_id.id,path)
-                path.append(parent.name)
-            else:
-                path.append(parent.name)
-                return path
-
-        directory=self.browse(cr,uid,dir_id)
-        model_ids=self.pool.get('ir.model').search(cr, uid, [('model','=',res_model)])
-        if directory:
-            _parent(dir_id,path)
-            path.append(self.pool.get(directory.ressource_type_id.model).browse(cr, uid, res_id).name)
-            #user=self.pool.get('res.users').browse(cr,uid,uid)
-            #return "ftp://%s:%s@localhost:%s/%s/%s"%(user.login,user.password,config.get('ftp_server_port',8021),cr.dbname,'/'.join(path))
-            # No way we will return the password!
-            return "ftp://user:pass@host:port/test/this"
-        return False
-
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
@@ -178,9 +151,9 @@ class document_directory(osv.osv):
     _constraints = [
         (_check_recursion, 'Error! You can not create recursive Directories.', ['parent_id'])
     ]
+    
     def __init__(self, *args, **kwargs):
-        res = super(document_directory, self).__init__(*args, **kwargs)
-        #self._cache = {}
+        super(document_directory, self).__init__(*args, **kwargs)
 
     def onchange_content_id(self, cr, uid, ids, ressource_type_id):
         return {}
@@ -223,31 +196,8 @@ class document_directory(osv.osv):
         """ try to locate the node in uri,
             Return a tuple (node_dir, remaining_path)
         """
-        return (nodes.node_database(context=ncontext), uri)         
+        return (nodes.node_database(context=ncontext), uri)
         
-    def old_code():
-        if not uri:
-            return node_database(cr, uid, context=context)
-        turi = tuple(uri)
-        node = node_class(cr, uid, '/', False, context=context, type='database')
-        for path in uri[:]:
-            if path:
-                node = node.child(path)
-                if not node:
-                    return False
-        oo = node.object and (node.object._name, node.object.id) or False
-        oo2 = node.object2 and (node.object2._name, node.object2.id) or False
-        return node
-
-    def ol_get_childs(self, cr, uid, uri, context={}):
-        node = self.get_object(cr, uid, uri, context)
-        if uri:
-            children = node.children()
-        else:
-            children= [node]
-        result = map(lambda node: node.path_get(), children)
-        return result
-
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default ={}

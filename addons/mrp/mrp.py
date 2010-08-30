@@ -53,7 +53,7 @@ class mrp_workcenter(osv.osv):
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
-       'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
+        'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
@@ -686,29 +686,42 @@ class mrp_production(osv.osv):
         final_product_todo = []
 
         produced_qty = 0
+        if production_mode == 'consume_produce':
+            produced_qty = production_qty
+            
         for produced_product in production.move_created_ids2:
             if (produced_product.scraped) or (produced_product.product_id.id<>production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
 
-
         if production_mode in ['consume','consume_produce']:
             consumed_products = {}
+            check = {}
+            scraped = map(lambda x:x.scraped,production.move_lines2).count(True)
+            
             for consumed_product in production.move_lines2:
+                consumed = consumed_product.product_qty
                 if consumed_product.scraped:
                     continue
                 if not consumed_products.get(consumed_product.product_id.id, False):
-                    consumed_products[consumed_product.product_id.id] = 0
-                consumed_products[consumed_product.product_id.id] -= consumed_product.product_qty
-                
+                    consumed_products[consumed_product.product_id.id] = consumed_product.product_qty
+                    check[consumed_product.product_id.id] = 0
+                for f in production.product_lines:
+                    if f.product_id.id == consumed_product.product_id.id:
+                        if (len(production.move_lines2) - scraped) > len(production.product_lines):
+                            check[consumed_product.product_id.id] += consumed_product.product_qty
+                            consumed = check[consumed_product.product_id.id]
+                        rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed 
+                        consumed_products[consumed_product.product_id.id] = rest_consumed
+            
             for raw_product in production.move_lines:
                 for f in production.product_lines:
-                    if f.product_id.id==raw_product.product_id.id:
+                    if f.product_id.id == raw_product.product_id.id:
                         consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
-                        rest_qty = production_qty * f.product_qty / production.product_qty - consumed_qty
-                         
-                        if rest_qty > 0:
-                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
+                        if consumed_qty == 0:
+                            consumed_qty = production_qty * f.product_qty / production.product_qty
+                        if consumed_qty > 0:
+                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, production.location_src_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product

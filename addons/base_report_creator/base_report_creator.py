@@ -34,7 +34,7 @@ class report_creator(osv.osv):
     # Should request only used fields
     #
     def export_data(self, cr, uid, ids, fields_to_export, context=None):
-        
+
         if context is None:
             context = {}
         data_l = self.read(cr, uid, ids, ['sql_query'], context)
@@ -52,7 +52,7 @@ class report_creator(osv.osv):
             final_datas += [datas]
             #End Loop
         return {'datas': final_datas}
-        
+
     def fields_get(self, cr, user, fields=None, context=None):
         """
         Get Fields.
@@ -63,7 +63,7 @@ class report_creator(osv.osv):
         """
         if context is None:
             context = {}
-            
+
         data = context and context.get('report_id', False) or False
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).fields_get(cr, user, fields, context)
@@ -82,7 +82,7 @@ class report_creator(osv.osv):
                     i += 1
                 else:
                     fields['column_count'] = {'readonly': True, 'type': 'integer', 'string': 'Count', 'size': 64, 'name': 'column_count'}
-              
+
             return fields
 
     #
@@ -97,7 +97,7 @@ class report_creator(osv.osv):
         """
         if context is None:
             context = {}
-          
+
         data = context and context.get('report_id', False) or False
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
@@ -113,7 +113,7 @@ class report_creator(osv.osv):
                 i += 1
             else:
                 fields['column_count'] = {'readonly': True, 'type': 'integer', 'string': 'Count', 'size': 64, 'name': 'column_count'}
-            
+
         arch = '<?xml version="1.0"?>'
         if view_type == 'graph':
             orientation_eval = {'horz':'horizontal','vert' :'vertical'}
@@ -128,7 +128,7 @@ class report_creator(osv.osv):
                             i += 1
                         else:
                             arch += '<field name="%s" select="1"/>' % ('column_count',)
-                    
+
         elif view_type == 'calendar':
             required_types = ['date_start', 'date_delay', 'color']
             set_dict = {'view_type':view_type, 'string':report.name}
@@ -141,7 +141,7 @@ class report_creator(osv.osv):
                         i += 1
                     else:
                         field_cal = 'column_count'
-                    set_dict[f.calendar_mode] = field_cal   
+                    set_dict[f.calendar_mode] = field_cal
                     del required_types[required_types.index(f.calendar_mode)]
 
                 else:
@@ -149,8 +149,8 @@ class report_creator(osv.osv):
                         temp_list.append('''<field name = "%(name)s" select = "1"/>''' % {'name': 'field' + str(i)})
                         i += 1
                     else:
-                        temp_list.append('''<field name="%(name)s" select="1"/>''' % {'name':'column_count'})    
-                    
+                        temp_list.append('''<field name="%(name)s" select="1"/>''' % {'name':'column_count'})
+
             arch += '''<% (view_type)s string = "%(string)s" date_start = "%(date_start)s" ''' % set_dict
             if set_dict.get('date_delay', False):
                 arch += ''' date_delay = "%(date_delay)s"  ''' % set_dict
@@ -217,7 +217,7 @@ class report_creator(osv.osv):
                             continue
                         related_name = self.pool.get(field_dict.get('relation')).name_get(cr, user, [r[k]], context)[0]
                         r[k] = related_name
-            
+
             return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -226,12 +226,12 @@ class report_creator(osv.osv):
         @param cr: the current row, from the database cursor,
         @param user: the current user’s ID for security checks,
         @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
-        @return: List of id 
+        @return: List of id
         """
         if context is None:
             context = {}
         context_id = context.get('report_id', False)
-        
+
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).search(cr, user, args, offset, limit, order, context, count)
         if context_id:
@@ -243,7 +243,7 @@ class report_creator(osv.osv):
                     fields['field'+str(i)] = (f.field_id.model, f.field_id.name)
                     i += 1
                 else:
-                    fields['column_count'] = (False, 'Count')   
+                    fields['column_count'] = (False, 'Count')
             newargs = []
             newargs2 = []
             for a in args:
@@ -274,7 +274,7 @@ class report_creator(osv.osv):
         filter_list = []
         for model in models:
             model_dict[model.model] = self.pool.get(model.model)._table
-        
+
         model_list = model_dict.keys()
         reference_model_dict = {}
         for model in model_dict:
@@ -284,7 +284,7 @@ class report_creator(osv.osv):
             model_pool = self.pool.get(model)
             fields_get = model_pool.fields_get(cr, uid)
             model_columns = {}
-            
+
             def _get_inherit_fields(obj):
                 pool_model = self.pool.get(obj)
                 #Adding the columns of the model itself
@@ -293,11 +293,11 @@ class report_creator(osv.osv):
                 for record in pool_model._inherits.keys():
                     _get_inherit_fields(record)
 
-            _get_inherit_fields(model)         
-            
-            fields_filter = dict(filter(lambda x:x[1].get('relation', False) 
-                                        and x[1].get('relation') in rest_list 
-                                        and x[1].get('type') == 'many2one' 
+            _get_inherit_fields(model)
+
+            fields_filter = dict(filter(lambda x:x[1].get('relation', False)
+                                        and x[1].get('relation') in rest_list
+                                        and x[1].get('type') == 'many2one'
                                         and not (isinstance(model_columns[x[0]], fields.function) or isinstance(model_columns[x[0]], fields.related)), fields_get.items()))
             if fields_filter:
                 model in model_list and model_list.remove(model)
@@ -316,7 +316,7 @@ class report_creator(osv.osv):
                 if k in self.pool.get(model)._columns:
                     str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
                     where_list.append(str_where)
-                    
+
         if reference_model_dict:
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
         if model_list and not len(model_dict.keys()) == 1:
@@ -348,20 +348,19 @@ class report_creator(osv.osv):
             if ret_str.endswith('or'):
                 ret_str = ret_str[0:len(ret_str)-2]
             ret_str = ret_str.strip()
-       
+
         return ret_str % {'uid': uid}
 
     def _id_get(self, cr, uid, id, context):
         """
         Get Model id
         """
-#       return 'min(sale_order_line.id)'
         return self.model_set_id and 'min('+self.model_set_id+'.id)'
 
     def _sql_query_get(self, cr, uid, ids, prop, unknow_none, context, where_plus=[], limit=None, offset=None):
         """
         Get sql query which return on sql_query field.
-        @return: Dictionary of sql query. 
+        @return: Dictionary of sql query.
         """
         result = {}
         for obj in self.browse(cr, uid, ids):
@@ -379,7 +378,7 @@ class report_creator(osv.osv):
                     groupby.append(t+'.'+f.field_id.name)
                 else:
                     fields.append('\t'+f.group_method+'('+t+'.'+f.field_id.name+')'+' as field'+str(i))
-                    
+
                 i += 1
             models = self._path_get(cr, uid, obj.model_ids, obj.filter_ids)
             check = self._id_get(cr, uid, ids[0], context)
@@ -458,7 +457,7 @@ class report_creator(osv.osv):
         rep = self.browse(cr, uid, ids, context=context)
         if not rep:
             return False
-        
+
         rep = rep[0]
         view_mode = rep.view_type1
         if rep.view_type2:
@@ -500,15 +499,15 @@ class report_creator(osv.osv):
 
     def _aggregation_error(self, cr, uid, ids):
         """
-        constraints function which specify that 
+        constraints function which specify that
                 aggregate function to the non calculated field..
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Report creator's id.       
+        @param ids: List of Report creator's id.
         @return: True if model colume type is in integer or float.
                      or false model colume type is not in integer or float.
         """
-        
+
         aggregate_columns = ('integer', 'float')
         apply_functions = ('sum', 'min', 'max', 'avg', 'count')
         this_objs = self.browse(cr, uid, ids)
@@ -517,13 +516,12 @@ class report_creator(osv.osv):
                 # Allowing to use count(*)
                 if not fld.field_id.model and fld.group_method == 'count':
                     continue
-                model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]                
+                model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
                 if model_column._type not in aggregate_columns and fld.group_method in apply_functions:
                     return False
         return True
 
     def _calander_view_error(self, cr, uid, ids):
-#       required_types = ['date_start','date_delay','color']
         required_types = []
         this_objs = self.browse(cr, uid, ids)
         for obj in this_objs:

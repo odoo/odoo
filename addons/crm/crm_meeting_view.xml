@@ -32,6 +32,7 @@
                         groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
                     <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+                    <newline/>
                     <field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="duration" widget="float_time"
@@ -107,7 +108,7 @@
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Assignment"/>
                             <field name="user_id" />
-                            <field name="organizer_id" groups="base.group_extended"/>
+                            <field name="organizer" groups="base.group_extended"/>
                             <field name="section_id" widget="selection"
                                 groups="base.group_extended"/>
                         </group><group col="2" colspan="2">

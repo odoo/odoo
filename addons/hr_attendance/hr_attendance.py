@@ -34,6 +34,7 @@ class hr_action_reason(osv.osv):
     _defaults = {
         'action_type': 'sign_in',
     }
+
 hr_action_reason()
 
 def _employee_get(obj, cr, uid, context=None):
@@ -59,7 +60,7 @@ class hr_attendance(osv.osv):
     _columns = {
         'name': fields.datetime('Date', required=True, select=1),
         'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
-        'action_desc': fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
+        'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
         'day': fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
     }
@@ -71,13 +72,13 @@ class hr_attendance(osv.osv):
     def _altern_si_so(self, cr, uid, ids):
         for id in ids:
             sql = '''
-            select action, name
-            from hr_attendance as att
-            where employee_id = (select employee_id from hr_attendance where id=%s)
-            and action in ('sign_in','sign_out')
-            and name <= (select name from hr_attendance where id=%s)
-            order by name desc
-            limit 2 '''
+            SELECT action, name
+            FROM hr_attendance AS att
+            WHERE employee_id = (SELECT employee_id FROM hr_attendance WHERE id=%s)
+            AND action IN ('sign_in','sign_out')
+            AND name <= (SELECT name FROM hr_attendance WHERE id=%s)
+            ORDER BY name DESC
+            LIMIT 2 '''
             cr.execute(sql,(id,id))
             atts = cr.fetchall()
             if not ((len(atts)==1 and atts[0][0] == 'sign_in') or (atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1])):
@@ -86,6 +87,7 @@ class hr_attendance(osv.osv):
 
     _constraints = [(_altern_si_so, 'Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
     _order = 'name desc'
+
 hr_attendance()
 
 class hr_employee(osv.osv):
@@ -115,12 +117,12 @@ class hr_employee(osv.osv):
 
     _columns = {
        'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
-     }
+    }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):
         if context is None:
             context = {}
-        cr.execute('select max(name) from hr_attendance where employee_id=%s', (emp_id,))
+        cr.execute('SELECT MAX(name) FROM hr_attendance WHERE employee_id=%s', (emp_id,))
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 
@@ -144,14 +146,12 @@ class hr_employee(osv.osv):
                 raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
 
             res = {'action': type, 'employee_id': emp['id']}
-
             if dt:
                 res['name'] = dt
             id = obj_attendance.create(cr, uid, res, context=context)
 
         if type != 'action':
             return id
-
         return True
 
 hr_employee()

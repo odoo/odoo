@@ -34,7 +34,7 @@ class account_common_report(osv.osv_memory):
     _columns = {
         'chart_account_id': fields.many2one('account.account', 'Chart of account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal year', help='Keep empty for all open fiscal year'),
-        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by:", required=True),
+        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
         'period_from': fields.many2one('account.period', 'Start period'),
         'period_to': fields.many2one('account.period', 'End period'),
         'journal_ids': fields.many2many('account.journal', 'account_common_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
@@ -71,7 +71,7 @@ class account_common_report(osv.osv_memory):
                                 (SELECT max(date_start) from account_period WHERE p.fiscalyear_id = f.id)\
                             OR p.date_stop IN \
                                 (SELECT min(date_stop) from account_period WHERE p.fiscalyear_id = f.id)) \
-                            AND f.id = ' + str(fiscalyear_id) + ' ')
+                            AND f.id = ' + str(fiscalyear_id) + ' order by p.date_start')
             periods =  [i[0] for i in cr.fetchall()]
             if periods:
                 start_period = periods[0]

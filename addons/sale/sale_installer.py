@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 
 class sale_installer(osv.osv_memory):
@@ -41,4 +42,7 @@ class sale_installer(osv.osv_memory):
         'sale_order_dates': fields.boolean('Sale Order Dates',
             help="Add commitment, requested and effective dates on the sale order."),
         }
+    
 sale_installer()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

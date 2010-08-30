@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -30,28 +30,28 @@ class all_closed_cashbox_of_the_day(osv.osv_memory):
     _description = 'All closed cashbox of the day'
 
     _columns = {
-                
+
     }
-    
+
     def print_report(self, cr, uid, ids, context=None):
 
-        """ 
-             To get the date and print the report 
-                       
+        """
+             To get the date and print the report
+
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
+             @param context: A standard dictionary
              @return : retrun report
-        """        
+        """
         datas = {'ids' : context.get('active_ids',[])}
-        res =  {}        
+        res =  {}
         datas['form'] = res
-        
-        return { 
-                'type' : 'ir.actions.report.xml',
-                'report_name':'all.closed.cashbox.of.the.day',
-                'datas' : datas,               
+
+        return {
+            'type' : 'ir.actions.report.xml',
+            'report_name':'all.closed.cashbox.of.the.day',
+            'datas' : datas,
        }
 
 all_closed_cashbox_of_the_day()

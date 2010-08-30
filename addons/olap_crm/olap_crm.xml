@@ -7,7 +7,7 @@ CUSTOM CUBE FOR CRM
 -->
 
   <record model="olap.fact.database" id="fact_databases_BI">
-    <field name="name">Open ERP CRM Database</field>
+    <field name="name">OpenERP CRM Database</field>
     <field name="db_name">crm</field>
     <field name="db_login">postgres</field>
     <field name="db_password">postgres</field>
@@ -68,10 +68,10 @@ cube table and cube table line
         <field name="fact_database_id" ref="fact_databases_BI"/>
         <field name="active">True</field>
     </record>
-   
+
 <!-- Olap Database Columns -->
 
-    
+
     <record model="olap.database.columns" id="crm_case_id">
         <field name="name">id</field>
         <field name="column_db_name">id</field>
@@ -95,7 +95,7 @@ cube table and cube table line
         <field name="active">True</field>
         <field name="related_to" ref="table_res_partner"/>
     </record>
- 
+
     <record model="olap.database.columns" id="crm_case_planned_cost">
         <field name="name">id</field>
         <field name="column_db_name">id</field>
@@ -144,7 +144,7 @@ cube table and cube table line
         <field name="type">int4</field>
         <field name="table_id" ref="table_crm_case"/>
         <field name="related_to" ref="table_res_partner"/>
-    </record>    
+    </record>
 
     <record model="olap.database.columns" id="crm_case_canal_id">
         <field name="name">canal_id</field>
@@ -265,7 +265,7 @@ cube table and cube table line
 DIMENSION Sections
 
 -->
-    
+
     <record model="olap.dimension" id="dimension_crm_section">
         <field name="name">Sections</field>
         <field name="cube_id" ref="cube_crm"/>
@@ -378,7 +378,7 @@ Category
     </record>
 
 
-    
+
     <record model="olap.dimension" id="dimension_crm_channel">
         <field name="name">Channels</field>
         <field name="cube_id" ref="cube_crm"/>
@@ -428,7 +428,7 @@ Measures
         <field name="value_sql">avg(crm_case.planned_cost)</field>
         <field name="formatstring">cr_postfix_comma</field>
     </record>
-    
+
      <record model="olap.measure" id="measure_planned_revenue">
         <field name="name">Planned Revenue</field>
         <field name="cube_id" ref="cube_crm"/>
@@ -438,7 +438,7 @@ Measures
         <field name="agregator">sum</field>
         <field name="formatstring">cr_postfix_comma</field>
     </record>
- 
+
     <record model="olap.measure" id="measure_planned_revenue">
         <field name="name">Planned Revenue</field>
         <field name="cube_id" ref="cube_crm"/>
@@ -447,7 +447,7 @@ Measures
         <field name="table_name">crm_case</field>
         <field name="agregator">sum</field>
     </record>
-    
+
     <record model="olap.measure" id="measure_probability">
         <field name="name">Probability</field>
         <field name="cube_id" ref="cube_crm"/>
@@ -456,7 +456,7 @@ Measures
         <field name="table_name">crm_case</field>
         <field name="agregator">sum</field>
     </record>
-d
+
 </data>
 </openerp>
 

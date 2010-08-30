@@ -26,6 +26,18 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherit = "hr.employee"
+
+    def _get_latest_contract(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        obj_contract = self.pool.get('hr.contract')
+        for emp in self.browse(cr, uid, ids, context=context):
+            contract_ids = obj_contract.search(cr, uid, [('employee_id','=',emp.id),], order='date_start', context=context)
+            if contract_ids:
+                res[emp.id] = contract_ids[-1:][0]
+            else:
+                res[emp.id] = False
+        return res
+
     _columns = {
         'manager': fields.boolean('Is a Manager'),
         'medic_exam': fields.date('Medical Examination Date'),
@@ -34,7 +46,9 @@ class hr_employee(osv.osv):
         'vehicle': fields.char('Company Vehicle', size=64),
         'vehicle_distance': fields.integer('Home-Work Distance', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
-        }
+        'contract_id':fields.function(_get_latest_contract, method=True, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+    }
+
 hr_employee()
 
 #Contract wage type period name
@@ -44,10 +58,10 @@ class hr_contract_wage_type_period(osv.osv):
     _columns = {
         'name': fields.char('Period Name', size=50, required=True, select=True),
         'factor_days': fields.float('Hours in the period', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
-        }
+    }
     _defaults = {
         'factor_days': 168.0
-        }
+    }
 hr_contract_wage_type_period()
 
 #Contract wage type (hourly, daily, monthly, ...)
@@ -59,11 +73,11 @@ class hr_contract_wage_type(osv.osv):
         'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
         'type': fields.selection([('gross','Gross'), ('net','Net')], 'Type', required=True),
         'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
-        }
+    }
     _defaults = {
         'type': 'gross',
         'factor_type': 1.8
-        }
+    }
 hr_contract_wage_type()
 
 
@@ -93,10 +107,10 @@ class hr_contract(osv.osv):
         'advantages_net': fields.float('Net Advantages Value', digits=(16,2)),
         'advantages_gross': fields.float('Gross Advantages Value', digits=(16,2)),
         'notes': fields.text('Notes'),
-        }
+    }
     _defaults = {
         'date_start': time.strftime("%Y-%m-%d"),
-        }
+    }
 
 hr_contract()
 

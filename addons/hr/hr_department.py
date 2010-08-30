@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class hr_department(osv.osv):
@@ -119,19 +119,18 @@ class res_users(osv.osv):
         result = {}
         obj_dept = self.pool.get('hr.department')
         for user_id in ids:
-            emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', user_id)])
+            emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', user_id)], context=context)
             cr.execute('SELECT emp.department_id FROM hr_employee AS emp \
                         JOIN resource_resource AS res ON res.id = emp.resource_id \
                         JOIN hr_department as dept ON dept.id = emp.department_id \
                         WHERE res.user_id = %s AND emp.department_id IS NOT NULL AND dept.manager_id IS NOT NULL', (user_id,))
             ids_dept = [x[0] for x in cr.fetchall()]
-#            ids_dept = obj_dept.search(cr, uid, [('member_ids', 'in', [user_id])], context=context)
             parent_ids = []
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['manager_id'], context=context)
                 parent_ids = map(lambda x: x['manager_id'][0], data_dept)
                 cr.execute('SELECT res.user_id FROM hr_employee AS emp JOIN resource_resource AS res ON res.id=emp.resource_id \
-                        WHERE emp.id IN %s', (tuple(parent_ids),))
+                        WHERE emp.id IN %s AND res.user_id IS NOT NULL', (tuple(parent_ids),))
                 parent_ids = [x[0] for x in cr.fetchall()]
             result[user_id] = parent_ids
         return result
@@ -162,7 +161,6 @@ class res_users(osv.osv):
                             (SELECT emp.id FROM hr_employee \
                                 JOIN resource_resource r ON r.id = emp.resource_id WHERE r.user_id=' + str(user_id) + ') ')
             mgnt_dept_ids = [x[0] for x in cr.fetchall()]
-#            mgnt_dept_ids = obj_dept.search(cr, uid, [('manager_id', '=', user_id)], context=context)
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)], context=context)
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'], context=context)

@@ -31,7 +31,7 @@ class procurement_compute_all(osv.osv_memory):
         'automatic': fields.boolean('Automatic orderpoint',help='Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.'),
     }
 
-    _defaults ={
+    _defaults = {
          'automatic': lambda *a: False,
     }
 

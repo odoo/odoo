@@ -37,8 +37,8 @@ class sale_shop(osv.osv):
         'payment_default_id': fields.many2one('account.payment.term', 'Default Payment Term', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
-        'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'project_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
 sale_shop()
@@ -290,7 +290,6 @@ class sale_order(osv.osv):
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
-#        'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist.id,
     }
     _order = 'name desc'
 
@@ -315,7 +314,6 @@ class sale_order(osv.osv):
             # Que faire si le client a une pricelist a lui ?
             if shop.pricelist_id.id:
                 v['pricelist_id'] = shop.pricelist_id.id
-            #v['payment_default_id']=shop.payment_default_id.id
         return {'value': v}
 
     def action_cancel_draft(self, cr, uid, ids, *args):
@@ -703,6 +701,7 @@ class sale_order(osv.osv):
             for proc_id in proc_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
@@ -772,6 +771,7 @@ sale_order()
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
+
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -1171,9 +1171,9 @@ class sale_config_picking_policy(osv.osv_memory):
            "in one or two operations by the worker.")
     }
     _defaults = {
-        'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'manual',
-        'step': lambda *a: 'one'
+        'picking_policy': 'direct',
+        'order_policy': 'manual',
+        'step': 'one'
     }
 
     def execute(self, cr, uid, ids, context=None):

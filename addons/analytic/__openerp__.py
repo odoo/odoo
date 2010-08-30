@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     "name" : "Analytic Account",
     "version": "1.1",
@@ -30,7 +29,8 @@
     "description": """Module for defining analytic accounting object.
     """,
     "init_xml" : [],
-    "update_xml": ["security/ir.model.access.csv",
+    "update_xml": ['security/analytic_security.xml',
+                   "security/ir.model.access.csv",
     ],
     'demo_xml': [
     ],

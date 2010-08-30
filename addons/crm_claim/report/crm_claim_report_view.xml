@@ -75,13 +75,9 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="8">
-                   		<!--  <filter string="This Year" name="This Year" icon="terp-hr"
-                   			domain="[('name','=',time.localtime()[0])]"/>-->
                    		<filter string="This Year" icon="terp-go-year"
                    			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
 
-                   		<!-- <filter string="This Month" name="This Year" icon="terp-hr"
-                   			domain="[('month','=',time.strftime('%%m'))]" />-->
                        <filter string="This Month" icon="terp-go-month" name="This Month"
                     	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
 
@@ -212,7 +208,7 @@
         </record>
 
        <menuitem name="Claims Analysis" id="menu_report_crm_claim_tree"
-           groups="base.group_extended,base.group_sale_manager"
+           groups="base.group_extended"
            action="action_report_crm_claim" parent="base.next_id_64" sequence="6"/>
 
 

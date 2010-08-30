@@ -28,6 +28,7 @@ class base_setup_installer(osv.osv_memory):
     _install_if = {
         ('sale','crm'): ['sale_crm'],
         ('sale','project'): ['project_mrp'],
+        ('sale',):['account_accountant']
         }
     _columns = {
         # Generic modules

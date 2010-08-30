@@ -80,14 +80,14 @@ class openerp_dav_handler(dav_interface):
 
     M_NS={ "DAV:" : dav_interface.M_NS['DAV:'],}
 
-    def __init__(self,  parent, verbose=False):        
+    def __init__(self,  parent, verbose=False):
         self.db_name_list=[]
         self.parent = parent
         self.baseuri = parent.baseuri
         self.verbose = verbose
 
     def get_propnames(self, uri):
-        props = self.PROPS   
+        props = self.PROPS
         self.parent.log_message('get propnames: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
@@ -98,7 +98,7 @@ class openerp_dav_handler(dav_interface):
         if node:
             props = props.copy()
             props.update(node.get_dav_props(cr))
-        cr.close()     
+        cr.close()
         return props
 
     def _try_function(self, funct, args, opname='run function', cr=None,
@@ -129,6 +129,7 @@ class openerp_dav_handler(dav_interface):
             raise default_exc(err.strerror)
         except Exception,e:
             import traceback
+            if cr: cr.close()
             self.parent.log_error("Cannot %s: %s", opname, str(e))
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc("Operation failed")
@@ -139,20 +140,20 @@ class openerp_dav_handler(dav_interface):
     def _get_dav_supportedlock(self, uri):
         raise DAV_NotFound
 
-    def match_prop(self, uri, match, ns, propname):        
+    def match_prop(self, uri, match, ns, propname):
         if self.M_NS.has_key(ns):
             return match == dav_interface.get_prop(self, uri, ns, propname)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
             raise DAV_NotFound
-        node = self.uri2object(cr, uid, pool, uri2)        
+        node = self.uri2object(cr, uid, pool, uri2)
         if not node:
             cr.close()
             raise DAV_NotFound
-        res = node.match_dav_eprop(cr, match, ns, propname)        
-        cr.close()          
-        return res  
+        res = node.match_dav_eprop(cr, match, ns, propname)
+        cr.close()
+        return res
 
     def prep_http_options(self, uri, opts):
         """see HttpOptions._prep_OPTIONS """
@@ -191,7 +192,7 @@ class openerp_dav_handler(dav_interface):
             uri        -- uri of the object to get the property of
             ns        -- namespace of the property
             pname        -- name of the property
-         """            
+         """
         if self.M_NS.has_key(ns):
             return dav_interface.get_prop(self, uri, ns, propname)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
@@ -203,8 +204,8 @@ class openerp_dav_handler(dav_interface):
             cr.close()
             raise DAV_NotFound
         res = node.get_dav_eprop(cr, ns, propname)
-        cr.close()        
-        return res    
+        cr.close()
+        return res
 
     def get_db(self, uri, rest_ret=False, allow_last=False):
         """Parse the uri and get the dbname and the rest.
@@ -271,17 +272,17 @@ class openerp_dav_handler(dav_interface):
         return self.db_name_list
 
     def get_childs(self, uri, filters=None):
-        """ return the child objects as self.baseuris for the given URI """        
+        """ return the child objects as self.baseuris for the given URI """
         self.parent.log_message('get childs: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri, allow_last=True)
-        
-        if not dbname:            
+
+        if not dbname:
             if cr: cr.close()
-            res = map(lambda x: self.urijoin(x), self.db_list())            
+            res = map(lambda x: self.urijoin(x), self.db_list())
             return res
         result = []
         node = self.uri2object(cr, uid, pool, uri2[:])
-        
+
         if not node:
             if cr: cr.close()
             raise DAV_NotFound2(uri2)
@@ -296,12 +297,12 @@ class openerp_dav_handler(dav_interface):
             if filters:
                 domain = node.get_domain(cr, filters)
             for d in node.children(cr, domain):
-                self.parent.log_message('child: %s' % d.path)                
+                self.parent.log_message('child: %s' % d.path)
                 if fp:
                     result.append( self.urijoin(dbname,fp,d.path) )
                 else:
                     result.append( self.urijoin(dbname,d.path) )
-        if cr: cr.close()        
+        if cr: cr.close()
         return result
 
     def uri2local(self, uri):
@@ -367,11 +368,11 @@ class openerp_dav_handler(dav_interface):
                 raise DAV_Error, 409
             return str(datas) # FIXME!
         finally:
-            if cr: cr.close()    
+            if cr: cr.close()
 
     @memoize(CACHE_SIZE)
     def _get_dav_resourcetype(self, uri):
-        """ return type of object """        
+        """ return type of object """
         self.parent.log_message('get RT: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         try:
@@ -394,7 +395,11 @@ class openerp_dav_handler(dav_interface):
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
-            return COLLECTION
+            # at root, dbname, just return the last component
+            # of the path.
+            if uri2 and len(uri2) < 2:
+                return uri2[-1]
+            return ''
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
             if cr: cr.close()
@@ -522,7 +527,6 @@ class openerp_dav_handler(dav_interface):
     def put(self, uri, data, content_type=None):
         """ put the object into the filesystem """
         self.parent.log_message('Putting %s (%d), %s'%( misc.ustr(uri), data and len(data) or 0, content_type))
-        parent='/'.join(uri.split('/')[:-1])
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
@@ -535,20 +539,44 @@ class openerp_dav_handler(dav_interface):
         objname = uri2[-1]
         ext = objname.find('.') >0 and objname.split('.')[1] or False
 
+        ret = None
         if not node:
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
             if not dir_node:
                 cr.close()
                 raise DAV_NotFound('Parent folder not found')
 
-            self._try_function(dir_node.create_child, (cr, objname, data),
+            newchild = self._try_function(dir_node.create_child, (cr, objname, data),
                     "create %s" % objname, cr=cr)
+            if not newchild:
+                cr.commit()
+                cr.close()
+                raise DAV_Error(400, "Failed to create resource")
+            
+            uparts=urlparse.urlparse(uri)
+            fileloc = '/'.join(newchild.full_path())
+            if isinstance(fileloc, unicode):
+                fileloc = fileloc.encode('utf-8')
+            # the uri we get is a mangled one, where the davpath has been removed
+            davpath = self.parent.get_davpath()
+            
+            surl = '%s://%s' % (uparts[0], uparts[1])
+            uloc = urllib.quote(fileloc)
+            hurl = False
+            if uri != ('/'+uloc) and uri != (surl + '/' + uloc):
+                hurl = '%s%s/%s/%s' %(surl, davpath, dbname, uloc)
+            etag = False
+            try:
+                etag = str(newchild.get_etag(cr))
+            except Exception, e:
+                self.parent.log_error("Cannot get etag for node: %s" % e)
+            ret = (hurl, etag)
         else:
             self._try_function(node.set_data, (cr, data), "save %s" % objname, cr=cr)
             
         cr.commit()
         cr.close()
-        return 201
+        return ret
 
     def rmcol(self,uri):
         """ delete a collection """

@@ -75,7 +75,7 @@ class hr_recruitment_degree(osv.osv):
     }
 hr_recruitment_degree()
 
-class hr_applicant(osv.osv, crm.crm_case):
+class hr_applicant(crm.crm_case, osv.osv):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
@@ -174,7 +174,6 @@ class hr_applicant(osv.osv, crm.crm_case):
         'active': lambda *a: 1,
         'stage_id': _get_stage,
         'user_id':  lambda self, cr, uid, context: uid,
-#        'user_id': crm.crm_case._get_default_user,
         'email_from': crm.crm_case. _get_default_email,
         'state': lambda *a: 'draft',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),

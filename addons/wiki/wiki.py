@@ -210,13 +210,13 @@ class History(osv.osv):
     _order = 'id DESC'
 
     _columns = {
-              'create_date': fields.datetime("Date", select=True),
-              'text_area': fields.text("Text area"),
-              'minor_edit': fields.boolean('This is a major edit ?', select=True),
-              'summary': fields.char('Summary', size=256, select=True),
-              'write_uid': fields.many2one('res.users', "Modify By", select=True),
-              'wiki_id': fields.many2one('wiki.wiki', 'Wiki Id', select=True)
-            }
+          'create_date': fields.datetime("Date", select=True),
+          'text_area': fields.text("Text area"),
+          'minor_edit': fields.boolean('This is a major edit ?', select=True),
+          'summary': fields.char('Summary', size=256, select=True),
+          'write_uid': fields.many2one('res.users', "Modify By", select=True),
+          'wiki_id': fields.many2one('wiki.wiki', 'Wiki Id', select=True)
+    }
 
     _defaults = {
         'write_uid': lambda obj, cr, uid, context: uid,

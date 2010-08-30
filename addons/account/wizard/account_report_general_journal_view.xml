@@ -8,11 +8,10 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
-               <field name="fiscalyear_id" position="after">
-               	<field name="amount_currency"/>
-               	<newline/>
-                 <!-- we don't change the view but have to define a view for this specific object otherelse openerp will try to build a fedault one without using the one from the parent object -->
-               </field>
+                <field name="fiscalyear_id" position="after">
+	                <field name="amount_currency"/>
+	                <newline/>
+                </field>
             </field>
         </record>
 

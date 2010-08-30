@@ -37,12 +37,12 @@ class account_aged_trial_balance(osv.osv_memory):
         'direction_selection': fields.selection([('past','Past'),
                                                  ('future','Future')],
                                                  'Analysis Direction', required=True),
-                }
+    }
     _defaults = {
         'period_length': 30,
         'date_from' : time.strftime('%Y-%m-%d'),
         'direction_selection': 'past',
-                }
+    }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')

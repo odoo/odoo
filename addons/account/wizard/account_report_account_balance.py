@@ -30,7 +30,7 @@ class account_balance_report(osv.osv_memory):
 
     _defaults = {
         'journal_ids': [],
-                }
+    }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')

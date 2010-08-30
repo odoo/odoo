@@ -20,9 +20,9 @@
 ##############################################################################
 
 import time
+
 import netsvc
 from osv import fields, osv
-
 from tools.misc import currency
 from tools.translate import _
 import decimal_precision as dp
@@ -52,13 +52,13 @@ class account_bank_statement(osv.osv):
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
         journal_id = False
-        
+
         if journal_type:
             ids = journal_pool.search(cr, uid, [('type', '=', journal_type)])
             if ids:
                 journal_id = ids[0]
-            
-        return journal_id 
+
+        return journal_id
 
     def _default_balance_start(self, cr, uid, context={}):
         cr.execute('select id from account_bank_statement where journal_id=%s order by date desc limit 1', (1,))
@@ -126,12 +126,12 @@ class account_bank_statement(osv.osv):
             currency_id = res[statement_id]
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
-        
+
     _order = "date desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, states={'confirm': [('readonly', True)]}),
+        'name': fields.char('Name', size=64, required=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself', states={'confirm': [('readonly', True)]}),
         'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'bank')]),
@@ -185,7 +185,7 @@ class account_bank_statement(osv.osv):
             context.update({
                 'period_id':pids[0]
             })
-        
+
         return {
             'value':res,
             'context':context,
@@ -194,16 +194,19 @@ class account_bank_statement(osv.osv):
     def button_dummy(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {}, context)
         return True
-        
-    def button_confirm_bank(self, cr, uid, ids, context={}):
+
+    def button_confirm_bank(self, cr, uid, ids, context=None):
         done = []
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
-        account_bank_statement_line_obj = \
-                self.pool.get('account.bank.statement.line')
+        account_analytic_line_obj = self.pool.get('account.analytic.line')
+        account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
+        obj_seq = self.pool.get('ir.sequence')
 
+        if context is None:
+            context = {}
         company_currency_id = res_users_obj.browse(cr, uid, uid,
                 context=context).company_id.currency_id.id
 
@@ -220,6 +223,11 @@ class account_bank_statement(osv.osv):
                 raise osv.except_osv(_('Configuration Error !'),
                         _('Please verify that an account is defined in the journal.'))
 
+            if not st.name == '/':
+                next_number = st.name
+            else:
+                next_number = obj_seq.get(cr, uid, 'account.bank.statement')
+
             for line in st.move_line_ids:
                 if line.state <> 'valid':
                     raise osv.except_osv(_('Error !'),
@@ -228,14 +236,18 @@ class account_bank_statement(osv.osv):
             # In line we get reconcile_id on bank.ste.rec.
             # in bank stat.rec we get line_new_ids on bank.stat.rec.line
             for move in st.line_ids:
-                context.update({'date':move.date})
+                if move.analytic_account_id:
+                    if not st.journal_id.analytic_journal_id:
+                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (st.journal_id.name,))
+
+                context.update({'date': move.date})
                 move_id = account_move_obj.create(cr, uid, {
                     'journal_id': st.journal_id.id,
                     'period_id': st.period_id.id,
                     'date': move.date,
                 }, context=context)
                 account_bank_statement_line_obj.write(cr, uid, [move.id], {
-                    'move_ids': [(4,move_id, False)]
+                    'move_ids': [(4, move_id, False)]
                 })
                 if not move.amount:
                     continue
@@ -266,6 +278,7 @@ class account_bank_statement(osv.osv):
                     'journal_id': st.journal_id.id,
                     'period_id': st.period_id.id,
                     'currency_id': st.currency.id,
+                    'analytic_account_id': move.analytic_account_id and move.analytic_account_id.id or False
                 }
 
                 amount = res_currency_obj.compute(cr, uid, st.currency.id,
@@ -287,7 +300,28 @@ class account_bank_statement(osv.osv):
                                 account=acc_cur)
                     val['amount_currency'] = amount_cur
 
-                torec.append(account_move_line_obj.create(cr, uid, val , context=context))
+                move_line_id = account_move_line_obj.create(cr, uid, val , context=context)
+                torec.append(move_line_id)
+
+                if move.analytic_account_id:
+                    anal_val = {}
+                    amt = (val['credit'] or  0.0) - (val['debit'] or 0.0)
+                    anal_val = {
+                        'name': val['name'],
+                        'ref': val['ref'],
+                        'date': val['date'],
+                        'amount': amt,
+                        'account_id': val['analytic_account_id'],
+                        'currency_id': val['currency_id'],
+                        'general_account_id': val['account_id'],
+                        'journal_id': st.journal_id.analytic_journal_id.id,
+                        'period_id': val['period_id'],
+                        'user_id': uid,
+                        'move_id': move_line_id
+                                }
+                    if val.get('amount_currency', False):
+                        anal_val['amount_currency'] = val['amount_currency']
+                    account_analytic_line_obj.create(cr, uid, anal_val, context=context)
 
                 if move.reconcile_id and move.reconcile_id.line_new_ids:
                     for newline in move.reconcile_id.line_new_ids:
@@ -336,7 +370,7 @@ class account_bank_statement(osv.osv):
                         context=context):
                     if line.state <> 'valid':
                         raise osv.except_osv(_('Error !'),
-                                _('Ledger Posting line "%s" is not valid') % line.name)
+                                _('Journal Item "%s" is not valid') % line.name)
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
                     ## Search if move has already a partial reconciliation
@@ -365,17 +399,12 @@ class account_bank_statement(osv.osv):
                             account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
-                    #except:
-                    #    raise osv.except_osv(_('Error !'), _('Unable to reconcile entry "%s": %.2f') % (move.name, move.amount))
+                move_name = next_number + ' - ' + str(move.sequence)
+                account_move_obj.write(cr, uid, [move_id], {'name': move_name, 'state': 'posted'}) # Bank statements will not consider boolean on journal entry_posted
 
-                if st.journal_id.entry_posted:
-                    account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
-                    
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
             done.append(st.id)
-
-            next_number = self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement')
-            self.write(cr, uid, [st.id], {'name':next_number}, context)
+            self.write(cr, uid, [st.id], {'name': next_number}, context=context)
 
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
         return True
@@ -394,28 +423,15 @@ class account_bank_statement(osv.osv):
         return True
 
     def onchange_journal_id(self, cursor, user, statement_id, journal_id, context=None):
-        if not journal_id:
-            return {'value': {'currency': False}}
-
         account_journal_obj = self.pool.get('account.journal')
         res_users_obj = self.pool.get('res.users')
-        res_currency_obj = self.pool.get('res.currency')
-
         cursor.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
-                WHERE journal_id = %s \
-                ORDER BY date DESC,id DESC LIMIT 1', (journal_id,))
+                WHERE journal_id = %s AND NOT state = %s \
+                ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cursor.fetchone()
         balance_start = res and res[0] or 0.0
-
-        currency_id = account_journal_obj.browse(cursor, user, journal_id,
-                context=context).currency.id
-        if not currency_id:
-            currency_id = res_users_obj.browse(cursor, user, user,
-                    context=context).company_id.currency_id.id
-        currency = res_currency_obj.name_get(cursor, user, [currency_id],
-                context=context)[0]
-        return {'value': {'balance_start': balance_start, 'currency': currency}}
+        return {'value': {'balance_start': balance_start}}
 
     def unlink(self, cr, uid, ids, context=None):
         stat = self.read(cr, uid, ids, ['state'])
@@ -600,26 +616,27 @@ class account_bank_statement_reconcile_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', required=True),
         'line_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile'),
         'amount': fields.float('Amount', required=True),
-        'analytic_id': fields.many2one('account.analytic.account',"Analytic Account")
+        'analytic_id': fields.many2one('account.analytic.account',"Analytic Account", domain=[('parent_id', '!=', False)])
     }
     _defaults = {
-        'name': lambda *a: 'Write-Off',
+        'name': 'Write-Off',
     }
 account_bank_statement_reconcile_line()
 
 
 class account_bank_statement_line(osv.osv):
 
-    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context={}):
+    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context=None):
         res = {'value': {}}
-        
+        obj_partner = self.pool.get('res.partner')
+        if context is None:
+            context = {}
         if not partner_id:
             return res
+
         line = self.browse(cursor, user, line_id)
-  
         if not line or (line and not line[0].account_id):
-            part = self.pool.get('res.partner').browse(cursor, user, partner_id,
-                context=context)
+            part = obj_partner.browse(cursor, user, partner_id, context=context)
             if type == 'supplier':
                 account_id = part.property_account_payable.id
             else:
@@ -645,10 +662,6 @@ class account_bank_statement_line(osv.osv):
             balance = res_currency_obj.compute(cursor, user, company_currency_id,
                 currency_id, balance, context=context)
             res['value']['amount'] = balance
-        
-        if context.get('amount', 0) > 0:
-            res['value']['amount'] = context.get('amount')
-            
         return res
 
     def _reconcile_amount(self, cursor, user, ids, name, args, context=None):
@@ -670,7 +683,7 @@ class account_bank_statement_line(osv.osv):
                 res[line.id] = 0.0
         return res
 
-    _order = "date,name desc"
+    _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _columns = {
@@ -689,6 +702,7 @@ class account_bank_statement_line(osv.osv):
             select=True, required=True, ondelete='cascade'),
         'reconcile_id': fields.many2one('account.bank.statement.reconcile',
             'Reconcile'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_ids': fields.many2many('account.move',
             'account_bank_statement_line_move_rel', 'move_id','statement_id',
             'Moves'),
@@ -707,7 +721,4 @@ class account_bank_statement_line(osv.osv):
 
 account_bank_statement_line()
 
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

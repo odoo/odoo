@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!--menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
-        <menuitem name="Events Organisation" id="menu_event_main" parent="base.menu_association" /-->
         <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.marketing_menu" />
 
@@ -35,8 +33,8 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="base.menu_event_config" parent="base.marketing_menu" sequence="30" groups="base.group_extended,base.group_system"/>
-        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_event_config" groups="base.group_extended,base.group_sale_manager,base.group_system"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_extended"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -56,7 +54,7 @@
                     </group>
                     <notebook colspan="4">
                     <page string="Event">
-                        <group colspan="4" col="4">                            
+                        <group colspan="4" col="4">
                             <separator string="Invoice Information" colspan="4"/>
                             <field name="product_id" on_change="onchange_product(product_id)" colspan="4"/>
                             <field name="unit_price"/>
@@ -151,7 +149,7 @@
                                 </group>
                             </group>
                         </group>
-                    </page>                   
+                    </page>
                     </notebook>
             </form>
             </field>
@@ -330,12 +328,12 @@
                                 <separator string="Invoice" colspan="4"/>
                                 <field name="event_product" attrs="{'required':[('tobe_invoiced','=',True)]}"/>
                                 <field name="partner_invoice_id" attrs="{'required':[('tobe_invoiced','=',True)]}" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
-                                <field name="invoice_id"/>                                
+                                <field name="invoice_id"/>
                            </group>
                             <separator string="Description" colspan="4"/>
                             <field name="description" colspan="4" nolabel="1"/>
                             <separator string="" colspan="4"/>
-                            <group col="8" colspan="4">                                
+                            <group col="8" colspan="4">
                                 <field name="state" select="1" colspan="2"/>
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
@@ -359,7 +357,7 @@
                                 </form>
                             </field>
                             <group col="2" colspan="2" groups="base.group_extended">
-                               <separator string="Dates" colspan="2"/>                               
+                               <separator string="Dates" colspan="2"/>
                                <field name="date_closed"/>
                             </group>
                             <group col="2" colspan="2" groups="base.group_extended">

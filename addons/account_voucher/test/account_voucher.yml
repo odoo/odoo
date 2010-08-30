@@ -9,7 +9,7 @@
     journal_id: account.bank_journal
     name: Voucher for Axelor
     narration: Basic Pc
-    payment_ids:
+    line_ids:
       - account_id: account.a_recv
         amount: 1000.0
         name: Voucher for Axelor
@@ -23,9 +23,9 @@
   !assert {model: account.voucher, id: account_voucher_voucherforaxelor0}:
     - state == 'draft'
 -
-  I change the state of voucher to "proforma" by clicking PRO-FORMA button
+  I compute the voucher to calculate the taxes by clicking Cpmpute button
 -
-  !workflow {model: account.voucher, action: open_voucher, ref: account_voucher_voucherforaxelor0}
+  !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucherforaxelor0}
 -
   I check that the voucher state is now "proforma"
 -
@@ -36,16 +36,7 @@
 -
   !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucherforaxelor0}
 -
-  I check that the voucher state is "Waiting for re-checking"
--
-  !assert {model: account.voucher, id: account_voucher_voucherforaxelor0}:
-    - state == 'recheck'
--
   I clicked on Validate Button
--
-  !workflow {model: account.voucher, action: recheck_voucher, ref: account_voucher_voucherforaxelor0}
--
-  I check that the voucher state is "posted"
 -
   !assert {model: account.voucher, id: account_voucher_voucherforaxelor0}:
     - state == 'posted'
@@ -68,7 +59,7 @@
     journal_id: account.bank_journal
     name: Voucher Axelor
     narration: Basic PC
-    payment_ids:
+    line_ids:
       - account_id: account.cash
         amount: 1000.0
         name: Voucher Axelor
@@ -83,7 +74,7 @@
 -
   I change the state of voucher to "proforma" by clicking PRO-FORMA button
 -
-  !workflow {model: account.voucher, action: open_voucher, ref: account_voucher_voucheraxelor0}
+  !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucheraxelor0}
 -
   I check that the voucher state is now "proforma"
 -
@@ -94,20 +85,10 @@
 -
   !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucheraxelor0}
 -
-  I check that the voucher state is "Waiting for re-checking"
--
-  !assert {model: account.voucher, id: account_voucher_voucheraxelor0}:
-    - state == 'recheck'
--
-  I clicked on Validate Button
--
-  !workflow {model: account.voucher, action: recheck_voucher, ref: account_voucher_voucheraxelor0}
--
   I check that the voucher state is "posted"
 -
   !assert {model: account.voucher, id: account_voucher_voucheraxelor0}:
     - state == 'posted'
-
 -
   I check that moves get created for this voucher
 -

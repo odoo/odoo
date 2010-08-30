@@ -64,21 +64,12 @@ class quality_test(base_module_quality.abstract_quality_check):
                     self.result += _("Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")+"\n"
                     return None
                 count += 1
-#                leftchar = -1
-#                while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:
-#                    leftchar -= 1
-#                rightchar = -10
-#                while res[rightchar:rightchar+1] != '/' and rightchar+1 <= 0:
-#                    rightchar += 1
                 try:
-#                    score += float(res[leftchar+1:rightchar])
                     scr = res.split("Your code has been rated at")[1].split("</div>")[0].split("/")[0]
                     score += float(scr)
-                    #self.result += file + ": " + res[leftchar+1:rightchar] + "/10\n"
                     dict_py[file_py] = [file_py, scr]
                 except:
                     score += 0
-                    #self.result += file + ": "+_("Unable to parse the result. Check the details.")+"\n"
                     dict_py[file_py] = [file_py, _("Unable to parse the result. Check the details.")]
                 replace_string = ''
                 replace_string += res

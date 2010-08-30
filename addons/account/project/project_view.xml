@@ -51,7 +51,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="True" colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
+                <tree toolbar="True" colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>
@@ -60,11 +60,7 @@
                     <field name="credit"/>
                     <field name="balance"/>
                     <field name="company_currency_id"/>
-<!--                    <field name="date"/>-->
-<!--                    <field name="parent_id" invisible="1"/>-->
-<!--                    <field name="type" invisible="1"/>-->
-<!--                    <field name="partner_id" invisible="1"/>-->
-<!--                    <field name="user_id" invisible="1"/>-->
+                    <field name="date" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -78,7 +74,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
-                        <field name="parent_id" on_change="on_change_parent(parent_id)"/>
+                        <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended"/>
                         <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
                         <field name="type" select="2"/>
                         <field name="company_currency_id" select="2"/>
@@ -112,8 +108,7 @@
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
         </record>
-        <!--<menuitem id="menu_analytic_account" name="Analytic Accounts" parent="account.menu_analytic_accounting"/>-->
-        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="menu_analytic_accounting"/>
+        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="menu_analytic_accounting" groups="base.group_extended"/>
 
         <record id="act_account_renew_view" model="ir.actions.act_window">
             <field name="name">Accounts to Renew</field>
@@ -135,17 +130,8 @@
             <field name="view_id" ref="view_account_analytic_account_tree"/>
             <field name="help">Analytic Charts of Accounts allows you to access to reports by analytic accounts (or cost accounts) . From this menu you can access to analytic balance, a report that relates the analytic accounts to the general accounts. It is useful for analyzing the profitability of projects, giving you the profitability of a project for the different operations that you used to carry out the project.</field>
         </record>
-<!--        <menuitem-->
-<!--            action="action_account_analytic_account_tree2"-->
-<!--            id="account_analytic_def_chart"-->
-<!--            parent="account_analytic_def_account"/>-->
-<!--        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>-->
 
-<!--        <wizard id="wizard_analytic_account_chart" menu="False" model="account.analytic.account" name="account.analytic.account.chart" string="Analytic Chart of Accounts"/>
-        <menuitem icon="STOCK_INDENT" action="wizard_analytic_account_chart" id="menu_action_analytic_account_tree2" parent="account.menu_finance_charts" type="wizard"/>-->
-
-        <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_generic_reporting" sequence="4"/>
-        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart_balance" parent="next_id_40"/>
+        <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_generic_reporting" sequence="4" groups="base.group_extended"/>
 
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
@@ -157,7 +143,7 @@
                     <field colspan="4" name="name" select="1"/>
                     <field name="amount" select="2"/>
                     <field name="date" select="1"/>
-                    <field name="account_id" select="1"/>
+                    <field name="account_id" select="1" groups="base.group_extended"/>
                     <field name="journal_id" select="2"/>
                     <field name="general_account_id" select="2"/>
                     <field name="move_id" select="2"/>
@@ -183,7 +169,7 @@
                     <field name="name"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total quantity"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                    <field domain="[('type','=','normal')]" name="account_id"/>
+                    <field domain="[('type','=','normal')]" name="account_id" groups="base.group_extended"/>
                     <field invisible="True" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="amount" sum="Total amount"/>
                     <field name="general_account_id"/>
@@ -203,7 +189,7 @@
                 <search string="Search Analytic Lines">
                     <group col='6' colspan='4'>
                         <field name="name" select="1"/>
-                        <field name="account_id" select="1"/>
+                        <field name="account_id" select="1" groups="base.group_extended"/>
                         <field name="amount" select="1"/>
                         <field name="date" select="1"/>
                         <field name="user_id" widget="selection"/>
@@ -215,7 +201,7 @@
                     <newline/>
                     <group string="Group By..." expand="0">
                         <filter string="General Account" context="{'group_by':'general_account_id'}"/>
-                        <filter string="Analytic Account" context="{'group_by':'account_id'}"/>
+                        <filter string="Analytic Account" context="{'group_by':'account_id'}" groups="base.group_extended"/>
                         <filter string="Analytic Journal" context="{'group_by':'journal_id'}"/>
                         <filter string="Product" context="{'group_by':'product_id'}"/>
                     </group>
@@ -230,14 +216,8 @@
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
         </record>
-<!--       <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries by Line"/>-->
-<!--        <menuitem id="next_id_41" name="Analytic Entries" parent="account.menu_finance_entries"/>-->
-          <!-- Entries by Line -->
 
-<!--         <menuitem  icon="STOCK_JUSTIFY_FILL"-->
-<!--          action="action_project_account_analytic_line_form"-->
-<!--          id="account_entries_analytic_entries"-->
-<!--          parent="next_id_41"/>-->
+        <!-- Entries by Line -->
 
         <record id="action_account_tree1" model="ir.actions.act_window">
             <field name="name">Analytic Entries</field>
@@ -263,7 +243,7 @@
             <field name="arch" type="xml">
                 <form string="Project line">
                     <field name="name"/>
-                    <field name="account_id"/>
+                    <field name="account_id" groups="base.group_extended"/>
                     <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="journal_id"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
@@ -308,12 +288,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Journals">
-                	<group>
-                		<field name="name"/>
-                    	<field name="code"/>
-                    	<field name="type"/>
-                	</group>
-                	<newline/>
+                  <group>
+                    <field name="name"/>
+                      <field name="code"/>
+                      <field name="type"/>
+                  </group>
+                  <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
                     </group>
@@ -342,7 +322,7 @@
             <field name="view_mode">tree,form,search</field>
             <field name="search_view_id" ref="view_analytic_journal_search" />
         </record>
-        <menuitem action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting"/>
+        <menuitem action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" groups="base.group_extended"/>
 
         #
         # Open journal entries
@@ -354,31 +334,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_entries"/>
-        <!-- <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
-            <field name="name">Check Register</field>
-            <field name="res_model">account.analytic.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id','=',active_id)]</field>
-        </record> -->
-<!--        <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_bank_and_cash"/>-->
-         <!-- <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
-            <field name="name">Check Registers</field>
-            <field name="res_model">account.analytic.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id','=',active_id)]</field>
-        </record> -->
-<!--        <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_bank_and_cash"/>-->
-
-<!--        <record id="ir_open_account_journal_analytic" model="ir.values">-->
-<!--            <field eval="'tree_but_open'" name="key2"/>-->
-<!--            <field eval="'account.analytic.journal'" name="model"/>-->
-<!--            <field name="name">Open Analytic Journal</field>-->
-<!--            <field eval="'ir.actions.act_window,%d'%action_account_analytic_journal_open_form" name="value"/>-->
-<!--            <field eval="True" name="object"/>-->
-<!--        </record>-->
+        <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_entries" groups="base.group_extended"/>
 
         #
         # Reporting
@@ -390,16 +346,7 @@
             <field name="view_type">tree</field>
             <field name="help">To print an analytics (or costs) journal for a given period. The report give code, move name, account number, general amount and analytic amount.</field>
         </record>
-        <menuitem action="action_account_analytic_journal_tree" id="account_analytic_journal_print" parent="account.next_id_40"/>
-
-
-<!--        <record id="action_account_analytic_journal_tree2" model="ir.actions.act_window">-->
-<!--            <field name="name">Analytic Entries by Journal</field>-->
-<!--            <field name="res_model">account.analytic.journal</field>-->
-<!--            <field name="view_type">tree</field>-->
-<!--            <field name="view_id" ref="view_account_analytic_journal_tree"/>-->
-<!--        </record>-->
-<!--        <menuitem action="action_account_analytic_journal_tree2" id="account_analytic_journal_entries" parent="account.next_id_41"/>-->
+        <menuitem action="action_account_analytic_journal_tree" id="account_analytic_journal_print" parent="account.next_id_40" groups="base.group_extended"/>
 
         #
         # Statistics
@@ -476,7 +423,6 @@
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="report_hr_timesheet_invoice_journal_search"/>
         </record>
-<!--        <menuitem action="report_account_analytic_journal_tree" id="report_account_analytic_journal_print" parent="account.next_id_40"/>-->
 
         <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" name="All Analytic Entries" res_model="account.analytic.line" src_model="account.analytic.account" view_mode="tree,form" view_type="form"/>
 

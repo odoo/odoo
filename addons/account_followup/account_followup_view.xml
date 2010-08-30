@@ -87,7 +87,7 @@
         </record>
         <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_finance_configuration" groups="base.group_system"/>
 
-        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/rappel.rml" string="Followup Report"/>
+        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/report_followp_print.rml" string="Followup Report"/>
 
         <record id="account_move_line_partner_tree" model="ir.ui.view">
             <field name="name">account.move.line.partner.tree</field>
@@ -95,7 +95,7 @@
             <field name="type">tree</field>
             <field eval="32" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('validate')" editable="bottom" string="Partner entries">
+                <tree colors="red:state in ('draft');black:state in ('validate')" editable="bottom" string="Partner entries">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
@@ -136,13 +136,23 @@
             </field>
         </record>
 
-<!--        <act_window context="{'search_default_reconcile_id':False}" domain="[('partner_id', '=', active_id),('reconcile_id','=',False),('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="account.act_account_partner_account_move_unreconciled" name="Receivables &amp; Payables" res_model="account.move.line" view="account_move_line_partner_tree"/>-->
-
-        <act_window domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]" id="act_account_partner_account_move_all" name="All receivable entries" res_model="account.move.line" src_model="" view="account_move_line_partner_tree"/>
+        <act_window
+            domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]"
+            id="act_account_partner_account_move_all"
+            name="Receivable Items"
+            res_model="account.move.line"
+            src_model=""
+            view="account_move_line_partner_tree"/>
 
         <menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/>
 
-        <act_window domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]" id="act_account_partner_account_move_payable_all" name="All payable entries" res_model="account.move.line" src_model="" view="account_move_line_partner_tree"/>
+        <act_window
+            domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]"
+            id="act_account_partner_account_move_payable_all"
+            name="Payable Items"
+            res_model="account.move.line"
+            src_model=""
+            view="account_move_line_partner_tree"/>
 
         <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/>
 

@@ -26,7 +26,7 @@ import crm
 import time
 from datetime import datetime, timedelta
 
-class crm_phonecall(osv.osv, crm_case):
+class crm_phonecall(crm_case, osv.osv):
     """ Phonecall Cases """
 
     _name = "crm.phonecall"

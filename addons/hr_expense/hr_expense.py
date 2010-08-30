@@ -21,6 +21,7 @@
 
 import time
 
+import netsvc
 from osv import fields, osv
 from tools.translate import _
 
@@ -89,15 +90,14 @@ class hr_expense_expense(osv.osv):
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
-        'date' : lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'date' : time.strftime('%Y-%m-%d'),
+        'state': 'draft',
         'employee_id' : _employee_get,
         'user_id' : lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     def expense_confirm(self, cr, uid, ids, *args):
-        #for exp in self.browse(cr, uid, ids):
         self.write(cr, uid, ids, {
             'state':'confirm',
             'date_confirm': time.strftime('%Y-%m-%d')
@@ -125,6 +125,8 @@ class hr_expense_expense(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         property_obj = self.pool.get('ir.property')
         sequence_obj = self.pool.get('ir.sequence')
+        analytic_journal_obj = self.pool.get('account.analytic.journal')
+        account_journal = self.pool.get('account.journal')
         for exp in self.browse(cr, uid, ids):
             lines = []
             for l in exp.line_ids:
@@ -171,10 +173,24 @@ class hr_expense_expense(osv.osv):
                 to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [], payment_term_id, None)
                 if to_update:
                     inv.update(to_update['value'])
+            journal = False
             if exp.journal_id:
                 inv['journal_id']=exp.journal_id.id
+                journal = exp.journal_id
+            else:
+                journal_id = invoice_obj._get_journal(cr, uid, context={'type': 'in_invoice'})
+                if journal_id:
+                    inv['journal_id'] = journal_id
+                    journal = account_journal.browse(cr, uid, journal_id)
+            if journal and not journal.analytic_journal_id:
+                analytic_journal_ids = analytic_journal_obj.search(cr, uid, [('type','=','purchase')])
+                if analytic_journal_ids:
+                    account_journal.write(cr, uid, [journal.id],{'analytic_journal_id':analytic_journal_ids[0]})
             inv_id = invoice_obj.create(cr, uid, inv, {'type': 'in_invoice'})
             invoice_obj.button_compute(cr, uid, [inv_id], {'type': 'in_invoice'}, set_total=True)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
+
             self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
             res = inv_id
         return res
@@ -185,7 +201,7 @@ class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
         'hr_expense_ok': fields.boolean('Can Constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
-                }
+    }
 
 product_product()
 
@@ -219,7 +235,7 @@ class hr_expense_line(osv.osv):
     _defaults = {
         'unit_quantity': 1,
         'date_value': time.strftime('%Y-%m-%d'),
-        }
+    }
     _order = "sequence"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):

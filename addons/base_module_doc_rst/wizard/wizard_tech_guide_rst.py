@@ -282,9 +282,6 @@ class RstDoc(object):
                        title,
                        '#' * len(title),
                        "",
-                       #".. index::",
-                       #"  single: %s object" % (obj_name),
-                       #".. ",
                       ]
 
                 for field in obj['fields']:
@@ -292,11 +289,6 @@ class RstDoc(object):
                            "",
                            write_field(field),
                            "",
-                           #".. index::",
-                           #"  single: %s field" % (field[0]),
-                           #".. ",
-                           #"",
-                           #"",
                           ]
                     slo.extend(slf)
                 sl.extend(slo)
@@ -498,11 +490,6 @@ class wizard_tech_guide_rst(wizard.interface):
             msg = "Object %s not found" % (obj)
             logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
             return ""
-
-##     def _object_doc(self, cr, uid, obj):
-##         pool = pooler.get_pool(cr.dbname)
-##         modobj = pool.get(obj)
-##         return modobj.__doc__
 
     states = {
         'init': {

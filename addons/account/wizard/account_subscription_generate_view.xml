@@ -16,7 +16,7 @@
                     <group colspan="4" col="6">
                         <label string ="" colspan="2"/>
                         <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                        <button icon="gtk-execute" string="Compute Entry Dates"
+                        <button icon="gtk-execute" string="Generate Entries"
                         name="action_generate" type="object" />
                     </group>
                </form>
@@ -32,7 +32,7 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem action="action_account_subscription_generate" id="menu_generate_subscription" parent="account.menu_finance_recurrent_entries" />
+        <menuitem sequence="3" action="action_account_subscription_generate" id="menu_generate_subscription" parent="account.menu_finance_recurrent_entries" />
 
     </data>
 </openerp>

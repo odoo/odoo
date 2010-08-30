@@ -1,28 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <assert model="account.move" search="[]" string="For all Ledger Postings, the state is valid implies that the sum of credits equals the sum of debits">
+        <assert model="account.move" search="[]" string="For all Journal Items, the state is valid implies that the sum of credits equals the sum of debits">
             <test expr="not len(line_id) or line_id[0].state != 'valid' or (sum([l.debit - l.credit for l in line_id]) &lt;= 0.00001)"/>
         </assert>
-
-
-   <!--     <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its childs">
-        <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its childs">
-            <test expr="not len(child_id) or (balance - sum([c.balance for c in child_id]) &lt;= 0.00001)"/>
-        </assert>
-
-        <assert model="account.move.line" search="[('account_id.type', '=', 'view')]" string="Accounts of view type do not contain any move line">
-            <test expr="False"/>
-        </assert>
-
-        <assert model="account.invoice" search="[('state', 'in', ['paid', 'open'])]" string="The total amount of all paid or open invoices is correctly computed">
-            <test expr="sum([l.price_subtotal for l in invoice_line]) - amount_untaxed &lt;= 0.00001"/>
-        </assert>
-
-        <assert model="account.move.reconcile" search="[]" string="For each reconciliation, the sum of credits equals the sum of debits">
-            <test expr="sum([l.debit - l.credit for l in line_id]) &lt;= 0.00001"/>
-        </assert>
-
--->
     </data>
 </openerp>

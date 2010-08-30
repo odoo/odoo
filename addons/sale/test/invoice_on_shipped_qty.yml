@@ -103,8 +103,7 @@
     inv_brw = self.browse(cr,uid,inv_id)[0]
     for inv_lines in inv_brw.invoice_line:
         qty1=inv_lines.quantity
-    invoice_id = self.search(cr, uid, [('qty1','=', 'qty') and ('origin', '=', so.name)])
-    assert invoice_id, "Quantities are not same"
+    assert ('qty1','=','qty'), "Quantities are not same"
 -    
   I open the Invoice for the SO.
 -

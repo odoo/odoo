@@ -30,7 +30,6 @@ import StringIO
 
 
 theme.use_color = 1
-#theme.scale = 2
 random.seed(0)
 
 #

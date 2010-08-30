@@ -47,20 +47,6 @@
             name="Taxes"
             parent="account.menu_finance_generic_reporting" sequence="3"/>
 
-<!--        <wizard
-            id="wizard_vat_declaration"
-            menu="False"
-            model="account.tax.code"
-            name="account.vat.declaration"
-            string="Print Taxes Report"/> -->
-
-<!--        <menuitem
-            icon="STOCK_PRINT"
-            action="wizard_vat_declaration"
-            id="menu_wizard_vat_declaration"
-            parent="menu_tax_report"
-            type="wizard"/> -->
-
         <report id="account_account_balance_compare"
             string="Account balance"
             model="account.account"
@@ -77,16 +63,5 @@
             auto="False"
             menu="False"/>
 
-        <!--
-
-        <report id="analytic_journal"
-            string="Analytic journal"
-            model="account.analytic.account"
-            name="account.analytic.journal"
-            xml="account/report/analytic_journal.rml"
-            auto="False" />
-
-
-        -->
     </data>
 </openerp>

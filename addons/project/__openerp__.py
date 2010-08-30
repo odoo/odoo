@@ -26,7 +26,7 @@
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Generic Modules/Projects & Services",
-    "depends": ["product", "analytic", "mail_gateway", "board"],
+    "depends": ["product", "analytic", "board"],
     "description": """Project management module tracks multi-level projects, tasks,
 work done on tasks, eso. It is able to render planning, order tasks, eso.
  Dashboard for project members that includes:
@@ -55,9 +55,9 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         'board_project_demo.xml',
     ],
     'test':[
-            'test/test_project.yml',
-            'test/test_project_delegation.yml',
-            ],
+        'test/test_project.yml',
+        'test/test_project_delegation.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0075116868317',

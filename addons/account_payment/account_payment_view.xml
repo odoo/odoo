@@ -69,6 +69,7 @@
                 <tree string="Payment Mode">
                     <field name="name"/>
                     <field name="journal"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -82,6 +83,7 @@
                     <field name="type"/>
                     <field name="journal"/>
                     <field name="bank_id"/>
+                    <field name="company_id" select="1" widget='selection'/>
                 </form>
             </field>
         </record>
@@ -124,7 +126,7 @@
                                     <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)" select="1"/>
                                     <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
                                     <separator colspan="2" string="Owner Account"/>
-                                    <separator colspan="2" string="Desitination Account"/>
+                                    <separator colspan="2" string="Destination Account"/>
                                     <field colspan="2" name="info_owner" nolabel="1"/>
                                     <field colspan="2" name="info_partner" nolabel="1"/>
                                     <field colspan="4" name="communication"/>
@@ -299,7 +301,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <group col="6" colspan="4" position="inside">
+                <group col="7" colspan="4" position="inside">
                     <button  colspan="2" name="%(action_account_populate_statement_confirm)d" string="Import payment lines" type="action" icon="gtk-open"/>
                 </group>
             </field>

@@ -120,7 +120,7 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
                 WHERE account_id IN %s AND date>=%s AND date<=%s", (tuple(ids),date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
-report_sxw.report_sxw('report.account.analytic.account.inverted.balance', 'account.analytic.account', 'addons/account/project/report/inverted_analytic_balance.rml',parser=account_inverted_analytic_balance, header=False)
+report_sxw.report_sxw('report.account.analytic.account.inverted.balance', 'account.analytic.account', 'addons/account/project/report/inverted_analytic_balance.rml',parser=account_inverted_analytic_balance, header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

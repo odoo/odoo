@@ -139,7 +139,8 @@
     if (mod_brw.state == 'installed'):
         sale_order_obj = self.pool.get('sale.order')
         so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-        proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
+        proc_ids = self.search(cr, uid, [('origin','=',so.name),('state','=','running')])
+        assert proc_ids, _('Procurement is not in the running state!')
 -
   I verify that a purchase order has been generated
 -
@@ -235,7 +236,7 @@
         pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
         po = pur_obj.browse(cr, uid, pur_id)[0]
         picking_obj = self.pool.get('stock.picking')
-        ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ) and ('state', '=', 'done')])
+        ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ),('state', '=', 'done')])
         assert ids, _('Picking is not in the done state!')
 -
   I verify that a "Picked" has been set to true 
