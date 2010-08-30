@@ -799,7 +799,9 @@ form: module.record_id""" % (xml_id,)
     def id_get(self, cr, model, id_str):
         if id_str in self.idref:
             return self.idref[id_str]
-        return self.model_id_get(cr, model, id_str)[1]
+        res = self.model_id_get(cr, model, id_str)
+        if res and len(res)>1: res = res[1]
+        return res
 
     def model_id_get(self, cr, model, id_str):
         model_data_obj = self.pool.get('ir.model.data')
