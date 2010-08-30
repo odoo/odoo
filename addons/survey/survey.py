@@ -570,7 +570,7 @@ class survey_answer(osv.osv):
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
     }
     _defaults = {
-         'sequence' : lambda * a: 1,
+#         'sequence' : lambda * a: 1,
          'type' : lambda * a: 'char',
          'in_visible_answer_type':_get_in_visible_answer_type,
     }
