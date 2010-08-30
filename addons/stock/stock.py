@@ -1135,16 +1135,19 @@ class stock_move(osv.osv):
                 if check_picking_ids:
                     pickid = check_picking_ids[0]
                 else:
-                    pickid = picking_obj.create(cr, uid, {
-                        'name': picking.name,
-                        'origin': str(picking.origin or ''),
-                        'type': ptype,
-                        'note': picking.note,
-                        'move_type': picking.move_type,
-                        'auto_picking': todo[0][1][1] == 'auto',
-                        'address_id': picking.address_id.id,
-                        'invoice_state': 'none'
-                    })
+                    if picking:
+                        pickid = picking_obj.create(cr, uid, {
+                            'name': picking.name,
+                            'origin': str(picking.origin or ''),
+                            'type': ptype,
+                            'note': picking.note,
+                            'move_type': picking.move_type,
+                            'auto_picking': todo[0][1][1] == 'auto',
+                            'address_id': picking.address_id.id,
+                            'invoice_state': 'none'
+                        })
+                    else:
+                        pickid = False
                 for move, (loc, auto, delay) in todo:
                     # Is it smart to copy ? May be it's better to recreate ?
                     new_id = move_obj.copy(cr, uid, move.id, {
@@ -1162,8 +1165,9 @@ class stock_move(osv.osv):
                         'move_history_ids': [(4, new_id)]
                     })
                     new_moves.append(self.browse(cr, uid, [new_id])[0])
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+                if pickid:
+                    wf_service = netsvc.LocalService("workflow")
+                    wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
             if new_moves:
                 create_chained_picking(self, cr, uid, new_moves, context)
         create_chained_picking(self, cr, uid, moves, context)
