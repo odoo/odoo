@@ -261,7 +261,7 @@ class split_in_production_lot(osv.osv_memory):
                             'name': line.name,
                             'product_id': move.product_id.id},
                         context=context)
-                    print 'write', current_move, {'prodlot_id': prodlot_id, 'state':move.state}
+                    
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state})
 
                     update_val = {}
