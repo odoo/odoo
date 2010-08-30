@@ -1497,12 +1497,13 @@ class account_invoice_tax(osv.osv):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency = False
-        tax_amount = self.read(cr, uid, ids[0], ['tax_amount'])['tax_amount']
         tax_sign = 1
-        if tax_amount < 0:
-            tax_sign = -1
-        elif tax_amount == 0:
-            tax_sign = 0
+        if ids:
+            tax_amount = self.read(cr, uid, ids[0], ['tax_amount'])['tax_amount']
+            if tax_amount < 0:
+                tax_sign = -1
+            elif tax_amount == 0:
+                tax_sign = 0
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:

@@ -1000,7 +1000,7 @@ class account_move(osv.osv):
         @param context: context arguments, like lang, time zone
         @param limit: Returns first 'n' ids of complete result, default is 80.
 
-        @return: Returns a list of tupples containing id and name
+        @return: Returns a list of tuples containing id and name
         """
 
         if not args:
