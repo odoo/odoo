@@ -101,7 +101,7 @@ class account_voucher(osv.osv):
         'line_dr_ids':fields.one2many('account.voucher.line','voucher_id','Debits',
             domain=[('type','=','dr')], context={'default_type':'dr'}, readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}),
+        'narration':fields.text('Notes', readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state':fields.selection(
@@ -120,7 +120,7 @@ class account_voucher(osv.osv):
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Journal Items', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
+        'partner_id':fields.many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft':[('readonly',False)]}),
         'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
         'pay_now':fields.selection([
             ('pay_now','Pay Directly'),
@@ -143,7 +143,52 @@ class account_voucher(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
         'tax_id': _get_tax,
     }
-
+    
+    def compute_tax(self, cr, uid, ids, context={}):
+        tax_pool = self.pool.get('account.tax')
+        partner_pool = self.pool.get('res.partner')
+        position_pool = self.pool.get('account.fiscal.position')
+        voucher_line_pool = self.pool.get('account.voucher.line')
+        voucher_pool = self.pool.get('account.voucher')
+        
+        for voucher in voucher_pool.browse(cr, uid, ids, context):
+            voucher_amount = 0.0
+            for line in voucher.line_ids:
+                voucher_amount += line.untax_amount or line.amount
+                line.amount = line.untax_amount
+                voucher_line_pool.write(cr, uid, [line.id], {'amount':line.untax_amount, 'untax_amount':line.untax_amount})
+                
+            if not voucher.tax_id:
+                continue
+            
+            tax = [tax_pool.browse(cr, uid, voucher.tax_id.id)]
+            partner = partner_pool.browse(cr, uid, voucher.partner_id.id) or False
+            taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+            tax = tax_pool.browse(cr, uid, taxes)
+            
+            total = voucher_amount
+            total_tax = 0.0
+            
+            if not tax[0].price_include:
+                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes'):
+                    total_tax += tax_line.get('amount')
+                total += total_tax
+            else:
+                line_ids2 = []
+                for line in voucher.line_ids:
+                    line_total = 0.0
+                    line_tax = 0.0
+                    
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line.untax_amount or line.amount, 1).get('taxes'):
+                        line_tax += tax_line.get('amount')
+                        line_total += tax_line.get('price_unit')
+                    total_tax += line_tax
+                    untax_amount = line.untax_amount or line.amount
+                    voucher_line_pool.write(cr, uid, [line.id], {'amount':line_total, 'untax_amount':untax_amount})
+            
+            self.write(cr, uid, [voucher.id], {'amount':total, 'tax_amount':total_tax})
+        return True
+            
     # TODO: review this code.
     def onchange_price(self, cr, uid, ids, line_ids, tax_id, partner_id=False, context={}):
         tax_pool = self.pool.get('account.tax')
@@ -162,45 +207,16 @@ class account_voucher(osv.osv):
         total_tax = 0.0
         
         for line in line_ids:
+            line_amount = 0.0
+            if line[1]:
+                line_amount = voucher_line_pool.browse(cr, uid, line[1]).untax_amount
+            else:
+                line_amount = line[2].get('amount')
             voucher_line_ids += [line[1]]
-            voucher_total += line[2].get('amount')
+            voucher_total += line_amount
         
         total = voucher_total
         
-        if tax_id:
-            tax = [tax_pool.browse(cr, uid, tax_id)]
-            
-            if partner_id:
-                partner = partner_pool.browse(cr, uid, partner_id) or False
-                taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
-                tax = tax_pool.browse(cr, uid, taxes)
-            
-            if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes'):
-                    total_tax += tax_line.get('amount')
-                total += total_tax
-            else:
-                line_ids2 = []
-                for line in line_ids:
-                    line_total = 0.0
-                    line_tax = 0.0
-                    operation = line[0]
-                    rec_id = line[1]
-                    rec = line[2]
-                    for tax_line in tax_pool.compute_all(cr, uid, tax, rec.get('amount'), 1).get('taxes'):
-                        line_tax += tax_line.get('amount')
-                        line_total += tax_line.get('price_unit')
-                    total_tax += line_tax
-                    if rec_id:
-                        voucher_line_pool.write(cr, uid, [rec_id], {'amount':line_total})
-                        line_ids2 += [rec_id]
-                    else:
-                        rec.update({
-                            'amount':line_total
-                        })
-                res.update({
-                    'line_ids':line_ids2
-                })
         res.update({
             'amount':total,
             'tax_amount':total_tax
@@ -486,6 +502,8 @@ class account_voucher(osv.osv):
                     'move_id':move_id,
                     'partner_id':inv.partner_id.id,
                     'currency_id':inv.currency_id.id,
+                    'analytic_account_id':line.account_analytic_id and line.account_analytic_id.id or False,
+                    'quantity':1
                 }
                 if (line.type=='dr'):
                     line_total += amount
@@ -563,7 +581,10 @@ class account_voucher(osv.osv):
         default.update({
             'state':'draft',
             'number':False,
-            'move_id':False
+            'move_id':False,
+            'line_cr_ids':False,
+            'line_dr_ids':False,
+            'reference':False
         })
         if 'date' not in default:
             default['date'] = time.strftime('%Y-%m-%d')
@@ -606,6 +627,8 @@ account_voucher()
 class account_voucher_line(osv.osv):
     _name = 'account.voucher.line'
     _description = 'Voucher Lines'
+    _order = "move_line_id"
+    
     def _compute_balance(self, cr, uid, ids, name, args, context=None):
         res = {}
         for line in self.browse(cr, uid, ids):
@@ -623,6 +646,7 @@ class account_voucher_line(osv.osv):
         'name':fields.char('Description', size=256),
         'account_id':fields.many2one('account.account','Account', required=True),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
+        'untax_amount':fields.float('Untax Amount'),
         'amount':fields.float('Amount'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Cr/Dr'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),

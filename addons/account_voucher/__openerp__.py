@@ -44,8 +44,8 @@
         "wizard/account_voucher_open_view.xml",
         "wizard/account_voucher_unreconcile_view.xml",
         "voucher_view.xml",
-        "voucher_sales_purchase_view.xml",
         "voucher_payment_receipt_view.xml",
+        "voucher_sales_purchase_view.xml",
         "voucher_wizard.xml",
     ],
     "test" : [

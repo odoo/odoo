@@ -33,7 +33,7 @@
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
-                                    <field name="account_id"  domain="[('type','=','payable')]"/>
+                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -44,7 +44,7 @@
                             <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
-                                    <field name="account_id"  domain="[('type','=','receivable')]"/>
+                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
                                     <field name="date_original"/>
                                     <field name="amount_original"/>
                                     <field name="amount" sum="Payment"/>
@@ -61,7 +61,7 @@
                                 <field name="number"/>
                             </group>
                         </page>
-                        <page string="Journal Items">
+                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
@@ -73,8 +73,8 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="proforma_voucher" string="Create" states="draft" icon="terp-camera_test"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="%(action_view_account_voucher_unreconcile)d" string="Unreconcile" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
@@ -127,7 +127,7 @@
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
-                                    <field name="account_id"  domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -138,7 +138,7 @@
                             <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
-                                    <field name="account_id"  domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
                                     <field name="date_original"/>
                                     <field name="amount_original"/>
                                     <field name="amount" sum="Payment"/>
@@ -155,7 +155,7 @@
                                 <field name="number"/>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended">
+                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
@@ -167,8 +167,8 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="%(action_view_account_voucher_unreconcile)d" string="Unreconcile" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
