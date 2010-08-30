@@ -57,7 +57,7 @@
 <!--        </record>-->
 <!--        <menuitem action="action_account_moves_sale_refund" sequence="5" id="menu_eaction_account_moves_sale_refund" parent="menu_finance_payables" icon="STOCK_JUSTIFY_FILL"/>-->
 
-        <record id="action_account_moves_all" model="ir.actions.act_window">
+        <record id="action_account_moves_bank" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.journal</field>
             <field name="view_type">form</field>
@@ -67,10 +67,10 @@
         </record>
 
         <menuitem
-            action="action_account_moves_all"
+            action="action_account_moves_bank"
             icon="STOCK_JUSTIFY_FILL"
-            id="menu_eaction_account_moves_all"
-            parent="account.menu_finance_entries"
+            id="menu_action_account_moves_bank"
+            parent="account.menu_finance_bank_and_cash"
             sequence="4"
             groups="group_account_user,group_account_manager,base.group_system"
         />
