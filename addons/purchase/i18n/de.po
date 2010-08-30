@@ -73,6 +73,7 @@ msgstr "Auftragsannahme Lieferant"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Rechnungsstellung Fehler"
 
@@ -132,6 +133,7 @@ msgstr "Annahme Bestellung (durch Lieferant)"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Akzeptiert"
 
@@ -290,6 +292,7 @@ msgstr "Auftragszeile"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Bestätigt"
 
@@ -316,6 +319,7 @@ msgstr "Angebotsanfrage"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Warteliste"
 
@@ -397,6 +401,7 @@ msgstr "Referenz Bestellung"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Erledigt"
 
@@ -447,6 +452,7 @@ msgstr "Bestätige Beschaffungsvorgänge nach Auftragsannahme (Lieferant)."
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Versand Fehlerliste"
 
@@ -900,6 +906,12 @@ msgstr "Annahme Bestellvorschlag"
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
 msgid "After approved purchase order , it comes into the supplier invoice"
 msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr ""
 "Nach Bestätigung des Beschaffungsauftrag wird der Vorgang unter 'Rechnung "
 "Lieferanten' weiter fortgesetzt."
 
@@ -937,3 +949,9 @@ msgstr "Auftrag in manueller Bearbeitung"
 #: selection:report.purchase.order.product,state:0
 msgid "In progress"
 msgstr "In Bearbeitung"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr ""
