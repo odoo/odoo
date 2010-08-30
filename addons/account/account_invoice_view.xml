@@ -136,7 +136,6 @@
                     <field name="state"/>
 
                     <button name="invoice_open" states="draft,proforma2" string="Approve" icon="terp-camera_test"/>
-                    <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="terp-dolar_ok!"/>
                 </tree>
             </field>
         </record>
@@ -210,7 +209,6 @@
                                 <group col="6" colspan="4">
                                     <button name="invoice_open" states="draft,proforma2" string="Approve" icon="terp-camera_test"/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
-                                    <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="terp-dolar_ok!"/>
                                     <button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
@@ -307,7 +305,6 @@
                                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-gtk-media-pause" groups="account.group_account_user"/>
                                     <button name="invoice_open" states="draft,proforma2" string="Create" icon="terp-camera_test"/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
-                                    <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="terp-dolar_ok!"/>
                                     <button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
                                 </group>
                             </group>
@@ -500,7 +497,7 @@
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 
-        <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id]}" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
         <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 
