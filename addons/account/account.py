@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -60,7 +61,7 @@ class account_payment_term(osv.osv):
         'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
     }
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
     }
     _order = "name"
 
@@ -120,9 +121,9 @@ class account_payment_term_line(osv.osv):
         'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True),
     }
     _defaults = {
-        'value': lambda *a: 'balance',
-        'sequence': lambda *a: 5,
-        'days2': lambda *a: 0,
+        'value': 'balance',
+        'sequence': 5,
+        'days2': 0,
     }
     _order = "sequence"
 
@@ -405,10 +406,10 @@ class account_account(osv.osv):
     }
 
     _defaults = {
-        'type': lambda *a : 'view',
-        'reconcile': lambda *a: False,
-        'active': lambda *a: True,
-        'currency_mode': lambda *a: 'current',
+        'type': 'view',
+        'reconcile': False,
+        'active': True,
+        'currency_mode': 'current',
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
@@ -502,7 +503,7 @@ class account_account(osv.osv):
             default['child_parent_ids'] = False
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
-    def _check_moves(self, cr, uid, ids, method, context):
+    def _check_moves(self, cr, uid, ids, method, context=None):
         line_obj = self.pool.get('account.move.line')
         account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
 
@@ -518,7 +519,7 @@ class account_account(osv.osv):
             raise osv.except_osv(_('Warning !'), _('You cannot remove/deactivate an account which is set as a property to any Partner.'))
         return True
 
-    def _check_allow_type_change(self, cr, uid, ids, new_type, context):
+    def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
         group1 = ['payable', 'receivable', 'other']
         group2 = ['consolidation','view']
         line_obj = self.pool.get('account.move.line')
@@ -548,9 +549,9 @@ class account_account(osv.osv):
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
-    def unlink(self, cr, uid, ids, context={}):
-        self._check_moves(cr, uid, ids, "unlink", context)
-        return super(account_account, self).unlink(cr, uid, ids, context)
+    def unlink(self, cr, uid, ids, context=None):
+        self._check_moves(cr, uid, ids, "unlink", context=context)
+        return super(account_account, self).unlink(cr, uid, ids, context=context)
 
 account_account()
 
@@ -562,6 +563,7 @@ class account_journal_view(osv.osv):
         'columns_id': fields.one2many('account.journal.column', 'view_id', 'Columns')
     }
     _order = "name"
+
 account_journal_view()
 
 
@@ -587,6 +589,7 @@ class account_journal_column(osv.osv):
         'readonly': fields.boolean('Readonly'),
     }
     _order = "sequence"
+
 account_journal_column()
 
 class account_journal(osv.osv):
