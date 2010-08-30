@@ -1183,6 +1183,7 @@ class stock_picking(osv.osv):
                           'assigned': 'is ready to process.',
                           'cancel': 'is Cancelled.',
                           'done': 'is processed.',
+                          'draft':'is draft.',
                           }
             message += state_list[pick.state]
             self.log(cr, uid, pick.id, message)

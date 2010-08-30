@@ -1439,6 +1439,10 @@
                                       groups="base.group_extended"
                                       icon="terp-stock_effects-object-colorize"
                                       states="draft,assigned,confirmed,done"/>
+				                   <button name="%(stock.move_scrap)d"
+				                        string="Scrap Products" type="action"
+				                        icon="gtk-convert" context="{'scrap': True}"
+				                        states="draft,waiting,confirmed,assigned" />                                      
                                 </group>
                             </group>
                         </page>
