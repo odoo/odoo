@@ -1701,14 +1701,15 @@ class stock_move(osv.osv):
 
     def setlast_tracking(self, cr, uid, ids, context=None):
         tracking_obj = self.pool.get('stock.tracking')
-        tracking = context.get('tracking', False)
-        last_track = [line.tracking_id.id for line in self.browse(cr, uid, ids)[0].picking_id.move_lines if line.tracking_id]
-        if not last_track:
-            last_track = tracking_obj.create(cr, uid, {}, context=context)
-        else:
-            last_track.sort()
-            last_track = last_track[-1]
-        self.write(cr, uid, ids, {'tracking_id': last_track})
+        for line in self.browse(cr, uid, ids, context=context):
+            last_track = None
+            if line.picking_id:
+                tracking_ids = [l.tracking_id.id for l in line.picking_id.move_lines if l.tracking_id]
+                if tracking_ids:
+                    last_track = max(tracking_ids)
+            if not last_track:
+                last_track = tracking_obj.create(cr, uid, {}, context=context)
+            self.write(cr, uid, line.id, {'tracking_id': last_track}, context=context)
         return True
 
     #
