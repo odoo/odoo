@@ -9,7 +9,6 @@ class crm_add_note(osv.osv_memory):
     _description = "Add New Note"
 
     _columns = {
-        'subject': fields.char('Subject', size=512, required=True),
         'body': fields.text('Note Body', required=True),
         'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
     }
@@ -29,8 +28,7 @@ class crm_add_note(osv.osv_memory):
             user_obj = self.pool.get('res.users')
             user_name = user_obj.browse(cr, uid, [uid], context=context)[0].name
             case_pool.history(cr, uid, [case], _("Note"), history=True,
-                              details=obj.body, subject=obj.subject,
-                              email_from=user_name)
+                              details=obj.body, email_from=user_name)
 
             if obj.state == 'unchanged':
                 pass
