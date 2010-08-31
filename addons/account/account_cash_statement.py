@@ -232,7 +232,7 @@ class account_cash_statement(osv.osv):
                 'starting_details_ids':False
             })
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
-        self.write(cr, uid, [res_id], {})
+        #self.write(cr, uid, [res_id], {})
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):

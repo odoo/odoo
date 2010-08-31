@@ -2433,7 +2433,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_start" readonly="1" string="Opening Balance"/>
+                            <field name="balance_start" attrs="{'readonly':[('state','in',('open','confirm'))]}" string="Opening Balance"/>
                             <field name="total_entry_encoding"/>
                         </group>
                         <group col="2" colspan="2">
