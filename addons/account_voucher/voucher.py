@@ -89,7 +89,7 @@ class account_voucher(osv.osv):
             ('purchase','Purchase'),
             ('payment','Payment'),
             ('receipt','Receipt'),
-        ],'Type'),
+        ],'Default Type', readonly=True, states={'draft':[('readonly',False)]}),
         'name':fields.char('Memo', size=256, readonly=True, states={'draft':[('readonly',False)]}),
         'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -116,7 +116,7 @@ class account_voucher(osv.osv):
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
         'amount': fields.float('Total', digits=(16, 2), required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_amount':fields.float('Tax Amount', digits=(14,2), readonly=True, states={'draft':[('readonly',False)]}),
-        'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Payment or Receipt transaction number, i.e. Bank cheque number or payorder number or Wire transfer number or Acknowledge number."),
+        'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Transaction referance number."),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Journal Items', readonly=True),
@@ -155,8 +155,8 @@ class account_voucher(osv.osv):
             voucher_amount = 0.0
             for line in voucher.line_ids:
                 voucher_amount += line.untax_amount or line.amount
-                line.amount = line.untax_amount
-                voucher_line_pool.write(cr, uid, [line.id], {'amount':line.untax_amount, 'untax_amount':line.untax_amount})
+                line.amount = line.untax_amount or line.amount
+                voucher_line_pool.write(cr, uid, [line.id], {'amount':line.amount, 'untax_amount':line.untax_amount})
                 
             if not voucher.tax_id:
                 continue
@@ -611,6 +611,7 @@ class account_voucher(osv.osv):
         }
         if view_type == 'form':
             tview = voucher_type.get(context.get('type'))
+            tview = tview or 'view_voucher_form'
             result = data_pool._get_id(cr, uid, 'account_voucher', tview)
             view_id = data_pool.browse(cr, uid, result, context=context).res_id
         
@@ -707,13 +708,16 @@ class account_voucher_line(osv.osv):
             return values
         journal = journal_pool.browse(cr, user, journal_id)
         account_id = False
+        ttype = 'cr'
         if journal.type in ('sale', 'purchase_refund'):
             account_id = journal.default_credit_account_id and journal.default_credit_account_id.id or False
         elif journal.type in ('purchase', 'expense', 'sale_refund'):
             account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
+            ttype = 'dr'
         elif partner_id:
             partner = partner_pool.browse(cr, user, partner_id, context=context)
             if context.get('type') == 'payment':
+                ttype = 'dr'
                 account_id = partner.property_account_payable.id
             elif context.get('type') == 'receipt':
                 account_id = partner.property_account_receivable.id
@@ -722,6 +726,7 @@ class account_voucher_line(osv.osv):
             raise osv.except_osv(_('Invalid Error !'), _('Please change partner and try again !'))
         values.update({
             'account_id':account_id,
+            'type':ttype
         })
         return values
 account_voucher_line()
