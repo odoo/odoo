@@ -455,9 +455,9 @@ class account_invoice(osv.osv):
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
         if not payment_term_id:
             return {}
-        res={}
-        pt_obj= self.pool.get('account.payment.term')
-        if not date_invoice :
+        res = {}
+        pt_obj = self.pool.get('account.payment.term')
+        if not date_invoice:
             date_invoice = time.strftime('%Y-%m-%d')
 
         pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
@@ -465,7 +465,7 @@ class account_invoice(osv.osv):
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
             pterm_list.sort()
-            res= {'value':{'date_due': pterm_list[-1]}}
+            res = {'value':{'date_due': pterm_list[-1]}}
         else:
              raise osv.except_osv(_('Data Insufficient !'), _('The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !'))
 
@@ -523,7 +523,7 @@ class account_invoice(osv.osv):
                         obj_l = account_obj.browse(cr, uid, inv_line[2]['account_id'])
                         if obj_l.company_id.id != company_id:
                             raise osv.except_osv(_('Configuration Error !'),
-                                _('invoice line account company is not match with invoice company.'))
+                                _('Invoice line account company does not match with invoice company.'))
                         else:
                             continue
         if company_id and type:
@@ -630,7 +630,7 @@ class account_invoice(osv.osv):
                 context.update({'lang': partner.lang})
             for taxe in ait_obj.compute(cr, uid, id, context=context).values():
                 ait_obj.create(cr, uid, taxe)
-         # Update the stored value (fields.function), so we write to trigger recompute
+        # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=context)
         return True
 
@@ -801,7 +801,7 @@ class account_invoice(osv.osv):
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
 
-            entry_type=''
+            entry_type = ''
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
                 entry_type = 'journal_pur_voucher'
@@ -890,11 +890,11 @@ class account_invoice(osv.osv):
                 'type': entry_type,
                 'narration':inv.comment
             }
-            period_id=inv.period_id and inv.period_id.id or False
+            period_id = inv.period_id and inv.period_id.id or False
             if not period_id:
-                period_ids= self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
+                period_ids = self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
                 if len(period_ids):
-                    period_id=period_ids[0]
+                    period_id = period_ids[0]
             if period_id:
                 move['period_id'] = period_id
                 for i in line:
@@ -1017,9 +1017,9 @@ class account_invoice(osv.osv):
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if context is None:
-            context={}
+            context = {}
         ids = []
         if name:
             ids = self.search(cr, user, [('number','=',name)]+ args, limit=limit, context=context)
@@ -1486,7 +1486,7 @@ class account_invoice_tax(osv.osv):
     def base_change(self, cr, uid, ids, base, currency_id=False, company_id=False, date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
-        company_currency=False
+        company_currency = False
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
@@ -1498,7 +1498,7 @@ class account_invoice_tax(osv.osv):
         company_obj = self.pool.get('res.company')
         company_currency = False
         tax_amount = self.read(cr, uid, ids[0], ['tax_amount'])['tax_amount']
-        tax_sign=1
+        tax_sign = 1
         if tax_amount < 0:
             tax_sign = -1
         elif tax_amount == 0:

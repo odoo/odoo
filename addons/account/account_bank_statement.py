@@ -104,8 +104,7 @@ class account_bank_statement(osv.osv):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
-        else:
-            return False
+        return False
 
     def _currency(self, cursor, user, ids, name, args, context=None):
         res = {}

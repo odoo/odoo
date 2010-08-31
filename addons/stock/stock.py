@@ -1479,8 +1479,8 @@ class stock_move(osv.osv):
         warning = {}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
             warning = {
-                'title': 'Bad Lot Assignation !',
-                'message': 'You are moving %.2f products but only %.2f available in this lot.' % (product_qty, prodlot.stock_available or 0.0)
+                'title': _('Bad Lot Assignation !'),
+                'message': _('You are moving %.2f products but only %.2f available in this lot.') % (product_qty, prodlot.stock_available or 0.0)
             }
         return {'warning': warning}
 
@@ -1587,24 +1587,30 @@ class stock_move(osv.osv):
                 context = {}
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
                 ptype = todo[0][1][5] and todo[0][1][5] or self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-                pick_name = picking.name
+                pick_name = picking.name or ''
                 if ptype == 'delivery':
                     pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.delivery')
-
-                pickid = picking_obj.create(cr, uid, {
-                    'name': pick_name,
-                    'origin': str(picking.origin or ''),
-                    'type': ptype,
-                    'note': picking.note,
-                    'move_type': picking.move_type,
-                    'auto_picking': todo[0][1][1] == 'auto',
-                    'stock_journal_id': todo[0][1][3],
-                    'company_id': todo[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context),
-                    'address_id': picking.address_id.id,
-                    'invoice_state': 'none',
-                    'date': picking.date,
-                    'sale_id':' sale_id' in picking._columns.keys() and  picking.sale_id.id or False
-                })
+                check_picking_ids = picking_obj.search(cr, uid, [('name','=',picking.name),('origin','=',str(picking.origin or '')),('type','=',ptype),('move_type','=',picking.move_type)])
+                if check_picking_ids:
+                    pickid = check_picking_ids[0]
+                else:
+                    if picking:
+                        pickid = picking_obj.create(cr, uid, {
+                            'name': pick_name,
+                            'origin': str(picking.origin or ''),
+                            'type': ptype,
+                            'note': picking.note,
+                            'move_type': picking.move_type,
+                            'auto_picking': todo[0][1][1] == 'auto',
+                            'stock_journal_id': todo[0][1][3],
+                            'company_id': todo[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context=context),
+                            'address_id': picking.address_id.id,
+                            'invoice_state': 'none',
+                            'date': picking.date,
+                            'sale_id':' sale_id' in picking._columns.keys() and  picking.sale_id.id or False
+                        })
+                    else:
+                        pickid = False
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
                     new_id = move_obj.copy(cr, uid, move.id, {
                         'location_id': move.location_dest_id.id,
@@ -1612,7 +1618,7 @@ class stock_move(osv.osv):
                         'date_moved': time.strftime('%Y-%m-%d'),
                         'picking_id': pickid,
                         'state': 'waiting',
-                        'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context)  ,
+                        'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
                         'move_history_ids': [],
                         'date_planned': (datetime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                         'move_history_ids2': []}
@@ -1622,8 +1628,9 @@ class stock_move(osv.osv):
                         'move_history_ids': [(4, new_id)]
                     })
                     new_moves.append(self.browse(cr, uid, [new_id])[0])
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+                if pickid:
+                    wf_service = netsvc.LocalService("workflow")
+                    wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
             if new_moves:
                 create_chained_picking(self, cr, uid, new_moves, context)
         create_chained_picking(self, cr, uid, moves, context)
@@ -1701,15 +1708,16 @@ class stock_move(osv.osv):
 
     def setlast_tracking(self, cr, uid, ids, context=None):
         tracking_obj = self.pool.get('stock.tracking')
-        for line in self.browse(cr, uid, ids, context=context):
-            last_track = None
-            if line.picking_id:
-                tracking_ids = [l.tracking_id.id for l in line.picking_id.move_lines if l.tracking_id]
-                if tracking_ids:
-                    last_track = max(tracking_ids)
+        tracking = context.get('tracking', False)
+        picking = self.browse(cr, uid, ids)[0].picking_id
+        if picking:
+            last_track = [line.tracking_id.id for line in picking.move_lines if line.tracking_id]
             if not last_track:
                 last_track = tracking_obj.create(cr, uid, {}, context=context)
-            self.write(cr, uid, line.id, {'tracking_id': last_track}, context=context)
+            else:
+                last_track.sort()
+                last_track = last_track[-1]
+            self.write(cr, uid, ids, {'tracking_id': last_track})
         return True
 
     #
