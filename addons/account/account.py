@@ -1001,9 +1001,9 @@ class account_move(osv.osv):
         """
 
         if not args:
-          args=[]
+          args = []
         if not context:
-          context={}
+          context = {}
         ids = []
         if name:
             ids += self.search(cr, user, [('name','ilike',name)]+args, limit=limit, context=context)
@@ -1019,7 +1019,7 @@ class account_move(osv.osv):
     def name_get(self, cursor, user, ids, context=None):
         if not len(ids):
             return []
-        res=[]
+        res = []
         data_move = self.pool.get('account.move').browse(cursor,user,ids)
         for move in data_move:
             if move.state=='draft':
@@ -1033,8 +1033,7 @@ class account_move(osv.osv):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
-        else:
-            return False
+        return False
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
@@ -1643,9 +1642,9 @@ class account_tax(osv.osv):
         @return: Returns a list of tupples containing id and name
         """
         if not args:
-            args=[]
+            args = []
         if not context:
-            context={}
+            context = {}
         ids = []
         ids = self.search(cr, user, args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
@@ -1800,7 +1799,7 @@ class account_tax(osv.osv):
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
         for r in tin:
             totalex -= r['amount']
-        totlex_qty=0.0
+        totlex_qty = 0.0
         try:
             totlex_qty=totalex/quantity
         except:
@@ -2221,12 +2220,12 @@ class account_add_tmpl_wizard(osv.osv_memory):
     }
 
     def action_create(self,cr,uid,ids,context=None):
-        acc_obj=self.pool.get('account.account')
-        tmpl_obj=self.pool.get('account.account.template')
-        data= self.read(cr, uid, ids)
+        acc_obj = self.pool.get('account.account')
+        tmpl_obj = self.pool.get('account.account.template')
+        data = self.read(cr, uid, ids)
         company_id = acc_obj.read(cr, uid, [data[0]['cparent_id']], ['company_id'])[0]['company_id'][0]
         account_template = tmpl_obj.browse(cr, uid, context['tmpl_ids'])
-        vals={
+        vals = {
             'name': account_template.name,
             'currency_id': account_template.currency_id and account_template.currency_id.id or False,
             'code': account_template.code,
