@@ -1449,12 +1449,13 @@ class stock_move(osv.osv):
             context={}
         group_id = self.pool.get('res.groups').search(cr, uid, [('name', 'in', ('Administration / Configuration','Administration / Access Rights'))])
         user_obj = self.pool.get('res.users')
+        group=[]
         user_rec = user_obj.read(cr, uid, uid)
         for move in self.browse(cr, uid, ids):
             if move.state=='done':
-                for i in group_id:
-                    if i not in user_rec['groups_id']:
-                        raise osv.except_osv(_('Error!'),  _('Quantities, UoMs, Products and Locations cannot be modified on stock moves in Done state (except by the Administrator ' ))
+              group=[i for i in group_id if (i and (i not in user_rec['groups_id']))]                
+              if group:
+                  raise osv.except_osv(_('Error!'),  _('Quantities, UoMs, Products and Locations cannot be modified on stock moves in Done state (except by the Administrator ' ))
 #                       
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
         
