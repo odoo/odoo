@@ -1227,7 +1227,6 @@
                             </field>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
-                                 <button name="%(act_stock_picking_move_wizard)d" string="Unreceived Products" type="action" states="draft" icon="gtk-redo"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
@@ -1362,7 +1361,7 @@
                     <field name="prodlot_id" groups="base.group_extended"/>
                     <button name="%(track_line)d" string="Split in Production Lots" type="action"
                         icon="gtk-justify-fill"
-                       states="draft,waiting,confirmed,assigned"
+                       states="draft,waiting,confirmed,assigned,done"
                         groups="base.group_extended"/>
                     <field groups="base.group_extended" name="tracking_id"/>
                     <button name="setlast_tracking" string="Put in current pack" type="object"
