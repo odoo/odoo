@@ -1,29 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="wizard_base_module_import" model="ir.actions.wizard">
-            <field name="name">Import module</field>
-            <field name="wiz_name">base.module.import</field>
-        </record>
-        <menuitem action="wizard_base_module_import" id="menu_wizard_module_import" parent="menu_management" type="wizard"/>
-
-        <record id="wizard_update" model="ir.actions.wizard">
-            <field name="name">Update Modules List</field>
-            <field name="wiz_name">module.module.update</field>
-        </record>
-        <menuitem action="wizard_update" icon="STOCK_CONVERT" id="menu_module_update" parent="menu_management" type="wizard"/>
 
         <wizard id="wizard_upgrade" model="ir.module.module" name="module.upgrade" string="Apply Scheduled Upgrades"/>
 
-        
-
         <menuitem action="wizard_upgrade" id="menu_wizard_upgrade" parent="menu_management" type="wizard"/>
-
-        <record id="wizard_lang_install" model="ir.actions.wizard">
-            <field name="name">Load an Official Translation</field>
-            <field name="wiz_name">module.lang.install</field>
-        </record>
-        <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="menu_translation" type="wizard"/>
 
         <record id="wizard_lang_export" model="ir.ui.view">
             <field name="name">Export a Translation File</field>
@@ -33,11 +14,11 @@
                 <form col="3" string="Export language">
                     <notebook>
                         <page string="Export Data">
-                            <group col="2" fill="0" states="choose">
+                            <group col="2" colspan="4" fill="0" states="choose">
                                 <separator colspan="2" string="Export translation file"/>
-                                <field name="lang" width="300"/>
+                                <field name="lang" required="1"/>
                                 <field name="format" required="1"/>
-                                <field height="200" name="modules" width="500"/>
+                                <field height="200" name="modules" nolabel="1" colspan="4"/>
                                 <field invisible="1" name="state"/>
                             </group>
                             <group col="1" fill="0" states="get">
@@ -56,7 +37,7 @@
                     </notebook>
 
                     <group col="2" colspan="3" fill="0">
-                        <button icon="gtk-cancel" name="act_cancel" special="cancel" states="choose" string="Cancel" type="object"/>
+                        <button icon="gtk-cancel" name="act_cancel" special="cancel" states="choose" string="Close" type="object"/>
                         <button icon="gtk-ok" name="act_getfile" states="choose" string="Get file" type="object"/>
                         <button icon="gtk-close" name="act_destroy" special="cancel" states="get" string="Close" type="object"/>
                     </group>
@@ -86,14 +67,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form col="3" string="Update Translations">
-                    <image name="gtk-dialog-info"/>
-                    <group col="2" fill="0" height="500">
-                        <field name="lang" width="300"/>
-                    </group>
+                    <field name="lang"/>
                     <label align="0.0" colspan="4" string="This wizard will detect new terms in the application so that you can update them manually."/>
                     <separator colspan="4"/>
                     <group col="2" colspan="4" fill="0">
-                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="Cancel" type="object"/>
+                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="Close" type="object"/>
                         <button icon="gtk-ok" name="act_update" string="Update" type="object"/>
                     </group>
                 </form>

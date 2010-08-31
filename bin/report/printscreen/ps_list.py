@@ -83,20 +83,21 @@ class report_printscreen_list(report_int):
                 for rec in records:
                     rec['__group'] = True
                     rec['__no_leaf'] = self.groupby_no_leaf
+                    rec['__grouped_by'] = groupby[0] if (isinstance(groupby, list) and groupby) else groupby
                     for f in fields_order:
                         if f not in rec:
                             rec.update({f:False})
                         elif isinstance(rec[f], tuple):
                             rec[f] = rec[f][1]
                     rows.append(rec)
-                    groupby = (rec.get('__context', {})).get('group_by',[])
-                    domain = rec.get('__domain', [])
-                    if groupby:
-                        get_groupby_data(groupby, domain)
+                    inner_groupby = (rec.get('__context', {})).get('group_by',[])
+                    inner_domain = rec.get('__domain', [])
+                    if inner_groupby:
+                        get_groupby_data(inner_groupby, inner_domain)
                     else:
                         if self.groupby_no_leaf:
                             continue
-                        child_ids = model.search(cr, uid, domain)
+                        child_ids = model.search(cr, uid, inner_domain)
                         res = model.read(cr, uid, child_ids, result['fields'].keys(), context)
                         rows.extend(res)
             dom = [('id','in',ids)]
@@ -175,7 +176,7 @@ class report_printscreen_list(report_int):
                 count += 1
                 if fields[f]['type']=='many2one' and line[f]:
                     if not line.get('__group'):
-                        line[f]= line[f][1]
+                        line[f] = line[f][1]
                 if fields[f]['type']=='selection' and line[f]:
                     for key, value in fields[f]['selection']:
                         if key == line[f]:
@@ -212,10 +213,18 @@ class report_printscreen_list(report_int):
                         d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
                         new_d1 = d1.strftime(format)
                     line[f] = new_d1
+
+
                 if line.get('__group'):
                     col = etree.SubElement(node_line, 'col', para='group', tree='no')
                 else:
                     col = etree.SubElement(node_line, 'col', para='yes', tree='no')
+
+                # Prevent empty labels in groups
+                if f == line.get('__grouped_by') and line.get('__group') and not line[f] and not float_flag and not temp[count]:
+                    col.text = line[f] = 'Undefined'
+                    col.set('tree', 'undefined')
+
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
@@ -225,7 +234,10 @@ class report_printscreen_list(report_int):
                     if not line.get('__group') and f != 'id' and temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
                 else:
-                     col.text = '/'
+                    col.text = '/'
+
+
+
         node_line = etree.SubElement(lines, 'row')
         for f in range(0, len(fields_order)):
             col = etree.SubElement(node_line, 'col', para='group', tree='no')

@@ -10,34 +10,71 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Connect Events to Actions">
-                    <field name="name" select="1" required="1"/>
-                    <newline/>
-                    <group col="2" colspan="2">
-                        <separator string="Action Source" colspan="2"/>
-                        <field name="model_id" on_change="onchange_object_id(model_id)"/>
-                        <field name="model" select="1" required="1"/>
-                        <field name="res_id"/>
-                        <field name="key2" select="2" required="1"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Action To Launch" colspan="2"/>
-                        <field name="action_id" on_change="onchange_action_id(action_id)"/>
-                        <field name="value_unpickle" required="1"/>
-                        <field name="object" readonly="1"/>
-                    </group>
+                    <field name="name" required="1"/>
+                    <field name="model_id" on_change="onchange_object_id(model_id)"/>
+                    <field name="action_id" on_change="onchange_action_id(action_id)"/>
+                    <field name="key2" required="1"/>
+                    <field name="object" readonly="1"/>
+                    <field name="res_id"/>
+                    <field name="value_unpickle"/>
+                    <field name="meta_unpickle"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </form>
             </field>
         </record>
+        
+        <record id="values_view_tree_action" model="ir.ui.view">
+            <field name="name">ir.values.tree.action</field>
+            <field name="model">ir.values</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Client Actions">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="action_id"/>
+                    <field name="key2"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="values_view_search_action" model="ir.ui.view">
+            <field name="name">ir.values.search.action</field>
+            <field name="model">ir.values</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Client Actions">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="key2"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="act_values_form_action" model="ir.actions.act_window">
-            <field name="name">Connect Actions To Client Events</field>
+            <field name="name">Client Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.values</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="values_view_form_action"/>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="values_view_search_action"/>
             <field name="domain">[('key','=','action')]</field>
             <field name="context">{'read':'default','default_object':1}</field>
         </record>
+        
+        <record model="ir.actions.act_window.view" id="action_values_tree_view">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="values_view_tree_action"/>
+	        <field name="act_window_id" ref="act_values_form_action"/>
+	    </record>
+	
+	    <record model="ir.actions.act_window.view" id="action_values_form_view">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="values_view_form_action"/>
+	        <field name="act_window_id" ref="act_values_form_action"/>
+	    </record>
 
         <menuitem action="act_values_form_action" id="menu_values_form_action" parent="base.menu_custom_action"/>
 
@@ -89,8 +126,6 @@
             <field name="context">{'read':'default'}</field>
         </record>
 
-        <menuitem action="act_values_form" id="menu_values_form" parent="next_id_4"/>
-
         <!-- Sequences -->
 
         <record id="sequence_view" model="ir.ui.view">
@@ -102,7 +137,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="company_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <field name="active" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
@@ -137,21 +172,35 @@
                 </form>
             </field>
         </record>
+
         <record id="sequence_view_tree" model="ir.ui.view">
             <field name="name">ir.sequence.tree</field>
             <field name="model">ir.sequence</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sequences">
-                    <field name="name"/>
                     <field name="code"/>
-                    <field name="company_id"/>
-                    <field name="number_next"/>
-                    <field name="number_increment"/>
+                    <field name="name"/>
                     <field name="prefix"/>
                     <field name="padding"/>
-                    <field name="active"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="number_next"/>
+                    <field name="number_increment"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_sequence_search" model="ir.ui.view">
+            <field name="name">ir.sequence.search</field>
+            <field name="model">ir.sequence</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Sequences">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <separator orientation="vertical"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                </search>
             </field>
         </record>
 
@@ -174,9 +223,33 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sequence Type">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="code"/>
                 </form>
+            </field>
+        </record>
+
+        <record id="sequence_type_tree_view" model="ir.ui.view">
+            <field name="name">ir.sequence.type.tree</field>
+            <field name="model">ir.sequence.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sequence Type">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_sequence_type_search" model="ir.ui.view">
+            <field name="name">ir.sequence.type.search</field>
+            <field name="model">ir.sequence.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Sequences Type">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                </search>
             </field>
         </record>
 
@@ -200,8 +273,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
+                    <field name="name"/>
+                    <field name="type"/>
                     <field name="usage"/>
                 </form>
             </field>
@@ -217,6 +290,17 @@
                 </tree>
             </field>
         </record>
+        <record id="action_view_search" model="ir.ui.view">
+            <field name="name">ir.actions.actions.search</field>
+            <field name="model">ir.actions.actions</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Action">
+                    <field name="name"/>
+                    <field name="type"/>
+                </search>
+            </field>
+        </record>
 
         <record id="ir_sequence_actions" model="ir.actions.act_window">
             <field name="name">Actions</field>
@@ -224,6 +308,7 @@
             <field name="res_model">ir.actions.actions</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="action_view_tree"/>
+            <field name="search_view_id" ref="action_view_search"/>
         </record>
         <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
@@ -237,8 +322,8 @@
             <field name="arch" type="xml">
                 <form string="Filters">
                     <group colspan="4" >
-                        <field name="name" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="name"/>
+                        <field name="user_id"/>
                         <field name="model_id"/>
                     </group>
                     <group col="4" expand="1">
@@ -259,12 +344,32 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Filters">
-                    <field name="name" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
                     <field name="model_id"/>
                     <field name="domain"/>
                     <field name="context"/>
                 </tree>
+            </field>
+        </record>
+    
+        <!--Filters search view-->
+
+        <record id="ir_filters_view_search" model="ir.ui.view">
+            <field name="name">ir.filters.search</field>
+            <field name="model">ir.filters</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Filters">
+                    <group colspan="4" col="10">
+		              <field name="name"/>
+		              <field name="user_id"/>
+		            </group>
+		            <newline/>
+		            <group expand="0" string="Group By" colspan="4">
+		              <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+		            </group>
+                </search>
             </field>
         </record>
 
@@ -276,6 +381,7 @@
             <field name="res_model">ir.filters</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_filters_view_tree"/>
+            <field name="search_view_id" ref="ir_filters_view_search"/>
         </record>
 
         <!--        Filters view menu-->
@@ -290,8 +396,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Report custom">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
+                    <field name="name"/>
+                    <field name="type"/>
                     <field name="report_id"/>
                     <field name="usage"/>
                 </form>
@@ -308,6 +414,23 @@
                 </tree>
             </field>
         </record>
+        <record id="act_report_custom_search_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.custom.search</field>
+            <field name="model">ir.actions.report.custom</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Report custom">
+                    <group colspan="4" col="10">
+                        <field name="name"/>
+                        <field name="type"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+           </field>
+        </record>
 
         <record id="ir_action_report_custom" model="ir.actions.act_window">
             <field name="name">Report Custom</field>
@@ -315,6 +438,7 @@
             <field name="res_model">ir.actions.report.custom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="act_report_custom_view_tree"/>
+            <field name="search_view_id" ref="act_report_custom_search_view"/>
         </record>
         <menuitem action="ir_action_report_custom" id="menu_ir_action_report_custom" parent="base.next_id_6"/>
 
@@ -379,6 +503,26 @@
                 </tree>
             </field>
         </record>
+        <record id="act_report_xml_search_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.xml.search</field>
+            <field name="model">ir.actions.report.xml</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Report xml">
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="model"/>
+                        <field name="type"/>
+                        <field name="report_name"/>
+                        <field name="report_type"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'report_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record id="ir_action_report_xml" model="ir.actions.act_window">
             <field name="name">Report Xml</field>
@@ -386,6 +530,7 @@
             <field name="res_model">ir.actions.report.xml</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="act_report_xml_view_tree"/>
+            <field name="search_view_id" ref="act_report_xml_search_view"/>
         </record>
         <menuitem action="ir_action_report_xml" id="menu_ir_action_report_xml" parent="base.next_id_6"/>
 
@@ -464,11 +609,31 @@
                 </form>
             </field>
         </record>
+        <record id="view_window_action_search" model="ir.ui.view">
+            <field name="name">ir.actions.windows.search</field>
+            <field name="model">ir.actions.act_window</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Open a Window">
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="res_model"/>
+                        <field name="view_type"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="View Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'view_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
         <record id="ir_action_window" model="ir.actions.act_window">
             <field name="name">Window Actions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.act_window</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_window_action_search"/>
         </record>
         <record id="ir_action_window_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -503,20 +668,38 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Wizards">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="wiz_name" select="1"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="wiz_name"/>
                     <field name="multi"/>
-                    <field colspan="4" name="groups_id"/>
+                    <notebook colspan="4">
+                        <page string="Security">
+                            <field colspan="4" name="groups_id" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
-
+        
+        <record id="act_wizard_search_view" model="ir.ui.view">
+            <field name="name">ir.actions.wizard.search</field>
+            <field name="model">ir.actions.wizard</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Wizards">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="wiz_name"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="ir_action_wizard" model="ir.actions.act_window">
             <field name="name">Wizards</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.actions.wizard</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="act_wizard_search_view"/>
         </record>
 
         <menuitem action="ir_action_wizard" id="menu_ir_action_wizard" parent="base.next_id_6"/>
@@ -606,7 +789,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Role">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="parent_id"/>
                     <separator string="Description" colspan="4"/>
                     <field name="description" nolabel="1" colspan="4"/>
@@ -636,6 +819,18 @@
                 </tree>
             </field>
         </record>
+        <record id="view_roles_search" model="ir.ui.view">
+            <field name="name">res.roles.search</field>
+            <field name="model">res.roles</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Role">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                </search>
+            </field>
+        </record>
+                    
         <record id="action_res_roles" model="ir.actions.act_window">
             <field name="name">Roles Structure</field>
             <field name="type">ir.actions.act_window</field>
@@ -652,6 +847,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.roles</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_roles_search"/>
         </record>
         <menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="menu_action_res_roles"/>
 
@@ -680,22 +876,43 @@
                 </form>
             </field>
         </record>
+
         <record id="view_view_tree" model="ir.ui.view">
             <field name="name">ir.ui.view.tree</field>
             <field name="model">ir.ui.view</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Views">
+                    <field name="priority" string="Sequence"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
                     <field name="xml_id"/>
                     <field name="inherit_id"/>
-                    <field name="field_parent"/>
-                    <field name="priority"/>
                 </tree>
             </field>
         </record>
+
+        <record id="view_view_search" model="ir.ui.view">
+            <field name="name">ir.ui.view.search</field>
+            <field name="model">ir.ui.view</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Views">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="model"/>
+                    <field name="inherit_id"/>
+                    <field name="xml_id"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Object" icon="terp-stage" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_ui_view" model="ir.actions.act_window">
             <field name="name">Views</field>
             <field name="type">ir.actions.act_window</field>
@@ -760,6 +977,24 @@
                 </tree>
             </field>
         </record>
+        <record id="view_attachment_search" model="ir.ui.view">
+            <field name="name">ir.attachment.search</field>
+            <field name="model">ir.attachment</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Attachments">
+                    <group colspan="4" col="10">
+                        <field name="name"/>
+                        <field name="datas_fname"/>
+                        <field name="type"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4">
+                        <filter string="File Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record id="action_attachment" model="ir.actions.act_window">
             <field name="name">Attachments</field>
@@ -767,6 +1002,7 @@
             <field name="res_model">ir.attachment</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_attachment_search"/>
         </record>
         <menuitem action="action_attachment" id="menu_action_attachment" parent="base.next_id_4"/>
 
@@ -878,9 +1114,10 @@
             <field name="arch" type="xml">
                 <form string="Model Description">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="model" select="1"/>
-                        <field name="osv_memory" select="1"/>
+                        <field name="name"/>
+                        <field name="model"/>
+                        <field name="osv_memory"/>
+                        <field name="state"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Fields">
@@ -923,10 +1160,12 @@
                                     <field name="groups" colspan="4" nolabel="1"/>
                                 </form>
                             </field>
-                            <separator colspan="4" string="Status"/>
-                            <field name="state"/>
-                            <group col="2" colspan="2">
-                                <button colspan="2" name="%(act_menu_create)d" string="Create a Menu" type="action" target="new"/>
+                            <group col="2" colspan="4">
+                                <button colspan="2"
+                                    icon="gtk-justify-fill"
+                                    name="%(act_menu_create)d"
+                                    string="Create a Menu" type="action"
+                                    target="new" />
                             </group>
                         </page>
                         <page string="Access Rights">
@@ -942,7 +1181,7 @@
                             </field>
                         </page>
                         <page string="Notes">
-                            <field colspan="4" name="info" nolabel="1" select="1"/>
+                            <field colspan="4" name="info" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -958,10 +1197,27 @@
                 <tree string="Model Description">
                     <field name="name"/>
                     <field name="model"/>
+                    <field name="state"/>
+                    <field name="osv_memory"/>
                 </tree>
             </field>
         </record>
 
+        <record id="view_model_search" model="ir.ui.view">
+            <field name="name">ir.model.search</field>
+            <field name="model">ir.model</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Model Description">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="osv_memory"/>
+                    <field name="state"/>
+                    <field name="access_ids"/>
+                    <field name="info"/>
+                </search>
+            </field>
+        </record>
 
         <!-- fields_description -->
         <record id="view_model_fields_form" model="ir.ui.view">
@@ -972,39 +1228,37 @@
                 <form string="Fields">
                     <group colspan="4" col="4">
                         <field name="name" select="1"/>
-                        <field name="model_id" readonly="1"/>
-                        <field colspan="4" name="field_description" select="2"/>
+                        <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                        <field name="field_description"/>
+                        <field name="state"/>
                     </group>
-
-                    <notebook>
+                    <notebook colspan="4">
                         <page string="Properties">
                             <group colspan="2" col="2">
-                                <field name="ttype" select="2"/>
-                                <field name="relation" select="2" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
+                                <field name="ttype"/>
+                                <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
                                 <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
                                 <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                                 <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
-                                <field name="state"/>
                                 <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                             </group>
 
                             <group colspan="2" col="2">
-                                <field name="required" select="2"/>
-                                <field name="readonly" select="2"/>
+                                <field name="required"/>
+                                <field name="readonly"/>
                                 <field name="select_level"/>
                                 <field name="translate"/>
                                 <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
                             </group>
                         </page>
-                        <page string="Security on Groups">
+                        <page string="Security">
                             <field name="groups" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-
 
         <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="name">ir.model.fields.tree</field>
@@ -1014,22 +1268,41 @@
                 <tree string="Fields">
                     <field name="name"/>
                     <field name="field_description"/>
+                    <field name="model_id"/>
+                    <field name="ttype"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
 
-
+        <record id="view_model_fields_search" model="ir.ui.view">
+            <field name="name">ir.model.fields.search</field>
+            <field name="model">ir.model.fields</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Fields">
+                    <field name="name"/>
+                    <field name="field_description"/>
+                    <field name="model_id"/>
+                    <field name="ttype"/>
+                    <field name="required"/>
+                    <field name="readonly"/>
+                </search>
+            </field>
+        </record>
+        
         <record model="ir.ui.view" id="view_model_data_form">
             <field name="name">ir.model.data.form</field>
             <field name="model">ir.model.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module data">
-                    <field name="module" select="1" />
-                    <field name="name" select="1" />
-                    <field name="model" select="1" />
-                    <field name="res_id" select="1" />
-                    <field name="noupdate" select="2" />
+                    <field name="name"/>
+                    <field name="module"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="noupdate"/>
+                    <newline/>
                     <field name="date_update" />
                     <field name="date_init" />
                 </form>
@@ -1044,12 +1317,32 @@
                 <tree string="Module Data">
                     <field name="module"/>
                     <field name="name"/>
-                    <field name="model" select="1" />
+                    <field name="model"/>
                     <field name="res_id"/>
-                    <field name="noupdate"/>
                 </tree>
             </field>
         </record>
+
+        <record id="view_model_data_search" model="ir.ui.view">
+            <field name="name">ir.model.data.search</field>
+            <field name="model">ir.model.data</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Module Data">
+                    <field name="module"/>
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="noupdate"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Module" icon="terp-stage" domain="[]" context="{'group_by':'module'}"/>
+                        <filter string="Object" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'model'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
 
         <record id="action_model_model" model="ir.actions.act_window">
             <field name="name">Objects</field>
@@ -1104,12 +1397,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Translations">
+                    <field name="lang"/>
+                    <field name="type"/>
                     <field name="name"/>
                     <field name="res_id"/>
-                    <field name="type"/>
-                    <field name="lang"/>
-                    <field name="src"/>
-                    <field name="value"/>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2">
+		                    <separator string="Source Term" colspan="2"/>
+		                    <field name="src" nolabel="1" height="400"/>
+	                    </group>
+	                    <group colspan="2" col="2">
+		                    <separator string="Tranlsation Term" colspan="2"/>
+		                    <field name="value" nolabel="1" height="400"/>
+		                </group>
+	                </group>
                 </form>
             </field>
         </record>
@@ -1185,28 +1486,43 @@
             <field name="arch" type="xml">
                 <form string="Menu">
                     <group col="8">
-                        <field name="name" select="1" string="Menu" />
-                        <field  name="parent_id" select="1" colspan="4"/>
+                        <field name="name" string="Menu" />
+                        <field  name="parent_id" colspan="4"/>
                         <field name="sequence" colspan="2"/>
                         <field name="complete_name" string="Full Path" colspan="8"/>
                         <field name="action" colspan="4" />
                         <field name="icon" on_change="onchange_icon(icon)" colspan="2"/>
                         <field name="icon_pict" widget="picture" nolabel="1" colspan="2"/>
                     </group>
-                    <group col="4" colspan="4" expand="1">
-                        <separator string="Security on Groups" colspan="4"/>
-                        <field name="groups_id"  colspan="4" nolabel="1"/>
-                    </group>
+                    <notebook colspan="4">
+                        <page string="Security on Groups">
+		                    <field name="groups_id" colspan="4" nolabel="1"/>
+		                </page>
+		            </notebook>
                 </form>
             </field>
         </record>
+        
+        <record id="edit_menu_access_search" model="ir.ui.view">
+            <field name="name">ir.ui.menu.search</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Menu">
+	                <field name="name" string="Menu" />
+	                <field name="parent_id"/>
+	            </search>
+	        </field>
+	    </record>
+                        
         <record id="grant_menu_access" model="ir.actions.act_window">
             <field name="name">Manage Menus</field>
             <field name="res_model">ir.ui.menu</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_menu"/>
+            <field name="search_view_id" ref="edit_menu_access_search"/>
         </record>
-        <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.menu_security"/>
+        <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.menu_security" sequence="1"/>
 
         <!--
     =============================================================
@@ -1219,25 +1535,27 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Scheduled Actions">
-                    <field name="nextcall"/>
+                    <field name="priority" string="Sequence"/>
                     <field name="name"/>
-                    <field name="active"/>
+                    <field name="nextcall"/>
                     <field name="interval_number"/>
                     <field name="interval_type"/>
                     <field name="numbercall"/>
+                    <field name="user_id" invisible="1"/>
                 </tree>
             </field>
         </record>
-            <record id="ir_cron_view" model="ir.ui.view">
+
+        <record id="ir_cron_view" model="ir.ui.view">
             <field name="name">ir.cron.form</field>
             <field name="model">ir.cron</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scheduled Actions">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1" />
-                    <field name="user_id" select="1" />
-                    <field name="priority" select="1" />
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="user_id" />
+                    <field name="priority" />
                     <notebook colspan="4">
                     <page string="Information">
                         <field name="interval_number"/>
@@ -1257,13 +1575,49 @@
                 </form>
             </field>
         </record>
+
+        <record id="ir_cron_view_search" model="ir.ui.view">
+            <field name="name">ir.cron.search</field>
+            <field name="model">ir.cron</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Scheduled Actions">
+                    <field name="name"/>
+                    <field name="user_id" widget="selection"/>
+                    <field name="nextcall"/>
+                    <field name="active"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="User" icon="terp-personal-" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Next Call" icon="terp-go-month"
+                                domain="[]" context="{'group_by':'nextcall'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ir_cron_view_calendar">
+            <field name="name">ir.cron.calendar</field>
+            <field name="model">ir.cron</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Scheduled Actions" date_start="nextcall" color="user_id">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </calendar>
+            </field>
+        </record>
+
         <record id="ir_cron_act" model="ir.actions.act_window">
             <field name="name">Scheduled Actions</field>
             <field name="res_model">ir.cron</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="context">{'active_test': False}</field>
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
+
         <menuitem id="next_id_10" name="Scheduler" parent="base.menu_config"/>
         <menuitem action="ir_cron_act" id="menu_ir_cron_act" parent="next_id_10"/>
 
@@ -1290,9 +1644,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Access Controls">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="model_id" select="1"/>
-                    <field name="group_id" select="1"/>
+                    <field colspan="4" name="name"/>
+                    <field name="model_id"/>
+                    <field name="group_id"/>
                     <newline/>
                     <field name="perm_read"/>
                     <field name="perm_write"/>
@@ -1301,13 +1655,27 @@
                 </form>
             </field>
         </record>
+        <record id="ir_access_view_search" model="ir.ui.view">
+            <field name="name">ir.model.access.search</field>
+            <field name="model">ir.model.access</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Access Controls">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="group_id"/>
+                </search>
+            </field>
+        </record>
+                    
         <record id="ir_access_act" model="ir.actions.act_window">
             <field name="name">Access Controls List</field>
             <field name="res_model">ir.model.access</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_access_view_tree"/>
+            <field name="search_view_id" ref="ir_access_view_search"/>
         </record>
-        <menuitem name="Access Controls" id="menu_security_access" parent="menu_security"/>
+        <menuitem name="Access Controls" id="menu_security_access" parent="menu_security" sequence="5"/>
         <menuitem action="ir_access_act" id="menu_ir_access_act" parent="menu_security_access"/>
 
         <!-- Rules -->
@@ -1321,7 +1689,7 @@
                     <group col="2" colspan="2">
                         <separator colspan="2" string="General"/>
                         <field colspan="4" name="name"/>
-                        <field name="model_id" select="1"/>
+                        <field name="model_id"/>
                     </group>
                     <group col="4" colspan="2">
                         <separator colspan="4" string="Access Rights"/>
@@ -1336,8 +1704,8 @@
                     </group>
                     <separator colspan="4" string="Groups (no group = global)"/>
                     <group colspan="4" expand="1">
-                        <field name="global" select="1"/>
-                        <field name="groups" select="1" nolabel="1" colspan="4"/>
+                        <field name="global"/>
+                        <field name="groups" nolabel="1" colspan="4"/>
                     </group>
                     <separator colspan="4" string="Combination of rules"/>
                     <label align="0.0" colspan="4"
@@ -1368,14 +1736,27 @@
                 </tree>
             </field>
         </record>
+        <record id="view_rule_search" model="ir.ui.view">
+            <field name="name">Record rules</field>
+            <field name="model">ir.rule</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Record rules">
+                    <field name="model_id"/>
+                    <field name="global"/>
+                    <field name="groups"/>
+                </search>
+            </field>
+        </record>
 
         <record id="action_rule" model="ir.actions.act_window">
             <field name="name">Record Rules</field>
             <field name="res_model">ir.rule</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_rule_tree"/>
+            <field name="search_view_id" ref="view_rule_search"/>
         </record>
-        <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_security"/>
+        <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_security" sequence="3"/>
 
         <record id="property_rule" model="ir.rule">
             <field name="name">Property multi-company</field>
@@ -1393,10 +1774,10 @@
             <field name="arch" type="xml">
                 <form string="Server Action">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="model_id" select="1"/>
-                        <field name="state" select="1"/>
-                        <field name="sequence" select="2"/>
+                        <field name="name"/>
+                        <field name="model_id"/>
+                        <field name="state"/>
+                        <field name="sequence"/>
                         <field name="condition"/>
                     </group>
                     <notebook colspan="4">
@@ -1407,12 +1788,12 @@
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
                             <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
-                            <field name="trigger_obj_id" select="2" context="{'key':''}" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','trigger')]}"/>
-                            <field name="trigger_name" select="2" attrs="{'required':[('state','=','trigger')]}"/>
+                            <field name="trigger_obj_id" context="{'key':''}" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','trigger')]}"/>
+                            <field name="trigger_name" attrs="{'required':[('state','=','trigger')]}"/>
                         </page>
                         <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
                             <separator colspan="4" string="Client Action Configuration"/>
-                            <field name="action_id" select="2" attrs="{'required':[('state','=','client_action')]}"/>
+                            <field name="action_id" attrs="{'required':[('state','=','client_action')]}"/>
                         </page>
                         <page string="Email Configuration" attrs="{'invisible':[('state','!=','email')]}">
                             <separator colspan="4" string="Email Configuration"/>
@@ -1431,9 +1812,9 @@
                         </page>
                         <page string="Create / Write / Copy" attrs="{'invisible':[('state','!=','object_create'), ('state','!=','object_write'), ('state','!=','object_copy')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                            <field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_copy'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
+                            <field name="srcmodel_id" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_copy'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
                             <field name="copy_object" on_change="change_object(copy_object, state)" select="2" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'), ('state','!=','trigger'), ('state','!=','object_write'), ('state','!=','object_create'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
-                            <field name="fields_lines" nolabel="1" select="2" colspan="4">
+                            <field name="fields_lines" nolabel="1" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
                                     <field name="type"/>
@@ -1478,6 +1859,25 @@
                 </tree>
             </field>
         </record>
+        
+        <record id="view_server_action_search" model="ir.ui.view">
+            <field name="name">ir.actions.server.search</field>
+            <field name="model">ir.actions.server</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Server Actions">
+                    <group col="10" colspan="4">
+	                    <field name="name"/>
+	                    <field name="state"/>
+	                    <field name="model_id"/>
+	                </group>
+                    <newline/>
+                    <group expand="0" string="Group By" colspan="4" col="4">
+	                   <filter string="Action Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record id="action_server_action" model="ir.actions.act_window">
             <field name="name">Server Actions</field>
@@ -1486,23 +1886,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
+            <field name="search_view_id" ref="view_server_action_search"/>
             <field name="context">{'key':'server_action'}</field>
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.menu_custom_action"/>
-
-        <record id="view_model_fields_tree" model="ir.ui.view">
-            <field name="name">ir.model.fields.tree</field>
-            <field name="model">ir.model.fields</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Fields">
-                    <field name="complete_name"/>
-                    <field name="model_id"/>
-                    <field name="name"/>
-                    <field name="field_description"/>
-                </tree>
-            </field>
-        </record>
 
         <record model="ir.actions.act_window" id="action_model_grid_security">
             <field name="name">Access Controls Grid</field>
@@ -1519,9 +1906,12 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
-                    <field name="action_id" select="1"/>
-                    <field name="state"/>
-                    <button name="action_id" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                    <field name="action_id"/>
+                    <field name="state" readonly="1"/>
+                    <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                    <button name="action_open" states="cancel,skip,done"
+                            string="Set as Todo" type="object"
+                            icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -1532,15 +1922,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form editable="bottom" string="Config Wizard Steps">
-                    <field name="sequence"/>
-                    <field name="action_id" select="1"/>
-                    <field name="restart"/>
-                    <field name="state"/>
-                    <notebook colspan="4">
-                        <page string="Groups">
-                            <field name="groups_id" nolabel="1" colspan="4"/>
-                        </page>
-                    </notebook>
+                    <group colspan="4" col="6">
+                        <field name="action_id"/>
+                        <field name="restart"/>
+                        <field name="sequence"/>
+                    </group>
+                    <separator string="Groups" colspan="4"/>
+                    <field name="groups_id" nolabel="1" colspan="4"/>
+                    <group colspan="4" col="4">
+                        <field name="state" colspan="2" readonly="1"/>
+                        <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                        <button name="action_open" states="cancel,skip,done"
+                            string="Set as Todo" type="object"
+                            icon="gtk-convert"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -1552,6 +1947,7 @@
             <field name="arch" type="xml">
                 <search string="Search Actions">
                 	<filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','onskip')]" help="Todo State Or (Skip State And Onskip Restart)"/>
+                	<separator orientation="vertical"/>
                     <field name="state"/>
                     <field name="restart"/>
                 </search>

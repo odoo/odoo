@@ -23,56 +23,68 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Requests">
-                	<field name="act_from" select="1"/>
-                    <field name="act_to" select="1"/>
-                    <field colspan="4" name="name" select="1"/>
+                    <group colspan="4" col="6">
+	                    <field name="name" colspan="4"/>
+	                    <field name="create_date" string="Request Date"/>
+	                    <newline/>
+	                	<field name="act_from"/>
+	                	<field name="priority"/>
+	                	<field name="active"/>
+	                </group>
                     <notebook colspan="4">
                         <page string="Request">
+                            <field name="act_to"/>
+                            <field name="trigger_date"/>
                             <separator colspan="4" string="Description"/>
                             <newline/>
-                            <field colspan="4" name="body" select="2"/>
-                            <field name="trigger_date" select="2"/>
-                            <group col="2" colspan="2">
+                            <field colspan="4" name="body" nolabel="1"/>
+                            <group col="5" colspan="4">
+                                <field name="state"/>
+                                <button name="request_close" states="waiting,draft,active" string="End of Request" type="object"/>
                                 <button name="request_send" states="draft,active" string="Send" type="object"/>
                                 <button name="request_reply" states="waiting" string="Reply" type="object"/>
                             </group>
-                            
-                            <separator colspan="4" string="References"/>
+                        </page>
+                        <page string="References" groups="base.group_extended">
                             <field name="ref_partner_id"/>
-                            <field name="priority" select="2"/>
                             <field colspan="4" name="ref_doc1"/>
                             <field colspan="4" name="ref_doc2"/>
-                            <separator colspan="4" string="Status"/>
-                            <field name="state"/>
-                            <group col="3" colspan="2">
-                                <field name="active" select="2"/>
-                                <button name="request_close" states="waiting,draft,active" string="End of Request" type="object"/>
-                            </group>
                         </page>
-                        <page string="History">
+                        <page string="History" groups="base.group_extended">
                             <field colspan="4" name="history" nolabel="1" widget="one2many_list"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
+        <record id="res_request_search_view" model="ir.ui.view">
+            <field name="name">res.request.search</field>
+            <field name="model">res.request</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Requests">
+                    <group colspan="4" col="10">
+	                    <field name="act_from"/>
+	                    <field name="act_to"/>
+	                    <field name="name"/>
+	                    <field name="state"/>
+	                </group>
+	                <newline/>
+	                <group expand="0" string="Group By" colspan="4">
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+	                </group>
+                </search>
+            </field>
+        </record>    
         <record id="res_request-act" model="ir.actions.act_window">
-            <field name="name">My Requests</field>
+            <field name="name">Requests</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.request</field>
             <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="res_request_search_view"/>
         </record>
         <menuitem id="next_id_12" name="Requests" parent="base.next_id_4"/>
-        <menuitem action="res_request-act" id="menu_res_request_act" parent="next_id_12"/>
-        
-        <record id="res_request-closed" model="ir.actions.act_window">
-            <field name="name">My Closed Requests</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.request</field>
-            <field name="domain">[('active','=',False)]</field>
-            <field name="view_id" eval="False"/>
-        </record>
-        <menuitem action="res_request-closed" id="next_id_12_close" parent="menu_res_request_act"/>
+        <menuitem action="res_request-act" id="menu_res_request_act" parent="next_id_12" sequence="1"/>
         
         <record id="res_request_link-view" model="ir.ui.view">
             <field name="name">res.request.link.form</field>
@@ -80,8 +92,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Request Link">
-                    <field name="name" select="1"/>
-                    <field name="object" select="1"/>
+                    <field name="name"/>
+                    <field name="object"/>
                     <field name="priority"/>
                 </form>
             </field>
@@ -97,15 +109,27 @@
                 </tree>
             </field>
         </record>
+        <record id="res_request_link_search_view" model="ir.ui.view">
+            <field name="name">res.request.link.search</field>
+            <field name="model">res.request.link</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Request Link">
+                    <field name="name"/>
+                    <field name="object"/>
+                </search>
+            </field>
+        </record>
         
         <record id="res_request_link-act" model="ir.actions.act_window">
-            <field name="name">Accepted Links in Requests</field>
+            <field name="name">References Link</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.request.link</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="res_request_link_search_view"/>
         </record>
-        <menuitem action="res_request_link-act" id="menu_res_request_link_act" parent="base.next_id_12"/>
+        <menuitem action="res_request_link-act" id="menu_res_request_link_act" parent="base.next_id_12" sequence="4"/>
         
         
         <record id="res_request_history_tree-view" model="ir.ui.view">
