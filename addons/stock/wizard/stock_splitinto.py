@@ -41,6 +41,10 @@ class stock_split_into(osv.osv_memory):
         quantity = self.browse(cr, uid, data[0], context).quantity or 0.0
         for move in move_obj.browse(cr, uid, rec_id):
             quantity_rest = move.product_qty - quantity
+            if move.tracking_id and quantity!= 0.0:
+                raise osv.except_osv(_('Error!'),  _('The current move line is already assigned to a pack, please remove it first if you really want to change it ' \
+                                    'for this product: "%s" (id: %d)') % \
+                                    (move.product_id.name, move.product_id.id,))                  
             if quantity > move.product_qty:
                 raise osv.except_osv(_('Error!'),  _('Total quantity after split exceeds the quantity to split ' \
                                     'for this product: "%s" (id: %d)') % \
