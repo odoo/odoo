@@ -205,7 +205,7 @@ class stock_location(osv.osv):
         'chained_picking_type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', help="Shipping Type of the Picking List that will contain the chained move (leave empty to automatically detect the type based on the source and destination locations)."),
         'chained_company_id': fields.many2one('res.company', 'Chained Company', help='The company the Picking List containing the chained move will belong to (leave empty to use the default company determination rules'),
         'chained_delay': fields.integer('Chaining Lead Time',help="Delay between original move and chained move in days"),
-        'address_id': fields.many2one('res.partner.address', 'Location Address'),
+        'address_id': fields.many2one('res.partner.address', 'Location Address',help="Address of  customer or supplier."),
         'icon': fields.selection(tools.icons, 'Icon', size=64,help="Icon show in  hierarchical tree view"),
 
         'comment': fields.text('Additional Information'),
