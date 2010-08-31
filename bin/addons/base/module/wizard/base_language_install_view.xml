@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_base_language_install" model="ir.ui.view">
+            <field name="name">Install Language</field>
+            <field name="model">base.language.install</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="System Upgrade">
+            <group colspan="2" col="4">
+                <separator string="System Upgrade" colspan="6"/>
+                <newline/>
+                <label align="0.0" string="Choose a language to install:" colspan="4"/>
+                <field name="lang" colspan="4"/>
+                <label align="0.0" string="Note that this operation may take a few minutes." colspan="4"/>
+                <separator string="" colspan="6"/>
+                <button special="cancel" string="Close" icon="gtk-cancel"/>
+                <button name="lang_install" string="Start installation" type="object" icon="gtk-ok"/>
+            </group>
+           </form>
+           </field>
+        </record>
+
+        <record id="action_view_base_language_install" model="ir.actions.act_window">
+            <field name="name">Install Language</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.language.install</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+        name="Load an Official Translation"
+        action="action_view_base_language_install"
+        id="menu_view_base_language_install"
+        parent="menu_translation"/>
+
+        <record id="view_base_language_install_msg" model="ir.ui.view">
+            <field name="name">Install Language Message</field>
+            <field name="model">base.module.import.msg</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Language file loaded.">
+                <group colspan="2" col="4">
+                    <separator string="Installation Done" colspan="4"/>
+                    <label align="0.0" string="The selected language has been successfully installed.\nYou must change the preferences of the user and open a new menu to view changes." colspan="4"/>
+                    <separator string="" colspan="4"/>
+                    <button special="cancel" string="OK" icon="gtk-ok"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_language_install_msg" model="ir.actions.act_window">
+            <field name="name">Install Language Message</field>
+            <field name="res_model">base.module.import.msg</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_base_language_install"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>
+

@@ -79,7 +79,7 @@
                     <notebook colspan="4">
                         <page string="Current Activity">
                             <field name="company_id" widget="selection" readonly="0"
-                                    context="{'user_id': self, 'user_preference': 1}"/>
+                                    context="{'user_id': self, 'user_preference': 1}" groups="base.group_multi_company"/>
                             <field name="view" readonly="0"/>
                             <label string="" colspan="2"/>
                             <field name="menu_tips" colspan="2" readonly="0"/>
@@ -116,14 +116,14 @@
                         <page string="User">
                             <field name="address_id" select="1"/>
                             <field name="user_email" widget="email"/>
-                            <field name="company_id" required="1" context="{'user_id': self, 'user_preference': 1}"/>
+                            <field name="company_id" required="1" context="{'user_id': self, 'user_preference': 1}" groups="base.group_multi_company"/>
                             <field name="action_id" required="True"/>
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field name="context_lang"/>
                             <field name="context_tz"/>
                             <field name="view" readonly="0"/>
                             <field name="menu_tips" colspan="2"/>
-                            <label string="" colspan="2"/>
+                            <newline/>
                             <group colspan="2" col="2">
                                 <separator string="Signature" colspan="2"/>
                                 <field colspan="2" name="signature" nolabel="1"/>
@@ -152,7 +152,7 @@
                     <field name="name"/>
                     <field name="login"/>
                     <field name="address_id" string="Address" />
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -163,10 +163,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Users">
-                    <field name="name" select="1"/>
-                    <field name="login" select="1"/>
-                    <field name="address_id" select="1" string="Address"/>
-                    <field name="company_ids" select="1" string="Company"/>
+                    <field name="name"/>
+                    <field name="login"/>
+                    <field name="address_id" string="Address"/>
+                    <field name="company_ids" string="Company"/>
                 </search>
             </field>
         </record>

@@ -23,18 +23,19 @@ from osv import fields,osv
 class wizard_model_menu(osv.osv_memory):
     _name = 'wizard.ir.model.menu.create'
     _columns = {
-        'model_id': fields.many2one('ir.model','Object', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
         'name': fields.char('Menu Name', size=64, required=True),
     }
-    _defaults = {
-        'model_id': lambda self,cr,uid,ctx: ctx.get('model_id', False)
-    }
-    def menu_create(self, cr, uid, ids, context={}):
+
+    def menu_create(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        model_pool = self.pool.get('ir.model')
         for menu in self.browse(cr, uid, ids, context):
+            model = model_pool.browse(cr, uid, context.get('model_id'), context=context)
             val = {
                 'name': menu.name,
-                'res_model': menu.model_id.model,
+                'res_model': model.model,
                 'view_type': 'form',
                 'view_mode': 'tree,form'
             }

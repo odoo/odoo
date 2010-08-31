@@ -523,29 +523,35 @@ form: module.record_id""" % (xml_id,)
         m_l = map(escape, escape_re.split(rec.get("name",'').encode('utf8')))
 
         values = {'parent_id': False}
-        if not rec.get('parent'):
+        if rec.get('parent', False) is False and len(m_l) > 1:
+            # No parent attribute specified and the menu name has several menu components, 
+            # try to determine the ID of the parent according to menu path
             pid = False
+            res = None
+            values['name'] = m_l[-1]
+            m_l = m_l[:-1] # last part is our name, not a parent
             for idx, menu_elem in enumerate(m_l):
                 if pid:
                     cr.execute('select id from ir_ui_menu where parent_id=%s and name=%s', (pid, menu_elem))
                 else:
                     cr.execute('select id from ir_ui_menu where parent_id is null and name=%s', (menu_elem,))
                 res = cr.fetchone()
-                if idx==len(m_l)-1:
-                    values = {'parent_id': pid,'name':menu_elem}
-                elif res:
+                if res:
                     pid = res[0]
-                    xml_id = idx==len(m_l)-1 and rec.get('id','').encode('utf8')
-                    try:
-                        self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
-                    except:
-                        self.logger.notifyChannel('init', netsvc.LOG_ERROR, "module: %s xml_id: %s" % (self.module, xml_id))
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
                     self.logger.notifyChannel("init", netsvc.LOG_WARNING, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
                     pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
+            values['parent_id'] = pid
         else:
-            menu_parent_id = self.id_get(cr, 'ir.ui.menu', rec.get('parent',''))
+            # The parent attribute was specified, if non-empty determine its ID, otherwise
+            # explicitly make a top-level menu
+            if rec.get('parent'):
+                menu_parent_id = self.id_get(cr, 'ir.ui.menu', rec.get('parent',''))
+            else:
+                # we get here with <menuitem parent="">, explicit clear of parent, or
+                # if no parent attribute at all but menu name is not a menu path
+                menu_parent_id = False
             values = {'parent_id': menu_parent_id}
             if rec.get('name'):
                 values['name'] = rec.get('name')
@@ -793,7 +799,9 @@ form: module.record_id""" % (xml_id,)
     def id_get(self, cr, model, id_str):
         if id_str in self.idref:
             return self.idref[id_str]
-        return self.model_id_get(cr, model, id_str)[1]
+        res = self.model_id_get(cr, model, id_str)
+        if res and len(res)>1: res = res[1]
+        return res
 
     def model_id_get(self, cr, model, id_str):
         model_data_obj = self.pool.get('ir.model.data')

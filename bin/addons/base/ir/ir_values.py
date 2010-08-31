@@ -222,14 +222,15 @@ class ir_values(osv.osv):
         res2 = res[:]
         for r in res:
             if type(r[2])==type({}) and 'type' in r[2]:
-                groups = r[2].get('groups_id')
-                if groups:
-                        cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',(tuple(groups), uid))
-                        cnt = cr.fetchone()[0]
-                        if cnt:
-                            res2.remove(r)
-                        if r[1] == 'Menuitem' and not res2:
-                            raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
+                if r[2]['type'] in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
+                    groups = r[2].get('groups_id')
+                    if groups:
+                            cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',(tuple(groups), uid))
+                            cnt = cr.fetchone()[0]
+                            if not cnt:
+                                res2.remove(r)
+                            if r[1] == 'Menuitem' and not res2:
+                                raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
         return res2
 ir_values()
 
