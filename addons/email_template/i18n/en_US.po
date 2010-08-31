@@ -174,8 +174,8 @@ msgstr "Approve Account"
 
 #. module: email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_all
-msgid "E-MAIL Templates"
-msgstr "E-MAIL Templates"
+msgid "Email Templates"
+msgstr "Email Templates"
 
 #. module: email_template
 #: field:email_template.preview,rel_model_ref:0
@@ -221,8 +221,8 @@ msgstr "Download Full Mail"
 
 #. module: email_template
 #: help:email.template,def_to:0
-msgid "The default recipient of email.Placeholders can be used here."
-msgstr "The default recipient of email.Placeholders can be used here."
+msgid "The recipient of email.Placeholders can be used here."
+msgstr "The recipient of email.Placeholders can be used here."
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -258,8 +258,8 @@ msgstr "Accounts"
 
 #. module: email_template
 #: field:email.template,track_campaign_item:0
-msgid "Track campaign items"
-msgstr "Track campaign items"
+msgid "Resource Tracking"
+msgstr "Resource Tracking"
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -334,11 +334,6 @@ msgstr "Body(Html)"
 #: view:email_template.account:0
 msgid "Send/Receive"
 msgstr "Send/Receive"
-
-#. module: email_template
-#: model:ir.ui.menu,name:email_template.menu_email_template_mailbox_all_main2
-msgid "MailBox"
-msgstr "MailBox"
 
 #. module: email_template
 #: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
@@ -762,8 +757,8 @@ msgstr "Save in Drafts"
 
 #. module: email_template
 #: help:email.template,def_subject:0
-msgid "The default subject of email. Placeholders can be used here."
-msgstr "The default subject of email. Placeholders can be used here."
+msgid "The subject of email. Placeholders can be used here."
+msgstr "The subject of email. Placeholders can be used here."
 
 #. module: email_template
 #: field:email_template.account,smtptls:0
@@ -772,8 +767,8 @@ msgstr "TLS"
 
 #. module: email_template
 #: view:email_template.send.wizard:0
-msgid "Add here all attachments of the current document you want to include in the e-mail."
-msgstr "Add here all attachments of the current document you want to include in the e-mail."
+msgid "Add here all attachments of the current document you want to include in the Email."
+msgstr "Add here all attachments of the current document you want to include in the Email."
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_send_wizard
@@ -786,6 +781,8 @@ msgstr "This is the wizard for sending mail"
 #: code:addons/email_template/email_template_mailbox.py:0
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
+#: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #, python-format
 msgid "Email Template"
 msgstr "Email Template"
@@ -1023,8 +1020,8 @@ msgstr "Password"
 #: help:email.template,message_id:0
 #: help:email_template.preview,message_id:0
 #: help:email_template.send.wizard,message_id:0
-msgid "The Message-ID header value, if you need tospecify it, for example to automatically recognize the replies later. Placeholders can be used here."
-msgstr "The Message-ID header value, if you need tospecify it, for example to automatically recognize the replies later. Placeholders can be used here."
+msgid "Specify the Message-ID SMTP header to use in outgoing emails. Please note that this overrides the Resource tracking option! Placeholders can be used here."
+msgstr "Specify the Message-ID SMTP header to use in outgoing emails. Please note that this overrides the Resource tracking option! Placeholders can be used here."
 
 #. module: email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_configuration
@@ -1114,11 +1111,6 @@ msgid "Enter name of outgoing server, eg:smtp.gmail.com "
 msgstr "Enter name of outgoing server, eg:smtp.gmail.com "
 
 #. module: email_template
-#: model:ir.ui.menu,name:email_template.menu_email_template_company_mails
-msgid "Company Mails"
-msgstr "Company Mails"
-
-#. module: email_template
 #: view:email.template:0
 msgid "Addresses"
 msgstr "Addresses"
@@ -1130,8 +1122,8 @@ msgstr "Emails will be sent from this approved account."
 
 #. module: email_template
 #: field:email.template,def_subject:0
-msgid "Default Subject"
-msgstr "Default Subject"
+msgid "Subject"
+msgstr "Subject"
 
 #. module: email_template
 #: help:email.template,def_bcc:0
@@ -1182,8 +1174,8 @@ msgstr "Has Attachments"
 
 #. module: email_template
 #: help:email.template,track_campaign_item:0
-msgid "Enable this if you want the outgoing e-mails to include a tracking marker that makes it possible to identify the replies an link them back to the campaign item"
-msgstr "Enable this if you want the outgoing e-mails to include a tracking marker that makes it possible to identify the replies an link them back to the campaign item"
+msgid "Enable this is you wish to include a special tracking marker in outgoing emails so you can identify replies and link them back to the corresponding resource record. This is useful for CRM leads for example"
+msgstr "Enable this is you wish to include a special tracking marker in outgoing emails so you can identify replies and link them back to the corresponding resource record. This is useful for CRM leads for example"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:0
