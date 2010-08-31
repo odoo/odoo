@@ -142,7 +142,7 @@ class stock_move_scrap(osv.osv_memory):
         return res
 
     def move_scrap(self, cr, uid, ids, context={}):
-        """ To move scraped products
+        """ To move scrapped products
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in

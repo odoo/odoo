@@ -1391,7 +1391,7 @@ class stock_move(osv.osv):
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner", store=True),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin",store=True),
-        'scraped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scraped'),
+        'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped'),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
     }
     _constraints = [
@@ -1437,7 +1437,7 @@ class stock_move(osv.osv):
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
-        'scraped' :  False,
+        'scrapped' :  False,
         'date_planned': time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
@@ -1935,7 +1935,7 @@ class stock_move(osv.osv):
         """ Move the scrap/damaged product into scrap location
         @param cr: the database cursor
         @param uid: the user id
-        @param ids: ids of stock move object to be scraped
+        @param ids: ids of stock move object to be scrapped
         @param quantity : specify scrap qty
         @param location_id : specify scrap location
         @param context: context arguments
@@ -1951,7 +1951,7 @@ class stock_move(osv.osv):
                 'product_qty': quantity,
                 'product_uos_qty': uos_qty,
                 'state': move.state,
-                'scraped' : True,
+                'scrapped' : True,
                 'location_dest_id': location_id,
                 'tracking_id':False,
                 'prodlot_id':False
@@ -1960,7 +1960,7 @@ class stock_move(osv.osv):
             res += [new_move]
             product_obj = self.pool.get('product.product')
             for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
-                message = _('Product ') + " '" + name + "' "+ _("is scraped with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
+                message = _('Product ') + " '" + name + "' "+ _("is scrapped with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
             self.log(cr, uid, move.id, message)
 
         self.action_done(cr, uid, res)
