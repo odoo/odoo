@@ -1542,7 +1542,6 @@
                         icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
                     <field name="date_planned"/>
-                    <field name="backorder_id" groups="base.group_extended"/>
                     <field name="state"/>
                     <button name="%(action_partial_move)d" string="Partial" type="action" states="assigned" icon="gtk-justify-fill"/>
                     <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
@@ -1599,7 +1598,7 @@
                                 <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                                 <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                                 <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
-                                <button name="%(action_partial_move)d" states="assigned" string="Partial" type="action" icon="gtk-justify-fill"/>
+                                <button name="%(action_partial_move)d" states="assigned,confirmed" string="Partial" type="action" icon="gtk-justify-fill"/>
                                 <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
                             </group>
                         </page>
@@ -1623,8 +1622,6 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
                         <filter icon="terp-check" name="received" string="Done" domain="[('state','=','done')]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-accessories-archiver-minus" string="Back Order" domain="[('backorder_id','!=',False)]" help="Back Order"/>
                         <separator orientation="vertical"/>
                         <field name="origin"/>
                         <field name="partner_id" string="Partner"/>
