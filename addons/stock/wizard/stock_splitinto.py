@@ -41,6 +41,10 @@ class stock_split_into(osv.osv_memory):
         quantity = self.browse(cr, uid, data[0], context).quantity or 0.0
         for move in move_obj.browse(cr, uid, rec_id):
             quantity_rest = move.product_qty - quantity
+            if quantity > move.product_qty:
+                raise osv.except_osv(_('Error!'),  _('Total quantity after split exceeds the quantity to split ' \
+                                    'for this product: "%s" (id: %d)') % \
+                                    (move.product_id.name, move.product_id.id,))              
             if quantity > 0:
                 move_obj.setlast_tracking(cr, uid, [move.id], context=context)
                 move_obj.write(cr, uid, [move.id], {
