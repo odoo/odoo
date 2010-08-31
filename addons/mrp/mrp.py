@@ -1111,7 +1111,7 @@ class mrp_procurement(osv.osv):
         todo = []
         todo2 = []
         for proc in self.browse(cr, uid, ids):
-            if proc.close_move:
+            if proc.close_move and proc.move_id:
                 if proc.move_id.state not in ('done','cancel'):
                     todo2.append(proc.move_id.id)
             else:
