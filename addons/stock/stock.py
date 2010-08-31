@@ -190,9 +190,12 @@ class stock_location(osv.osv):
         'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
         'chained_location_type': fields.selection([('none', 'None'), ('customer', 'Customer'), ('fixed', 'Fixed Location')],
             'Chained Location Type', required=True,
-            help="This field is set to determine the destination location.\n" \
-                "If the field is set to 'customer', the location is given by the properties of the partner form.\n"\
-                "If the field is set to 'fixed', the destination location is given by the field Location if link is fixed."),
+            help="Determines whether this location is chained to another location, i.e. any incoming product in this location \n" \
+                "should next go to the chained location. The chained location is determined according to the type :"\
+                "\n* None: No chaining at all"\
+                "\n* Customer: The chained location will be taken from the Customer Location field on the Partner form of the Partner that is specified in the Picking list of the incoming products." \
+                "\n* Fixed Location: The chained location is taken from the next field: Chained Location if Fixed." \
+                ),
         'chained_auto_packing': fields.selection(
             [('auto', 'Automatic Move'), ('manual', 'Manual Operation'), ('transparent', 'Automatic No Step Added')],
             'Chaining Type',
