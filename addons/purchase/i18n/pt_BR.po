@@ -75,6 +75,7 @@ msgstr "Compra Confirmada"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Pendência no Faturamento"
 
@@ -133,6 +134,7 @@ msgstr "Aprovar Compra"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Aprovada"
 
@@ -288,6 +290,7 @@ msgstr "Linha da Ordem"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Confirmada"
 
@@ -314,6 +317,7 @@ msgstr "RFQ"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Aguardando"
 
@@ -396,6 +400,7 @@ msgstr "Ref. Ordem"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Concluído"
 
@@ -446,6 +451,7 @@ msgstr "Aprovar Ordem de Compra depois da Confirmação"
 
 #. module: purchase
 #: selection:purchase.order,state:0
+#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Pendência no Embarque"
 
@@ -932,6 +938,12 @@ msgstr ""
 #: selection:report.purchase.order.category,state:0
 #: selection:report.purchase.order.product,state:0
 msgid "In progress"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr ""
 
 #, python-format

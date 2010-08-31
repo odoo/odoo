@@ -125,16 +125,5 @@
             <field name="restart">always</field>
         </record>
 
-        <record id="account_ir_actions_todo_tree" model="ir.ui.view">
-            <field name="model">ir.actions.todo</field>
-            <field name="name">account_installer_action_replace</field>
-            <field name="type">tree</field>
-            <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@string='Launch']" position="replace">
-                    <button name="%(action_account_configuration_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-                </xpath>
-            </field>
-        </record>
     </data>
 </openerp>
