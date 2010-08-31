@@ -1454,7 +1454,6 @@ class stock_move(osv.osv):
               group=[i for i in group_id if (i and (i not in user_rec['groups_id']))]                
               if group:
                   raise osv.except_osv(_('Error!'),  _('Quantities, UoMs, Products and Locations cannot be modified on stock moves in Done state (except by the Administrator ' ))
-#                       
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
         
     def copy(self, cr, uid, id, default=None, context=None):
