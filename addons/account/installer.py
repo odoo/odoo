@@ -374,6 +374,7 @@ class account_installer(osv.osv_memory):
         #Sales Refund Journal
         vals_journal['name'] = _('Sales Refund Journal')
         vals_journal['type'] = 'sale_refund'
+        vals_journal['refund_journal'] = True
         vals_journal['code'] = _('SCNJ')
         vals_journal['sequence_id'] = seq_id_sale_refund
 
@@ -386,6 +387,7 @@ class account_installer(osv.osv_memory):
         # Purchase Refund Journal
         vals_journal['name'] = _('Purchase Refund Journal')
         vals_journal['type'] = 'purchase_refund'
+        vals_journal['refund_journal'] = True
         vals_journal['code'] = _('ECNJ')
         vals_journal['sequence_id'] = seq_id_purchase_refund
 
