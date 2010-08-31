@@ -24,14 +24,34 @@ import pooler
 from report.interface import report_rml
 from tools import to_xml
 import tools
+import time
+from report import report_sxw
 
 class survey_analysis(report_rml):
     def create(self, cr, uid, ids, datas, context):
+
+        surv_obj = pooler.get_pool(cr.dbname).get('survey')
+        rml_obj=report_sxw.rml_parse(cr, uid, surv_obj._name,context)
+        company=surv_obj.browse(cr,uid,ids,context)[0].responsible_id.company_id
+
         rml ="""<document filename="Survey Analysis Report.pdf">
-                <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
-                    <pageTemplate id="first">
-                      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
-                </pageTemplate>
+                <template pageSize="(595.0,842.0)" title="Survey Analysis" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+                        <pageTemplate>
+                        <frame id="first" x1="1.3cm" y1="1.5cm" width="18.4cm" height="26.5cm"/>
+                        <pageGraphics>
+                        <fill color="black"/>
+                        <stroke color="black"/>
+                        <setFont name="DejaVu Sans" size="8"/>
+                        <drawString x="1.3cm" y="28.3cm"> """+to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True))+"""</drawString>
+                        <setFont name="DejaVu Sans Bold" size="10"/>
+                        <drawString x="9.8cm" y="28.3cm">"""+ to_xml(company.name) +"""</drawString>
+                        <setFont name="DejaVu Sans" size="8"/>
+                        <drawRightString x="19.7cm" y="28.3cm"><pageNumber/> / </drawRightString>
+                        <drawString x="19.8cm" y="28.3cm"></drawString>
+                        <stroke color="#000000"/>
+                        <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
+                        </pageGraphics>
+                        </pageTemplate>
                   </template>
                   <stylesheet>
                     <blockTableStyle id="Table1">
@@ -95,7 +115,7 @@ class survey_analysis(report_rml):
                   </stylesheet>
                   <images/>
                   <story>
-                    <para style="Title"><u>Answer Summary</u></para>
+                    <para style="Title">Answer Summary</para>
                     <para style="Standard"><font></font></para>
                     <para style="P2">
                       <font color="white"> </font>
@@ -103,7 +123,7 @@ class survey_analysis(report_rml):
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
         if datas.has_key('form') and datas['form']['survey_ids']:
            ids =  datas['form']['survey_ids']
-            
+
         for survey in surv_obj.browse(cr, uid, ids):
             rml += """<blockTable colWidths="280.0,100.0,120.0" style="Table_heading">
                       <tr>
@@ -130,13 +150,16 @@ class survey_analysis(report_rml):
                           <para style="terp_default_Centre_8">""" + str(survey.tot_comp_survey) + """</para>
                         </td>
                       </tr>
-                    </blockTable>"""
+                    </blockTable>
+                    <para style="P2">
+                      <font color="white"> </font>
+                    </para>"""
             for page in survey.page_ids:
                 rml += """ <blockTable colWidths="500" style="Table4">
-#                              <tr>
-#                                <td><para style="page">Page :- """ + to_xml(tools.ustr(page.title)) + """</para></td>
-#                              </tr>
-#                           </blockTable>"""
+                              <tr>
+                                <td><para style="page">Page :- """ + to_xml(tools.ustr(page.title)) + """</para></td>
+                              </tr>
+                           </blockTable>"""
                 for que in page.question_ids:
                     rml +="""<blockTable colWidths="500" style="Table5">
                               <tr>
