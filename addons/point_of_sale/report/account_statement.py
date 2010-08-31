@@ -37,4 +37,4 @@ class account_statement(report_sxw.rml_parse):
         for line in statement_line_ids:
             total += line.amount
         return total
-report_sxw.report_sxw('report.account.statement', 'account.bank.statement', 'addons/statement/report/account_statement.rml', parser=account_statement)
+report_sxw.report_sxw('report.account.statement', 'account.bank.statement', 'addons/statement/report/account_statement.rml', parser=account_statement,header='internal')
