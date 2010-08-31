@@ -592,7 +592,7 @@ class marketing_campaign_workitem(osv.osv):
         'activity_id': fields.many2one('marketing.campaign.activity','Activity',
              required=True, readonly=True),
         'campaign_id': fields.related('activity_id', 'campaign_id',
-             type='many2one', relation='marketing.campaign', string='Campaign', readonly=True),
+             type='many2one', relation='marketing.campaign', string='Campaign', readonly=True, store=True),
         'object_id': fields.related('activity_id', 'campaign_id', 'object_id',
              type='many2one', relation='ir.model', string='Resource', select=1, readonly=True),
         'res_id': fields.integer('Resource ID', select=1, readonly=True),
