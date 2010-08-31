@@ -38,10 +38,11 @@ class campaign_analysis(osv.osv):
             wi_ids = self.pool.get('marketing.campaign.workitem').search(cr, uid,
                         [('segment_id.campaign_id', '=', ca_obj.campaign_id.id)])
             total_cost = ca_obj.activity_id.variable_cost + \
-                                (ca_obj.campaign_id.fixed_cost / len(wi_ids))
+                                ((ca_obj.campaign_id.fixed_cost or 0.00) / len(wi_ids))
             result[ca_obj.id] = total_cost
         return result
     _columns = {
+        'res_id' : fields.integer('Resource', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'),
                     ('03','March'), ('04','April'),('05','May'), ('06','June'),
@@ -69,6 +70,7 @@ class campaign_analysis(osv.osv):
             create or replace view campaign_analysis as (
             select
                 min(wi.id) as id,
+                min(wi.res_id) as res_id,
                 to_char(wi.date::date, 'YYYY') as year,
                 to_char(wi.date::date, 'MM') as month,
                 wi.date::date as date,

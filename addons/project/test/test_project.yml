@@ -122,12 +122,12 @@
 -
   Now in order to reactivate the task 'Technical Training', i click on the "Reactivate" button and fill the remaining hour field
 -
-  !record {model: config.compute.remaining, id: project_task_technicaltraining_remainingwiz0}:
+  !record {model: project.task.reevaluate, id: project_task_technicaltraining_remainingwiz0}:
     remaining_hours: 30.0
 - |
   I click the apply button
 -
-  !python {model: config.compute.remaining}: |
+  !python {model: project.task.reevaluate}: |
       self.compute_hours(cr, uid, [ref('project_task_technicaltraining_remainingwiz0')], {'active_id': ref("project_task_technicaltraining0"),'button_reactivate': True})
 - |
   Check if task 'Technical Training' in  open state and for other initial values
@@ -193,12 +193,12 @@
 - 
   Set remaining hours of 10 hours for reevaluating the task  
 - 
-  !record {model: config.compute.remaining, id: config_compute_remaining_0}:
+  !record {model: project.task.reevaluate, id: config_compute_remaining_0}:
     remaining_hours: 10.0
 -
   Reevaluate the task
 - 
-  !python {model: config.compute.remaining}: |
+  !python {model: project.task.reevaluate}: |
     self.compute_hours(cr, uid, [ref("config_compute_remaining_0")], {"lang": "en_US",
       "project_id": False, "tz": False, "active_model": "project.task", "search_default_project_id":
       False, "search_default_user_id": 1, "search_default_current": 1, "active_ids":
@@ -248,12 +248,12 @@
 -
   Reactivate task       
 - 
-  !record {model: config.compute.remaining, id: config_compute_remaining_1}:
+  !record {model: project.task.reevaluate, id: config_compute_remaining_1}:
     remaining_hours: 10.0   
 - 
   Reevaluate the task with 10 hours remaining
 - 
-  !python {model: config.compute.remaining}: |
+  !python {model: project.task.reevaluate}: |
     self.compute_hours(cr, uid, [ref("config_compute_remaining_1")], {"lang": "en_US",
       "project_id": False, "tz": False, "button_reactivate": True, "active_model":
       "project.task", "search_default_project_id": False, "search_default_user_id":

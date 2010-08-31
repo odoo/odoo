@@ -31,14 +31,14 @@
     -->
 
     <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
-    <menuitem name="Mailchimps" id="menu_action_mailchimp" parent="base.menu_emails" />
+    <menuitem name="Mailchimp" id="menu_action_mailchimp" parent="base.menu_emails" />
 
     <record model="ir.ui.view" id="view_mailchimp_account_tree">
         <field name="name">mailchimp.account.tree</field>
         <field name="model">mailchimp.account</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('approved');gray:state in ('cancelled')" string="All Accounts">
+            <tree colors="blue:state in ('draft');black:state in ('approved');gray:state in ('cancelled')" string="Accounts">
                 <field name="name"/>
                 <field name="username" />
                 <field name="data_center"/>
@@ -70,7 +70,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_mailchimp_account">
-        <field name="name">All Mailchimp Accounts</field>
+        <field name="name">Mailchimp Accounts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mailchimp.account</field>
         <field name="view_type">form</field>
