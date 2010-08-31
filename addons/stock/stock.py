@@ -212,9 +212,9 @@ class stock_location(osv.osv):
         'icon': fields.selection(tools.icons, 'Icon', size=64,help="Icon show in  hierarchical tree view"),
 
         'comment': fields.text('Additional Information'),
-        'posx': fields.integer('Corridor (X)'),
-        'posy': fields.integer('Shelves (Y)'),
-        'posz': fields.integer('Height (Z)'),
+        'posx': fields.integer('Corridor (X)',help="Optional localization details, for information purpose only"),
+        'posy': fields.integer('Shelves (Y)', help="Optional localization details, for information purpose only"),
+        'posz': fields.integer('Height (Z)', help="Optional localization details, for information purpose only"),
 
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
