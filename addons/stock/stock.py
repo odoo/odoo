@@ -543,9 +543,8 @@ class stock_picking(osv.osv):
     _columns = {
         'name': fields.char('Reference', size=64, select=True),
         'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking."),
-        'backorder_id': fields.many2one('stock.picking', 'Back Order', help="If this picking was split this field links to the picking that contains the other part that has been processed already."),
+        'backorder_id': fields.many2one('stock.picking', 'Back Order of', help="If this picking was split this field links to the picking that contains the other part that has been processed already."),
         'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the picking without removing it."),
         'note': fields.text('Notes'),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal'),
         'location_id': fields.many2one('stock.location', 'Location', help="Keep empty if you produce at the location where the finished products are needed." \
@@ -587,7 +586,6 @@ class stock_picking(osv.osv):
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
-        'active': 1,
         'state': 'draft',
         'move_type': 'direct',
         'type': 'in',
