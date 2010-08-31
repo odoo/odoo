@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,8 +19,19 @@
 #
 ##############################################################################
 
-import purchase_requisition
-import wizard
-import report
+import time
+from report import report_sxw
+from osv import osv
+import pooler
+
+class requisition(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(requisition, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+        })
+   
+report_sxw.report_sxw('report.purchase.requisition','purchase.requisition','addons/purchase_requisition/report/purchase_requisition.rml',parser=requisition)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

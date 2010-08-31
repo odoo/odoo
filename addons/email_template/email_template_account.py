@@ -80,7 +80,12 @@ class email_template_account(osv.osv):
         'name': fields.char('Description',
                         size=64, required=True,
                         readonly=True, select=True,
+                        help="The description is used as the Sender name along with the provided From Email, \
+unless it is already specified in the From Email, e.g: John Doe <john@doe.com>", 
                         states={'draft':[('readonly', False)]}),
+        'auto_delete': fields.boolean('Auto Delete', size=64, readonly=True, 
+                                      help="Permanently delete emails after sending", 
+                                      states={'draft':[('readonly', False)]}),
         'user':fields.many2one('res.users',
                         'Related User', required=True,
                         readonly=True, states={'draft':[('readonly', False)]}),
@@ -133,7 +138,7 @@ class email_template_account(osv.osv):
                                   ('suspended', 'Suspended'),
                                   ('approved', 'Approved')
                                   ],
-                        'Status', required=True, readonly=True),
+                        'State', required=True, readonly=True),
     }
 
     _defaults = {
@@ -189,25 +194,7 @@ class email_template_account(osv.osv):
          'Error: You are not allowed to have more than 1 account.',
          [])
     ]
-    
-    def on_change_emailid(self, cursor, user, ids, name=None, email_id=None, context=None):
-        """
-        Called when the email ID field changes.
-        
-        UI enhancement
-        Writes the same email value to the smtpusername
-        and incoming username
-        """
-        #TODO: Check and remove the write. Is it needed?
-        self.write(cursor, user, ids, {'state':'draft'}, context=context)
-        return {
-                'value': {
-                          'state': 'draft',
-                          'smtpuname':email_id,
-                          'isuser':email_id
-                          }
-                }
-    
+
     def get_outgoing_server(self, cursor, user, ids, context=None):
         """
         Returns the Out Going Connection (SMTP) object
