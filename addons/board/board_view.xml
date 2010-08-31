@@ -88,7 +88,7 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Dashboard">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <button colspan="2"
                         name="%(action_board_menu_create)d"
                         string="Create Menu" type="action"
@@ -113,6 +113,18 @@
                 </form>
             </field>
         </record>
+        
+        <record id="view_board_search" model="ir.ui.view">
+            <field name="name">board.board.search</field>
+            <field name="model">board.board</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Dashboard">
+                    <field name="name"/>
+                    <field name="line_ids"/>
+                </search>
+            </field>
+        </record>
 
     <!-- Action for DashBoard Definition form -->
 
@@ -121,6 +133,7 @@
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_board_search"/>
         </record>
 
         <menuitem
