@@ -495,6 +495,8 @@ class account_installer(osv.osv_memory):
                 sal_tax_parent_id = mod_obj.read(cr, uid, [sal_tax_parent], ['res_id'])[0]['res_id']
 
                 if s_tax*100 > 0.0:
+                    tax_account_ids = obj_acc.search(cr, uid, [('name','=','Tax Received')], context=context)
+                    sales_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code = {
                         'name': 'TAX%s%%'%(s_tax*100),
                         'code': 'TAX%s%%'%(s_tax*100),
@@ -509,11 +511,18 @@ class account_installer(osv.osv_memory):
                                             'amount':s_tax,
                                             'base_code_id':new_tax_code,
                                             'tax_code_id':new_tax_code,
-                                            'type_tax_use':'sale'
+                                            'type_tax_use':'sale',
+                                            'account_collected_id':sales_tax_account_id,
+                                            'account_paid_id':sales_tax_account_id
                                             })
+                    default_account_ids = obj_acc.search(cr, uid, [('name','=','Product Sales')],context=context)
+                    if default_account_ids:
+                        obj_acc.write(cr, uid, default_account_ids, {'tax_ids':[(6,0,[sales_tax])]})
                     tax_val.update({'taxes_id':[(6,0,[sales_tax])]})
                     default_tax.append(('taxes_id',sales_tax))
                 if p_tax*100 > 0.0:
+                    tax_account_ids = obj_acc.search(cr, uid, [('name','=','Tax Paid')], context=context)
+                    purchase_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code = {
                         'name': 'TAX%s%%'%(p_tax*100),
                         'code': 'TAX%s%%'%(p_tax*100),
@@ -528,8 +537,13 @@ class account_installer(osv.osv_memory):
                                              'amount':p_tax,
                                              'base_code_id':new_tax_code,
                                             'tax_code_id':new_tax_code,
-                                            'type_tax_use':'purchase'
+                                            'type_tax_use':'purchase',
+                                            'account_collected_id':purchase_tax_account_id,
+                                            'account_paid_id':purchase_tax_account_id
                                              })
+                    default_account_ids = obj_acc.search(cr, uid, [('name','=','Expenses')], context=context)
+                    if default_account_ids:
+                        obj_acc.write(cr, uid, default_account_ids, {'tax_ids':[(6,0,[purchase_tax])]})
                     tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
                     default_tax.append(('supplier_taxes_id',purchase_tax))
                 if len(tax_val):
