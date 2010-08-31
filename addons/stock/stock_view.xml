@@ -516,18 +516,15 @@
                 </form>
                </field>
         </record>
-        <record id="act_stock_picking_move_wizard" model="ir.actions.act_window">
-            <field name="name">Fill From Unreceived Products</field>
-            <field name="res_model">stock.picking.move.wizard</field>
-            <field name="src_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="auto_refresh" eval="1"/>
-            <field name="target">new</field>
-            <field name="context">{'action_id': active_id}</field>
-        </record>
 
+  	<act_window name="Unreceived Products"		    
+		    res_model="stock.picking.move.wizard"
+		    src_model="stock.picking"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"
+		    id="act_stock_picking_move_wizard"/>		
+		    	
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>
