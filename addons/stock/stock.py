@@ -1698,7 +1698,7 @@ class stock_move(osv.osv):
                     #the test does not work correctly if the same product occurs multiple times
                     #in the same order. This is e.g. the case when using the button 'split in two' of
                     #the stock outgoing form
-                    self.write(cr, uid, move.id, {'state':'assigned'})
+                    self.write(cr, uid, [move.id], {'state':'assigned'})
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
                     r = res.pop(0)
