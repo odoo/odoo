@@ -55,9 +55,9 @@ class report_printscreen_list(report_int):
             context={}
         datas['ids'] = ids
         pool = pooler.get_pool(cr.dbname)
-        model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
+        model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._description)])
         if model_id:
-            model_desc = pool.get('ir.model').browse(cr, uid, model_id, context).name
+            model_desc = pool.get('ir.model').browse(cr, uid, model_id, context).description
             self.title = model_desc
         else:
             model_desc = model._description
