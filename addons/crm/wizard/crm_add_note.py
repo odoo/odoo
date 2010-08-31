@@ -44,4 +44,11 @@ class crm_add_note(osv.osv_memory):
 
         return {}
 
+    def default_get(self, cr, uid, fields, context=None):
+        """
+        This function gets default values
+        """
+        return {'state': u'pending'}
+
+
 crm_add_note()
