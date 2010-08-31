@@ -1331,6 +1331,8 @@ class stock_move(osv.osv):
         @return: True or False
         """
         for move in self.browse(cr, uid, ids):
+            if  move.picking_id and  move.picking_id.type=="internal":
+                return True
             if not move.prodlot_id and \
                (move.state == 'done' and \
                ( \
