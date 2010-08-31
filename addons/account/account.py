@@ -835,7 +835,7 @@ class account_period(osv.osv):
         'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': 'draft',
     }
     _order = "date_start"
 
@@ -883,13 +883,10 @@ class account_period(osv.osv):
         return ids
 
     def action_draft(self, cr, uid, ids, *args):
-        users_roles = self.pool.get('res.users').browse(cr, uid, uid).roles_id
-        for role in users_roles:
-            if role.name=='Period':
-                mode = 'draft'
-                for id in ids:
-                    cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
-                    cr.execute('update account_period set state=%s where id=%s', (mode, id))
+        mode = 'draft'
+        for id in ids:
+            cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
+            cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context={}, limit=80):
@@ -1004,9 +1001,9 @@ class account_move(osv.osv):
         """
 
         if not args:
-          args=[]
+          args = []
         if not context:
-          context={}
+          context = {}
         ids = []
         if name:
             ids += self.search(cr, user, [('name','ilike',name)]+args, limit=limit, context=context)
@@ -1022,7 +1019,7 @@ class account_move(osv.osv):
     def name_get(self, cursor, user, ids, context=None):
         if not len(ids):
             return []
-        res=[]
+        res = []
         data_move = self.pool.get('account.move').browse(cursor,user,ids)
         for move in data_move:
             if move.state=='draft':
@@ -1036,8 +1033,7 @@ class account_move(osv.osv):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
-        else:
-            return False
+        return False
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
@@ -1051,21 +1047,25 @@ class account_move(osv.osv):
         return result
 
     def _search_amount(self, cr, uid, obj, name, args, context):
-        ids = []
-        cr.execute('select move_id,sum(debit) from account_move_line group by move_id')
-        result = dict(cr.fetchall())
-
-        for item in args:
-            if item[1] == '>=':
-                res = [('id', 'in', [k for k,v in result.iteritems() if v >= item[2]])]
+        ids = set()
+        for cond in args:
+            amount = cond[2]
+            if isinstance(cond[2],(list,tuple)):
+                if cond[1] in ['in','not in']:
+                    amount = tuple(cond[2])
+                else:
+                    continue
             else:
-                res = [('id', 'in', [k for k,v in result.iteritems() if v <= item[2]])]
-            ids += res
-
-        if not ids:
-            return [('id', '>', '0')]
-
-        return ids
+                if cond[1] in ['=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of']:
+                    continue
+            
+            cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]) ,(amount,))
+            res_ids = set(id[0] for id in cr.fetchall())
+            ids = ids and (ids & res_ids) or res_ids
+        if ids:
+            return [('id','in',tuple(ids))]
+        else:    
+            return [('id', '=', '0')]
 
     _columns = {
         'name': fields.char('Number', size=64, required=True),
@@ -1642,9 +1642,9 @@ class account_tax(osv.osv):
         @return: Returns a list of tupples containing id and name
         """
         if not args:
-            args=[]
+            args = []
         if not context:
-            context={}
+            context = {}
         ids = []
         ids = self.search(cr, user, args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
@@ -1799,7 +1799,7 @@ class account_tax(osv.osv):
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
         for r in tin:
             totalex -= r['amount']
-        totlex_qty=0.0
+        totlex_qty = 0.0
         try:
             totlex_qty=totalex/quantity
         except:
@@ -2220,12 +2220,12 @@ class account_add_tmpl_wizard(osv.osv_memory):
     }
 
     def action_create(self,cr,uid,ids,context=None):
-        acc_obj=self.pool.get('account.account')
-        tmpl_obj=self.pool.get('account.account.template')
-        data= self.read(cr, uid, ids)
+        acc_obj = self.pool.get('account.account')
+        tmpl_obj = self.pool.get('account.account.template')
+        data = self.read(cr, uid, ids)
         company_id = acc_obj.read(cr, uid, [data[0]['cparent_id']], ['company_id'])[0]['company_id'][0]
         account_template = tmpl_obj.browse(cr, uid, context['tmpl_ids'])
-        vals={
+        vals = {
             'name': account_template.name,
             'currency_id': account_template.currency_id and account_template.currency_id.id or False,
             'code': account_template.code,

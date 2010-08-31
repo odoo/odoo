@@ -51,7 +51,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="True" colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
+                <tree toolbar="True" colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>

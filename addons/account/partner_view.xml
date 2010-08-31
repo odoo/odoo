@@ -130,8 +130,8 @@
         <act_window
             id="action_analytic_open"
             name="Analytic Accounts"
-            res_model="account.analytic.account"
-            domain="[('partner_id','=',active_id)]"
+            res_model="account.analytic.account"             
+            context="{'search_default_partner_id':[active_id]}"
             src_model="res.partner"
             view_type="form"
             view_mode="tree,form,graph,calendar"/>
