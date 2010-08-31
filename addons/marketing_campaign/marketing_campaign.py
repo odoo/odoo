@@ -526,7 +526,18 @@ class marketing_campaign_transition(osv.osv):
         'interval_type': 'days',
         'trigger': 'time',
     }
+    def _check_campaign(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.activity_from_id.campaign_id != obj.activity_to_id.campaign_id:
+                return False
+        return True
 
+    _constraints = [
+            (_check_campaign, _('The To/From Activity of transition must be of the same Campaign '), ['activity_from_id,activity_to_id']),
+        ]
+ 
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
