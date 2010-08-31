@@ -92,7 +92,7 @@ class purchase_requisition_partner(osv.osv_memory):
                     pricelist_id = partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.id or False
                     price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, line.product_qty, False, {'uom': uom_id})[pricelist_id]
                     product = prod_obj.browse(cr, uid, line.product_id.id, context=context)
-
+                    location_id = self.pool.get('stock.warehouse').read(cr, uid, [tender.warehouse_id.id], ['lot_input_id'])[0]['lot_input_id'][0]
 
                     purchase_order_line= {
                             'name': product.partner_ref,
@@ -118,6 +118,10 @@ class purchase_requisition_partner(osv.osv_memory):
                             'company_id': tender.company_id.id,
                             'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
                             'requisition_id':tender.id,
+                            'notes':tender.description,
+                            'warehouse_id':tender.warehouse_id.id and tender.warehouse_id.id ,
+                            'location_id':location_id,
+                            'company_id':tender.company_id.id,
                 })
                 order_ids=[]
                 for order_line in list_line:
