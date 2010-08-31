@@ -19,9 +19,9 @@
             <attribute name="string">After having installed the core manufacturing application, you can extend it depending on the needs of your MRP's organization</attribute>
           </xpath>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
-      			<attribute name='string'></attribute>
-  		  </xpath>
-  		  <xpath expr="//button[@string='Install Modules']" position="attributes">
+                  <attribute name='string'></attribute>
+            </xpath>
+            <xpath expr="//button[@string='Install Modules']" position="attributes">
                    <attribute name="string">Configure</attribute>
           </xpath>
           <group colspan="8">
@@ -51,16 +51,5 @@
       <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
     </record>
 
-   <record id="mrp_ir_actions_todo_tree" model="ir.ui.view">
-    <field name="model">ir.actions.todo</field>
-    <field name="name">mrp_installer_action_replace</field>
-    <field name="type">tree</field>
-    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-    <field name="arch" type="xml">
-	 <xpath expr="//button[@string='Launch']" position="replace">
-        	<button name="%(action_mrp_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-  		</xpath>
-  	</field>
-	</record>
   </data>
 </openerp>

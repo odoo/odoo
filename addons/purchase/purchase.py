@@ -220,7 +220,8 @@ class purchase_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
+                state_dict = {'wait':'Waiting','confirmed':'Confirmed','approved':'Approved','except_picking': 'Shipping Exception','except_invoice': 'Invoice Exception','done': 'Done'}
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!')  %_(eval(s['state'],state_dict)))
 
         # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support
         # automatically sending subflow.delete upon deletion
