@@ -7,7 +7,7 @@
       <field name="type">form</field>
       <field name="inherit_id" ref="base.res_config_installer"/>
       <field name="arch" type="xml">
-      	<data>
+          <data>
           <form position="attributes">
             <attribute name="string">Project Modules Configuration</attribute>
           </form>
@@ -15,13 +15,13 @@
             <attribute name="string">Project Management</attribute>
           </separator>
            <xpath expr='//separator[@string="vsep"]' position='attributes'>
-          	  <attribute name='string'></attribute>
-     		</xpath>
+                <attribute name='string'></attribute>
+             </xpath>
           <xpath expr="//label[@string='description']" position="attributes">
-          	<attribute name="string">Various OpenERP applications are available to manage your projects with different level of control and flexibility.</attribute>
+              <attribute name="string">Various OpenERP applications are available to manage your projects with different level of control and flexibility.</attribute>
           </xpath>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
-          	<attribute name="string">Configure</attribute>
+              <attribute name="string">Configure</attribute>
           </xpath>
           <group colspan="8">
             <field name="project_crm"/>
@@ -53,18 +53,6 @@
       <field name="action_id" ref="action_project_installer"/>
       <field name="sequence">3</field>
     </record>
-
-     <record id="project_ir_actions_todo_tree" model="ir.ui.view">
-		    <field name="model">ir.actions.todo</field>
-		    <field name="name">project_installer_action_replace</field>
-		    <field name="type">tree</field>
-		    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-		    <field name="arch" type="xml">
-				<xpath expr="//button[@string='Launch']" position="replace">
-        			<button name="%(action_project_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-  				</xpath>
-  			</field>
-	</record>
 
   </data>
 </openerp>
