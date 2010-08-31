@@ -84,7 +84,7 @@ class account_installer(osv.osv_memory):
     }
 
     def on_change_tax(self, cr, uid, id, tax):
-        return{'value':{'purchase_tax':tax}}
+        return {'value':{'purchase_tax':tax}}
 
     def on_change_start_date(self, cr, uid, id, start_date):
         if start_date:
@@ -319,15 +319,15 @@ class account_installer(osv.osv_memory):
             seq_sale = {
                         'name': 'Sale Journal',
                         'code': 'account.journal',
-                        'prefix': 'INV/',
-                        'padding': 4
+                        'prefix': '%(year)s/',
+                        'padding': 3
                         }
             seq_id_sale = obj_sequence.create(cr, uid, seq_sale)
             seq_purchase = {
                         'name': 'Purchase Journal',
                         'code': 'account.journal',
-                        'prefix': 'VEN/',
-                        'padding': 4
+                        'prefix': '%(year)s/',
+                        'padding': 3
                         }
             seq_id_purchase = obj_sequence.create(cr, uid, seq_purchase)
         else:
@@ -583,8 +583,8 @@ class account_bank_accounts_wizard(osv.osv_memory):
     _columns = {
         'acc_name': fields.char('Account Name.', size=64, required=True),
         'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
-        'currency_id': fields.many2one('res.currency', 'Currency'),
-        'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
+        'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
+        'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Account Type', size=32),
     }
     _defaults = {
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,

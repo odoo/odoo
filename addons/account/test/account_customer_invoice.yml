@@ -47,7 +47,7 @@
 -
   !assert {model: account.invoice, id: account_invoice_customer0}:
     - state == 'open'
-    
+
 -
   I check that now there is a move attached to the invoice
 -
@@ -126,7 +126,7 @@
     acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
     assert(acc_id.move_id)
 -
-  I refund the invoice Using Credit Note
+  I refund the invoice Using Refund Button
 -
   !record {model: account.invoice.refund, id: account_invoice_refund_0}:
     description: Refund To China Export

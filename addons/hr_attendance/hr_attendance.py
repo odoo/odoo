@@ -72,13 +72,13 @@ class hr_attendance(osv.osv):
     def _altern_si_so(self, cr, uid, ids):
         for id in ids:
             sql = '''
-            select action, name
-            from hr_attendance as att
-            where employee_id = (select employee_id from hr_attendance where id=%s)
-            and action in ('sign_in','sign_out')
-            and name <= (select name from hr_attendance where id=%s)
-            order by name desc
-            limit 2 '''
+            SELECT action, name
+            FROM hr_attendance AS att
+            WHERE employee_id = (SELECT employee_id FROM hr_attendance WHERE id=%s)
+            AND action IN ('sign_in','sign_out')
+            AND name <= (SELECT name FROM hr_attendance WHERE id=%s)
+            ORDER BY name DESC
+            LIMIT 2 '''
             cr.execute(sql,(id,id))
             atts = cr.fetchall()
             if not ((len(atts)==1 and atts[0][0] == 'sign_in') or (atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1])):
@@ -117,12 +117,12 @@ class hr_employee(osv.osv):
 
     _columns = {
        'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
-     }
+    }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):
         if context is None:
             context = {}
-        cr.execute('select max(name) from hr_attendance where employee_id=%s', (emp_id,))
+        cr.execute('SELECT MAX(name) FROM hr_attendance WHERE employee_id=%s', (emp_id,))
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 

@@ -234,19 +234,19 @@
             <font color="white"> </font>
           </para>
           <section>
-            <para style="terp_default_8">[[ repeatIn(voucher.payment_ids,'payment_ids') ]] </para>
+            <para style="terp_default_8">[[ repeatIn(voucher.line_ids,'line_ids') ]] </para>
             <blockTable colWidths="342.0,135.0" style="Table3">
               <tr>
                 <td>
-                  <para style="terp_header">[[ payment_ids.partner_id and payment_ids.partner_id.name or '' ]] </para>
+                  <para style="terp_header">[[ line_ids.partner_id and line_ids.partner_id.name or '' ]] </para>
                 </td>
                 <td>
-                  <para style="terp_header_Right">[[ payment_ids.amount ]]</para>
+                  <para style="terp_header_Right">[[ line_ids.amount ]]</para>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <para style="terp_default_9_30">[[ payment_ids.account_id.name ]] </para>
+                  <para style="terp_default_9_30">[[ line_ids.account_id.name ]] </para>
                 </td>
                 <td>
                   <para style="P22">
@@ -256,7 +256,7 @@
               </tr>
               <tr>
                 <td>
-                  <para style="terp_default_9_50">[[ payment_ids.ref ]] [[ payment_ids.amount ]] </para>
+                  <para style="terp_default_9_50">[[ line_ids.ref ]] [[ line_ids.amount ]] </para>
                 </td>
                 <td>
                   <para style="terp_default_9_50">
@@ -266,7 +266,7 @@
               </tr>
               <tr>
                 <td>
-                  <para style="terp_default_9_50">[[ payment_ids.type ]]</para>
+                  <para style="terp_default_9_50">[[ line_ids.type ]]</para>
                 </td>
                 <td>
                   <para style="terp_default_9_50">

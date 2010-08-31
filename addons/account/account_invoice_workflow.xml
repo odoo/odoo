@@ -105,14 +105,6 @@ write({'state':'cancel'})</field>
             <field name="signal">invoice_open</field>
         </record>
 
-        <record id="pro2_to_paid" model="workflow.transition">
-            <field name="act_from" ref="act_proforma2"/>
-            <field name="act_to" ref="account.act_paid"/>
-            <field name="trigger_model">account.move.line</field>
-            <field name="trigger_expr_id">move_line_id_payment_get()</field>
-            <field name="condition">test_paid()</field>
-        </record>
-
         <record id="pro2_to_cancel" model="workflow.transition">
             <field name="act_from" ref="act_proforma2"/>
             <field name="act_to" ref="account.act_cancel"/>
