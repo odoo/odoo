@@ -268,6 +268,13 @@ class users(osv.osv):
 
     }
 
+    def on_change_company_id(self, cr, uid, ids, company_id):
+        return {
+            'value': {
+                'warning' : _("Please keep in mind that data currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close the forms before switching to a different company (you can click on Cancel now)"),
+            }
+        }
+
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
