@@ -315,7 +315,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <field name="journal_id" position="after">
-                    <button name="%(action_account_populate_statement_confirm)d" string="Import payment lines" type="action" icon="gtk-execute"/>
+                    <button name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import payment lines" type="action" icon="gtk-execute"/>
                 </field>
             </field>
         </record>
