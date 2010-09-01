@@ -72,7 +72,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,-1" stop="7,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
@@ -80,7 +79,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,-1" stop="7,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_All_Total_Detail">
       <blockAlignment value="LEFT"/>
@@ -88,10 +86,8 @@
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="1,2" stop="1,2"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="2,2" stop="2,2"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,2" stop="3,2"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Outer_Notes">
       <blockAlignment value="LEFT"/>
@@ -264,7 +260,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[repeatIn(o.order_line,'line')]]</para>
-      <blockTable colWidths="179.0,82.0,73.0,44.0,20.0,58.0,56.0,23.0" style="Table_Order_Pur_line_Content">
+      <blockTable colWidths="179.0,82.0,73.0,44.0,20.0,58.0,79.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
@@ -273,7 +269,7 @@
             <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ formatLang( line.date_planned, date_time=True) ]]</para>
+            <para style="terp_default_Centre_9">[[ formatLang( line.date_planned, date=True) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.product_qty ) ]] </para>
@@ -285,10 +281,7 @@
             <para style="terp_default_Right_9">[[ formatLang(line.price_unit ) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal ) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal ) ]] [[ o.pricelist_id.currency_id.code ]]</para>
           </td>
         </tr>
         <tr>
@@ -325,15 +318,10 @@
               <font color="white"> </font>
             </para>
           </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
-          </td>
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="391.0,55.0,66.0,23.0" style="Table_All_Total_Detail">
+    <blockTable colWidths="391.0,55.0,88.0" style="Table_All_Total_Detail">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -344,10 +332,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed ) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed ) ]] [[ o.pricelist_id.currency_id.code ]]</para>
         </td>
       </tr>
       <tr>
@@ -360,10 +345,7 @@
           <para style="terp_default_9">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[ o.pricelist_id.currency_id.code ]]</para>
         </td>
       </tr>
       <tr>
@@ -376,10 +358,7 @@
           <para style="terp_default_Bold_9">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang(o.amount_total ) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9_Right">[[ o.pricelist_id.currency_id.name ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ formatLang(o.amount_total ) ]] [[ o.pricelist_id.currency_id.code ]]</para>
         </td>
       </tr>
     </blockTable>
