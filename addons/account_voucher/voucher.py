@@ -422,7 +422,7 @@ class account_voucher(osv.osv):
                 terms = term_pool.compute(cr, uid, term_id, amount)
                 return terms
             return False
-    
+        
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
         analytic_pool = self.pool.get('account.analytic.line')
@@ -460,7 +460,12 @@ class account_voucher(osv.osv):
                 credit = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
             elif inv.type in ('sale', 'receipt'):
                 debit = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.amount)
-            
+            if debit < 0:
+                credit = -debit
+                debit = 0.0
+            if credit < 0:
+                debit = -credit
+                credit = 0.0
             if inv.type == 'purchase' and inv.term_id and _get_payment_term_lines(inv.term_id.id, credit or debit):
                 terms = _get_payment_term_lines(inv.term_id.id, credit or debit)
                 for term in terms:
@@ -510,6 +515,13 @@ class account_voucher(osv.osv):
                     'analytic_account_id':line.account_analytic_id and line.account_analytic_id.id or False,
                     'quantity':1
                 }
+                if amount < 0:
+                    amount = -amount
+                    if line.type == 'dr':
+                        line.type = 'cr'
+                    else:
+                        line.type = 'dr'
+                        
                 if (line.type=='dr'):
                     line_total += amount
                     move_line['debit'] = amount
@@ -522,7 +534,7 @@ class account_voucher(osv.osv):
                     rec_ids = [master_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
 
-            if inv.tax_amount > 0:
+            if inv.tax_amount:
                 amount = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.tax_amount)
                 name = inv.tax_id and inv.tax_id.name or '/'
                 move_line = {
@@ -533,11 +545,12 @@ class account_voucher(osv.osv):
                     'partner_id':inv.partner_id.id,
                     'currency_id':inv.currency_id.id,
                 }
-
-                if inv.journal_id.type in ('sale','purchase_refund'):
+                if inv.journal_id.type in ('sale','purchase_refund') and amount > 0:
                     line_total -= amount
                     move_line['credit'] = amount
                 else:
+                    if amount < 0:
+                        amount = -amount
                     line_total += amount
                     move_line['debit'] = amount
 
