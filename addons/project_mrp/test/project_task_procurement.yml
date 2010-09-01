@@ -62,14 +62,12 @@
     - model: procurement.order
       search: "[('state','=','confirmed')]"
 -
-  Now I check the tasks.
--
-  I see that one task is created for my sale order.
+  Now I check that one task is created for my sale order.
 -
   !python {model: project.task}: |
     from tools.translate import _
     order_obj = self.pool.get('sale.order')
     order = order_obj.browse(cr, uid, ref('sale_order_so0')) 
-    task_id = self.search(cr, uid, [('project_id.name','=', order.name)]) 
+    task_id = self.search(cr, uid, [('name','like', order.name)]) 
     assert task_id, _('No Task is created!')
     
