@@ -602,12 +602,18 @@ class stock_picking(osv.osv):
             default = {}
         default = default.copy()
         picking_obj = self.browse(cr, uid, [id], context)[0]
+        move_obj=self.pool.get('stock.move')
         if ('name' not in default) or (picking_obj.name=='/'):
             seq_obj_name =  'stock.picking.' + picking_obj.type
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
             default['origin'] = ''
-            default['backorder_id'] = False   
-        return super(stock_picking, self).copy(cr, uid, id, default, context)
+            default['backorder_id'] = False
+        res=super(stock_picking, self).copy(cr, uid, id, default, context)
+        if res:
+            picking_obj = self.browse(cr, uid, [res], context)[0]
+            for move in picking_obj.move_lines:
+                move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False})
+        return res 
 
     def onchange_partner_in(self, cr, uid, context=None, partner_id=None):
         return {}
