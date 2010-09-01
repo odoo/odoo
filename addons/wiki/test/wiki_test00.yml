@@ -22,23 +22,33 @@
 
       '
 -
-    Creating a wiki make index record
--
-    !record {model: wiki.make.index, id: wiki_make_index_1}:
-    {}
--
     I create Index on this current page by clicking on "Create Index" wizard
 -
     !python {model: wiki.make.index}: |
-      self.wiki_do_index(cr, uid, [ref("wiki_make_index_1")], {"active_model":
-      wiki.wiki, "active_ids": [ref("wiki_wiki_openerpwikiediting0")], "tz": False, "active_id":
-      ref("wiki_wiki_openerpwikiediting0"), })
+      self.wiki_do_index(cr, uid, [1], {"active_model": "wiki.wiki", 
+            "active_ids": [ref("wiki_wiki_openerpwikiediting0")], "tz": False, 
+            "active_id": ref("wiki_wiki_openerpwikiediting0"), })
+-
+    Now I will update the wikipage with other text
+-
+    !record {model: wiki.wiki, id: wiki_wiki_openerpwikiediting0}:
+      text_area: '=The Open ERP wiki=
+
+      The Open ERP wiki allows you to manage your enterprise contents using wiki
+
+      restructured texts. This module provides a collaborative way to manage internal
+
+      FAQs, quality manuals, technical references, etc.
+      
+      Wiki text can easily be edited
+      '
 -
     I check the page history for the current page by clicking on "Page History".After that find difference between history.
 -
     !python {model: wizard.wiki.history.show_diff}: |
-      ids = self.search(cr, uid, [])
-      self.get_diff(cr, uid, {'active_id': [ref('wiki_wiki_openerpwikiediting0')]})
+      hist_obj = model.pool.get('wiki.wiki.history')
+      ids = hist_obj.search(cr, uid, [('wiki_id', '=', ref("wiki_wiki_openerpwikiediting0"))])
+      model.get_diff(cr, uid, {'active_ids': ids[:] })
 -
     I create a new wiki group on the Given Home Page
 -

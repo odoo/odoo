@@ -34,7 +34,7 @@ class showdiff(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         """
         history = self.pool.get('wiki.wiki.history')
-        ids = context.get('active_ids')
+        ids = context.get('active_ids', [])
 
         diff = ""
         if len(ids) == 2:

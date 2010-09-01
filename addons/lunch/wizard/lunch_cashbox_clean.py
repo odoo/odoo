@@ -35,10 +35,9 @@ class lunch_cashbox_clean(osv.osv_memory):
          @param ids: List  Lunch cashbox Clean’s IDs
          @return:Dictionary {}.
          """
-
+         #TOFIX: use orm methods
          data = context and context.get('active_ids', []) or []
          cashmove_ref = self.pool.get('lunch.cashmove')
-
          cr.execute("select user_cashmove, box,sum(amount) from lunch_cashmove \
                  where active = 't' and box IN %s group by user_cashmove, \
                      box"  , (tuple(data),))
@@ -46,15 +45,16 @@ class lunch_cashbox_clean(osv.osv_memory):
 
          cr.execute("update lunch_cashmove set active = 'f' where active= 't' \
              and box IN %s" , (tuple(data),))
-
-         for (user_id, box_id, amount) in res:
-            cashmove_ref.create(cr, uid, {
-                'name': 'Summary for user' + str(user_id),
-                'amount': amount,
-                'user_cashmove': user_id,
-                'box': box_id,
-                'active': True,
-            })
+         #TOCHECK: Why need to create duplicate entry after clean box ?
+ 
+         #for (user_id, box_id, amount) in res:
+         #   cashmove_ref.create(cr, uid, {
+         #       'name': 'Summary for user' + str(user_id),
+         #       'amount': amount,
+         #       'user_cashmove': user_id,
+         #       'box': box_id,
+         #       'active': True,
+         #   })
          return {}
 
 lunch_cashbox_clean()
