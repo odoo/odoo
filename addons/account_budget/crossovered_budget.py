@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
 
 from osv import osv,fields
-import datetime
 from tools.translate import _
 
 def strToDate(dt):
@@ -58,6 +58,7 @@ class account_budget_post(osv.osv):
             for p in fy.period_ids:
                 dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'amount': amount/num})
         return True
+
 account_budget_post()
 
 class account_budget_post_dotation(osv.osv):
@@ -116,7 +117,7 @@ class crossovered_budget(osv.osv):
     }
 
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': 'draft',
         'creating_user_id': lambda self,cr,uid,context: uid,
     }
 
