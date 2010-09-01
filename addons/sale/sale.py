@@ -697,7 +697,6 @@ class sale_order(osv.osv):
             for proc_id in proc_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
 
             if picking_id:
                 wf_service = netsvc.LocalService("workflow")
