@@ -66,6 +66,10 @@ class project_work(osv.osv):
         
         vals_line = {}
         context = kwargs.get('context', {})
+        #TOFIX: after loading project_timesheet module, it's fail yml of other project* modules. 
+        #Temporary: pass context['withoutemployee'] = True in all yml.
+        if 'withoutemployee' in context and context['withoutemployee']:
+            return super(project_work,self).create(cr, uid, vals, context=context)
         obj_task = task_obj.browse(cr, uid, vals['task_id'])
         result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
         vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
