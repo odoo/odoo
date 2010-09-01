@@ -612,49 +612,61 @@
                                     <field name="scrapped" invisible="1"/>
                                 </tree>
                                 <form string="Stock Moves">
-                                    <notebook colspan="4">
-                                        <page string="General Information">
-                                            <separator colspan="4" string="Move Information"/>
-                                            <field name="location_id" domain="[('usage','=','internal')]"/>
-                                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
-                                            <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                            <field name="product_uom"/>
-                                            <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                            <field groups="product.group_uos" name="product_uos_qty"/>
-                                            <field colspan="4" invisible="1" name="name"/>
-                                            <field invisible="1" name="date"/>
-                                            <field name="date_planned"/>
-                                             <field name="date_expected" string="Date Expected"/>
-                                            <field name="address_id" context="{'contact_display':'partner'}"/>
-                                            <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
-                                            <field name="prodlot_id" groups="base.group_extended"
-                                                context="{'location_id':location_id, 'product_id':product_id}"
-                                                domain="[('product_id','=?',product_id)]"
-                                                on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                            <field groups="base.group_extended" name="tracking_id"/>
+                                    <group colspan="2" col="2">
+                                        <separator colspan="2" string="Move Information"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"/>
+                                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                        <field name="product_uom" string="Unit Of Measure" widget="selection"/>
+                                        <field name="product_uos_qty" groups="product.product_uos" />
+                                        <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                        <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]"/>
+                                    </group>
 
-                                            <newline/>
-                                            <label/>
-                                            <button name="%(track_line)d" string="Split in production lots"
-                                             states="draft,waiting,confirmed,assigned"
-                                            type="action" icon="terp-stock_effects-object-colorize"
-                                              groups="base.group_extended" />
-                                            <button name="%(move_scrap)d" string="Scrap" type="action" icon="gtk-justify-fill"/>
-                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
-                                                states="draft,assigned,confirmed,done"
-                                                groups="base.group_extended"
-                                                icon="terp-stock_effects-object-colorize" />
-                                            <separator colspan="4" string="Move State"/>
-                                            <field name="state"/>
-                                            <group colspan="2">
-												<button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                                <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-no"/>
-                                                <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
-                                            </group>
-                                        </page>
-                                    </notebook>
+                                    <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2" />
+                                        <field name="location_id" domain="[('usage','=','internal')]" widget="selection"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]" widget="selection"/>
+                                    </group>
+
+                                    <group colspan="2" col="2">
+                                        <separator string="Dates" colspan="2" />
+                                        <field name="date" invisible="1"/>
+                                        <field name="date_planned"/>
+                                        <field name="date_expected"/>
+                                    </group>
+
+                                    <group colspan="2" col="4">
+                                        <separator string="Traceability" colspan="4" />
+                                        <field name="tracking_id" groups="base.group_extended" colspan="4" />
+                                        <field name="prodlot_id" groups="base.group_extended"
+                                            context="{'location_id':location_id, 'product_id':product_id}"
+                                            domain="[('product_id','=?',product_id)]"
+                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+                                        <newline/>
+                                        <group colspan="4" col="4">
+                                          <button name="%(track_line)d"
+                                              groups="base.group_extended"
+                                              states="draft,waiting,confirmed,assigned,done"
+                                              string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
+                                          <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                              groups="base.group_extended"
+                                              icon="terp-stock_effects-object-colorize"
+                                              states="draft,assigned,confirmed,done"/>
+                                          <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="gtk-convert" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned" />
+                                        </group>
+                                    </group>
+                                    <separator colspan="4"/>
+                                    <group col="8" colspan="4">
+                                        <field name="state"/>
+                                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>`
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+                                    </group>
                                 </form>
                             </field>
                             <group col="10" colspan="4">
@@ -783,48 +795,61 @@
                                     <field name="scrapped" invisible="1"/>
                                 </tree>
                                 <form string="Stock Moves">
-                                    <notebook colspan="4">
-                                        <page string="General Information">
-                                            <separator colspan="4" string="Move Information"/>
-                                            <field name="location_id" domain="[('usage','=','internal')]"/>
-                                            <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
-                                            <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                            <field name="product_uom"/>
-                                            <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                            <field groups="product.group_uos" name="product_uos_qty"/>
-                                            <field colspan="4" invisible="1" name="name"/>
-                                            <field invisible="1" name="date"/>
-                                            <field name="date_planned"/>
-                                             <field name="date_expected"  string="Date Expected"/>
-                                            <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]"/>
-                                            <newline/>
-                                            <field name="prodlot_id" groups="base.group_extended"
-                                                context="{'location_id':location_id, 'product_id':product_id}"
-                                                domain="[('product_id','=?',product_id)]"
-                                                on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                            <field groups="base.group_extended" name="tracking_id"/>
+                                    <group colspan="2" col="2">
+                                        <separator colspan="2" string="Move Information"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"/>
+                                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                        <field name="product_uom" string="Unit Of Measure" widget="selection"/>
+                                        <field name="product_uos_qty" groups="product.product_uos" />
+                                        <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                        <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]"/>
+                                    </group>
 
-                                            <label/>
-                                            <button name="%(track_line)d" string="Split in production lots"
-                                            groups="base.group_extended"
-                                            states="draft,waiting,confirmed,assigned"
-                                            type="action" icon="terp-stock_effects-object-colorize"/>
-                                            <label/>
-                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
-                                                groups="base.group_extended"
-                                                icon="terp-stock_effects-object-colorize"
-                                                states="draft,assigned,confirmed,done"/>
-                                            <separator colspan="4" string="Move State"/>
-                                            <field name="state"/>
-                                            <group colspan="2">
-												<button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>                                            
-                                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                                <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
-                                                <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
-                                            </group>
-                                        </page>
-                                    </notebook>
+                                    <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2" />
+                                        <field name="location_id" domain="[('usage','=','internal')]" widget="selection"/>
+                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]" widget="selection"/>
+                                    </group>
+
+                                    <group colspan="2" col="2">
+                                        <separator string="Dates" colspan="2" />
+                                        <field name="date" invisible="1"/>
+                                        <field name="date_planned"/>
+                                        <field name="date_expected"/>
+                                    </group>
+
+                                    <group colspan="2" col="4">
+                                        <separator string="Traceability" colspan="4" />
+                                        <field name="tracking_id" groups="base.group_extended" colspan="4" />
+                                        <field name="prodlot_id" groups="base.group_extended"
+                                            context="{'location_id':location_id, 'product_id':product_id}"
+                                            domain="[('product_id','=?',product_id)]"
+                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+                                        <newline/>
+                                        <group colspan="4" col="4">
+                                          <button name="%(track_line)d"
+                                              groups="base.group_extended"
+                                              states="draft,waiting,confirmed,assigned,done"
+                                              string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
+                                          <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                              groups="base.group_extended"
+                                              icon="terp-stock_effects-object-colorize"
+                                              states="draft,assigned,confirmed,done"/>
+                                          <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="gtk-convert" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned" />
+                                        </group>
+                                    </group>
+                                    <separator colspan="4"/>
+                                    <group col="8" colspan="4">
+                                        <field name="state"/>
+                                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+                                    </group>
                                 </form>
                             </field>
                             <group col="10" colspan="4">
@@ -982,48 +1007,61 @@
                                     <field name="scrapped" invisible="1"/>
                                 </tree>
                                 <form string="Stock Moves">
-                                    <notebook colspan="4">
-                                         <page string="General Information">
-                                            <separator colspan="4" string="Move Information"/>
-                                            <field name="location_id" domain="[('usage','=','internal')]"/>
-                                            <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
-                                            <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" />
-                                            <field name="product_uom"/>
-                                            <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                            <field groups="product.group_uos" name="product_uos_qty"/>
-                                            <field colspan="4" invisible="1" name="name"/>
-                                            <field invisible="1" name="date"/>
-                                            <field name="date_planned"/>
-                                             <field name="date_expected"  string="Date Expected"/>
-                                            <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
-                                            <newline/>
-                                            <field name="prodlot_id" groups="base.group_extended"
-                                                context="{'location_id':location_id, 'product_id':product_id}"
-                                                domain="[('product_id','=?',product_id)]"
-                                                on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                            <field groups="base.group_extended" name="tracking_id"/>
-                                            <label/>
-                                            <button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"
-                                                states="draft,assigned,confirmed,done"
-                                                groups="base.group_extended"
-                                             />
-                                            <label/>
-                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
-                                                groups="base.group_extended"
-                                                icon="terp-stock_effects-object-colorize"
-                                                states="draft,assigned,confirmed,done"/>
-                                            <label/>
-                                            <separator colspan="4" string="Move State"/>
-                                            <field name="state"/>
-                                            <group colspan="2">
-												<button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>                                            
-                                                <button name="force_assign" states="confirmed" string="Force Availability" type="object"  icon="gtk-jump-to"/>
-                                                <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"  icon="gtk-no"/>
-                                                <button name="action_cancel" states="assigned" string="Cancel" type="object"  icon="gtk-cancel"/>
-                                            </group>
-                                        </page>
-                                    </notebook>
+                                    <group colspan="2" col="2">
+                                        <separator colspan="2" string="Move Information"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"/>
+                                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                        <field name="product_uom" string="Unit Of Measure" widget="selection"/>
+                                        <field name="product_uos_qty" groups="product.product_uos" />
+                                        <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                        <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]"/>
+                                    </group>
+
+                                    <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2" />
+                                        <field name="location_id" domain="[('usage','=','internal')]" widget="selection"/>
+                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]" widget="selection"/>
+                                    </group>
+
+                                    <group colspan="2" col="2">
+                                        <separator string="Dates" colspan="2" />
+                                        <field name="date" invisible="1"/>
+                                        <field name="date_planned"/>
+                                        <field name="date_expected"/>
+                                    </group>
+
+                                    <group colspan="2" col="4">
+                                        <separator string="Traceability" colspan="4" />
+                                        <field name="tracking_id" groups="base.group_extended" colspan="4" />
+                                        <field name="prodlot_id" groups="base.group_extended"
+                                            context="{'location_id':location_id, 'product_id':product_id}"
+                                            domain="[('product_id','=?',product_id)]"
+                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+                                        <newline/>
+                                        <group colspan="4" col="4">
+                                          <button name="%(track_line)d"
+                                              groups="base.group_extended"
+                                              states="draft,waiting,confirmed,assigned,done"
+                                              string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
+                                          <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                              groups="base.group_extended"
+                                              icon="terp-stock_effects-object-colorize"
+                                              states="draft,assigned,confirmed,done"/>
+                                          <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="gtk-convert" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned" />
+                                        </group>
+                                    </group>
+                                    <separator colspan="4"/>
+                                    <group col="8" colspan="4">
+                                        <field name="state"/>
+                                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+                                    </group>
                                 </form>
                             </field>
                             <group col="10" colspan="4">
@@ -1179,41 +1217,61 @@
                                     <field name="scrapped" invisible="1"/>
                                 </tree>
                                 <form string="Stock Moves">
-                                    <notebook colspan="4">
-                                        <page string="General Information">
-                                            <separator colspan="4" string="Move Information"/>
-                                            <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field domain="[('usage','=','internal')]" name="location_dest_id" />
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
-                                            <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                            <field name="product_uom"/>
-                                            <field groups="product.group_uos" name="product_uos_qty"/>
-                                            <field colspan="4" invisible="1" name="name" />
-                                            <field groups="base.group_extended" name="date_planned"/>
-                                           <field name="date_expected" groups="base.group_extended" string="Date Expected"/>
-                                            <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                            <newline/>
-                                            <newline/>
-                                            <field name="prodlot_id" groups="base.group_extended" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=?',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                            <field groups="base.group_extended" name="tracking_id"/>
+                                    <group colspan="2" col="2">
+                                        <separator colspan="2" string="Move Information"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"/>
+                                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                        <field name="product_uom" string="Unit Of Measure" widget="selection"/>
+                                        <field name="product_uos_qty" groups="product.product_uos" />
+                                        <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                        <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]"/>
+                                    </group>
 
-                                            <newline/>
-                                            <label/>
-                                             <button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" states="draft,assigned,confirmed"/>
-                                            <label/>
-                                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                                    <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]" widget="selection"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]" widget="selection"/>
+                                    </group>
+
+                                    <group colspan="2" col="2">
+                                        <separator string="Dates" colspan="2" />
+                                        <field name="date" invisible="1"/>
+                                        <field name="date_planned"/>
+                                        <field name="date_expected"/>
+                                    </group>
+
+                                    <group colspan="2" col="4">
+                                        <separator string="Traceability" colspan="4" />
+                                        <field name="tracking_id" groups="base.group_extended" colspan="4" />
+                                        <field name="prodlot_id" groups="base.group_extended"
+                                            context="{'location_id':location_id, 'product_id':product_id}"
+                                            domain="[('product_id','=?',product_id)]"
+                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+                                        <newline/>
+                                        <group colspan="4" col="4">
+                                          <button name="%(track_line)d"
                                               groups="base.group_extended"
-                                              icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" states="draft,assigned,confirmed,done"/>
-                                            <separator colspan="4" string="Move State"/>
-                                            <field name="state"/>
-                                            <group colspan="2">
-												<button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>                                            
-                                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon=""/>
-                                                <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon=""/>
-                                                <button name="action_cancel" states="assigned" string="Cancel" type="object" icon=""/>
-                                            </group>
-                                        </page>
-                                    </notebook>
+                                              states="draft,waiting,confirmed,assigned,done"
+                                              string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
+                                          <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                              groups="base.group_extended"
+                                              icon="terp-stock_effects-object-colorize"
+                                              states="draft,assigned,confirmed,done"/>
+                                          <button name="%(stock.move_scrap)d"
+                                                string="Scrap Products" type="action"
+                                                icon="gtk-convert" context="{'scrap': True}"
+                                                states="draft,waiting,confirmed,assigned" />
+                                        </group>
+                                    </group>
+                                    <separator colspan="4"/>
+                                    <group col="8" colspan="4">
+                                        <field name="state"/>
+                                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+                                    </group>
                                 </form>
                             </field>
                             <group col="10" colspan="4">
@@ -1593,7 +1651,7 @@
                         </group>
                     </group>
                     <separator colspan="4"/>
-                    <group col="6" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="state"/>
                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                         <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
