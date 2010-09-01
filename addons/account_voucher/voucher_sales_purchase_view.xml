@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        
-        <act_window
-            id="act_pay_voucher"
-            name="Sales Payment"
-            context="{'default_journal_type':'bank', 'default_type':'receipt', 'default_partner_id': partner_id}"
-            view_id="account_open_vouchers_view"
-            res_model="account.voucher"
-            src_model="account.voucher"/>
-<!--        <record id="act_pay_voucher" model="ir.actions.act_window">-->
-<!--            <field name="name">Sales Payment</field>-->
-<!--            <field name="res_model">account.voucher.open</field>-->
-<!--            <field name="view_type">form</field>-->
-<!--            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>-->
-<!--            <field name="context">{'default_journal_type':'bank', 'default_type':'receipt', 'default_partner_id': partner_id}</field>-->
-<!--            <field name="view_id" ref="account_open_vouchers_view"/>-->
-<!--            <field name="target">new</field>-->
-<!--        </record>-->
-        
+<!--        <act_window-->
+<!--            id="act_pay_voucher"-->
+<!--            name="Sales Payment"-->
+<!--            context="{'default_journal_type':'bank', 'default_type':'receipt', 'default_partner_id': partner_id}"-->
+<!--            res_model="account.voucher.open"-->
+<!--            src_model="account.voucher"-->
+<!--            target="new"/>-->
+        <record id="act_pay_voucher" model="ir.actions.act_window">
+            <field name="name">Sales Payment</field>
+            <field name="res_model">account.voucher.open</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>
+            <field name="context">{'journal_type':'bank', 'type':'receipt', 'partner_id': partner_id}</field>
+            <field name="view_id" ref="account_open_vouchers_view"/>
+            <field name="target">new</field>
+        </record>
         <record model="ir.ui.view" id="view_sale_receipt_form">
             <field name="name">account.voucher.sale.form</field>
             <field name="model">account.voucher</field>
@@ -80,7 +78,7 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
-<!--                        <button name="%(act_pay_voucher)d" type="action" string="Pay"/>-->
+                        <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'title':'Sales Payment', 'journal_type':'bank', 'type':'receipt', 'partner_id': partner_id}" type="action" string="Pay" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>

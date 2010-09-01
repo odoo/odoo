@@ -78,7 +78,10 @@ class account_voucher(osv.osv):
         if user.company_id:
             return user.company_id.currency_id.id
         return False
-
+    
+    def _get_partner(self, cr, uid, context={}):
+        return context.get('partner_id', False)
+        
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "date desc, id desc"
@@ -133,6 +136,7 @@ class account_voucher(osv.osv):
     }
     _defaults = {
         'period_id': _get_period,
+        'partner_id': _get_partner,
         'journal_id':_get_journal,
         'currency_id': _get_currency,
         'type':_get_type,
@@ -336,7 +340,7 @@ class account_voucher(osv.osv):
                 default['value']['pre_line'] = 1
             elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1                
-
+        
         return default
 
     def onchange_date(self, cr, user, ids, date, context={}):
