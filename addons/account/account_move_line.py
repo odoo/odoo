@@ -694,7 +694,7 @@ class account_move_line(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar)
-        if view_type=='tree' and 'journal_id' in context:
+        if view_type=='tree' and context.get('journal_id',False):
             title = self.view_header_get(cr, uid, view_id, view_type, context)
             journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
 
