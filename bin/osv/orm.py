@@ -1496,7 +1496,7 @@ class orm_template(object):
         view = self.fields_view_get(cr, uid, False, 'form', context)
 
         root = etree.fromstring(encode(view['arch']))
-        res = etree.XML("<search string='%s'></search>" % root.get("string", ""))
+        res = etree.XML("""<search string="%s"></search>""" % root.get("string", ""))
         node = etree.Element("group")
         res.append(node)
 
@@ -1830,7 +1830,33 @@ class orm_template(object):
     def _check_removed_columns(self, cr, log=False):
         raise NotImplementedError()
 
+    def _add_missing_default_values(self, cr, uid, values, context=None):
+        missing_defaults = []
+        avoid_tables = [] # avoid overriding inherited values when parent is set
+        for tables, parent_field in self._inherits.items():
+            if parent_field in values:
+                avoid_tables.append(tables)
+        for field in self._columns.keys():
+            if not field in values:
+                missing_defaults.append(field)
+        for field in self._inherit_fields.keys():
+            if (field not in values) and (self._inherit_fields[field][0] not in avoid_tables):
+                missing_defaults.append(field)
+
+        if len(missing_defaults):
+            # override defaults with the provided values, never allow the other way around
+            defaults = self.default_get(cr, uid, missing_defaults, context)
+            for dv in defaults:
+                # FIXME: also handle inherited m2m
+                if dv in self._columns and self._columns[dv]._type == 'many2many' \
+                     and defaults[dv] and isinstance(defaults[dv][0], (int, long)):
+                        defaults[dv] = [(6, 0, defaults[dv])]
+            defaults.update(values)
+            values = defaults
+        return values
+
 class orm_memory(orm_template):
+
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
     _inherit_fields = {}
     _max_count = 200
@@ -1922,10 +1948,7 @@ class orm_memory(orm_template):
         self.next_id += 1
         id_new = self.next_id
 
-        # override defaults with the provided values, never allow the other way around
-        defaults = self.default_get(cr, user, [], context)
-        defaults.update(vals)
-        vals = defaults
+        vals = self._add_missing_default_values(cr, user, vals, context)
 
         vals2 = {}
         upd_todo = []
@@ -3385,30 +3408,7 @@ class orm(orm_template):
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
 
-        default = []
-
-        avoid_table = []
-        for (t, c) in self._inherits.items():
-            if c in vals:
-                avoid_table.append(t)
-        for f in self._columns.keys(): # + self._inherit_fields.keys():
-            if not f in vals:
-                default.append(f)
-
-        for f in self._inherit_fields.keys():
-            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table):
-                default.append(f)
-
-        if len(default):
-            default_values = self.default_get(cr, user, default, context)
-            for dv in default_values:
-                if dv in self._columns and self._columns[dv]._type == 'many2many':
-                    if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
-                        default_values[dv] = [(6, 0, default_values[dv])]
-
-            # override defaults with the provided values, never allow the other way around
-            default_values.update(vals)
-            vals = default_values
+        vals = self._add_missing_default_values(cr, user, vals, context)
 
         tocreate = {}
         for v in self._inherits:

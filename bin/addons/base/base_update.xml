@@ -82,7 +82,7 @@
                                     context="{'user_id': self, 'user_preference': 1}" groups="base.group_multi_company"/>
                             <field name="view" readonly="0"/>
                             <label string="" colspan="2"/>
-                            <field name="menu_tips" colspan="2"/>
+                            <field name="menu_tips" colspan="2" readonly="0"/>
                             <newline/>
                             <separator colspan="4" string="Preferences"/>
                         </page>
@@ -116,7 +116,11 @@
                         <page string="User">
                             <field name="address_id" select="1"/>
                             <field name="user_email" widget="email"/>
-                            <field name="company_id" required="1" context="{'user_id': self, 'user_preference': 1}" groups="base.group_multi_company"/>
+                            <field name="company_id" required="1"
+                                context="{'user_id': self, 'user_preference': 1}"
+                                on_change="on_change_company_id(company_id)"
+                                groups="base.group_multi_company"
+                                />
                             <field name="action_id" required="True"/>
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field name="context_lang"/>

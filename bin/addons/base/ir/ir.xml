@@ -179,14 +179,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sequences">
-                    <field name="name"/>
                     <field name="code"/>
+                    <field name="name"/>
                     <field name="prefix"/>
                     <field name="padding"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="number_next"/>
                     <field name="number_increment"/>
-                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -197,10 +196,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sequences">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                     <separator orientation="vertical"/>
-                    <field name="company_id" select="1"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
                 </search>
             </field>
         </record>
@@ -884,13 +883,12 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Views">
-                    <field name="priority"/>
+                    <field name="priority" string="Sequence"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
                     <field name="xml_id"/>
                     <field name="inherit_id"/>
-                    <field name="field_parent"/>
                 </tree>
             </field>
         </record>
@@ -1201,11 +1199,6 @@
                     <field name="model"/>
                     <field name="state"/>
                     <field name="osv_memory"/>
-                    <button colspan="2"
-                        icon="gtk-justify-fill"
-                        name="%(act_menu_create)d"
-                        string="Create a Menu" type="action"
-                        target="new" />
                 </tree>
             </field>
         </record>
@@ -1324,9 +1317,8 @@
                 <tree string="Module Data">
                     <field name="module"/>
                     <field name="name"/>
-                    <field name="model" select="1" />
+                    <field name="model"/>
                     <field name="res_id"/>
-                    <field name="noupdate"/>
                 </tree>
             </field>
         </record>
@@ -1543,13 +1535,12 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Scheduled Actions">
-                    <field name="priority"/>
+                    <field name="priority" string="Sequence"/>
                     <field name="name"/>
                     <field name="nextcall"/>
                     <field name="interval_number"/>
                     <field name="interval_type"/>
                     <field name="numbercall"/>
-                    <field name="active"/>
                     <field name="user_id" invisible="1"/>
                 </tree>
             </field>
@@ -1915,9 +1906,12 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
-                    <field name="action_id" select="1"/>
-                    <field name="state"/>
-                    <button name="action_id" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                    <field name="action_id"/>
+                    <field name="state" readonly="1"/>
+                    <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                    <button name="action_open" states="cancel,skip,done"
+                            string="Set as Todo" type="object"
+                            icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -1929,21 +1923,16 @@
             <field name="arch" type="xml">
                 <form editable="bottom" string="Config Wizard Steps">
                     <group colspan="4" col="6">
-                        <field name="sequence"/>
-                        <field name="action_id" select="1"/>
+                        <field name="action_id"/>
                         <field name="restart"/>
+                        <field name="sequence"/>
                     </group>
                     <separator string="Groups" colspan="4"/>
                     <field name="groups_id" nolabel="1" colspan="4"/>
-                    <separator string="State" colspan="4"/>
                     <group colspan="4" col="4">
                         <field name="state" colspan="2" readonly="1"/>
-                        <!--TO CHECK: This is working in tree view but not here in form view  -->
-                        <button name="action_id" states="open,skip"
-                            string="Launch" type="action"
-                            icon="gtk-execute"
-                            help="Launch Configuration Wizard" />
-                        <button name="action_open" states="cancel,done"
+                        <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
+                        <button name="action_open" states="cancel,skip,done"
                             string="Set as Todo" type="object"
                             icon="gtk-convert"/>
                     </group>
