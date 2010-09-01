@@ -126,6 +126,12 @@ class crossovered_budget(osv.osv):
         })
         return True
 
+    def budget_draft(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {
+            'state':'draft'
+        })
+        return True
+
     def budget_validate(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'validate',
