@@ -163,6 +163,11 @@
     comment: Write-Off
     writeoff_acc_id: account.a_sale
     writeoff_journal_id: sale.account_journal_bankjournal0
+-
+  Assign analytic jounal into Bank journal
+- 
+  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
+    analytic_journal_id: account.cose_journal_sale
 - 
   Pay and Reconcile the Invoice.
 - 
