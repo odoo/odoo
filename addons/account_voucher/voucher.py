@@ -361,7 +361,16 @@ class account_voucher(osv.osv):
         }
 
     def onchange_journal(self, cr, uid, ids, journal_id):
-        return {}
+        if not journal_id:
+            return False
+        journal_pool = self.pool.get('account.journal')
+        journal = journal_pool.browse(cr, uid, journal_id)
+        account_id = journal.default_credit_account_id or journal.default_debit_account_id
+        tax_id = False
+        if account_id and account_id.tax_ids:
+            tax_id = account_id.tax_ids[0].id
+                   
+        return {'value':{'tax_id':tax_id}}
 
     def proforma_voucher(self, cr, uid, ids):
         self.action_move_line_create(cr, uid, ids)
