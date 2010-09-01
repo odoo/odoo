@@ -1329,7 +1329,7 @@ class orm_template(object):
                         search_context = dict(context)
                         if column._context and not isinstance(column._context, basestring):
                             search_context.update(column._context)
-                        attrs['selection'] = relation._name_search(cr, 1, '', dom, context=search_context, limit=None, name_get_uid=1)
+                        attrs['selection'] = relation._name_search(cr, user, '', dom, context=search_context, limit=None, name_get_uid=1)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
@@ -1767,8 +1767,59 @@ class orm_template(object):
             return len(res)
         return res
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
-            context=None, count=False):
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        """
+        Search for records based on a search domain.
+
+        :param cr: database cursor
+        :param user: current user id
+        :param args: list of tuples specifying the search domain [('field_name', 'operator', value), ...]. Pass an empty list to match all records.
+        :param offset: optional number of results to skip in the returned values (default: 0)
+        :param limit: optional max number of records to return (default: **None**)
+        :param order: optional columns to sort by (default: self._order=id )
+        :param context: optional context arguments, like lang, time zone
+        :type context: dictionary
+        :param count: optional (default: **False**), if **True**, returns only the number of records matching the criteria, not their ids
+        :return: id or list of ids of records matching the criteria
+        :rtype: integer or list of integers
+        :raise AccessError: * if user tries to bypass access rules for read on the requested object.
+
+        **Expressing a search domain (args)**
+
+        Each tuple in the search domain needs to have 3 elements, in the form: **('field_name', 'operator', value)**, where:
+
+            * **field_name** must be a valid name of field of the object model, possibly following many-to-one relationships using dot-notation, e.g 'street' or 'partner_id.country' are valid values.
+            * **operator** must be a string with a valid comparison operator from this list: ``=, !=, >, >=, <, <=, like, ilike, in, not in, child_of, parent_left, parent_right``
+              The semantics of most of these operators are obvious.
+              The ``child_of`` operator will look for records who are children or grand-children of a given record,
+              according to the semantics of this model (i.e following the relationship field named by
+              ``self._parent_name``, by default ``parent_id``.
+            * **value** must be a valid value to compare with the values of **field_name**, depending on its type.
+
+        Domain criteria can be combined using 3 logical operators than can be added between tuples:  '**&**' (logical AND, default), '**|**' (logical OR), '**!**' (logical NOT).
+        These are **prefix** operators and the arity of the '**&**' and '**|**' operator is 2, while the arity of the '**!**' is just 1.
+        Be very careful about this when you combine them the first time.
+
+        Here is an example of searching for Partners named *ABC* from Belgium and Germany whose language is not english ::
+
+            [('name','=','ABC'),'!',('language.code','=','en_US'),'|',('country_id.code','=','be'),('country_id.code','=','de'))
+
+        The '&' is omitted as it is the default, and of course we could have used '!=' for the language, but what this domain really represents is::
+
+            (name is 'ABC' AND (language is NOT english) AND (country is Belgium OR Germany))
+
+        """
+        return self._search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
+
+    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        """
+        Private implementation of search() method, allowing specifying the uid to use for the access right check. 
+        This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
+        by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
+        
+        :param access_rights_uid: optional user ID to use when checking access rights
+                                  (not for ir.rules, this is only for ir.model.access)
+        """
         raise NotImplementedError(_('The search method is not implemented on this object !'))
 
     def name_get(self, cr, user, ids, context=None):
@@ -1994,8 +2045,7 @@ class orm_memory(orm_template):
             res = e.exp
         return res or []
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
-            context=None, count=False):
+    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         if not context:
             context = {}
 
@@ -3757,52 +3807,19 @@ class orm(orm_template):
             return True
         return False
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
-            context=None, count=False):
+    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         """
-        Search for record/s based on a search domain.
-
-        :param cr: database cursor
-        :param user: current user id
-        :param args: list of tuples specifying the search domain [('field_name', 'operator', value), ...]. Pass an empty list to match all records.
-        :param offset: optional number of results to skip in the returned values (default: 0)
-        :param limit: optional max number of records to return (default: **None**)
-        :param order: optional columns to sort by (default: self._order=id )
-        :param context: optional context arguments, like lang, time zone
-        :type context: dictionary
-        :param count: optional (default: **False**), if **True**, returns only the number of records matching the criteria, not their ids
-        :return: id or list of ids of records matching the criteria
-        :rtype: integer or list of integers
-        :raise AccessError: * if user tries to bypass access rules for read on the requested object.
-
-        **Expressing a search domain (args)**
-
-        Each tuple in the search domain needs to have 3 elements, in the form: **('field_name', 'operator', value)**, where:
-
-            * **field_name** must be a valid name of field of the object model, possibly following many-to-one relationships using dot-notation, e.g 'street' or 'partner_id.country' are valid values.
-            * **operator** must be a string with a valid comparison operator from this list: ``=, !=, >, >=, <, <=, like, ilike, in, not in, child_of, parent_left, parent_right``
-              The semantics of most of these operators are obvious.
-              The ``child_of`` operator will look for records who are children or grand-children of a given record,
-              according to the semantics of this model (i.e following the relationship field named by
-              ``self._parent_name``, by default ``parent_id``.
-            * **value** must be a valid value to compare with the values of **field_name**, depending on its type.
-
-        Domain criteria can be combined using 3 logical operators than can be added between tuples:  '**&**' (logical AND, default), '**|**' (logical OR), '**!**' (logical NOT).
-        These are **prefix** operators and the arity of the '**&**' and '**|**' operator is 2, while the arity of the '**!**' is just 1.
-        Be very careful about this when you combine them the first time.
-
-        Here is an example of searching for Partners named *ABC* from Belgium and Germany whose language is not english ::
-
-            [('name','=','ABC'),'!',('language.code','=','en_US'),'|',('country_id.code','=','be'),('country_id.code','=','de'))
-
-        The '&' is omitted as it is the default, and of course we could have used '!=' for the language, but what this domain really represents is::
-
-            (name is 'ABC' AND (language is NOT english) AND (country is Belgium OR Germany))
-
+        Private implementation of search() method, allowing specifying the uid to use for the access right check. 
+        This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
+        by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
+        This is ok at the security level because this method is private and not callable through XML-RPC.
+        
+        :param access_rights_uid: optional user ID to use when checking access rights
+                                  (not for ir.rules, this is only for ir.model.access)
         """
         if context is None:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
         (where_clause, where_clause_params, tables) = self._where_calc(cr, user, args, context=context)
 
@@ -3894,8 +3911,9 @@ class orm(orm_template):
         args = args[:]
         if name:
             args += [(self._rec_name, operator, name)]
-        ids = self.search(cr, user, args, limit=limit, context=context)
-        res = self.name_get(cr, name_get_uid or user, ids, context)
+        access_rights_uid = name_get_uid or user
+        ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
+        res = self.name_get(cr, access_rights_uid, ids, context)
         return res
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
