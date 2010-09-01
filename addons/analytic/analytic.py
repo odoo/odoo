@@ -186,9 +186,9 @@ class account_analytic_account(osv.osv):
     _columns = {
         'name' : fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
-        'code' : fields.char('Account Code', size=24),
+        'code': fields.char('Account Code', size=24),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type'),
-        'description' : fields.text('Description'),
+        'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
@@ -237,12 +237,6 @@ class account_analytic_account(osv.osv):
     _constraints = [
         (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id'])
     ]
-
-    def create(self, cr, uid, vals, context=None):
-        parent_id = vals.get('parent_id', 0)
-        if ('code' not in vals or not vals['code']) and not parent_id:
-            vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account')
-        return super(account_analytic_account, self).create(cr, uid, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
