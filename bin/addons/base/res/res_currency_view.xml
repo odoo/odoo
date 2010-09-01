@@ -31,8 +31,9 @@
                         <field name="code" select="1"/>
                         <field name="company_id" select="2" />
                         <field name="rate"/>
+                        <field name="symbol"/>
                     </group>
-                    
+
                     <group col="2" colspan="2">
                         <separator string="Price Accuracy" colspan="2"/>
                         <field name="rounding"/>
@@ -44,7 +45,7 @@
                         <field name="base"/>
                         <field name="active" select="1"/>
                     </group>
-                    
+
                     <field colspan="4" mode="tree,form" name="rate_ids" nolabel="1" attrs="{'readonly':[('base','=',True)]}">
                         <form string="Rates">
                             <field name="name"/>
