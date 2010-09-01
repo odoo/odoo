@@ -141,7 +141,7 @@
           <para style="terp_default_9">Used Account </para>
         </td>
         <td>
-          <para style="P1">[[ o.mode.bank_id.name or '-' ]]</para>
+          <para style="P1">[[ get_account_name(o.mode.bank_id.id) ]]</para>
         </td>
       </tr>
       <tr>
@@ -223,7 +223,7 @@
             <para style="terp_default_9">[[line.partner_id and line.partner_id.name or '-' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ line.bank_id and line.bank_id.name or '-' ]]</para>
+            <para style="terp_default_9">[[ get_account_name(line.bank_id.id) or '-']]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ get_invoice_name(line.ml_inv_ref.id) or '-' ]]</para>
