@@ -13,7 +13,8 @@ class crm_add_note(osv.osv_memory):
 
     _columns = {
         'body': fields.text('Note Body', required=True),
-        'state': fields.selection(AVAILABLE_STATES, string='Set New State To', required=True),
+        'state': fields.selection(AVAILABLE_STATES, string='Set New State To',
+                                  required=True),
     }
 
     def action_add(self, cr, uid, ids, context=None):
@@ -27,7 +28,9 @@ class crm_add_note(osv.osv_memory):
         case_pool = self.pool.get(model)
 
         for obj in self.browse(cr, uid, ids, context=context):
-            case = case_pool.browse(cr, uid, context['active_ids'], context=context)[0]
+            case_list = case_pool.browse(cr, uid, context['active_ids'],
+                                         context=context)
+            case = case_list[0]
             user_obj = self.pool.get('res.users')
             user_name = user_obj.browse(cr, uid, [uid], context=context)[0].name
             case_pool.history(cr, uid, [case], _("Note"), history=True,
