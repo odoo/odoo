@@ -74,7 +74,7 @@ class abstracted_fs(object):
                     if not cr.fetchone():
                         continue
 
-                    cr.execute("SELECT id FROM ir_module_module WHERE name = 'document_ftp' AND state IN ('installed', 'to upgrade') ")
+                    cr.execute("SELECT id FROM ir_module_module WHERE name = 'document_ftp' AND state IN ('installed', 'to install', 'to upgrade') ")
                     res = cr.fetchone()
                     if res and len(res):
                         self.db_name_list.append(db_name)
@@ -287,7 +287,7 @@ class abstracted_fs(object):
                 raise IOError(errno.EPERM, 'Cannot perform operation at root dir')
             dbname = p_parts[0]
             if dbname not in self.db_list():
-                raise IOError(errno.ENOENT,'Invalid database path')
+                raise IOError(errno.ENOENT,'Invalid database path: %s' % dbname)
             try:
                 db = pooler.get_db(dbname)
             except Exception:

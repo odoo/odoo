@@ -1018,7 +1018,7 @@ class stock_picking(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
-        if not context:
+        if context is None:
             context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
@@ -1918,12 +1918,13 @@ class stock_move(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        ctx = context.copy()
         for move in self.browse(cr, uid, ids, context=context):
-            if move.state != 'draft':
+            if move.state != 'draft' and not ctx.get('call_unlink',False):
                 raise osv.except_osv(_('UserError'),
                         _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
-            cr, uid, ids, context=context)
+            cr, uid, ids, context=ctx)
 
     def _create_lot(self, cr, uid, ids, product_id, prefix=False):
         """ Creates production lot

@@ -2,9 +2,10 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"/>
-            <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
+
+        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
@@ -910,7 +911,6 @@
             src_model="product.product"/>
 
         <!-- Menu for Resource for MRP-->
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" groups="mrp.group_mrp_user" sequence="3" />
 
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
             groups="base.group_extended"

@@ -24,6 +24,7 @@ import decimal_precision as dp
 import pooler
 
 import math
+import logging
 from _common import rounding
 
 from tools import config
@@ -724,13 +725,24 @@ class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
 
-    def create(self, cr, uid, data, context={}):
+    def create(self, cr, uid, data, context=None):
+        if context is None:
+            context = {}
         user_id = super(res_users, self).create(cr, uid, data, context)
         data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'product', 'ir_ui_view_sc_product0')
-        view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-        copy_id = self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                    'user_id': user_id}, context=context)
+        try:
+            data_id = data_obj._get_id(cr, uid, 'product', 'ir_ui_view_sc_product0')
+            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+            copy_id = self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                        'user_id': user_id}, context=context)
+        except ValueError:
+            # During a single install of multiple modules, the product_view.xml may
+            # be loaded after this python code is present in the server and called
+            # by other module's res_users.create() calls. So, we have to survive
+            # this and create the user.
+            # One more case is if some admin has deliberately removed this shortcut,
+            # users must still be able to create.
+            logging.getLogger('orm').warning('Skipped Products shortcut for user "%s"', data.get('name','<new'))
         return user_id
 
 res_users()

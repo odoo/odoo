@@ -7,7 +7,7 @@
             <field name="model">email_template.mailbox</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Outbox">
+                <form string="Emails">
                     <group col="4" colspan="4" name="headers">
                         <field name="email_from" select="1"/>
                         <field name="email_to" required="1" select="1" />
@@ -28,32 +28,27 @@
                                     <field name="body_html" nolabel="1" colspan="4" />
                                 </page>
                             </notebook>
+                            <separator colspan="4" string="" />
+                            <group col="4" colspan="4">
+                                <field name="state" readonly="1" string="State"/>
+                                <button name="send_this_mail" type="object" string="Send Mail" icon="terp-mail-message-new"/>
+                            </group>
                         </page>
 
                         <page string="Attachments">
-                            <group col="4">
-                                <separator colspan="4" string="Attachments" />
-                                <field name="attachments_ids" colspan="4" nolabel="1" />
-                            </group>
+                            <separator colspan="4" string="Attachments" />
+                            <field name="attachments_ids" colspan="4" nolabel="1" />
                         </page>
                         <page string="Advanced">
-                            <group col="4">
-                                <field name="account_id" colspan="2" />
-                                <field name="server_ref" colspan="2" />
-                                <field name="mail_type" colspan="2" />
-                                <field name="folder" colspan="2" select="2"/>
-                                <field name="message_id" select="2"/>
-                                <separator string="History" colspan="4" />
-                                <field name="history" nolabel="1" colspan="4"/>
-                            </group>
+                            <field name="account_id" colspan="2" />
+                            <field name="server_ref" colspan="2" />
+                            <field name="mail_type" colspan="2" />
+                            <field name="folder" colspan="2" select="2"/>
+                            <field name="message_id" select="2"/>
+                            <separator string="History" colspan="4" />
+                            <field name="history" nolabel="1" colspan="4"/>
                         </page>
                     </notebook>
-                    <separator colspan="4" string="" />
-                    <group col="4" colspan="4">
-                        <field name="state" readonly="1" />
-                        <button name="complete_mail" type="object" string="Download Full Mail"  states="read,unread" />
-                        <button name="send_this_mail" type="object" string="Send Mail" />
-                    </group>
                 </form>
             </field>
         </record>
@@ -64,12 +59,14 @@
             <field name="model">email_template.mailbox</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Drafts">
+                <tree string="Emails" colors="blue:folder=='drafts';grey:folder=='trash'">
+                    <field name="subject" select="1" />
                     <field name="user" />
                     <field name="email_from" select="1" />
-                    <field name="subject" select="1" />
-                    <field name="attachments_ids" select="2" />
+                    <field name="email_to"/>
                     <field name="date_mail" select="2" />
+                    <field name="attachments_ids" select="2" />
+                    <field name="folder" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -79,37 +76,54 @@
            <field name="model">email_template.mailbox</field>
            <field name="type">search</field>
            <field name="arch" type="xml">
-               <search string="Mailboxes">
-                    <filter icon="terp-mail-message-new" string="Drafts" name="draft" domain="[('folder','=','drafts')]"/>
+               <search string="Emails">
+                    <filter icon="terp-document-new" string="Drafts" name="draft" domain="[('folder','=','drafts')]"/>
                     <filter icon="terp-mail-" string="Outbox" name="outbox" domain="[('folder','=','outbox')]"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-jump-to-ltr" string="Sent" domain="[('folder','=','sent')]"/>
+                    <filter icon="terp-camera_test" string="Sent" domain="[('folder','=','sent')]"/>
                     <filter icon="terp-mail_delete" string="Trash" domain="[('folder','=','trash')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-stop" string="Not Applicable" domain="[('state','=','na')]"/>
-                    <filter icon="terp-gtk-jump-to-ltr" string="Sending" domain="[('state','=','sending')]"/>
+                    <filter icon="terp-personal+" string="Personal Emails" name="personal" domain="[('account_id.company','=','no')]"/>
+                    <filter icon="terp-go-home" string="Company Emails" name="company" domain="[('account_id.company','=','yes')]"/>
                     <separator orientation="vertical"/>
-                    <field name="email_from" select="1"/>
-                    <field name="email_to" select="1"/>
-                    <field name="subject" select="1"/>
+                    <field name="subject"/>
+                    <field name="email_from"/>
+                    <field name="user">
+                        <filter icon="terp-personal"
+                            string="My Emails" name="myemails"
+                            domain="[('account_id.user','=', uid)]" />
+                    </field>
+                    <newline/>
+                    <field name="email_to"/>
+                    <field name="date_mail"/>
                </search>
            </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_email_template_mailbox">
-            <field name="name">Mailbox</field>
+            <field name="name">Emails</field>
             <field name="res_model">email_template.mailbox</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_email_template_mailbox_tree" />
-            <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_outbox': 1}</field>
+            <field name="context">{'group_by': [], 'search_default_outbox': 1}</field>
             <field name="search_view_id" ref="view_email_template_mailbox_search"/>
         </record>
 
         <!--======================================== MENUS ========================================-->
-        <menuitem name="MailBox" id="menu_email_template_mailbox_all_main2" parent="menu_email_template" />
-        <menuitem name="Personal Mails" id="menu_email_template_personal_mails" parent="menu_email_template_mailbox_all_main2" action="action_email_template_mailbox"/>
-        <menuitem name="Company Mails" id="menu_email_template_company_mails" parent="menu_email_template_mailbox_all_main2" action="action_email_template_mailbox"/>
+
+        <menuitem name="Emails"
+            id="menu_email_template_personal_mails"
+            parent="menu_email_template"
+            action="action_email_template_mailbox" />
+
+        <!-- Mailbox menu in Tools -->
+        <menuitem name="Email Template" id="menu_email_template_tools"
+            parent="base.menu_tools" />
+
+        <menuitem name="Emails"
+            id="menu_email_template_mails_tools"
+            parent="menu_email_template_tools"
+            action="action_email_template_mailbox" />
 
     </data>
 </openerp>
