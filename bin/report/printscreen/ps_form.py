@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -54,17 +54,18 @@ class report_printscreen_list(report_int):
         if not context:
             context={}
         datas['ids'] = ids
-        pool = pooler.get_pool(cr.dbname)
-        model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._description)])
-        if model_id:
-            model_desc = pool.get('ir.model').browse(cr, uid, model_id, context).description
-            self.title = model_desc
-        else:
-            model_desc = model._description
-            self.title = model_desc
-
         model = pool.get(datas['model'])
-        result = model.fields_view_get(cr, uid, view_type='tree', context=context)
+        pool = pooler.get_pool(cr.dbname)
+#        model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._description)])
+#        if model_id:
+#            model_desc = pool.get('ir.model').browse(cr, uid, model_id, context).description
+#            self.title = model_desc
+#        else:
+#        model_desc = model._description
+        self.title = model._description
+
+
+        result = model.fields_view_get(cr, uid, view_type='form', context=context)
 
         fields_order = self._parse_string(result['arch'])
         rows = model.read(cr, uid, datas['ids'], result['fields'].keys() )
