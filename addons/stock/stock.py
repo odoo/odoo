@@ -1366,7 +1366,7 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
 
-        'date': fields.datetime('Created Date'),
+        'date': fields.datetime('Creation Date'),
         'date_planned': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
         'date_expected': fields.datetime('Date Expected', readonly=True,required=True, help="Scheduled date for the movement of the products"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
@@ -1378,17 +1378,17 @@ class stock_move(osv.osv):
         'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True, help="Location where the system will stock the finished products."),
-        'address_id': fields.many2one('res.partner.address', 'Dest. Address', help="Address where goods are to be delivered"),
+        'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True, select=True, help="Location where the system will stock the finished products."),
+        'address_id': fields.many2one('res.partner.address', 'Destination Address', help="Optional address where goods are to be delivered, specifically used for allotment"),
 
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production"),
-        'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, help="This is the code that will be put on the logistical unit: pallet, box, pack."),
+        'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, help="Logistical shipping unit: pallet, box, pack ..."),
 
         'auto_validate': fields.boolean('Auto Validate'),
 
-        'move_dest_id': fields.many2one('stock.move', 'Dest. Move'),
-        'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History'),
-        'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History'),
+        'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Optional: next stock move when chaining them"),
+        'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History (child moves)'),
+        'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Picking List', select=True),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
@@ -1453,19 +1453,15 @@ class stock_move(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context={}
-        group_id = self.pool.get('res.groups').search(cr, uid, [('name', 'in', ('Administration / Configuration','Administration / Access Rights'))])
-        user_obj = self.pool.get('res.users')
-        group=[]
-        user_rec = user_obj.read(cr, uid, uid)
-        for move in self.browse(cr, uid, ids):
-            if move.state=='done':
-              group=[i for i in group_id if (i and (i not in user_rec['groups_id']))]                
-              if group:
-                  raise osv.except_osv(_('Error!'),  _('Quantities, UoMs, Products and Locations cannot be modified on stock moves in Done state (except by the Administrator ' ))
+        if uid != 1:
+            for move in self.browse(cr, uid, ids):
+                if move.state == 'done':
+                    frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
+                    if frozen_fields.intersection(vals):
+                        raise osv.except_osv(_('Operation forbidden'),
+                                             _('Quantities, UoMs, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator)'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
-        
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
