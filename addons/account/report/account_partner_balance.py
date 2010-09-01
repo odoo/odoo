@@ -100,10 +100,11 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         ## Compute Code
         #
         self.initial_balance = data['form'].get('initial_balance', True)
+        self.display_partner = data['form'].get('display_partner', 'non-zero_balance') 
         self.query = data['form'].get('query_line', '')
         self.init_query = data['form'].get('initial_bal_query', '')
         self.result_selection = data['form'].get('result_selection')
-
+        
         if (self.result_selection == 'customer' ):
             self.ACCOUNT_TYPE = ('receivable',)
         elif (self.result_selection == 'supplier'):
@@ -205,9 +206,12 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     res_init['enlitige'] = 0.0 # fix me
                     res_init['account_id'] = r['account_id']
                 final_init[r['account_id']] = res_init
-        for r in res:
-            full_account.append(r)
-
+       
+        if self.display_partner == 'non-zero_balance':
+            full_account = [r for r in res if r['sdebit'] > 0 or r['scredit'] > 0]
+        else:
+            full_account = [r for r in res]
+        
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
         if not self.initial_balance:
