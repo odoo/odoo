@@ -1635,7 +1635,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('picking_id.type','=','in')]</field>
+			<field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context">{"search_default_receive":1}</field>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
@@ -1844,7 +1844,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('picking_id','!=',False),('picking_id.type','=','out')]</field>
+            <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context">{"search_default_receive":1}</field>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
