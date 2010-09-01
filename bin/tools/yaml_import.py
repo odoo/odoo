@@ -293,8 +293,10 @@ class YamlInterpreter(object):
 
             record_dict = self._create_record(model, fields)
             self.logger.debug("RECORD_DICT %s" % record_dict)
+            #context = self.get_context(record, self.eval_context)
+            context = record.context #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
             id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
+                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
