@@ -50,6 +50,8 @@
     ],
     "test" : [
 #         "test/account_voucher.yml",
+          "test/sales_receipt.yml",
+          "test/sales_payment.yml",
     ],
 
     'certificate': '0037580727101',

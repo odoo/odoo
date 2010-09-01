@@ -1,0 +1,74 @@
+
+-
+  In order to test sales receipt i will create a sale receipt and pay it through sales payment
+-
+  First of all I create a voucher
+-
+  !record {model: account.voucher, id: account_voucher_chinaexport_0}:
+    account_id: account.a_recv
+    amount: 30000.0
+    company_id: base.main_company
+    journal_id: account.sales_journal
+    line_cr_ids:
+      - account_id: account.a_sale
+        amount: 30000.0
+    partner_id: base.res_partner_3
+    period_id: account.period_8
+    tax_amount: 0.0
+    type: sale
+
+-
+  I check that the voucher state is Draft
+-
+  !assert {model: account.voucher, id: account_voucher_chinaexport_0}:
+    - state == 'draft'
+
+-
+  I clicked on post button to post the voucher
+-
+  !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_chinaexport_0}
+
+-
+  Check the voucher state is Posted
+-
+  !assert {model: account.voucher, id: account_voucher_chinaexport_0}:
+    - state == 'posted'
+
+-
+  I create a voucher record for the same partner
+-
+  !record {model: account.voucher, id: account_voucher_chinaexport_1}:
+    account_id: account.cash
+    amount: 30000.0
+    company_id: base.main_company
+    currency_id: base.EUR
+    journal_id: account.bank_journal
+    line_cr_ids:
+      - account_id: account.a_recv
+        amount: 0.0
+        name: 2010/003
+        type: cr
+      - account_id: account.a_recv
+        amount: 30000.0
+        name: 2010/003
+        type: cr
+    partner_id: base.res_partner_3
+    period_id: account.period_8
+    type: receipt
+
+-
+  Check the voucher state is draft
+-
+  !assert {model: account.voucher, id: account_voucher_chinaexport_1}:
+    - state == 'draft'
+
+-
+  I clicked on Post button to post the voucher
+-
+  !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_chinaexport_1}
+
+-
+  Check the voucher state is Posted
+-
+  !assert {model: account.voucher, id: account_voucher_chinaexport_1}:
+    - state == 'posted'
