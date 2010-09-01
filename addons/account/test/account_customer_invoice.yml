@@ -37,7 +37,7 @@
 -
   !python {model: account.invoice}: |
     acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
-    assert acc_id.move_id, "Move not created"
+    assert (not acc_id.move_id), "Move falsely created at pro-forma"
 -
   I create invoice by clicking on Create button
 -
@@ -53,7 +53,7 @@
 -
   !python {model: account.invoice}: |
     acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
-    assert acc_id.move_id, "Move created"
+    assert acc_id.move_id, "Move not created for open invoice"
 -
   I create a record for partial payment of 1000 EUR.
 -
