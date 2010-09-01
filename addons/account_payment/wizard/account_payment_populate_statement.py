@@ -109,3 +109,5 @@ class account_payment_populate_statement(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 account_payment_populate_statement()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
