@@ -98,7 +98,7 @@ class job2phonecall(osv.osv_memory):
             new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id, context=context)
             vals = {}
             job_case_obj.write(cr, uid, [job.id], vals, context=context)
-            job_case_obj.case_cancel(cr, uid, [job.id])
+#            job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])
 
         return {
