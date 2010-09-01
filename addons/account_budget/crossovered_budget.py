@@ -105,8 +105,8 @@ class crossovered_budget(osv.osv):
     _description = "Budget"
 
     _columns = {
-        'name': fields.char('Name', size=50, required=True,states={'done':[('readonly',True)]}),
-        'code': fields.char('Code', size=20, required=True,states={'done':[('readonly',True)]}),
+        'name': fields.char('Name', size=64, required=True, states={'done':[('readonly',True)]}),
+        'code': fields.char('Code', size=16, required=True, states={'done':[('readonly',True)]}),
         'creating_user_id': fields.many2one('res.users', 'Responsible User'),
         'validating_user_id': fields.many2one('res.users', 'Validate User', readonly=True),
         'date_from': fields.date('Start Date', required=True, states={'done':[('readonly',True)]}),
