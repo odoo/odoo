@@ -527,8 +527,12 @@ class account_invoice(osv.osv):
                         else:
                             continue
         if company_id and type:
-            if type in ('out_invoice', 'out_refund'):
+            if type in ('out_invoice'):
                 journal_type = 'sale'
+            elif type in ('out_refund'):  
+                journal_type = 'sale_refund'
+            elif type in ('in_refund'):
+                journal_type = 'purchase_refund'
             else:
                 journal_type = 'purchase'
             journal_ids = obj_journal.search(cr, uid, [('company_id','=',company_id), ('type', '=', journal_type)])
@@ -1497,12 +1501,13 @@ class account_invoice_tax(osv.osv):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency = False
-        tax_amount = self.read(cr, uid, ids[0], ['tax_amount'])['tax_amount']
         tax_sign = 1
-        if tax_amount < 0:
-            tax_sign = -1
-        elif tax_amount == 0:
-            tax_sign = 0
+        if ids:
+            tax_amount = self.read(cr, uid, ids[0], ['tax_amount'])['tax_amount']
+            if tax_amount < 0:
+                tax_sign = -1
+            elif tax_amount == 0:
+                tax_sign = 0
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:

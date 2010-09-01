@@ -355,6 +355,7 @@
             <field name="name">Sales Credit Note Journal - (test)</field>
             <field name="code">SCNJ</field>
             <field name="type">sale_refund</field>
+            <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
             <field name="invoice_sequence_id" ref="seq_out_refund"/>
@@ -378,6 +379,7 @@
             <field name="name">Expenses Credit Notes Journal - (test)</field>
             <field name="code">ECNJ</field>
             <field name="type">purchase_refund</field>
+            <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
             <field name="invoice_sequence_id" ref="seq_in_refund"/>
