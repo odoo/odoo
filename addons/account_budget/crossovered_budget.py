@@ -40,13 +40,11 @@ class account_budget_post(osv.osv):
         'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of budgetary position."),        
     }
     _defaults = {
-        'sequence': lambda *a: 1,   
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
     }
-    _order = "sequence, name"
+    _order = "name"
 
     def spread(self, cr, uid, ids, fiscalyear_id=False, amount=0.0):
         dobj = self.pool.get('account.budget.post.dotation')

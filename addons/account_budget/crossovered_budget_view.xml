@@ -19,7 +19,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budgetary Position">
-                    <field name="sequence"/>
                     <field name="code"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -58,7 +57,8 @@
             <field name="view_id" ref="view_budget_post_tree"/>
         </record>
         <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="5"/>
-        <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_31" sequence="2"/>
+        <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="5"/>
+        <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_pos" sequence="2"/>
 
 
         <record model="ir.ui.view" id="view_budget_post_form">
@@ -70,7 +70,6 @@
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
                     <field name="company_id"  groups="base.group_multi_company"/>
-                    <field name="sequence"/>
                     <notebook colspan="4">
                         <page string="Accounts">
                             <field name="account_ids" colspan="4" nolabel="1"/>
@@ -88,9 +87,9 @@
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
-                                    <field name="planned_amount"/>
-                                    <field name="practical_amount" select="1"/>
-                                    <field name="theoritical_amount"/>
+                                    <field name="planned_amount" sum="Planned Amount"/>
+                                    <field name="practical_amount" select="1" sum="Practical Amount" />
+                                    <field name="theoritical_amount" sum="Theoritical Amount"/>
                                     <field name="percentage"/>
                                 </tree>
                                 <form string="Budget Lines">
