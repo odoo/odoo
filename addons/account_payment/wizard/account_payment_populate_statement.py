@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from lxml import etree
 
 from osv import osv, fields
@@ -38,7 +39,8 @@ class account_payment_populate_statement(osv.osv_memory):
         statement = statement_obj.browse(cr, uid, context['active_id'], context=context)
         line_ids = line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
-            ('order_id.mode.journal.id', '=', statement.journal_id.id)])
+            ('bank_statement_line_id', '=', False),])
+#            ('order_id.mode.journal.id', '=', statement.journal_id.id)])
         line_ids.extend(line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
             ('order_id.mode', '=', False)]))
@@ -47,15 +49,15 @@ class account_payment_populate_statement(osv.osv_memory):
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','account_payment_populate_statement_view')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
-                'name': ('Entrie Lines'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'account.payment.populate.statement',
-                'views': [(resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                }
+            'name': ('Entrie Lines'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.payment.populate.statement',
+            'views': [(resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(account_payment_populate_statement, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
@@ -93,7 +95,7 @@ class account_payment_populate_statement(osv.osv_memory):
                 reconcile_id = statement_reconcile_obj.create(cr, uid, {
                     'line_ids': [(6, 0, [line.move_line_id.id])]
                     }, context=context)
-                statement_line_obj.create(cr, uid, {
+                st_line_id = statement_line_obj.create(cr, uid, {
                     'name': line.order_id.reference or '?',
                     'amount': - amount,
                     'type': 'supplier',
@@ -103,6 +105,7 @@ class account_payment_populate_statement(osv.osv_memory):
                     'ref': line.communication,
                     'reconcile_id': reconcile_id,
                     }, context=context)
-        return {'type' : 'ir.actions.act_window_close'}
+            line_obj.write(cr, uid, [line.id], {'bank_statement_line_id': st_line_id})
+        return {'type': 'ir.actions.act_window_close'}
 
 account_payment_populate_statement()
