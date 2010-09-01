@@ -92,12 +92,6 @@ class base_setup_installer(osv.osv_memory):
         'crm': True,
         }
 
-    def _if_mrp(self, cr, uid, ids, context=None):
-        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
-               .view == 'simple':
-            return ['mrp_jit']
-        return None
-
     def _if_knowledge(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
                .view == 'simple':
