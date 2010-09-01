@@ -65,31 +65,6 @@
      - membership_state == 'invoiced', 'Member should be has "Current Membership State" in "Invoiced Member".'
   
 - |
-  I'm doing to paid that invoice which is opened for "Mark Johnson".
--
-  !python {model: account.invoice}: |
-  
-        from tools.translate import _
-        invoice_pool = self.pool.get('account.invoice')
-        partner_pool = self.pool.get('res.partner')
-        membership_line_pool = self.pool.get('membership.membership_line')
-        membership_pool = self.pool.get('product.product')
-        invoice_pay_pool = self.pool.get('account.invoice.pay')
-        
-        membership_line_ids = membership_line_pool.search(cr, uid, [('membership_id','=',ref('product_product_membershipproduct0')),('partner','=',ref('res_partner_markjohnson0'))])
-        membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
-        assert membership_lines, _('Membership is not registrated.')
-        membership_line = membership_lines[0]
-        assert membership_line.account_invoice_id.state == 'open', _('Invoice should be Opened.')
-        pay_id = invoice_pay_pool.create(cr, uid, {'amount': 80, 'name': 'Payment of Membership', 'journal_id': ref('account.bank_journal')}, {'active_id': membership_line.account_invoice_id.id})
-        invoice_pay_pool.pay_and_reconcile(cr, uid, [pay_id], {'active_id': membership_line.account_invoice_id.id}) 
-- |
-  I'm checking "Current membership state" of "Mark Johnson". It is an "Paid Member" or not.
--
-  !assert {model: res.partner, id: res_partner_markjohnson0}:
-     - membership_state == 'paid', 'Member should be has "Current Membership State" in "Paid Member".'
-
-- |
   I'm creating free member "Ms. Johnson" of "Golden Membership".
 -
   !record {model: res.partner, id: res_partner_msjohnson0}:
