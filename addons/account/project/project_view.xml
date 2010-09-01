@@ -51,16 +51,15 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="True" colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account">
+                <tree toolbar="True" string="Analytic Account">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="partner_id"/>
                     <field name="quantity"/>
-                    <field name="quantity_max"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
                     <field name="company_currency_id"/>
-                    <field name="date" invisible="1"/>
                 </tree>
             </field>
         </record>
