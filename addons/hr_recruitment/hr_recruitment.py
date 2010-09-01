@@ -422,10 +422,20 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case's Ids
         @param *args: Give Tuple Value
         """
+        employee_obj = self.pool.get('hr.employee')
+        job_obj = self.pool.get('hr.job')
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _('Applicant ') + " '" + name + "' "+ _("is Hired.")
             self.log(cr, uid, id, message)
+
+        applicant = self.browse(cr, uid, ids)[0]
+        if applicant['job_id'] :
+            emp_id = employee_obj.create(cr,uid,{'name':applicant['name'],'job_id':applicant['job_id']['id']})
+            job_data = job_obj.browse(cr,uid, [applicant['job_id']['id']])[0]
+            expected_emp = job_data['expected_employees'] - 1
+            job_obj.write(cr,uid, [applicant['job_id']['id']],{'expected_employees':expected_emp})
+
         return res
 
     def case_reset(self, cr, uid, ids, *args):
