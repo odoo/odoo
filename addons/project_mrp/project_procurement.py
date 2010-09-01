@@ -46,7 +46,7 @@ class procurement_order(osv.osv):
                 'procurement_id': procurement.id,
                 'description': procurement.note,
                 'date_deadline': procurement.date_planned,
-                'project_id': procurement.project_id and procurement.project_id.id or False,
+                'project_id': procurement.product_id.project_id and procurement.product_id.project_id.id or False,
                 'state': 'draft',
                 'company_id': procurement.company_id.id,
             },context=context)
