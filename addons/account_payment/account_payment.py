@@ -90,7 +90,7 @@ class payment_order(osv.osv):
         return res
 
     _columns = {
-        'date_planned': fields.date('Scheduled date if fixed', states={'done':[('readonly',True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
+        'date_scheduled': fields.date('Scheduled date if fixed', states={'done':[('readonly',True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
         'reference': fields.char('Reference', size=128, required=1, states={'done':[('readonly',True)]}),
         'mode': fields.many2one('payment.mode','Payment mode', select=True, required=1, states={'done':[('readonly',True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
@@ -107,7 +107,7 @@ class payment_order(osv.osv):
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Preferred date", change_default=True, required=True, states={'done':[('readonly',True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
+            ], "Preferred date", change_default=True, required=True, states={'done':[('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
         'date_created': fields.date('Creation date', readonly=True),
         'date_done': fields.date('Execution date', readonly=True),
     }
@@ -252,7 +252,7 @@ class payment_line(osv.osv):
         res = {}
         for line in self.browse(cursor, user, ids, context=context):
             if line.order_id.date_prefered == 'fixed':
-                res[line.id] = line.order_id.date_planned
+                res[line.id] = line.order_id.date_scheduled
             elif line.order_id.date_prefered == 'due':
                 res[line.id] = line.due_date or time.strftime('%Y-%m-%d')
             else:
@@ -330,7 +330,7 @@ class payment_line(osv.osv):
         ('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
     ]
 
-    def onchange_move_line(self, cr, uid, ids, move_line_id, payment_type, date_prefered, date_planned, currency=False, company_currency=False, context=None):
+    def onchange_move_line(self, cr, uid, ids, move_line_id, payment_type, date_prefered, date_scheduled, currency=False, company_currency=False, context=None):
         data={}
 
         data['amount_currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=data['amount']=False
@@ -365,7 +365,7 @@ class payment_line(osv.osv):
             elif date_prefered == 'due':
                 data['date'] = line.date_maturity
             elif date_prefered == 'fixed':
-                data['date'] = date_planned
+                data['date'] = date_scheduled
 
         return {'value': data}
 
