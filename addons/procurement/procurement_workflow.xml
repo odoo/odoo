@@ -138,6 +138,10 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
+        <record id="trans_confirm_mto_purchase" model="workflow.transition">
+            <field name="act_from" ref="act_confirm_mto"/>
+            <field name="act_to" ref="act_make_done"/>
+        </record>
         <record id="trans_confirm_mto_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
             <field name="act_to" ref="act_confirm"/>

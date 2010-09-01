@@ -273,8 +273,8 @@
     obj_lots = self.pool.get('auction.lots')
     lots_id = obj_lots.browse(cr, uid, ref("auction_lots_woodenchair0"))
     self.pay_and_reconcile(cr, uid, [lots_id.ach_inv_id.id], 4120.0,
-        ref('account.account_type_cash_moves'), ref('account.period_8'),
-        ref('account.cash_journal'), ref('account.account_type_cash_moves'),
+        ref('account.cash'), ref('account.period_8'),
+        ref('account.cash_journal'), ref('account.cash'),
         ref('account.period_8'), ref('account.cash_journal'), name='Furniture')
 -
   I check that "Buyer Invoice Reconciled" field is marked.
