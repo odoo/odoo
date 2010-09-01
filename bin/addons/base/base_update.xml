@@ -116,7 +116,11 @@
                         <page string="User">
                             <field name="address_id" select="1"/>
                             <field name="user_email" widget="email"/>
-                            <field name="company_id" required="1" context="{'user_id': self, 'user_preference': 1}" groups="base.group_multi_company"/>
+                            <field name="company_id" required="1"
+                                context="{'user_id': self, 'user_preference': 1}"
+                                on_change="on_change_company_id(company_id)"
+                                groups="base.group_multi_company"
+                                />
                             <field name="action_id" required="True"/>
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field name="context_lang"/>

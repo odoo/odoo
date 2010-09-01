@@ -57,6 +57,18 @@
                 </form>
             </field>
         </record>
+        <record model="ir.ui.view" id="res_request_calendar_view">
+            <field name="name">Request - Calendar</field>
+            <field name="model">res.request</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Requests" date_start="trigger_date" color="act_to">
+                    <field name="name"/>
+                    <field name="act_from"/>
+                </calendar>
+            </field>
+        </record>
         <record id="res_request_search_view" model="ir.ui.view">
             <field name="name">res.request.search</field>
             <field name="model">res.request</field>
@@ -65,7 +77,7 @@
                 <search string="Requests">
                     <group colspan="4" col="10">
 	                    <field name="act_from"/>
-	                    <field name="act_to"/>
+	                    <field name="act_to" select="1"/>
 	                    <field name="name"/>
 	                    <field name="state"/>
 	                </group>
@@ -81,10 +93,11 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.request</field>
             <field name="view_id" eval="False"/>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="res_request_search_view"/>
+            <field name="context">{"search_default_act_to":uid}</field>
         </record>
-        <menuitem id="next_id_12" name="Requests" parent="base.next_id_4"/>
-        <menuitem action="res_request-act" id="menu_res_request_act" parent="next_id_12" sequence="1"/>
+        <menuitem action="res_request-act" id="menu_res_request_act" parent="base.next_id_4" sequence="1"/>
         
         <record id="res_request_link-view" model="ir.ui.view">
             <field name="name">res.request.link.form</field>
@@ -129,7 +142,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="res_request_link_search_view"/>
         </record>
-        <menuitem action="res_request_link-act" id="menu_res_request_link_act" parent="base.next_id_12" sequence="4"/>
+        <menuitem action="res_request_link-act" id="menu_res_request_link_act" parent="base.next_id_4" sequence="4"/>
         
         
         <record id="res_request_history_tree-view" model="ir.ui.view">
