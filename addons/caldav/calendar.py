@@ -598,7 +598,7 @@ class Calendar(CalDAV, osv.osv):
                 data_ids = mod_obj.search(cr, uid, line_domain, order="id", context=context)
                 for data in mod_obj.browse(cr, uid, data_ids, context):
                     ctx = parent and parent.context or None
-                    if data.recurrent_uid:
+                    if hasattr(data, 'recurrent_uid') and data.recurrent_uid:
                         # Skip for event which is child of other event
                         continue
                     node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)
