@@ -29,14 +29,14 @@ class report_designer_installer(osv.osv_memory):
         'base_report_designer':fields.boolean('OpenOffice Report Designer',help="This module adds wizards to import/export .SXW report that "
                                 "you can modify in OpenOffice.Once you have modified it you can "
                                 "upload the report using the same wizard."),
-        'base_report_creator':fields.boolean('Query Builder',help="his module allows you to create any statistic "
+        'base_report_creator':fields.boolean('Query Builder',help="Query Builder allows you to create any statistic "
                                 "reports  on several objects. It's a SQL query builder and browser for and users. "
                                 "After installation, it adds a menu to define custom report in the Dashboard menu."),
         'olap':fields.boolean('Business Intelligence Report',help="Olap module is used to install BI module in client. Olap provides Online "
                                 "Analytical Process with the mdx query. BI provides Cube Browsing and Cube Designing. "
                                 "After installation you will get Cube Browser and Cube Desinger in Reporting Menu. "
                                 "Cube Browser is used to generate the reports with table view (mdx view) of mdx query "
-                                "and Cube designer is used to make cubes in BI."),
+                                "and Cube Designer is used to make cubes in BI."),
     }
 report_designer_installer()
 

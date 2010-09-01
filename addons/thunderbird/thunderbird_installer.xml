@@ -9,13 +9,13 @@
       <field name="arch" type="xml">
           <data>
               <form position="attributes">
-                  <attribute name="string">Thunderbird Module Installation</attribute>
+                  <attribute name="string">Thunderbird Plug-In Configuration</attribute>
               </form>
               <separator string="title" position="attributes">
                    <attribute name="string">Thunderbird</attribute>
               </separator>
               <xpath expr="//label[@string='description']" position="attributes">
-                  <attribute name="string">This module allows you to archive an e-mail on one or more objects of OpenERP. You can attach an email to a partner, a task, an analytic account or any other object. You can also create a new object like a lead, a phone call, claim and many more.</attribute>
+                  <attribute name="string">This plug-in allows you to link your e-mail to OpenERP' documents. You can attach it to any existing one in OpenERP or create a new one.</attribute>
               </xpath>
 	      <xpath expr="//button[@string='Install Modules']" position="attributes">
 	        <attribute name="string">Configure</attribute>
@@ -84,7 +84,7 @@
 		                  <newline/>
 		                  <field name="pdf_file" filename="pdf_name"/>
 		                  <newline/>
-		                  <separator string="Thunderbird plugin installation note." colspan="4"/>
+		                  <separator string="Installation and Configuration Steps" colspan="4"/>
 		                  <field name="description" nolabel="1" colspan="8"/>
 		               </group>
                    </group>
