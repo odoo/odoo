@@ -31,8 +31,9 @@ class survey_analysis(report_rml):
     def create(self, cr, uid, ids, datas, context):
 
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
+        user_obj = pooler.get_pool(cr.dbname).get('res.users')
         rml_obj=report_sxw.rml_parse(cr, uid, surv_obj._name,context)
-        company=surv_obj.browse(cr,uid,ids,context)[0].responsible_id.company_id
+        company=user_obj.browse(cr,uid,[uid],context)[0].company_id
 
         rml ="""<document filename="Survey Analysis Report.pdf">
                 <template pageSize="(595.0,842.0)" title="Survey Analysis" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
@@ -120,7 +121,7 @@ class survey_analysis(report_rml):
                     <para style="P2">
                       <font color="white"> </font>
                     </para>"""
-        surv_obj = pooler.get_pool(cr.dbname).get('survey')
+
         if datas.has_key('form') and datas['form']['survey_ids']:
            ids =  datas['form']['survey_ids']
 
