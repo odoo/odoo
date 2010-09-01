@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_base_module_update" model="ir.ui.view">
+            <field name="name">Module Update</field>
+            <field name="model">base.module.update</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Scan for new modules">
+            <label string="This function will check for new modules in the 'addons' path" colspan="4" align="0.0"/>
+            <separator string="" colspan="4" />
+            <newline/>
+            <group colspan="6" >
+                <button special="cancel" string="Close" icon="gtk-cancel"/>
+                <button name="update_module" string="Check new modules" type="object" icon="gtk-ok"/>
+            </group>
+             </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_module_update" model="ir.actions.act_window">
+            <field name="name">Module Update</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.module.update</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+        name=" Update Modules List"
+        action="action_view_base_module_update"
+        id="menu_view_base_module_update"
+       parent="menu_management"
+       sequence="2"
+       icon="STOCK_CONVERT"/>
+
+       <record id="view_base_module_update_open" model="ir.ui.view">
+            <field name="name">Update ModuleList</field>
+            <field name="model">base.module.update.open</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="New modules">
+            <field name="update" colspan="4"/>
+            <field name="add" colspan="4"/>
+            <separator string="" colspan="4" />
+            <newline/>
+            <group colspan="6" >
+                <button special="cancel" string="Close" icon="gtk-cancel"/>
+                <button name="action_module_open" string="OK" type="object" icon="gtk-ok"/>
+            </group>
+             </form>
+            </field>
+        </record>
+
+          <record id="action_view_base_module_update_open" model="ir.actions.act_window">
+            <field name="name">Update ModuleList</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.module.update.open</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_base_module_update"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

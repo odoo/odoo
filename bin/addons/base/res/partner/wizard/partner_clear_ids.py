@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,10 +19,35 @@
 #
 ##############################################################################
 
-import partner_sms_send
-import partner_wizard_spam
-import partner_clear_ids
-import partner_wizard_ean_check
+import netsvc
+from osv import fields, osv
+
+class partner_clear_ids(osv.osv_memory):
+    """ Clear IDs """
+
+    _name = "partner.clear.ids"
+    _description = "Clear IDs"
+
+    def clear_ids(self, cr, uid, ids, context):
+        """
+           Clear Ids
+
+            @param cr: the current row, from the database cursor.
+            @param uid: the current user’s ID for security checks.
+            @param ids: the ID or list of IDs
+            @param context: A standard dictionary
+        """
+
+        partner_pool = self.pool.get('res.partner')
+        active_ids = context and context.get('active_ids', [])
+        res = {}
+        for partner in partner_pool.browse(cr, uid, active_ids, context=context):
+            if active_ids in partner:
+                res.update({'ref': False})
+        return res
+
+partner_clear_ids()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
