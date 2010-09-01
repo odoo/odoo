@@ -563,10 +563,10 @@ class stock_picking(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
             ], 'State', readonly=True, select=True,
-            help=' * The \'Draft\' Not confirmed yet and will not be scheduled until confirmed picking. \
-            \n* The \'Confirmed \' Still waiting for the availability of products. \
-            \n* The \'Available\' Products reserved, simply waiting for confirmation.\
-            \n* The \'Waiting\'  Waiting for another move to proceed before it becomes automatically available. (e.g. in Make-To-Order flows).\
+            help=' * The \'Draft\'state is used when a user is not  yet confirmed and will not be scheduled until  picking is confirmed.\
+            \n* The \'Confirmed \'state is still waiting for the availability of products. \
+            \n* The \'Available\'state is set when products are reserved, or simply waiting for confirmation.\
+            \n* The \'Waiting\' state is used when move is waiting for another move to proceed before it becomes automatically available. (e.g. in Make-To-Order flows).\
             \n* The \'Done\' Has been processed, can not be modified or cancelled anymore. \
             \n* The \'Cancelled\' Has been cancelled, can not be confirmed anymore. \
             '),
