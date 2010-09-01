@@ -245,6 +245,8 @@ class OpenERPDispatcher:
             self.log('method', method)
             self.log('params', params)
             result = LocalService(service_name)(method, *params)
+            if result is None: #we cannot marshal none in XMLRPC
+                result = False
             self.log('result', result)
             return result
         except Exception, e:
