@@ -375,6 +375,9 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     if newlang:
         lang = 'en_US'
     trans = trans_generate(lang, modules, dbname)
+    if newlang and format!='csv':
+        for trx in trans:
+            trx[-1] = ''
     modules = set([t[0] for t in trans[1:]])
     _process(format, modules, trans, buffer, lang, newlang)
     del trans
