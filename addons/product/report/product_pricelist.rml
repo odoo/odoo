@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Products Price List" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Price List" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -62,11 +62,16 @@
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -125,7 +130,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_header_Centre">Products Price List</para>
+    <para style="terp_header_Centre">Price List</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -161,26 +166,26 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="165.0,78.0,74.0,73.0,72.0,76.0" style="Table7">
+    <blockTable colWidths="255.0,57.0,57.0,57.0,57.0,57.0" style="Table7">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
           <para style="terp_default_1">[[repeatIn(get_titles(data['form']), 'k')]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ k['qty1'] or removeParentNode('para') ]] units</para>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty1') and k['qty1']) or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ k['qty2'] or removeParentNode('para') ]] units</para>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty2') and k['qty2']) or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ k['qty3'] or removeParentNode('para') ]] units</para>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty3') and k['qty3']) or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ k['qty4'] or removeParentNode('para') ]] units</para>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty4') and k['qty4']) or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ k['qty5'] or removeParentNode('para') ]] units</para>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty5') and k['qty5']) or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -202,26 +207,26 @@
         <font color="white"> </font>
       </para>
       <section>
-        <para style="terp_default_8">[[repeatIn(c['products'], 'p')]]</para>
-        <blockTable colWidths="166.0,78.0,75.0,73.0,73.0,74.0" style="Table3">
+        <para style="terp_default_1">[[repeatIn(c['products'], 'p')]]</para>
+        <blockTable colWidths="255.0,57.0,57.0,57.0,57.0,57.0" style="Table3">
           <tr>
             <td>
               <para style="terp_default_9">[[ p['code'] and '[' + p['code'] + '] ' or '' ]] [[ p['name'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9_Bold">[[ p['qty1'] or removeParentNode('para') ]]</para>
+              <para style="terp_default_Right_9_Bold">[[ (p.has_key('qty1') and p['qty1']) or '' ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9_Bold">[[ p['qty2'] or removeParentNode('para') ]]</para>
+              <para style="terp_default_Right_9_Bold">[[ (p.has_key('qty2') and p['qty2']) or '' ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9_Bold">[[ p['qty3'] or removeParentNode('para') ]]</para>
+              <para style="terp_default_Right_9_Bold">[[ (p.has_key('qty3') and p['qty3']) or '' ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9_Bold">[[ p['qty4'] or removeParentNode('para') ]]</para>
+              <para style="terp_default_Right_9_Bold">[[ (p.has_key('qty4') and p['qty4']) or '' ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9_Bold">[[ p['qty5'] or removeParentNode('para') ]]</para>
+              <para style="terp_default_Right_9_Bold">[[ (p.has_key('qty5') and p['qty5']) or '' ]]</para>
             </td>
           </tr>
         </blockTable>
@@ -229,9 +234,6 @@
           <font color="white"> </font>
         </para>
       </section>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
     </section>
   </story>
 </document>

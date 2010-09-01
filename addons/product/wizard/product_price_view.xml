@@ -9,7 +9,7 @@
 		      <field name="model">product.price_list</field>
 		      <field name="type">form</field>
 		      <field name="arch" type="xml">
-				<form string="Price per Unit">
+				<form string="Price List">
                     <separator colspan="4" string="Calculate Product Price per unit base on pricelist version."/>
 				    <field name="price_list" widget="selection"/>
 				    <field name="qty1" colspan="2" />
@@ -27,9 +27,9 @@
     	</record>
 
         <act_window id="action_product_price_list"
-    		key2="client_print_multi" 
-            name="Price Per Unit"
-    		res_model="product.price_list" 
+    		key2="client_print_multi"
+            name="Price List"
+    		res_model="product.price_list"
             src_model="product.product"
     		view_mode="form" target="new" view_type="form" />
 
