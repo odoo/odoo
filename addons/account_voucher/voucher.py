@@ -188,7 +188,7 @@ class account_voucher(osv.osv):
             
             self.write(cr, uid, [voucher.id], {'amount':total, 'tax_amount':total_tax})
         return True
-            
+    
     # TODO: review this code.
     def onchange_price(self, cr, uid, ids, line_ids, tax_id, partner_id=False, context={}):
         tax_pool = self.pool.get('account.tax')
@@ -297,6 +297,7 @@ class account_voucher(osv.osv):
             account_type = 'receivable'
             
         ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
+        ids.reverse()
         moves = move_line_pool.browse(cr, uid, ids)
         total_credit = price or 0.0
         total_debit = 0.0
