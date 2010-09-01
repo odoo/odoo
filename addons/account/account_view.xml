@@ -560,6 +560,8 @@
             <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
         <menuitem string="Bank Statements" action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_bank_and_cash" sequence="7"/>
+        <menuitem name="Statements Reconciliation" action="action_bank_statement_tree" id="menu_menu_Bank_process" parent="menu_finance_periodical_processing_bank" sequence="7"/>
+
 
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
             <field name="name">Draft statements</field>
