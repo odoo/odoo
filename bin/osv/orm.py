@@ -1823,10 +1823,60 @@ class orm_template(object):
         raise NotImplementedError(_('The search method is not implemented on this object !'))
 
     def name_get(self, cr, user, ids, context=None):
-        raise NotImplementedError(_('The name_get method is not implemented on this object !'))
+        """
+
+        :param cr: database cursor
+        :param user: current user id
+        :type user: integer
+        :param ids: list of ids
+        :param context: context arguments, like lang, time zone
+        :type context: dictionary
+        :return: tuples with the text representation of requested objects for to-many relationships
+
+        """
+        if not context:
+            context = {}
+        if not ids:
+            return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
+            [self._rec_name], context, load='_classic_write')]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        raise NotImplementedError(_('The name_search method is not implemented on this object !'))
+        """
+        Search for records and their display names according to a search domain. 
+
+        :param cr: database cursor
+        :param user: current user id
+        :param name: object name to search
+        :param args: list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
+        :param operator: operator for search criterion
+        :param context: context arguments, like lang, time zone
+        :type context: dictionary
+        :param limit: optional max number of records to return
+        :return: list of object names matching the search criteria, used to provide completion for to-many relationships
+
+        This method is equivalent of :py:meth:`~osv.osv.osv.search` on **name** + :py:meth:`~osv.osv.osv.name_get` on the result.
+        See :py:meth:`~osv.osv.osv.search` for an explanation of the possible values for the search domain specified in **args**.
+
+        """
+        return self._name_search(cr, user, name, args, operator, context, limit)
+
+    # private implementation of name_search, allows passing a dedicated user for the name_get part to
+    # solve some access rights issues
+    def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
+        if args is None:
+            args = []
+        if context is None:
+            context = {}
+        args = args[:]
+        if name:
+            args += [(self._rec_name, operator, name)]
+        access_rights_uid = name_get_uid or user
+        ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
+        res = self.name_get(cr, access_rights_uid, ids, context)
+        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         raise NotImplementedError(_('The copy method is not implemented on this object !'))
@@ -3879,61 +3929,6 @@ class orm(orm_template):
             return self.pool.get(self._inherit_fields[field][0]).distinct_field_get(cr, uid, field, value, args, offset, limit)
         else:
             return self._columns[field].search(cr, self, args, field, value, offset, limit, uid)
-
-    def name_get(self, cr, user, ids, context=None):
-        """
-
-        :param cr: database cursor
-        :param user: current user id
-        :type user: integer
-        :param ids: list of ids
-        :param context: context arguments, like lang, time zone
-        :type context: dictionary
-        :return: tuples with the text representation of requested objects for to-many relationships
-
-        """
-        if not context:
-            context = {}
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
-            [self._rec_name], context, load='_classic_write')]
-
-    # private implementation of name_search, allows passing a dedicated user for the name_get part to
-    # solve some access rights issues
-    def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
-        if args is None:
-            args = []
-        if context is None:
-            context = {}
-        args = args[:]
-        if name:
-            args += [(self._rec_name, operator, name)]
-        access_rights_uid = name_get_uid or user
-        ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)
-        res = self.name_get(cr, access_rights_uid, ids, context)
-        return res
-
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        """
-
-        :param cr: database cursor
-        :param user: current user id
-        :param name: object name to search
-        :param args: list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
-        :param operator: operator for search criterion
-        :param context: context arguments, like lang, time zone
-        :type context: dictionary
-        :param limit: optional max number of records to return
-        :return: list of object names matching the search criteria, used to provide completion for to-many relationships
-
-        This method is equivalent of :py:meth:`~osv.osv.osv.search` on **name** + :py:meth:`~osv.osv.osv.name_get` on the result.
-        See :py:meth:`~osv.osv.osv.search` for an explanation of the possible values for the search domain specified in **args**.
-
-        """
-        return self._name_search(cr, user, name, args, operator, context, limit)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         """
