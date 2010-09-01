@@ -6,7 +6,7 @@
         <!--    For Bugs    -->
 
         <record model="crm.case.categ" id="bug_categ">
-            <field name="name">Bugs</field>
+            <field name="name">Maintenance</field>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
         </record>    
@@ -26,7 +26,13 @@
         </record>
 
         <record model="crm.case.resource.type" id="type2">
-            <field name="name">Version 4.4</field>
+            <field name="name">Version 5.0</field>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>        
+        </record>
+
+        <record model="crm.case.resource.type" id="type2">
+            <field name="name">Version 6.0</field>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>        
         </record>
