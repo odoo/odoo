@@ -622,7 +622,17 @@ class account_voucher(osv.osv):
         
         #Restrict the list of journal view in search view
         if view_type == 'search':
-            journal_list = journal_pool.name_search(cr, uid, '', [], context=context)
+            type_search = {
+                'bank':[('type','in',['bank','cash'])],
+                'cash':[('type','in',['bank','cash'])],
+                'sale':[('type','in',['sale','purchase_refund'])],
+                'purchase':[('type','in',['purchase','sale_refund'])],
+                'expense':[('type','in',['purchase'])],
+                'sale_refund':[('type','in',['sale','purchase_refund'])],
+                'purchase_refund':[('type','in',['purchase','sale_refund'])]
+            }
+            domain = type_search.get(context.get('journal_type'))
+            journal_list = journal_pool.name_search(cr, uid, '', domain)
             res['fields']['journal_id']['selection'] = journal_list
         return res
 
