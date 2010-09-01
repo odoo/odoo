@@ -51,7 +51,6 @@
      new_prj = self.read(cr, uid, [new_id], ['name', 'state'])[0]
      state = new_prj['state']
      name = new_prj['name'] 
-     print "Project '%s' created"%name
      assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state          
 - 
   Reset project template to normal project  

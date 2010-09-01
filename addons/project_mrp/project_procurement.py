@@ -34,76 +34,23 @@ class procurement_order(osv.osv):
         if context is None:
             context = {}
         for procurement in self.browse(cr, uid, ids):
-            sline = self.pool.get('sale.order.line')
-            product_obj=self.pool.get('product.product')
-            content = ''
-            sale_order = self.pool.get('sale.order')
-            so_ref =  procurement.name.split(':')[0]
-            order_ids = sale_order.search(cr, uid, [('name', '=', so_ref)], context)
-
-            if order_ids:
-                sale_ids = sale_order.read(cr, uid, order_ids[0], ['order_line'], context=context)['order_line']
-            else:
-                so_ref =  procurement.origin.split(':')[0]
-                sale_ids = sline.search(cr, uid, [('procurement_id', '=',procurement.id)], context)
-            l = None
-            project_id = None
-            analytic_account_id = False
-            partner_id = False
-
-            for line in sline.browse(cr, uid, sale_ids, context=context):
-                content += (line.notes or '')
-                l = line
-                partner_id = line.order_id.partner_id.id
-                if line.order_id.project_id:
-                    analytic_account_id = line.order_id.project_id.id
-                    partner_id = line.order_id.partner_id.id
-                    content+="\n\n"+line.order_id.project_id.complete_name
-                    break
-
-            # Creating a project for task.Project is created from Procurement.
-            project_obj = self.pool.get('project.project')
-            proj_name = tools.ustr(so_ref)
-            product_project = procurement.product_id.project_id or False
-            proj_exist_id = project_obj.search(cr, uid, [('name', '=', proj_name)], context=context)
-            if not proj_exist_id:
-                parent_project = False 
-                if product_project:
-                    parent_project = product_project.analytic_account_id.id
-                project_id = project_obj.create(cr, uid, {'name': proj_name, 'partner_id': partner_id, 'parent_id': parent_project})
-            else:
-                project_id = proj_exist_id[0]
-
             self.write(cr, uid, [procurement.id], {'state': 'running'})
-
-            name_task = ('','')
-            planned_hours=0.0
-            if procurement.product_id.type == 'service':
-                proc_name = procurement.name
-                if procurement.origin == proc_name:
-                    proc_name = procurement.product_id.name
-
-                name_task = (procurement.origin, proc_name or '')
-            else:
-                name_task = (procurement.product_id.name or procurement.origin, procurement.name or '')
-            planned_hours= procurement.product_id.sale_delay + procurement.product_id. produce_delay   
+            planned_hours = procurement.product_qty
             task_id = self.pool.get('project.task').create(cr, uid, {
-                'name': '%s:%s' % name_task,
+                'name': '%s:%s' % (procurement.origin or '', procurement.name),
                 'date_deadline': procurement.date_planned,
                 'planned_hours':planned_hours,
                 'remaining_hours': planned_hours,
                 'user_id': procurement.product_id.product_manager.id,
-                'notes': "b"+(l and l.order_id.note or ''),
+                'notes': procurement.note,
                 'procurement_id': procurement.id,
-                'description': content,
+                'description': procurement.note,
                 'date_deadline': procurement.date_planned,
+                'project_id': procurement.project_id and procurement.project_id.id or False,
                 'state': 'draft',
-                'partner_id': l and l.order_id.partner_id.id or False,
                 'company_id': procurement.company_id.id,
-                'project_id': project_id,
             },context=context)
             self.write(cr, uid, [procurement.id],{'task_id':task_id}) 
-            product_obj.write(cr,uid,[procurement.product_id.id],{'project_id':project_id})
         return task_id
 
 procurement_order()
