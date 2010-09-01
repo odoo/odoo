@@ -72,7 +72,7 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
-                        <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'title':'Sales Payment', 'journal_type':'bank', 'type':'receipt', 'partner_id': partner_id}" type="action" string="Pay" states="posted" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
+                        <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'title':'Sales Payment', 'journal_type':'bank', 'type':'receipt', 'partner_id': partner_id}" type="action" string="Pay" attrs="{'invisible':[('pay_now','!=','pay_now'),('state','!=','posted')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
