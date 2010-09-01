@@ -101,7 +101,7 @@
 -
   !python {model: hr.sign.in.project}: |
       uid = ref('res_users_user0')
-      new_id = self.create(cr, uid, {'emp_id': 'hr_employee_fracline1', 'name': 'Francline', 'server_date': '2010-06-08 19:50:54', 'state': 'absent'})
+      new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': '2010-06-08 19:50:54', 'state': 'absent'})
       self.sign_in_result(cr, uid, [new_id], context)
 
 -

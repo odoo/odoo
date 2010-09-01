@@ -35,28 +35,29 @@
   !record {model: res.users, id: res_users_user0}: 
     company_id: base.main_company
     context_lang: en_US
-    login: user1
-    name: user1
+    login: idea_user1
+    name: Idea test user1
     password: user1
+    groups_id: [ base.group_tool_user, ]
 - |
   And I will also create user2.    
 - 
   !record {model: res.users, id: res_users_user1}:
     company_id: base.main_company
     context_lang: en_US
-    login: user2
-    name: user2
+    login: idea_user2
+    name: Idea test user2
     password: user2
- 
+    groups_id: [ base.group_tool_user, ]
 - |
   In order to post vote I connect as user1 and open the idea page
   I click on  "Submit Vote" wizard  button and vote the idea as "Normal"
     
 - 
   !python {model: idea.post.vote}: |
-    uid = ref('res_users_user0')
-    new_id = self.create(cr, uid, {'vote': 50}, {"active_ids": [ref("idea_idea_0")]})
-    self.do_vote(cr, uid, [new_id], {"active_ids": [ref("idea_idea_0")]})
+    uid2 = ref('res_users_user0')
+    new_id = self.create(cr, uid2, {'vote': 50}, {"active_ids": [ref("idea_idea_0")]})
+    self.do_vote(cr, uid2, [new_id], {"active_ids": [ref("idea_idea_0")]})
     
 - |
   To add other vote I connect as user2 and open the idea page.
@@ -67,9 +68,9 @@
   
 -
   !python {model: idea.post.vote}: |
-    uid = ref('res_users_user1')
-    new_id = self.create(cr, uid, {'vote': 100, 'note': 'We can learn many things from technical presentation'}, {"active_ids": [ref("idea_idea_0")]})
-    self.do_vote(cr, uid, [new_id], {'active_ids': [ref('idea_idea_0')]})  
+    uid2 = ref('res_users_user1')
+    new_id = self.create(cr, uid2, {'vote': 100, 'note': 'We can learn many things from technical presentation'}, {"active_ids": [ref("idea_idea_0")]})
+    self.do_vote(cr, uid2, [new_id], {'active_ids': [ref('idea_idea_0')]})  
         
 - |
   I can see that the Average score changed in "Average score" field with value 75

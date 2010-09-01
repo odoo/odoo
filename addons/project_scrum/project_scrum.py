@@ -45,49 +45,29 @@ class project_scrum_sprint(osv.osv):
     _name = 'project.scrum.sprint'
     _description = 'Project Scrum Sprint'
 
-    def _calc_progress(self, cr, uid, ids, name, args, context=None):
-        res = {}
+    def _compute(self, cr, uid, ids, fields, arg, context=None):
+        res = {}.fromkeys(ids, 0.0)
+        progress = {}
+        if not ids:
+            return res
         if context is None:
             context = {}
-        for sprint in self.browse(cr, uid, ids):
+        for sprint in self.browse(cr, uid, ids, context=context):
             tot = 0.0
             prog = 0.0
+            effective = 0.0
+            progress = 0.0
             for bl in sprint.backlog_ids:
                 tot += bl.expected_hours
+                effective += bl.effective_hours
                 prog += bl.expected_hours * bl.progress / 100.0
-            res.setdefault(sprint.id, 0.0)
             if tot>0:
-                res[sprint.id] = round(prog/tot*100)
-        return res
-
-    def _calc_effective(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        if context is None:
-            context = {}
-        for sprint in self.browse(cr, uid, ids):
-            res.setdefault(sprint.id, 0.0)
-            for bl in sprint.backlog_ids:
-                res[sprint.id] += bl.effective_hours
-        return res
-
-    def _calc_planned(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        if context is None:
-            context = {}
-        for sprint in self.browse(cr, uid, ids):
-            res.setdefault(sprint.id, 0.0)
-            for bl in sprint.backlog_ids:
-                res[sprint.id] += bl.expected_hours
-        return res
-
-    def _calc_expected(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        if context is None:
-            context = {}
-        for sprint in self.browse(cr, uid, ids):
-            res.setdefault(sprint.id, 0.0)
-            for bl in sprint.backlog_ids:
-                res[sprint.id] += bl.expected_hours
+                progress = round(prog/tot*100)
+            res[sprint.id] = {
+                'progress' : progress,
+                'expected_hours' : tot,
+                'effective_hours': effective,
+            }
         return res
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -137,9 +117,9 @@ class project_scrum_sprint(osv.osv):
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
         'backlog_ids': fields.one2many('project.scrum.product.backlog', 'sprint_id', 'Sprint Backlog'),
-        'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done."),
-        'expected_hours': fields.function(_calc_expected, method=True, string='Planned Hours', help='Estimated time to do the task.'),
+        'progress': fields.function(_compute, group_operator="avg", type='float', multi="progress", method=True, string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
+        'effective_hours': fields.function(_compute, multi="effective_hours", method=True, string='Effective hours', help="Computed using the sum of the task work done."),
+        'expected_hours': fields.function(_compute, multi="expected_hours", method=True, string='Planned Hours', help='Estimated time to do the task.'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('cancel','Cancelled'),('done','Done')], 'State', required=True),
     }
     _defaults = {
@@ -188,39 +168,31 @@ class project_scrum_product_backlog(osv.osv):
             return self.name_get(cr, uid, ids, context=context)
         return super(project_scrum_product_backlog, self).name_search(cr, uid, name, args, operator,context, limit=limit)
 
-    def _calc_progress(self, cr, uid, ids, name, args, context=None):
-        res = {}
+    def _compute(self, cr, uid, ids, fields, arg, context=None):
+        res = {}.fromkeys(ids, 0.0)
+        progress = {}
+        if not ids:
+            return res
         if context is None:
             context = {}
-        for bl in self.browse(cr, uid, ids):
+        for backlog in self.browse(cr, uid, ids, context=context):
             tot = 0.0
             prog = 0.0
-            for task in bl.tasks_id:
+            effective = 0.0
+            task_hours = 0.0
+            progress = 0.0
+            for task in backlog.tasks_id:
+                task_hours += task.total_hours
+                effective += task.effective_hours
                 tot += task.planned_hours
                 prog += task.planned_hours * task.progress / 100.0
-            res.setdefault(bl.id, 0.0)
             if tot>0:
-                res[bl.id] = round(prog/tot*100)
-        return res
-
-    def _calc_effective(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        if context is None:
-            context = {}
-        for bl in self.browse(cr, uid, ids):
-            res.setdefault(bl.id, 0.0)
-            for task in bl.tasks_id:
-                res[bl.id] += task.effective_hours
-        return res
-
-    def _calc_task(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        if context is None:
-            context = {}
-        for bl in self.browse(cr, uid, ids):
-            res.setdefault(bl.id, 0.0)
-            for task in bl.tasks_id:
-                res[bl.id] += task.total_hours
+                progress = round(prog/tot*100)
+            res[backlog.id] = {
+                'progress' : progress,
+                'effective_hours': effective,
+                'task_hours' : task_hours
+            }
         return res
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -291,11 +263,11 @@ class project_scrum_product_backlog(osv.osv):
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
-        'progress': fields.function(_calc_progress, method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Spent Hours', help="Computed using the sum of the time spent on every related tasks"),
+        'progress': fields.function(_compute, multi="progress", group_operator="avg", type='float', method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
+        'effective_hours': fields.function(_compute, multi="effective_hours", method=True, string='Spent Hours', help="Computed using the sum of the time spent on every related tasks"),
         'expected_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),
         'create_date': fields.datetime("Creation Date", readonly=True),
-        'task_hours': fields.function(_calc_task, method=True, string='Task Hours', help='Estimated time of the total hours of the tasks')
+        'task_hours': fields.function(_compute, multi="task_hours", method=True, string='Task Hours', help='Estimated time of the total hours of the tasks')
     }
     _defaults = {
         'state': 'draft',

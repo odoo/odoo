@@ -179,7 +179,7 @@ class procurement_order(osv.osv):
         @param proc: Current procurement.
         @return: Quantity or False.
         """
-        if proc.product_id.type == 'product':
+        if proc.product_id.type == 'product' and proc.move_id:
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos_qty
         return False
@@ -189,7 +189,7 @@ class procurement_order(osv.osv):
         @param proc: Current procurement.
         @return: UoS or False.
         """
-        if proc.product_id.type == 'product':
+        if proc.product_id.type == 'product' and proc.move_id:
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos.id
         return False
@@ -405,7 +405,7 @@ class procurement_order(osv.osv):
         todo2 = []
         move_obj = self.pool.get('stock.move')
         for proc in self.browse(cr, uid, ids):
-            if proc.close_move:
+            if proc.close_move and proc.move_id:
                 if proc.move_id.state not in ('done', 'cancel'):
                     todo2.append(proc.move_id.id)
             else:
@@ -430,7 +430,7 @@ class procurement_order(osv.osv):
         """
         ok = False
         for procurement in self.browse(cr, uid, ids):
-            if procurement.move_id.state == 'assigned' or procurement.move_id.state == 'done':
+            if procurement.move_id and procurement.move_id.state == 'assigned' or procurement.move_id.state == 'done':
                 self.action_done(cr, uid, [procurement.id])
                 ok = True
         return ok
