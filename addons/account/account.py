@@ -1159,16 +1159,16 @@ class account_move(osv.osv):
             return chart_account
 
         for move in self.browse(cursor, user, ids):
-            lines = move.line_id
-            if lines:
-                ref_line = lines[0]
-                ref_chart_account = _get_chart_account(cursor, user, ref_line.account_id)
-                parent_left = ref_chart_account.parent_left
-                parent_right = ref_chart_account.parent_right
-                result = True
-                for line in lines[1:]:
-                   if not (line.account_id.parent_left > parent_left and line.account_id.parent_left < parent_right):
-                         raise osv.except_osv(_('Error !'), _('You cannot validate a move unless accounts in its entry lines are in same Chart Of Accounts !'))
+            top = None
+            for line in move.line_id:
+                account = line.account_id
+                while account:
+                    account2 = account
+                    account = account.parent_id
+                if not top:
+                    top = account2.id
+                elif top<>account2.id:
+                    raise osv.except_osv(_('Error !'), _('You cannot validate a Journal Entry unless all journal items are in same chart of accounts !'))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context={}):
