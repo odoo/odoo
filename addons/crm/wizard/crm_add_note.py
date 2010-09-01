@@ -3,6 +3,9 @@ from osv import fields, osv
 from tools.translate import _
 
 
+AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
+
+
 class crm_add_note(osv.osv_memory):
     """Adds a new note to the case."""
     _name = 'crm.add.note'
@@ -10,7 +13,7 @@ class crm_add_note(osv.osv_memory):
 
     _columns = {
         'body': fields.text('Note Body', required=True),
-        'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
+        'state': fields.selection(AVAILABLE_STATES, string='Set New State To', required=True),
     }
 
     def action_add(self, cr, uid, ids, context=None):
@@ -46,7 +49,7 @@ class crm_add_note(osv.osv_memory):
         """
         This function gets default values
         """
-        return {'state': u'pending'}
+        return {'state': u'unchanged'}
 
 
 crm_add_note()
