@@ -141,6 +141,14 @@ class payment_order(osv.osv):
         wf_service.trg_validate(uid, 'payment.order', id, 'done', cr)
         return True
 
+    def copy(self, cr, uid, id, default={}, context=None):
+        default.update({
+            'state':'draft',
+            'line_ids': [],
+            'reference': self.pool.get('ir.sequence').get(cr, uid, 'payment.order')
+        })
+        return super(payment_order, self).copy(cr, uid, id, default, context=context)
+
 payment_order()
 
 class payment_line(osv.osv):
