@@ -530,7 +530,7 @@ class actions_server(osv.osv):
                         'uid': uid,
                         'object':obj
                         }
-                    exec action.code in localdict
+                    eval(action.code, localdict, 'exec')
                     if 'action' in localdict:
                         return localdict['action']
                 else:

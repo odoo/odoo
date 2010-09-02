@@ -648,14 +648,14 @@ form: module.record_id""" % (xml_id,)
                     if key in brrec:
                         return brrec[key]
                     return dict.__getitem__(self2, key)
-            globals = d()
-            globals['floatEqual'] = self._assert_equals
-            globals['ref'] = ref
-            globals['_ref'] = ref
+            globals_dict = d()
+            globals_dict['floatEqual'] = self._assert_equals
+            globals_dict['ref'] = ref
+            globals_dict['_ref'] = ref
             for test in rec.findall('./test'):
                 f_expr = test.get("expr",'').encode('utf-8')
                 expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
-                expression_value = unsafe_eval(f_expr, globals)
+                expression_value = unsafe_eval(f_expr, globals_dict, nocopy=True)
                 if expression_value != expected_value: # assertion failed
                     self.assert_report.record_assertion(False, severity)
                     msg = 'assertion "%s" failed!\n'    \
