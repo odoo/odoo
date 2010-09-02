@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:48:39+0000\n"
-"PO-Revision-Date: 2010-07-09 12:48:39+0000\n"
+"POT-Creation-Date: 2010-09-02 14:01:22+0000\n"
+"PO-Revision-Date: 2010-09-02 14:01:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -161,7 +161,8 @@ msgstr "Codificación llamada telefónica"
 #, python-format
 msgid "You cannot enter an attendance ' \\n"
 "                            'date outside the current timesheet dates!"
-msgstr ""
+msgstr "You cannot enter an attendance ' \\n"
+"                            'date outside the current timesheet dates!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
@@ -189,7 +190,8 @@ msgstr "﻿Diferencia permitida entre el registro de entrada/salida y el cálcul
 #, python-format
 msgid "You cannot enter an attendance ' \\n"
 "                        'date outside the current timesheet dates!"
-msgstr ""
+msgstr "You cannot enter an attendance ' \\n"
+"                        'date outside the current timesheet dates!"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -541,6 +543,12 @@ msgid "Timesheet is validate by project manager."
 msgstr "Hoja de servicios es validada por el responsable del proyecto"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!"
+msgstr "The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!"
+
+#. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_phonecall0
 msgid "Whatever time u spent for phone call"
 msgstr "Cualquier tiempo que dedique a la llamada telefónica"
@@ -582,7 +590,7 @@ msgstr "Registrar salida"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
-msgstr ""
+msgstr "Cannot delete Sheet(s) which have attendance entries encoded !"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:33:41+0000\n"
-"PO-Revision-Date: 2010-07-09 12:33:41+0000\n"
+"POT-Creation-Date: 2010-09-02 13:45:58+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,12 +37,12 @@ msgstr "Notification"
 #: code:addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
-msgstr ""
+msgstr "No partner has a VAT Number asociated with him."
 
 #. module: l10n_be
 #: help:wizard.account.xml.vat.declaration,init,client_nihil:0
 msgid "Thick this case only if it concerns only the last statement on the civil or cessation of activity"
-msgstr ""
+msgstr "Thick this case only if it concerns only the last statement on the civil or cessation of activity"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers
@@ -63,7 +63,7 @@ msgstr "Charge"
 #: code:addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Data Insufficient!"
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,init,go:0
@@ -88,7 +88,7 @@ msgstr "Fichier crée"
 #: code:addons/l10n_be/wizard/wizard_vat_intra.py:0
 #, python-format
 msgid "Wrong Period Code"
-msgstr ""
+msgstr "Wrong Period Code"
 
 #. module: l10n_be
 #: model:ir.module.module,shortdesc:l10n_be.module_meta_information
@@ -99,7 +99,7 @@ msgstr "Belgique - Plan Comptable Minimum Normalise"
 #: code:addons/l10n_be/wizard/wizard_vat_intra.py:0
 #, python-format
 msgid "The period code you entered is not valid."
-msgstr ""
+msgstr "The period code you entered is not valid."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_stock
@@ -109,7 +109,7 @@ msgstr "Stock et Encours"
 #. module: l10n_be
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
-msgstr ""
+msgstr "Error ! You can not create recursive account templates."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
@@ -131,7 +131,7 @@ msgstr "Cet Assistant créera un fichier XML pour la TVA Intra"
 #. module: l10n_be
 #: wizard_field:wizard.account.xml.vat.declaration,init,client_nihil:0
 msgid "Last Declaration of Entreprise"
-msgstr ""
+msgstr "Last Declaration of Entreprise"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
@@ -141,7 +141,7 @@ msgstr "Sélectionnez l'Année Fiscale"
 #. module: l10n_be
 #: wizard_field:wizard.account.xml.vat.declaration,init,ask_resitution:0
 msgid "Ask Restitution"
-msgstr ""
+msgstr "Ask Restitution"
 
 #. module: l10n_be
 #: wizard_view:vat.intra.xml,init:0
@@ -177,7 +177,7 @@ msgstr "Sélectionnez la Période"
 #. module: l10n_be
 #: help:vat.intra.xml,init,period_ids:0
 msgid "Select here the period(s) you want to include in your intracom declaration"
-msgstr ""
+msgstr "Select here the period(s) you want to include in your intracom declaration"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
@@ -204,7 +204,7 @@ msgstr "Ok"
 #. module: l10n_be
 #: wizard_field:wizard.account.xml.vat.declaration,init,ask_payment:0
 msgid "Ask Payment"
-msgstr ""
+msgstr "Ask Payment"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
@@ -225,7 +225,7 @@ msgstr "Liste Annuelle des clients assujettis à la TVA"
 #. module: l10n_be
 #: wizard_field:vat.intra.xml,init,period_ids:0
 msgid "Period(s)"
-msgstr ""
+msgstr "Period(s)"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,fyear:0
@@ -248,14 +248,22 @@ msgid "This is where you have to set the period code for the intracom declaratio
 "  PP can stand for a complete fiscal year: '00'.\n"
 "  YYYY stands for the year (4 positions).\n"
 ""
-msgstr ""
+msgstr "This is where you have to set the period code for the intracom declaration using the format: ppyyyy\n"
+"\n"
+"  PP can stand for a month: from '01' to '12'.\n"
+"  PP can stand for a trimester: '31','32','33','34'\n"
+"      The first figure means that it is a trimester,\n"
+"      The second figure identify the trimester.\n"
+"  PP can stand for a complete fiscal year: '00'.\n"
+"  YYYY stands for the year (4 positions).\n"
+""
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/account_vat_declaration.py:0
 #: code:addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "Data Insufficient"
-msgstr ""
+msgstr "Data Insufficient"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.menu_finance_belgian_statement
@@ -290,7 +298,7 @@ msgstr "Taxe"
 #: code:addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "No VAT Number Associated with Main Company!"
-msgstr ""
+msgstr "No VAT Number Associated with Main Company!"
 
 #. module: l10n_be
 #: wizard_view:vat.intra.xml,init:0
@@ -306,7 +314,7 @@ msgstr "Information Générale"
 #. module: l10n_be
 #: wizard_field:vat.intra.xml,init,period_code:0
 msgid "Period Code"
-msgstr ""
+msgstr "Period Code"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_financiers

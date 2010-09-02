@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:43:15+0000\n"
-"PO-Revision-Date: 2010-07-09 12:43:15+0000\n"
+"POT-Creation-Date: 2010-09-02 13:55:51+0000\n"
+"PO-Revision-Date: 2010-09-02 13:55:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "Expedição"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "No Pricelist !"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -78,7 +78,6 @@ msgstr "Compra confirmada"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Excepção na factura"
 
@@ -129,7 +128,6 @@ msgstr "Aprovar compra"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Aprovado"
 
@@ -213,12 +211,18 @@ msgstr "Corrigido manualmente"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
-msgstr ""
+msgstr "You must first cancel all invoices attached to this purchase order."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
 msgstr "Referência"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr "Cannot delete Purchase Order(s) which are in %s State!"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -250,7 +254,9 @@ msgstr "Validado por"
 msgid "From Order: a draft invoice will be pre-generated based on the purchase order. The accountant will just have to validate this invoice for control.\n"
 "From Picking: a draft invoice will be pre-genearted based on validated receptions.\n"
 "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
-msgstr ""
+msgstr "From Order: a draft invoice will be pre-generated based on the purchase order. The accountant will just have to validate this invoice for control.\n"
+"From Picking: a draft invoice will be pre-genearted based on validated receptions.\n"
+"Manual: no invoice will be pre-generated. The accountant will have to encode manually."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
@@ -271,17 +277,16 @@ msgstr "Linha da ordem"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
-msgstr ""
+msgstr "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Wrong Product UOM !"
-msgstr ""
+msgstr "Wrong Product UOM !"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Confirmado"
 
@@ -304,11 +309,10 @@ msgstr "Contolo de facturas"
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr ""
+msgstr "RFQ"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "A Aguardar"
 
@@ -356,7 +360,7 @@ msgstr "Endereço de envio:"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: purchase
 #: field:purchase.order,minimum_planned_date:0
@@ -387,11 +391,10 @@ msgstr "Destino da reserva"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Invalid action !"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Pronto"
 
@@ -399,11 +402,6 @@ msgstr "Pronto"
 #: field:purchase.order,pricelist_id:0
 msgid "Pricelist"
 msgstr "Lista de preços"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-msgid "Request for quotation is proposed by the system."
-msgstr "Pedido de cotação é proposto pelo sistema."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -423,7 +421,7 @@ msgstr "Factura do fornecedor pre-criada com na base em ordens para controlo"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Product purchases"
-msgstr ""
+msgstr "Product purchases"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
@@ -452,7 +450,6 @@ msgstr "Aprovar Ordem de Compra após confirmação"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Excepção de envio"
 
@@ -527,7 +524,7 @@ msgstr "Facturado"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a product UOM in the same category than the purchase UOM of the product"
-msgstr ""
+msgstr "You have to select a product UOM in the same category than the purchase UOM of the product"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -544,7 +541,7 @@ msgstr "Linha de ordem de compra"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
-msgstr ""
+msgstr "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -573,10 +570,9 @@ msgid "Purchase order"
 msgstr "Ordem de compra"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+msgid "Request for quotation is proposed by the system."
+msgstr "Pedido de cotação é proposto pelo sistema."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -591,7 +587,7 @@ msgstr "Cria factura pela lista de empacotamento"
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Data de criação deste documento."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -601,7 +597,7 @@ msgstr "Entregas e facturas"
 #. module: purchase
 #: field:purchase.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -612,7 +608,7 @@ msgstr "Compra aprovada"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "There is no expense account defined for this product: \"%s\" (id:%d)"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -667,7 +663,7 @@ msgstr "Total :"
 #. module: purchase
 #: constraint:product.pricelist.item:0
 msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
-msgstr ""
+msgstr "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -677,7 +673,7 @@ msgstr "Quando a ordem de compra é aprovada, cria a sua lista de empacotamento.
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr ""
+msgstr "Histórico"
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -713,7 +709,7 @@ msgstr "Posição Fiscal"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "Pedido de cotação Nº"
 
 #. module: purchase
 #: field:purchase.order,invoice_id:0
@@ -731,7 +727,7 @@ msgstr "Cancelar"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Purchase Order Lines"
 
 #. module: purchase
 #: view:res.partner:0
@@ -802,13 +798,14 @@ msgstr "Data de aprovação"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
+msgstr "Could not cancel this purchase order !"
 
 #. module: purchase
 #: model:ir.module.module,description:purchase.module_meta_information
 msgid "Module for purchase management\n"
 "    Request for quotation, Create Supplier Invoice, Print Order..."
-msgstr ""
+msgstr "Module for purchase management\n"
+"    Request for quotation, Create Supplier Invoice, Print Order..."
 
 #. module: purchase
 #: field:purchase.order.line,product_id:0
@@ -819,12 +816,12 @@ msgstr "Artigo"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "No Partner!"
-msgstr ""
+msgstr "No Partner!"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Invoicing"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
@@ -866,7 +863,7 @@ msgstr "Reserva"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr ""
+msgstr "Could not cancel purchase order !"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
@@ -877,7 +874,7 @@ msgstr "Factura de compra"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You must first cancel all packing attached to this purchase order."
-msgstr ""
+msgstr "You must first cancel all packing attached to this purchase order."
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -887,7 +884,7 @@ msgstr "Referência da sua ordem"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Confirmação de ordem de compra nº"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -961,5 +958,5 @@ msgstr "Após a aprovação da ordem de compra, torna-se na factura do fornecedo
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Movimentos de stock"
 

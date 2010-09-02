@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:50:30+0000\n"
-"PO-Revision-Date: 2010-07-09 12:50:30+0000\n"
+"POT-Creation-Date: 2010-09-02 14:03:14+0000\n"
+"PO-Revision-Date: 2010-09-02 14:03:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees Line"
-msgstr ""
+msgstr "Fees Line"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,repair_id:0
@@ -34,7 +34,7 @@ msgstr "Stok Hareketi"
 #. module: mrp_repair
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -58,6 +58,12 @@ msgid "Quantity"
 msgstr "Miktar"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "No product defined on Fees!"
+
+#. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Set to Draft"
 msgstr "Taslak olarak Ayarla"
@@ -75,7 +81,7 @@ msgstr "Teslimat Adresi"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Make Invoice"
-msgstr ""
+msgstr "Make Invoice"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_subtotal:0
@@ -104,6 +110,12 @@ msgstr "Vergi"
 #: rml:repair.order:0
 msgid "Net Total :"
 msgstr "Net Toplam :"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -144,7 +156,7 @@ msgstr "Ortak"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "No account defined for partner \"%s\"."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
@@ -192,7 +204,7 @@ msgstr "Onarımdakiler"
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
 msgid "Fees Lines"
-msgstr ""
+msgstr "Fees Lines"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
@@ -202,7 +214,7 @@ msgstr "Onarım Ücret Kalemi"
 #. module: mrp_repair
 #: rml:repair.order:0
 msgid "Fees Line(s)"
-msgstr ""
+msgstr "Fees Line(s)"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -223,7 +235,7 @@ msgstr "Onarımı Başlat"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
@@ -281,7 +293,7 @@ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
 msgid "The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."
-msgstr ""
+msgstr "The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -289,9 +301,15 @@ msgid "Repair Line"
 msgstr "Onarım Kalemi"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner and invoicing address in the repair form !"
+msgstr "You have to select a partner and invoicing address in the repair form !"
+
+#. module: mrp_repair
 #: rml:repair.order:0
 msgid "N° :"
-msgstr ""
+msgstr "N° :"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_method:0
@@ -347,12 +365,6 @@ msgid "Invoiced"
 msgstr "Faturalandı"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
-#, python-format
-msgid "You have to select a partner in the repair form !"
-msgstr ""
-
-#. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
 msgid "No"
 msgstr "Hayır"
@@ -367,12 +379,12 @@ msgstr "Faturaları Oluştur"
 #: selection:mrp.repair.line,type:0
 #: rml:repair.order:0
 msgid "Add"
-msgstr ""
+msgstr "Add"
 
 #. module: mrp_repair
 #: wizard_view:mrp.repair.make_invoice,init:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Do you really want to create the invoice(s) ?"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_form
@@ -383,7 +395,7 @@ msgstr "Yeni Onarım"
 #. module: mrp_repair
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -409,12 +421,12 @@ msgstr "Ürün Onarımı"
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "The pricelist comes from the selected partner, by default."
-msgstr ""
+msgstr "The pricelist comes from the selected partner, by default."
 
 #. module: mrp_repair
 #: wizard_view:mrp.repair.cancel,display:0
 msgid "This operation  will  cancel the  Repair process, but  will not cancel it's Invoice. Do you want to continue?"
-msgstr ""
+msgstr "This operation  will  cancel the  Repair process, but  will not cancel it's Invoice. Do you want to continue?"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -445,7 +457,7 @@ msgstr "Onarım Bitir"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "No account defined for product \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -488,7 +500,7 @@ msgstr "Fatura"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees"
-msgstr ""
+msgstr "Fees"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -524,7 +536,7 @@ msgstr "Ürün Onarım Modülü"
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
 msgid "This field allow you to change the workflow of the repair order. If value selected is different from 'No Invoice', it also allow you to select the pricelist and invoicing address."
-msgstr ""
+msgstr "This field allow you to change the workflow of the repair order. If value selected is different from 'No Invoice', it also allow you to select the pricelist and invoicing address."
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -554,12 +566,12 @@ msgstr "Ürün"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Invoice Corrected"
-msgstr ""
+msgstr "Invoice Corrected"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
 msgid "Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a packing with selected product. Note that you can select the locations in the Info tab, if you have the extended view."
-msgstr ""
+msgstr "Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a packing with selected product. Note that you can select the locations in the Info tab, if you have the extended view."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
@@ -595,7 +607,7 @@ msgstr "Faturaları Oluştur"
 #. module: mrp_repair
 #: help:mrp.repair,state:0
 msgid "Gives the state of the Repair Order"
-msgstr ""
+msgstr "Gives the state of the Repair Order"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -606,7 +618,7 @@ msgstr "Birim"
 #: selection:mrp.repair.line,type:0
 #: rml:repair.order:0
 msgid "Remove"
-msgstr ""
+msgstr "Remove"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -663,7 +675,7 @@ msgstr "Durumlar"
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid "This field allow you to choose the parner that will be invoiced and delivered"
-msgstr ""
+msgstr "This field allow you to choose the parner that will be invoiced and delivered"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
@@ -679,5 +691,5 @@ msgstr "Onarıma Hazır"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No partner !"
-msgstr ""
+msgstr "No partner !"
 

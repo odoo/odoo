@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:33:40+0000\n"
-"PO-Revision-Date: 2010-07-09 12:33:40+0000\n"
+"POT-Creation-Date: 2010-09-02 13:45:58+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr "Mouvement d'Inventaire"
 #. module: mrp_repair
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -56,6 +56,12 @@ msgstr "Date d'impression"
 #: rml:repair.order:0
 msgid "Quantity"
 msgstr "Quantité"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "No product defined on Fees!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -106,6 +112,12 @@ msgid "Net Total :"
 msgstr "Total Net :"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
+
+#. module: mrp_repair
 #: rml:repair.order:0
 msgid "VAT"
 msgstr "TVA"
@@ -144,7 +156,7 @@ msgstr "Partenaire"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "No account defined for partner \"%s\"."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
@@ -223,7 +235,7 @@ msgstr "Commencer la Réparation"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
@@ -289,6 +301,12 @@ msgid "Repair Line"
 msgstr "Ligne de Réparation"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner and invoicing address in the repair form !"
+msgstr "You have to select a partner and invoicing address in the repair form !"
+
+#. module: mrp_repair
 #: rml:repair.order:0
 msgid "N° :"
 msgstr "N° :"
@@ -347,12 +365,6 @@ msgid "Invoiced"
 msgstr "Facturée"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
-#, python-format
-msgid "You have to select a partner in the repair form !"
-msgstr ""
-
-#. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
 msgid "No"
 msgstr "Non"
@@ -372,7 +384,7 @@ msgstr "Ajouter"
 #. module: mrp_repair
 #: wizard_view:mrp.repair.make_invoice,init:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Do you really want to create the invoice(s) ?"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_form
@@ -445,7 +457,7 @@ msgstr "Terminer la Réparation"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "No account defined for product \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -679,5 +691,5 @@ msgstr "Prêt à Réparer"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No partner !"
-msgstr ""
+msgstr "No partner !"
 

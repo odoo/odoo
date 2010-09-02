@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:25:26+0000\n"
-"PO-Revision-Date: 2010-07-09 12:25:26+0000\n"
+"POT-Creation-Date: 2010-09-02 13:37:33+0000\n"
+"PO-Revision-Date: 2010-09-02 13:37:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_planned:0
 msgid "Scheduled date if fixed"
-msgstr "Data planificada si fixa"
+msgstr "Scheduled date if fixed"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -75,6 +75,11 @@ msgid "Entries"
 msgstr "Assentaments"
 
 #. module: account_payment
+#: rml:payment.order:0
+msgid "Used Account"
+msgstr "Used Account"
+
+#. module: account_payment
 #: wizard_field:populate_payment,init,duedate:0
 msgid "Due Date"
 msgstr "Data venciment"
@@ -96,9 +101,9 @@ msgid "Amount"
 msgstr "Import"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Execution date:"
-msgstr "Data d'execució:"
+#: help:payment.mode,type:0
+msgid "Select the Payment Type for the Payment Mode."
+msgstr "Seleccioneu el tipus de pagament per la forma de pagament."
 
 #. module: account_payment
 #: view:payment.order:0
@@ -117,6 +122,11 @@ msgid "New Payment Order"
 msgstr "Nova ordre de pagament/cobrament"
 
 #. module: account_payment
+#: field:payment.order,total:0
+msgid "Total"
+msgstr "Total"
+
+#. module: account_payment
 #: rml:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
@@ -126,12 +136,17 @@ msgstr "Referència"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr "Ordres de pagament"
+msgstr "Ordres de pagament/cobrament"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
 msgstr "Directament"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Value date"
+msgstr "Value date"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
@@ -164,14 +179,19 @@ msgid "Payment lines"
 msgstr "Línies de pagament"
 
 #. module: account_payment
-#: help:payment.order,date_planned:0
-msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr "Seleccioneu una data si heu seleccionat que la data preferida sigui fixa."
+#: rml:payment.order:0
+msgid "Execution Type"
+msgstr "Execution Type"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
 msgstr "Estructurat"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Amount in currency"
+msgstr "Amount in currency"
 
 #. module: account_payment
 #: field:payment.order,state:0
@@ -302,15 +322,16 @@ msgid "Mode of Payment"
 msgstr "Forma de pagament"
 
 #. module: account_payment
+#: rml:payment.order:0
 #: view:payment.type:0
 #: help:payment.type,name:0
 msgid "Payment Type"
-msgstr "Tipus de pagament"
+msgstr "Payment Type"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
 msgid "Payment amount in the partner currency"
-msgstr "Quantitat pagada en la moneda de la seva empresa"
+msgstr "Quantitat pagada en la moneda de l'empresa"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -336,7 +357,12 @@ msgstr "Direcció del client que ordena."
 #. module: account_payment
 #: wizard_field:populate_statement,init,date_select:0
 msgid "Select Date"
-msgstr ""
+msgstr "Select Date"
+
+#. module: account_payment
+#: help:payment.order,date_planned:0
+msgid "Select a date if you have chosen Preferred Date to be fixed."
+msgstr "Select a date if you have chosen Preferred Date to be fixed."
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_payment
@@ -355,15 +381,9 @@ msgid "Payment Lines"
 msgstr "Línies de pagament"
 
 #. module: account_payment
-#: rml:payment.order:0
 #: wizard_field:populate_statement,init,d_date:0
 msgid "Date"
-msgstr "Data"
-
-#. module: account_payment
-#: rml:payment.order:0
-msgid "Reference:"
-msgstr "Referència:"
+msgstr "Date"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -374,6 +394,11 @@ msgstr "﻿Aquesta línia d'entrada s'atribuirà per la informació del client q
 #: field:payment.line,date:0
 msgid "Payment Date"
 msgstr "Data de pagament"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Total:"
+msgstr "Total:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -389,7 +414,7 @@ msgstr "Data venciment"
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Fixed Date"
-msgstr ""
+msgstr "Fixed Date"
 
 #. module: account_payment
 #: help:payment.type,code:0
@@ -424,7 +449,7 @@ msgstr "La seva referència"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Payment order"
-msgstr "Ordres de pagament"
+msgstr "Ordre de pagament/cobrament"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -461,24 +486,24 @@ msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter e
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_pay_payment
 msgid "Pay"
-msgstr "Pagar"
+msgstr "Paga"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
-msgstr "Ordre de pagament"
+msgstr "Ordre de pagament/cobrament"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
 msgid "Draft Payment Order"
-msgstr "Ordre de pagament esborrany"
+msgstr "Ordres de pagament/cobrament esborranys"
 
 #. module: account_payment
 #: help:payment.line,amount:0
 msgid "Payment amount in the company currency"
-msgstr "Quantitat pagada en la moneda de la nostra empresa"
+msgstr "Quantitat pagada en la moneda de la companyia"
 
 #. module: account_payment
 #: wizard_view:populate_payment,init:0
@@ -488,12 +513,12 @@ msgstr "Busca línies de pagament"
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Current Date"
-msgstr ""
+msgstr "Current Date"
 
 #. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
-msgstr "Import en la moneda de la empresa"
+msgstr "Import en la moneda de l'empresa"
 
 #. module: account_payment
 #: field:payment.line,communication2:0
@@ -503,7 +528,7 @@ msgstr "Comunicació 2"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank account"
-msgstr "Compte bancària destí"
+msgstr "Compte bancari destí"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -523,6 +548,7 @@ msgstr "Confirma pagaments"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
+#: rml:payment.order:0
 msgid "Company Currency"
 msgstr "Moneda de la companyia"
 
@@ -540,12 +566,17 @@ msgstr "Línia de pagament"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
-msgstr "Pagament"
+msgstr "Pagaments/Cobraments"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Payment Order / Payment"
+msgstr "Payment Order / Payment"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr "Línia de l'assentament"
+msgstr "Apunt"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -578,12 +609,12 @@ msgstr "Informació de l'assentament"
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-msgstr "Empresa '+ line.partner_id.name+ ' no té una compte bancària definida"
+msgstr "Empresa '+ line.partner_id.name+ ' no té cap compte bancari definit"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
 msgid "Populate Statement with Payment lines"
-msgstr "Propaga extractes amb línies de pagament"
+msgstr "Omple un extracte amb línies de pagament"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -594,7 +625,7 @@ msgstr "Ordre"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_open
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
 msgid "Payment Orders to Validate"
-msgstr "Ordres de pagament a validar"
+msgstr "Ordres de pagament/cobrament a validar"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_type
@@ -603,24 +634,19 @@ msgid "Payment type"
 msgstr "Tipus de pagament"
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr "Total"
+#: rml:payment.order:0
+msgid "Invoice reference"
+msgstr "Invoice reference"
 
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Payment Order Date"
-msgstr ""
+msgstr "Payment Order Date"
 
 #. module: account_payment
 #: wizard_button:populate_statement,init,add:0
 msgid "_Add"
 msgstr "_Afegix"
-
-#. module: account_payment
-#: help:payment.mode,type:0
-msgid "Select the Payment Type for the Payment Mode."
-msgstr "Seleccioneu el tipus de pagament per la forma de pagament."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_mode
@@ -631,12 +657,12 @@ msgstr "Mode de pagament"
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import payment lines"
-msgstr "Import línies de pagament"
+msgstr "Importa línies de pagament"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr "Compte bancària per la forma de pagament"
+msgstr "Compte bancari per la forma de pagament"
 
 #. module: account_payment
 #: field:payment.mode,journal:0
@@ -646,5 +672,5 @@ msgstr "Diari"
 #. module: account_payment
 #: help:populate_statement,init,date_select:0
 msgid "The selected date will be used for statement lines"
-msgstr ""
+msgstr "The selected date will be used for statement lines"
 

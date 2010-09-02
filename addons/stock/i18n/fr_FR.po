@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:33:41+0000\n"
-"PO-Revision-Date: 2010-07-09 12:33:41+0000\n"
+"POT-Creation-Date: 2010-09-02 13:45:58+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr ""
+msgstr "Track Outgoing Lots"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -48,7 +48,7 @@ msgstr "terp-account"
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
@@ -74,7 +74,7 @@ msgstr "STOCK_MEDIA_FORWARD"
 #. module: stock
 #: rml:lot.location:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -125,6 +125,12 @@ msgstr "Montant"
 #: view:stock.picking:0
 msgid "Products Received"
 msgstr "Réception produit"
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
@@ -301,7 +307,7 @@ msgstr "Commande(Origine)"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: stock
 #: view:stock.location:0
@@ -374,22 +380,10 @@ msgid "Move Lines"
 msgstr "Lignes de mouvements"
 
 #. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "Bad Lot Assignation !"
-msgstr "A afectação do lote ruim!"
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "You are moving %.2f products but only %.2f available in this lot."
-msgstr "Sie befinden sich bewegenden %.2f Produkte, sondern nur %.2f in dieser Partie."
-
-#. module: stock
 #: code:addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Caution!"
-msgstr ""
+msgstr "Caution!"
 
 #. module: stock
 #: wizard_field:stock.fill_inventory,init,recursive:0
@@ -436,7 +430,7 @@ msgstr "terp-graph"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Receptions"
-msgstr ""
+msgstr "Future Receptions"
 
 #. module: stock
 #: rml:lot.location:0
@@ -512,7 +506,7 @@ msgstr "Identifiant produit"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future P&L"
-msgstr ""
+msgstr "Future P&L"
 
 #. module: stock
 #: view:res.partner:0
@@ -553,6 +547,12 @@ msgstr "Cet emplacement de stock sera utilisé au lieu de celui par défaut, com
 #: help:product.category,property_stock_account_output_categ:0
 msgid "This account will be used to value the output stock"
 msgstr "Ce compte sera utilisé pour valoriser le stock sortant"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Bad Lot Assignation !"
+msgstr "Bad Lot Assignation !"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -619,7 +619,7 @@ msgstr "STOCK_INDEX"
 #: code:addons/stock/wizard/wizard_partial_picking.py:0
 #, python-format
 msgid "Back Order %s Assigned to this Packing."
-msgstr ""
+msgstr "Back Order %s Assigned to this Packing."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -635,7 +635,7 @@ msgstr "Nouveau colisage entrant"
 #. module: stock
 #: wizard_field:mrp.stock.move.track,init,quantity:0
 msgid "Quantity per lot"
-msgstr ""
+msgstr "Quantity per lot"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -1277,7 +1277,7 @@ msgstr "Compte de Stock Sortant"
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
-msgstr "Automatique aucune étape ajoutée"
+msgstr "Automatique aucun pas ajouter"
 
 #. module: stock
 #: wizard_view:stock.location.products,init:0
@@ -1334,7 +1334,7 @@ msgstr "STOCK_STOP"
 #. module: stock
 #: wizard_view:mrp.stock.move.track,init:0
 msgid "Tracking a move"
-msgstr ""
+msgstr "Tracking a move"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1349,7 +1349,7 @@ msgstr "Valider"
 #. module: stock
 #: field:product.product,track_incoming:0
 msgid "Track Incoming Lots"
-msgstr ""
+msgstr "Track Incoming Lots"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1360,7 +1360,7 @@ msgstr "STOCK_DIALOG_WARNING"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Qty"
-msgstr ""
+msgstr "Future Qty"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1401,7 +1401,7 @@ msgstr "Produits"
 #: selection:stock.location,chained_location_type:0
 #, python-format
 msgid "None"
-msgstr "Aucun"
+msgstr "None"
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -1493,7 +1493,7 @@ msgstr "État de la facturation"
 #. module: stock
 #: rml:lot.location:0
 msgid "Units"
-msgstr ""
+msgstr "Unités"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1728,12 +1728,18 @@ msgstr "Faire le colisage"
 #: wizard_field:stock.partial_picking,end2,back_order_notification:0
 #: field:stock.picking,backorder_id:0
 msgid "Back Order"
-msgstr "Reliquat"
+msgstr "Back Order"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_DND_MULTIPLE"
 msgstr "STOCK_DND_MULTIPLE"
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "You cannot return a packing with a product quantity zero or less!"
+msgstr "You cannot return a packing with a product quantity zero or less!"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1771,7 +1777,7 @@ msgstr "Incoterms"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1786,7 +1792,7 @@ msgstr "STOCK_ZOOM_OUT"
 #. module: stock
 #: wizard_field:mrp.stock.move.track,init,tracking_prefix:0
 msgid "Tracking prefix"
-msgstr ""
+msgstr "Tracking prefix"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -1892,7 +1898,8 @@ msgstr "Diviser les lignes en deux"
 #, python-format
 msgid "There is no journal defined '\\n"
 "                            'on the product category: \"%s\" (id: %d)"
-msgstr ""
+msgstr "There is no journal defined '\\n"
+"                            'on the product category: \"%s\" (id: %d)"
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,journal_id:0
@@ -1927,6 +1934,12 @@ msgid "Auto-Packing"
 msgstr "Colisage automatique"
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You are moving %.2f products but only %.2f available in this lot."
+msgstr "You are moving %.2f products but only %.2f available in this lot."
+
+#. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
 msgstr "US produit"
@@ -1946,14 +1959,15 @@ msgstr "UdM produit"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
-msgstr ""
+msgstr "You cannot remove the picking which is in %s state !"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "There is no stock output account defined ' \\n"
 "                                        'for this product: \"%s\" (id: %d)"
-msgstr ""
+msgstr "There is no stock output account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
 
 #. module: stock
 #: rml:lot.stock.overview:0
@@ -2050,7 +2064,7 @@ msgstr "Tout en une fois"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Productions"
-msgstr ""
+msgstr "Future Productions"
 
 #. module: stock
 #: code:addons/stock/wizard/wizard_return.py:0
@@ -2143,7 +2157,7 @@ msgstr "Voulez vous fusionnez ces inventaires"
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelled"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -2272,7 +2286,7 @@ msgstr "Veuillez choisir un inventaire et un seul !"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Deliveries"
-msgstr ""
+msgstr "Future Deliveries"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2296,7 +2310,7 @@ msgstr "Validation Automatique"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "Weight"
-msgstr ""
+msgstr "Weight"
 
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
@@ -2414,7 +2428,7 @@ msgstr "Mouvements de stocks prévisionnels"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Stock"
-msgstr ""
+msgstr "Future Stock"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -2471,7 +2485,7 @@ msgstr "Emplacements"
 #. module: stock
 #: help:stock.move,date_planned:0
 msgid "Scheduled date for the movement of the products or real date if the move is done."
-msgstr ""
+msgstr "Date prévisionnelle pour le mouvement du produit ou la date réelle si le mouvement est terminé."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2534,7 +2548,7 @@ msgstr "Bas niveau"
 #: code:addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
-msgstr ""
+msgstr "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -2592,7 +2606,8 @@ msgstr "Valeurs des emplacements"
 #, python-format
 msgid "There is no stock input account defined ' \\n"
 "                                        'for this product: \"%s\" (id: %d)"
-msgstr ""
+msgstr "There is no stock input account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output
@@ -2613,7 +2628,7 @@ msgstr "Ligne d'inventaire"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You can not create new moves."
-msgstr ""
+msgstr "You can not create new moves."
 
 #. module: stock
 #: view:stock.picking:0

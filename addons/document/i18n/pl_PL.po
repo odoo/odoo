@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:41:24+0000\n"
-"PO-Revision-Date: 2010-07-09 12:41:24+0000\n"
+"POT-Creation-Date: 2010-09-02 13:54:04+0000\n"
+"PO-Revision-Date: 2010-09-02 13:54:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr "Nazwa katalogu zawiera znaki specjalne !"
 #. module: document
 #: help:document.directory,ressource_type_id:0
 msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
-msgstr ""
+msgstr "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
 
 #. module: document
 #: constraint:ir.actions.act_window:0
@@ -34,7 +34,7 @@ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
-msgstr ""
+msgstr "Directory Content Type"
 
 #. module: document
 #: view:document.configuration.wizard:0
@@ -55,7 +55,7 @@ msgstr "Zawartość katalogu"
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document
 msgid "Document Management"
-msgstr ""
+msgstr "Document Management"
 
 #. module: document
 #: help:document.configuration.wizard,host:0
@@ -87,12 +87,12 @@ msgstr "Tytuł zasobu"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
 msgid "document.configuration.wizard"
-msgstr ""
+msgstr "document.configuration.wizard"
 
 #. module: document
 #: selection:ir.attachment,store_method:0
@@ -124,7 +124,7 @@ msgstr "Katalog dokumentu"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -172,12 +172,12 @@ msgstr "Nazwa katalogu musi być unikalna!"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid "Check this if you want to use the same tree structure as the object selected in the system."
-msgstr ""
+msgstr "Check this if you want to use the same tree structure as the object selected in the system."
 
 #. module: document
 #: help:document.directory,domain:0
 msgid "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
+msgstr "Use a domain if you want to apply an automatic filter on visible resources."
 
 #. module: document
 #: field:document.configuration.wizard,host:0
@@ -203,7 +203,7 @@ msgstr "Typ katalogu"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "You do not permissions to write on the server side."
-msgstr ""
+msgstr "You do not permissions to write on the server side."
 
 #. module: document
 #: field:document.directory.content,report_id:0
@@ -214,7 +214,7 @@ msgstr "Raport"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Permission Denied !"
-msgstr ""
+msgstr "Permission Denied !"
 
 #. module: document
 #: constraint:ir.ui.view:0
@@ -257,7 +257,7 @@ msgstr "Autor ostatniej modyfikacji"
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Directories Mapped to Objects"
-msgstr ""
+msgstr "Directories Mapped to Objects"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -273,7 +273,7 @@ msgstr "Data modyfikacji"
 #. module: document
 #: selection:document.directory,type:0
 msgid "Static Directory"
-msgstr ""
+msgstr "Static Directory"
 
 #. module: document
 #: field:document.directory,user_id:0
@@ -304,7 +304,7 @@ msgstr "Konfiguracja dokumentu"
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Auto Configure Directory"
-msgstr ""
+msgstr "Auto Configure Directory"
 
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
@@ -339,7 +339,17 @@ msgid "This is a complete document management system:\n"
 "    - After installing this module PDF's are not longer stored into the database, \n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 ""
-msgstr ""
+msgstr "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -406,12 +416,12 @@ msgstr "Utworzył"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
+msgstr "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
 
 #. module: document
 #: view:document.directory:0
 msgid "Auto-Generated Files"
-msgstr ""
+msgstr "Auto-Generated Files"
 
 #. module: document
 #: view:document.configuration.wizard:0
@@ -436,7 +446,7 @@ msgstr "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid "Check this field if you want that the name of the file start by the record name."
-msgstr ""
+msgstr "Check this field if you want that the name of the file start by the record name."
 
 #. module: document
 #: selection:document.directory,type:0
@@ -451,7 +461,7 @@ msgstr "Model nadrzędny"
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Item"
-msgstr ""
+msgstr "Parent Item"
 
 #. module: document
 #: view:document.directory:0
@@ -468,7 +478,7 @@ msgstr "Nazwa"
 #: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "Przeglądaj pliki przez FTP"
+msgstr "Browse Files Using FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -484,7 +494,7 @@ msgstr "Nazwa zawartości"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "File name must be unique!"
-msgstr ""
+msgstr "File name must be unique!"
 
 #. module: document
 #: field:document.directory,ressource_tree:0

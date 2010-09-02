@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:26:15+0000\n"
-"PO-Revision-Date: 2010-07-09 12:26:15+0000\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -299,7 +299,7 @@ msgstr "外部计划位置的参考"
 #: code:addons/mrp/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Caution!"
-msgstr ""
+msgstr "Caution!"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockrfq0
@@ -339,7 +339,7 @@ msgstr "生产单"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Qty Multiple must be greater than zero."
-msgstr ""
+msgstr "Qty Multiple must be greater than zero."
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -400,7 +400,7 @@ msgstr "需求流程"
 #. module: mrp
 #: field:mrp.production,date_planned_date:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Scheduled Date"
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
@@ -541,7 +541,7 @@ msgstr "需求单转为采购订单草稿。"
 #: code:addons/mrp/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation."
-msgstr ""
+msgstr "Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation."
 
 #. module: mrp
 #: field:mrp.procurement,message:0
@@ -616,7 +616,7 @@ msgstr "工作中心运作"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "TOTAL"
 
 #. module: mrp
 #: help:mrp.workcenter,time_efficiency:0
@@ -980,7 +980,14 @@ msgid "Cannot delete Production Order(s) which are in %s State!' % s['state']))\
 "            default = {}\n"
 "        default.update({\n"
 "            'name': self.pool.get('ir.sequence"
-msgstr ""
+msgstr "Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def copy(self, cr, uid, id, default=None,context=None):\n"
+"        if not default:\n"
+"            default = {}\n"
+"        default.update({\n"
+"            'name': self.pool.get('ir.sequence"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -1217,7 +1224,7 @@ msgstr "按库存生产"
 #: code:addons/mrp/wizard/wizard_track_line.py:0
 #, python-format
 msgid "No production sequence defined"
-msgstr ""
+msgstr "No production sequence defined"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemto0
@@ -1243,14 +1250,14 @@ msgstr "需求单"
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.product_procurement_wizard
 msgid "Procurement Request"
-msgstr ""
+msgstr "Procurement Request"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #: model:ir.actions.wizard,name:mrp.wizard_price
 #, python-format
 msgid "Product Cost Structure"
-msgstr "产品成本构成"
+msgstr "Product Cost Structure"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
@@ -1386,7 +1393,7 @@ msgstr "等待物料的生产单"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Data Insufficient !"
-msgstr ""
+msgstr "Data Insufficient !"
 
 #. module: mrp
 #: rml:mrp.production.order:0
@@ -1619,13 +1626,13 @@ msgstr "在生产单并且不是每层上计算自动计算原料明细中使用
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "No address defined for the supplier"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Please check the Quantity of Procurement Order(s), it should not be less than 1!"
-msgstr ""
+msgstr "Please check the Quantity of Procurement Order(s), it should not be less than 1!"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1672,7 +1679,7 @@ msgstr "仅计算产品需求"
 #: code:addons/mrp/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
@@ -1746,7 +1753,7 @@ msgstr "产品舍入"
 #. module: mrp
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr ""
+msgstr "Work Order"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1777,7 +1784,7 @@ msgstr "新的物料清单"
 #. module: mrp
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
-msgstr ""
+msgstr "无效的参数"
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -1803,7 +1810,7 @@ msgstr "小时数"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Product quantity"
-msgstr ""
+msgstr "Product quantity"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action
@@ -1938,7 +1945,7 @@ msgstr "订到最大值"
 #: code:addons/mrp/wizard/wizard_change_production_qty.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -1986,7 +1993,7 @@ msgstr "销售名称"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Product supplier"
-msgstr ""
+msgstr "Product supplier"
 
 #. module: mrp
 #: wizard_field:product.product.procurement,init,warehouse_id:0
@@ -2074,7 +2081,7 @@ msgstr "你可以看到生产产品使用的物料清单"
 #. module: mrp
 #: field:mrp.production,date_planned_end:0
 msgid "Scheduled End"
-msgstr ""
+msgstr "Scheduled End"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2104,5 +2111,10 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
 "    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
 "        if product_id:\n"
 "            w=self.pool.get('product.product"
-msgstr ""
+msgstr "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
+"        if product_id:\n"
+"            w=self.pool.get('product.product"
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:25:26+0000\n"
-"PO-Revision-Date: 2010-07-09 12:25:26+0000\n"
+"POT-Creation-Date: 2010-09-02 13:37:33+0000\n"
+"PO-Revision-Date: 2010-09-02 13:37:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,7 +49,7 @@ msgstr "Revisió"
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
 msgid "Compute Stock Minimum Rules Only"
-msgstr "Calcula nomé regles d'estoc mínim"
+msgstr "Calcula només regles d'estoc mínim"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
@@ -147,7 +147,7 @@ msgstr "﻿XML invàlid per a la definició de la vista!"
 #. module: mrp
 #: help:res.company,security_lead:0
 msgid "This is the days added to what you promise to customers for security purpose"
-msgstr "Aquests són els dies afegits als que els prometeu als clients per raons de seguretat"
+msgstr "Aquests són els dies afegits als dies que prometeu als clients per raons de seguretat."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -299,7 +299,7 @@ msgstr "Referència a una ubicació en una plan. externa"
 #: code:addons/mrp/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Caution!"
-msgstr ""
+msgstr "Caution!"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockrfq0
@@ -339,7 +339,7 @@ msgstr "Ordres de producció"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Qty Multiple must be greater than zero."
-msgstr ""
+msgstr "Qty Multiple must be greater than zero."
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -400,7 +400,7 @@ msgstr "Procés de proveïment"
 #. module: mrp
 #: field:mrp.production,date_planned_date:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Scheduled Date"
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
@@ -541,7 +541,7 @@ msgstr "Proveïment és converteix en l'ordre de compra esborrany."
 #: code:addons/mrp/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation."
-msgstr ""
+msgstr "Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation."
 
 #. module: mrp
 #: field:mrp.procurement,message:0
@@ -646,7 +646,7 @@ msgstr "En producció"
 #. module: mrp
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr "Qtat múltiple"
+msgstr "Qtat. múltiple"
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -980,7 +980,14 @@ msgid "Cannot delete Production Order(s) which are in %s State!' % s['state']))\
 "            default = {}\n"
 "        default.update({\n"
 "            'name': self.pool.get('ir.sequence"
-msgstr ""
+msgstr "Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def copy(self, cr, uid, id, default=None,context=None):\n"
+"        if not default:\n"
+"            default = {}\n"
+"        default.update({\n"
+"            'name': self.pool.get('ir.sequence"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -1021,7 +1028,7 @@ msgstr "Eficiència temporal"
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr "Dies de seguritat per cada operació de fabricació."
+msgstr "Dies de seguretat per cada operació de fabricació."
 
 #. module: mrp
 #: wizard_view:mrp.procurement.compute.all,init:0
@@ -1217,7 +1224,7 @@ msgstr "Obtenir per estoc"
 #: code:addons/mrp/wizard/wizard_track_line.py:0
 #, python-format
 msgid "No production sequence defined"
-msgstr ""
+msgstr "No production sequence defined"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemto0
@@ -1243,14 +1250,14 @@ msgstr "Proveïment"
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.product_procurement_wizard
 msgid "Procurement Request"
-msgstr ""
+msgstr "Procurement Request"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #: model:ir.actions.wizard,name:mrp.wizard_price
 #, python-format
 msgid "Product Cost Structure"
-msgstr "Estructura dels costos del producte"
+msgstr "Product Cost Structure"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
@@ -1386,7 +1393,7 @@ msgstr "Ordres de producció esperant productes"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Data Insufficient !"
-msgstr ""
+msgstr "Data Insufficient !"
 
 #. module: mrp
 #: rml:mrp.production.order:0
@@ -1626,7 +1633,7 @@ msgstr "No s'ha definit adreça pel proveïdor"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Please check the Quantity of Procurement Order(s), it should not be less than 1!"
-msgstr ""
+msgstr "Please check the Quantity of Procurement Order(s), it should not be less than 1!"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1673,7 +1680,7 @@ msgstr "Calcula només proveïments"
 #: code:addons/mrp/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
@@ -1747,7 +1754,7 @@ msgstr "Arrodoniment del producte"
 #. module: mrp
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr ""
+msgstr "Work Order"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1778,7 +1785,7 @@ msgstr "Nova llista de materials"
 #. module: mrp
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
-msgstr ""
+msgstr "Arguments no vàlids"
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -2075,7 +2082,7 @@ msgstr "Podeu veure la vostra llista de material que s'utilitza per fabricar el 
 #. module: mrp
 #: field:mrp.production,date_planned_end:0
 msgid "Scheduled End"
-msgstr ""
+msgstr "Scheduled End"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2105,5 +2112,10 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
 "    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
 "        if product_id:\n"
 "            w=self.pool.get('product.product"
-msgstr ""
+msgstr "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
+"        if product_id:\n"
+"            w=self.pool.get('product.product"
 

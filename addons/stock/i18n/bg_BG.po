@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:24:39+0000\n"
-"PO-Revision-Date: 2010-07-09 12:24:39+0000\n"
+"POT-Creation-Date: 2010-09-02 13:36:45+0000\n"
+"PO-Revision-Date: 2010-09-02 13:36:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr ""
+msgstr "Track Outgoing Lots"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -48,7 +48,7 @@ msgstr "terp-account"
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
@@ -74,7 +74,7 @@ msgstr "STOCK_MEDIA_FORWARD"
 #. module: stock
 #: rml:lot.location:0
 msgid "Total :"
-msgstr ""
+msgstr "Общо :"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -113,7 +113,7 @@ msgstr "Списък за опаковане"
 #: code:addons/stock/report_stock.py:0
 #, python-format
 msgid "You cannot delete any record!"
-msgstr ""
+msgstr "You cannot delete any record!"
 
 #. module: stock
 #: rml:lot.stock.overview:0
@@ -125,6 +125,12 @@ msgstr "Количество"
 #: view:stock.picking:0
 msgid "Products Received"
 msgstr "Получени продукти"
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
@@ -227,7 +233,7 @@ msgstr "STOCK_QUIT"
 #: code:addons/stock/wizard/wizard_inventory.py:0
 #, python-format
 msgid "No product in this location."
-msgstr ""
+msgstr "No product in this location."
 
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
@@ -258,7 +264,7 @@ msgstr "Вид местонахождение"
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice cannot be created from Packing."
-msgstr ""
+msgstr "Invoice cannot be created from Packing."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -301,7 +307,7 @@ msgstr "Ред(източник)"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr ""
+msgstr "Общ сбор"
 
 #. module: stock
 #: view:stock.location:0
@@ -374,22 +380,10 @@ msgid "Move Lines"
 msgstr "Редове с движения"
 
 #. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "Bad Lot Assignation !"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "You are moving %.2f products but only %.2f available in this lot."
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Caution!"
-msgstr ""
+msgstr "Caution!"
 
 #. module: stock
 #: wizard_field:stock.fill_inventory,init,recursive:0
@@ -436,7 +430,7 @@ msgstr "terp-graph"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Receptions"
-msgstr ""
+msgstr "Future Receptions"
 
 #. module: stock
 #: rml:lot.location:0
@@ -512,7 +506,7 @@ msgstr "Идентификатор на продукт"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future P&L"
-msgstr ""
+msgstr "Future P&L"
 
 #. module: stock
 #: view:res.partner:0
@@ -553,6 +547,12 @@ msgstr "Когато създавате наличност за текущия �
 #: help:product.category,property_stock_account_output_categ:0
 msgid "This account will be used to value the output stock"
 msgstr "Тази сметка ще бъде използвана за остойностяване на изхода от склада"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Bad Lot Assignation !"
+msgstr "Bad Lot Assignation !"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -619,7 +619,7 @@ msgstr "STOCK_INDEX"
 #: code:addons/stock/wizard/wizard_partial_picking.py:0
 #, python-format
 msgid "Back Order %s Assigned to this Packing."
-msgstr ""
+msgstr "Back Order %s Assigned to this Packing."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -635,7 +635,7 @@ msgstr "Ново пакетиране при приемане"
 #. module: stock
 #: wizard_field:mrp.stock.move.track,init,quantity:0
 msgid "Quantity per lot"
-msgstr ""
+msgstr "Quantity per lot"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -853,7 +853,7 @@ msgstr "STOCK_CONNECT"
 #: model:ir.ui.menu,name:stock.menu_action_picking_all
 #: wizard_field:stock.picking.make,init,pickings:0
 msgid "Packing"
-msgstr "Опаковка"
+msgstr "Packing"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1039,7 +1039,7 @@ msgstr "STOCK_APPLY"
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice is not created"
-msgstr ""
+msgstr "Invoice is not created"
 
 #. module: stock
 #: code:addons/stock/wizard/inventory_merge.py:0
@@ -1293,7 +1293,7 @@ msgstr "STOCK_CDROM"
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice is already created."
-msgstr ""
+msgstr "Invoice is already created."
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -1334,7 +1334,7 @@ msgstr "STOCK_STOP"
 #. module: stock
 #: wizard_view:mrp.stock.move.track,init:0
 msgid "Tracking a move"
-msgstr ""
+msgstr "Tracking a move"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1349,7 +1349,7 @@ msgstr "Проверка"
 #. module: stock
 #: field:product.product,track_incoming:0
 msgid "Track Incoming Lots"
-msgstr ""
+msgstr "Track Incoming Lots"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1360,7 +1360,7 @@ msgstr "STOCK_DIALOG_WARNING"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Qty"
-msgstr ""
+msgstr "Future Qty"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1401,7 +1401,7 @@ msgstr "Продукти"
 #: selection:stock.location,chained_location_type:0
 #, python-format
 msgid "None"
-msgstr "Няма"
+msgstr "None"
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -1493,7 +1493,7 @@ msgstr "Състояние на фактура"
 #. module: stock
 #: rml:lot.location:0
 msgid "Units"
-msgstr ""
+msgstr "Единици"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1514,7 +1514,7 @@ msgstr "Прогноза за бъдещи складове"
 #: code:addons/stock/report_stock.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: stock
 #: model:ir.module.module,description:stock.module_meta_information
@@ -1529,7 +1529,17 @@ msgid "OpenERP Stock Management module can manage multi-warehouses, multi and st
 "* Rapid detection of mistakes through double entry system\n"
 "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
 "    "
-msgstr ""
+msgstr "OpenERP Stock Management module can manage multi-warehouses, multi and structured stock locations.\n"
+"Thanks to the double entry management, the inventory controlling is powerful and flexible:\n"
+"* Moves history and planning,\n"
+"* Different inventory methods (FIFO, LIFO, ...)\n"
+"* Stock valuation (standard or average price, ...)\n"
+"* Robustness faced with Inventory differences\n"
+"* Automatic reordering rules (stock level, JIT, ...)\n"
+"* Bar code supported\n"
+"* Rapid detection of mistakes through double entry system\n"
+"* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+"    "
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -1718,12 +1728,18 @@ msgstr "Пакетиране"
 #: wizard_field:stock.partial_picking,end2,back_order_notification:0
 #: field:stock.picking,backorder_id:0
 msgid "Back Order"
-msgstr "Недостатъчни количества"
+msgstr "Back Order"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_DND_MULTIPLE"
 msgstr "STOCK_DND_MULTIPLE"
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "You cannot return a packing with a product quantity zero or less!"
+msgstr "You cannot return a packing with a product quantity zero or less!"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1761,7 +1777,7 @@ msgstr "Международни термини"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Total:"
-msgstr ""
+msgstr "Общо:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1776,7 +1792,7 @@ msgstr "STOCK_ZOOM_OUT"
 #. module: stock
 #: wizard_field:mrp.stock.move.track,init,tracking_prefix:0
 msgid "Tracking prefix"
-msgstr ""
+msgstr "Tracking prefix"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -1882,7 +1898,8 @@ msgstr "Разделяне на реда на движението на две"
 #, python-format
 msgid "There is no journal defined '\\n"
 "                            'on the product category: \"%s\" (id: %d)"
-msgstr ""
+msgstr "There is no journal defined '\\n"
+"                            'on the product category: \"%s\" (id: %d)"
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,journal_id:0
@@ -1917,6 +1934,12 @@ msgid "Auto-Packing"
 msgstr "Автом. пакетиране"
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You are moving %.2f products but only %.2f available in this lot."
+msgstr "You are moving %.2f products but only %.2f available in this lot."
+
+#. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
 msgstr "Продукт компект услуги"
@@ -1936,14 +1959,15 @@ msgstr "Продукт мер. ед."
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
-msgstr ""
+msgstr "You cannot remove the picking which is in %s state !"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "There is no stock output account defined ' \\n"
 "                                        'for this product: \"%s\" (id: %d)"
-msgstr ""
+msgstr "There is no stock output account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
 
 #. module: stock
 #: rml:lot.stock.overview:0
@@ -2040,7 +2064,7 @@ msgstr "Всичко наведнъж"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Productions"
-msgstr ""
+msgstr "Future Productions"
 
 #. module: stock
 #: code:addons/stock/wizard/wizard_return.py:0
@@ -2070,7 +2094,7 @@ msgstr "STOCK_FIND"
 #: code:addons/stock/wizard/wizard_inventory.py:0
 #, python-format
 msgid "Message !"
-msgstr ""
+msgstr "Message !"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2098,7 +2122,7 @@ msgstr "Проследяване"
 #: wizard_button:mrp.stock.move.track,init,track:0
 #: wizard_button:stock.picking.make,init,make:0
 msgid "Ok"
-msgstr "Добре"
+msgstr "Ok"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -2131,7 +2155,7 @@ msgstr "Искате ли да обедините тези наличности 
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelled"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -2158,7 +2182,7 @@ msgstr "STOCK_MEDIA_PLAY"
 #: code:addons/stock/wizard/inventory_merge_zero.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_delivery
@@ -2254,13 +2278,13 @@ msgstr "Настройка"
 #: code:addons/stock/wizard/inventory_merge_zero.py:0
 #, python-format
 msgid "Please select one and only one inventory !"
-msgstr ""
+msgstr "Please select one and only one inventory !"
 
 #. module: stock
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Deliveries"
-msgstr ""
+msgstr "Future Deliveries"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2284,7 +2308,7 @@ msgstr "Автоматична проверка"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "Weight"
-msgstr ""
+msgstr "Weight"
 
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
@@ -2402,14 +2426,14 @@ msgstr "Бъдещи складови движения"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Stock"
-msgstr ""
+msgstr "Future Stock"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
@@ -2459,7 +2483,7 @@ msgstr "Местонахождения"
 #. module: stock
 #: help:stock.move,date_planned:0
 msgid "Scheduled date for the movement of the products or real date if the move is done."
-msgstr ""
+msgstr "Планирана дата за придвижване на продукти, или реална дата, ако придвижването е извършено."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2522,7 +2546,7 @@ msgstr "Ниско ниво"
 #: code:addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
-msgstr ""
+msgstr "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -2580,7 +2604,8 @@ msgstr "Стойности на местонахождение"
 #, python-format
 msgid "There is no stock input account defined ' \\n"
 "                                        'for this product: \"%s\" (id: %d)"
-msgstr ""
+msgstr "There is no stock input account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output
@@ -2601,7 +2626,7 @@ msgstr "Ред от наличност"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You can not create new moves."
-msgstr ""
+msgstr "You can not create new moves."
 
 #. module: stock
 #: view:stock.picking:0

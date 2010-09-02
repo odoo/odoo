@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:44:58+0000\n"
-"PO-Revision-Date: 2010-07-09 12:44:58+0000\n"
+"POT-Creation-Date: 2010-09-02 13:57:40+0000\n"
+"PO-Revision-Date: 2010-09-02 13:57:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
 msgid "wizard.wiki.history.show_diff"
-msgstr ""
+msgstr "wizard.wiki.history.show_diff"
 
 #. module: wiki
 #: constraint:ir.model:0
@@ -28,7 +28,7 @@ msgstr "Название объекта должно начинаться с x_ 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_groups_link
 msgid "Wiki Groups Links"
-msgstr ""
+msgstr "Wiki Groups Links"
 
 #. module: wiki
 #: field:wiki.wiki,create_uid:0
@@ -40,7 +40,7 @@ msgstr "Автор"
 #: model:ir.actions.wizard,name:wiki.wizard_open_page
 #, python-format
 msgid "Open Page"
-msgstr "Открыть страницу"
+msgstr "Open Page"
 
 #. module: wiki
 #: field:wiki.groups.link,action_id:0
@@ -50,7 +50,7 @@ msgstr "Меню"
 #. module: wiki
 #: field:wiki.groups,child_ids:0
 msgid "Child Groups"
-msgstr ""
+msgstr "Child Groups"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_group_open
@@ -62,18 +62,18 @@ msgstr "Wiki страницы"
 #. module: wiki
 #: field:wiki.groups,section:0
 msgid "Make Section ?"
-msgstr ""
+msgstr "Make Section ?"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
 #: view:wiki.wiki.history:0
 msgid "Wiki History"
-msgstr ""
+msgstr "Wiki History"
 
 #. module: wiki
 #: field:wiki.wiki,minor_edit:0
 msgid "Minor edit"
-msgstr ""
+msgstr "Minor edit"
 
 #. module: wiki
 #: field:wiki.wiki,text_area:0
@@ -88,13 +88,13 @@ msgstr "Настройка Wiki"
 #. module: wiki
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: wiki
 #: field:wiki.groups,name:0
 #: field:wiki.wiki,group_id:0
 msgid "Wiki Group"
-msgstr ""
+msgstr "Wiki Group"
 
 #. module: wiki
 #: field:wiki.wiki,name:0
@@ -104,17 +104,23 @@ msgstr "Заголовок"
 #. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
-msgstr ""
+msgstr "History Lines"
 
 #. module: wiki
 #: field:wiki.groups,template:0
 msgid "Wiki Template"
-msgstr ""
+msgstr "Wiki Template"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no chnages in revisions"
+msgstr "There are no chnages in revisions"
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
 msgid "Document Management - Wiki"
-msgstr ""
+msgstr "Document Management - Wiki"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -134,12 +140,18 @@ msgstr "Секция"
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "History Differance"
-msgstr ""
+msgstr "History Differance"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,page:0
 msgid "Group Home Page"
-msgstr ""
+msgstr "Group Home Page"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: wiki
 #: field:wiki.wiki,write_uid:0
@@ -154,7 +166,7 @@ msgstr "Разность"
 #. module: wiki
 #: help:wiki.wiki,section:0
 msgid "Use page section code like 1.2.1"
-msgstr ""
+msgstr "Use page section code like 1.2.1"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -174,7 +186,7 @@ msgstr "Дата"
 #. module: wiki
 #: wizard_view:wiki.make.index,init:0
 msgid "Want to create a Index on Selected Pages ? "
-msgstr ""
+msgstr "Want to create a Index on Selected Pages ? "
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -191,7 +203,7 @@ msgstr "Страницы"
 #: code:addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "You need to select minimum 1 or maximum 2 history revision!"
-msgstr ""
+msgstr "You need to select minimum 1 or maximum 2 history revision!"
 
 #. module: wiki
 #: constraint:ir.ui.view:0
@@ -228,7 +240,7 @@ msgstr "Информация меню"
 #: field:wiki.groups,parent_id:0
 #: field:wiki.groups.link,group_id:0
 msgid "Parent Group"
-msgstr ""
+msgstr "Parent Group"
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -250,23 +262,23 @@ msgstr "История всех страниц"
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
 msgid "wiki.wiki"
-msgstr ""
+msgstr "wiki.wiki"
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "Wiki Differance"
-msgstr ""
+msgstr "Wiki Differance"
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
 msgid "Wiki Id"
-msgstr ""
+msgstr "Wiki Id"
 
 #. module: wiki
 #: code:addons/wiki/wizard/open_page.py:0
 #, python-format
 msgid "No action found"
-msgstr ""
+msgstr "No action found"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_name:0
@@ -303,7 +315,7 @@ msgstr "Создать индекс"
 #. module: wiki
 #: field:wiki.wiki.history,minor_edit:0
 msgid "This is a major edit ?"
-msgstr ""
+msgstr "This is a major edit ?"
 
 #. module: wiki
 #: model:ir.actions.wizard,name:wiki.wizard_group_menu_create
@@ -326,23 +338,23 @@ msgstr "Ярлыки"
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups_browse
 #: view:wiki.groups:0
 msgid "Wiki Groups"
-msgstr ""
+msgstr "Wiki Groups"
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
 msgid "Modify By"
-msgstr ""
+msgstr "Modify By"
 
 #. module: wiki
 #: field:wiki.wiki,toc:0
 msgid "Table of Contents"
-msgstr ""
+msgstr "Table of Contents"
 
 #. module: wiki
 #: code:addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
 
 #. module: wiki
 #: wizard_button:wiki.create.menu,init,end:0
@@ -358,5 +370,5 @@ msgstr "Различие"
 #. module: wiki
 #: field:wiki.wiki,review:0
 msgid "Need Review"
-msgstr ""
+msgstr "Need Review"
 

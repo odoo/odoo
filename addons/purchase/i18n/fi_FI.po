@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:32:51+0000\n"
-"PO-Revision-Date: 2010-07-09 12:32:51+0000\n"
+"POT-Creation-Date: 2010-09-02 13:45:06+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,6 @@ msgstr "Vahvistettu ostotilaus"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Poikkeus laskussa"
 
@@ -129,7 +128,6 @@ msgstr "Hyväksy ostotilaus"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Hyväksytty"
 
@@ -221,6 +219,12 @@ msgid "Reference"
 msgstr "Viite"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr "Cannot delete Purchase Order(s) which are in %s State!"
+
+#. module: purchase
 #: rml:purchase.order:0
 msgid "TVA :"
 msgstr "ALV:"
@@ -273,7 +277,7 @@ msgstr "Tilausrivi"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
-msgstr ""
+msgstr "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
@@ -283,7 +287,6 @@ msgstr "Väärä tuotteen mittayksikkö!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Vahvistettu"
 
@@ -310,7 +313,6 @@ msgstr "Tarjouspyyntö"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Odottaa"
 
@@ -393,7 +395,6 @@ msgstr "Virheellinen toiminto!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Valmis"
 
@@ -401,11 +402,6 @@ msgstr "Valmis"
 #: field:purchase.order,pricelist_id:0
 msgid "Pricelist"
 msgstr "Hinnasto"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-msgid "Request for quotation is proposed by the system."
-msgstr "Tarjouspyyntö esitetään järjestelmän toimesta."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -425,7 +421,7 @@ msgstr "Ennakkoon luotu toimittajan lasku tilaukseen perustuen"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Product purchases"
-msgstr ""
+msgstr "Product purchases"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
@@ -454,7 +450,6 @@ msgstr "Hyväksy ostotilaus vahvistuksen jälkeen"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Poikkeus toimituksessa"
 
@@ -546,7 +541,7 @@ msgstr "Ostotilauksen rivi"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
-msgstr ""
+msgstr "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -575,10 +570,9 @@ msgid "Purchase order"
 msgstr "Ostotilaus"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+msgid "Request for quotation is proposed by the system."
+msgstr "Tarjouspyyntö esitetään järjestelmän toimesta."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -593,7 +587,7 @@ msgstr "Luo laskun pakkauslistasta"
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Date on which this document has been created."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -603,7 +597,7 @@ msgstr "Toimitus & laskutus"
 #. module: purchase
 #: field:purchase.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -669,7 +663,7 @@ msgstr "Yhteensä:"
 #. module: purchase
 #: constraint:product.pricelist.item:0
 msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
-msgstr ""
+msgstr "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -679,7 +673,7 @@ msgstr "Kun ostotilaus on hyväksytty, sille luodaan pakkauslista."
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr ""
+msgstr "History"
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -715,7 +709,7 @@ msgstr "Talouskanta"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "Request for Quotation N°"
 
 #. module: purchase
 #: field:purchase.order,invoice_id:0
@@ -733,7 +727,7 @@ msgstr "Peruuta"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Purchase Order Lines"
 
 #. module: purchase
 #: view:res.partner:0
@@ -827,7 +821,7 @@ msgstr "Ei kumppania!"
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Invoicing"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
@@ -890,7 +884,7 @@ msgstr "Tilausviitteesi"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Purchase Order Confirmation N°"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -964,5 +958,5 @@ msgstr "Kun ostotilaus on hyväksytty, siitä tulee toimittajan lasku."
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Stock Moves"
 

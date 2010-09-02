@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:23:53+0000\n"
-"PO-Revision-Date: 2010-07-09 12:23:53+0000\n"
+"POT-Creation-Date: 2010-09-02 13:35:58+0000\n"
+"PO-Revision-Date: 2010-09-02 13:35:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_planned:0
 msgid "Scheduled date if fixed"
-msgstr "Zakazani datum ako je fiskno"
+msgstr "Scheduled date if fixed"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -38,7 +38,7 @@ msgstr "Odaberite način plaćanja koji će biti primjenjen."
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: account_payment
 #: view:payment.line:0
@@ -75,6 +75,11 @@ msgid "Entries"
 msgstr "Unosi"
 
 #. module: account_payment
+#: rml:payment.order:0
+msgid "Used Account"
+msgstr "Used Account"
+
+#. module: account_payment
 #: wizard_field:populate_payment,init,duedate:0
 msgid "Due Date"
 msgstr "Datum dospijeća"
@@ -96,9 +101,9 @@ msgid "Amount"
 msgstr "Iznos"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Execution date:"
-msgstr "Datum izvršenja:"
+#: help:payment.mode,type:0
+msgid "Select the Payment Type for the Payment Mode."
+msgstr "Odaberite tip plaćanja za način plaćanja"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -117,6 +122,11 @@ msgid "New Payment Order"
 msgstr "Novi nalog za plaćanje"
 
 #. module: account_payment
+#: field:payment.order,total:0
+msgid "Total"
+msgstr "Ukupno"
+
+#. module: account_payment
 #: rml:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
@@ -132,6 +142,11 @@ msgstr "Nalozi za plaćanje"
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
 msgstr "Izravno"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Value date"
+msgstr "Value date"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
@@ -164,14 +179,19 @@ msgid "Payment lines"
 msgstr "Linije plaćanja"
 
 #. module: account_payment
-#: help:payment.order,date_planned:0
-msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr "Odaberite datum ako ste odabrali fiksni poželjni datum"
+#: rml:payment.order:0
+msgid "Execution Type"
+msgstr "Execution Type"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
 msgstr "Strukturiran"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Amount in currency"
+msgstr "Amount in currency"
 
 #. module: account_payment
 #: field:payment.order,state:0
@@ -210,7 +230,7 @@ msgstr "Odaberite opciju za nalog za plaćanje: \"Fiksno\" znači datum naveden 
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -236,7 +256,7 @@ msgstr "Ciljno konto"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Desitination Account"
-msgstr ""
+msgstr "Desitination Account"
 
 #. module: account_payment
 #: constraint:ir.ui.view:0
@@ -302,10 +322,11 @@ msgid "Mode of Payment"
 msgstr "Način plaćanja"
 
 #. module: account_payment
+#: rml:payment.order:0
 #: view:payment.type:0
 #: help:payment.type,name:0
 msgid "Payment Type"
-msgstr "Tip plaćanja"
+msgstr "Payment Type"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -326,7 +347,7 @@ msgstr "Nasljedna poruka komunikacije."
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "No partner defined on entry line"
-msgstr ""
+msgstr "No partner defined on entry line"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -336,7 +357,12 @@ msgstr "Adresa kupca naručitelja."
 #. module: account_payment
 #: wizard_field:populate_statement,init,date_select:0
 msgid "Select Date"
-msgstr ""
+msgstr "Select Date"
+
+#. module: account_payment
+#: help:payment.order,date_planned:0
+msgid "Select a date if you have chosen Preferred Date to be fixed."
+msgstr "Select a date if you have chosen Preferred Date to be fixed."
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_payment
@@ -355,15 +381,9 @@ msgid "Payment Lines"
 msgstr "Stavke plaćanja"
 
 #. module: account_payment
-#: rml:payment.order:0
 #: wizard_field:populate_statement,init,d_date:0
 msgid "Date"
-msgstr "Datum"
-
-#. module: account_payment
-#: rml:payment.order:0
-msgid "Reference:"
-msgstr "Referenca:"
+msgstr "Date"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -374,6 +394,11 @@ msgstr "Ova stavka će biti određena iz informacije o kupcu naručitelju."
 #: field:payment.line,date:0
 msgid "Payment Date"
 msgstr "Datum plaćanja"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Total:"
+msgstr "Total:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -389,7 +414,7 @@ msgstr "Datum Dospijeać"
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Fixed Date"
-msgstr ""
+msgstr "Fixed Date"
 
 #. module: account_payment
 #: help:payment.type,code:0
@@ -456,7 +481,7 @@ msgstr "Informacija"
 #. module: account_payment
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_pay_payment
@@ -488,7 +513,7 @@ msgstr "Pretraga po stavkama plaćanja"
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Current Date"
-msgstr ""
+msgstr "Current Date"
 
 #. module: account_payment
 #: field:payment.line,amount_currency:0
@@ -523,6 +548,7 @@ msgstr "Potvrdi plaćanja"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
+#: rml:payment.order:0
 msgid "Company Currency"
 msgstr "Valuta preduzeća"
 
@@ -543,6 +569,11 @@ msgid "Payment"
 msgstr "Plaćanje"
 
 #. module: account_payment
+#: rml:payment.order:0
+msgid "Payment Order / Payment"
+msgstr "Payment Order / Payment"
+
+#. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
 msgstr "Redak unosa"
@@ -550,7 +581,7 @@ msgstr "Redak unosa"
 #. module: account_payment
 #: help:payment.line,communication:0
 msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"
-msgstr ""
+msgstr "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -561,7 +592,7 @@ msgstr "Naziv"
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr ""
+msgstr "Ukupno potražuje"
 
 #. module: account_payment
 #: wizard_button:populate_payment,init,search:0
@@ -578,7 +609,7 @@ msgstr "Unos obavijesti"
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-msgstr ""
+msgstr "Partner '+ line.partner_id.name+ ' has no bank account defined"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
@@ -603,24 +634,19 @@ msgid "Payment type"
 msgstr "Tip plaćanja"
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr "Ukupno"
+#: rml:payment.order:0
+msgid "Invoice reference"
+msgstr "Invoice reference"
 
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Payment Order Date"
-msgstr ""
+msgstr "Payment Order Date"
 
 #. module: account_payment
 #: wizard_button:populate_statement,init,add:0
 msgid "_Add"
 msgstr "_Dodaj"
-
-#. module: account_payment
-#: help:payment.mode,type:0
-msgid "Select the Payment Type for the Payment Mode."
-msgstr "Odaberite tip plaćanja za način plaćanja"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_mode
@@ -646,5 +672,5 @@ msgstr "Dnevnik knjiženja"
 #. module: account_payment
 #: help:populate_statement,init,date_select:0
 msgid "The selected date will be used for statement lines"
-msgstr ""
+msgstr "The selected date will be used for statement lines"
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:32:00+0000\n"
-"PO-Revision-Date: 2010-07-09 12:32:00+0000\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -124,7 +124,7 @@ msgstr "Dokumendi kataloog"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -339,7 +339,17 @@ msgid "This is a complete document management system:\n"
 "    - After installing this module PDF's are not longer stored into the database, \n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 ""
-msgstr ""
+msgstr "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -468,7 +478,7 @@ msgstr "Nimi"
 #: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "Sirvi faile kasutades FTP-d"
+msgstr "Browse Files Using FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0

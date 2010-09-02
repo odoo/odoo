@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:26:15+0000\n"
-"PO-Revision-Date: 2010-07-09 12:26:15+0000\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,8 @@ msgstr ""
 #: help:base_report_creator.report.filter,expression:0
 msgid "Provide an expression for the field based on which you want to filter the records.\n"
 " e.g. res_partner.id=3"
-msgstr ""
+msgstr "Provide an expression for the field based on which you want to filter the records.\n"
+" e.g. res_partner.id=3"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_type:0
@@ -45,12 +46,12 @@ msgstr "图形模式"
 #: code:addons/base_report_creator/base_report_creator.py:0
 #, python-format
 msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
-msgstr ""
+msgstr "These is/are model(s) (%s) in selection which is/are not related to any other model"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Legend"
-msgstr ""
+msgstr "Legend"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -71,7 +72,7 @@ msgstr "设置过滤字段"
 #: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "UserError"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
@@ -121,7 +122,7 @@ msgstr "自定义报表"
 #: code:addons/base_report_creator/base_report_creator.py:0
 #, python-format
 msgid "No Related Models!!"
-msgstr ""
+msgstr "No Related Models!!"
 
 #. module: base_report_creator
 #: constraint:ir.actions.act_window:0
@@ -183,7 +184,7 @@ msgstr "报表创建菜单"
 #: selection:base_report_creator.report,view_type2:0
 #: selection:base_report_creator.report,view_type3:0
 msgid "Form"
-msgstr ""
+msgstr "Form"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type3:0
@@ -208,7 +209,7 @@ msgstr "开始日期"
 #: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
 #, python-format
 msgid "No Wizards available for this object!"
-msgstr ""
+msgstr "No Wizards available for this object!"
 
 #. module: base_report_creator
 #: constraint:ir.ui.view:0
@@ -235,7 +236,7 @@ msgstr "图方向"
 #. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Use %(uid)s to filter by the connected user"
-msgstr ""
+msgstr "Use %(uid)s to filter by the connected user"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -245,7 +246,7 @@ msgstr "授权组(留空为所有)"
 #. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Security"
-msgstr "安全"
+msgstr "安全设定"
 
 #. module: base_report_creator
 #: wizard_field:base_report_creator.report.menu.create,init,menu_name:0
@@ -278,7 +279,7 @@ msgstr "y轴"
 #: selection:base_report_creator.report,view_type2:0
 #: selection:base_report_creator.report,view_type3:0
 msgid "Calendar"
-msgstr "日程表"
+msgstr "日历"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type1:0
@@ -310,7 +311,7 @@ msgstr "状态"
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
 msgid "Vertical"
-msgstr "垂直线"
+msgstr "纵向"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,type:0
@@ -335,12 +336,12 @@ msgstr "有效"
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
 msgid "Horizontal"
-msgstr "水平线"
+msgstr "横向"
 
 #. module: base_report_creator
 #: field:base_report_creator.report.fields,group_method:0
 msgid "Grouping Method"
-msgstr "图形模板"
+msgstr "分组方式"
 
 #. module: base_report_creator
 #: field:base_report_creator.report.filter,condition:0
@@ -381,7 +382,7 @@ msgstr "打开报表"
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Grouped"
-msgstr "图形"
+msgstr "已分组"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -419,7 +420,7 @@ msgstr "字段"
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
 msgid "Unique Colors"
-msgstr ""
+msgstr "Unique Colors"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -446,17 +447,15 @@ msgid "This modules allows you to create any statistic\n"
 "the \"Dashboard\" menu.\n"
 ""
 msgstr "这模块允许你创建任何统计\n"
-"报告几个对象,它是一SQL查询生成器和浏览器\n"
-"和用户\n"
+"报告几个对象, 它是一SQL查询生成器和浏览器\n"
 "\n"
-"安装模块后,它在控制台菜单增加一个自定义的报表菜单在\n"
-"控制台 的 菜单\n"
+"安装模块后, 它在控制台菜单增加一个自定义的报表菜单\n"
 ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
 msgid "End Date"
-msgstr ""
+msgstr "End Date"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0
@@ -496,7 +495,7 @@ msgstr "值"
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_type:0
 msgid "Bar Chart"
-msgstr "条线图"
+msgstr "柱状图表"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_type2:0

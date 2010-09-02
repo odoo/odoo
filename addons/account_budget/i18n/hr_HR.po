@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:27:55+0000\n"
-"PO-Revision-Date: 2010-07-09 12:27:55+0000\n"
+"POT-Creation-Date: 2010-09-02 13:40:01+0000\n"
+"PO-Revision-Date: 2010-09-02 13:40:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr "Proračunska pozicija"
 #. module: account_budget
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
@@ -50,12 +50,12 @@ msgstr "Potvrdi"
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
-msgstr ""
+msgstr "Validate User"
 
 #. module: account_budget
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -66,7 +66,7 @@ msgstr "Potvrđeno"
 #: code:addons/account_budget/wizard/wizard_budget_report.py:0
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "Insufficient Data!"
 
 #. module: account_budget
 #: field:account.budget.post.dotation,period_id:0
@@ -101,7 +101,7 @@ msgstr "na"
 #. module: account_budget
 #: view:account.budget.post:0
 msgid "Dotations"
-msgstr ""
+msgstr "Dotations"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -156,7 +156,25 @@ msgid "This module allows accountants to manage analytic and crossovered budgets
 "    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.\n"
 "\n"
 ""
-msgstr ""
+msgstr "This module allows accountants to manage analytic and crossovered budgets.\n"
+"\n"
+"Once the Master Budgets and the Budgets defined (in Financial\n"
+"Management/Budgets/), the Project Managers can set the planned amount on each\n"
+"Analytic Account.\n"
+"\n"
+"The accountant has the possibility to see the total of amount planned for each\n"
+"Budget and Master Budget in order to ensure the total planned is not\n"
+"greater/lower than what he planned for this Budget/Master Budget. Each list of\n"
+"record can also be switched to a graphical view of it.\n"
+"\n"
+"Three reports are available:\n"
+"    1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+"\n"
+"    2. The second is a summary of the previous one, it only gives the spreading, for the selected Budgets, of the Analytic Accounts.\n"
+"\n"
+"    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.\n"
+"\n"
+""
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -180,7 +198,7 @@ msgstr "Analitički račun:"
 #: field:crossovered.budget.lines,practical_amount:0
 #: rml:crossovered.budget.report:0
 msgid "Practical Amount"
-msgstr ""
+msgstr "Practical Amount"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -212,7 +230,7 @@ msgstr "Planirani iznos"
 #: code:addons/account_budget/wizard/wizard_budget_report.py:0
 #, python-format
 msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
-msgstr ""
+msgstr "No Dotations or Master Budget Expenses Found on Budget %s!"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -266,7 +284,7 @@ msgstr "Završni datum"
 #. module: account_budget
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Invalid XML for View Architecture!"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,theoritical_amount:0
@@ -311,7 +329,7 @@ msgstr "Budžet"
 #: code:addons/account_budget/crossovered_budget.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: account_budget
 #: field:account.budget.post.dotation,amount:0
@@ -335,7 +353,7 @@ msgstr "Budžeti"
 #: code:addons/account_budget/crossovered_budget.py:0
 #, python-format
 msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
+msgstr "The General Budget '%s' has no Accounts!"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -346,12 +364,12 @@ msgstr "Otkazano"
 #: view:account.budget.post.dotation:0
 #: model:ir.model,name:account_budget.model_account_budget_post_dotation
 msgid "Budget Dotation"
-msgstr ""
+msgstr "Budget Dotation"
 
 #. module: account_budget
 #: view:account.budget.post.dotation:0
 msgid "Budget Dotations"
-msgstr ""
+msgstr "Budget Dotations"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -363,7 +381,7 @@ msgstr "Detalji budžetske stavke"
 #: field:crossovered.budget.lines,general_budget_id:0
 #: model:ir.model,name:account_budget.model_account_budget_post
 msgid "Budgetary Position"
-msgstr ""
+msgstr "Budgetary Position"
 
 #. module: account_budget
 #: wizard_field:account.budget.report,init,date1:0
@@ -379,7 +397,7 @@ msgstr "Početak razdoblja"
 #: model:ir.actions.wizard,name:account_budget.account_analytic_account_budget_report
 #: model:ir.actions.wizard,name:account_budget.wizard_crossovered_budget_menu
 msgid "Print Budgets"
-msgstr ""
+msgstr "Print Budgets"
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -408,7 +426,7 @@ msgstr "Ispis"
 #. module: account_budget
 #: field:account.budget.post,dotation_ids:0
 msgid "Spreading"
-msgstr ""
+msgstr "Spreading"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
@@ -443,12 +461,12 @@ msgstr "Širenje"
 #: view:account.budget.post:0
 #: field:account.budget.post,account_ids:0
 msgid "Accounts"
-msgstr ""
+msgstr "Accounts"
 
 #. module: account_budget
 #: model:ir.actions.report.xml,name:account_budget.account_budget
 msgid "Print Budget"
-msgstr ""
+msgstr "Print Budget"
 
 #. module: account_budget
 #: view:account.analytic.account:0

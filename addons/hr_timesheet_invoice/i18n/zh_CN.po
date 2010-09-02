@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:26:15+0000\n"
-"PO-Revision-Date: 2010-07-09 12:26:15+0000\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr "利润"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
 #, python-format
 msgid "Analytic account incomplete"
-msgstr ""
+msgstr "Analytic account incomplete"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.create,init:0
@@ -54,12 +54,12 @@ msgstr "可见的名称"
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,date1:0
 msgid "Start of period"
-msgstr "期初日期"
+msgstr "开始会计期间"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,price:0
 msgid "The cost of each work done will be displayed on the invoice. You probably don't want to check this."
-msgstr "每个工作的成本将显示在发票上.你可能不想检查它"
+msgstr "每个完成工作的成本将显示在发票上. 你可能不想核对它"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.report_analytical_profit
@@ -82,7 +82,7 @@ msgstr "显示时间在工作日志"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_draft_analytic_accounts
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_draft_analytic_accounts
 msgid "Draft Analytic Accounts"
-msgstr "辅助核算项目草稿"
+msgstr "辅助核算项草稿"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.final.invoice.create,init,time:0
@@ -93,33 +93,33 @@ msgstr "花费的时间"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_invoiced:0
 msgid "Invoiced Amount"
-msgstr "开发票金额"
+msgstr "已开票金额"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
 msgid "Check this field if you plan to automatically generate invoices based on the costs in this analytic account: timesheets, expenses, ...You can configure an automatic invoice rate on analytic accounts."
-msgstr "如果你计划自动生成发票基于成本在辅助核算项目:时间表、费用....选择这字段你能设定自动发票的辅助核算项目"
+msgstr "勾选此项, 如果你打算根据在辅助核算项目:时间表、费用....的花费自动生成发票. 你能设定辅助核算项的花费生成发票."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Partner incomplete"
-msgstr ""
+msgstr "Partner incomplete"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,name:0
 msgid "The detail of each work done will be displayed on the invoice"
-msgstr "每个工作的详情将显示在发票上"
+msgstr "每个完成工作的细节将显示在发票上"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init:0
 msgid "Select period"
-msgstr "销售周期"
+msgstr "选择会计期间"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Period to enddate"
-msgstr "周期的结束日期"
+msgstr "会计期间的结束日期"
 
 #. module: hr_timesheet_invoice
 #: wizard_button:hr.timesheet.invoice.create,init,create:0
@@ -130,23 +130,23 @@ msgstr "创建发票"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Analytic Account incomplete"
-msgstr ""
+msgstr "Analytic Account incomplete"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Period from startdate"
-msgstr "周期的开始日期"
+msgstr "会计期间的开始日期"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,time:0
 msgid "The time of each work done will be displayed on the invoice"
-msgstr "每个工作完成的时间将显示在发票上"
+msgstr "每个完成工作的时间将显示在发票上"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.final.invoice.create,init,balance_product:0
@@ -166,13 +166,13 @@ msgstr "你想看详情每一发票行?"
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Date or Code"
-msgstr "日期代码"
+msgstr "日期或者代码"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/account_analytic_profit.py:0
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Data Insufficient!"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:account.analytic.profit,init:0
@@ -194,13 +194,13 @@ msgstr "打印"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_open_analytic_accounts
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_open_analytic_accounts
 msgid "Open Analytic Accounts"
-msgstr "待处理辅助核算项目"
+msgstr "待处理辅助核算项"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.create,init:0
@@ -211,12 +211,12 @@ msgstr "科目过滤"
 #: wizard_field:hr.timesheet.final.invoice.create,init,name:0
 #: wizard_field:hr.timesheet.invoice.create,init,name:0
 msgid "Name of entry"
-msgstr "凭证名称"
+msgstr "条目名称"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.create,init:0
 msgid "Invoice on analytic entries"
-msgstr ""
+msgstr "Invoice on analytic entries"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -226,12 +226,12 @@ msgstr "销售价格表"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,name:0
 msgid "Display detail of work in the invoice line."
-msgstr "显示发票行的工作详情"
+msgstr "显示发票行的工作细节"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "J.C. or Move name"
-msgstr "成本分类账或凭证名称"
+msgstr "成本分录集合或凭证名称"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -254,7 +254,8 @@ msgstr "发票类型"
 #, python-format
 msgid "Please fill in the partner and pricelist field '\n"
 "                        'in the analytic account:\n%s"
-msgstr ""
+msgstr "Please fill in the partner and pricelist field '\n"
+"                        'in the analytic account:\n%s"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -265,13 +266,13 @@ msgstr "理论"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced_my
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree_invoiced_my
 msgid "My Uninvoiced Entries"
-msgstr "我未开票项目"
+msgstr "我未开票的凭证"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
 #, python-format
 msgid "You can not modify an invoiced analytic line!"
-msgstr ""
+msgstr "You can not modify an invoiced analytic line!"
 
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,factor:0
@@ -281,13 +282,13 @@ msgstr "折扣%"
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Employee or Journal Name"
-msgstr "员工或分类帐名称"
+msgstr "员工或记录集合名称"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "Invoices"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -297,13 +298,13 @@ msgstr "货币"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,product:0
 msgid "Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost."
-msgstr "如果你想强制使用特定的产品只有完成这字段如果留空使用实际产品来自成本"
+msgstr "如果你想强制使用特定的产品只有填入该字段.  留空使用来自成本的实际产品"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "The analytic entry \"%s\" is already invoiced!"
-msgstr ""
+msgstr "The analytic entry \"%s\" is already invoiced!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced
@@ -344,7 +345,7 @@ msgstr "状态"
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Period to"
-msgstr "周期到"
+msgstr "会计期间到"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,balance_product:0
@@ -361,7 +362,7 @@ msgstr "成本分类账"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.final.invoice.create,init,date:0
 msgid "Display date in the history of works"
-msgstr "显示这工作的日志日期"
+msgstr "在这工作日志显示日期"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.final.invoice.create,init,date:0
@@ -373,7 +374,7 @@ msgstr "日期"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Please fill in the Address field in the Partner: %s."
-msgstr ""
+msgstr "Please fill in the Address field in the Partner: %s."
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -383,7 +384,7 @@ msgstr "有效"
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.create,init,accounts:0
 msgid "Analytic Accounts"
-msgstr "辅助核算项目"
+msgstr "辅助核算项"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -399,17 +400,17 @@ msgstr "最大开票价"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,date2:0
 msgid "End of period"
-msgstr "周期结束日期"
+msgstr "会计期间结束"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Balance"
-msgstr "结余"
+msgstr "差额"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
@@ -434,7 +435,7 @@ msgstr "你想显示这工作发票的详细资料"
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Period from"
-msgstr "周期从"
+msgstr "会计期间从"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,invoice_id:0
@@ -453,13 +454,13 @@ msgstr "取消"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree
 msgid "Entries to invoice"
-msgstr "凭证开发票"
+msgstr "分录开发票"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
 #, python-format
 msgid "Balance product needed"
-msgstr ""
+msgstr "Balance product needed"
 
 #. module: hr_timesheet_invoice
 #: constraint:ir.model:0
@@ -485,12 +486,12 @@ msgstr "每个工作实际日期将显示在发票上"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "At least one line has no product !"
-msgstr ""
+msgstr "At least one line has no product !"
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.create,init:0
 msgid "Choose accounts you want to invoice"
-msgstr "选择你想要开发票的科目"
+msgstr "选择你想要开发票的帐目"
 
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.create,init,product:0
@@ -500,7 +501,7 @@ msgstr "产品"
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,name:0
@@ -510,19 +511,19 @@ msgstr "内部名称"
 #. module: hr_timesheet_invoice
 #: wizard_field:account.analytic.profit,init,journal_ids:0
 msgid "Journal"
-msgstr "分类帐"
+msgstr "记录集合"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/account_analytic_profit.py:0
 #, python-format
 msgid "No Records Found for Report!"
-msgstr ""
+msgstr "No Records Found for Report!"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s"
-msgstr ""
+msgstr "Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -532,7 +533,7 @@ msgstr "单位"
 #. module: hr_timesheet_invoice
 #: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
 msgid "Invoice on analytic lines"
-msgstr "辅助核算的发票"
+msgstr "辅助核算明细的发票"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_pending_analytic_accounts
@@ -559,7 +560,7 @@ msgstr "发票类型"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Invoicing"
-msgstr "计价折扣"
+msgstr "开发票"
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -576,7 +577,7 @@ msgstr "未关闭的可开票项目"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
 #, python-format
 msgid "Please fill a Balance product in the wizard"
-msgstr ""
+msgstr "Please fill a Balance product in the wizard"
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0

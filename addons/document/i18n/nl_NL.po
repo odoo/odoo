@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:31:11+0000\n"
-"PO-Revision-Date: 2010-07-09 12:31:11+0000\n"
+"POT-Creation-Date: 2010-09-02 13:43:23+0000\n"
+"PO-Revision-Date: 2010-09-02 13:43:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -87,7 +87,7 @@ msgstr "Titel van bron"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fout!"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
@@ -124,7 +124,7 @@ msgstr "Documentenmap"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "Validatiefout"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -203,7 +203,7 @@ msgstr "Soort map"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "You do not permissions to write on the server side."
-msgstr ""
+msgstr "U heeft geen toestemming om op de server-zijde te schrijven."
 
 #. module: document
 #: field:document.directory.content,report_id:0
@@ -214,7 +214,7 @@ msgstr "Overzicht"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Permission Denied !"
-msgstr ""
+msgstr "Toestemming geweigerd!"
 
 #. module: document
 #: constraint:ir.ui.view:0
@@ -339,7 +339,17 @@ msgid "This is a complete document management system:\n"
 "    - After installing this module PDF's are not longer stored into the database, \n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 ""
-msgstr ""
+msgstr "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -468,7 +478,7 @@ msgstr "Naam"
 #: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "Blader door bestanden met FTP"
+msgstr "Browse Files Using FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -484,7 +494,7 @@ msgstr "Naam inhoud"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "File name must be unique!"
-msgstr ""
+msgstr "Bestandsnaam moet uniek zijn!"
 
 #. module: document
 #: field:document.directory,ressource_tree:0

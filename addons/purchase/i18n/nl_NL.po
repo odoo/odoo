@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:31:11+0000\n"
-"PO-Revision-Date: 2010-07-09 12:31:11+0000\n"
+"POT-Creation-Date: 2010-09-02 13:43:23+0000\n"
+"PO-Revision-Date: 2010-09-02 13:43:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,6 @@ msgstr "Goedgekeurde inkoop"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Factuur uitzondering"
 
@@ -129,7 +128,6 @@ msgstr "Goedgekeurde inkoopfacturen"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Goedgekeurd"
 
@@ -221,6 +219,12 @@ msgid "Reference"
 msgstr "Referentie"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr "Cannot delete Purchase Order(s) which are in %s State!"
+
+#. module: purchase
 #: rml:purchase.order:0
 msgid "TVA :"
 msgstr "BTW"
@@ -271,7 +275,7 @@ msgstr "Orderregel"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
-msgstr ""
+msgstr "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
@@ -281,7 +285,6 @@ msgstr "Verkeerde product meeteenheid!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Bevestigd"
 
@@ -308,7 +311,6 @@ msgstr "Offerteverzoek"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Wachten"
 
@@ -391,7 +393,6 @@ msgstr "Foutieve handeling!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Gereed"
 
@@ -399,11 +400,6 @@ msgstr "Gereed"
 #: field:purchase.order,pricelist_id:0
 msgid "Pricelist"
 msgstr "Prijslijst"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-msgid "Request for quotation is proposed by the system."
-msgstr "Inkoopaanvraag wordt voorgesteld door het systeem"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -423,7 +419,7 @@ msgstr "Concept-inkoopfactuur om ontvangsten te controleren op basis van order."
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Product purchases"
-msgstr ""
+msgstr "Product purchases"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
@@ -452,7 +448,6 @@ msgstr "Keur inkooporder goed na bevestiging"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Verzenduitzondering"
 
@@ -544,7 +539,7 @@ msgstr "Inkooporderregel"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
-msgstr ""
+msgstr "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -573,10 +568,9 @@ msgid "Purchase order"
 msgstr "Inkooporder"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+msgid "Request for quotation is proposed by the system."
+msgstr "Inkoopaanvraag wordt voorgesteld door het systeem"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -591,7 +585,7 @@ msgstr "Maak factuur op basis van de pakbonnen"
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Datum waarop dit document gemaakt is."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -601,7 +595,7 @@ msgstr "Levering & Facturen"
 #. module: purchase
 #: field:purchase.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -667,7 +661,7 @@ msgstr "Totaal :"
 #. module: purchase
 #: constraint:product.pricelist.item:0
 msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
-msgstr ""
+msgstr "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -677,7 +671,7 @@ msgstr "Wanneer de inkoop is goedgekeurd, wordt de pakbon gecreëerd."
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr ""
+msgstr "Historie"
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -713,7 +707,7 @@ msgstr "Fiscale situatie"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "Verzoek om offerte nr."
 
 #. module: purchase
 #: field:purchase.order,invoice_id:0
@@ -731,7 +725,7 @@ msgstr "Annuleer"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Purchase Order Lines"
 
 #. module: purchase
 #: view:res.partner:0
@@ -820,12 +814,12 @@ msgstr "Product"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "No Partner!"
-msgstr ""
+msgstr "Geen relatie geselecteerd!"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Invoicing"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
@@ -878,7 +872,7 @@ msgstr "Inkoopfactuur"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You must first cancel all packing attached to this purchase order."
-msgstr ""
+msgstr "Alle verzendingen gedaan voor deze inkooporder moeten eerst worden geannuleerd."
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -888,7 +882,7 @@ msgstr "Eigen orderreferentie"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Bestelopdracht bevestigingsnr."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -962,5 +956,5 @@ msgstr "Na goedkeuring inkooporder, de concept-inkoopfactuur wordt aangemaakt."
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Goederenstromen"
 

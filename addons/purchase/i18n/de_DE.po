@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:35:22+0000\n"
-"PO-Revision-Date: 2010-07-09 12:35:22+0000\n"
+"POT-Creation-Date: 2010-09-02 13:47:43+0000\n"
+"PO-Revision-Date: 2010-09-02 13:47:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,6 @@ msgstr "Auftragsannahme Lieferant"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Invoice Exception"
 msgstr "Rechnungsstellung Fehler"
 
@@ -129,7 +128,6 @@ msgstr "Annahme Bestellung (durch Lieferant)"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Approved"
 msgstr "Akzeptiert"
 
@@ -221,6 +219,12 @@ msgid "Reference"
 msgstr "Referenz"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr "Cannot delete Purchase Order(s) which are in %s State!"
+
+#. module: purchase
 #: rml:purchase.order:0
 msgid "TVA :"
 msgstr "USt."
@@ -273,7 +277,7 @@ msgstr "Auftragszeile"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
-msgstr ""
+msgstr "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
@@ -283,7 +287,6 @@ msgstr "Falsche Mengeneinheit!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Confirmed"
 msgstr "Bestätigt"
 
@@ -310,7 +313,6 @@ msgstr "Angebotsanfrage"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Waiting"
 msgstr "Warteliste"
 
@@ -393,7 +395,6 @@ msgstr "Fehlerhafte Aktion"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Done"
 msgstr "Erledigt"
 
@@ -401,11 +402,6 @@ msgstr "Erledigt"
 #: field:purchase.order,pricelist_id:0
 msgid "Pricelist"
 msgstr "Preisliste"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-msgid "Request for quotation is proposed by the system."
-msgstr "Angebotsanfragen werden vom System bereitgestellt"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -425,7 +421,7 @@ msgstr "Vorab Eingangsrechnung zur Wareneingangskontrolle"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Product purchases"
-msgstr ""
+msgstr "Product purchases"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
@@ -454,7 +450,6 @@ msgstr "Bestätige Beschaffungsvorgänge nach Auftragsannahme (Lieferant)."
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
 msgid "Shipping Exception"
 msgstr "Versand Fehlerliste"
 
@@ -546,7 +541,7 @@ msgstr "Einkaufspositionen"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
-msgstr ""
+msgstr "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -575,10 +570,9 @@ msgid "Purchase order"
 msgstr "Beschaffungsauftrag"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+msgid "Request for quotation is proposed by the system."
+msgstr "Angebotsanfragen werden vom System bereitgestellt"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -593,7 +587,7 @@ msgstr "Erzeuge Rechnung aus Packauftrag"
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Erzeugungsdatum des Dokuments"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -603,7 +597,7 @@ msgstr "Auslieferung & Rechnungen"
 #. module: purchase
 #: field:purchase.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -669,7 +663,7 @@ msgstr "Summe:"
 #. module: purchase
 #: constraint:product.pricelist.item:0
 msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
-msgstr ""
+msgstr "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -679,7 +673,7 @@ msgstr "Falls Beschaffungsauftrag bestätigt wurde wird ein Packauftrag erzeugt 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr ""
+msgstr "Verlauf"
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -705,7 +699,7 @@ msgstr "Standard Preislisten Version"
 #: rml:purchase.order:0
 #: field:purchase.order.line,price_unit:0
 msgid "Unit Price"
-msgstr "Preis/UoM"
+msgstr "Preis/ME"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -715,7 +709,7 @@ msgstr "Steuerliche Position"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "Anfrage für Angebots Nr"
 
 #. module: purchase
 #: field:purchase.order,invoice_id:0
@@ -733,7 +727,7 @@ msgstr "Abbrechen"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Purchase Order Lines"
 
 #. module: purchase
 #: view:res.partner:0
@@ -827,7 +821,7 @@ msgstr "Kein Partner!"
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Invoicing"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
@@ -853,7 +847,7 @@ msgstr "Bestätige Beschaffungsauftrag"
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product UOM"
-msgstr "Produkt UoM"
+msgstr "Produkt ME"
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -890,7 +884,7 @@ msgstr "Ihre Referenz"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Lieferantenbestellung Bestätigungs Nr"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -964,5 +958,5 @@ msgstr "Nach Bestätigung des Beschaffungsauftrag wird der Vorgang unter 'Rechnu
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Lagerbuchungen"
 

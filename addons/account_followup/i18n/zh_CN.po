@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:26:15+0000\n"
-"PO-Revision-Date: 2010-07-09 12:26:15+0000\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: view:res.company:0
 #: field:res.company,follow_up_msg:0
 msgid "Follow-up Message"
-msgstr ""
+msgstr "Follow-up Message"
 
 #. module: account_followup
 #: constraint:ir.actions.act_window:0
@@ -50,7 +50,7 @@ msgstr "跟进条件"
 #: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "Legend"
-msgstr "说明"
+msgstr "图表"
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,summary,end:0
@@ -115,7 +115,7 @@ msgstr "业务伙伴"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Date :"
-msgstr "打印日期:"
+msgstr "日期:"
 
 #. module: account_followup
 #: wizard_field:account_followup.followup.print.all,next,partner_ids:0
@@ -137,7 +137,7 @@ msgstr "月末"
 #: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(user_signature)s: User name"
-msgstr "%(user_signature)s:用户名 %(user_signature)"
+msgstr "%(user_signature)s：用户名"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -152,7 +152,7 @@ msgstr "科目类型"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Ref"
-msgstr "参考"
+msgstr "关联单号"
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
@@ -173,7 +173,7 @@ msgstr "选择业务伙伴"
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
-msgstr "跟进期限"
+msgstr "跟进等级"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
@@ -188,7 +188,7 @@ msgstr "无效XML视图结构!"
 #. module: account_followup
 #: wizard_field:account_followup.followup.print.all,next,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr ""
+msgstr "Send Email in Partner Language"
 
 #. module: account_followup
 #: wizard_field:account_followup.followup.print.all,init,followup_id:0
@@ -225,13 +225,13 @@ msgstr "跟进"
 #. module: account_followup
 #: help:account_followup.followup.print.all,next,partner_lang:0
 msgid "Do not change message text, if you want to send email in partner language, or configre from company"
-msgstr ""
+msgstr "Do not change message text, if you want to send email in partner language, or configre from company"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/wizard_followup_print.py:0
 #, python-format
 msgid "All E-mails have been successfully sent to Partners:.\n\n"
-msgstr ""
+msgstr "All E-mails have been successfully sent to Partners:.\n\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
@@ -294,7 +294,15 @@ msgid "\n"
 "\n"
 "Best Regards,\n"
 "			"
-msgstr ""
+msgstr "\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Exception made if there was a mistake of ours, it seems that the following amount staid unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"\n"
+"Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
+"			"
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,init:0
@@ -325,7 +333,7 @@ msgstr "跟进明细"
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr "当前公司:%(company_currency)s"
+msgstr "当前用户公司:%(company_currency)s"
 
 #. module: account_followup
 #: field:account_followup.stat,balance:0
@@ -351,7 +359,7 @@ msgstr "跟进报表"
 #: code:addons/account_followup/wizard/wizard_followup_print.py:0
 #, python-format
 msgid "E-Mail not sent to following Partners, Email not available !\n\n"
-msgstr ""
+msgstr "E-Mail not sent to following Partners, Email not available !\n\n"
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,init,end:0
@@ -368,7 +376,7 @@ msgstr "跟进明细"
 #: code:addons/account_followup/wizard/wizard_followup_print.py:0
 #, python-format
 msgid "\n\nE-Mail sent to following Partners successfully. !\n\n"
-msgstr ""
+msgstr "\n\nE-Mail sent to following Partners successfully. !\n\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -385,13 +393,25 @@ msgid "\n"
 "\n"
 "Best Regards,\n"
 "			"
-msgstr ""
+msgstr "\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Despite several reminders, your account is still not settled.\n"
+"\n"
+"Unless full payment is made in next 8 days , then legal action for the recovery of the debt, will be taken without further notice.\n"
+"\n"
+"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
+"\n"
+"In case of any queries concerning this matter, do not hesitate to contact our accounting department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
+"			"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 #: model:ir.ui.menu,name:account_followup.menu_account_move_open_unreconcile_payable
 msgid "All payable entries"
-msgstr "所有应付款凭证"
+msgstr "所有应付款"
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
@@ -425,7 +445,7 @@ msgstr "业务伙伴凭证"
 #: view:account_followup.followup.line:0
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(company_name)s: User's Company name"
-msgstr "公司名称:%(company_currency)s"
+msgstr "用户公司名称:%(company_currency)s"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -441,7 +461,7 @@ msgstr "首先"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
+msgstr "Li."
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -451,7 +471,7 @@ msgstr "明细"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Maturity"
-msgstr "到期"
+msgstr "到期日期"
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,init,next:0
@@ -466,7 +486,7 @@ msgstr "会计跟进管理"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr "客户科目报表"
+msgstr "文档: 客户科目对帐单"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -489,7 +509,20 @@ msgid "\n"
 "\n"
 "Best Regards,\n"
 "			"
-msgstr ""
+msgstr "\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
+"\n"
+"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the next 8 days\n"
+"\n"
+"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department at (+32).10.68.94.39. so that we can resolve the matter quickly.\n"
+"\n"
+"Details of due payments is printed below.\n"
+"\n"
+"Best Regards,\n"
+"			"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -499,7 +532,7 @@ msgstr "序列"
 #. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Customer Ref :"
-msgstr "客户参考:"
+msgstr "关联客户:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0

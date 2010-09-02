@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:45:51+0000\n"
-"PO-Revision-Date: 2010-07-09 12:45:51+0000\n"
+"POT-Creation-Date: 2010-09-02 13:58:34+0000\n"
+"PO-Revision-Date: 2010-09-02 13:58:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,7 +40,7 @@ msgstr "Autor"
 #: model:ir.actions.wizard,name:wiki.wizard_open_page
 #, python-format
 msgid "Open Page"
-msgstr "Otvoriť stránku"
+msgstr "Open Page"
 
 #. module: wiki
 #: field:wiki.groups.link,action_id:0
@@ -112,6 +112,12 @@ msgid "Wiki Template"
 msgstr "Wiki šablóna"
 
 #. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no chnages in revisions"
+msgstr "There are no chnages in revisions"
+
+#. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
 msgid "Document Management - Wiki"
 msgstr "Správa dokumentov - Wiki"
@@ -134,12 +140,18 @@ msgstr "Sekcia"
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "History Differance"
-msgstr ""
+msgstr "History Differance"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,page:0
 msgid "Group Home Page"
-msgstr ""
+msgstr "Group Home Page"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: wiki
 #: field:wiki.wiki,write_uid:0
@@ -154,7 +166,7 @@ msgstr "Rozdiely"
 #. module: wiki
 #: help:wiki.wiki,section:0
 msgid "Use page section code like 1.2.1"
-msgstr ""
+msgstr "Use page section code like 1.2.1"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -164,7 +176,7 @@ msgstr "Šablóna stránky"
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document2
 msgid "Document Management"
-msgstr ""
+msgstr "Document Management"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -174,7 +186,7 @@ msgstr "Dátum"
 #. module: wiki
 #: wizard_view:wiki.make.index,init:0
 msgid "Want to create a Index on Selected Pages ? "
-msgstr ""
+msgstr "Want to create a Index on Selected Pages ? "
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -191,7 +203,7 @@ msgstr "Stránky"
 #: code:addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "You need to select minimum 1 or maximum 2 history revision!"
-msgstr ""
+msgstr "You need to select minimum 1 or maximum 2 history revision!"
 
 #. module: wiki
 #: constraint:ir.ui.view:0
@@ -245,7 +257,7 @@ msgstr "Dátum vytvorenia"
 #: model:ir.actions.act_window,name:wiki.action_history
 #: model:ir.ui.menu,name:wiki.menu_action_history
 msgid "All Page Histories"
-msgstr ""
+msgstr "All Page Histories"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
@@ -266,7 +278,7 @@ msgstr "Wiki Id"
 #: code:addons/wiki/wizard/open_page.py:0
 #, python-format
 msgid "No action found"
-msgstr ""
+msgstr "No action found"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_name:0
@@ -342,7 +354,7 @@ msgstr "Obsah"
 #: code:addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
 
 #. module: wiki
 #: wizard_button:wiki.create.menu,init,end:0

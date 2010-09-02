@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:44:05+0000\n"
-"PO-Revision-Date: 2010-07-09 12:44:05+0000\n"
+"POT-Creation-Date: 2010-09-02 13:56:45+0000\n"
+"PO-Revision-Date: 2010-09-02 13:56:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_planned:0
 msgid "Scheduled date if fixed"
-msgstr "Data programată, dacă este stabilită"
+msgstr "Scheduled date if fixed"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -38,7 +38,7 @@ msgstr "Selectare modalitate de plată care va fi aplicată"
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: account_payment
 #: view:payment.line:0
@@ -75,6 +75,11 @@ msgid "Entries"
 msgstr "Înregistrări"
 
 #. module: account_payment
+#: rml:payment.order:0
+msgid "Used Account"
+msgstr "Used Account"
+
+#. module: account_payment
 #: wizard_field:populate_payment,init,duedate:0
 msgid "Due Date"
 msgstr "Data scadenţei"
@@ -96,9 +101,9 @@ msgid "Amount"
 msgstr "Sumă"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Execution date:"
-msgstr "Data efectuării"
+#: help:payment.mode,type:0
+msgid "Select the Payment Type for the Payment Mode."
+msgstr "Selectare tip plată corespunzator pentru mod de plată"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -117,6 +122,11 @@ msgid "New Payment Order"
 msgstr "Ordin de plată nou"
 
 #. module: account_payment
+#: field:payment.order,total:0
+msgid "Total"
+msgstr "Total"
+
+#. module: account_payment
 #: rml:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
@@ -132,6 +142,11 @@ msgstr "Ordine de plată"
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
 msgstr "Direct"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Value date"
+msgstr "Value date"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
@@ -164,14 +179,19 @@ msgid "Payment lines"
 msgstr "Linii plată"
 
 #. module: account_payment
-#: help:payment.order,date_planned:0
-msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr "Selectează o dată dacă ai ales să programezi plată"
+#: rml:payment.order:0
+msgid "Execution Type"
+msgstr "Execution Type"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
 msgstr "Structurat"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Amount in currency"
+msgstr "Amount in currency"
 
 #. module: account_payment
 #: field:payment.order,state:0
@@ -210,7 +230,7 @@ msgstr "Alege o opţiune pentru ordinul de plată: 'Fix' înseamnă specificare 
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -241,7 +261,7 @@ msgstr "Cont destinaţie"
 #. module: account_payment
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Invalid XML for View Architecture!"
 
 #. module: account_payment
 #: wizard_button:populate_payment,init,end:0
@@ -302,10 +322,11 @@ msgid "Mode of Payment"
 msgstr "Mod de plată"
 
 #. module: account_payment
+#: rml:payment.order:0
 #: view:payment.type:0
 #: help:payment.type,name:0
 msgid "Payment Type"
-msgstr "Tip plată"
+msgstr "Payment Type"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -326,7 +347,7 @@ msgstr "Mesajul următor al dialogului"
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "No partner defined on entry line"
-msgstr ""
+msgstr "No partner defined on entry line"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -336,7 +357,12 @@ msgstr "Adresa clientului care a făcut comanda"
 #. module: account_payment
 #: wizard_field:populate_statement,init,date_select:0
 msgid "Select Date"
-msgstr ""
+msgstr "Select Date"
+
+#. module: account_payment
+#: help:payment.order,date_planned:0
+msgid "Select a date if you have chosen Preferred Date to be fixed."
+msgstr "Select a date if you have chosen Preferred Date to be fixed."
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_payment
@@ -355,15 +381,9 @@ msgid "Payment Lines"
 msgstr "Linii plată"
 
 #. module: account_payment
-#: rml:payment.order:0
 #: wizard_field:populate_statement,init,d_date:0
 msgid "Date"
-msgstr "Dată"
-
-#. module: account_payment
-#: rml:payment.order:0
-msgid "Reference:"
-msgstr "Referință:"
+msgstr "Date"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -374,6 +394,11 @@ msgstr "Această înregistrare va fi folosită ca referinţă pentru informaţii
 #: field:payment.line,date:0
 msgid "Payment Date"
 msgstr "Data plăţii"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Total:"
+msgstr "Total:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -389,7 +414,7 @@ msgstr "Data scadentă"
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Fixed Date"
-msgstr ""
+msgstr "Fixed Date"
 
 #. module: account_payment
 #: help:payment.type,code:0
@@ -456,7 +481,7 @@ msgstr "Informaţii"
 #. module: account_payment
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_pay_payment
@@ -488,7 +513,7 @@ msgstr "Căutare linii plată"
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Current Date"
-msgstr ""
+msgstr "Current Date"
 
 #. module: account_payment
 #: field:payment.line,amount_currency:0
@@ -523,6 +548,7 @@ msgstr "Confirmare plăţi"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
+#: rml:payment.order:0
 msgid "Company Currency"
 msgstr "Monedă companie"
 
@@ -541,6 +567,11 @@ msgstr "Linie plată"
 #: view:payment.order:0
 msgid "Payment"
 msgstr "Plată"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Payment Order / Payment"
+msgstr "Payment Order / Payment"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -578,7 +609,7 @@ msgstr "Informaţii înregistrare"
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-msgstr ""
+msgstr "Partner '+ line.partner_id.name+ ' has no bank account defined"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
@@ -603,24 +634,19 @@ msgid "Payment type"
 msgstr "Tip plată"
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr "Total"
+#: rml:payment.order:0
+msgid "Invoice reference"
+msgstr "Invoice reference"
 
 #. module: account_payment
 #: selection:populate_statement,init,date_select:0
 msgid "Payment Order Date"
-msgstr ""
+msgstr "Payment Order Date"
 
 #. module: account_payment
 #: wizard_button:populate_statement,init,add:0
 msgid "_Add"
 msgstr "_Adăugare"
-
-#. module: account_payment
-#: help:payment.mode,type:0
-msgid "Select the Payment Type for the Payment Mode."
-msgstr "Selectare tip plată corespunzator pentru mod de plată"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_mode
@@ -646,5 +672,5 @@ msgstr "Jurnal"
 #. module: account_payment
 #: help:populate_statement,init,date_select:0
 msgid "The selected date will be used for statement lines"
-msgstr ""
+msgstr "The selected date will be used for statement lines"
 

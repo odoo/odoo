@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:33:41+0000\n"
-"PO-Revision-Date: 2010-07-09 12:33:41+0000\n"
+"POT-Creation-Date: 2010-09-02 13:45:58+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr "Sélectionnez un objet ici et open ERP créera un répertoire pour chaqu
 #. module: document
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -87,7 +87,7 @@ msgstr "Titre de la Ressource"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
@@ -124,7 +124,7 @@ msgstr "Répertoire du Document"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -172,12 +172,12 @@ msgstr "Le nom du répertoire doit être unique!"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid "Check this if you want to use the same tree structure as the object selected in the system."
-msgstr ""
+msgstr "Check this if you want to use the same tree structure as the object selected in the system."
 
 #. module: document
 #: help:document.directory,domain:0
 msgid "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
+msgstr "Use a domain if you want to apply an automatic filter on visible resources."
 
 #. module: document
 #: field:document.configuration.wizard,host:0
@@ -203,7 +203,7 @@ msgstr "Type de Répertoire"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "You do not permissions to write on the server side."
-msgstr ""
+msgstr "You do not permissions to write on the server side."
 
 #. module: document
 #: field:document.directory.content,report_id:0
@@ -214,7 +214,7 @@ msgstr "Rapport"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Permission Denied !"
-msgstr ""
+msgstr "Permission Denied !"
 
 #. module: document
 #: constraint:ir.ui.view:0
@@ -309,7 +309,7 @@ msgstr "Configurer le Répertoire"
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
 msgid "This wizard will configure the URL of the server of the document management system."
-msgstr ""
+msgstr "This wizard will configure the URL of the server of the document management system."
 
 #. module: document
 #: view:ir.attachment:0
@@ -339,7 +339,17 @@ msgid "This is a complete document management system:\n"
 "    - After installing this module PDF's are not longer stored into the database, \n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 ""
-msgstr ""
+msgstr "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -381,7 +391,7 @@ msgstr "Base de données"
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
 msgid "Integrated Document Management System"
-msgstr ""
+msgstr "Integrated Document Management System"
 
 #. module: document
 #: view:ir.attachment:0
@@ -421,12 +431,12 @@ msgstr "Annuler"
 #. module: document
 #: field:document.directory,child_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Children"
 
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "Resource ID"
 
 #. module: document
 #: constraint:ir.model:0
@@ -441,7 +451,7 @@ msgstr "Cochez cette case si vous souhaitez que le nom du fichier commence par l
 #. module: document
 #: selection:document.directory,type:0
 msgid "Other Resources"
-msgstr ""
+msgstr "Other Resources"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -468,7 +478,7 @@ msgstr "Nom"
 #: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "Parcourir les fichiers via FTP"
+msgstr "Browse Files Using FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -484,7 +494,7 @@ msgstr "Nom du Contenu"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "File name must be unique!"
-msgstr ""
+msgstr "File name must be unique!"
 
 #. module: document
 #: field:document.directory,ressource_tree:0

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"POT-Creation-Date: 2010-07-09 12:53+0000\n"
 "PO-Revision-Date: 2009-10-18 06:57+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-08 16:57+0000\n"
+"X-Launchpad-Export-Date: 2010-09-02 11:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -86,11 +86,6 @@ msgid "Bids line"
 msgstr "Γραμμή προσφορών"
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Deposit Form"
-msgstr "Φόρμα κατάθεσης"
-
-#. module: auction
 #: rml:auction.bids:0
 #: view:auction.lots:0
 #: field:auction.lots,ach_uid:0
@@ -159,11 +154,6 @@ msgid "Mark as taken away"
 msgstr "Σημαδέψτε καθώς αφαιρείται"
 
 #. module: auction
-#: xsl:report.auction.seller.list:0
-msgid "Inv."
-msgstr "Τιμ."
-
-#. module: auction
 #: field:auction.deposit.cost,amount:0
 msgid "Amount"
 msgstr "Ποσό"
@@ -175,19 +165,9 @@ msgid "Deposit border"
 msgstr "Όριο κατάθεσης"
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "VAT"
-msgstr "ΦΠΑ"
-
-#. module: auction
 #: view:auction.lots:0
 msgid "Statements"
 msgstr "Καταστάσεις"
-
-#. module: auction
-#: xsl:flagey.huissier:0
-msgid "Adjudication"
-msgstr "Δικαστική απόφαση"
 
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
@@ -490,9 +470,9 @@ msgid "Object Description"
 msgstr "Περιγραφή αντικειμένου"
 
 #. module: auction
-#: selection:auction.deposit,method:0
-msgid "Contact the Seller"
-msgstr "Επικοινωνήστε με τον πωλητή"
+#: field:auction.lots,artist2_id:0
+msgid "Artist/Author 2"
+msgstr ""
 
 #. module: auction
 #: view:auction.lots:0
@@ -554,6 +534,11 @@ msgstr "Αγοραστές"
 #: wizard_field:auction.pay.buy,init,amount3:0
 msgid "Amount paid"
 msgstr "Ποσό που πληρώθηκε"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id4
+msgid "VAT 12%"
+msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_report_latest_doposit_tree
@@ -646,11 +631,6 @@ msgstr "Συνεχίστε"
 #: field:report.object.encoded.manager,obj_num:0
 msgid "# of Encoded obj."
 msgstr "Πλήθος κωδικοποιημένων αντικειμένων"
-
-#. module: auction
-#: xsl:report.auction.vnd_bordereau:0
-msgid "List N."
-msgstr "Λίστα Ν."
 
 #. module: auction
 #: field:report.deposit.border,moy_est:0
@@ -779,16 +759,6 @@ msgid "Created by"
 msgstr "Δημιουργήθηκε από"
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Buyer form"
-msgstr "Φόρμα αγοραστή"
-
-#. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Estimate"
-msgstr "Εκτιμώ"
-
-#. module: auction
 #: rml:auction.total.rml:0
 msgid "# of buyers:"
 msgstr "Πλήθος αγοραστών"
@@ -797,11 +767,6 @@ msgstr "Πλήθος αγοραστών"
 #: field:auction.lots,costs:0
 msgid "Indirect costs"
 msgstr "Έμμεσα έξοδα"
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Cat"
-msgstr "Cat"
 
 #. module: auction
 #: constraint:account.tax.code:0
@@ -878,9 +843,9 @@ msgid "Bordereau de dépôt"
 msgstr "Φύλλο κατάθεσης"
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Document type"
-msgstr "Τύπος εγγράφου"
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Arts"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_estimation_adj_category
@@ -907,12 +872,6 @@ msgstr "Cont. Art/Other Media"
 #: model:ir.actions.wizard,name:auction.wizard_emporte
 msgid "Gestion emporte"
 msgstr "Διαχείριση Κερδισμένων"
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Cat. N."
-msgstr "Cat. N."
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_auction_object_cat
@@ -1131,19 +1090,15 @@ msgid "Biography"
 msgstr "Βιογραφία"
 
 #. module: auction
-#: field:auction.lots,lot_local:0
-msgid "Location"
-msgstr "Τοποθεσία"
-
-#. module: auction
 #: wizard_view:auction.payer.sel,init:0
 msgid "Check payment for seller"
 msgstr "Έλεγχος πληρωμής πωλητή"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.view_report_object_by_auction
-msgid "Detailed lots"
-msgstr "Λεπτομέρειες παρτίδων"
+#: wizard_button:auction.pay.buy,init,pay:0
+#: wizard_button:auction.payer.sel,init,pay2:0
+msgid "Pay"
+msgstr ""
 
 #. module: auction
 #: field:report.object.encoded.manager,obj_margin:0
@@ -1197,20 +1152,9 @@ msgid "Seller's Revenues"
 msgstr "Έσοδα Πωλητή"
 
 #. module: auction
-#: xsl:flagey.huissier:0
-msgid "Price"
-msgstr "Τιμή"
-
-#. module: auction
 #: rml:bids.phones.details:0
 msgid "-"
 msgstr "-"
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Subtotal:"
-msgstr "Μερικό σύνολο:"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1243,11 +1187,6 @@ msgstr ""
 #: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view1
 msgid "Buyer's Summary"
 msgstr "Σύνοψη Αγοραστή"
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Customer Reference"
-msgstr "Αναφορά πελάτη"
 
 #. module: auction
 #: rml:bids.lots:0
@@ -1381,17 +1320,6 @@ msgid "Payment's history"
 msgstr "Ιστορικό πληρωμών"
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Document"
-msgstr "Έγγραφο"
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid ", TEL:"
-msgstr ", Τηλέφωνο:"
-
-#. module: auction
 #: view:report.auction.view:0
 msgid "Auction results"
 msgstr "Αποτελέσματα Δημοπρασίας"
@@ -1503,10 +1431,9 @@ msgid "Cont. Art/Jewelry"
 msgstr "Συνέχεια σε Τέχνη/Κοσμήματα"
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Inventory"
-msgstr "Απογραφή"
+#: field:auction.lots,lot_local:0
+msgid "Location"
+msgstr "Τοποθεσία"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_dates_next
@@ -1608,6 +1535,11 @@ msgid "Antique/Religiosa"
 msgstr "Αντίκες / Θρησκευτικά"
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id3
+msgid "VAT 10%"
+msgstr ""
+
+#. module: auction
 #: wizard_button:auction.lots.make_invoice,init,invoice:0
 #: wizard_button:auction.lots.make_invoice_buyer,init,invoice:0
 msgid "Create invoices"
@@ -1622,9 +1554,15 @@ msgstr ""
 "να είναι στην ίδια κατηγορία."
 
 #. module: auction
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Lot"
-msgstr "Παρτίδα"
+#: model:account.tax.code,name:auction.account_tax_code_id5
+msgid "VAT 5%"
+msgstr ""
+
+#. module: auction
+#: selection:auction.dates,state:0
+#: selection:report.auction.adjudication,state:0
+msgid "Closed"
+msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_all_objects_unplanned1
@@ -1666,10 +1604,9 @@ msgid "Antique/Argenterie"
 msgstr "Αντίκες / Ασημικά"
 
 #. module: auction
-#: wizard_button:auction.pay.buy,init,pay:0
-#: wizard_button:auction.payer.sel,init,pay2:0
-msgid "Pay"
-msgstr ""
+#: model:ir.actions.act_window,name:auction.view_report_object_by_auction
+msgid "Detailed lots"
+msgstr "Λεπτομέρειες παρτίδων"
 
 #. module: auction
 #: field:auction.lot.category,active:0
@@ -1705,11 +1642,6 @@ msgid "Objects per Day"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Document Number"
-msgstr ""
-
-#. module: auction
 #: view:report.object.encoded:0
 #: view:report.object.encoded.manager:0
 msgid "Objects statistics"
@@ -1718,11 +1650,6 @@ msgstr "Στατιστικά Αντικειμένων"
 #. module: auction
 #: wizard_button:auction.lots.numerotate,search,set_number:0
 msgid "Numerotate"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Buyer, Price"
 msgstr ""
 
 #. module: auction
@@ -1774,9 +1701,9 @@ msgid "Total adjudication"
 msgstr ""
 
 #. module: auction
-#: field:auction.lots,artist2_id:0
-msgid "Artist/Author 2"
-msgstr ""
+#: selection:auction.deposit,method:0
+msgid "Contact the Seller"
+msgstr "Επικοινωνήστε με τον πωλητή"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_seller_allmonth_view1
@@ -1832,11 +1759,6 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Porcelain, Ceramics, Glassmaking, ..."
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Plate Number:"
 msgstr ""
 
 #. module: auction
@@ -2018,6 +1940,11 @@ msgid "Frais de vente"
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id1
+msgid "VAT 1%"
+msgstr ""
+
+#. module: auction
 #: wizard_view:auction.lots.numerotate_cont,init:0
 #: wizard_field:auction.lots.numerotate_cont,init,number:0
 msgid "First Number"
@@ -2055,13 +1982,8 @@ msgid "Bid information"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "TEL:"
-msgstr ""
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
-msgid "Objects to sell"
+#: field:auction.dates,acc_income:0
+msgid "Income Account"
 msgstr ""
 
 #. module: auction
@@ -2070,12 +1992,6 @@ msgstr ""
 #: field:report.object.encoded.manager,net_revenue:0
 #: field:report.seller.auction2,net_revenue:0
 msgid "Net revenue"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.deposit:0
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Limit"
 msgstr ""
 
 #. module: auction
@@ -2140,12 +2056,6 @@ msgid "Gross Margin (%)"
 msgstr ""
 
 #. module: auction
-#: selection:auction.dates,state:0
-#: selection:report.auction.adjudication,state:0
-msgid "Closed"
-msgstr ""
-
-#. module: auction
 #: field:auction.lots,obj_comm:0
 #: field:report.unclassified.objects,obj_comm:0
 msgid "Commission"
@@ -2164,17 +2074,6 @@ msgstr ""
 #. module: auction
 #: field:report.attendance,employee_id:0
 msgid "Employee"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Adj.(EUR)"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Est."
 msgstr ""
 
 #. module: auction
@@ -2240,6 +2139,11 @@ msgid "Image"
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id2
+msgid "VAT 20%"
+msgstr ""
+
+#. module: auction
 #: selection:report.object.encoded,state:0
 msgid "Invoiced"
 msgstr ""
@@ -2253,11 +2157,6 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Collectible & art objects"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "BID:"
 msgstr ""
 
 #. module: auction
@@ -2298,16 +2197,6 @@ msgid "........."
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Buyer Cost:"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "NET"
-msgstr ""
-
-#. module: auction
 #: rml:report.auction.buyer.result:0
 msgid "Adj"
 msgstr ""
@@ -2321,16 +2210,6 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Furnitures"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Customer Contact"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Inv, Name"
 msgstr ""
 
 #. module: auction
@@ -2487,11 +2366,6 @@ msgid "Description"
 msgstr ""
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Arts"
-msgstr ""
-
-#. module: auction
 #: field:auction.lots,obj_price:0
 #: field:report.auction.view,adj_price:0
 #: field:report.unclassified.objects,obj_price:0
@@ -2499,13 +2373,8 @@ msgid "Adjudication price"
 msgstr ""
 
 #. module: auction
-#: field:auction.dates,acc_income:0
-msgid "Income Account"
-msgstr ""
-
-#. module: auction
-#: xsl:flagey.huissier:0
-msgid "Ref."
+#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
+msgid "Objects to sell"
 msgstr ""
 
 #. module: auction
@@ -2616,7 +2485,53 @@ msgstr ""
 msgid "Auction history"
 msgstr ""
 
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Orders"
-msgstr ""
+#~ msgid "Deposit Form"
+#~ msgstr "Φόρμα κατάθεσης"
+
+#~ msgid "Inv."
+#~ msgstr "Τιμ."
+
+#~ msgid "Adjudication"
+#~ msgstr "Δικαστική απόφαση"
+
+#~ msgid "VAT"
+#~ msgstr "ΦΠΑ"
+
+#~ msgid "List N."
+#~ msgstr "Λίστα Ν."
+
+#~ msgid "Buyer form"
+#~ msgstr "Φόρμα αγοραστή"
+
+#~ msgid "Cat"
+#~ msgstr "Cat"
+
+#~ msgid "Estimate"
+#~ msgstr "Εκτιμώ"
+
+#~ msgid "Cat. N."
+#~ msgstr "Cat. N."
+
+#~ msgid "Document type"
+#~ msgstr "Τύπος εγγράφου"
+
+#~ msgid "Price"
+#~ msgstr "Τιμή"
+
+#~ msgid "Subtotal:"
+#~ msgstr "Μερικό σύνολο:"
+
+#~ msgid "Customer Reference"
+#~ msgstr "Αναφορά πελάτη"
+
+#~ msgid "Document"
+#~ msgstr "Έγγραφο"
+
+#~ msgid ", TEL:"
+#~ msgstr ", Τηλέφωνο:"
+
+#~ msgid "Inventory"
+#~ msgstr "Απογραφή"
+
+#~ msgid "Lot"
+#~ msgstr "Παρτίδα"

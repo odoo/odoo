@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:47:42+0000\n"
-"PO-Revision-Date: 2010-07-09 12:47:42+0000\n"
+"POT-Creation-Date: 2010-09-02 14:00:26+0000\n"
+"PO-Revision-Date: 2010-09-02 14:00:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr ""
+msgstr "Directory name contains special characters!"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -29,7 +29,7 @@ msgstr "Seleccione un objeto aquí y OpenERP creará una asociación para cada u
 #. module: document
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -87,7 +87,7 @@ msgstr "Título del recurso"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
@@ -124,7 +124,7 @@ msgstr "Directorio del documento"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -167,7 +167,7 @@ msgstr "Tipo"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Directory name must be unique!"
-msgstr ""
+msgstr "Directory name must be unique!"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -203,7 +203,7 @@ msgstr "Tipo de directorio"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "You do not permissions to write on the server side."
-msgstr ""
+msgstr "You do not permissions to write on the server side."
 
 #. module: document
 #: field:document.directory.content,report_id:0
@@ -214,7 +214,7 @@ msgstr "Reporte"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Permission Denied !"
-msgstr ""
+msgstr "Permission Denied !"
 
 #. module: document
 #: constraint:ir.ui.view:0
@@ -339,7 +339,17 @@ msgid "This is a complete document management system:\n"
 "    - After installing this module PDF's are not longer stored into the database, \n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 ""
-msgstr ""
+msgstr "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -468,7 +478,7 @@ msgstr "Nombre"
 #: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "Navegar por los archivos usando FTP"
+msgstr "Browse Files Using FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -484,7 +494,7 @@ msgstr "Nombre de contenido"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "File name must be unique!"
-msgstr ""
+msgstr "File name must be unique!"
 
 #. module: document
 #: field:document.directory,ressource_tree:0

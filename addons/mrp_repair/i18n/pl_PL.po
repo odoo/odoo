@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:41:24+0000\n"
-"PO-Revision-Date: 2010-07-09 12:41:24+0000\n"
+"POT-Creation-Date: 2010-09-02 13:54:03+0000\n"
+"PO-Revision-Date: 2010-09-02 13:54:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,6 +58,12 @@ msgid "Quantity"
 msgstr "Ilość"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "No product defined on Fees!"
+
+#. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Set to Draft"
 msgstr "Ustaw na projekt"
@@ -91,7 +97,7 @@ msgstr "Adres do faktury :"
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
-msgstr ""
+msgstr "Guarantee limit"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_tax:0
@@ -106,9 +112,15 @@ msgid "Net Total :"
 msgstr "Suma netto :"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
+
+#. module: mrp_repair
 #: rml:repair.order:0
 msgid "VAT"
-msgstr ""
+msgstr "VAT"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -144,7 +156,7 @@ msgstr "Partner"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "No account defined for partner \"%s\"."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
@@ -223,7 +235,7 @@ msgstr "Rozpocznij naprawę"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
@@ -281,12 +293,18 @@ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
 msgid "The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."
-msgstr ""
+msgstr "The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repair Line"
 msgstr "Pozycja naprawy"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner and invoicing address in the repair form !"
+msgstr "You have to select a partner and invoicing address in the repair form !"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -347,12 +365,6 @@ msgid "Invoiced"
 msgstr "Zafakturowano"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
-#, python-format
-msgid "You have to select a partner in the repair form !"
-msgstr ""
-
-#. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
 msgid "No"
 msgstr "Nie"
@@ -372,7 +384,7 @@ msgstr "Dodaj"
 #. module: mrp_repair
 #: wizard_view:mrp.repair.make_invoice,init:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Do you really want to create the invoice(s) ?"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_form
@@ -398,7 +410,7 @@ msgstr "Stan"
 #. module: mrp_repair
 #: rml:repair.order:0
 msgid "Guarantee Limit"
-msgstr ""
+msgstr "Guarantee Limit"
 
 #. module: mrp_repair
 #: field:mrp.repair,product_id:0
@@ -445,7 +457,7 @@ msgstr "Koniec naprawy"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "No account defined for product \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -524,7 +536,7 @@ msgstr "Moduł naprawy produktów"
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
 msgid "This field allow you to change the workflow of the repair order. If value selected is different from 'No Invoice', it also allow you to select the pricelist and invoicing address."
-msgstr ""
+msgstr "This field allow you to change the workflow of the repair order. If value selected is different from 'No Invoice', it also allow you to select the pricelist and invoicing address."
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -679,5 +691,5 @@ msgstr "Gotowe do naprawy"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No partner !"
-msgstr ""
+msgstr "No partner !"
 

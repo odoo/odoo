@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:37:57+0000\n"
-"PO-Revision-Date: 2010-07-09 12:37:57+0000\n"
+"POT-Creation-Date: 2010-09-02 13:50:25+0000\n"
+"PO-Revision-Date: 2010-09-02 13:50:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr "Il nome della directory contiene caratteri speciali !"
 #. module: document
 #: help:document.directory,ressource_type_id:0
 msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
-msgstr ""
+msgstr "Seleziona un oggetto qui e Open ERP creerà un abbinamento per tutti questi oggetti, usando il dominio fornito, quando verrà sfogliato attraverso FTP."
 
 #. module: document
 #: constraint:ir.actions.act_window:0
@@ -87,12 +87,12 @@ msgstr "Titolo della Risorsa"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
 msgid "document.configuration.wizard"
-msgstr ""
+msgstr "document.configuration.wizard"
 
 #. module: document
 #: selection:ir.attachment,store_method:0
@@ -112,7 +112,7 @@ msgstr "Sfoglia file"
 #. module: document
 #: field:ir.attachment,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory
@@ -124,17 +124,17 @@ msgstr "Cartella Documenti"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
-msgstr ""
+msgstr "Includi il nome della registrazione"
 
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr ""
+msgstr "Error! You can not create recursive Directories."
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -172,12 +172,12 @@ msgstr "Il nome della directory deve essere univoco!"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid "Check this if you want to use the same tree structure as the object selected in the system."
-msgstr ""
+msgstr "Spunta se vuoi usare la stessa struttura ad albero come l'oggetto selezionato nel sistema"
 
 #. module: document
 #: help:document.directory,domain:0
 msgid "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
+msgstr "Usa un Dominio se vui applicare un filtro automatico sulle risorse visibili"
 
 #. module: document
 #: field:document.configuration.wizard,host:0
@@ -203,7 +203,7 @@ msgstr "Tipo Cartella"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "You do not permissions to write on the server side."
-msgstr ""
+msgstr "You do not permissions to write on the server side."
 
 #. module: document
 #: field:document.directory.content,report_id:0
@@ -214,7 +214,7 @@ msgstr "Rapporto"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "Permission Denied !"
-msgstr ""
+msgstr "Permission Denied !"
 
 #. module: document
 #: constraint:ir.ui.view:0
@@ -252,7 +252,7 @@ msgstr "Sicurezza"
 #: field:document.directory,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
-msgstr ""
+msgstr "Ultimo utente che ha modificato"
 
 #. module: document
 #: field:document.directory,ressource_type_id:0
@@ -309,7 +309,7 @@ msgstr "Configurazione Automatica Cartella"
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
 msgid "This wizard will configure the URL of the server of the document management system."
-msgstr ""
+msgstr "Questa procedura automatica configura l'URL del server del Gestore Documentale"
 
 #. module: document
 #: view:ir.attachment:0
@@ -339,7 +339,17 @@ msgid "This is a complete document management system:\n"
 "    - After installing this module PDF's are not longer stored into the database, \n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 ""
-msgstr ""
+msgstr "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -381,7 +391,7 @@ msgstr "Database"
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
 msgid "Integrated Document Management System"
-msgstr ""
+msgstr "Sistema di gestione documentale integrato"
 
 #. module: document
 #: view:ir.attachment:0
@@ -406,7 +416,7 @@ msgstr "Autore"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
+msgstr "Se metti un oggetto qui, questo modello di directory comparirà sotto tutti questi oggetti. Non mettere una directory padre se selezioni un modello di partner."
 
 #. module: document
 #: view:document.directory:0
@@ -421,12 +431,12 @@ msgstr "Cancella"
 #. module: document
 #: field:document.directory,child_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Figlio"
 
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "ID Risorsa"
 
 #. module: document
 #: constraint:ir.model:0
@@ -441,17 +451,17 @@ msgstr "Seleziona questo campo se vuoi che il nome del file inizi con il nome de
 #. module: document
 #: selection:document.directory,type:0
 msgid "Other Resources"
-msgstr ""
+msgstr "Altre Risorse"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "Modello Padre"
 
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Item"
-msgstr ""
+msgstr "Articolo Padre"
 
 #. module: document
 #: view:document.directory:0
@@ -468,7 +478,7 @@ msgstr "Nome"
 #: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "Lista dei File usando l'FTP"
+msgstr "Browse Files Using FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -484,7 +494,7 @@ msgstr "Nome del Contenuto"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "File name must be unique!"
-msgstr ""
+msgstr "File name must be unique!"
 
 #. module: document
 #: field:document.directory,ressource_tree:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:26:15+0000\n"
-"PO-Revision-Date: 2010-07-09 12:26:15+0000\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "自动无步骤增加"
+msgstr "自动，不加入步骤"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -74,13 +74,14 @@ msgstr "手动操作"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "stock.location.path"
-msgstr "库存.库位.路径"
+msgstr "stock.location.path"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid "This is used to define paths the product has to follow within the location tree.\n"
 "The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
-msgstr "这些规则确定了产品在库位树中的正确移动路径.‘自动调拨’将创建一个产品从当前库位到下一库位的自动移动.‘手动操作’库存调拨需要人工生效.‘自动无增加步骤’库位是取代原来的"
+msgstr "这些规则确定了产品在库位树中的正确移动路径.\n"
+"‘自动调拨’ 将创建库存调拨后自动确认. ‘手动操作’ 库存调拨需要人工确认. ‘自动不加入步骤’ 库位是取代调拨源库位."
 
 #. module: stock_location
 #: field:stock.location.path,name:0
