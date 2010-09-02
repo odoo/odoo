@@ -52,7 +52,6 @@
       <rng:choice>
         <rng:ref name="notebook"/>
         <rng:ref name="field"/>
-        <rng:ref name="shortcut"/>
         <rng:ref name="group"/>
         <rng:ref name="button"/>
         <rng:ref name="hpaned" />
@@ -137,7 +136,6 @@
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
-                    <rng:ref name="shortcut"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="tree"/>
                     <rng:ref name="group"/>
@@ -316,7 +314,6 @@
                     <rng:element name="properties"><rng:empty/></rng:element>
                     <rng:ref name="label" />
                     <rng:ref name="field"/>
-		    		<rng:ref name="shortcut"/>
                     <rng:ref name="group"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="button"/>
@@ -358,7 +355,6 @@
                     <rng:ref name="separator"/>
                     <rng:ref name="button"/>
                     <rng:ref name="field"/>
-		    		<rng:ref name="shortcut"/>
                     <rng:ref name="label" />
                     <rng:ref name="group" />
                     <rng:ref name="filter"/>
@@ -614,15 +610,6 @@
                 </rng:choice>
             </rng:zeroOrMore>
 
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="shortcut">
-        <rng:element name="shortcut">
-            <rng:optional><rng:attribute name="attrs"/></rng:optional>
-            <rng:optional><rng:attribute name="name" /></rng:optional>
-            <rng:optional><rng:attribute name="key"/></rng:optional>
-            <rng:optional><rng:attribute name="goto" /></rng:optional>
         </rng:element>
     </rng:define>
 
