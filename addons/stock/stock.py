@@ -563,14 +563,12 @@ class stock_picking(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
             ], 'State', readonly=True, select=True,
-            help=' * The \'Draft\'state is used when a user is not yet confirmed and will not be scheduled until picking is confirmed.\
-            \n* The \'Confirmed \'state is still waiting for the availability of products. \
-            \n* The \'Available\'state is set when products are reserved, or simply waiting for confirmation.\
-            \n* The \'Waiting\' state is used when move is waiting for another move to proceed before it becomes automatically available. (e.g. in Make-To-Order flows).\
-            \n* The \'Done\' has been processed, can not be modified or cancelled anymore. \
-            \n* The \'Cancelled\' has been cancelled, can not be confirmed anymore. \
-            '),
-            
+            help="* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
+                 "* Confirmed: still waiting for the availability of products\n"\
+                 "* Available: products reserved, simply waiting for confirmation.\n"\
+                 "* Waiting: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"\
+                 "* Done: has been processed, can't be modified or cancelled anymore\n"\
+                 "* Cancelled: has been cancelled, can't be confirmed anymore"),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed. Will be set to date of actual processing if not specified."),
         'date': fields.datetime('Order Date', help="Date of Order"),
@@ -1945,7 +1943,7 @@ class stock_move(osv.osv):
         @return: Scraped lines
         """
         if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+            raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap!'))
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
@@ -1960,11 +1958,11 @@ class stock_move(osv.osv):
                 'prodlot_id':False
             }
             new_move = self.copy(cr, uid, move.id, default_val)
+
             res += [new_move]
             product_obj = self.pool.get('product.product')
             for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
-                message = _('Product ') + " '" + name + "' "+ _("is scrapped with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
-            self.log(cr, uid, move.id, message)
+                self.log(cr, uid, move.id, "%s x %s %s" % (move.product_qty, name, _("were scrapped")))
 
         self.action_done(cr, uid, res)
         return res
