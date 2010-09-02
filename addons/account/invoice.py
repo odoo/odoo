@@ -527,8 +527,12 @@ class account_invoice(osv.osv):
                         else:
                             continue
         if company_id and type:
-            if type in ('out_invoice', 'out_refund'):
+            if type in ('out_invoice'):
                 journal_type = 'sale'
+            elif type in ('out_refund'):  
+                journal_type = 'sale_refund'
+            elif type in ('in_refund'):
+                journal_type = 'purchase_refund'
             else:
                 journal_type = 'purchase'
             journal_ids = obj_journal.search(cr, uid, [('company_id','=',company_id), ('type', '=', journal_type)])

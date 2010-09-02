@@ -340,7 +340,7 @@ class account_analytic_line(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
 
-    _order = 'date'
+    _order = 'date desc'
 
 account_analytic_line()
 

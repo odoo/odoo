@@ -143,7 +143,7 @@
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
 
-                                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                                             <field colspan="4" name="name"/>
                                             <field name="price_unit"/>
                                             <field name="discount"/>
@@ -385,7 +385,7 @@ to your configuration: from the sale order, from the pickings, etc.
                             <field name="product_uom"/>
                             <field name="product_id" readonly="1"/>
                             <field name="invoiced"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                             <separator colspan="4" string="Manual Designation"/>
                             <field colspan="4" name="name"/>
                             <field name="price_unit"/>

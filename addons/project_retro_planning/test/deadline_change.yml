@@ -33,10 +33,10 @@
     	new_end_date = date.today()+timedelta(1)
     	res={}
     	for task in prj.tasks:
-    		start_dt = (datetime(*time.strptime(task.date_start,'%Y-%m-%d  %H:%M:%S')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
+    		start_dt = (datetime(*time.strptime(task.date_start,'%Y-%m-%d  %H:%M:%S')[:3])+(new_end_date-old_end_date)).strftime('%Y-%m-%d %H:%M:%S')
     		deadline_dt=''
             if task.date_deadline:
-           	    deadline_dt = (datetime(*time.strptime(task.date_deadline,'%Y-%m-%d')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d')
+           	    deadline_dt = (datetime(*time.strptime(task.date_deadline,'%Y-%m-%d')[:3])+(new_end_date-old_end_date)).strftime('%Y-%m-%d')
            	res[task.id]=[start_dt,deadline_dt]
     self.write(cr, uid, [ref("project_project_retroplanning0")], {'date' : (datetime.now()+timedelta(1)).strftime('%Y-%m-%d')})
     data_project = self.browse(cr,uid,[ref("project_project_retroplanning0")])

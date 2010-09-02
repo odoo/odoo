@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
 
 from osv import osv,fields
-import datetime
 from tools.translate import _
 
 def strToDate(dt):
@@ -40,13 +40,11 @@ class account_budget_post(osv.osv):
         'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of budgetary position."),        
     }
     _defaults = {
-        'sequence': lambda *a: 1,   
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', context=c)
     }
-    _order = "sequence, name"
+    _order = "name"
 
     def spread(self, cr, uid, ids, fiscalyear_id=False, amount=0.0):
         dobj = self.pool.get('account.budget.post.dotation')
@@ -60,6 +58,7 @@ class account_budget_post(osv.osv):
             for p in fy.period_ids:
                 dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'amount': amount/num})
         return True
+
 account_budget_post()
 
 class account_budget_post_dotation(osv.osv):
@@ -107,8 +106,8 @@ class crossovered_budget(osv.osv):
     _description = "Budget"
 
     _columns = {
-        'name': fields.char('Name', size=50, required=True,states={'done':[('readonly',True)]}),
-        'code': fields.char('Code', size=20, required=True,states={'done':[('readonly',True)]}),
+        'name': fields.char('Name', size=64, required=True, states={'done':[('readonly',True)]}),
+        'code': fields.char('Code', size=16, required=True, states={'done':[('readonly',True)]}),
         'creating_user_id': fields.many2one('res.users', 'Responsible User'),
         'validating_user_id': fields.many2one('res.users', 'Validate User', readonly=True),
         'date_from': fields.date('Start Date', required=True, states={'done':[('readonly',True)]}),
@@ -118,13 +117,19 @@ class crossovered_budget(osv.osv):
     }
 
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': 'draft',
         'creating_user_id': lambda self,cr,uid,context: uid,
     }
 
     def budget_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'confirm'
+        })
+        return True
+
+    def budget_draft(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {
+            'state':'draft'
         })
         return True
 

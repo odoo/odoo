@@ -240,7 +240,7 @@ class document_file(osv.osv):
             return bro.address_id.partner_id.id
         return False
 
-    def unlink(self, cr, uid, ids, context={}):
+    def unlink(self, cr, uid, ids, context=None):
         stor = self.pool.get('document.storage')
         unres = []
         # We have to do the unlink in 2 stages: prepare a list of actual
@@ -250,7 +250,15 @@ class document_file(osv.osv):
 
         for f in self.browse(cr, uid, ids, context):
             # TODO: update the node cache
-            r = stor.prepare_unlink(cr, uid, f.parent_id.storage_id, f)
+            par = f.parent_id
+            storage_id = None
+            while par:
+                if par.storage_id:
+                    storage_id = par.storage_id
+                    break
+                par = par.parent_id
+            assert storage_id, "Strange, found file #%s w/o storage!" % f.id
+            r = stor.prepare_unlink(cr, uid, storage_id, f)
             if r:
                 unres.append(r)
         res = super(document_file, self).unlink(cr, uid, ids, context)

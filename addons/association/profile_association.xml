@@ -12,8 +12,8 @@
                   <attribute name="string">Association Profile Configuration</attribute>
                 </form>
                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
-	          	  <attribute name='string'></attribute>
-	      		</xpath>
+                    <attribute name='string'></attribute>
+                  </xpath>
                 <xpath expr="//label[@string='description']"
                        position="attributes">
                   <attribute name="string">Install more modules. A few modules are proposed according to the Association Profile you selected. You will be able to install them based on our requirements.</attribute>
@@ -51,21 +51,10 @@
         <field name="action_id" ref="action_config_install_module"/>
         <field name="sequence">3</field>
       </record>
-       <record id="association_ir_actions_todo_tree" model="ir.ui.view">
-        <field name="model">ir.actions.todo</field>
-        <field name="name">association_installer_action_replace</field>
-        <field name="type">tree</field>
-        <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-  		<field name="arch" type="xml">
-  		 <xpath expr="//button[@string='Launch']" position="replace">
-        	<button name="%(action_config_install_module)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-      		</xpath>
-      	</field>
-		</record>
 
-		<menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9" groups="base.group_extended"/>
-		<menuitem name="Events Organisation" id="base.menu_event_main" parent="base.menu_association" />
-		<menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
-		<menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9" groups="base.group_extended"/>
+        <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.menu_association" />
+        <menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
     </data>
 </openerp>
