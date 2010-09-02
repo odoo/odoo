@@ -655,7 +655,7 @@ form: module.record_id""" % (xml_id,)
             for test in rec.findall('./test'):
                 f_expr = test.get("expr",'').encode('utf-8')
                 expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
-                expression_value = unsafe_eval(f_expr, globals_dict, nocopy=True)
+                expression_value = unsafe_eval(f_expr, globals_dict)
                 if expression_value != expected_value: # assertion failed
                     self.assert_report.record_assertion(False, severity)
                     msg = 'assertion "%s" failed!\n'    \
