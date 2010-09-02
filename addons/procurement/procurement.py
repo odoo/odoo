@@ -227,6 +227,9 @@ class procurement_order(osv.osv):
                 return True
         return False
 
+    def check_produce_service(self, cr, uid, procurement, context=[]):
+        return False
+
     def check_produce_product(self, cr, uid, procurement, context=[]):
         """ Finds BoM of a product if not found writes exception message.
         @param procurement: Current procurement.
