@@ -1151,13 +1151,6 @@ class account_move(osv.osv):
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
-        def _get_chart_account(cursor, user, account):
-            if account.parent_id:
-                chart_account = _get_chart_account(cursor, user, account.parent_id)
-            else:
-                chart_account = account
-            return chart_account
-
         for move in self.browse(cursor, user, ids):
             top = None
             for line in move.line_id:
