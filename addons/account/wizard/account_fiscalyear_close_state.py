@@ -32,7 +32,6 @@ class account_fiscalyear_close_state(osv.osv_memory):
     _columns = {
        'fy_id': fields.many2one('account.fiscalyear', \
                                  'Fiscal Year to close', required=True),
-       'sure': fields.boolean('Check this box', required=False)
     }
 
     def data_save(self, cr, uid, ids, context=None):
@@ -44,9 +43,6 @@ class account_fiscalyear_close_state(osv.osv_memory):
 
         """
         for data in  self.read(cr, uid, ids, context=context):
-            if not data['sure']:
-                raise osv.except_osv(_('UserError'), _('Closing of states \
-cancelled, please check the box !'))
             fy_id = data['fy_id']
 
             cr.execute('UPDATE account_journal_period ' \

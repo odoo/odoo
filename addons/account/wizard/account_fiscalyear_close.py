@@ -34,11 +34,10 @@ class account_fiscalyear_close(osv.osv_memory):
        'fy2_id': fields.many2one('account.fiscalyear', \
                                  'New Fiscal Year', required=True),
        'journal_id': fields.many2one('account.journal', \
-                                 'Opening Entries Journal', required=True),
+                                 'Opening Entries Journal', required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts and with a centralized counterpart.'),
        'period_id': fields.many2one('account.period', \
                                  'Opening Entries Period', required=True),
        'report_name': fields.char('Name of new entries',size=64, required=True),
-       'sure': fields.boolean('Check this box'),
     }
     _defaults = {
         'report_name':'End of Fiscal Year Entry',
@@ -63,10 +62,7 @@ class account_fiscalyear_close(osv.osv_memory):
 
         if context is None:
             context = {}
-        if not data[0]['sure']:
-            raise osv.except_osv(_('UserError'), _('Closing of fiscal year cancelled, please check the box !'))
         fy_id = data[0]['fy_id']
-
 
         cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)" , (str(data[0]['fy2_id']),))
         fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
