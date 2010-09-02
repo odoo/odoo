@@ -250,6 +250,25 @@ class YamlInterpreter(object):
                     if not success:
                         msg = 'Assertion "%s" FAILED\ntest: %s\n'
                         args = (assertion.string, test)
+                        for aop in ('==', '!=', '<>', 'in', 'not in', '>=', '<=', '>', '<'):
+                            if aop in test:
+                                left, right = test.split(aop,1)
+                                lmsg = ''
+                                rmsg = ''
+                                try:
+                                    lmsg = unsafe_eval(left, self.eval_context, RecordDictWrapper(record))
+                                except Exception, e:
+                                    lmsg = '<exc>'
+
+                                try:
+                                    rmsg = unsafe_eval(right, self.eval_context, RecordDictWrapper(record))
+                                except Exception, e:
+                                    rmsg = '<exc>'
+
+                                msg += 'values: ! %s %s %s'
+                                args += ( lmsg, aop, rmsg )
+                                break
+
                         self._log_assert_failure(assertion.severity, msg, *args)
                         return
             else: # all tests were successful for this assertion tag (no break)
