@@ -1628,11 +1628,34 @@
                 <form string="Payment Term">
                     <field name="name" select="1"/>
                     <field name="sequence"/>
-                    <field name="value"/>
-                    <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
+                    <group colspan="2" col="4">
+                        <separator string="Amount Computation" colspan="4"/>
+                        <field name="value" colspan="4"/>
+                        <field name="value_amount" colspan="4" attrs="{'readonly':[('value','=','balance')]}"/>
+                    </group>
+                    <group colspan="2" col="4">
+                        <separator string="Due date Computation" colspan="4"/>
+                        <field name="days" colspan="4"/>
+                        <field name="days2" colspan="4"/>
+                    </group>
+                    <label string=""/>
                     <newline/>
-                    <field name="days"/>
-                    <field name="days2"/>
+                    <label string="Example: at 14 net days 2 percents, remaining amount at 30 days end of month." colspan="4"/>
+                    <group colspan="2" col="2">
+                        <label string="Line 1:" colspan="2"/>
+                        <label string="  valuation: percent"/>
+                        <label string="  number of days: 14"/>
+                        <label string="  value amount: 0.02"/>
+                        <label string="  day of the month: 0"/>
+                    </group>
+                    <newline/>
+                    <group colspan="2" col="2">
+                        <label string="Line 2:" colspan="2"/>
+                        <label string="  valuation: balance"/>
+                        <label string="  number of days: 30"/>
+                        <label string="  value amount: n.a"/>
+                        <label string="  day of the month= -1"/>
+                    </group>
                 </form>
             </field>
         </record>

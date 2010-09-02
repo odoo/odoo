@@ -109,10 +109,8 @@ class account_payment_term_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
-                                   ('fixed', 'Fixed Amount')], 'Value',
-                                   required=True, help="""Example: 14 days 2%, 30 days net
-1. Line 1: percent 0.02 14 days
-2. Line 2: balance 30 days"""),
+                                   ('fixed', 'Fixed Amount')], 'Valuation',
+                                   required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be threated."""),
 
         'value_amount': fields.float('Value Amount', help="For Value percent enter % ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
