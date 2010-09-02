@@ -183,7 +183,7 @@ class ir_ui_menu(osv.osv):
         rex=re.compile('\([0-9]+\)')
         concat=rex.findall(datas['name'])
         if concat:
-            next_num=eval(concat[0])+1
+            next_num=int(concat[0])+1
             datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
         else:
             datas['name']=datas['name']+'(1)'
