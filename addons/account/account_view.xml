@@ -58,8 +58,8 @@
             <field name="arch" type="xml">
                 <search string="Search Fiscalyear">
                     <group>
-                        <filter string="Done" domain="[('state','=','done')]" icon="terp-dolar_ok!"/>
-                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Open" domain="[('state','=','draft')]" icon="terp-camera_test"/>
+                        <filter string="Closed" domain="[('state','=','done')]" icon="terp-dialog_close"/>
                         <separator orientation="vertical"/>
                         <field name="code"/>
                         <field name="name"/>
