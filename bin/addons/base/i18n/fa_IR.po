@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.11\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-07-09 12:40:32+0000\n"
-"PO-Revision-Date: 2010-07-09 12:40:32+0000\n"
+"POT-Creation-Date: 2010-09-02 13:53:08+0000\n"
+"PO-Revision-Date: 2010-09-02 13:53:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -594,7 +594,7 @@ msgstr "روزهای کاری"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Other OSI Approved Licence"
-msgstr ""
+msgstr "Other OSI Approved Licence"
 
 #. module: base
 #: help:ir.values,action_id:0
@@ -937,7 +937,7 @@ msgstr "ورود"
 #. module: base
 #: view:ir.actions.server:0
 msgid "Access all the fields related to the current object using expressions, i.e. object.partner_id.name "
-msgstr ""
+msgstr "Access all the fields related to the current object using expressions, i.e. object.partner_id.name "
 
 #. module: base
 #: view:maintenance.contract:0
@@ -991,7 +991,18 @@ msgid "Date : %(date)s\n"
 "--\n"
 "%(user_signature)s\n"
 "%(company_name)s"
-msgstr ""
+msgstr "Date : %(date)s\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Please find in attachment a reminder of all your unpaid invoices, for a total amount due of:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s"
 
 #. module: base
 #: view:ir.rule:0
@@ -1395,7 +1406,7 @@ msgstr "نمای بُنیانی"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "Make sure you have no users linked with the group(s)!"
-msgstr ""
+msgstr "Make sure you have no users linked with the group(s)!"
 
 #. module: base
 #: selection:ir.report.custom.fields,fc0_op:0
@@ -1713,7 +1724,7 @@ msgstr "سیگنال (subflow.*)"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "HR sector"
-msgstr ""
+msgstr "HR sector"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -2320,7 +2331,7 @@ msgstr "پیش‌فرض"
 #. module: base
 #: help:res.partner.bank,acc_number:0
 msgid "Bank account number"
-msgstr ""
+msgstr "Bank account number"
 
 #. module: base
 #: field:ir.model.fields,required:0
@@ -2378,7 +2389,7 @@ msgstr "پرونده ZIP. پیمانه"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
 msgid "Telecom sector"
-msgstr ""
+msgstr "Telecom sector"
 
 #. module: base
 #: field:workflow.transition,trigger_model:0
@@ -2428,7 +2439,7 @@ msgstr "نوع دنباله"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system."
-msgstr ""
+msgstr "You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system."
 
 #. module: base
 #: view:res.partner.address:0
@@ -2465,7 +2476,7 @@ msgstr "مدل"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "You try to install a module that depends on the module: %s.\nBut this module is not available in your system."
-msgstr ""
+msgstr "You try to install a module that depends on the module: %s.\nBut this module is not available in your system."
 
 #. module: base
 #: field:ir.actions.act_window.view,view_id:0
@@ -2765,7 +2776,7 @@ msgstr "برزیل"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Affero GPL-3"
-msgstr ""
+msgstr "Affero GPL-3"
 
 #. module: base
 #: field:ir.sequence,number_next:0
@@ -3289,7 +3300,7 @@ msgstr "کیپ ورد"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "Some installed modules depend on the module you plan to Uninstall :\n %s"
-msgstr ""
+msgstr "Some installed modules depend on the module you plan to Uninstall :\n %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
@@ -3379,7 +3390,7 @@ msgstr "ir.cron"
 #. module: base
 #: view:ir.sequence:0
 msgid "Current Year without Century: %(y)s"
-msgstr ""
+msgstr "Current Year without Century: %(y)s"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3959,7 +3970,7 @@ msgstr "acc_number"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_partner_address_form
 msgid "Addresses"
-msgstr ""
+msgstr "Addresses"
 
 #. module: base
 #: model:res.country,name:base.mm
@@ -4389,7 +4400,7 @@ msgstr "کد"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "Can not create the module file:\n %s"
-msgstr ""
+msgstr "Can not create the module file:\n %s"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_update
@@ -4524,7 +4535,7 @@ msgstr "terp-stock"
 #: code:addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify the Partner Email address !"
-msgstr ""
+msgstr "Please specify the Partner Email address !"
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -4701,7 +4712,7 @@ msgstr "بلژیک"
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "Security (Groups)"
-msgstr ""
+msgstr "Security (Groups)"
 
 #. module: base
 #: field:ir.translation,lang:0
@@ -4883,7 +4894,7 @@ msgstr "شیی را که کُنش روی آن کار خواهد کرد برگز�
 #: code:addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify server option --email-from !"
-msgstr ""
+msgstr "Please specify server option --email-from !"
 
 #. module: base
 #: view:ir.model:0
@@ -4992,7 +5003,7 @@ msgstr "پدیدن"
 #. module: base
 #: view:ir.sequence:0
 msgid "Current Year with Century: %(year)s"
-msgstr ""
+msgstr "Current Year with Century: %(year)s"
 
 #. module: base
 #: field:ir.exports,export_fields:0
@@ -5483,7 +5494,7 @@ msgstr "توگو"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Other Proprietary"
-msgstr ""
+msgstr "Other Proprietary"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -5617,7 +5628,9 @@ msgstr "پورتو ریکو"
 msgid "No rate found \n' \\n"
 "                    'for the currency: %s \n' \\n"
 "                    'at the date: %s"
-msgstr ""
+msgstr "No rate found \n' \\n"
+"                    'for the currency: %s \n' \\n"
+"                    'at the date: %s"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -5699,12 +5712,12 @@ msgstr "sxw"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 2"
-msgstr ""
+msgstr "GPL Version 2"
 
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 3"
-msgstr ""
+msgstr "GPL Version 3"
 
 #. module: base
 #: field:ir.actions.report.xml,auto:0
@@ -5890,7 +5903,7 @@ msgstr "مرجع کاربر"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Warning !"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -5985,7 +5998,7 @@ msgstr "تمام واژگان"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Galician / Galego"
-msgstr ""
+msgstr "Galician / Galego"
 
 #. module: base
 #: model:res.country,name:base.no
@@ -6447,7 +6460,7 @@ msgstr "terp-report"
 #. module: base
 #: model:res.company,overdue_msg:base.main_company
 msgid "Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting department"
-msgstr ""
+msgstr "Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting department"
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
@@ -6804,7 +6817,7 @@ msgstr "سنت پیر و میکلون"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Latvian / Latviešu valoda"
-msgstr ""
+msgstr "Latvian / Latviešu valoda"
 
 #. module: base
 #: field:res.partner.event,document:0
@@ -6871,7 +6884,13 @@ msgid "Model %s Does not Exist !\" % vals['relation']))\n"
 "                #Added context to _auto_init for special treatment to custom field for select_level\n"
 "                ctx = context.copy()\n"
 "                ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0"
-msgstr ""
+msgstr "Model %s Does not Exist !\" % vals['relation']))\n"
+"\n"
+"            if self.pool.get(vals['model']):\n"
+"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+"                #Added context to _auto_init for special treatment to custom field for select_level\n"
+"                ctx = context.copy()\n"
+"                ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_canal-act
@@ -7150,7 +7169,7 @@ msgstr "تازه‌ترین نگارش"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You cannot remove the field '%s' !"
-msgstr ""
+msgstr "You cannot remove the field '%s' !"
 
 #. module: base
 #: field:ir.report.custom,print_format:0
@@ -7182,7 +7201,7 @@ msgstr "شناسه قرارداد"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Persian / فارس"
-msgstr ""
+msgstr "Persian / فارس"
 
 #. module: base
 #: selection:ir.report.custom.fields,alignment:0
@@ -7407,7 +7426,7 @@ msgstr "نام دسته‌بندی"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
 msgid "IT sector"
-msgstr ""
+msgstr "IT sector"
 
 #. module: base
 #: view:res.lang:0
@@ -7432,7 +7451,7 @@ msgstr "پیکره‌ای"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Slovak Language / Slovenský jazyk"
-msgstr ""
+msgstr "Slovak Language / Slovenský jazyk"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -7525,7 +7544,7 @@ msgstr "ذخیره بصورت پیشوند پیوست"
 #. module: base
 #: view:ir.actions.server:0
 msgid "Only one client action will be executed, last client action will be considered in case of multiple client actions."
-msgstr ""
+msgstr "Only one client action will be executed, last client action will be considered in case of multiple client actions."
 
 #. module: base
 #: model:res.country,name:base.hr
