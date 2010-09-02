@@ -23,6 +23,7 @@
 from osv import fields, osv
 import re
 import tools
+from tools.safe_eval import safe_eval as eval
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB

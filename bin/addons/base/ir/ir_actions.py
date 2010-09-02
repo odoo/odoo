@@ -27,6 +27,7 @@ from tools.config import config
 from tools.translate import _
 import netsvc
 import re
+from tools.safe_eval import safe_eval as eval
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'

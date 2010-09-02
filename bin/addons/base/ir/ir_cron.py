@@ -26,6 +26,7 @@ import netsvc
 import tools
 import pooler
 from osv import fields,osv
+from tools.safe_eval import safe_eval as eval
 
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))

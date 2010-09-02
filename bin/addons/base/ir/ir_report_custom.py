@@ -26,6 +26,7 @@ import ir
 import report.custom
 from tools.translate import _
 import netsvc
+from tools.safe_eval import safe_eval as eval
 
 class report_custom(osv.osv):
     _name = 'ir.report.custom'
@@ -101,7 +102,7 @@ class report_custom(osv.osv):
                         c_f[i] = []
                         tmp = report.fields_child0[i]
                         for j in range(3):
-                            c_f[i].append((not isinstance(eval('tmp.field_child'+str(j)), browse_null) and eval('tmp.field_child'+str(j)+'.ttype')) or None)
+                            c_f[i].append((not isinstance(eval('tmp.field_child'+str(j), {}, {'tmp' : tmp}), browse_null) and eval('tmp.field_child'+str(j)+'.ttype', {}, {'tmp' : tmp})) or None)
 
                         if i == 0:
                             pass

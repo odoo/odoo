@@ -25,20 +25,26 @@
 #-------------------------------------------------------------
 
 
-to_19_fr = ( 'zéro',  'un',   'deux',  'trois', 'quatre',   'cinq',   'six',
-          'sept', 'huit', 'neuf', 'dix',   'onze', 'douze', 'treize',
-          'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf' )
-tens_fr  = ( 'vingt', 'trente', 'quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-vingts', 'Quatre-vingt Dix')
+to_19_fr = ('zéro',  'un',   'deux',  'trois', 'quatre',   'cinq',   'six',
+            'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'treize',
+            'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf' )
+tens_fr  = ( 'Vingt', 'Trente', 'Quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-Vingts', 'Quatre-Vingt Dix')
 denom_fr = ( '',
-          'Mille',     'Millions',         'Milliards',       'Billions',       'Quadrillions',
-          'Quintillion',  'Sextillion',      'Septillion',    'Octillion',      'Nonillion',
-          'Décillion',    'Undecillion',     'Duodecillion',  'Tredecillion',   'Quattuordecillion',
-          'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Icosillion', 'Vigintillion' )
+            'Mille',     'Millions',         'Milliards',       'Billions',       'Quadrillions',
+            'Quintillion',  'Sextillion',      'Septillion',    'Octillion',      'Nonillion',
+            'Décillion',    'Undecillion',     'Duodecillion',  'Tredecillion',   'Quattuordecillion',
+            'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Icosillion', 'Vigintillion' )
 
 # convert a value < 100 to French.
 def _convert_nn_fr(val):
     if val < 20:
         return to_19_fr[val]
+    if val > 70 and val < 80:
+        if val == 71:
+            return 'soixante et onze'
+        return '-'.join([tens_fr[4], to_19_fr[val-60]])
+    if val > 90 and val < 100:
+        return '-'.join(['Quatre-Vingt', to_19_fr[val-80]])
     for (dcap, dval) in ((k, 20 + (10 * v)) for (v, k) in enumerate(tens_fr)):
         if dval + 10 > val:
             if val % 10:
@@ -52,7 +58,10 @@ def _convert_nnn_fr(val):
     word = ''
     (mod, rem) = (val % 100, val // 100)
     if rem > 0:
-        word = to_19_fr[rem] + ' Cent'
+        if rem > 1:
+            word = to_19_fr[rem] + ' Cent'
+        else:
+            word = 'Cent'
         if mod > 0:
             word = word + ' '
     if mod > 0:
@@ -69,7 +78,10 @@ def french_number(val):
             mod = 1000 ** didx
             l = val // mod
             r = val - (l * mod)
-            ret = _convert_nnn_fr(l) + ' ' + denom_fr[didx]
+            if l > 1:
+                ret = _convert_nnn_fr(l) + ' ' + denom_fr[didx]
+            else:
+                ret = denom_fr[didx]
             if r > 0:
                 ret = ret + ', ' + french_number(r)
             return ret
@@ -81,9 +93,8 @@ def amount_to_text_fr(number, currency):
     start_word = french_number(abs(int(list[0])))
     end_word = french_number(int(list[1]))
     cents_number = int(list[1])
-    cents_name = (cents_number > 1) and ' Cents' or ' Cent'
-    final_result = start_word +' '+units_name+' '+ end_word +' '+cents_name
-    return final_result
+    cents_name = (cents_number > 1) and 'Centimes' or 'Centime'
+    return ' '.join([start_word, units_name, end_word, cents_name])
 
 #-------------------------------------------------------------
 # Dutch

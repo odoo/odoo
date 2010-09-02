@@ -29,6 +29,7 @@ import locale
 
 import time, os
 import mx.DateTime
+from tools.safe_eval import safe_eval as eval
 
 class report_printscreen_list(report_int):
     def __init__(self, name):

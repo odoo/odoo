@@ -56,6 +56,7 @@ from tools.translate import _
 import copy
 import sys
 import operator
+from tools.safe_eval import safe_eval as eval
 
 try:
     from lxml import etree
@@ -305,8 +306,8 @@ def get_pg_type(f):
             f_type = ('int4', 'INTEGER')
         else:
             f_type = ('varchar', 'VARCHAR(%d)' % f_size)
-    elif isinstance(f, fields.function) and eval('fields.'+(f._type)) in type_dict:
-        t = eval('fields.'+(f._type))
+    elif isinstance(f, fields.function) and eval('fields.'+(f._type), {}, {'fields' : fields}) in type_dict:
+        t = eval('fields.'+(f._type), {}, {'fields' : fields})
         f_type = (type_dict[t], type_dict[t])
     elif isinstance(f, fields.function) and f._type == 'float':
         if f.digits:

@@ -23,6 +23,7 @@
 from osv import fields, osv
 from locale import localeconv
 import tools
+from tools.safe_eval import safe_eval as eval
 
 class lang(osv.osv):
     _name = "res.lang"

@@ -24,24 +24,19 @@ import os, sys, imp
 from os.path import join as opj
 import itertools
 import zipimport
-
 import osv
 import tools
 import tools.osutil
 import pooler
-
-
 import netsvc
 from osv import fields
-
 import zipfile
 import release
-
 import re
 import base64
 from zipfile import PyZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
-
+from tools.safe_eval import safe_eval as eval
 
 logger = netsvc.Logger()
 

@@ -44,7 +44,9 @@ import copy
 import tools
 import locale
 import netsvc
-import traceback, sys
+import traceback
+import sys
+from tools.safe_eval import safe_eval as eval
 
 _regex = re.compile('\[\[(.+?)\]\]')
 

@@ -38,6 +38,7 @@ import misc
 import cStringIO
 from lxml import etree
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 
 class external_pdf(render.render):
     def __init__(self, pdf):
