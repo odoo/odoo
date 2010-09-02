@@ -130,17 +130,28 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
         # Each history will contain : history[1] = {'<partner_id>': <partner_debit-credit>}
         history = []
         for i in range(5):
+            args_list = (tuple(self.ACCOUNT_TYPE), tuple(partner_ids) ,self.date_from,)
+            dates_query = '(COALESCE(date_maturity,date)'
+            if form[str(i)]['start'] and form[str(i)]['stop']:
+                dates_query += ' BETWEEN %s AND %s)'
+                args_list += (form[str(i)]['start'], form[str(i)]['stop'])
+            elif form[str(i)]['start']:
+                dates_query += ' > %s)'
+                args_list += (form[str(i)]['start'],)
+            else:
+                dates_query += ' < %s)'
+                args_list += (form[str(i)]['stop'],)
             self.cr.execute('SELECT partner_id, SUM(debit-credit)\
                     FROM account_move_line AS l, account_account\
                     WHERE (l.account_id = account_account.id)\
                         AND (account_account.type IN %s)\
-                        AND (COALESCE(date_maturity,date) BETWEEN %s AND %s)\
                         AND (partner_id IN %s)\
                         AND ((reconcile_id IS NULL)\
                         OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                         AND '+ self.query + '\
                         AND account_account.active\
-                    GROUP BY partner_id' , (tuple(self.ACCOUNT_TYPE), form[str(i)]['start'], form[str(i)]['stop'], tuple(partner_ids) ,self.date_from,))
+                        AND ' + dates_query + '\
+                    GROUP BY partner_id' , args_list)
             t = self.cr.fetchall()
             d = {}
             for i in t:
