@@ -26,6 +26,7 @@ import tools
 from osv import fields,osv,orm
 from tools.translate import _
 from tools import ustr
+from tools.safe_eval import safe_eval
 
 #class ir_model_fields(osv.osv):
 #   _inherit = 'ir.model.fields'
@@ -111,7 +112,7 @@ class report_creator(osv.osv):
         arch = '<?xml version="1.0" encoding="utf-8"?>\n'
         if view_type=='graph':
             orientation_eval = {'horz':'horizontal','vert' :'vertical'}
-            orientation = eval(report.view_graph_orientation,orientation_eval)
+            orientation = safe_eval(report.view_graph_orientation,orientation_eval)
             arch +='<graph string="%s" type="%s" orientation="%s">' % (report.name, report.view_graph_type, orientation)
             i = 0
             for val in ('x','y'):

@@ -21,24 +21,25 @@
 ##############################################################################
 
 import base64
-
-from osv import osv, fields
-from osv.orm import except_orm
-import urlparse
-
 import os
-
-import pooler
-from content_index import content_index
-import netsvc
+import urlparse
 import StringIO
-
 import random
 import string
 from psycopg2 import Binary
-from tools import config
+
 import tools
 from tools.translate import _
+from tools import config
+from tools.safe_eval import safe_eval as eval
+
+from osv import osv, fields
+from osv.orm import except_orm
+
+import pooler
+import netsvc
+
+from content_index import content_index
 
 def random_name():
     random.seed()
@@ -121,7 +122,7 @@ class node_class(object):
         if self.object and self.root and (self.object.type=='ressource'):
             ids += fobj.search(self.cr, self.uid, where+[ ('parent_id','=',False) ])
         res = fobj.browse(self.cr, self.uid, ids, context=self.context)
-        return map(lambda x: node_class(self.cr, self.uid, self.path+'/'+eval('x.'+fobj._rec_name), x, False, context=self.context, type='file', root=False), res) + res2
+        return map(lambda x: node_class(self.cr, self.uid, self.path+'/'+eval('x.'+fobj._rec_name, {'x' : x}), x, False, context=self.context, type='file', root=False), res) + res2
     
     def get_translation(self,value,lang):
         result = value
@@ -163,7 +164,7 @@ class node_class(object):
             file_ids=fobj.search(self.cr,self.uid,vargs)
 
             res = fobj.browse(self.cr, self.uid, file_ids, context=self.context)
-            result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+eval('x.'+fobj._rec_name), x, False, context=self.context, type='file', root=self.root), res)
+            result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+eval('x.'+fobj._rec_name, {'x' : x}), x, False, context=self.context, type='file', root=self.root), res)
         if self.type=='collection' and self.object.type=="ressource":
             where = self.object.domain and eval(self.object.domain, {'active_id':self.root, 'uid':self.uid}) or []
             pool = pooler.get_pool(self.cr.dbname)            
@@ -204,7 +205,7 @@ class node_class(object):
             res = obj.browse(self.cr, self.uid, ids,self.context)
             for r in res:                               
                 if len(obj.fields_get(self.cr, self.uid, [_dirname_field])):
-                    r.name = eval('r.'+_dirname_field)
+                    r.name = eval('r.'+_dirname_field, {'r' : r})
                 else:
                     r.name = False
                 if not r.name:

@@ -27,6 +27,7 @@ import tools
 import os
 from xml.dom import minidom
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 
 info_start_form = '''<?xml version="1.0"?>
 <form string="Module Merging">
