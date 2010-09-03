@@ -93,7 +93,7 @@ logging.DEBUG_RPC = logging.DEBUG - 1
 class DBLogger(logging.getLoggerClass()):
     def makeRecord(self, *args, **kwargs):
         record = logging.Logger.makeRecord(self, *args, **kwargs)
-        record.dbname = getattr(threading.current_thread(), 'dbname', '?')
+        record.dbname = getattr(threading.currentThread(), 'dbname', '?')
         return record
 
 def init_logger():
