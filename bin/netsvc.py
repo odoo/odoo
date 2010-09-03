@@ -89,14 +89,22 @@ LOG_CRITICAL = 'critical'
 # add new log level below DEBUG
 logging.DEBUG_RPC = logging.DEBUG - 1
 
+
+class DBLogger(logging.getLoggerClass()):
+    def makeRecord(self, *args, **kwargs):
+        record = logging.Logger.makeRecord(self, *args, **kwargs)
+        record.dbname = getattr(threading.current_thread(), 'dbname', '?')
+        return record
+
 def init_logger():
     import os
     from tools.translate import resetlocale
     resetlocale()
 
-    logger = logging.getLogger()
+    logging.setLoggerClass(DBLogger)
+
     # create a format for log messages and dates
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s')
+    formatter = logging.Formatter('[%(asctime)s][%(dbname)s] %(levelname)s:%(name)s:%(message)s')
 
     logging_to_stdout = False
     if tools.config['syslog']:
@@ -107,7 +115,7 @@ def init_logger():
                                                           release.version))
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
-        formatter = logging.Formatter("%s %s" % (release.description, release.version) + ':%(levelname)s:%(name)s:%(message)s')
+        formatter = logging.Formatter("%s %s" % (release.description, release.version) + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s')
 
     elif tools.config['logfile']:
         # LogFile Handler
@@ -131,6 +139,7 @@ def init_logger():
     handler.setFormatter(formatter)
 
     # add the handler to the root logger
+    logger = logging.getLogger()
     logger.addHandler(handler)
     logger.setLevel(tools.config['log_level'] or '0')
 
@@ -174,7 +183,7 @@ class Logger(object):
             msg = tools.exception_to_unicode(msg)
 
         msg = tools.ustr(msg).strip()
-        
+
         if level in (LOG_ERROR,LOG_CRITICAL):
             msg = common().get_server_environment() + '\n' + msg
 
