@@ -1129,8 +1129,9 @@ class account_move(osv.osv):
 
     def post(self, cr, uid, ids, context=None):
         invoice = context.get('invoice', False)
-        if self.validate(cr, uid, ids, context) and len(ids):
-            for move in self.browse(cr, uid, ids):
+        valid_moves = self.validate(cr, uid, ids, context)
+        if valid_moves:
+            for move in self.browse(cr, uid, valid_moves):
                 if move.name =='/':
                     new_name = False
                     journal = move.journal_id
@@ -1150,7 +1151,7 @@ class account_move(osv.osv):
             cr.execute('UPDATE account_move '\
                        'SET state=%s '\
                        'WHERE id IN %s',
-                       ('posted', tuple(ids),))
+                       ('posted', tuple(valid_moves),))
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
         return True
@@ -1421,7 +1422,8 @@ class account_move(osv.osv):
         for record in valid_moves:
             self.pool.get('account.move.line').create_analytic_lines(cr, uid, [line.id for line in record.line_id], context)
 
-        return len(valid_moves) > 0
+        valid_moves = [move.id for move in valid_moves]
+        return len(valid_moves) > 0 and valid_moves or False
 
 account_move()
 
@@ -1986,21 +1988,26 @@ class account_model(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
         'legend' :fields.text('Legend', readonly=True, size=100),
+        'date': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Current Date', required=True, help="The date of the generated entries"),
     }
 
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'date': 'today'
     }
     def generate(self, cr, uid, ids, datas={}, context={}):
         move_ids = []
+        account_move_obj = self.pool.get('account.move')
+        account_move_line_obj = self.pool.get('account.move.line')
+        period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
+        if not period_id:
+            raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
+        period_id = period_id[0]
+        
         for model in self.browse(cr, uid, ids, context):
             context.update({'date':datas['date']})
-            period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
-            if not period_id:
-                raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
-            period_id = period_id[0]
-            move_id = self.pool.get('account.move').create(cr, uid, {
+            move_id = account_move_obj.create(cr, uid, {
                 'ref': model.ref,
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
@@ -2008,10 +2015,16 @@ class account_model(osv.osv):
             })
             move_ids.append(move_id)
             for line in model.lines_id:
+                analytic_account_id = False
+                if line.analytic_account_id:
+                    if not model.journal_id.analytic_journal_id:
+                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (model.journal_id.name,))
+                    analytic_account_id = line.analytic_account_id.id
                 val = {
                     'move_id': move_id,
                     'journal_id': model.journal_id.id,
-                    'period_id': period_id
+                    'period_id': period_id,
+                    'analytic_account_id': analytic_account_id
                 }
                 val.update({
                     'name': line.name,
@@ -2027,7 +2040,7 @@ class account_model(osv.osv):
                 })
                 c = context.copy()
                 c.update({'journal_id': model.journal_id.id,'period_id': period_id})
-                self.pool.get('account.move.line').create(cr, uid, val, context=c)
+                account_move_line_obj.create(cr, uid, val, context=c)
         return move_ids
 account_model()
 
@@ -2040,22 +2053,14 @@ class account_model_line(osv.osv):
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries"),
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
-
-        'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade"),
-
-        'model_id': fields.many2one('account.model', 'Model', required=True, ondelete="cascade", select=True),
-
         'ref': fields.char('Reference', size=16),
-
+        'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade"),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete="cascade"),
+        'model_id': fields.many2one('account.model', 'Model', required=True, ondelete="cascade", select=True),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency."),
         'currency_id': fields.many2one('res.currency', 'Currency'),
-
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Maturity date', help="The maturity date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."),
-        'date': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Current Date', required=True, help="The date of the generated entries"),
-    }
-    _defaults = {
-        'date': lambda *a: 'today'
     }
     _order = 'sequence'
     _sql_constraints = [

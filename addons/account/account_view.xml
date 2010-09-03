@@ -1548,13 +1548,13 @@
             <field name="arch" type="xml">
                 <tree string="Journal Entry Model Line" editable="bottom">
                     <field name="sequence"/>
-                    <field name="ref"/>
                     <field name="name"/>
+                    <field name="ref"/>
                     <field name="account_id"/>
+                    <field name="analytic_account_id"/>
                     <field name="partner_id"/>
                     <field name="debit"/>
                     <field name="credit"/>
-                    <field name="date"/>
                     <field name="date_maturity"/>
                 </tree>
             </field>
@@ -1571,12 +1571,11 @@
                     <field name="sequence"/>
                     <field name="ref" select="1"/>
                     <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                    <field name="analytic_account_id"/>
                     <field name="partner_id"/>
+                    <field name="quantity"/>
                     <field name="debit" select="1"/>
                     <field name="credit" select="1"/>
-                    <field name="quantity"/>
-                    <newline/>
-                    <field name="date"/>
                     <field name="date_maturity"/>
                 </form>
             </field>
@@ -1589,9 +1588,10 @@
             <field name="arch" type="xml">
                 <form string="Journal Entry Model">
                     <field name="name" select="1"/>
-                    <field name="ref" select="1"/>
+                    <field name="ref"/>
                     <field name="journal_id" select="1"/>
-                    <field name="company_id" select="1" widget='selection'/>
+                    <field name="company_id" select="1" widget='selection' groups="base.group_multi_company"/>
+                    <field name="date" context="{'date': date}"/>
                     <field colspan="4" nolabel="1" name="lines_id" height="250" widget="one2many_list"/>
                     <separator string="Legend" colspan="4"/>
                     <field name="legend" colspan="4" nolabel="1"/>
@@ -1601,6 +1601,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_model_tree" model="ir.ui.view">
             <field name="name">account.model.tree</field>
             <field name="model">account.model</field>
@@ -1609,15 +1610,39 @@
                 <tree string="Journal Entry Model">
                     <field name="name"/>
                     <field name="journal_id"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
+        
+        <record id="view_model_search" model="ir.ui.view">
+            <field name="name">account.model.search</field>
+            <field name="model">account.model</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Journal Entry Model">
+                	<group>
+	                	<filter string="Sale" icon="terp-sale" domain="[('journal_id.type', '=', 'sale')]"/>
+	                	<filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
+	                	<separator orientation="vertical"/>
+	                    <field name="name"/>
+	                    <field name="journal_id"/>
+	                    <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                    	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
         <record id="action_model_form" model="ir.actions.act_window">
             <field name="name">Recurring Models</field>
             <field name="res_model">account.model</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,search</field>
+            <field name="search_id">view_model_search</field>
         </record>
         <menuitem action="action_model_form" id="menu_action_model_form" sequence="5" parent="account.menu_configuration_misc" groups="base.group_extended"/>
 
@@ -2418,6 +2443,7 @@
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
                                     <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'currency_id': parent.currency, 'journal_id': parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field invisible="1" name="reconcile_amount"/>
