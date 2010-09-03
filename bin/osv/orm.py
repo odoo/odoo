@@ -2715,17 +2715,50 @@ class orm(orm_template):
 
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
-            cr.execute("SELECT conname FROM pg_constraint where conname=%s", (conname,))
-            if not cr.dictfetchall():
-                query = 'ALTER TABLE "%s" ADD CONSTRAINT "%s" %s' % (self._table, conname, con,)
+
+            cr.execute("SELECT conname, pg_catalog.pg_get_constraintdef(oid, true) as condef FROM pg_constraint where conname=%s", (conname,))
+            existing_constraints = cr.dictfetchall()
+
+            sql_actions = {
+                'drop': {
+                    'execute': False,
+                    'query': 'ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (self._table, conname, ),
+                    'msg_ok': "Table '%s': dropped constraint '%s'. Reason: its definition changed from '%%s' to '%s'" % (
+                        self._table, conname, con),
+                    'msg_err': "Table '%s': unable to drop \'%s\' constraint !" % (self._table, con),
+                    'order': 1,
+                },
+                'add': {
+                    'execute': False,
+                    'query': 'ALTER TABLE "%s" ADD CONSTRAINT "%s" %s' % (self._table, conname, con,),
+                    'msg_ok': "Table '%s': added constraint '%s' with definition=%s" % (self._table, conname, con),
+                    'msg_err': "Table '%s': unable to add \'%s\' constraint !\n If you want to have it, you should update the records and execute manually:\n%%s" % (
+                        self._table, con),
+                    'order': 2,
+                },
+            }
+
+            if not existing_constraints:
+                # constraint does not exists:
+                sql_actions['add']['execute'] = True
+                sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
+            elif con.lower() not in [item['condef'].lower() for item in existing_constraints]:
+                # constraint exists but its definition has changed:
+                sql_actions['drop']['execute'] = True
+                sql_actions['drop']['msg_ok'] = sql_actions['drop']['msg_ok'] % (existing_constraints[0]['condef'].lower(), )
+                sql_actions['add']['execute'] = True
+                sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
+
+            # we need to add the constraint:
+            sql_actions = [item for item in sql_actions.values()]
+            sql_actions.sort(key=lambda x: x['order'])
+            for sql_action in [action for action in sql_actions if action['execute']]:
                 try:
-                    cr.execute(query)
+                    cr.execute(sql_action['query'])
                     cr.commit()
-                    logging.getLogger('schema').info("Table '%s': added constraint '%s' with definition=%s" % (self._table, conname, con))
+                    logging.getLogger('schema').info(sql_action['msg_ok'])
                 except:
-                    msg = "Table '%s': unable to add \'%s\' constraint !\n If you want to have it, you should update the records and execute manually:\n%s" % (
-                        self._table, con, query)
-                    logger.notifyChannel('schema', netsvc.LOG_WARNING, msg)
+                    logger.notifyChannel('schema', netsvc.LOG_WARNING, sql_action['msg_err'])
                     cr.rollback()
 
         if create:
