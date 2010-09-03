@@ -108,7 +108,7 @@ class Cursor(object):
             self._close(True)
 
     @check
-    def execute(self, query, params=None):
+    def execute(self, query, params=None, log_exceptions=True):
         if '%d' in query or '%f' in query:
             self.__logger.warn(query)
             self.__logger.warn("SQL queries cannot contain %d or %f anymore. "
@@ -123,10 +123,12 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            self.__logger.error("Programming error: %s, in query %s", pe, query)
+            if log_exceptions or self.sql_log:
+                self.__logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            self.__logger.exception("bad query: %s", self._obj.query or query)
+            if log_exceptions or self.sql_log:
+                self.__logger.exception("bad query: %s", self._obj.query or query)
             raise
 
         if self.sql_log:
