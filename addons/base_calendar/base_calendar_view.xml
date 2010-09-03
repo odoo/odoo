@@ -245,7 +245,7 @@
                                    attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                    name="open_event" icon="gtk-edit"
                                    type="object" />
-                               <button string="ExRule"
+                               <button string="Exclude range" groups="base.group_extended"
                                     help="Add Exception Rule"
                                     name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
                                     context="{'model' : 'calendar.event'}"
@@ -255,8 +255,8 @@
                     <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
                         <separator string="Select data for Custom Rule" colspan="8"/>
                         <group col="8" colspan="4">
-                            <field name="freq" />
                             <field name="interval" />
+                            <field name="freq" />
                             <field name="count" />
                             <field name="end_date" />
                         </group>
