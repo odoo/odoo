@@ -128,19 +128,17 @@
         <td>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]]</para>
+          <para style="terp_default_9">[[ picking.address_id and picking.address_id.street2 or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.zip or '' ]] [[ picking.address_id and picking.address_id.city or '']]</para>
-
-          <para style="terp_default_2">
-            <font color="white"> </font>
-          </para>
-          <para style="terp_default_2">
-            <font color="white"> </font>
-          </para>
+		  <para style="terp_default_9">[[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ (  picking.address_id and picking.address_id.title) or '' ]] [[ (picking.address_id and picking.address_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.title) or '' ]] [[ (picking.address_id and picking.address_id.name) or '' ]] </para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.street) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.zip) or '' ]] [[ (picking.address_id and picking.address_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.street2) or removeParentNode('para') ]] </para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.zip) or '' ]] [[ (picking.address_id and picking.address_id.city) or '' ]]</para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
         </td>
       </tr>
@@ -195,7 +193,7 @@
           <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ 'weight' in picking._columns.keys() and picking.weight or '']] </para>
+          <para style="terp_tblheader_Details_Centre">[[ 'weight' in picking._columns.keys() and picking.weight or '']] </para>
         </td>
       </tr>
     </blockTable>
@@ -247,7 +245,7 @@
             <para style="terp_default_9">[[ move_lines.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
+            <para style="terp_default_Centre_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -283,7 +281,7 @@
             <para style="terp_default_9">[[ move_lines.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
+            <para style="terp_default_Centre_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
           </td>
         </tr>
       </blockTable>
