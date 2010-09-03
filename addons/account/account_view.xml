@@ -483,9 +483,10 @@
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
-                        <field name="journal_id" widget="selection"/>
-                        <field name="date"/>
                         <field name="name"/>
+                        <field name="date"/>
+                        <field name="period_id"/>
+                        <field name="journal_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -2476,11 +2477,11 @@
                         <group col="2" colspan="2">
                             <separator string="Dates" colspan="4"/>
                             <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date)"/>
-                            <field name="closing_date" select="1" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            <field name="closing_date" select="1" readonly="1"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_start" attrs="{'readonly':[('state','in',('open','confirm'))]}" string="Opening Balance"/>
+                            <field name="balance_start" readonly="1" string="Opening Balance"/>
                             <field name="total_entry_encoding"/>
                         </group>
                         <group col="2" colspan="2">
