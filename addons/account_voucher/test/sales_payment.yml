@@ -18,7 +18,7 @@
     property_account_receivable: account.a_recv
 
 -
-  Creat an invoice for the partner
+  Create an invoice for the partner
 -
   !record {model: account.invoice, id: account_invoice_0}:
     account_id: account.a_recv
@@ -72,6 +72,8 @@
         'period_id': ref('account.period_8'),
         'type': 'receipt',
     }
+    if not res['value']['line_cr_ids']:
+      res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
     res['value']['line_cr_ids'][0]['amount'] = 450.0
     vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
     id = self.create(cr, uid, vals)
