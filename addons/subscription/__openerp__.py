@@ -29,7 +29,7 @@
     'depends': ['base'],
     'init_xml': [],
     'update_xml': ['security/subcription_security.xml', 'security/ir.model.access.csv', 'subscription_view.xml'],
-    'demo_xml': [],
+    'demo_xml': ['subscription_demo.xml',],
     'installable': True,
     'active': False,
     'certificate': '0029454782573',

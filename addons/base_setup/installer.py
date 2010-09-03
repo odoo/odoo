@@ -107,7 +107,7 @@ class base_setup_installer(osv.osv_memory):
     def _if_misc_tools(self, cr, uid, ids, context=None):
         interface = self.pool.get('res.users').browse(cr, uid, uid, context=context).view
         if interface == 'simple' or interface =='extended' :
-            return ['lunch','idea','survey']
+            return ['profile_tools']
         return None
 
     def _if_account(self, cr, uid, ids, context=None):
