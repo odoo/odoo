@@ -21,6 +21,7 @@
 
 __all__ = ['db_connect', 'close_db']
 
+from threading import current_thread
 import logging
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE
 from psycopg2.psycopg1 import cursor as psycopg1cursor
@@ -362,11 +363,15 @@ def dsn_are_equals(first, second):
 _Pool = ConnectionPool(int(tools.config['db_maxconn']))
 
 def db_connect(db_name):
+    current_thread().dbname = db_name
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
     _Pool.close_all(dsn(db_name))
     tools.cache.clean_caches_for_db(db_name)
+    ct = current_thread()
+    if hasattr(ct, 'dbname'):
+        delattr(ct, 'dbname')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

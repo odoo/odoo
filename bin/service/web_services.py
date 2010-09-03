@@ -20,7 +20,6 @@
 ##############################################################################
 
 import base64
-import logging
 import os
 import security
 import thread
@@ -38,8 +37,6 @@ import sql_db
 import tools
 import locale
 from cStringIO import StringIO
-
-logging.basicConfig()
 
 class db(netsvc.ExportService):
     def __init__(self, name="db"):
