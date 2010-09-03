@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -126,7 +126,7 @@ class Cursor(object):
             self.__logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            self.__logger.exception("bad query: %s", self._obj.query)
+            self.__logger.exception("bad query: %s", self._obj.query or query)
             raise
 
         if self.sql_log:
@@ -268,7 +268,7 @@ class ConnectionPool(object):
                 delattr(cnx, 'leaked')
                 self._connections.pop(i)
                 self._connections.append((cnx, False))
-                self._debug('Free leaked connection to %r', cnx.dsn)
+                self.__logger.warn('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and dsn_are_equals(cnx.dsn, dsn):
@@ -311,7 +311,7 @@ class ConnectionPool(object):
 
     @locked
     def close_all(self, dsn):
-        self._debug('Close all connections to %r', dsn)
+        self.__logger.info('%r: Close all connections to %r', self, dsn)
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
             if dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
