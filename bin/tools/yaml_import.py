@@ -250,6 +250,25 @@ class YamlInterpreter(object):
                     if not success:
                         msg = 'Assertion "%s" FAILED\ntest: %s\n'
                         args = (assertion.string, test)
+                        for aop in ('==', '!=', '<>', 'in', 'not in', '>=', '<=', '>', '<'):
+                            if aop in test:
+                                left, right = test.split(aop,1)
+                                lmsg = ''
+                                rmsg = ''
+                                try:
+                                    lmsg = unsafe_eval(left, self.eval_context, RecordDictWrapper(record))
+                                except Exception, e:
+                                    lmsg = '<exc>'
+
+                                try:
+                                    rmsg = unsafe_eval(right, self.eval_context, RecordDictWrapper(record))
+                                except Exception, e:
+                                    rmsg = '<exc>'
+
+                                msg += 'values: ! %s %s %s'
+                                args += ( lmsg, aop, rmsg )
+                                break
+
                         self._log_assert_failure(assertion.severity, msg, *args)
                         return
             else: # all tests were successful for this assertion tag (no break)
@@ -362,14 +381,14 @@ class YamlInterpreter(object):
                 value = expression
             # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
         return value
-    
+
     def process_context(self, node):
         self.context = node.__dict__
         if node.uid:
             self.uid = self.get_id(node.uid)
         if node.noupdate:
             self.noupdate = node.noupdate
-    
+
     def process_python(self, node):
         def log(msg, *args):
             self.logger.log(logging.TEST, msg, *args)
@@ -386,7 +405,7 @@ class YamlInterpreter(object):
             return
         except Exception, e:
             self.logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
-            raise YamlImportAbortion(e)
+            raise
         else:
             self.assert_report.record(True, python.severity)
     
