@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,28 +15,20 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
 import pooler
+from osv import osv, fields
 
-class wizard_configuration(wizard.interface):   
+class base_module_configuration(osv.osv_memory):
 
-    def _config(self, cr, uid, data, context=None):
-        return pooler.get_pool(cr.dbname).get('res.config')\
-            .next(cr, uid, [], context=context)
+     _name = "base.module.configuration"
 
-    states = {        
-        'init':{
-            'result': {
-                'type': 'action',
-                'action': _config,
-                'state': 'end',
-            },
-        }
-    }
-wizard_configuration('module.configuration')
+     def config(self, cr, uid, data, context=None):
+        return self.pool.get('res.config').next(cr, uid, [], context=context)
+
+base_module_configuration()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
