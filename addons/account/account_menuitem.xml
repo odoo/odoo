@@ -7,6 +7,8 @@
         <menuitem id="menu_finance_payables" name="Vendors" parent="menu_finance" sequence="2" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="menu_finance_bank_and_cash" name="Bank and Cash" parent="menu_finance" sequence="3"/>
         <menuitem id="menu_finance_periodical_processing" name="Periodical Processing" parent="menu_finance" sequence="8" groups="group_account_user,group_account_manager,base.group_system,group_account_invoice"/>
+        <menuitem id="menu_finance_periodical_processing_bank" name="Bank Reconciliation" parent="menu_finance_periodical_processing" sequence="8" groups="group_account_user,group_account_manager,base.group_system,group_account_invoice"/>
+        
         <menuitem id="periodical_processing_journal_entries_validation" name="Draft Entries" parent="menu_finance_periodical_processing" groups="group_account_user,group_account_manager,base.group_system"/>
         <menuitem id="periodical_processing_reconciliation" name="Reconciliation" parent="menu_finance_periodical_processing"/>
         <menuitem id="periodical_processing_invoicing" name="Invoicing" parent="menu_finance_periodical_processing"/>

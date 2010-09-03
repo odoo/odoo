@@ -77,7 +77,7 @@ class payment_order_create(osv.osv_memory):
             elif payment.date_prefered == 'due':
                 date_to_pay = line.date_maturity
             elif payment.date_prefered == 'fixed':
-                date_to_pay = payment.date_planned
+                date_to_pay = payment.date_scheduled
             payment_obj.create(cr, uid,{
                 'move_line_id': line.id,
                 'amount_currency': line.amount_to_pay,

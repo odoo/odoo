@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -64,7 +64,7 @@ class budget_report(report_sxw.rml_parse):
             achievements = float(self.cr.fetchone()[0])
             res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
         return res
-report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml',parser=budget_report,header=False)
+report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml',parser=budget_report, header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
