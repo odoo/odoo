@@ -441,7 +441,7 @@
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="name"/>
-                        <field name="journal_id"/>
+                        <field name="journal_id" widget='selection'/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -1882,9 +1882,19 @@
     # Admin config
     -->
 
-        <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_bank_statement" name="Bank statements" res_model="account.bank.statement" src_model="account.journal"/>
+        <act_window 
+           id="act_account_journal_2_account_bank_statement" 
+           name="Bank statements" 
+           context="{'search_default_journal_id':active_id,}"
+           res_model="account.bank.statement" 
+           src_model="account.journal"/>
 
-        <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_move_line" name="Journal Items" res_model="account.move.line" src_model="account.journal"/>
+        <act_window 
+           id="act_account_journal_2_account_move_line" 
+           name="Journal Items" 
+           context="{'search_default_journal_id':active_id,}"
+           res_model="account.move.line" 
+           src_model="account.journal"/>
 
         <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 

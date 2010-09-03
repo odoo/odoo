@@ -354,7 +354,7 @@
                         <filter icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
                         <filter icon="terp-camera_test" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Invoices"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
+                        <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
                         <field name="number"/>
                         <field name="partner_id"/>
@@ -499,7 +499,12 @@
 
         <act_window context="{'search_default_partner_id':[active_id]}" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
-        <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
+        <act_window 
+           id="act_account_journal_2_account_invoice_opened" 
+           name="Unpaid Invoices"
+           context="{'search_default_journal_id':active_id, 'search_default_unpaid':1,}"
+           res_model="account.invoice" 
+           src_model="account.journal"/>
 
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
 
