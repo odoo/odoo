@@ -2303,7 +2303,22 @@ class orm(orm_template):
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
-
+        
+        if not res:
+            res = map(lambda x: {'id': x}, ids)
+            for record in res:
+                for f in fields_to_read:
+                    field_val = False
+                    if f in self._columns.keys():
+                        ftype = self._columns[f]._type
+                    elif key in self._inherit_fields.keys():
+                        ftype = self._inherit_fields[f][2]._type
+                    else:
+                        continue
+                    if ftype in ('one2many', 'many2many'):
+                        field_val = []
+                    record.update({f:field_val})
+        
         for f in fields_pre:
             if f == self.CONCURRENCY_CHECK_FIELD:
                 continue
