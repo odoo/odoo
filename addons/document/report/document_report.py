@@ -40,7 +40,6 @@ class report_document_user(osv.osv):
         'file_size': fields.integer('File Size', readonly=True),
         'nbr':fields.integer('# of Files', readonly=True),
         'type':fields.char('Directory Type',size=64,readonly=True),
-        'partner':fields.char('Partner',size=64,readonly=True),
      }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_document_user')
