@@ -121,7 +121,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_account_period_search" model="ir.ui.view">
             <field name="name">account.period.search</field>
             <field name="model">account.period</field>
@@ -137,7 +137,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="action_account_period_form" model="ir.actions.act_window">
             <field name="name">Periods</field>
             <field name="res_model">account.period</field>
@@ -520,7 +520,7 @@
                         <page string="Transaction">
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
-                                    <field name="sequence" invisible="1"/>
+                                    <field name="sequence"/>
                                     <field name="date"/>
                                     <field name="ref"/>
                                     <field name="name"/>
@@ -2411,7 +2411,7 @@
                         <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
-                                    <field name="sequence" invisible="1"/>
+                                    <field name="sequence"/>
                                     <field name="date"/>
                                     <field name="ref"/>
                                     <field name="name"/>
