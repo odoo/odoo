@@ -56,9 +56,6 @@ def _eval_expr(cr, ident, workitem, action):
             ret=False
         else:
             env = Env(cr, uid, model, ids)
-            import tools
-            tools.debug(line)
-            tools.debug(env)
             ret = eval(line, env, nocopy=True)
     return ret
 
