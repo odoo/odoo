@@ -1752,7 +1752,7 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         for move in self.browse(cr, uid, ids, context=context):
-            if move.product_id.type == 'consu':
+            if move.product_id.type == 'consu' or move.location_id.usage == 'supplier':
                 if move.state in ('confirmed', 'waiting'):
                     done.append(move.id)
                 pickings[move.picking_id.id] = 1
