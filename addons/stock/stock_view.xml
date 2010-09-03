@@ -703,7 +703,7 @@
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Available Pickings"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Pickings"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-accessories-archiver-minus" string="Back Order" domain="[('backorder_id', '&lt;&gt;', False)]" help="Has Back Order"  />
+                        <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="address_id"/>
@@ -883,7 +883,7 @@
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Orders" />
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Orders"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-accessories-archiver-minus" string="Back Order" domain="[('backorder_id','!=',False)]" help="Back Order"/>
+                        <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="address_id"/>
@@ -1094,7 +1094,7 @@
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Outgoing Orders"/>
                         <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Outgoing Orders"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '&lt;&gt;', False)]" help="Has Back Order"  />
+                        <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="address_id" />
@@ -1295,7 +1295,7 @@
                     <group col="8" colspan="4">
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Incoming Orders" />
                         <separator orientation="vertical" />
-                        <filter icon="terp-accessories-archiver-minus" string="Back Order" domain="[('backorder_id', '!=', False)]" help="Has Back Order" groups="base.group_extended"/>
+                        <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="address_id"/>
