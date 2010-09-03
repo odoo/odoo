@@ -975,6 +975,13 @@ class account_fiscalyear(osv.osv):
     _columns = {
         'end_journal_period_id':fields.many2one('account.journal.period','End of Year Entries Journal', readonly=True),
     }
+    
+    def copy(self, cr, uid, id, default={}, context=None):
+        default.update({
+            'period_ids': [],
+            'end_journal_period_id': False
+        })
+        return super(account_fiscalyear, self).copy(cr, uid, id, default=default, context=context)
 
 account_fiscalyear()
 #----------------------------------------------------------
