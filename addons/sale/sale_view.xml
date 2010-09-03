@@ -111,8 +111,8 @@
                         <page string="Sale Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
@@ -387,13 +387,13 @@ to your configuration: from the sale order, from the pickings, etc.
                             <field name="invoiced"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                             <separator colspan="4" string="Manual Designation"/>
-                            <field colspan="4" name="name"/>
+                            <field colspan="4" name="name" groups="base.group_extended"/>
                             <field name="price_unit"/>
                             <field name="discount"/>
                             <field name="type" groups="base.group_extended"/>
                             <field name="delay" groups="base.group_extended"/>
                             <field name="price_subtotal"/>
-                            <field name="th_weight"/>
+                            <field name="th_weight" groups="base.group_extended"/>
                             <separator colspan="4" string="Taxes"/>
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                             <separator colspan="4" string="States"/>

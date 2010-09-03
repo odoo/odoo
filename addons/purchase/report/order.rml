@@ -71,14 +71,12 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_All_Total_Detail">
       <blockAlignment value="LEFT"/>
@@ -151,12 +149,12 @@
               <td>
                 <para style="terp_default_9">[[ repeatIn(o.dest_address_id and [o.dest_address_id] or [],'addr') ]]</para>
                 <para style="terp_default_Bold_9">Shipping address :</para>
-                <para style="terp_default_9">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+                <para style="terp_default_9">[[ addr.partner_id.title or '' ]] [[ addr.partner_id.name ]]</para>
                 <para style="terp_default_9">[[ addr.title or '' ]] [[ addr.name ]]</para>
                 <para style="terp_default_9">[[ addr.street ]]</para>
-                <para style="terp_default_9">[[ addr.street2 or '' ]]</para>
+                <para style="terp_default_9">[[ addr.street2 or removeParentNode('para') ]]</para>
                 <para style="terp_default_9">[[ addr.zip or '' ]] [[ addr.city or '' ]]</para>
-                <para style="terp_default_9">[[ addr.state_id and addr.state_id.name or '' ]]</para>
+                <para style="terp_default_9">[[ addr.state_id and addr.state_id.name or removeParentNode('para') ]]</para>
                 <para style="terp_default_9">[[ addr.country_id and addr.country_id.name or '' ]]</para>
               </td>
             </tr>
@@ -172,11 +170,10 @@
         </td>
         <td>
           <para style="terp_default_9">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ o.partner_address_id.title or '' ]] [[ o.partner_address_id.name ]]</para>
           <para style="terp_default_9">[[ o.partner_address_id.street ]]</para>
-          <para style="terp_default_9">[[ o.partner_address_id.street2 or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_address_id.street2 or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ o.partner_address_id.zip or '' ]] [[ o.partner_address_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_address_id.state_id and o.partner_address_id.state_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_address_id.state_id and o.partner_address_id.state_id.name or removeParentNode('para')]]</para>
           <para style="terp_default_9">[[ o.partner_address_id.country_id and o.partner_address_id.country_id.name or '' ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
@@ -260,7 +257,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[repeatIn(o.order_line,'line')]]</para>
-      <blockTable colWidths="179.0,82.0,73.0,44.0,20.0,58.0,79.0" style="Table_Order_Pur_line_Content">
+      <blockTable colWidths="179.0,82.0,73.0,64.0,57.0,79.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
@@ -272,10 +269,7 @@
             <para style="terp_default_Centre_9">[[ formatLang( line.date_planned, date=True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.product_qty ) ]] </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ line.product_uom.name ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line.product_qty ) ]] [[ line.product_uom.name ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.price_unit ) ]]</para>
@@ -313,11 +307,6 @@
               <font color="white"> </font>
             </para>
           </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
-          </td>
         </tr>
       </blockTable>
     </section>
@@ -332,7 +321,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed ) ]] [[ o.pricelist_id.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed ) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -345,7 +334,7 @@
           <para style="terp_default_9">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[ o.pricelist_id.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -358,7 +347,7 @@
           <para style="terp_default_Bold_9">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang(o.amount_total ) ]] [[ o.pricelist_id.currency_id.symbol ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ formatLang(o.amount_total ) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
     </blockTable>
