@@ -611,11 +611,11 @@
                                    <tree colors="red:scraped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                    <field name="product_uom" readonly="1" string="UOM"/>
-                                    <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
-                                    <field name="prodlot_id" />
-                                    <field name="state" invisible="1"/>
-                                    <field name="scraped" invisible="1"/>
+                                       <field name="product_uom" readonly="1" string="UOM"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
+                                       <field name="prodlot_id" />
+                                       <field name="state" invisible="1"/>
+                                       <field name="scraped" invisible="1"/>
                                        <button
                                            name="%(stock.track_line)d"
                                            string="Split in production lots"
@@ -661,11 +661,11 @@
                                    <tree colors="red:scraped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                    <field name="product_uom" readonly="1" string="UOM"/>
-                                    <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
+                                       <field name="product_uom" readonly="1" string="UOM"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                                        <field name="prodlot_id" />
-                                    <field name="state" invisible="1"/>
-                                    <field name="scraped" invisible="1"/>
+                                       <field name="state" invisible="1"/>
+                                       <field name="scraped" invisible="1"/>
                                        <button name="%(stock.track_line)d"
                                             string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                                        <button name="%(stock.move_scrap)d"
