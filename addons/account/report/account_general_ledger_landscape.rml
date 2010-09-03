@@ -142,12 +142,12 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="8.3" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="date" fontName="Helvetica" fontSize="8.3" leading="10" spaceBefore="0.0" spaceAfter="6.0" alignment="CENTER"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="9.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="date" fontName="Helvetica-Bold" fontSize="9.0" leading="10" spaceBefore="0.0" spaceAfter="6.0" alignment="CENTER"/>
     <paraStyle name="P2_content" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P3" fontName="Helvetica" fontSize="8.3" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3_content" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P4" fontName="Helvetica" fontSize="8.3" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P4_content" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P5" fontName="Helvetica" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P6" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -160,7 +160,7 @@
     <paraStyle name="terp_default_Centre_8a" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="11.0" leading="14"/>
-    <paraStyle name="P12" fontName="Helvetica" fontSize="14.0" leading="17"/>
+    <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="9.0" leading="0"/>
     <paraStyle name="P13" fontName="Helvetica-Bold" fontSize="10.0" leading="8" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P14" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P15" fontName="Helvetica-Bold" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -194,9 +194,6 @@
     </para>
    <para>[[ repeatIn(objects, 'a') ]]</para>
 
-   <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -249,23 +246,20 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
 
    	<blockTable colWidths="66.0,35.0,150.0, 90.0,60.0,330.0,50.0,69.0,72.0,64.0,58.0" style="tbl_header" repeatRows="1">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
        <tr>
           <td><para style="date">Date</para></td>
-          <td><para style="P12"></para><para style="P2">JNRL</para></td>
-          <td><para style="P12"></para><para style="P2">Partner</para></td>
-          <td><para style="P12"></para><para style="P2">Ref</para></td>
-          <td><para style="P12"></para><para style="P2">Move</para></td>
-          <td><para style="P12"></para><para style="P3">Entry Label</para></td>
-          <td><para style="P12"></para><para style="P3">Counterpart</para></td>
-          <td><para style="P12"></para><para style="P4">Debit</para></td>
-          <td><para style="P12"></para><para style="P4">Credit</para></td>
-          <td><para style="P12"></para><para style="P4">Balance</para></td>
-          <td><para style="P12"></para><para style="P4">Currency</para></td>
+          <td><para style="P2">JNRL</para></td>
+          <td><para style="P2">Partner</para></td>
+          <td><para style="P2">Ref</para></td>
+          <td><para style="P2">Move</para></td>
+          <td><para style="P3">Entry Label</para></td>
+          <td><para style="P3">Counterpart</para></td>
+          <td><para style="P4">Debit([[ company.currency_id.code]])</para></td>
+          <td><para style="P4">Credit([[ company.currency_id.code]])</para></td>
+          <td><para style="P4">Balance([[ company.currency_id.code]])</para></td>
+          <td><para style="P4">Currency</para></td>
        </tr>
     </blockTable>
      <section>
@@ -279,9 +273,9 @@
 	        		<tr>
 		    			<td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
 		    			<td><para style="Standard"></para></td>
-					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
-					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
-			  			<td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]]</u></para></td>
+					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
+					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
+			  			<td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
 			  			<td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o, data['form']) +o.currency_id.code or '' ]]</u></para></td>
 		   			</tr>
 	    		</blockTable>
@@ -305,9 +299,9 @@
 			<td><para style="P2_content">[[ line['move'] ]]</para></td>
 			<td><para style="P3_content">[[ line['lname'] ]]</para></td>
 			<td><para style="P3_content">[[ strip_name(line['line_corresp'],15) ]]</para></td>
-			<td><para style="P4_content">[[ formatLang(line['debit']) ]]</para></td>
-			<td><para style="P4_content">[[ formatLang(line['credit']) ]]</para></td>
-			<td><para style="P4_content">[[ formatLang(line['progress']) ]]</para></td>
+			<td><para style="P4_content">[[ formatLang(line['debit']) ]] [[ company.currency_id.symbol ]]</para></td>
+			<td><para style="P4_content">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol ]]</para></td>
+			<td><para style="P4_content">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
 			<td><para style="P4_content">[[  formatLang(line['amount_currency'] or '')]] [[  line['currency_code'] or '' ]]</para></td>
 		</tr>
 	  </blockTable>
@@ -316,16 +310,16 @@
 
     <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
        <tr>
-          <td><para style="P12"><font color="white"> </font></para><para style="P2">JNRL</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P2">Partner</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P2">Ref</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P2">Move</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P3">Entry Label</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P3">Counterpart</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P4">Debit</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P4">Credit</para></td>
-          <td><para style="P12"><font color="white"> </font></para><para style="P4">Balance</para></td>
+          <td><para style="P2">Date</para></td>
+          <td><para style="date">JNRL</para></td>
+          <td><para style="P2">Partner</para></td>
+          <td><para style="P2">Ref</para></td>
+          <td><para style="P2">Move</para></td>
+          <td><para style="P3">Entry Label</para></td>
+          <td><para style="P3">Counterpart</para></td>
+          <td><para style="P4">Debit([[ company.currency_id.code]])</para></td>
+          <td><para style="P4">Credit([[ company.currency_id.code]])</para></td>
+          <td><para style="P4">Balance([[ company.currency_id.code]])</para></td>
        </tr>
 	</blockTable>
 
@@ -340,9 +334,9 @@
 						<tr>
 			 	 			<td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
 			  				<td><para style="Standard"></para></td>
-						  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
-					  		<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
-			  				<td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]]</u></para></td>
+						  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
+					  		<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
+			  				<td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
 						</tr>
 					</blockTable>
 		 		</td>
@@ -365,12 +359,15 @@
 				<td><para style="P2_content">[[ line['move'] ]]</para></td>
 				<td><para style="P3_content">[[ line['lname'] ]]</para></td>
 				<td><para style="P3_content">[[ strip_name(line['line_corresp'],15) ]]</para></td>
-				<td><para style="P4_content">[[ formatLang(line['debit']) ]]</para></td>
-				<td><para style="P4_content">[[ formatLang(line['credit']) ]]</para></td>
-				<td><para style="P4_content">[[ formatLang(line['progress']) ]]</para></td>
+				<td><para style="P4_content">[[ formatLang(line['debit']) ]] [[ company.currency_id.symbol ]]</para></td>
+				<td><para style="P4_content">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol ]]</para></td>
+				<td><para style="P4_content">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
 			</tr>
 		</blockTable>
 
 	</section>
+	<para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
  </story>
 </document>
