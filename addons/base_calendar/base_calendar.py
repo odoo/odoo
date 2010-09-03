@@ -942,7 +942,7 @@ class calendar_event(osv.osv):
         if not start_date:
             return value
         if not end_date and not duration:
-            duration = 8.00
+            duration = 1.00
             value['duration'] = duration
 
         if allday: # For all day event
