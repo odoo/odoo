@@ -1401,15 +1401,13 @@ class stock_move(osv.osv):
         @return: True or False
         """
         for move in self.browse(cr, uid, ids):
-            if  move.picking_id and  move.picking_id.type=="internal":
-                return True
             if not move.prodlot_id and \
                (move.state == 'done' and \
                ( \
-                   (move.product_id.track_production and move.location_id.usage=='production') or \
-                   (move.product_id.track_production and move.location_dest_id.usage=='production') or \
-                   (move.product_id.track_incoming and move.location_id.usage in ('supplier','internal')) or \
-                   (move.product_id.track_outgoing and move.location_dest_id.usage in ('customer','internal')) \
+                   (move.product_id.track_production and move.location_id.usage == 'production') or \
+                   (move.product_id.track_production and move.location_dest_id.usage == 'production') or \
+                   (move.product_id.track_incoming and move.location_id.usage == 'supplier') or \
+                   (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer') \
                )):
                 return False
         return True
