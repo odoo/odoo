@@ -39,8 +39,8 @@ class crm_installer(osv.osv_memory):
         'crm_caldav': fields.boolean('Calendar Synchronizing', help="Helps you to synchronize the meetings with other calendar clients and mobiles."),
         'sale_crm': fields.boolean('Opportunity to Quotation', help="This module relates sale from opportunity cases in the CRM."),
         'fetchmail': fields.boolean('Fetch Emails', help="Fetchmail Server."),
-        'thunderbird': fields.boolean('Thunderbird', help="Allows you to link your e-mail to OpenERP' documents. You can attach it to any existing one in OpenERP or create a new one"),
-        'outlook': fields.boolean('MS-Outlook', help="Allows you to link your e-mail to OpenERP' documents. You can attach it to any existing one in OpenERP or create a new one"),
+        'thunderbird': fields.boolean('Thunderbird', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one"),
+        'outlook': fields.boolean('MS-Outlook', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one"),
         'wiki_sale_faq': fields.boolean('Sale FAQ', help="Sale FAQ."),
     }
 

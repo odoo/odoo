@@ -34,7 +34,7 @@ class report_designer_installer(osv.osv_memory):
                                 "After installation, it adds a menu to define custom report in the Dashboard menu."),
         'olap':fields.boolean('Business Intelligence Report',help="Olap module is used to install BI module in client. Olap provides Online "
                                 "Analytical Process with the mdx query. BI provides Cube Browsing and Cube Designing. "
-                                "After installation you will get Cube Browser and Cube Desinger in Reporting Menu. "
+                                "After installation you will get Cube Browser and Cube Designer in Reporting Menu. "
                                 "Cube Browser is used to generate the reports with table view (mdx view) of mdx query "
                                 "and Cube Designer is used to make cubes in BI."),
     }
