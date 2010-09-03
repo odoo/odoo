@@ -1498,19 +1498,17 @@
 
 
         <act_window
-            domain="[('account_id', '=', active_id)]"
             id="act_account_acount_move_line_open"
             name="Entries"
-            context="{'account_id': active_id}"
+            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':0}"
             res_model="account.move.line"
             src_model="account.account"/>
 
         <act_window
-            domain="[('account_id', '=', active_id),('reconcile_id','=',False)]"
             id="act_account_acount_move_line_open_unreconciled"
-            name="Unreconciled entries"
+            name="Unreconciled Entries"
             res_model="account.move.line"
-            context="{'account_id': active_id}"
+            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1,}"
             src_model="account.account"/>
 
         <act_window domain="[('reconcile_id', '=', active_id)]" id="act_account_acount_move_line_reconcile_open" name="Reconciled entries" res_model="account.move.line" src_model="account.move.reconcile"/>
