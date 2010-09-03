@@ -60,10 +60,16 @@ class account_use_model(osv.osv_memory):
                 })
                 move_ids.append(move_id)
                 for line in model.lines_id:
+                    analytic_account_id = False
+                    if line.analytic_account_id:
+                        if not model.journal_id.analytic_journal_id:
+                            raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (model.journal_id.name,))
+                        analytic_account_id = line.analytic_account_id.id
                     val = {
                         'move_id': move_id,
                         'journal_id': model.journal_id.id,
-                        'period_id': period_id
+                        'period_id': period_id,
+                        'analytic_account_id': analytic_account_id
                     }
                     val.update({
                         'name': line.name,
@@ -80,24 +86,8 @@ class account_use_model(osv.osv_memory):
                     c = context.copy()
                     c.update({'journal_id': model.journal_id.id,'period_id': period_id})
                     id_line = account_move_line_obj.create(cr, uid, val, context=c)
-        context.update({'move_ids':move_ids})
-        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_account_use_model_open_entry')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {
-            'name': _('Use Model'),
-            'context': context,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'account.use.model',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
 
-    def open_moves(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
+        context.update({'move_ids':move_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_move_form')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {

@@ -151,17 +151,37 @@ class account_cash_statement(osv.osv):
             res[r] = round(res[r], 2)
         return res
 
-    def _get_company(self, cr, uid, ids, context={}):
+    def _get_company(self, cr, uid, context={}):
         user_pool = self.pool.get('res.users')
         company_pool = self.pool.get('res.company')
-        user = user_pool.browse(cr, uid, uid, uid)
+        user = user_pool.browse(cr, uid, uid, context)
         company_id = user.company_id and user.company_id.id
         if not company_id:
             company_id = company_pool.search(cr, uid, [])[0]
 
         return company_id
 
-    def _get_cash_open_box_lines(self, cr, uid, ids, context={}):
+    def _get_cash_open_box_lines(self, cr, uid, context={}):
+        res = []
+        curr = [1, 2, 5, 10, 20, 50, 100, 500]
+        for rs in curr:
+            dct = {
+                'pieces':rs,
+                'number':0
+            }
+            res.append(dct)
+        journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','cash')], context=context)
+        if journal_ids:
+            results = self.search(cr, uid, [('journal_id','in',journal_ids),('state','=','confirm')],context=context)
+            if results:
+                cash_st = self.browse(cr, uid, results, context)[0]
+                for cash_line in cash_st.ending_details_ids:
+                    for r in res:
+                        if cash_line.pieces == r['pieces']:
+                            r['number'] = cash_line.number
+        return res
+
+    def _get_default_cash_close_box_lines(self, cr, uid, context={}):
         res = []
         curr = [1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
@@ -172,7 +192,7 @@ class account_cash_statement(osv.osv):
             res.append(dct)
         return res
 
-    def _get_cash_close_box_lines(self, cr, uid, ids, context={}):
+    def _get_cash_close_box_lines(self, cr, ids, uid, context={}):
         res = []
         curr = [1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
@@ -180,7 +200,7 @@ class account_cash_statement(osv.osv):
                 'pieces':rs,
                 'number':0
             }
-            res.append((0, 0, dct))
+            res.append((0,0,dct))
         return res
 
     _columns = {
@@ -206,7 +226,7 @@ class account_cash_statement(osv.osv):
         'user_id': lambda self, cr, uid, context=None: uid,
         'company_id': _get_company,
         'starting_details_ids':_get_cash_open_box_lines,
-        'ending_details_ids':_get_cash_open_box_lines
+        'ending_details_ids':_get_default_cash_close_box_lines
      }
 
     def create(self, cr, uid, vals, context=None):
@@ -305,25 +325,25 @@ class account_cash_statement(osv.osv):
                 'name': number
             })
 
-        cr.execute("select id from account_bank_statement where journal_id=%s and user_id=%s and state=%s order by id desc limit 1", (statement.journal_id.id, uid, 'confirm'))
-        rs = cr.fetchone()
-        rs = rs and rs[0] or None
-        if rs:
-            if len(statement.starting_details_ids) > 0:
-                sid = []
-                for line in statement.starting_details_ids:
-                    sid.append(line.id)
-                cash_pool.unlink(cr, uid, sid)
-
-            statement = statement_pool.browse(cr, uid, rs)
-            balance_start = statement.balance_end_real or 0.0
-            open_ids = cash_pool.search(cr, uid, [('ending_id','=',statement.id)])
-            for sid in open_ids:
-                default = {
-                    'ending_id': False,
-                    'starting_id':ids[0]
-                }
-                cash_pool.copy(cr, uid, sid, default)
+#        cr.execute("select id from account_bank_statement where journal_id=%s and user_id=%s and state=%s order by id desc limit 1", (statement.journal_id.id, uid, 'confirm'))
+#        rs = cr.fetchone()
+#        rs = rs and rs[0] or None
+#        if rs:
+#            if len(statement.starting_details_ids) > 0:
+#                sid = []
+#                for line in statement.starting_details_ids:
+#                    sid.append(line.id)
+#                cash_pool.unlink(cr, uid, sid)
+#
+#            statement = statement_pool.browse(cr, uid, rs)
+#            balance_start = statement.balance_end_real or 0.0
+#            open_ids = cash_pool.search(cr, uid, [('ending_id','=',statement.id)])
+#            for sid in open_ids:
+#                default = {
+#                    'ending_id': False,
+#                    'starting_id':ids[0]
+#                }
+#                cash_pool.copy(cr, uid, sid, default)
 
         vals.update({
             'date':time.strftime("%Y-%m-%d %H:%M:%S"),
