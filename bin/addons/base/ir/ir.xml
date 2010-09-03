@@ -1909,7 +1909,7 @@
                     <field name="state" readonly="1"/>
                     <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
                     <button name="action_open" states="cancel,skip,done"
-                            string="Set as Todo" type="object"
+                            string="Todo" type="object" help="Set as Todo"
                             icon="gtk-convert"/>
                 </tree>
             </field>
@@ -1960,6 +1960,15 @@
             <field name="view_type">form</field>
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
+
+        <wizard id="wizard_configuration" model="ir.module.module" name="module.configuration" string="Start Configuration"/>
+        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
+                parent="next_id_11" groups="base.group_extended" sequence="20"/>
+
+        <menuitem
+            action="wizard_configuration" name="Start Configuration"
+            id="menu_configurator_module" parent="next_id_11"
+            type="wizard"/>
 
     </data>
 </openerp>

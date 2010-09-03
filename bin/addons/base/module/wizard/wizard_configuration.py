@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,21 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-#Old Wizard 
-import wizard_configuration
+import wizard
+import pooler
 
-import base_module_import
-import base_module_update
-import base_language_install
-import base_import_language
-import base_module_upgrade
-import base_module_configuration
-import base_export_language
-import base_update_translations
+class wizard_configuration(wizard.interface):   
 
+    def _config(self, cr, uid, data, context=None):
+        return pooler.get_pool(cr.dbname).get('res.config')\
+            .next(cr, uid, [], context=context)
+
+    states = {        
+        'init':{
+            'result': {
+                'type': 'action',
+                'action': _config,
+                'state': 'end',
+            },
+        }
+    }
+wizard_configuration('module.configuration')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
