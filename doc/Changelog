@@ -1,3 +1,204 @@
+2010-09-03: 5.0.13
+==================
+
+Bugfixes (server)
+-----------------
+
+* Not linked to a bug report:
+
+  * Remove the tools.debug call
+  * convert.py: don't use the nocopy flag
+  * Use the safe_eval function
+  * netsvc: backport of trunk fix: don't marshal none in XMLRPC
+  * core: correct fields.related behavior at write()
+  * core: raise an usefull exception when trying to inherit from an osv_memory
+
+* https://launchpad.net/bugs/516030
+ * Fix: Translation problem with 'Resynchronise Terms' Wizard +source stands with blank value + cache does not get updated with changes on translations
+
+* https://launchpad.net/bugs/594504
+  * Corrected the problem of read when field is of type function and many2one and store=True
+
+* https://launchpad.net/bugs/627299
+  * msgstr in .pot file must be '' while exporting template translation
+
+* https://launchpad.net/bugs/608029
+  * Translation should not fail if lang=False is passed anyhow
+
+* https://launchpad.net/bugs/613924
+  * RNG file was missing filters attribute for binary field
+
+* https://launchpad.net/bugs/576987
+
+* https://launchpad.net/bugs/600216
+  * Expression : Support for M2O with in,not in operators corrected
+
+* https://launchpad.net/bugs/589083
+  * fields.related should not break when o2m,m2m returns null
+
+* https://launchpad.net/bugs/600533
+  * read() should never return [] if fields are not empty
+
+Improvements
+------------
+
+* Backport the safe_eval function from the trunk version of OpenERP
+* Better Logging, display database name in the logger
+* Add the @logged decorator also log exceptions
+* Add the @traceback decorator that log the traceback at call
+
+
+Bugfixes (addons)
+-----------------
+
+* Not linked to a bug report:
+
+  * Use the safe_eval function instead of the unsafe_eval
+  * purchase: Use .get instead of an eval
+  * stock: Use the standard price for the price in the wizard of a partial picking
+  * stock : Missing translations added
+  * l10n_be: fixed duplicated xml_id
+  * project_timesheet: casting ids as a list: prevents a crash when delegating a task
+  * project_timesheet: don't use a mutable object in function definition ('context')
+  * Stock : Return picking wizard improved
+  * Improve the calculation of general ledger
+  * mrp: Attribute the right destination location
+  * mrp_operations: corrected workcenrer line Workflow proceedings
+
+* https://launchpad.net/bugs/591294
+  * stock : Manually created stock moves should confirm without fail
+
+* https://launchpad.net/bugs/608573
+  * Account ; Unpaid invoices should not include proforma type of invoices
+
+* https://launchpad.net/bugs/611207
+  * Stock : Return picking should not allow picking qty <=0
+
+* https://launchpad.net/bugs/367813
+  * l10n_be : Vat Listing wizard corrected
+
+* https://launchpad.net/bugs/604542
+  * Account_date_check/point_of_sale : Corrections in check_date constraint of move line
+
+* https://launchpad.net/bugs/507389
+
+* https://launchpad.net/bugs/610128
+  * crm: fixes send reminder.
+
+* https://launchpad.net/bugs/611243
+  * Account : Overdue message wizard corrected
+
+* https://launchpad.net/bugs/604615
+
+* https://launchpad.net/bugs/604529
+  * account: added notification on absence of invoice sequence number
+
+* https://launchpad.net/bugs/619864
+  * account: Use the right journal and period ids for the General Journal Report
+
+* https://launchpad.net/bugs/616278
+  * account : fixed _search_amount() ethod to allow operators like <, >, =, !=, in and not in
+
+* https://launchpad.net/bugs/613767
+  * Account : General Ledger report correction
+
+* https://launchpad.net/bugs/511104
+  * account: Pay Invoice Wizard in foreign currency
+
+* https://launchpad.net/bugs/607715
+  * sale : Included customer reference in advance invoice
+
+* https://launchpad.net/bugs/616258
+  * hr_timesheet_sheet : timesheet should only be confirmed when no. of sign in entries equal to sign out
+
+* https://launchpad.net/bugs/514808
+  * Account : General Ledger report improved
+
+* https://launchpad.net/bugs/628750
+  * Account_followup : Report corrected by putting formatLang for maturity date
+
+* https://launchpad.net/bugs/581754
+  * Stock : Chained picking should generate same picking for moves
+
+* https://launchpad.net/bugs/596837
+
+* https://launchpad.net/bugs/587754
+  * Account : Partner Balance report filter corrected
+
+* https://launchpad.net/bugs/629048
+  * Purchase : Report should show Partner of destination address
+
+* https://launchpad.net/bugs/620907
+  * hr_timesheet : Onchange of user was counting changed user into context
+
+* https://launchpad.net/bugs/588657
+  * stock : return picking type corrected
+
+* https://launchpad.net/bugs/619775
+  * Account : Bank statement should allow opening entries to reconcile disrepcting jornal
+
+* https://launchpad.net/bugs/603608
+  * l10n_ch : Correction on making payment with DTA
+
+* https://launchpad.net/bugs/611285
+  * purchase : Calculation of minimum planned date should not fail when there is no PO Line.
+
+* https://launchpad.net/bugs/600590
+  * account : Read Access for Fiscalyear given to Partner Manager
+
+* https://launchpad.net/bugs/619078
+  * mrp_repair : Creation of invoices corrected from repairs with fees
+
+* https://launchpad.net/bugs/596862
+  * Sale/Purchase : Cancellation of Order should be allowed by un-linking the Pickings to it
+
+* https://launchpad.net/bugs/623896
+  * Sale_crm : Case should be created with the user which is supplied from the wizard,not the current logged in user
+
+* https://launchpad.net/bugs/606960
+  * purchase : Translations corrected
+
+* https://launchpad.net/bugs/604535
+  * account: sequences in fiscal years should be restricted to the same type.
+
+* https://launchpad.net/bugs/619851
+  * l10n_be : Wizard of vat intra corrected
+
+* https://launchpad.net/bugs/618631
+  * Report_intrastat : Correction in PSQL View creation
+
+* https://launchpad.net/bugs/625287
+  * Wiki : Corrections for history revision differences,_rec_name corrected
+
+* https://launchpad.net/bugs/606958
+  * Sale : Correction on advance invoice wizard
+
+* https://launchpad.net/bugs/532532
+  * CRM_configuration : Stage should be set to the basic stage of opportunity when leads are converted to opportunity.
+
+* https://launchpad.net/bugs/595839
+  * sale : Make Invoice button set to invisible when invoiced.
+
+* https://launchpad.net/bugs/626695
+  * MRP : Cancellation of procurement allowed if it has no moves attached
+
+* https://launchpad.net/bugs/620429
+  * account : General Journal and Central Journal Reports Corrected & Optimized
+
+* https://launchpad.net/bugs/610198
+  * project_retro_planning: currection in write method.
+
+* https://launchpad.net/bugs/619849
+  * l10n_be : Vat declaration wizard corrected
+
+
+Improvements
+------------
+
+* stock.move: backport of 6.0 fix: products reservations should be guarded by a row-wise WRITE-LOCK to avoid potential duplicate reservations
+* rowheight
+
+
 2010-07-09: 5.0.12
 ==================
 
