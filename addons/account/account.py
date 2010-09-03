@@ -143,7 +143,6 @@ class account_account_type(osv.osv):
     _columns = {
         'name': fields.char('Acc. Type Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=32, required=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account types."),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True),
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
         'report_type':fields.selection([
@@ -159,10 +158,9 @@ class account_account_type(osv.osv):
     }
     _defaults = {
         'close_method': lambda *a: 'none',
-        'sequence': lambda *a: 5,
         'sign': lambda *a: 1,
     }
-    _order = "sequence"
+    _order = "code"
 
     def _check_recursion(self, cr, uid, ids):
         #TODO: Need to check for recusrion
