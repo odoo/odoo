@@ -155,7 +155,7 @@
               <td>
                 <para style="terp_default_9">[[ repeatIn(o.dest_address_id and [o.dest_address_id] or [],'addr') ]]</para>
                 <para style="terp_default_Bold_9">Shipping address :</para>
-                <para style="P1">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+                <para style="P1">[[ addr.partner_id.title or '' ]] [[ addr.partner_id.name ]]</para>
                 <para style="P1">[[ addr.title or '' ]] [[ addr.name ]]</para>
                 <para style="P1">[[ addr.street ]]</para>
                 <para style="P1">[[ addr.street2 or '' ]]</para>
