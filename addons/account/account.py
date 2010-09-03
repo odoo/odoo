@@ -599,8 +599,8 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
-        'name': fields.char('Journal Name', size=64, required=True, translate=True,help="Name of the journal"),
-        'code': fields.char('Code', size=16,required=True,help="Code of the journal"),
+        'name': fields.char('Journal Name', size=64, required=True, translate=True),
+        'code': fields.char('Code', size=16, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'),('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
@@ -616,7 +616,7 @@ class account_journal(osv.osv):
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
-        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=False),
+        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the informatin related to the numbering of the journal entries of this journal.", required=True),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
@@ -640,7 +640,7 @@ class account_journal(osv.osv):
                 raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
-    def create_sequence(self, cr, uid, ids, context={}):
+    def create_sequence(self, cr, uid, vals, context={}):
         """
         Create new entry sequence for every new Joural
         @param cr: cursor to database
@@ -663,39 +663,29 @@ class account_journal(osv.osv):
         date_pool = self.pool.get('ir.model.data')
 
         result = True
+        name = vals['name']
+        code = vals['code'].lower()
 
-        journal = self.browse(cr, uid, ids[0], context)
-        code = journal.code.lower()
         types = {
-            'name':journal.name,
-            'code':code
+            'name': name,
+            'code': code
         }
         type_id = seq_typ_pool.create(cr, uid, types)
 
         seq = {
-            'name':journal.name,
-            'code':code,
-            'active':True,
-            'prefix':journal.code + "/%(year)s/",
-            'padding':4,
-            'number_increment':1
+            'name': name,
+            'code': code,
+            'active': True,
+            'prefix': code + "/%(year)s/",
+            'padding': 4,
+            'number_increment': 1
         }
-        seq_id = seq_pool.create(cr, uid, seq)
-
-        res = {}
-        if not journal.sequence_id:
-            res.update({
-                'sequence_id':seq_id
-            })
-
-        result = self.write(cr, uid, [journal.id], res)
-
-        return result
+        return seq_pool.create(cr, uid, seq)
 
     def create(self, cr, uid, vals, context={}):
-        journal_id = super(account_journal, self).create(cr, uid, vals, context)
-        self.create_sequence(cr, uid, [journal_id], context)
-        return journal_id
+        if not 'sequence_id' in vals or not vals['sequence_id']:
+            vals.update({'sequence_id' : self.create_sequence(cr, uid, vals, context)}) 
+        return super(account_journal, self).create(cr, uid, vals, context)
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
