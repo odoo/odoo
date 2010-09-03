@@ -466,6 +466,8 @@ class account_account(osv.osv):
                 ids = self.search(cr, user, [('shortcut', '=', name)]+ args, limit=limit)
             if not ids:
                 ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
+            if not ids and len(name.split()) >= 2:
+                ids = self.search(cr, user, [('code', operator, name.split()[0]), ('name', operator, name.split()[1])]+ args, limit=limit)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
