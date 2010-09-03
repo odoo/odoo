@@ -95,7 +95,7 @@ class sale_order(osv.osv):
         for id in ids:
             res[id] = [0.0, 0.0]
         cr.execute('''SELECT
-                p.sale_id,sum(m.product_qty), mp.state as mp_state
+                p.sale_id,sum(m.product_qty), mp.state as mp_state, m.state as state, p.type as tp
             FROM
                 stock_move m
             LEFT JOIN
@@ -104,15 +104,21 @@ class sale_order(osv.osv):
                 mrp_procurement mp on (mp.move_id=m.id)
             WHERE
                 p.sale_id in %s
-            GROUP BY mp.state, p.sale_id''', (tuple(ids),))
-        for oid, nbr, state in cr.fetchall():
+            GROUP BY m.state, mp.state, p.sale_id, p.type''', (tuple(ids),))
+
+        for oid, nbr, state, move_state, type_pick in cr.fetchall():
             if state == 'cancel':
                 continue
-            if state == 'done':
+            res[oid][1] += nbr or 0.0
+            if state == 'done' or move_state == 'done':
                 res[oid][0] += nbr or 0.0
-                res[oid][1] += nbr or 0.0
-            else:
-                res[oid][1] += nbr or 0.0
+            
+            if type_pick == 'in':#which  clearly means that this is a returned picking
+                res[oid][1] -= 2*nbr or 0.0 # Deducting the return picking qty
+                if state == 'done' or move_state == 'done':
+                    nbr += nbr
+                res[oid][0] -= nbr or 0.0
+                
         for r in res:
             if not res[r][1]:
                 res[r] = 0.0
