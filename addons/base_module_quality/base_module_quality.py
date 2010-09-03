@@ -113,7 +113,7 @@ class abstract_quality_check(object):
         model_data = pool.get('ir.model.data').browse(cr, uid, ids2)
         for model in model_data:
             model_list.append(model.res_id)
-        self.log.debug('get_objects() model_list: %s', ','.join(model_list))
+        self.log.debug('get_objects() model_list: %s', ','.join(map(str, model_list)))
         obj_list = []
         for mod in pool.get('ir.model').browse(cr, uid, model_list):
             obj_list.append(str(mod.model))
