@@ -162,7 +162,7 @@
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
-      search: "[]"
+      search: "[('state','=','confirmed')]"
 -
   I check that there is one purchase order for Cloth.
 -
@@ -286,7 +286,7 @@
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
-      search: "[]"
+      search: "[('state','!=','confirmed')]"
 -
   Check state of manufacturing order for Shirt.
 -
