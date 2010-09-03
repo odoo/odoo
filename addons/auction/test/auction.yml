@@ -1,7 +1,5 @@
 -
-  In order to test the auction module in the Open-ERP I start the process by creating a product.
-- 
-  I create a new product furniture.
+  In order to test the auction module in the OpenERP I start the process by creating a product.
 - 
   !record {model: product.product, id: product_product_furniture0}:
     categ_id: product.cat1
@@ -36,8 +34,7 @@
 - 
   !record {model: account.journal, id: account.sales_journal}:
     analytic_journal_id: account.cose_journal_sale    
-        
--      
+-
   I'm creating new Seller "Mr. Pinakin" with him email "info@mycustomer.com".
 - 
   !record {model: res.partner, id: res_partner_mrpinakin0}:
@@ -225,8 +222,7 @@
   !python {model: auction.lots}: |
     from tools.translate import _
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    assert(auc_id.buyer_price,auc_id.seller_price), _('Buyer price and seller price are not available!')
- 
+    assert auc_id.buyer_price and auc_id.seller_price, _('Buyer price and seller price are not available!')
 -
   Now, An object has been sold,so I click on the "Sold" button.
 -
@@ -271,44 +267,15 @@
     auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
     assert(auc_id.ach_inv_id), _('Buyer Invoice has not been created!')     
 - 
-  Buyer Create a Invoice payment record by Click on "Pay Invoice" Button of Account invoice. 
+  Buyer pays the invoice
 - 
-  !record {model: account.invoice.pay, id: account_invoice_pay_furniture0}:
-    amount: 4120.0
-    date: '2010-08-06'
-    journal_id: account.cash_journal
-    name: Furniture
-    period_id: account.period_8
-- 
-  Now Buyer want to make Full payment by click on "Full Payment" button of Account Invoice wizard.
-- 
-  !python {model: account.invoice.pay}: |
-    obj_invoice = self.pool.get('account.invoice')
+  !python {model: account.invoice}: |
     obj_lots = self.pool.get('auction.lots')
     lots_id = obj_lots.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    invoice_ids = obj_invoice.search(cr, uid, [('id', '=', lots_id.ach_inv_id.id)])
-    self.wo_check(cr, uid, [ref("account_invoice_pay_furniture0")], {"active_model": "account.invoice", "department_id": False,
-      "record_id": 7, "search_default_draft": "1", "active_ids": invoice_ids,
-      "active_id": invoice_ids[0]})
-- 
-  After Click on Full Payment Button, Creating a account invoice pay writeoff record.
-- 
-  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
-    comment: Write-Off
-    writeoff_acc_id: auction.auction_income_costs
-    writeoff_journal_id: account.sales_journal
-- 
-  And  click on "pay_and_reconcile_writeoff" button. 
-- 
-  !python {model: account.invoice.pay.writeoff}: |
-    obj_invoice = self.pool.get('account.invoice')
-    obj_lots = self.pool.get('auction.lots')
-    lots_id = obj_lots.browse(cr, uid, ref("auction_lots_woodenchair0"))
-    invoice_ids = obj_invoice.search(cr, uid, [('id', '=', lots_id.ach_inv_id.id)])
-    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
-      {"active_model": "account.invoice", "department_id":
-      False, "record_id": 7, "search_default_draft": "1", "active_ids": invoice_ids ,
-      "active_id": invoice_ids[0], })
+    self.pay_and_reconcile(cr, uid, [lots_id.ach_inv_id.id], 4120.0,
+        ref('account.cash'), ref('account.period_8'),
+        ref('account.cash_journal'), ref('account.cash'),
+        ref('account.period_8'), ref('account.cash_journal'), name='Furniture')
 -
   I check that "Buyer Invoice Reconciled" field is marked.
 -
