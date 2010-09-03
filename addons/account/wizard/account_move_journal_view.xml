@@ -21,7 +21,7 @@
             <field name="context">{'journal_type':'sale','view_mode':False}</field>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_account_moves_sale" sequence="10" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL" groups="group_account_user,group_account_manager,base.group_system"/>
+        <menuitem action="action_account_moves_sale" sequence="16" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL" groups="group_account_user,group_account_manager,base.group_system"/>
 
 <!--        <record id="action_account_moves_purchase_refund" model="ir.actions.act_window">-->
 <!--            <field name="name">Journal Refund Items</field>-->
@@ -41,10 +41,11 @@
             <field name="context">{'journal_type':'purchase','view_mode':False}</field>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_account_moves_purchase" sequence="10"
+        <menuitem action="action_account_moves_purchase"
             id="menu_eaction_account_moves_purchase"
             parent="menu_finance_payables"
             icon="STOCK_JUSTIFY_FILL"
+            sequence="16"
             groups="group_account_user,group_account_manager,base.group_system"/>
 
 <!--        <record id="action_account_moves_sale_refund" model="ir.actions.act_window">-->
@@ -71,7 +72,7 @@
             icon="STOCK_JUSTIFY_FILL"
             id="menu_action_account_moves_bank"
             parent="account.menu_finance_bank_and_cash"
-            sequence="4"
+            sequence="16"
             groups="group_account_user,group_account_manager,base.group_system"
         />
     </data>

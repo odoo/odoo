@@ -89,11 +89,4 @@
      invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', repair_id.partner_invoice_id.id)])
      invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
      
-     assert repair_id.partner_invoice_id == invoice_id.partner_id
-    
-     for operation in repair_id.operations:
-            if operation.to_invoice == True:
-                line_ids = obj_lines.search(cr, uid, [('product_id', '=', operation.product_id.id), ('invoice_id', '=', invoice_id.id), ('price_unit', '=', operation.price_unit)])
-                if line_ids:
-                    line_id = obj_lines.browse(cr, uid, line_ids)[0]
-                    assert line_id.product_id == operation.product_id  
+     assert repair_id.partner_invoice_id.id == invoice_id.partner_id.id, "No invoice existing for the same partner"
