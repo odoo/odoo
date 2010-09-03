@@ -113,12 +113,13 @@ class project_compute_tasks(osv.osv_memory):
                     hours = str(each_task.planned_hours )+ 'H'
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
+                    rcre = False
                     if each_task.user_id:
                        for resrce in resources:
                             if resrce.__name__ == each_task.user_id.name: # check me!!
-                               task = create_tasks(i, hours, priorty, resrce)
-                    else:
-                        task = create_tasks(i, hours, priorty)
+                               rcre = resrce
+                               break
+                    task = create_tasks(i, hours, priorty, rcre)
                     i += 1
 
             project = BalancedProject(Project)

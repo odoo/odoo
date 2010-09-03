@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <notebook colspan="4">
                     <page string="Worklogs">
-                        <field name="analytic_account_id" invisible="1" groups="base.group_extended"/>
+                        <field name="analytic_account_id" invisible="1" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : user_id, 'default_account_id' : analytic_account_id}">
                             <tree editable="top" string="Timesheet">
                               <field name="name"/>

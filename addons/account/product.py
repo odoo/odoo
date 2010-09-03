@@ -48,6 +48,7 @@ product_category()
 #----------------------------------------------------------
 # Products
 #----------------------------------------------------------
+
 class product_template(osv.osv):
     _inherit = "product.template"
     _columns = {
@@ -75,6 +76,4 @@ class product_template(osv.osv):
             help="This account will be used for invoices instead of the default one to value expenses for the current product"),
     }
 product_template()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

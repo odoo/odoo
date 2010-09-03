@@ -109,14 +109,14 @@
                     <field name="reference"/>
                     <field name="mode"/>
                     <field name="date_prefered"/>
-                    <field name="date_planned" select="1"/>
+                    <field name="date_scheduled" select="1" attrs="{'readonly':[('date_prefered','!=','fixed')]}" />
                     <field name="user_id"/>
                     <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                     <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1">
                         <form string="Payment Line">
                             <notebook>
                                 <page string="Payment">
-                                    <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_planned,currency,company_currency)" select="1" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
+                                    <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" select="1" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
                                     <separator colspan="4" string="Transaction Information"/>
                                     <field name="date"/>
                                     <group colspan="2">
@@ -179,15 +179,43 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open')" editable="bottom" string="Payment order">
+                <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open')" string="Payment order">
                     <field name="reference"/>
                     <field name="mode"/>
-                    <field name="date_planned"/>
+                    <field name="user_id"/>
                     <field name="date_created"/>
                     <field name="date_done"/>
                     <field name="total"/>
                     <field name="state"/>
+                    <button name="cancel" states="draft,open" string="Cancel" icon="gtk-cancel"/>
+                    <button name="open" states="draft" string="Confirm Payments"  icon="gtk-apply"/>
+                    <button name="%(action_account_payment_make_payment)d" states="open" string="Make Payments" type="action" icon="gtk-execute"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_payment_order_search" model="ir.ui.view">
+            <field name="name">payment.order.tree.search</field>
+            <field name="model">payment.order</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Payment Orders">
+                    <group col="8" colspan="4">
+                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
+                        <filter string="Done" domain="[('state','=','done')]" icon="terp-dolar_ok!"/>
+                        <separator orientation="vertical"/>
+                        <field name="reference"/>
+                        <field name="mode" widget='selection'/>
+                        <field name="date_done"/>
+                        <field name="state"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Payment Mode" context="{'group_by': 'mode'}" icon="terp-dolar_ok!"/>
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -196,26 +224,11 @@
             <field name="res_model">payment.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_payment_order_search"/>
         </record>
+
         <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="account_payment.menu_main" sequence="3"/>
 
-        <record id="action_payment_order_draft" model="ir.actions.act_window">
-            <field name="name">Draft Payment Order</field>
-            <field name="res_model">payment.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','draft')]</field>
-            <field name="filter" eval="True"/>
-        </record>
-
-        <record id="action_payment_order_open" model="ir.actions.act_window">
-            <field name="name">Payment Orders to Approve</field>
-            <field name="res_model">payment.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','open')]</field>
-            <field name="filter" eval="True"/>
-        </record>
         <record id="action_payment_order_tree_new" model="ir.actions.act_window">
             <field name="name">New Payment Order</field>
             <field name="res_model">payment.order</field>
@@ -301,9 +314,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <group col="7" colspan="4" position="inside">
-                    <button  colspan="2" name="%(action_account_populate_statement_confirm)d" string="Import payment lines" type="action" icon="gtk-open"/>
-                </group>
+                <field name="journal_id" position="after">
+                    <button name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import payment lines" type="action" icon="gtk-execute"/>
+                </field>
             </field>
         </record>
 
