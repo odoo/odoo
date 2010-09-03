@@ -122,8 +122,12 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except Exception, e:
-            log("bad query: %s" % self._obj.query)
+            q = self._obj.query or query
+            log("bad query: %s" % (q,))
+            log(params)
             log(e)
+            from traceback import format_stack
+            log(''.join(format_stack()))
             raise
 
         if self.sql_log:
@@ -245,24 +249,27 @@ class ConnectionPool(object):
     def _debug(self, msg):
         msg = "%s %s" % (repr(self), msg)
         self._log(netsvc.LOG_DEBUG, msg)
+    def _info(self, msg):
+        msg = "%s %s" % (repr(self), msg)
+        self._log(netsvc.LOG_INFO, msg)
+    def _warn(self, msg):
+        msg = "%s %s" % (repr(self), msg)
+        self._log(netsvc.LOG_WARNING, msg)
 
     @locked
     def borrow(self, dsn):
-        self._debug('Borrow connection to %s' % (dsn,))
-
         # free leaked connections
         for i, (cnx, _) in tools.reverse_enumerate(self._connections):
             if getattr(cnx, 'leaked', False):
                 delattr(cnx, 'leaked')
                 self._connections.pop(i)
                 self._connections.append((cnx, False))
-                self._debug('Free leaked connection to %s' % (cnx.dsn,))
+                self._warn('Free leaked connection to %s' % (cnx.dsn,))
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and dsn_are_equals(cnx.dsn, dsn):
                 self._connections.pop(i)
                 self._connections.append((cnx, True))
-                self._debug('Existing connection found at index %d' % i)
 
                 return cnx
 
@@ -279,25 +286,22 @@ class ConnectionPool(object):
 
         result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
         self._connections.append((result, True))
-        self._debug('Create new connection')
         return result
 
     @locked
     def give_back(self, connection, keep_in_pool=True):
-        self._debug('Give back connection to %s' % (connection.dsn,))
         for i, (cnx, used) in enumerate(self._connections):
             if cnx is connection:
                 self._connections.pop(i)
                 if keep_in_pool:
                     self._connections.append((cnx, False))
-                    self._debug('Put connection to %s in pool' % (cnx.dsn,))
                 break
         else:
             raise PoolError('This connection does not below to the pool')
 
     @locked
     def close_all(self, dsn):
-        self._debug('Close all connections to %s' % (dsn,))
+        self._info('Close all connections to %s' % (dsn,))
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
             if dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
@@ -308,12 +312,8 @@ class Connection(object):
     def __init__(self, pool, dbname):
         self.dbname = dbname
         self._pool = pool
-        self._debug = partial(netsvc.Logger().notifyChannel, 'Connection',
-                              netsvc.LOG_DEBUG)
 
     def cursor(self, serialized=False):
-        cursor_type = serialized and 'serialized ' or ''
-        self._debug('create %scursor to "%s"' % (cursor_type, self.dbname,))
         return Cursor(self._pool, self.dbname, serialized=serialized)
 
     def serialized_cursor(self):
