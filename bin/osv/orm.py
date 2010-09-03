@@ -44,7 +44,6 @@ import logging
 import operator
 import pickle
 import re
-import string
 import time
 import traceback
 import types
@@ -730,23 +729,23 @@ class orm_template(object):
 
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
                         # Database ID
-                        res = False
-                        if line[i]:
-                            field_name = field[0].split(':')[0]
-                            model_rel =  fields_def[field_name]['relation']
+                    res = False
+                    if line[i]:
+                        field_name = field[0].split(':')[0]
+                        model_rel =  fields_def[field_name]['relation']
 
-                            if fields_def[field[len(prefix)][:-6]]['type']=='many2many':
-                                res_id = []
-                                for db_id in line[i].split(config.get('csv_internal_sep')):
-                                    try:
-                                        _check_db_id(self, model_rel, db_id)
-                                        res_id.append(db_id)
-                                    except Exception,e:
-                                        warning += [tools.exception_to_unicode(e)]
-                                        logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                                  tools.exception_to_unicode(e))
-                                if len(res_id):
-                                    res = [(6, 0, res_id)]
+                        if fields_def[field[len(prefix)][:-6]]['type']=='many2many':
+                            res_id = []
+                            for db_id in line[i].split(config.get('csv_internal_sep')):
+                                try:
+                                    _check_db_id(self, model_rel, db_id)
+                                    res_id.append(db_id)
+                                except Exception,e:
+                                    warning += [tools.exception_to_unicode(e)]
+                                    logger.notifyChannel("import", netsvc.LOG_ERROR,
+                                              tools.exception_to_unicode(e))
+                            if len(res_id):
+                                res = [(6, 0, res_id)]
                             else:
                                 try:
                                     _check_db_id(self, model_rel, line[i])
@@ -808,10 +807,10 @@ class orm_template(object):
                             d = ir_model_data_obj.read(cr, uid, data_ids, ['res_id'])[0]
                             db_id = d['res_id']
                         if is_db_id and not db_id:
-                           data_ids = ir_model_data_obj.search(cr, uid, [('module','=',module),('model','=',model_name),('res_id','=',is_db_id)])
-                           if not len(data_ids):
-                               ir_model_data_obj.create(cr, uid, {'module':module, 'model':model_name, 'name':name, 'res_id':is_db_id})
-                               db_id = is_db_id
+                            data_ids = ir_model_data_obj.search(cr, uid, [('module','=',module),('model','=',model_name),('res_id','=',is_db_id)])
+                            if not len(data_ids):
+                                ir_model_data_obj.create(cr, uid, {'module':module, 'model':model_name, 'name':name, 'res_id':is_db_id})
+                                db_id = is_db_id
                         if is_db_id and int(db_id) != int(is_db_id):
                             warning += [_("Id is not the same than existing one: %s")%(is_db_id)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
@@ -1410,9 +1409,9 @@ class orm_template(object):
         fields={}
         if node.tag=='diagram':
             if node.getchildren()[0].tag=='node':
-               node_fields=self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
+                node_fields=self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
             if node.getchildren()[1].tag=='arrow':
-               arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
+                arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
             for key,value in node_fields.items():
                 fields[key]=value
             for key,value in arrow_fields.items():
@@ -1444,15 +1443,15 @@ class orm_template(object):
                 '<calendar string="%s"') % (self._description)
 
         if (self._date_name not in self._columns):
-                date_found = False
-                for dt in ['date','date_start','x_date','x_date_start']:
-                    if dt in self._columns:
-                        self._date_name = dt
-                        date_found = True
-                        break
+            date_found = False
+            for dt in ['date','date_start','x_date','x_date_start']:
+                if dt in self._columns:
+                    self._date_name = dt
+                    date_found = True
+                    break
 
-                if not date_found:
-                    raise except_orm(_('Invalid Object Architecture!'),_("Insufficient fields for Calendar View!"))
+            if not date_found:
+                raise except_orm(_('Invalid Object Architecture!'),_("Insufficient fields for Calendar View!"))
 
         if self._date_name:
             arch +=' date_start="%s"' % (self._date_name)
@@ -1472,9 +1471,9 @@ class orm_template(object):
 
         if not dt_stop_flag:
             for dt_delay in ["date_delay","planned_hours","x_date_delay","x_planned_hours"]:
-               if dt_delay in self._columns:
-                   arch += ' date_delay="' + dt_delay + '"'
-                   break
+                if dt_delay in self._columns:
+                    arch += ' date_delay="' + dt_delay + '"'
+                    break
 
         arch += ('>\n'
                  '  <field name="%s"/>\n'
@@ -1752,9 +1751,9 @@ class orm_template(object):
                 'relate': resrelate
             }
         if result['type']=='form' and result['arch'].count("default_focus")>1:
-                msg = "Form View contain more than one default_focus attribute"
-                netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
-                raise except_orm('View Error !',msg)
+            msg = "Form View contain more than one default_focus attribute"
+            netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
+            raise except_orm('View Error !',msg)
         return result
 
     _view_look_dom_arch = __view_look_dom_arch
@@ -1946,8 +1945,8 @@ class orm_template(object):
             for dv in defaults:
                 # FIXME: also handle inherited m2m
                 if dv in self._columns and self._columns[dv]._type == 'many2many' \
-                     and defaults[dv] and isinstance(defaults[dv][0], (int, long)):
-                        defaults[dv] = [(6, 0, defaults[dv])]
+                        and defaults[dv] and isinstance(defaults[dv][0], (int, long)):
+                    defaults[dv] = [(6, 0, defaults[dv])]
             defaults.update(values)
             values = defaults
         return values
@@ -2223,7 +2222,7 @@ class orm(orm_template):
             tables, where_clause, qfield = self._inherits_join_calc(groupby,tables,where_clause)
 
         if len(where_clause):
-            where_clause = ' where '+string.join(where_clause, ' and ')
+            where_clause = ' where ' + ' and '.join(where_clause)
         else:
             where_clause = ''
         limit_str = limit and ' limit %d' % limit or ''
@@ -2272,7 +2271,7 @@ class orm(orm_template):
                 if not isinstance(groupby_list,(str, unicode)):
                     if groupby or not context.get('group_by_no_leaf', False):
                         d['__context'] = {'group_by':groupby_list[1:]}
-            if groupby and fget.has_key(groupby):
+            if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
                     dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
                     days = calendar.monthrange(dt.year, dt.month)[1]
@@ -3272,7 +3271,7 @@ class orm(orm_template):
                 for group in groups:
                     module = group.split(".")[0]
                     grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s" \
+                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s", \
                                (grp, module, 'res.groups', user))
                     readonly = cr.fetchall()
                     if readonly[0][0] >= 1:
@@ -3760,7 +3759,7 @@ class orm(orm_template):
                     upd1.append(id)
                     if upd0 and upd1:
                         cr.execute('update "' + self._table + '" set ' + \
-                            string.join(upd0, ',') + ' where id = %s', upd1)
+                            ','.join(upd0) + ' where id = %s', upd1)
 
             else:
                 for f in val:
