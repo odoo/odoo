@@ -1,18 +1,18 @@
 -
   In order to test the hr_holiday module in OpenERP, I will  Allocate leaves for Employee and manage leaves and leaves requests.
 -
-  I create new user "user1" who will make leave request.
+  I create new user "test_holiday_user1" who will make leave request.
 -
-  !record {model: res.users, id: res_users_user0}:
+  !record {model: res.users, id: test_holiday_user1}:
     company_id: base.main_company
     context_lang: en_US
     groups_id:
       - base.group_user
       - base.group_hr_manager
       - base.group_hr_user
-    login: user1
-    name: user1
-    password: user1
+    login: test_holiday_user1
+    name: test_holiday_user1
+    password: test_holiday_user1
 -
   I create a new employee “Mark Johnshon” as Manager to validate employee leave.
 -
@@ -23,13 +23,13 @@
     name: Mark Johnson
     user_id: base.user_root
 -
-  I Create another employee "Phil Graves" as "user1".
+  I Create another employee "Phil Graves" as "test_holiday_user1".
 -
   !record {model: hr.employee, id: hr_employee_philgraves0}:
     address_home_id: base.res_partner_address_8
     name: Phil Graves
     parent_id: 'hr_employee_employee0'
-    user_id: 'res_users_user0'
+    user_id: 'test_holiday_user1'
 -
   I create a new Leave type "Sick Leave".
 -
@@ -61,7 +61,7 @@
   !workflow {model: hr.holidays, action: validate,  ref: hr_holidays_allocateleaveforuser0}
 
 -
-  I connect as "user1", and create a new leave request for employee "Phil Graves".
+  I connect as "test_holiday_user1", and create a new leave request for employee "Phil Graves".
 -
   !record {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
     allocation_type: employee
@@ -73,7 +73,7 @@
     notes: My appointment with the doctor is confirmed. so please accept my leave.
     number_of_days_temp: 2.0
     type: remove
-    user_id: 'res_users_user0'
+    user_id: 'test_holiday_user1'
 -
   I check that Leave Request is in "Draft" state.
 -

@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from lxml import etree
 
 from osv import osv, fields
@@ -29,43 +30,22 @@ class account_payment_populate_statement(osv.osv_memory):
         'lines': fields.many2many('payment.line', 'payment_line_rel_', 'payment_id', 'line_id', 'Payment Lines')
                }
 
-    def search_entries(self, cr, uid, ids, context=None):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         line_obj = self.pool.get('payment.line')
-        statement_obj = self.pool.get('account.bank.statement')
-        mod_obj = self.pool.get('ir.model.data')
 
-        data = self.read(cr, uid, ids, [], context=context)[0]
-        statement = statement_obj.browse(cr, uid, context['active_id'], context=context)
+        res = super(account_payment_populate_statement, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         line_ids = line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
-            ('order_id.mode.journal.id', '=', statement.journal_id.id)])
+            ('bank_statement_line_id', '=', False),])
         line_ids.extend(line_obj.search(cr, uid, [
             ('move_line_id.reconcile_id', '=', False),
             ('order_id.mode', '=', False)]))
-
-        context.update({'line_ids': line_ids})
-        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','account_payment_populate_statement_view')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {
-                'name': ('Entrie Lines'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'account.payment.populate.statement',
-                'views': [(resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(account_payment_populate_statement, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        if context and 'line_ids' in context:
-            view_obj = etree.XML(res['arch'])
-            child = view_obj.getchildren()[0]
-            domain = '[("id", "in", '+ str(context['line_ids'])+')]'
-            field = etree.Element('field', attrib={'domain': domain, 'name':'lines', 'colspan':'4', 'height':'300', 'width':'800', 'nolabel':"1"})
-            child.addprevious(field)
-            res['arch'] = etree.tostring(view_obj)
+        domain = '[("id", "in", '+ str(line_ids)+')]'
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//field[@name='lines']")
+        for node in nodes:
+            node.set('domain', domain)
+        res['arch'] = etree.tostring(doc)
         return res
 
     def populate_statement(self, cr, uid, ids, context=None):
@@ -93,7 +73,7 @@ class account_payment_populate_statement(osv.osv_memory):
                 reconcile_id = statement_reconcile_obj.create(cr, uid, {
                     'line_ids': [(6, 0, [line.move_line_id.id])]
                     }, context=context)
-                statement_line_obj.create(cr, uid, {
+                st_line_id = statement_line_obj.create(cr, uid, {
                     'name': line.order_id.reference or '?',
                     'amount': - amount,
                     'type': 'supplier',
@@ -103,6 +83,9 @@ class account_payment_populate_statement(osv.osv_memory):
                     'ref': line.communication,
                     'reconcile_id': reconcile_id,
                     }, context=context)
-        return {'type' : 'ir.actions.act_window_close'}
+            line_obj.write(cr, uid, [line.id], {'bank_statement_line_id': st_line_id})
+        return {'type': 'ir.actions.act_window_close'}
 
 account_payment_populate_statement()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 09:15+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"PO-Revision-Date: 2010-09-02 07:22+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:40+0000\n"
+"X-Launchpad-Export-Date: 2010-09-03 03:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -49,7 +49,7 @@ msgstr "Tâche projet"
 #. module: project
 #: model:process.transition,name:project.process_transition_opendonetask0
 msgid "Open Done Task"
-msgstr "Ouvrir les tâches ouvertes"
+msgstr "Rouvrir les tâches terminées"
 
 #. module: project
 #: constraint:ir.actions.act_window:0
@@ -64,7 +64,7 @@ msgstr "Heures à Validé"
 #. module: project
 #: field:project.project,progress_rate:0
 msgid "Progress"
-msgstr "Achevé"
+msgstr "Avancement"
 
 #. module: project
 #: help:config.compute.remaining,remaining_hours:0
@@ -79,7 +79,7 @@ msgstr ""
 #. module: project
 #: field:project.project,child_id:0
 msgid "Subproject"
-msgstr "Sous projet"
+msgstr "Sous-projet"
 
 #. module: project
 #: field:project.project,members:0
@@ -114,7 +114,7 @@ msgstr ""
 #. module: project
 #: field:project.task,priority:0
 msgid "Importance"
-msgstr "Important"
+msgstr "Priorité"
 
 #. module: project
 #: view:config.compute.remaining:0
@@ -276,7 +276,7 @@ msgstr "Tâche terminée"
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
 msgid "Task is Completed"
-msgstr "La tâche est complète"
+msgstr "La tâche est terminée"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
@@ -787,7 +787,7 @@ msgstr "Mois"
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
 msgid "When task is completed, it will come into the done state."
-msgstr "Quand une tâche est complète, elle deviendra dans l'état terminer"
+msgstr "Quand une tâche est complète, elle passera à l'état terminé"
 
 #. module: project
 #: field:project.task.work,date:0
@@ -1004,7 +1004,7 @@ msgstr "Fermer (sans mail)"
 #. module: project
 #: help:project.task.delegate,init,prefix:0
 msgid "New title of your own task to validate the work done."
-msgstr "Nouveau titre de votre tâche pour valider le travail terminer."
+msgstr "Nouveau titre de votre tâche pour valider le travail effectué."
 
 #. module: project
 #: field:project.task,progress:0
@@ -1166,7 +1166,7 @@ msgstr "Date d'arrêt: %(date_stop)s"
 #. module: project
 #: field:project.project,date_end:0
 msgid "Expected End"
-msgstr "Fin attendu"
+msgstr "Fin prévue"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
@@ -1216,7 +1216,7 @@ msgstr "Tableau de bord de projet"
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
 msgid "Board for project users"
-msgstr ""
+msgstr "Tableau de bord pour les utilisateurs de projet"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_pipeline_user
@@ -1279,7 +1279,7 @@ msgstr "Mon pipeline"
 #. module: project
 #: view:board.board:0
 msgid "My Timesheet"
-msgstr ""
+msgstr "Ma feuille de présence"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_tree_month
@@ -1428,7 +1428,7 @@ msgstr ""
 #. module: project
 #: field:report.task.user.pipeline.open,task_nbr:0
 msgid "Task Number"
-msgstr ""
+msgstr "Numéro de tâche"
 
 #. module: project
 #: model:ir.model,name:project.model_report_timesheet_task_user
@@ -1448,7 +1448,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_report_closed_task
 msgid "Closed Task Report"
-msgstr ""
+msgstr "Rapport des tâches terminées"
 
 #. module: project
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -1458,4 +1458,4 @@ msgstr ""
 #. module: project
 #: view:report.closed.task:0
 msgid "Closed Tasks"
-msgstr ""
+msgstr "Tâches terminées"
