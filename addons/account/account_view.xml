@@ -742,16 +742,22 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Tax Code">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="company_id" select="1"/>
-                    <field name="notprintable"/>
-                    <field name="parent_id" select="1"/>
-                    <field name="sign"/>
-                    <newline/>
-                    <field name="sum"/>
-                    <field name="sum_period"/>
-                    <newline/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="parent_id" select="1"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Reporting Configuration" colspan="4"/>
+                        <field name="notprintable"/>
+                        <field name="sign"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Statistics" colspan="4"/>
+                        <field name="sum_period"/>
+                        <field name="sum"/>
+                    </group>
                     <separator string="Description" colspan="4"/>
                     <field colspan="4" name="info" nolabel="1"/>
                 </form>

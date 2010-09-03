@@ -1551,7 +1551,7 @@ class account_tax_code(osv.osv):
         'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Child Codes'),
         'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'sign': fields.float('Sign for parent', required=True),
+        'sign': fields.float('Coefficent for parent', required=True, help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.'),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
