@@ -72,7 +72,7 @@ class res_config_configurable(osv.osv_memory):
         config_logo = _get_image
         )
 
-    def _next_action(self, cr, uid):
+    def _next_action(self, cr, uid, context=None):
         todos = self.pool.get('ir.actions.todo')
         self.logger.notifyChannel('actions', netsvc.LOG_INFO,
                                   'getting next %s' % todos)
@@ -92,7 +92,7 @@ class res_config_configurable(osv.osv_memory):
                 return self._next_action(cr, uid)
         return None
 
-    def _set_previous_todo(self, cr, uid, state):
+    def _set_previous_todo(self, cr, uid, state, context=None):
         """ lookup the previous (which is still the next at this point)
         ir.actions.todo, set it to whatever state was provided.
 
@@ -101,10 +101,12 @@ class res_config_configurable(osv.osv_memory):
         `ValueError`: if no state is provided
         anything ir_actions_todo.write can throw
         """
+        if context is None:
+            context = {}
         # this is ultra brittle, but apart from storing the todo id
         # into the res.config view, I'm not sure how to get the
         # "previous" todo
-        previous_todo = self._next_action(cr, uid)
+        previous_todo = self._next_action(cr, uid, context=context)
         if not previous_todo:
             raise LookupError(_("Couldn't find previous ir.actions.todo"))
         if not state:
@@ -112,7 +114,7 @@ class res_config_configurable(osv.osv_memory):
                                "nothingness"))
         previous_todo.write({'state':state})
 
-    def _next(self, cr, uid):
+    def _next(self, cr, uid, context=None):
         self.logger.notifyChannel('actions', netsvc.LOG_INFO,
                                   'getting next operation')
         next = self._next_action(cr, uid)
@@ -139,7 +141,6 @@ class res_config_configurable(osv.osv_memory):
             .read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
-        print 'Start'
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
         for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
             if (todo.restart=='always') or (todo.restart=='onskip' and (todo.state in ('skip','cancel'))):
@@ -150,7 +151,7 @@ class res_config_configurable(osv.osv_memory):
         """ Returns the next todo action to execute (using the default
         sort order)
         """
-        return self._next(cr, uid)
+        return self._next(cr, uid, context=context)
 
     def execute(self, cr, uid, ids, context=None):
         """ Method called when the user clicks on the ``Next`` button.
@@ -185,7 +186,10 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='done')
+        try:
+            self._set_previous_todo(cr, uid, state='done', context=context)
+        except Exception, e:
+            raise osv.except_osv(_('Error'), e.message)
         next = self.execute(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
@@ -198,7 +202,10 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='skip')
+        try:
+            self._set_previous_todo(cr, uid, state='skip', context=context)
+        except Exception, e:
+            raise osv.except_osv(_('Error'), e.message)
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
@@ -214,7 +221,10 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='cancel')
+        try:
+            self._set_previous_todo(cr, uid, state='cancel', context=context)
+        except Exception, e:
+            raise osv.except_osv(_('Error'), e.message)
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)

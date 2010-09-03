@@ -364,15 +364,18 @@ class _rml_canvas(object):
                 image_data = self.images[node.get('name')]
                 s = cStringIO.StringIO(image_data)
             else:
-                import base64
                 if self.localcontext:
-                   res = utils._regex.findall(node.text)
-                   for key in res:
-                       newtext = eval(key, {}, self.localcontext)
-                       node.text = newtext
-                image_data = base64.decodestring(node.text)
-                if not image_data: return False
-                s = cStringIO.StringIO(image_data)
+                    res = utils._regex.findall(node.text)
+                    for key in res:
+                        newtext = eval(key, {}, self.localcontext)
+                        node.text = newtext
+                image_data = None
+                if node.text:
+                    image_data = base64.decodestring(node.text)
+                if image_data:
+                    s = cStringIO.StringIO(image_data)
+                else:
+                    return False
         else:
             if node.get('file') in self.images:
                 s = cStringIO.StringIO(self.images[node.get('file')])

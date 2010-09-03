@@ -80,6 +80,7 @@ class ir_ui_menu(osv.osv):
         menu_id =  self.pool.get('ir.ui.menu').create(cr, uid, menu_data)
         sc_data= {'name':values['name'], 'sequence': 1,'res_id': menu_id }
         sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, context)
+
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         key = (cr.dbname, shortcut_menu_id, tuple(user_groups))
         self._cache[key] = True
@@ -182,7 +183,7 @@ class ir_ui_menu(osv.osv):
         rex=re.compile('\([0-9]+\)')
         concat=rex.findall(datas['name'])
         if concat:
-            next_num=eval(concat[0])+1
+            next_num=int(concat[0])+1
             datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
         else:
             datas['name']=datas['name']+'(1)'
