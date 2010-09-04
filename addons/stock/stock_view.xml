@@ -564,17 +564,21 @@
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
             <field name="type">form</field>
+            <field eval="12" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Picking list">
                     <group colspan="4" col="6">
                         <field name="name" readonly="1"/>
-                        <field name="origin"/>
-                        <field name="backorder_id" groups="base.group_extended" readonly="1"/>
                         <field name="date"/>
-                        <field name="min_date"/>
-                        <field name="type"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="address_id" required="1" colspan="4"/>
+                        <field name="origin"/>
+                        <newline/>
+                        <field name="min_date"/>
+                        <field name="backorder_id" groups="base.group_extended" readonly="1"/>
+                        <newline/>
+                        <field name="type" readonly="1"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -741,14 +745,15 @@
                 <form string="Picking list">
                     <group col="6" colspan="4" attrs="{'readonly': [('state','not in',['draft','auto'])]}">
                         <field name="name" readonly="1"/>
-                        <field name="address_id" required="1"/>
-                        <field name="origin"/>
-                        <field name="backorder_id" groups="base.group_extended" readonly="1"/>
-                        <field name="date" />
-                        <field name="min_date"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        <field name="date"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        <field name="type" invisible="1"/>
+                        <field name="address_id" required="1" colspan="4"/>
+                        <field name="origin"/>
+                        <field name="min_date"/>
+                        <field name="backorder_id" groups="base.group_extended" readonly="1"/>
+                        <newline/>
+                        <field name="type" readonly="1"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     </group>
                         <notebook colspan="4">
                         <page string="General Information">
@@ -830,7 +835,7 @@
                                         </page>
  										<page string="Return Picking History">
                                             <field name="move_stock_return_history" nolabel="1"/>
-                                        </page>                                  
+                                        </page>
                                     </notebook>
                                 </form>
                             </field>
@@ -944,16 +949,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Picking list">
-                    <group col="6" colspan="4">
-                        <field name="address_id" required="1" />
-                        <field name="min_date"/>
+                   <group col="6" colspan="4">
                         <field name="name" readonly="1"/>
-                        <field name="invoice_state"/>
-                        <field name="backorder_id" readonly="1"/>
-                        <field name="origin" readonly="1"/>
-                        <field name="type" invisible="1"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        <field name="date"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="address_id" required="1" colspan="4"/>
+                        <field name="origin" readonly="1"/>
+                        <field name="min_date"/>
+                        <field name="backorder_id" readonly="1"/>
+                        <newline/>
+                        <field name="type" readonly="1"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        <field name="invoice_state"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -1143,15 +1150,15 @@
                 <form string="Input Picking List">
                     <group colspan="4" col="6">
                         <field name="name" readonly="1"/>
-                        <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" />
-                        <field name="origin"/>
-                        <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         <field name="date"/>
-                        <field name="type"/>
-                        <field name="min_date" readonly="1"/>
-                        <field name="invoice_state" string="Invoice Control"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" colspan="4"/>
+                        <field name="origin"/>
+                        <field name="min_date" readonly="1"/>
+                        <field name="backorder_id" readonly="1" groups="base.group_extended"/>
+                        <field name="type" readonly="1"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        <field name="invoice_state" string="Invoice Control"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -1221,7 +1228,7 @@
                                         <page string="Return Picking History">
                                                     <field name="move_stock_return_history" nolabel="1"/>
                                                 </page>
-                                        
+
                                     </notebook>
                                 </form>
                             </field>
@@ -1444,7 +1451,7 @@
                         </page>
                         <page string="Return Picking History">
                             <field name="move_stock_return_history" nolabel="1"/>
-                        </page>                        
+                        </page>
                     </notebook>
                     <group col="6" colspan="4">
                         <field name="state"/>
@@ -1604,7 +1611,7 @@
                         </page>
            				<page string="Return Picking History">
                             <field name="move_stock_return_history" nolabel="1"/>
-                         </page>                        
+                         </page>
                     </notebook>
                 </form>
             </field>
@@ -1744,7 +1751,7 @@
             <field name="name">Products</field>
             <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
             <field eval="True" name="object"/>
-        </record>    
+        </record>
 
 
         <record id="ir_act_product_location_open" model="ir.values">
@@ -1753,7 +1760,7 @@
             <field name="name">Open Products</field>
             <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
             <field eval="True" name="object"/>
-        </record>  
+        </record>
 
         <!-- Graph Views -->
         <!--  Products To Received Vs Planned -->
