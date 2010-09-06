@@ -268,16 +268,16 @@
       <tr>
         <td><para style="terp_tblheader_Details">Code</para></td>
         <td><para style="terp_tblheader_Details">Journal Name</para></td>
-        <td><para style="terp_tblheader_Details_Right">Debit</para></td>
-        <td><para style="terp_tblheader_Details_Right">Credit</para></td>
-  		<td><para style="terp_tblheader_Details_Right">Balance</para></td>
+        <td><para style="terp_tblheader_Details_Right">Debit([[ company.currency_id.code]])</para></td>
+        <td><para style="terp_tblheader_Details_Right">Credit([[ company.currency_id.code]])</para></td>
+  		<td><para style="terp_tblheader_Details_Right">Balance([[ company.currency_id.code]])</para></td>
       </tr>
       <tr>
-        <td><para style="terp_default_Bold_9">Total:</para></td>
+        <td><para style="terp_default_Bold_9">Total:([[ company.currency_id.code]])</para></td>
         <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>
-        <td><para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit()) ]]</para></td>
-        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()) ]]</para></td>
- 		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit()- sum_credit()) ]]</para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit()) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()) ]] [[ company.currency_id.symbol ]]</para></td>
+ 		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit()- sum_credit()) ]] [[ company.currency_id.symbol ]]</para></td>
       </tr>
     </blockTable>
     <blockTable colWidths="100.0,100.0,73.0,80.0,80.0,80.0" style="Table_Journal_Title" repeatRows="1">[[ display_currency(data) or removeParentNode('blockTable') ]]
@@ -290,11 +290,11 @@
         <td><para style="terp_tblheader_Details_Right">Currency</para></td>
       </tr>
       <tr>
-        <td><para style="terp_default_Bold_9">Total:</para></td>
+        <td><para style="terp_default_Bold_9">Total:([[ company.currency_id.code]])</para></td>
         <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>
-        <td><para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit()) ]]</para></td>
-        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()) ]]</para></td>
-		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()- sum_debit()) ]]</para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit()) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()) ]] [[ company.currency_id.symbol ]]</para></td>
+		<td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()- sum_debit()) ]] [[ company.currency_id.symbol ]]</para></td>
       </tr>
     </blockTable>
 
@@ -309,13 +309,13 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit_period(o.id)) ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit_period(o.id)) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)) ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)-sum_debit_period(o.id)) ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)-sum_debit_period(o.id)) ]] [[ company.currency_id.symbol ]]</para>
 
           </td>
      		<td>
@@ -335,13 +335,13 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit_period(o.id)) ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit_period(o.id)) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)) ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)-sum_debit_period(o.id)) ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit_period(o.id)-sum_debit_period(o.id)) ]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -356,13 +356,13 @@
             <para style="terp_default_9">[[ line['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['debit'] )]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['debit'] )]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['credit']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol ]]</para>
           </td>
       		<td>
-            <para style="terp_default_Right_9">[[ formatLang(line['credit']-line['debit'] ) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['credit']-line['debit'] ) ]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -373,9 +373,9 @@
         <tr>
           <td><para style="terp_default_9"><font>[[ repeatIn(lines(o.id),'line')]]</font> [[ line['code'] ]]</para></td>
           <td><para style="terp_default_9">[[ line['name'] ]]</para></td>
-          <td><para style="terp_default_Right_9">[[ formatLang(line['debit'] )]]</para></td>
-          <td><para style="terp_default_Right_9">[[ formatLang(line['credit']) ]]</para></td>
-		  <td><para style="terp_default_Right_9">[[ formatLang(line['credit']-line['debit'] ) ]]</para></td>
+          <td><para style="terp_default_Right_9">[[ formatLang(line['debit'] )]] [[ company.currency_id.symbol ]]</para></td>
+          <td><para style="terp_default_Right_9">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol ]]</para></td>
+		  <td><para style="terp_default_Right_9">[[ formatLang(line['credit']-line['debit'] ) ]] [[ company.currency_id.symbol ]]</para></td>
           <td><para style="terp_default_Right_9">[[ line['currency_id'] and formatLang(line['amount_currency'] ) ]] [[ line['currency_code'] or '' ]]</para></td>
         </tr>
       </blockTable>

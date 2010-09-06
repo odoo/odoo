@@ -197,8 +197,8 @@
 	        		<td><para style="terp_tblheader_Details_Centre">End Date</para></td>
 	        	</tr>
 	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ get_start_date(data)]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[get_end_date(data) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
         	<blockTable colWidths="65.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
@@ -239,13 +239,13 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines_another('liability'), 'a') ]]</font>[[ a['code'] ]]<font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]]</font></para>
+          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines_another('liability'), 'a') ]]</font>[[ a['code'] ]]<font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]] </font></para>
         </td>
         <td>
           <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font></para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ a['balance'] and formatLang(abs(a['balance'])) or 0.0  ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ a['balance'] and formatLang(abs(a['balance'])) or 0.0  ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -255,7 +255,7 @@
           <para style="terp_default_Bold_9">Balance:([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) or 0.0 ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) or 0.0 ]] [[ company.currency_id.symbol ]]</u></para>
         </td>
       </tr>
     </blockTable>
@@ -283,7 +283,7 @@
           <para style="terp_default_9">[[ a['code'] ]]<font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font></para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ a['balance'] and formatLang(abs(a['balance'])) or 0.0 ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ a['balance'] and formatLang(abs(a['balance'])) or 0.0 ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -293,7 +293,7 @@
           <para style="terp_default_Bold_9">Balance:([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_cr())) or 0.0 ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_cr())) or 0.0 ]] [[ company.currency_id.symbol ]]</u></para>
         </td>
       </tr>
     </blockTable>

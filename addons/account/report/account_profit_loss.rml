@@ -267,7 +267,7 @@
           </para>
         </td>
          <td>
-          <para style="terp_default_Right_9_Bold">[[ a.balance and formatLang(abs(a.balance)) or 0.0 ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ a.balance and formatLang(abs(a.balance)) or 0.0 ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -280,7 +280,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit C.F.B.L.' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit C.F.B.L.' and  formatLang(abs(final_result()['balance'])) or 0.0 ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit C.F.B.L.' and  formatLang(abs(final_result()['balance'])) or 0.0 ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -290,7 +290,7 @@
           <para style="terp_default_Bold_9">Total:([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ sum_dr() and formatLang(abs(sum_dr())) or 0.0 ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ sum_dr() and formatLang(abs(sum_dr())) or 0.0 ]] [[ company.currency_id.symbol ]]</u></para>
         </td>
       </tr>
     </blockTable>
@@ -322,7 +322,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ a.balance and formatLang(abs(a.balance)) or 0.0 ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ a.balance and formatLang(abs(a.balance)) or 0.0 ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -345,7 +345,7 @@
           <para style="terp_default_Bold_9">Total:([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ sum_cr() and formatLang(abs(sum_cr())) or 0.0 ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ sum_cr() and formatLang(abs(sum_cr())) or 0.0 ]] [[ company.currency_id.symbol ]]</u></para>
         </td>
       </tr>
     </blockTable>

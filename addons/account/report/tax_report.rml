@@ -120,9 +120,9 @@
 	<blockTable colWidths="347.0,64.0,59.0,71.0" style="Table2" repeatRows="1">
 	  <tr>
 	    <td><para style="P12">Tax Name</para></td>
-	    <td><para style="P12a">Debit</para></td>
-	    <td><para style="P12a">Credit</para></td>
-	    <td><para style="P12a">Tax Amount</para></td>
+	    <td><para style="P12a">Debit([[ company.currency_id.code]])</para></td>
+	    <td><para style="P12a">Credit([[ company.currency_id.code]])</para></td>
+	    <td><para style="P12a">Tax Amount([[ company.currency_id.code]])</para></td>
 	  </tr>
 	  <tr>
 	       <td><para style="P5"><font>[[ repeatIn(get_lines(data['form']['based_on'],data['form']['periods'],data['form']['company_id']), 'o') ]]</font><font color="white">[[ (o['level']) ]]</font> <font>[[o['type']==1 and ( setTag('para','para',{'fontName':'Helvetica-Bold'}))]]</font><font>[[ o['code'] ]]  [[ o['name'] ]]</font></para></td>
