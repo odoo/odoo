@@ -107,7 +107,7 @@ class hr_employee(osv.osv):
     _inherits = {'resource.resource': "resource_id"}
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
-        'birthday': fields.date("Birthday"),
+        'birthday': fields.date("Date of Birth"),
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
         'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
         'otherid': fields.char('Other ID', size=32),
@@ -119,10 +119,10 @@ class hr_employee(osv.osv):
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
         'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone', readonly=True),
-        'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail', readonly=True),
+        'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail'),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
-        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True),
+        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True,help='It is linked to Department',readonly=True),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel','category_id','emp_id','Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
@@ -130,15 +130,28 @@ class hr_employee(osv.osv):
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo')
     }
-
+    def onchange_company(self, cr, uid, ids, company, context=None):    
+        return {'value': {'address_id': company}}   
+        
+    def onchange_department(self, cr, uid, ids, department_id, context=None):  
+        return {'value': {'parent_id':department_id}}         
+        
+    def onchange_user(self, cr, uid, ids, user_id, context=None):  
+        user_obj = self.pool.get('res.users')
+        t = user_obj.browse(cr,uid,user_id)
+        print t['user_email']
+        print "t.email",t.user_email
+        return {'value': {'work_email':t.user_email}}             
+        
     def _get_photo(self, cr, uid, context=None):
         return open(os.path.join(
             tools.config['addons_path'], 'hr/image', 'photo.png'),
                     'rb') .read().encode('base64')
-
+               
     _defaults = {
         'active': 1,
         'photo': _get_photo,
+        'address_id': lambda self,cr,uid,c: self.pool.get('res.partner.address').browse(cr, uid, uid, c).partner_id.id
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):

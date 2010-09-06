@@ -22,8 +22,8 @@
                     <group colspan="4" col="8">
                         <group colspan="6" col="6">
                         <field colspan="6" name="name" />
-                        <field name="user_id"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <field name="user_id" on_change="onchange_user(user_id)"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
                         <field name="active" groups="base.group_extended"/>
                         <newline/>
                         <field name="parent_id" />
@@ -59,8 +59,8 @@
                             </group>
                             <group col="2" colspan="2">
                             <separator string="Position" colspan="2"/>
-                            <field name="job_id" widget="selection" domain="[('state','!=','old')]"/>
-                            <field name="department_id" widget="selection"/>
+                            <field name="job_id" domain="[('state','!=','old')]"/>
+                            <field name="department_id" widget="selection" on_change="onchange_department(department_id)"/>
                             </group>
                         </page>
                         <page string="Categories">
@@ -83,7 +83,8 @@
                 <tree string="Employees">
                     <field name="name"/>
                     <field name="work_phone"/>
-                    <field name="work_email"/>
+                    <field name="company_id"/>                                        
+                    <field name="work_email" invisible="1"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
@@ -113,6 +114,7 @@
                     <separator orientation="vertical" />
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                    <filter string="Company" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
                 </search>
              </field>
