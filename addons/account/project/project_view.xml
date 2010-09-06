@@ -172,13 +172,13 @@
                 <tree editable="top" string="Analytic Entries">
                     <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="name"/>
+                    <field name="journal_id"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total quantity"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field domain="[('type','=','normal')]" name="account_id" groups="base.group_extended"/>
                     <field invisible="True" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="amount" sum="Total amount"/>
                     <field name="general_account_id"/>
-                    <field name="journal_id"/>
                     <field name="ref"/>
                     <field name="currency_id" />
                     <field name="amount_currency" />
