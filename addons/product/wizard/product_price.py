@@ -36,11 +36,11 @@ class product_price_list(osv.osv_memory):
         'qty5': fields.integer('Quantity-5'),
     }
     _defaults = {
-        'qty1': lambda *a: 1,
-        'qty2': lambda *a: 5,
-        'qty3': lambda *a: 10,
-        'qty4': lambda *a: 0,
-        'qty5': lambda *a: 0,
+        'qty1': 1,
+        'qty2': 5,
+        'qty3': 10,
+        'qty4': 0,
+        'qty5': 0,
     }
 
     def print_report(self, cr, uid, ids, context=None):

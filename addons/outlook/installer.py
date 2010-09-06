@@ -50,21 +50,22 @@ class outlook_installer(osv.osv_memory):
         'outlook' : True,
         'name' : 'OpenERP-Outlook-PlugIn.zip',
         'doc_name' : 'Installation Guide to OpenERP Outlook Plug-in.doc',
-        'description' : """ * Save the outlook plug­in.
-* Follows the step to install outlook plug­in.
+        'description' : """
+* Save the Outlook plug­-in.
+* Follows these steps to install outlook plug­in.
 Pre-requirements :
-    1) Python 2.6+ .
-    2) Python for Windows extensions - PyWin32 this module for python must be installed for appropriate version of the Python.
+    1. Python 2.6+ .
+    2. Python for Windows extensions - PyWin32 this module for python must be installed for appropriate version of the Python.
 
 How to install openerp-outlook plug-in?
-    1) Extract zip file  “openerp-outlook-plugin.zip” .
-    2) Open the folder openerp-outlook-plugin.
-    3) And Run “Register-plugin.bat” file.
-    4) Run Outlook and Check addin has been registered.
-    5) Tools->OpenERP Configuration and test your connection.
-    6) See User Guide for More. 
-    7) Keep All extratced files in some safe palce
-        (e.g. python installation Directory "C:\pythonXX\\" or Windows installation Directory "C:\Program Files\\"  ).
+    1. Extract zip file  “openerp-outlook-plugin.zip” .
+    2. Open the folder openerp-outlook-plugin.
+    3. Run “Register-plugin.bat” file.
+    4. Run Outlook and Check addon has been registered.
+    5. Tools->OpenERP Configuration and test your connection.
+    6. See User Guide for more information. 
+    7. Keep All extratced files in some safe places
+        (e.g. python installation Directory "C:\pythonXX\" or Windows installation Directory "C:\Program Files\"  ).
 """
         }
 outlook_installer()
