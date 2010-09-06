@@ -27,18 +27,3 @@
     self.create_entries(cr, uid, [ref("account_use_model_0")], {"lang": 'en_US', "active_model":
       "account.model", "active_ids": [ref("account_model_mymodelonyears0")], "tz":
       False, "active_id": ref("account_model_mymodelonyears0"), })
--
-  I create an account use model record
--
-  !record {model: account.use.model, id: account_use_model_1}:
-    {}
-
--
-  I checked that Moves are created successfully
-
--
-  !python {model: account.use.model}: |
-    self.open_moves(cr, uid, [ref("account_use_model_1")], {"lang": 'en_US', "move_ids":
-      [], "tz": False, "active_model": "account.model", "active_ids": [ref("account_model_mymodelonyears0")],
-      "active_id": ref("account_model_mymodelonyears0"), })
-
