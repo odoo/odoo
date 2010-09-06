@@ -31,8 +31,10 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 class res_currency(osv.osv):
-    def _current_rate(self, cr, uid, ids, name, arg, context={}):
-        res={}
+    def _current_rate(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        res = {}
         if 'date' in context:
             date=context['date']
         else:
@@ -74,7 +76,9 @@ class res_currency(osv.osv):
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}, account=None, account_invert=False):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=None, account=None, account_invert=False):
+        if context is None:
+            context = {}
         if not from_currency_id:
             from_currency_id = to_currency_id
         if not to_currency_id:
