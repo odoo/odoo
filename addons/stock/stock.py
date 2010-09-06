@@ -40,7 +40,7 @@ class stock_incoterms(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, help="Incoterms are series of sales terms.They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices."),
         'code': fields.char('Code', size=3, required=True, help="Code for Incoterms"),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the incoterms without removing it."),
+        'active': fields.boolean('Active', help="By unchecking the active field, you may hide an INCOTERM without deleting it."),
     }
     _defaults = {
         'active': True,
@@ -168,17 +168,17 @@ class stock_location(osv.osv):
 
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the stock location without removing it."),
+        'active': fields.boolean('Active', help="By unchecking the active field, you may hide a location without deleting it."),
         'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True,
-        help=' * The \'Supplier Location\' Source of products received from suppliers. \
-            \n* The \'View \' Shows that the location is only an organizational node for the hierarchical structure, and can be involved in stock moves itself. \
-            \n* The \'Internal Location\' Locations for your own stock,.\
-            \n* The \'Customer Location\' Destination for products sent to customers.\
-            \n* The \'Inventory\' The counterpart for inventory operations used to correct stock levels,. \
-            \n* The \'Procurement\' The counterpart for procurement operations when you dont yet know the source (supplier or production). Products in this location should be zero after the scheduler run completes. \
-            \n* The \'Production\' The counterpart for production operations; receipt of raw material and sending finished products. \
-            '),
-        'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
+                 help="""* Supplier Location: Virtual location representing the source location for products coming from your suppliers
+                       \n* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products
+                       \n* Internal Location: Physical locations inside your own warehouses,
+                       \n* Customer Location: Virtual location representing the destination location for products sent to your customers
+                       \n* Inventory: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)
+                       \n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (supplier or production) is not known yet. This location should be empty when the procurement scheduler has finished running.
+                       \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
+                      """, select = True),
+         # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
 
         'stock_real': fields.function(_product_qty_available, method=True, type='float', string='Real Stock', multi="stock"),
@@ -221,13 +221,12 @@ class stock_location(osv.osv):
         'parent_right': fields.integer('Right Parent', select=1),
         'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock"),
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock"),
-        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared for every companies'),
+        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
     }
     _defaults = {
         'active': True,
         'usage': 'internal',
-        'allocation_method': 'fifo',
         'chained_location_type': 'none',
         'chained_auto_packing': 'manual',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.location', context=c),
@@ -285,6 +284,9 @@ class stock_location(osv.osv):
         price_type_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.property_valuation_price_type.id
         pricetype = self.pool.get('product.price.type').browse(cr, uid, price_type_id)
         context['currency_id'] = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+
+        # To be able to offer recursive or non-recursive reports we need to prevent recursive quantities by default
+        context['compute_child'] = False
 
         if not product_ids:
             product_ids = product_obj.search(cr, uid, [])
@@ -493,8 +495,8 @@ class stock_tracking(osv.osv):
         return sequence + str(self.checksum(sequence))
 
     _columns = {
-        'name': fields.char('Tracking ID', size=64, required=True, select=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the pack without removing it."),
+        'name': fields.char('Pack Reference', size=64, required=True, select=True),
+        'active': fields.boolean('Active', help="By unchecking the active field, you may hide a pack without deleting it."),
         'serial': fields.char('Reference', size=64, select=True),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves for this pack', readonly=True),
         'date': fields.datetime('Creation Date', required=True),
@@ -620,15 +622,15 @@ class stock_picking(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True),
-        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking."),
-        'backorder_id': fields.many2one('stock.picking', 'Back Order of', help="If this picking was split this field links to the picking that contains the other part that has been processed already."),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking.", select=True),
+        'backorder_id': fields.many2one('stock.picking', 'Back Order of', help="If this picking was split this field links to the picking that contains the other part that has been processed already.", select=True),
         'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes'),
-        'stock_journal_id': fields.many2one('stock.journal','Stock Journal'),
+        'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True),
         'location_id': fields.many2one('stock.location', 'Location', help="Keep empty if you produce at the location where the finished products are needed." \
                 "Set a location if you produce at a fixed location. This can be a partner location " \
-                "if you subcontract the manufacturing operations."),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products."),
+                "if you subcontract the manufacturing operations.", select=True),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products.", select=True),
         'move_type': fields.selection([('direct', 'Direct Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
         'state': fields.selection([
             ('draft', 'Draft'),
@@ -646,7 +648,7 @@ class stock_picking(osv.osv):
                  "* Cancelled: has been cancelled, can't be confirmed anymore"),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed. Will be set to date of actual processing if not specified."),
-        'date': fields.datetime('Order Date', help="Date of Order"),
+        'date': fields.datetime('Order Date', help="Date of Order", select=True),
         'date_done': fields.datetime('Date Done', help="Date of Completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Expected Date', select=2),
@@ -658,7 +660,7 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not from Picking")], "Invoice Status",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -1342,14 +1344,14 @@ class stock_production_lot(osv.osv):
         return ids
 
     _columns = {
-        'name': fields.char('Serial', size=64, required=True),
-        'ref': fields.char('Internal Reference', size=256),
-        'prefix': fields.char('Prefix', size=64),
+        'name': fields.char('Serial Number', size=64, required=True, help="Unique serial number"),
+        'ref': fields.char('Internal Reference', size=256, help="Internal reference number in case it differs from the manufacturer's serial number"),
+        'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number"),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'date': fields.datetime('Created Date', required=True),
+        'date': fields.datetime('Creation Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
-        'company_id': fields.many2one('res.company','Company',select=1),
+        'company_id': fields.many2one('res.company', 'Company', select=True),
     }
     _defaults = {
         'date':  time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1357,7 +1359,7 @@ class stock_production_lot(osv.osv):
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, ref)', 'The serial/ref must be unique !'),
+        ('name_ref_uniq', 'unique (name, ref)', _('The combination of serial number and internal reference must be unique !')),
     ]
     def action_traceability(self, cr, uid, ids, context={}):
         """ It traces the information of a product
@@ -1380,7 +1382,7 @@ class stock_production_lot_revision(osv.osv):
         'name': fields.char('Revision Name', size=64, required=True),
         'description': fields.text('Description'),
         'date': fields.date('Revision Date'),
-        'indice': fields.char('Revision', size=16),
+        'indice': fields.char('Revision Number', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
         'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
@@ -1447,7 +1449,7 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
 
-        'date': fields.datetime('Creation Date'),
+        'date': fields.datetime('Creation Date', select=True),
         'date_planned': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
         'date_expected': fields.datetime('Date Expected', readonly=True,required=True, help="Scheduled date for the movement of the products"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
@@ -1462,12 +1464,12 @@ class stock_move(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True, select=True, help="Location where the system will stock the finished products."),
         'address_id': fields.many2one('res.partner.address', 'Destination Address', help="Optional address where goods are to be delivered, specifically used for allotment"),
 
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production"),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production", select=True),
         'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, help="Logistical shipping unit: pallet, box, pack ..."),
 
         'auto_validate': fields.boolean('Auto Validate'),
 
-        'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Optional: next stock move when chaining them"),
+        'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Optional: next stock move when chaining them", select=True),
         'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History (child moves)'),
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Picking List', select=True),
@@ -1477,10 +1479,12 @@ class stock_move(osv.osv):
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits_compute= dp.get_precision('Account')),
-        'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
-        'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner", store=True),
-        'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order"),
-        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin",store=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
+        'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner", store=True, select=True),
+        'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order", select=True),
+        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin", store=True),
+
+        # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped'),
     }
     _constraints = [
@@ -2307,13 +2311,13 @@ class stock_inventory(osv.osv):
     _name = "stock.inventory"
     _description = "Inventory"
     _columns = {
-        'name': fields.char('Inventory', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'date': fields.datetime('Date create', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date': fields.datetime('Creation Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', states={'done': [('readonly', True)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'State', readonly=True),
-        'company_id': fields.many2one('res.company','Company',required=True,select=1),
+        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'State', readonly=True, select=True),
+        'company_id': fields.many2one('res.company','Company',required=True,select=True),
     }
     _defaults = {
         'date': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -2405,10 +2409,10 @@ class stock_inventory_line(osv.osv):
     _columns = {
         'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity'),
-        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
     }
@@ -2438,8 +2442,8 @@ class stock_warehouse(osv.osv):
     _name = "stock.warehouse"
     _description = "Warehouse"
     _columns = {
-        'name': fields.char('Name', size=60, required=True),
-        'company_id': fields.many2one('res.company','Company',required=True,select=1),
+        'name': fields.char('Name', size=128, required=True, select=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_address_id': fields.many2one('res.partner.address', 'Owner Address'),
         'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage','<>','view')]),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','<>','view')]),
@@ -2506,7 +2510,7 @@ stock_picking_move_wizard()
 
 class report_products_to_received_planned(osv.osv):
     _name = "report.products.to.received.planned"
-    _description = "Product to Received Vs Planned"
+    _description = "Received Products vs Planned"
     _auto = False
     _columns = {
         'date':fields.date('Date'),
@@ -2540,7 +2544,7 @@ report_products_to_received_planned()
 
 class report_delivery_products_planned(osv.osv):
     _name = "report.delivery.products.planned"
-    _description = "Number of Delivery products vs planned"
+    _description = "Delivered products vs Planned"
     _auto = False
     _columns = {
         'date':fields.date('Date'),

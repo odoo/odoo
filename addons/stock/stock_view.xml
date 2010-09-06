@@ -377,16 +377,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Location">
-                    <field name="name"/>
-                    <field name="active" groups="base.group_extended"/>
-                    <newline/>
-                    <field name="usage"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="location_id"/>
-                    <field name="address_id" context="{'contact_display':'partner'}"/>
-                    <field name="icon" groups="base.group_extended"/>
-                    <field name="scrap_location"/>
-                    <newline/>
+                    <group col="2" colspan="2">
+                        <separator string="Location" colspan="2"/>
+                        <field name="name"/>
+                        <field name="usage"/>
+                        <field name="location_id"/>
+                    </group>
+                    <group col="4" colspan="2">
+                        <separator string="Additional Information" colspan="4"/>
+                        <field name="address_id" context="{'contact_display':'partner'}" colspan="4"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="4"/>
+                        <field name="icon" groups="base.group_extended" colspan="4"/>
+                        <field name="scrap_location" groups="base.group_extended"/>
+                        <field name="active" groups="base.group_extended"/>
+                    </group>
                     <group col="2" colspan="2" groups="base.group_extended">
                         <separator string="Chained Locations" colspan="2"/>
                         <field name="chained_location_type"/>
