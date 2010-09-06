@@ -157,15 +157,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packs">
+	    		<notebook colspan="4">
+					<page string="General Information">                            
                     <field name="name" select="1"/>
                     <field name="serial" select="1"/>
                     <field name="date" select="1"/>
                     <field name="active" select="1"/>
-                    <separator string="" colspan="4" />
-					<group col="4" colspan="4">
+        			<separator string="Traceability" colspan="4" />
+                    <group col="4" colspan="4">
 						<button name="action_traceability"  icon="gtk-go-up"  string="Upstream traceability" type="object" context="{'type': '','field': ''}"/>
 						<button name="action_traceability"  icon="gtk-go-down" string="Downstream traceability" type="object" context="{'type': 'move_history_ids','field': ''}"/>
 					</group>                    
+                    </page>
+                    <page string="Stock Move">         
+ 					<field colspan="4" name="move_ids" nolabel="1" />           
+					</page>
+					</notebook>
+					                    
                 </form>
             </field>
         </record>
@@ -178,7 +186,6 @@
                     <field name="name"/>
                     <field name="serial"/>
                     <field name="date"/>
-                    <field name="active"/>
                 </tree>
             </field>
         </record>
