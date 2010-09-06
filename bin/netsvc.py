@@ -165,21 +165,24 @@ LEVEL_COLOR_MAPPING = {
     logging.CRITICAL: (WHITE, RED),
 }
 
-class ColoredFormatter(logging.Formatter):
+class DBFormatter(logging.Formatter):
+    def format(self, record):
+        record.dbname = getattr(threading.current_thread(), 'dbname', '?')
+        return logging.Formatter.format(self, record)
+
+class ColoredFormatter(DBFormatter):
     def format(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING[record.levelno]
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
-        return logging.Formatter.format(self, record)
-
+        return DBFormatter.format(self, record)
 
 def init_logger():
     import os
     from tools.translate import resetlocale
     resetlocale()
 
-    logger = logging.getLogger()
     # create a format for log messages and dates
-    format = '[%(asctime)s] %(levelname)s:%(name)s:%(message)s'
+    format = '[%(asctime)s][%(dbname)s] %(levelname)s:%(name)s:%(message)s'
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -188,7 +191,7 @@ def init_logger():
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
         format = '%s %s' % (release.description, release.version) \
-               + ':%(levelname)s:%(name)s:%(message)s'
+                + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
         # LogFile Handler
@@ -213,10 +216,11 @@ def init_logger():
     if isinstance(handler, logging.StreamHandler) and os.isatty(handler.stream.fileno()):
         formatter = ColoredFormatter(format)
     else:
-        formatter = logging.Formatter(format)
+        formatter = DBFormatter(format)
     handler.setFormatter(formatter)
 
     # add the handler to the root logger
+    logger = logging.getLogger()
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
