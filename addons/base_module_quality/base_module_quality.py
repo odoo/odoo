@@ -26,6 +26,7 @@ import tools
 from tools import config
 from tools.translate import _
 from osv import osv, fields
+import logging
 
 class abstract_quality_check(object):
     '''
@@ -80,6 +81,7 @@ class abstract_quality_check(object):
 
         #This variable used to give message if test result is good or not
         self.message = ''
+        self.log = logging.getLogger('module.quality')
 
         #The tests have to subscribe itselfs in this list, that contains
         #all the test that have to be performed.
@@ -111,9 +113,11 @@ class abstract_quality_check(object):
         model_data = pool.get('ir.model.data').browse(cr, uid, ids2)
         for model in model_data:
             model_list.append(model.res_id)
+        self.log.debug('get_objects() model_list: %s', ','.join(map(str, model_list)))
         obj_list = []
         for mod in pool.get('ir.model').browse(cr, uid, model_list):
             obj_list.append(str(mod.model))
+        self.log.debug('get_objects() obj_list: %s', ','.join(obj_list))
         return obj_list
 
     def get_model_ids(self, cr, uid, models=[]):
@@ -121,6 +125,7 @@ class abstract_quality_check(object):
         if not models:
             return []
         pool = pooler.get_pool(cr.dbname)
+        self.log.debug('get_model_ids([%s])', ', '.join(models))
         return pool.get('ir.model').search(cr, uid, [('model', 'in', models)])
 
     def get_ids(self, cr, uid, object_list):

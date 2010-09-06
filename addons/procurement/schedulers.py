@@ -64,6 +64,7 @@ class procurement_order(osv.osv):
         report_total = 0
         report_except = 0
         report_later = 0
+        allids = self.search(cr, uid, [])
         while True:
             cr.execute('select id from procurement_order where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
             ids = map(lambda x: x[0], cr.fetchall())

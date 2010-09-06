@@ -439,7 +439,7 @@ class account_move_line(osv.osv):
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
 
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
+        'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
             store={
                 'account.move': (_get_move_lines, ['date'], 20)

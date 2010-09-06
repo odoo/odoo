@@ -48,12 +48,13 @@ class project_task(osv.osv):
         return True
 
 project_task()
+
 class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null',)
     }
-product_product()    
+product_product()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

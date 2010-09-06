@@ -135,6 +135,7 @@
         <field name="arch" type="xml">
         <tree string="Votes">
             <field name="user_id" />
+            <field name="idea_id"/>
             <field name="score"/>
             <field name="date"/>
         </tree>
@@ -175,9 +176,11 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="14">
-                    <filter string="Vote date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
-                    <filter string="Idea" icon="terp-idea" domain="[]" context="{'group_by':'idea_id'}"/>
                     <filter string="User" name="user" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Idea" icon="terp-idea" domain="[]" context="{'group_by':'idea_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Vote date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                 </group>
             </search>
         </field>
@@ -192,7 +195,7 @@
         <field name="arch" type="xml">
         <form string="New Idea">
             <group col="6" colspan="4">
-                <field name="title" select="1" />
+                <field name="name" select="1" />
                 <field name="category_id" select="1"/>
                 <field name="user_id" attrs="{'invisible':[('visibility','=',False)]}"/>
                 <field name="vote_avg" widget="progressbar"/>
@@ -217,7 +220,7 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Vote" groups="base.group_extended">
+                <page string="History" groups="base.group_extended">
                     <field name="vote_ids" nolabel="1" colspan="4" readonly="True">
                         <tree string="Votes">
                             <field name="user_id"/>
@@ -261,7 +264,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
         <tree colors="blue:state in ('draft');black:state in ('open','close');gray:state in('cancel')" string="Ideas">
-            <field name="title"/>
+            <field name="name"/>
             <field name="category_id" />
             <field name="created_date"/>
             <field name="vote_avg" widget="progressbar"/>
@@ -285,12 +288,11 @@
         <field name="arch" type="xml">
             <search string="Ideas">
                 <group col="10" colspan="4">
-                    <filter icon="terp-document-new" string="Draft"
-                        domain="[('state','=','draft')]" help="Draft Ideas" />
-                    <filter icon="terp-camera_test" string="Open"
-                        domain="[('state','=','open')]" help="Open Ideas" />
+                    <filter icon="terp-document-new" string="Current" domain="[('state','in', ('draft', 'open'))]" help="Draft and Open Ideas"/>
+                    <filter icon="terp-check" string="Accepted"
+                        domain="[('state','=','close')]" help="Accepted Ideas" />
                     <separator orientation="vertical"/>
-                    <field name="title" select="1"/>
+                    <field name="name" select="1"/>
                     <field name="category_id" select="1"/>
                     <field name="user_id" select="1"/>
                 </group>
@@ -309,11 +311,10 @@
         <field name="res_model">idea.idea</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{"search_default_user_id":uid}</field>
         <field name="search_view_id" ref="view_idea_idea_search"/>
     </record>
 
-    <menuitem name="Ideas" parent="menu_ideas1" id="menu_idea_idea" action="action_idea_idea"/>
+    <menuitem name="Ideas" parent="menu_ideas1" id="menu_idea_idea" action="action_idea_idea" sequence="1"/>
 
 <!-- Open Idea Action  -->
 
@@ -387,7 +388,7 @@
 
     <!-- Vote For Idea Action  -->
     <record model="ir.actions.act_window" id="action_idea_vote">
-        <field name="name">Idea's vote</field>
+        <field name="name">Idea's Votes</field>
         <field name="res_model">idea.vote</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
