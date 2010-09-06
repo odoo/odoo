@@ -185,9 +185,9 @@
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
                     <group col='6' colspan='4'>
-                    	<filter string="Sale" domain="[('journal_id.type','=','sale')]" icon="terp-sale"/>
-						<filter string="Purchase" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase"/>
-						<separator orientation="vertical"/>
+                        <filter string="Sale" domain="[('journal_id.type','=','sale')]" icon="terp-sale"/>
+                        <filter string="Purchase" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase"/>
+                        <separator orientation="vertical"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="date" select="1"/>
@@ -205,9 +205,9 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Extended options...">
-                    	<field name="journal_id" widget="selection"/>
-                    	<field name="product_id" widget="selection"/>
-                    	<field name="amount" select="1"/>
+                        <field name="journal_id" widget="selection"/>
+                        <field name="product_id" widget="selection"/>
+                        <field name="amount" select="1"/>
                     </group>
                 </search>
             </field>
