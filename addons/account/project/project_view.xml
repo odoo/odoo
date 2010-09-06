@@ -136,23 +136,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry">
-                <separator string="General Information" colspan="4"/>
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="amount" select="2"/>
-                    <field name="date" select="1"/>
-                    <field name="account_id" select="1" groups="base.group_extended"/>
-                    <field name="journal_id" select="2"/>
-                    <field name="general_account_id" select="2"/>
-                    <field name="move_id" select="2"/>
-                <separator string="Optional Information" colspan="4"/>
-                    <field name="unit_amount" select="2"/>
-                    <field name="ref" select="2"/>
-                    <field name="currency_id" select="2"/>
-                    <field name="amount_currency" select="2"/>
-                    <field name="company_id" select="2" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="product_id" select="2"/>
-                    <field name="product_uom_id" select="2"/>
+                    <group colspan="4" col="6">
+                        <field name="name"/>
+                        <field name="ref"/>
+                        <field name="account_id"/>
+                        <field name="journal_id"/>
+                        <field name="date"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group colspan="2" col="4">
+                        <separator string="Amount" colspan="4"/>
+                        <field name="amount" colspan="4"/>
+                        <field name="amount_currency" colspan="2"/>
+                        <field name="currency_id" colspan="2" nolabel="1"/>
+                    </group>
+                    <group colspan="2" col="4">
+                        <separator string="Product Information" colspan="4"/>
+                        <field name="product_id" colspan="4"/>
+                        <field name="unit_amount" colspan="2"/>
+                        <field name="product_uom_id" colspan="2" nolabel="1"/>
+                    </group>
+                    <group colspan="2" col="2" groups="base.group_extended">
+                        <separator string="General Accounting" colspan="2"/>
+                        <field name="general_account_id"/>
+                        <field name="move_id" readonly="1"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -189,8 +197,8 @@
                         <filter string="Purchase" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase"/>
                         <separator orientation="vertical"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
                         <field name="date" select="1"/>
+                        <field name="name" select="1"/>
                         <field name="account_id" select="1" groups="base.group_extended"/>
                         <field name="user_id" widget="selection"/>
                     </group>
