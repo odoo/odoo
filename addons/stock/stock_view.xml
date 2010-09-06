@@ -245,7 +245,15 @@
                             <field name="product_id"/>
                             <field name="stock_available"/>
                             <field name="date"/>
-                            <field colspan="4" name="revisions" nolabel="1"/>
+			    <notebook colspan="4">
+				<page string="General Information">                            
+					<field colspan="4" name="revisions" nolabel="1"/>
+					<group col="4" colspan="4">
+						<button name="%(action_view_stock_traceability_lot_upstream)d" string="Upstream Traceability"  icon="gtk-go-back" type="action"/>
+						<button name="%(action_view_stock_traceability_lot_downstream)d" string="Downstream Traceability" icon="gtk-jump-to" type="action"/>		                         
+			</group>
+			</page>
+			</notebook>
                 </form>
             </field>
         </record>
