@@ -1067,7 +1067,7 @@
             <field name="company_id" ref="main_company"/>
         </record>
 
-        <!-- The Following currency rates are considered as 3rd sep,2010 against EUR. -->
+        <!-- The Following currency rates are considered as on 1st Jan,2010 against EUR. --><
         <!-- Currencies -->
         <record id="EUR" model="res.currency">
             <field name="company_id" ref="main_company"/>
@@ -1167,7 +1167,7 @@
             <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateCOP" model="res.currency.rate">
-            <field name="rate">2332.91</field>
+            <field name="rate">2933.8378</field>
             <field name="currency_id" ref="COP"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
@@ -1181,7 +1181,7 @@
             <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateCZK" model="res.currency.rate">
-            <field name="rate">24.6682</field>
+            <field name="rate">26.5634</field>
             <field name="currency_id" ref="CZK"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
@@ -1210,8 +1210,22 @@
             <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateHUF" model="res.currency.rate">
-            <field name="rate">284.1004</field>
+            <field name="rate">271.5621</field>
             <field name="currency_id" ref="HUF"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+        
+        <record id="IDR" model="res.currency">
+            <field name="name">Rs</field>
+            <field name="code">IDR</field>
+            <field name="symbol">Rs</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateIDR" model="res.currency.rate">
+            <field name="rate">13495.2056</field>
+            <field name="currency_id" ref="IDR"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
@@ -1268,12 +1282,11 @@
             <field name="company_id" ref="main_company"/>
         </record>
         <record id="ratePLN" model="res.currency.rate">
-            <field name="rate">3.9416</field>
+            <field name="rate">4.1005</field>
             <field name="currency_id" ref="PLN"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
         
-
         <record id="SEK" model="res.currency">
             <field name="name">kr</field>
             <field name="code">SEK</field>
@@ -1283,7 +1296,7 @@
             <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateSEK" model="res.currency.rate">
-            <field name="rate">9.2981</field>
+            <field name="rate">10.3004</field>
             <field name="currency_id" ref="SEK"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
