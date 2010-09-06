@@ -2039,7 +2039,7 @@ class account_model_line(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency'),
 
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Maturity date', help="The maturity date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."),
+        'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Due date', help="The due date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."),
         'date': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Current Date', required=True, help="The date of the generated entries"),
     }
     _defaults = {

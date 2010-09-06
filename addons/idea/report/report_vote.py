@@ -35,7 +35,7 @@ class report_vote(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'user_id': fields.many2one('res.users', 'User Name'),
-        'score': fields.integer('Score'),
+        'score': fields.integer('Score',group_operator="avg"),
         'idea_id': fields.many2one('idea.idea', 'Idea'),
         'nbr':fields.integer('# of Lines', readonly=True),
         'idea_state': fields.selection([('draft', 'Draft'),('open', 'Opened'),

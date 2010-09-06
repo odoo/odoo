@@ -209,7 +209,7 @@ class account_followup_print_all(osv.osv_memory):
                 subtotal_maturity = 0.0
                 balance = 0.0
                 l = '--------------------------------------------------------------------------------------------------------------------------'
-                head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
+                head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Due date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
                 for i in data_lines:
                     maturity = 0.00
                     if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
