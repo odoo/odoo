@@ -167,7 +167,7 @@ class hr_evaluation(osv.osv):
         'state': fields.selection([
             ('draft','Draft'),
             ('wait','Plan In Progress'),
-            ('progress','Final Validation'),
+            ('progress','Waiting Validation'),
             ('done','Done'),
             ('cancel','Cancelled'),
         ], 'State', required=True, readonly=True),
