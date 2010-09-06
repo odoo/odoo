@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,17 +19,16 @@
 #
 ##############################################################################
 
-#Old Wizard 
-import wizard_configuration
+import pooler
+from osv import osv, fields
 
-import base_module_import
-import base_module_update
-import base_language_install
-import base_import_language
-import base_module_upgrade
-import base_module_configuration
-import base_export_language
-import base_update_translations
+class base_module_configuration(osv.osv_memory):
+
+     _name = "base.module.configuration"
+
+     def config(self, cr, uid, data, context=None):
+        return self.pool.get('res.config').next(cr, uid, [], context=context)
+
+base_module_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

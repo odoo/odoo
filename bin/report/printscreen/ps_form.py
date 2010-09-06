@@ -56,15 +56,8 @@ class report_printscreen_list(report_int):
         datas['ids'] = ids
         model = pool.get(datas['model'])
         pool = pooler.get_pool(cr.dbname)
-#        model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._description)])
-#        if model_id:
-#            model_desc = pool.get('ir.model').browse(cr, uid, model_id, context).description
-#            self.title = model_desc
-#        else:
-#        model_desc = model._description
+        # title come from description of model which are specified in py file.
         self.title = model._description
-
-
         result = model.fields_view_get(cr, uid, view_type='form', context=context)
 
         fields_order = self._parse_string(result['arch'])

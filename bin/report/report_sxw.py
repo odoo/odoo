@@ -256,19 +256,8 @@ class rml_parse(object):
                 value=value.split('.')[0]
                 date_format = date_format + " " + self.lang_dict['time_format']
                 parse_format = DHM_FORMAT
-
-            # filtering time.strftime('%Y-%m-%d')
-#            if type(value) == type(''):
-#                parse_format = DHM_FORMAT
-#                if (not date_time):
-#                    return str(value)
-
             if not isinstance(value, time.struct_time):
                 return time.strftime(date_format, time.strptime(value, parse_format))
-#                try:
-#                    date = datetime.datetime(str(value), parse_format)
-#                except:# sometimes it takes converted values into value, so we dont need conversion.
-#                    return str(value)
             else:
                 date = datetime(*value.timetuple()[:6])
             return date.strftime(date_format)

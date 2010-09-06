@@ -88,7 +88,7 @@ def import_translate(uri, user, pwd, dbname, translate_in):
     uid = login(uri, dbname, user, pwd)
     if uid:
         conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
-        wiz_id = execute(conn,'create',dbname, uid, pwd, 'module.lang.import')
+        wiz_id = execute(conn,'create',dbname, uid, pwd, 'base.language.import')
         for trans_in in translate_in:
             lang,ext = os.path.splitext(trans_in.split('/')[-1])
             state = 'init'

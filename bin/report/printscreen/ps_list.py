@@ -65,13 +65,9 @@ class report_printscreen_list(report_int):
         self.groupby_no_leaf = context.get('group_by_no_leaf',False)
         pool = pooler.get_pool(cr.dbname)
         model = pool.get(datas['model'])
-#        model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
-#        if model_id:
-#            model_desc = pool.get('ir.model').browse(cr, uid, model_id[0], context).description
-#            self.title = model_desc
-#        else:
+        # Title come from description of model which are specified in py file.
         model_desc = model._description
-        self.title = model._description
+        self.title = model_desc
         datas['ids'] = ids
         model = pooler.get_pool(cr.dbname).get(datas['model'])
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
