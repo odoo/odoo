@@ -53,7 +53,7 @@ class subscription_document_fields(osv.osv):
     _rec_name = 'field'
     _columns = {
         'field': fields.many2one('ir.model.fields', 'Field', domain="[('model_id', '=', parent.model)]", required=True),
-        'value': fields.selection([('false','False'),('date','Current Date')], 'Default Value', size=40),
+        'value': fields.selection([('false','False'),('date','Current Date')], 'Default Value', size=40, help="User can set new values for the field when new document is generated"),
         'document_id': fields.many2one('subscription.document', 'Subscription Document', ondelete='cascade'),
     }
     _defaults = {}
@@ -77,9 +77,9 @@ class subscription_subscription(osv.osv):
         'exec_init': fields.integer('Number of documents'),
         'date_init': fields.datetime('First Date'),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
-        'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
+        'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128, help="User can choose the source document on which he wants to create documents"),
         'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created', readonly=True),
-        'cron_id': fields.many2one('ir.cron', 'Cron Job'),
+        'cron_id': fields.many2one('ir.cron', 'Cron Job', help="Scheduler which run on subscription"),
         'note': fields.text('Notes', help="Description or Summary of Subscription"),
     }
     _defaults = {
