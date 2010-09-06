@@ -506,8 +506,6 @@
            res_model="account.invoice" 
            src_model="account.journal"/>
 
-        <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
-
         <act_window
             domain="[('partner_id', '=', partner_id), ('account_id.reconcile', '=', True)]"
             context="{'search_default_unreconciled':True}"
