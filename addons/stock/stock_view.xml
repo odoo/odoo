@@ -163,8 +163,8 @@
                     <field name="active" select="1"/>
                     <separator string="" colspan="4" />
 					<group col="4" colspan="4">
-						<button name="action_traceability"  icon="gtk-go-back" string="Downstream traceability" type="object" context="{'type': 'move_history_ids','field': ''}"/>
-						<button name="action_traceability"  icon="gtk-jump-to"  string="Upstream traceability" type="object" context="{'type': '','field': ''}"/>
+						<button name="action_traceability"  icon="gtk-go-up"  string="Upstream traceability" type="object" context="{'type': '','field': ''}"/>
+						<button name="action_traceability"  icon="gtk-go-down" string="Downstream traceability" type="object" context="{'type': 'move_history_ids','field': ''}"/>
 					</group>                    
                 </form>
             </field>
@@ -254,8 +254,8 @@
 				<page string="General Information">                            
 					<field colspan="4" name="revisions" nolabel="1"/>
 					<group col="4" colspan="4">
-						<button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-back"/>
-						<button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-jump-to"/>		                         
+						<button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up"/>
+						<button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down"/>		                         
 					</group>
 			</page>
 			</notebook>
