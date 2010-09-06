@@ -52,55 +52,12 @@ class action_traceability(osv.osv_memory):
             'res_model': 'stock.move',
             'field_parent': type1,
             'view_id': (view_id,'View'),
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,            
         }
         return value
 
 action_traceability()
-
-class stock_traceability_downstream(osv.osv_memory):
-    """
-    This class is defined for Stock traceability downstream wizard
-
-    """
-    _name = "stock.traceability.downstream"
-    _inherit = "action.traceability"
-    _description = "Stock traceability downstream"
-
-stock_traceability_downstream()
-
-class stock_traceability_upstream(osv.osv_memory):
-    """
-    This class is defined for Stock traceability upstream wizard
-
-    """
-    _name = "stock.traceability.upstream"
-    _inherit = "action.traceability"
-    _description = "Stock traceability upstream"
-
-stock_traceability_upstream()
-
-class stock_traceability_lot_upstream(osv.osv_memory):
-    """
-    This class is defined for Stock traceability lot upstream wizard
-
-    """
-    _name = "stock.traceability.lot.upstream"
-    _inherit = "action.traceability"
-    _description = "Stock traceability lot upstream"
-
-stock_traceability_lot_upstream()
-
-class stock_traceability_lot_downstream(osv.osv_memory):
-    """
-    This class is defined for Stock traceability lot downstream wizard
-
-    """
-    _name = "stock.traceability.lot.downstream"
-    _inherit = "action.traceability"
-    _description = "Stock traceability lot downstream"
-
-stock_traceability_lot_downstream()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

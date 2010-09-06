@@ -532,24 +532,8 @@ class stock_tracking(osv.osv):
         @param context: A standard dictionary 
         @return: A dictionary of values
         """
-        # Refactor Need
-        type1 = context['type'] or 'move_history_ids'
-        field = context['field'] or 'tracking_id'
-        obj = self.pool.get('stock.move')
-        ids = obj.search(cr, uid, [(field, 'in',context['active_ids'])])
-        cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type1, 'tree'))
-        view_id = cr.fetchone()[0]
-        value = {
-            'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
-            'name': ((type1=='move_history_ids') and 'Upstream Traceability') or 'Downstream Traceability',
-            'view_type': 'tree',
-            'res_model': 'stock.move',
-            'field_parent': type1,
-            'view_id': (view_id,'View'),
-            'type': 'ir.actions.act_window',
-            'nodestroy':True,
-        
-        }
+        value={}
+        value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
         return value
 stock_tracking()
 
@@ -1384,23 +1368,7 @@ class stock_production_lot(osv.osv):
         @param context: A standard dictionary 
         @return: A dictionary of values
         """
-        type1 = context['type'] or 'move_history_ids'
-        field = context['field'] or 'tracking_id'
-        obj = self.pool.get('stock.move')
-        ids = obj.search(cr, uid, [(field, 'in',context['active_ids'])])
-        cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type1, 'tree'))
-        view_id = cr.fetchone()[0]
-        value = {
-            'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
-            'name': ((type1=='move_history_ids') and 'Upstream Traceability') or 'Downstream Traceability',
-            'view_type': 'tree',
-            'res_model': 'stock.move',
-            'field_parent': type1,
-            'view_id': (view_id,'View'),
-            'type': 'ir.actions.act_window',
-            'nodestroy':True,
-        
-        }
+        value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
         return value
 stock_production_lot()
 
