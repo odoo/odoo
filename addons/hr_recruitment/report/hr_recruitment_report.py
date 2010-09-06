@@ -23,10 +23,10 @@ from osv import fields,osv
 from hr_recruitment import hr_recruitment
 
 AVAILABLE_STATES = [
-    ('draft','Draft'),
+    ('draft','New'),
     ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
+    ('cancel', 'Refused'),
+    ('done', 'Hired'),
     ('pending','Pending')
 ]
 
