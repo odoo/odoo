@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_base_module_scan" model="ir.ui.view">
+            <field name="name">Module Scan</field>
+            <field name="model">base.module.scan</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Scan for new modules">
+            <separator string="" colspan="4"/>
+            <label string="This function will check if you installed new modules in the 'addons' path of your server installation." colspan="4" />
+            <separator string="" colspan="4"/>
+            <newline/>
+            <group colspan="4">
+                <button special="cancel" string="Close" icon="gtk-cancel"/>
+                <button name="watch_dir" string="Check new modules" type="object" icon="gtk-ok"/>
+            </group>
+             </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_module_scan" model="ir.actions.act_window">
+            <field name="name">Module Scan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.module.scan</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>
+

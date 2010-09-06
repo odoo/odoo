@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -16,10 +15,9 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import os
 import re
 import glob
@@ -27,23 +25,19 @@ import time
 import imp
 
 import tools
-import wizard
 import pooler
 
 import zipfile
+from osv import osv, fields
 
-module_name_re = re.compile('.*addons.(.*?).__terp__.py$')
+class base_module_scan(osv.osv_memory):
+    """ scan module """
 
-_info_arch = '''<?xml version="1.0"?>
-<form string="Scan for new modules">
-  <label string="This function will check if you installed new modules in the 'addons' path of your server installation." colspan="4" />
-</form>
-'''
-_info_fields = {}
+    _name = "base.module.scan"
+    _description = "scan module"
 
-class wizard_install_module(wizard.interface):
-    def watch_dir(self, cr, uid, data, context):
-        mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
+    def watch_dir(self, cr, uid, ids, context):
+        mod_obj = self.pool.get('ir.module.module')
         all_mods = mod_obj.read(cr, uid, mod_obj.search(cr, uid, []), ['name', 'state'])
         known_modules = [x['name'] for x in all_mods]
         ls_ad = glob.glob(os.path.join(tools.config['addons_path'], '*', '__terp__.py'))
@@ -79,18 +73,4 @@ class wizard_install_module(wizard.interface):
                         mod_obj.write(cr, uid, [mod['id']], {'state': 'uninstalled'})
         return {}
 
-    states = {
-        'init': {
-            'actions': [], 
-            'result': {'type':'form', 'arch': _info_arch, 'fields': _info_fields, 'state':[('end','Cancel','gtk-cancel'),('addmod','Check new modules','gtk-ok')]}
-        },
-        'addmod': {
-            'actions': [watch_dir],
-            'result': {'type':'state', 'state':'end'}
-        },
-    }
-wizard_install_module('module.module.scan')
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+base_module_scan()
