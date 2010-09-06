@@ -63,6 +63,14 @@
                         <field name="account_id" select="1" widget="selection"/>
                         <field name="date" select="1"/>
                     </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Anlytic account" icon="terp-personal+" domain="[]" context="{'group_by':'account_id'}"/>
+                        <separator orientation="vertical"/>                        
+                        <filter string="Product" icon="terp-personal" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Date" icon="terp-personal+" domain="[]" context="{'group_by':'date'}"/>                        
+                    </group>                     
                 </search>
             </field>
 
@@ -99,7 +107,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Notes" position="before">
+                <page string="Categories" position="after">
                     <page string="Timesheets">
                         <field name="product_id" domain="[('type','=','service')]"/>
                         <field name="journal_id"/>
