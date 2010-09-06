@@ -522,7 +522,35 @@ class stock_tracking(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error'), _('You can not remove a lot line !'))
-
+    
+    def action_traceability(self, cr, uid, ids, context={}):
+        """ It traces the information of a product
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        @return: A dictionary of values
+        """
+        # Refactor Need
+        type1 = context['type'] or 'move_history_ids'
+        field = context['field'] or 'tracking_id'
+        obj = self.pool.get('stock.move')
+        ids = obj.search(cr, uid, [(field, 'in',context['active_ids'])])
+        cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type1, 'tree'))
+        view_id = cr.fetchone()[0]
+        value = {
+            'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
+            'name': ((type1=='move_history_ids') and 'Upstream Traceability') or 'Downstream Traceability',
+            'view_type': 'tree',
+            'res_model': 'stock.move',
+            'field_parent': type1,
+            'view_id': (view_id,'View'),
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,
+        
+        }
+        return value
 stock_tracking()
 
 #----------------------------------------------------------
@@ -1347,7 +1375,33 @@ class stock_production_lot(osv.osv):
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, ref)', 'The serial/ref must be unique !'),
     ]
-
+    def action_traceability(self, cr, uid, ids, context={}):
+        """ It traces the information of a product
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        @return: A dictionary of values
+        """
+        type1 = context['type'] or 'move_history_ids'
+        field = context['field'] or 'tracking_id'
+        obj = self.pool.get('stock.move')
+        ids = obj.search(cr, uid, [(field, 'in',context['active_ids'])])
+        cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type1, 'tree'))
+        view_id = cr.fetchone()[0]
+        value = {
+            'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
+            'name': ((type1=='move_history_ids') and 'Upstream Traceability') or 'Downstream Traceability',
+            'view_type': 'tree',
+            'res_model': 'stock.move',
+            'field_parent': type1,
+            'view_id': (view_id,'View'),
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,
+        
+        }
+        return value
 stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
