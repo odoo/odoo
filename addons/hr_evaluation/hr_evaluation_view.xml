@@ -26,13 +26,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Evaluation Plan">
-                    <group col="6" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="name" select="1"/>
                         <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
-                        <field name="active"/>
                         <field name="month_first"/>
                         <field name="month_next"/>
                         <label string="(months)" align="0.0"/>
+                        <newline/>
+                        <field name="active"/>
                     </group>
                      <notebook colspan="4">
                          <page string="Evaluation Phases">
@@ -72,7 +73,7 @@
             <field name="model">hr_evaluation.plan.phase</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Evaluation Plan Phase">
+                <form string="Evaluation Plan Phases">
                  <notebook>
                    <page string="General">
                     <field name="plan_id" invisible="1"/>
@@ -125,7 +126,7 @@
             <field name="model">hr_evaluation.plan.phase</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Evaluation Plan Phase" editable="bottom" >
+                <tree string="Evaluation Plan Phases" editable="bottom" >
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="action"/>

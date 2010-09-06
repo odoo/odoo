@@ -34,7 +34,7 @@ class hr_evaluation_plan(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Evaluation Phases'),
         'month_first': fields.integer('First Evaluation After'),
-        'month_next': fields.integer('Next Evaluation After'),
+        'month_next': fields.integer('After the Date of Start'),
         'active': fields.boolean('Active')
     }
     _defaults = {
@@ -67,10 +67,10 @@ class hr_evaluation_plan_phase(osv.osv):
         'send_anonymous_employee': fields.boolean('Anonymous Summary',
             help="Send an anonymous summary to the employee"),
         'wait': fields.boolean('Wait Previous Phases',
-            help="Check this box if you want to wait that all preceeding phases " +
+            help="Check this box if you want to wait that all preceding phases " +
               "are finished before launching this phase."),
         'mail_feature': fields.boolean('Send mail for this phase', help="Check this box if you want to send mail to employees"+
-                                       "coming under this phase"),
+                                       " coming under this phase"),
         'mail_body': fields.text('Email'),
         'email_subject':fields.text('char')
     }
