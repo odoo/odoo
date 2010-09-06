@@ -31,7 +31,7 @@ class account_use_model(osv.osv_memory):
     _columns = {
         'model': fields.many2many('account.model', 'account_use_model_relation', 'account_id', 'model_id', 'Account Model'),
     }
-    
+
     def view_init(self, cr , uid , fields_list, context=None):
         account_model_obj = self.pool.get('account.model')
         if context is None:
@@ -101,7 +101,6 @@ class account_use_model(osv.osv_memory):
                     'credit': line.credit,
                     'account_id': line.account_id.id,
                     'move_id': move_id,
-                    'ref': line.ref,
                     'partner_id': line.partner_id.id,
                     'date': time.strftime('%Y-%m-%d'),
                     'date_maturity': date_maturity
@@ -109,7 +108,7 @@ class account_use_model(osv.osv_memory):
                 c = context.copy()
                 c.update({'journal_id': model.journal_id.id,'period_id': period_id})
                 id_line = account_move_line_obj.create(cr, uid, val, context=c)
-    
+
         context.update({'move_ids':move_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_move_form')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']

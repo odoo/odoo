@@ -1989,11 +1989,11 @@ class account_model(osv.osv):
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         pt_obj = self.pool.get('account.payment.term')
-        
+
         if datas.get('date', False):
             context.update({'date':datas['date']})
         period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
-        
+
         if not period_id:
             raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
         period_id = period_id[0]
@@ -2018,7 +2018,7 @@ class account_model(osv.osv):
                     'period_id': period_id,
                     'analytic_account_id': analytic_account_id
                 }
-                
+
                 date_maturity = time.strftime('%Y-%m-%d')
                 if line.date_maturity == 'partner':
                     if not line.partner_id:
@@ -2031,7 +2031,7 @@ class account_model(osv.osv):
                             pterm_list = [l[0] for l in pterm_list]
                             pterm_list.sort()
                             date_maturity = pterm_list[-1]
-                
+
                 val.update({
                     'name': line.name,
                     'quantity': line.quantity,
@@ -2039,7 +2039,6 @@ class account_model(osv.osv):
                     'credit': line.credit,
                     'account_id': line.account_id.id,
                     'move_id': move_id,
-                    'ref': line.ref,
                     'partner_id': line.partner_id.id,
                     'date': context.get('date',time.strftime('%Y-%m-%d')),
                     'date_maturity': date_maturity
@@ -2059,7 +2058,6 @@ class account_model_line(osv.osv):
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries"),
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
-        'ref': fields.char('Reference', size=16),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade"),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete="cascade"),
         'model_id': fields.many2one('account.model', 'Model', required=True, ondelete="cascade", select=True),
