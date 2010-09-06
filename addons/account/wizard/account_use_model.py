@@ -103,4 +103,3 @@ class account_use_model(osv.osv_memory):
 account_use_model()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
