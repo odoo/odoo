@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 __all__ = ['db_connect', 'close_db']
 
+from threading import current_thread
 import logging
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE
 from psycopg2.psycopg1 import cursor as psycopg1cursor
@@ -107,7 +108,7 @@ class Cursor(object):
             self._close(True)
 
     @check
-    def execute(self, query, params=None):
+    def execute(self, query, params=None, log_exceptions=True):
         if '%d' in query or '%f' in query:
             self.__logger.warn(query)
             self.__logger.warn("SQL queries cannot contain %d or %f anymore. "
@@ -122,10 +123,12 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            self.__logger.error("Programming error: %s, in query %s", pe, query)
+            if log_exceptions or self.sql_log:
+                self.__logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            self.__logger.exception("bad query: %s", self._obj.query)
+            if log_exceptions or self.sql_log:
+                self.__logger.exception("bad query: %s", self._obj.query or query)
             raise
 
         if self.sql_log:
@@ -267,7 +270,7 @@ class ConnectionPool(object):
                 delattr(cnx, 'leaked')
                 self._connections.pop(i)
                 self._connections.append((cnx, False))
-                self._debug('Free leaked connection to %r', cnx.dsn)
+                self.__logger.warn('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and dsn_are_equals(cnx.dsn, dsn):
@@ -310,7 +313,7 @@ class ConnectionPool(object):
 
     @locked
     def close_all(self, dsn):
-        self._debug('Close all connections to %r', dsn)
+        self.__logger.info('%r: Close all connections to %r', self, dsn)
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
             if dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
@@ -362,11 +365,15 @@ def dsn_are_equals(first, second):
 _Pool = ConnectionPool(int(tools.config['db_maxconn']))
 
 def db_connect(db_name):
+    current_thread().dbname = db_name
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
     _Pool.close_all(dsn(db_name))
     tools.cache.clean_caches_for_db(db_name)
+    ct = current_thread()
+    if hasattr(ct, 'dbname'):
+        delattr(ct, 'dbname')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
