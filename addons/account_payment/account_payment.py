@@ -43,9 +43,8 @@ class payment_mode(osv.osv):
         for the given payment type code"""
         if not payment_code:
             return []
-        cr.execute(""" select t.code
-            from res_partner_bank_type t
-            join res_partner_bank pb on (t.id = pb.bank)
+        cr.execute(""" select pb.state
+            from res_partner_bank pb
             join payment_mode pm on (pm.bank_id = pb.id)
             where pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
