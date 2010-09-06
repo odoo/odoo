@@ -40,27 +40,6 @@
 
         <menuitem id="menu_main" name="Payment" parent="account.menu_finance" sequence="6"/>
 
-        <record id="view_payment_type_form" model="ir.ui.view">
-            <field name="name">payment.type.form</field>
-            <field name="model">payment.type</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-				<form string="Payment Type">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <separator string="Suitable Bank Types" colspan="4"/>
-                    <field name="suitable_bank_types" nolabel="1"  colspan="4"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_payment_type_tree" model="ir.actions.act_window">
-            <field name="name">Payment Type</field>
-            <field name="res_model">payment.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <record id="view_payment_mode_tree" model="ir.ui.view">
             <field name="name">payment.mode.tree</field>
             <field name="model">payment.mode</field>
@@ -69,7 +48,7 @@
                 <tree string="Payment Mode">
                     <field name="name"/>
                     <field name="journal"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -80,10 +59,9 @@
             <field name="arch" type="xml">
                 <form string="Payment Mode">
                     <field name="name" select="1"/>
-                    <field name="type"/>
                     <field name="journal"/>
                     <field name="bank_id"/>
-                    <field name="company_id" select="1" widget='selection'/>
+                    <field name="company_id" select="1" widget='selection' groups="base.group_multi_company"/>
                 </form>
             </field>
         </record>
@@ -94,11 +72,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="next_id_44" name="Payment" parent="account.menu_finance_configuration" groups="base.group_system"/>
-
-        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="next_id_44"/>
-
-        <menuitem action="action_payment_type_tree" id="menu_action_paymen_type" parent="next_id_44"/>
+        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="account.menu_configuration_misc"/>
 
         <record id="view_payment_order_form" model="ir.ui.view">
             <field name="name">payment.order.form</field>
@@ -106,12 +80,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment order">
-                    <field name="reference"/>
-                    <field name="mode"/>
-                    <field name="date_prefered"/>
-                    <field name="date_scheduled" select="1" attrs="{'readonly':[('date_prefered','!=','fixed')]}" />
-                    <field name="user_id"/>
-                    <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                    <group col="6" colspan="4">
+                      <field name="reference"/>
+                      <field name="mode" widget='selection'/>
+                      <field name="date_prefered"/>
+                      <field name="date_scheduled" select="1" attrs="{'readonly':[('date_prefered','!=','fixed')]}" />
+                      <field name="user_id"/>
+                      <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                    </group>
                     <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1">
                         <form string="Payment Line">
                             <notebook>

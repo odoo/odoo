@@ -23,20 +23,6 @@ import time
 from osv import osv, fields
 import netsvc
 
-class payment_type(osv.osv):
-    _name= 'payment.type'
-    _description= 'Payment Type'
-    _columns= {
-        'name': fields.char('Name', size=64, required=True, help='Payment Type'),
-        'code': fields.char('Code', size=64, required=True, help='Specifies the Code for Payment Type'),
-        'suitable_bank_types': fields.many2many('res.partner.bank.type',
-            'bank_type_payment_type_rel',
-            'pay_type_id', 'bank_type_id',
-            'Suitable bank types')
-            }
-
-payment_type()
-
 class payment_mode(osv.osv):
     _name= 'payment.mode'
     _description= 'Payment Mode'
@@ -47,11 +33,11 @@ class payment_mode(osv.osv):
         'journal': fields.many2one('account.journal', 'Journal', required=True,
             domain=[('type', '=', 'cash')], help='Cash Journal for the Payment Mode'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'type': fields.many2one('payment.type', 'Payment type', required=True, help='Select the Payment Type for the Payment Mode.'),
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
+
     def suitable_bank_types(self, cr, uid, payment_code=None, context={}):
         """Return the codes of the bank type that are suitable
         for the given payment type code"""
@@ -59,9 +45,8 @@ class payment_mode(osv.osv):
             return []
         cr.execute(""" select t.code
             from res_partner_bank_type t
-            join bank_type_payment_type_rel r on (r.bank_type_id = t.id)
-            join payment_type pt on (r.pay_type_id = pt.id)
-            join payment_mode pm on (pm.type = pt.id)
+            join res_partner_bank pb on (t.id = pb.bank)
+            join payment_mode pm on (pm.bank_id = pb.id)
             where pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
 
@@ -419,7 +404,6 @@ class payment_line(osv.osv):
                     if bank.state in bank_type:
                         data['bank_id'] = bank.id
                         break
-
         return {'value': data}
 
     def fields_get(self, cr, uid, fields=None, context=None):
