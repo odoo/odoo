@@ -493,11 +493,11 @@ class stock_tracking(osv.osv):
         return sequence + str(self.checksum(sequence))
 
     _columns = {
-        'name': fields.char('Tracking ID', size=64, required=True),
+        'name': fields.char('Tracking ID', size=64, required=True, select=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the pack without removing it."),
-        'serial': fields.char('Reference', size=64),
-        'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves Tracked'),
-        'date': fields.datetime('Created Date', required=True),
+        'serial': fields.char('Reference', size=64, select=True),
+        'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves for this pack', readonly=True),
+        'date': fields.datetime('Creation Date', required=True),
     }
     _defaults = {
         'active': 1,
