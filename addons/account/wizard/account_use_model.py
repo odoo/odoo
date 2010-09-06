@@ -69,7 +69,7 @@ class account_use_model(osv.osv_memory):
                 raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
             period_id = period_id[0]
             move_id = account_move_obj.create(cr, uid, {
-                'ref': model.ref,
+                'ref': model.name,
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
             })
