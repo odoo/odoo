@@ -41,7 +41,7 @@ class hr_installer(osv.osv_memory):
         'hr_evaluation': fields.boolean('Periodic Evaluations',
             help="Lets you create and manage the periodic evaluation and "
                  "performance review of employees."),
-        'hr_attendance': fields.boolean('Attendances (Sign In/Out)',
+        'hr_attendance': fields.boolean('Attendances',
             help="Simplifies the management of employee's attendances."),
         'hr_payroll': fields.boolean('Payroll',
             help="Generic Payroll system"),

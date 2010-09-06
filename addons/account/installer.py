@@ -634,6 +634,9 @@ class account_installer_modules(osv.osv_memory):
 #                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
                  }
 
+    _defaults = {
+        'account_voucher': True,
+        }
 account_installer_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
