@@ -39,7 +39,7 @@ class action_traceability(osv.osv_memory):
         @return: A dictionary of values
         """
 
-        type1 = context['type'] or 'move_history_ids'
+        type1 = context['type'] or 'move_history_ids2'
         field = context['field'] or 'tracking_id'
         obj = self.pool.get('stock.move')
         ids = obj.search(cr, uid, [(field, 'in',context['active_ids'])])
@@ -47,7 +47,7 @@ class action_traceability(osv.osv_memory):
         view_id = cr.fetchone()[0]
         value = {
             'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
-            'name': ((type1=='move_history_ids') and 'Donwstream Traceability') or 'Upstream Traceability',
+            'name': ((type1=='move_history_ids2') and 'Upstream Traceability') or 'Downstream Traceability',
             'view_type': 'tree',
             'res_model': 'stock.move',
             'field_parent': type1,
