@@ -8,13 +8,13 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, type)" string="Vendor"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Vendor"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, type)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"
                             string="Payment Method"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, type)"/>
+                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="4"/>
                         <field name="account_id"
@@ -104,14 +104,14 @@
             <field name="arch" type="xml">
                 <form string="Sales Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, type)" string="Customer"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" string="Customer"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, type)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"
                             string="Payment Method"/>
                         <field name="amount"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, type)"/>
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="4"/>
                         <field name="account_id"
