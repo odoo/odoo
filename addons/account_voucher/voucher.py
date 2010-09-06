@@ -243,7 +243,7 @@ class account_voucher(osv.osv):
             })
         return {'value':default}
     
-    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id=False, price=0.0, ttype=False, context={}):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id=False, price=0.0, currency_id=False, ttype=False, context={}):
         """price
         Returns a dict that contains new values and context
     
@@ -255,6 +255,8 @@ class account_voucher(osv.osv):
         """
         if not journal_id:
             return {}
+        
+        currency_pool = self.pool.get('res.currency')
         move_pool = self.pool.get('account.move')
         line_pool = self.pool.get('account.voucher.line')
         move_line_pool = self.pool.get('account.move.line')
@@ -304,11 +306,19 @@ class account_voucher(osv.osv):
         ids.reverse()
         moves = move_line_pool.browse(cr, uid, ids)
         
+        company_currency = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+        if company_currency != currency_id and ttype == 'payment':
+            total_debit = currency_pool.compute(cr, uid, currency_id, company_currency, total_debit)
+        elif company_currency != currency_id and ttype == 'receipt':
+            total_credit = currency_pool.compute(cr, uid, currency_id, company_currency, total_credit)
+            
         for line in moves:
             if line.credit and line.reconcile_partial_id:
                 continue
+            
             total_credit += line.credit or 0.0
             total_debit += line.debit or 0.0
+
         for line in moves:
             if line.credit and line.reconcile_partial_id:
                 continue
@@ -323,11 +333,13 @@ class account_voucher(osv.osv):
                 'amount_unreconciled': line.amount_unreconciled
             }
             if line.credit:
-                rs['amount'] = min(line.amount_unreconciled, total_debit)
-                total_debit -= rs['amount']
+                amount = min(line.amount_unreconciled, total_debit)
+                rs['amount'] = currency_pool.compute(cr, uid, company_currency, currency_id, amount)
+                total_debit -= amount
             else:
-                rs['amount'] = min(line.amount_unreconciled, total_credit)
-                total_credit -= rs['amount']
+                amount = min(line.amount_unreconciled, total_credit)
+                rs['amount'] = currency_pool.compute(cr, uid, company_currency, currency_id, amount)
+                total_credit -= amount
 
             default['value']['line_ids'].append(rs)
             if rs['type'] == 'cr':

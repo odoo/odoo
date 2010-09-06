@@ -143,8 +143,8 @@ class account_account_type(osv.osv):
     _columns = {
         'name': fields.char('Acc. Type Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=32, required=True),
-        'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type. 
- 
+        'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
+
  'None' means that nothing will be done.
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
@@ -684,7 +684,7 @@ class account_journal(osv.osv):
 
     def create(self, cr, uid, vals, context={}):
         if not 'sequence_id' in vals or not vals['sequence_id']:
-            vals.update({'sequence_id' : self.create_sequence(cr, uid, vals, context)}) 
+            vals.update({'sequence_id' : self.create_sequence(cr, uid, vals, context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -970,7 +970,7 @@ class account_fiscalyear(osv.osv):
     _columns = {
         'end_journal_period_id':fields.many2one('account.journal.period','End of Year Entries Journal', readonly=True),
     }
-    
+
     def copy(self, cr, uid, id, default={}, context=None):
         default.update({
             'period_ids': [],
@@ -1152,24 +1152,17 @@ class account_move(osv.osv):
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
-        def _get_chart_account(cursor, user, account):
-            if account.parent_id:
-                chart_account = _get_chart_account(cursor, user, account.parent_id)
-            else:
-                chart_account = account
-            return chart_account
-
         for move in self.browse(cursor, user, ids):
-            lines = move.line_id
-            if lines:
-                ref_line = lines[0]
-                ref_chart_account = _get_chart_account(cursor, user, ref_line.account_id)
-                parent_left = ref_chart_account.parent_left
-                parent_right = ref_chart_account.parent_right
-                result = True
-                for line in lines[1:]:
-                   if not (line.account_id.parent_left > parent_left and line.account_id.parent_left < parent_right):
-                         raise osv.except_osv(_('Error !'), _('You cannot validate a move unless accounts in its entry lines are in same Chart Of Accounts !'))
+            top = None
+            for line in move.line_id:
+                account = line.account_id
+                while account:
+                    account2 = account
+                    account = account.parent_id
+                if not top:
+                    top = account2.id
+                elif top<>account2.id:
+                    raise osv.except_osv(_('Error !'), _('You cannot validate a Journal Entry unless all journal items are in same chart of accounts !'))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context={}):
@@ -1978,7 +1971,6 @@ class account_model(osv.osv):
     _description = "Account Model"
     _columns = {
         'name': fields.char('Model Name', size=64, required=True, help="This is a model for recurring accounting entries"),
-        'ref': fields.char('Reference', size=64),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
@@ -1995,15 +1987,19 @@ class account_model(osv.osv):
         move_ids = []
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
+        pt_obj = self.pool.get('account.payment.term')
+
+        if datas.get('date', False):
+            context.update({'date':datas['date']})
         period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
+
         if not period_id:
             raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
         period_id = period_id[0]
-        
+
         for model in self.browse(cr, uid, ids, context):
-            context.update({'date':datas['date']})
             move_id = account_move_obj.create(cr, uid, {
-                'ref': model.ref,
+                'ref': model.name,
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
                 'date': context.get('date',time.strftime('%Y-%m-%d'))
@@ -2021,6 +2017,20 @@ class account_model(osv.osv):
                     'period_id': period_id,
                     'analytic_account_id': analytic_account_id
                 }
+
+                date_maturity = time.strftime('%Y-%m-%d')
+                if line.date_maturity == 'partner':
+                    if not line.partner_id:
+                        raise osv.except_osv(_('Error !'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term! \
+                    \nPlease define partner on it!"%(line.name, model.name)))
+                    if line.partner_id.property_payment_term:
+                        payment_term_id = line.partner_id.property_payment_term.id
+                        pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_maturity)
+                        if pterm_list:
+                            pterm_list = [l[0] for l in pterm_list]
+                            pterm_list.sort()
+                            date_maturity = pterm_list[-1]
+
                 val.update({
                     'name': line.name,
                     'quantity': line.quantity,
@@ -2028,10 +2038,9 @@ class account_model(osv.osv):
                     'credit': line.credit,
                     'account_id': line.account_id.id,
                     'move_id': move_id,
-                    'ref': line.ref,
                     'partner_id': line.partner_id.id,
                     'date': context.get('date',time.strftime('%Y-%m-%d')),
-                    'date_maturity': time.strftime('%Y-%m-%d')
+                    'date_maturity': date_maturity
                 })
                 c = context.copy()
                 c.update({'journal_id': model.journal_id.id,'period_id': period_id})
@@ -2048,7 +2057,6 @@ class account_model_line(osv.osv):
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries"),
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
-        'ref': fields.char('Reference', size=16),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade"),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete="cascade"),
         'model_id': fields.many2one('account.model', 'Model', required=True, ondelete="cascade", select=True),
@@ -2150,16 +2158,18 @@ class account_subscription_line(osv.osv):
 
     def move_create(self, cr, uid, ids, context=None):
         tocheck = {}
+        all_moves = []
         for line in self.browse(cr, uid, ids, context=context):
             datas = {
                 'date': line.date,
             }
-            ids = self.pool.get('account.model').generate(cr, uid, [line.subscription_id.model_id.id], datas, context)
+            move_ids = self.pool.get('account.model').generate(cr, uid, [line.subscription_id.model_id.id], datas, context)
             tocheck[line.subscription_id.id] = True
-            self.write(cr, uid, [line.id], {'move_id':ids[0]})
+            self.write(cr, uid, [line.id], {'move_id':move_ids[0]})
+            all_moves.extend(move_ids)
         if tocheck:
             self.pool.get('account.subscription').check(cr, uid, tocheck.keys(), context)
-        return ids
+        return all_moves
 
     _rec_name = 'date'
 account_subscription_line()

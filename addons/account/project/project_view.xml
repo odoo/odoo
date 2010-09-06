@@ -428,14 +428,6 @@
             </field>
         </record>
 
-        <record id="report_account_analytic_journal_tree" model="ir.actions.act_window">
-            <field name="name">Account cost and revenue by journal</field>
-            <field name="res_model">report.hr.timesheet.invoice.journal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="search_view_id" ref="report_hr_timesheet_invoice_journal_search"/>
-        </record>
-
         <act_window 
             context="{'search_default_account_id': [active_id], 'search_default_user_id': False}"
             id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" 
@@ -444,8 +436,6 @@
             src_model="account.analytic.account" 
             view_mode="tree,form" 
             view_type="form"/>
-
-        <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal" name="Costs &amp; Revenues" res_model="report.hr.timesheet.invoice.journal" src_model="account.analytic.account" view_mode="graph,tree,form" view_type="form"/>
 
         <record id="view_account_journal_1" model="ir.ui.view">
             <field name="name">account.journal.form.1</field>

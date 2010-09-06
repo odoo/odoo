@@ -31,20 +31,10 @@
             <field name="target">new</field>
         </record>
 
-        <record model="ir.values" id="account_followup_print_values">
-            <field name="model_id" ref="model_account_followup_followup" />
-            <field name="object" eval="1" />
-            <field name="name">Send followups</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_followup_print'))" />
-            <field name="key">action</field>
-            <field name="model">account_followup.followup</field>
-        </record>
-
         <menuitem action="action_account_followup_print"
                   id="account_followup_print_menu"
-                  parent="account.menu_finance_periodical_processing"
-                  />
+                  parent="account.menu_finance_periodical_processing_billing"
+                  sequence="10"/>
 
 
        <!-- Screen2 -->

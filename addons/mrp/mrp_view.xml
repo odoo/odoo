@@ -573,10 +573,7 @@
                         </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
-                        <group colspan="2" col="3" groups="product.group_uos">
-                            <field name="product_uos"/>
-                            <label string=""/>
-                        </group>
+                        <field name="product_uos" groups="product.group_uos"/>
                     </group>
 
                     <notebook colspan="4">
@@ -901,7 +898,8 @@
             view_type="tree"
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="base.group_extended"/>
 
         <act_window
             domain="[('product_id', '=', active_id),('bom_id','=',False)]"

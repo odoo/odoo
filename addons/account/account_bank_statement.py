@@ -642,7 +642,7 @@ class account_bank_statement_line(osv.osv):
                 account_id = part.property_account_receivable.id
             res['value']['account_id'] = account_id
 
-        if not line or (line and not line[0].amount):
+        if account_id and (not line or (line and not line[0].amount)):
             res_users_obj = self.pool.get('res.users')
             res_currency_obj = self.pool.get('res.currency')
             company_currency_id = res_users_obj.browse(cursor, user, user,

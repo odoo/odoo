@@ -100,7 +100,6 @@
                                                             attrs="{'readonly':[('state','!=','draft')]}"
                                                             on_change="onchange_planned(planned_hours,effective_hours)"/>
                                                         <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                                        <button name="%(project.action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                                                     </group>
                                                     <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                                                     <group col="11" colspan="4">

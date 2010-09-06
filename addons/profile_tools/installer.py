@@ -28,6 +28,7 @@ class misc_tools_installer(osv.osv_memory):
         'lunch':fields.boolean('Lunch Orders',help='Installs tools for lunch module'),
         'subscription':fields.boolean('Recurring Documents',help='Installs tools for subscription module'),
         'survey':fields.boolean('Survey',help='Installs tools for survey module'),
+        'idea':fields.boolean('Idea',help='Installs tools for idea module'),
         'audittrail':fields.boolean('Audit Trail',help='Installs tools for audittrail module'),
     }
     _defaults = {

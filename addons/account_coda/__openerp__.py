@@ -32,6 +32,7 @@
     "demo_xml"  : [],
     "init_xml"  : [],
     "update_xml": ["security/ir.model.access.csv",
+                    "security/account_security.xml",
                     "wizard/account_coda_import.xml",
                     "account_coda_view.xml"],
     "active"    : False,
