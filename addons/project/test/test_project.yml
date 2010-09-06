@@ -51,7 +51,6 @@
      new_prj = self.read(cr, uid, [new_id], ['name', 'state'])[0]
      state = new_prj['state']
      name = new_prj['name'] 
-     print "Project '%s' created"%name
      assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state          
 - 
   Reset project template to normal project  
@@ -142,7 +141,7 @@
 - 
   Make a work task entry 'Training on OpenERP modules, models and classes' of 10 hours
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-05-31 15:04:22'
         hours: 10.0
@@ -159,7 +158,7 @@
 - 
   Make a work task entry 'Training on OpenERP xml views' of 10 hours
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-06-01 15:04:46'
         hours: 10.0
@@ -176,7 +175,7 @@
 - 
   Make a work task entry 'Training on workflows' of 10 hours        
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-06-02 15:05:24'
         hours: 10.0
@@ -216,7 +215,7 @@
 - 
   Make a work task entry 'Training on reports and wizards' of 10 hours
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-05-31 15:08:40'
         hours: 10.0
@@ -271,7 +270,7 @@
 - 
   Make a work task entry 'Training on yml' of 5 hours
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-05-31 16:55:27'
         hours: 5.0

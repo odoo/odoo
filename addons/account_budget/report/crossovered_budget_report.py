@@ -205,6 +205,6 @@ class budget_report(report_sxw.rml_parse):
 
         return result
 
-report_sxw.report_sxw('report.crossovered.budget.report', 'crossovered.budget', 'addons/account_budget/report/crossovered_budget_report.rml',parser=budget_report,header=False)
+report_sxw.report_sxw('report.crossovered.budget.report', 'crossovered.budget', 'addons/account_budget/report/crossovered_budget_report.rml',parser=budget_report, header="internal")
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

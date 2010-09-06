@@ -177,7 +177,7 @@
 				
 			        <record id="conf_ova" model="account.account.template">
 			            <field name="code">1103</field>
-			            <field name="name">Output VAT</field>
+			            <field name="name">Tax Paid</field>
 			            <field ref="conf_cas" name="parent_id"/>
 			            <field name="type">other</field>
 			            <field name="user_type" ref="conf_account_type_asset"/>
@@ -210,7 +210,7 @@
 			
 			        <record id="conf_iva" model="account.account.template">
 			            <field name="code">1112</field>
-			            <field name="name">Input VAT</field>
+			            <field name="name">Tax Received</field>
 			            <field ref="conf_cli" name="parent_id"/>
 			            <field name="type">other</field>
 			            <field name="user_type" ref="conf_account_type_liability"/>
@@ -308,55 +308,55 @@
 
 			<!-- Input TAX -->
 	        <record id="tax_code_input" model="account.tax.code.template">
-	            <field name="name">Input TAX</field>
+	            <field name="name">Tax Received</field>
 	            <field name="parent_id" ref="tax_code_balance_net"/>
 	            <field eval="-1" name="sign"/>
 	        </record>
 
 		        <record id="tax_code_input_S" model="account.tax.code.template">
-		            <field name="name">Input TAX Rate S (15%)</field>
+		            <field name="name">Tax Received Rate S (15%)</field>
 		            <field name="parent_id" ref="tax_code_input"/>
 		        </record>
 	
 		        <record id="tax_code_input_R" model="account.tax.code.template">
-		            <field name="name">Input TAX Rate R (5%)</field>
+		            <field name="name">Tax Received Rate R (5%)</field>
 		            <field name="parent_id" ref="tax_code_input"/>
 		        </record>
 
 		        <record id="tax_code_input_X" model="account.tax.code.template">
-		            <field name="name">Input TAX Rate X (Exempt)</field>
+		            <field name="name">Tax Received Rate X (Exempt)</field>
 		            <field name="parent_id" ref="tax_code_input"/>
 		        </record>
 	
 		        <record id="tax_code_input_O" model="account.tax.code.template">
-		            <field name="name">Input TAX Rate O (Out of scope)</field>
+		            <field name="name">Tax Received Rate O (Out of scope)</field>
 		            <field name="parent_id" ref="tax_code_input"/>
 		        </record>
 
 	        <!-- Output TAX -->
 	
 	        <record id="tax_code_output" model="account.tax.code.template">
-	            <field name="name">Output TAX</field>
+	            <field name="name">Tax Paid</field>
 	            <field name="parent_id" ref="tax_code_balance_net"/>
 	        </record>
 
 		        <record id="tax_code_output_S" model="account.tax.code.template">
-		            <field name="name">Output TAX Rate S (15%)</field>
+		            <field name="name">Tax Paid Rate S (15%)</field>
 		            <field name="parent_id" ref="tax_code_output"/>
 		        </record>
 		
 		        <record id="tax_code_output_R" model="account.tax.code.template">
-		            <field name="name">Output TAX Rate R (5%)</field>
+		            <field name="name">Tax Paid Rate R (5%)</field>
 		            <field name="parent_id" ref="tax_code_output"/>
 		        </record>
 
 		        <record id="tax_code_output_X" model="account.tax.code.template">
-		            <field name="name">Output TAX Rate X (Exempt)</field>
+		            <field name="name">Tax Paid Rate X (Exempt)</field>
 		            <field name="parent_id" ref="tax_code_output"/>
 		        </record>
 		
 		        <record id="tax_code_output_O" model="account.tax.code.template">
-		            <field name="name">Output TAX Rate O (Out of scope)</field>
+		            <field name="name">Tax Paid Rate O (Out of scope)</field>
 		            <field name="parent_id" ref="tax_code_output"/>
 		        </record>
 

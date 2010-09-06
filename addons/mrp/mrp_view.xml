@@ -901,7 +901,8 @@
             view_type="tree"
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="base.group_extended"/>
 
         <act_window
             domain="[('product_id', '=', active_id),('bom_id','=',False)]"

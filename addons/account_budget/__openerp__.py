@@ -50,7 +50,6 @@ Three reports are available:
     'update_xml': [
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',
-        'account_budget_wizard.xml',
         'wizard/account_budget_spread_view.xml',
         'crossovered_budget_view.xml',
         'crossovered_budget_report.xml',

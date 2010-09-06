@@ -15,7 +15,7 @@
     description: I want that Technical presentation are arranged for 1 hours in every
       day.\nso, on that presentation, we can know all things what improvement and development
       are done in our company.\n\n\n\n\n
-    title: Technical  presentation for 1 hours in every day
+    name: Technical  presentation for 1 hours in every day
     user_id: base.user_root
     
 - |
@@ -30,37 +30,37 @@
   !workflow {model: idea.idea, action: idea_open, ref: idea_idea_0}
   
 - |
-  In order to check voting statistics in real systems I will create 2 new Users "user1".
+  In order to check voting statistics in real systems I will create 2 new Users "test_idea_user1".
 - 
-  !record {model: res.users, id: res_users_user0}: 
+  !record {model: res.users, id: test_idea_user1}: 
     company_id: base.main_company
     context_lang: en_US
-    login: idea_user1
+    login: test_idea_user1
     name: Idea test user1
-    password: user1
+    password: test_idea_user1
     groups_id: [ base.group_tool_user, ]
 - |
   And I will also create user2.    
 - 
-  !record {model: res.users, id: res_users_user1}:
+  !record {model: res.users, id: test_idea_user2}:
     company_id: base.main_company
     context_lang: en_US
-    login: idea_user2
+    login: test_idea_user2
     name: Idea test user2
-    password: user2
+    password: test_idea_user2
     groups_id: [ base.group_tool_user, ]
 - |
-  In order to post vote I connect as user1 and open the idea page
+  In order to post vote I connect as test_idea_user1 and open the idea page
   I click on  "Submit Vote" wizard  button and vote the idea as "Normal"
     
 - 
   !python {model: idea.post.vote}: |
-    uid2 = ref('res_users_user0')
+    uid2 = ref('test_idea_user1')
     new_id = self.create(cr, uid2, {'vote': 50}, {"active_ids": [ref("idea_idea_0")]})
     self.do_vote(cr, uid2, [new_id], {"active_ids": [ref("idea_idea_0")]})
     
 - |
-  To add other vote I connect as user2 and open the idea page.
+  To add other vote I connect as test_idea_user2 and open the idea page.
   
   I click on "Submit Vote" wizard button and vote the idea as "Very Good".
    
@@ -68,7 +68,7 @@
   
 -
   !python {model: idea.post.vote}: |
-    uid2 = ref('res_users_user1')
+    uid2 = ref('test_idea_user2')
     new_id = self.create(cr, uid2, {'vote': 100, 'note': 'We can learn many things from technical presentation'}, {"active_ids": [ref("idea_idea_0")]})
     self.do_vote(cr, uid2, [new_id], {'active_ids': [ref('idea_idea_0')]})  
         

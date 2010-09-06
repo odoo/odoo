@@ -8,6 +8,7 @@
     name: Test_SO003
     order_line:
       - name: Slider Mobile
+        sequence: 1
         price_unit: 200.0
         product_uom: product.product_uom_unit
         product_uom_qty: 100.0
@@ -18,6 +19,7 @@
         type: make_to_order
       - name: LG Viewty Smart
         price_unit: 170.0
+        sequence: 2
         product_uom: product.product_uom_unit
         product_uom_qty: 100.0
         state: draft
@@ -82,40 +84,22 @@
     invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     assert invoice_id, "Invoice is not in the open state"
 -
-  Creating an account invoice pay entry.
+  I assign an analytic jounal to the bank journal
 - 
-  !record {model: account.invoice.pay, id: account_invoice_pay_tst0}:
-    amount: 20000.0
-    date: '2010-07-12'
-    journal_id: sale.account_journal_bankjournal0
-    name: test
-    period_id: account.period_5
-- 
-  I pay the invoice.
+  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
+    analytic_journal_id: account.cose_journal_sale
 -
-  !python {model: account.invoice.pay}: |
+  I pay the invoice
+-
+  !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
-    self.wo_check(cr, uid, [ref("account_invoice_pay_tst0")], {"lang": "en_US", "active_model": "account.invoice", 
-      "tz":False,"record_id": so.invoice_ids[0].id, "active_ids": [so.invoice_ids[0].id], "type":
-      "out_invoice", "active_id": so.invoice_ids[0].id})
--
-  Creating an account invoice pay writeoff entry.
-- 
-  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
-    analytic_id: account.analytic_customers
-    comment: Write-Off
-    writeoff_acc_id: account.a_sale
-    writeoff_journal_id: sale.account_journal_bankjournal0
-- 
-  Pay and Reconcile the Invoice.
-- 
-  !python {model: account.invoice.pay.writeoff}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))   
-    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
-      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
-      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id, })
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
+    self.pay_and_reconcile(cr, uid, invoice_id,
+        20000.0, ref('account.cash'), ref('account.period_8'),
+        ref('sale.account_journal_bankjournal0'), ref('account.cash'),
+        ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
+        name='test')
 -
   I verify that an invoice is in done state. 
 -
@@ -131,19 +115,9 @@
     sale_id=self.browse(cr, uid, ref("sale_order_so3"))
     assert(sale_id.invoiced == True), "Paid has not been set to true"
 -
- I click on the "Create Invoice" button of sale order and verify that it gives a warning message
+  I click on the "Create Invoice" button of sale order and verify that it gives a warning message
 -
-  !python {model: sale.order}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    try:
-      wf_service.trg_validate(uid, 'sale.order',ref("sale_order_so3"),'manual_invoice', cr)
-    except:
-       pass
--
-  I create an invoice for another sale order line. 
--
-  I click on the "Create Invoice" button of sale order line
+  I create an invoice for another sale order line. I click on the "Create Invoice" button of sale order line
 - 
   !python {model: sale.order.line}: |
     sale_order_obj = self.pool.get('sale.order')
@@ -192,40 +166,22 @@
     invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
     assert invoice_id, "Invoice is not in the open state"
 -
-  Creating a account invoice pay entry.
+  Assign analytic jounal into bank journal
 - 
-  !record {model: account.invoice.pay, id: account_invoice_pay_tst1}:
-    amount: 17000.0
-    date: '2010-07-12'
-    journal_id: sale.account_journal_bankjournal0
-    name: test
-    period_id: account.period_5
-- 
-  I pay the invoice.
+  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
+    analytic_journal_id: account.cose_journal_sale
 -
-  !python {model: account.invoice.pay}: |
+  I pay the invoice
+-
+  !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
-    self.wo_check(cr, uid, [ref("account_invoice_pay_tst1")], {"lang": "en_US", "active_model": "account.invoice", 
-      "tz":False,"record_id": so.invoice_ids[1].id, "active_ids": [so.invoice_ids[1].id], "type":
-      "out_invoice", "active_id": so.invoice_ids[1].id})
--
-  Creating an account invoice pay writeoff entry.
-- 
-  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_1}:
-    analytic_id: account.analytic_customers
-    comment: Write-Off
-    writeoff_acc_id: account.a_sale
-    writeoff_journal_id: sale.account_journal_bankjournal0
-- 
-  Pay and Reconcile the Invoice.
-- 
-  !python {model: account.invoice.pay.writeoff}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))   
-    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_1")],
-      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
-      [so.invoice_ids[1].id], "type": "out_invoice", "active_id": so.invoice_ids[1].id})
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
+    self.pay_and_reconcile(cr, uid, invoice_id,
+        17000.0, ref('account.cash'), ref('account.period_8'),
+        ref('sale.account_journal_bankjournal0'), ref('account.cash'),
+        ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
+        name='test')
 -
   I verify the invoice is in done state. 
 -
