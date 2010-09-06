@@ -161,6 +161,11 @@
                     <field name="serial" select="1"/>
                     <field name="date" select="1"/>
                     <field name="active" select="1"/>
+                    <separator string="" colspan="4" />
+					<group col="4" colspan="4">
+						<button name="%(action_view_stock_traceability_lot_upstream)d" string="Upstream Traceability"  icon="gtk-go-back" type="action"/>
+						<button name="%(action_view_stock_traceability_upstream)d" string="Downstream Traceability" icon="gtk-jump-to" type="action"/>		                         
+					</group>                    
                 </form>
             </field>
         </record>
