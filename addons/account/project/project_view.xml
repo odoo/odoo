@@ -8,7 +8,7 @@
             <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
+                <tree colors="red:(date&lt;=current_date);black:(date&gt;current_date);black:(date==False)" string="Analytic account">
                     <field name="code"/>
                     <field name="complete_name"/>
                     <field name="quantity"/>
@@ -77,7 +77,6 @@
                         <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended"/>
                         <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
                         <field name="type" select="2"/>
-                        <field name="currency_id" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
@@ -85,7 +84,6 @@
                             <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>
-
                             <newline/>
                             <field name="quantity_max"/>
                             <field name="user_id"/>
@@ -430,7 +428,14 @@
             <field name="search_view_id" ref="report_hr_timesheet_invoice_journal_search"/>
         </record>
 
-        <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" name="All Analytic Entries" res_model="account.analytic.line" src_model="account.analytic.account" view_mode="tree,form" view_type="form"/>
+        <act_window 
+            context="{'search_default_account_id': [active_id], 'search_default_user_id': False}"
+            id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" 
+            name="All Analytic Entries" 
+            res_model="account.analytic.line" 
+            src_model="account.analytic.account" 
+            view_mode="tree,form" 
+            view_type="form"/>
 
         <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal" name="Costs &amp; Revenues" res_model="report.hr.timesheet.invoice.journal" src_model="account.analytic.account" view_mode="graph,tree,form" view_type="form"/>
 
