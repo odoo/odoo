@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -25,7 +25,7 @@ pool_dic = {}
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False):
     if not status:
         status={}
- 
+
     db = get_db_only(db_name)
 
     if db_name in pool_dic:
@@ -35,10 +35,10 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
         import osv.osv
         pool = osv.osv.osv_pool()
         pool_dic[db_name] = pool
-        
+
         try:
             addons.load_modules(db, force_demo, status, update_module)
-        except Exception, e:
+        except Exception:
             del pool_dic[db_name]
             raise
 
@@ -51,13 +51,12 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
 
         import report
         report.interface.register_all(db)
-        pool.get('ir.cron')._poolJobs(db.dbname)
+        pool.get('ir.cron').restart(db.dbname)
     return db, pool
 
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     if db_name in pool_dic:
-        pool_dic[db_name].get('ir.cron').cancel(db_name)
         del pool_dic[db_name]
     return get_db_and_pool(db_name, force_demo, status, update_module=update_module)
 
