@@ -40,6 +40,7 @@
                              separator="1"
                              domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                              help="Idea Vote created last 7 days"/>
+                         <separator orientation="vertical"/>
                          <filter icon="terp-go-today"
                              string="    Today    "
                              name="today"
