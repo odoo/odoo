@@ -497,7 +497,7 @@ class stock_tracking(osv.osv):
     _columns = {
         'name': fields.char('Pack Reference', size=64, required=True, select=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a pack without deleting it."),
-        'serial': fields.char('Reference', size=64, select=True),
+        'serial': fields.char('Additional Reference', size=64, select=True, help="Other reference or serial number"),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves for this pack', readonly=True),
         'date': fields.datetime('Creation Date', required=True),
     }
@@ -1344,14 +1344,15 @@ class stock_production_lot(osv.osv):
         return ids
 
     _columns = {
-        'name': fields.char('Serial Number', size=64, required=True, help="Unique serial number"),
+        'name': fields.char('Serial Number', size=64, required=True, help="Unique serial number, will be displayed as: PREFIX/SERIAL [INT_REF]"),
         'ref': fields.char('Internal Reference', size=256, help="Internal reference number in case it differs from the manufacturer's serial number"),
-        'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number"),
+        'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'date': fields.datetime('Creation Date', required=True),
-        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),
+        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2", help="Current quantity of products with this Production Lot Number available in company warehouses"),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
         'company_id': fields.many2one('res.company', 'Company', select=True),
+        'move_ids': fields.one2many('stock.move', 'prodlot_id', 'Moves for this production lot', readonly=True),
     }
     _defaults = {
         'date':  time.strftime('%Y-%m-%d %H:%M:%S'),

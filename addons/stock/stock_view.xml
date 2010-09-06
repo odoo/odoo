@@ -157,23 +157,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packs">
-	    		<notebook colspan="4">
-					<page string="General Information">                            
-                    <field name="name" select="1"/>
-                    <field name="serial" select="1"/>
-                    <field name="date" select="1"/>
-                    <field name="active" select="1"/>
-        			<separator string="Traceability" colspan="4" />
-                    <group colspan="2" col="2">
-						<button name="action_traceability"  icon="gtk-go-up"  string="Upstream traceability" type="object" context="{'type': '','field': ''}"/>
-						<button name="action_traceability"  icon="gtk-go-down" string="Downstream traceability" type="object" context="{'type': 'move_history_ids','field': ''}"/>
-					</group>                    
-                    </page>
-                    <page string="Stock Move">         
- 					<field colspan="4" name="move_ids" nolabel="1" />           
-					</page>
-					</notebook>
-					                    
+                    <group col="2" colspan="2">
+                        <separator string="Pack Identification" colspan="2"/>
+                        <field name="name"/>
+                        <field name="serial"/>
+                        <field name="date"/>
+                        <field name="active" groups="base.group_extended"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Traceability" colspan="4"/>
+                        <button name="action_traceability" icon="gtk-go-up" string="Upstream traceability" type="object"
+                            context="{'type': '','field': ''}" colspan="2"/>
+                        <button name="action_traceability" icon="gtk-go-down" string="Downstream traceability" type="object"
+                            context="{'type': 'move_history_ids','field': ''}" colspan="2"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Stock Moves">
+                            <field colspan="2" name="move_ids" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -215,6 +217,22 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="search_stock_packs">
+            <field name="name">Pack Search</field>
+            <field name="model">stock.tracking</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Pack Search">
+                    <group col="10" colspan="4">
+                        <field name="name" />
+                        <field name="serial" />
+                        <field name="date" />
+                        <field name="active" groups="base.group_extended"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="view_production_lot_revision_form" model="ir.ui.view">
             <field name="name">stock.production.lot.revision.form</field>
             <field name="model">stock.production.lot.revision</field>
@@ -251,21 +269,28 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Production Lot">
-                            <field name="name"/>
-                            <field name="ref"/>
-                            <field name="prefix"/>
-                            <field name="product_id"/>
-                            <field name="stock_available"/>
-                            <field name="date"/>
-			    <notebook colspan="4">
-				<page string="General Information">                            
-					<field colspan="4" name="revisions" nolabel="1"/>
-					<group col="4" colspan="4">
-						<button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up"/>
-						<button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down"/>		                         
-					</group>
-			</page>
-			</notebook>
+                    <group col="4" colspan="2">
+                        <separator string="Production Lot Identification" colspan="4"/>
+                        <field name="product_id" colspan="4"/>
+                        <field name="prefix" colspan="2"/>
+                        <field name="name" colspan="2"/>
+                        <field name="ref" colspan="4"/>
+                        <field name="date" colspan="4"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Traceability" colspan="4"/>
+                        <field name="stock_available" colspan="4"/>
+                        <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up" colspan="2"/>
+                        <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down" colspan="2"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Revisions">
+                            <field colspan="2" name="revisions" nolabel="1"/>
+                        </page>
+                        <page string="Stock Moves">
+                            <field colspan="2" name="move_ids" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
