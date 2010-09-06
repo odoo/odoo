@@ -1590,7 +1590,6 @@
             <field name="arch" type="xml">
                 <form string="Journal Entry Model">
                     <field name="name" select="1"/>
-                    <field name="ref"/>
                     <field name="journal_id" select="1"/>
                     <field name="company_id" select="1" widget='selection' groups="base.group_multi_company"/>
                     <field name="date" context="{'date': date}"/>
