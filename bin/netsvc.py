@@ -167,7 +167,7 @@ LEVEL_COLOR_MAPPING = {
 
 class DBFormatter(logging.Formatter):
     def format(self, record):
-        record.dbname = getattr(threading.current_thread(), 'dbname', '?')
+        record.dbname = getattr(threading.currentThread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
 
 class ColoredFormatter(DBFormatter):
