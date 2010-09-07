@@ -96,7 +96,7 @@
   stock of beers remains exact.
 -
   !assert {model: stock.picking, id: picking_out, string: pack_of_beer_splitted}:
-    - len(move_lines) == 2
+    - len(move_lines) >= 2
     - move_lines[0].product_id.id <> move_lines[1].product_id.id
     - move_lines[0].product_id.id in (ref('product_product_beers0'), ref('product_product_beerspack0'))
     - move_lines[1].product_id.id in (ref('product_product_beers0'), ref('product_product_beerspack0'))

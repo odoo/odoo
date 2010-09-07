@@ -17,66 +17,14 @@
     product_qty: 5.0
     product_uom: product.product_uom_unit
     product_uos_qty: 0.0
-- 
-  I create a record for Workcenter line.
-- 
-  !record {model: mrp.production.workcenter.line, id: mrp_production_workcenter_line_assemblyline0}:
-    cycle: 5.0
-    hour: 10.0
-    name: Assembly Line 1
-    production_id: mrp_production_mo0
-    sequence: 0.0
-    workcenter_id: mrp.mrp_workcenter_0
-- 
-  I create second record for Workcenter line.
-- 
-  !record {model: mrp.production.product.line, id: mrp_production_product_line_regularprocessorconfig0}:
-    name: Regular processor config
-    product_id: product.product_product_cpu_gen
-    product_qty: 5.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
-    production_id: mrp_production_mo0
-- 
-  I create third record for Workcenter line.
-- 
-  !record {model: mrp.production.product.line, id: mrp_production_product_line_hddseagategb0}:
-    name: HDD Seagate 7200.8 80GB
-    product_id: product.product_product_hdd1
-    product_qty: 5.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
-    production_id: mrp_production_mo0
-- 
-  I create fourth record for Workcenter line.
-- 
-  !record {model: mrp.production.product.line, id: mrp_production_product_line_atxmidsizetower0}:
-    name: ATX Mid-size Tower
-    product_id: product.product_product_tow1
-    product_qty: 5.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
-    production_id: mrp_production_mo0
-- 
-  I create a record for production line.
-- 
-  !record {model: mrp.production.product.line, id: mrp_production_product_line_mouse0}:
-    name: Mouse
-    product_id: product.product_product_25
-    product_qty: 5.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
-    production_id: mrp_production_mo0
-- 
-  I create second record for production line.
-- 
-  !record {model: mrp.production.product.line, id: mrp_production_product_line_keyboard0}:
-    name: Keyboard
-    product_id: product.product_product_24
-    product_qty: 5.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
-    production_id: mrp_production_mo0
+-
+  I compute the data.
+-
+  !python {model: mrp.production}: |
+    self.action_compute(cr, uid, [ref("mrp_production_mo0")], {"lang": "en_US", "tz":
+      False, "search_default_current": 1, "active_model": "ir.ui.menu", "active_ids":
+      [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
+      })
 -
   I confirm the order.
 - 
@@ -86,7 +34,7 @@
 -
   !python {model: procurement.order}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','=','confirmed')])
+    proc_ids = self.search(cr, uid, [('product_id','=',[ref('product.product_product_pc1')])])
     assert proc_ids, _('No Procurements!')
 -
   The scheduler runs.
