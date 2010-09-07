@@ -37,7 +37,7 @@ class mrp_installer(osv.osv_memory):
                  "procurement scheduler manually."),
         'mrp_operations': fields.boolean('Manufacturing Operations',
             help="Enhances production orders with readiness states as well "
-                 "as the dates of start and end of execution of the order."),
+                 "as the date of start and end of execution of the order."),
         'mrp_subproduct': fields.boolean('MRP Subproducts',
             help="Enables multiple product output from a single production "
                  "order: without this, a production order can have only one "

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Sale Layout" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="34.0" y1="28.0" width="527" height="786"/>
     </pageTemplate>
@@ -292,7 +292,7 @@
         </td>
       </tr>
     </blockTable>
- 
+
 	<section>
       <para style="P32">[[ repeatIn(sale_order_lines(o),'a') ]]</para>
 		<blockTable colWidths="0.0,216.0,66,46,24,66,55,54" style="Table1">
@@ -336,7 +336,7 @@
     <blockTable colWidths="66.0,461.0" style="Table3">
       <tr>
         <td>
-        	
+
           <para style="P7"><font>[[ a['note']=='' and removeParentNode('blockTable') ]]</font><font>[[ repeatIn(( a['note'] and a['note'].splitlines()) or [], 'note') ]]</font></para>
         </td>
         <td>

@@ -53,7 +53,7 @@ class account_installer(osv.osv_memory):
     _columns = {
         # Accounting
         'charts':fields.selection(_get_charts, 'Chart of Accounts',
-            required=False,
+            required=True,
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
                  "country."),
@@ -625,12 +625,18 @@ class account_installer_modules(osv.osv_memory):
                  "per-partner policies."),
         'account_voucher':fields.boolean('Voucher Management',
             help="Account Voucher module includes all the basic requirements of "
-                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
+                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "),
+        'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
+            help="This module will support the Anglo-Saxons accounting methodology by "
+                "changing the accounting logic with stock transactions."),
 #        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
 #            help="Extension Account Voucher module includes allows to link payment / receipt "
 #                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
                  }
 
+    _defaults = {
+        'account_voucher': True,
+        }
 account_installer_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

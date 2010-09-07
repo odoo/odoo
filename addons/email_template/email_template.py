@@ -133,22 +133,26 @@ class email_template(osv.osv):
                  'Recipient (To)',
                  size=250,
                  help="The Recipient of email. " 
-                 "Placeholders can be used here."),
+                 "Placeholders can be used here. "
+                 "e.g. ${object.email_to}"),
         'def_cc':fields.char(
                  'CC',
                  size=250,
                  help="Carbon Copy address(es), comma-separated."
-                 " Placeholders can be used here."),
+                    " Placeholders can be used here. "
+                    "e.g. ${object.email_cc}"),
         'def_bcc':fields.char(
                   'BCC',
                   size=250,
                   help="Blind Carbon Copy address(es), comma-separated."
-                  " Placeholders can be used here."),
+                    " Placeholders can be used here. "
+                    "e.g. ${object.email_bcc}"),
         'reply_to':fields.char('Reply-To', 
                     size=250, 
                     help="The address recipients should reply to,"
-                         " if different from the From address."
-                         " Placeholders can be used here."),
+                    " if different from the From address."
+                    " Placeholders can be used here. "
+                    "e.g. ${object.email_reply_to}"),
         'message_id':fields.char('Message-ID', 
                     size=250, 
                     help="Specify the Message-ID SMTP header to use in outgoing emails. Please note that this overrides the Resource tracking option! Placeholders can be used here."),

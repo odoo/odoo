@@ -8,13 +8,13 @@
             <field name="arch" type="xml">
             <data>
                 <form position="attributes">
-                    <attribute name="string">Accounting System Configuration</attribute>
+                    <attribute name="string">Accounting Modules Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
                     <attribute name="string">Configure Your Accounting System</attribute>
                 </separator>
                 <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">From this screen, you can configure your accounting system. Choose a Chart of Account matched to your accounting system or the Generic Chart of Account which allows you to configure which suit your needs.</attribute>
+                    <attribute name="string">Configure your accounting system. By default, Chart of Account is matching to your country. If there are not chart of account certified for your county, you can install the generic chart of account.</attribute>
                 </xpath>
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
@@ -66,28 +66,24 @@
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
-                        <attribute name="string">Extra Accounting Modules Installation</attribute>
+                        <attribute name="string">Accounting Modules Configuration</attribute>
                     </form>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Install Extra Accounting Modules In Your Accounting System</attribute>
+                        <attribute name="string">Extra Accounting Modules</attribute>
                     </separator>
                     <xpath expr="//label[@string='description']" position="attributes">
                         <attribute name="string">From this screen, you can install extra accounting modules in your accounting system. Select the modules to directly install them. If you do not think you need any of these right now, you can easily install them later.</attribute>
                     </xpath>
                     <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                        <attribute name='rowspan'>23</attribute>
                         <attribute name='string'></attribute>
                     </xpath>
                     <group colspan="8">
-                        <group colspan="4" height="450" width="600">
-                            <group colspan="4">
-                                <field name="account_analytic_plans"/>
-                                <field name="account_payment"/>
-                                <field name="account_followup"/>
-                                <field name="account_voucher"/>
-<!--                                <field name="account_voucher_payment"/>-->
-                            </group>
-                        </group>
+                        <field name="account_voucher"/>
+                        <field name="account_followup"/>
+                        <field name="account_payment"/>
+                        <field name="account_analytic_plans"/>
+                        <field name="account_anglo_saxon"/>
+<!--                    <field name="account_voucher_payment"/>-->
                     </group>
                 </data>
             </field>
