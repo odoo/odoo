@@ -443,7 +443,7 @@ class orm_template(object):
                 if context.get('field_name', '') == k:
                     vals['select_level'] = context.get('select', '0')
                 #setting value to let the problem NOT occur next time
-                else:
+                elif k in cols:
                     vals['select_level'] = cols[k]['select_level']
 
             if k not in cols:
