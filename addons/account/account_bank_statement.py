@@ -626,6 +626,8 @@ account_bank_statement_reconcile_line()
 class account_bank_statement_line(osv.osv):
 
     def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context=None):
+        res_users_obj = self.pool.get('res.users')
+        res_currency_obj = self.pool.get('res.currency')
         res = {'value': {}}
         obj_partner = self.pool.get('res.partner')
         if context is None:
@@ -643,8 +645,6 @@ class account_bank_statement_line(osv.osv):
             res['value']['account_id'] = account_id
 
         if account_id and (not line or (line and not line[0].amount)):
-            res_users_obj = self.pool.get('res.users')
-            res_currency_obj = self.pool.get('res.currency')
             company_currency_id = res_users_obj.browse(cursor, user, user,
                     context=context).company_id.currency_id.id
             if not currency_id:
