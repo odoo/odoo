@@ -59,16 +59,16 @@
               <group col="10" colspan="12">
                     <filter icon="terp-go-year" string="  365 Days  "
                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                            help="Invoices of last 365 days"/>
+                            help="Validated invoices of last 365 days"/>
                     <filter icon="terp-go-month" string="   30 Days   "
                             name="month"
                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                            help="Invoices of last 30 days"/>
+                            help="Validated invoices of last 30 days"/>
                     <filter icon="terp-go-week"
                             string="    7 Days    "
                             separator="1"
                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                            help="Invoices during last 7 days"/>
+                            help="Validated invoices during last 7 days"/>
                     <separator orientation="vertical"/>
                     <filter string="Draft"
                            icon="terp-check"
@@ -103,8 +103,8 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True,'residual_invisible':True}"/>
                     <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id','residual_invisible':True}"/>
