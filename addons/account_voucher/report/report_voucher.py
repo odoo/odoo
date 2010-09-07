@@ -61,5 +61,5 @@ report_sxw.report_sxw(
     'report.voucher.cash_receipt.drcr',
     'account.voucher',
     'addons/account_voucher/report/report_voucher.rml',
-    parser=report_voucher,header=False
+    parser=report_voucher,header="external"
 )
