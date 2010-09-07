@@ -530,6 +530,7 @@
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="amount"/>
+                                    <field name="analytic_account_id"/>
                                     <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'currency_id': parent.currency, 'journal_id': parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field invisible="1" name="reconcile_amount"/>
                                 </tree>
