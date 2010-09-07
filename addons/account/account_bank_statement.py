@@ -632,7 +632,7 @@ class account_bank_statement_line(osv.osv):
             context = {}
         if not partner_id:
             return res
-
+        account_id = False
         line = self.browse(cursor, user, line_id)
         if not line or (line and not line[0].account_id):
             part = obj_partner.browse(cursor, user, partner_id, context=context)
