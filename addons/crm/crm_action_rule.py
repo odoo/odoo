@@ -96,7 +96,8 @@ this if you want the rule to send an email to the partner."),
         res_count = True
         if action.trg_max_history:
             res_count = False
-            if len(obj.message_ids) >= action.trg_max_history:
+            history_ids = filter(lambda x: x.history, obj.message_ids)
+            if len(history_ids) <= action.trg_max_history:
                 res_count = True
         ok = ok and res_count
         return ok
