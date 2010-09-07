@@ -46,4 +46,8 @@ class mrp_installer(osv.osv_memory):
             help="Enables warranty and repair management (and their impact "
                  "on stocks and invoicing)."),
         }
+
+    _defaults = {
+        'mrp_jit': lambda self,cr,uid,*a: self.pool.get('res.users').browse(cr, uid, uid).view == 'simple',
+    }
 mrp_installer()
