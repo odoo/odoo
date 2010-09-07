@@ -34,6 +34,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
         self.total_account = []
         self.localcontext.update({
             'time': time,
+            'get_lines_with_out_partner': self._get_lines_with_out_partner,
             'get_lines': self._get_lines,
             'get_total': self._get_total,
             'get_direction': self._get_direction,
@@ -195,6 +196,113 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
             if values['total']:
                 res.append(values)
+
+        total = 0.0
+        totals = {}
+        for r in res:
+            total += float(r['total'] or 0.0)
+            for i in range(5)+['direction']:
+                totals.setdefault(str(i), 0.0)
+                totals[str(i)] += float(r[str(i)] or 0.0)
+        return res
+
+    def _get_lines_with_out_partner(self, form):
+        res = []
+        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+        ## mise a 0 du total
+        for i in range(7):
+            self.total_account.append(0)
+        totals = {}
+        self.cr.execute('SELECT SUM(debit-credit) \
+                    FROM account_move_line AS l, account_account\
+                    WHERE (l.account_id = account_account.id)\
+                    AND (l.partner_id IS NULL)\
+                    AND (account_account.type IN %s)\
+                    AND ((reconcile_id IS NULL) \
+                    OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+                    AND ' + self.query + '\
+                    AND account_account.active ' ,(tuple(self.ACCOUNT_TYPE), self.date_from, ))
+        t = self.cr.fetchall()
+        for i in t:
+            totals['With out Partner'] = i[0]
+        future_past = {}
+        if self.direction_selection == 'future':
+            self.cr.execute('SELECT SUM(debit-credit) \
+                        FROM account_move_line AS l, account_account\
+                        WHERE (l.account_id=account_account.id)\
+                        AND (l.partner_id IS NULL)\
+                        AND (account_account.type IN %s)\
+                        AND (COALESCE(date_maturity, date) < %s)\
+                        AND ((reconcile_id IS NULL)\
+                        OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+                        AND '+ self.query + '\
+                        AND account_account.active ', (tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from, ))
+            t = self.cr.fetchall()
+            for i in t:
+                future_past['With out Partner'] = i[0]
+        elif self.direction_selection == 'past': # Using elif so people could extend without this breaking
+            self.cr.execute('SELECT SUM(debit-credit) \
+                    FROM account_move_line AS l, account_account\
+                    WHERE (l.account_id=account_account.id)\
+                        AND (l.partner_id IS NULL)\
+                        AND (account_account.type IN %s)\
+                        AND (COALESCE(date_maturity,date) > %s)\
+                        AND ((reconcile_id IS NULL)\
+                        OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+                        AND '+ self.query + '\
+                        AND account_account.active ' , (tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from,))
+            t = self.cr.fetchall()
+            for i in t:
+                future_past['With out Partner'] = i[0]
+        history = []
+        for i in range(5):
+            self.cr.execute('SELECT SUM(debit-credit)\
+                    FROM account_move_line AS l, account_account\
+                    WHERE (l.account_id = account_account.id)\
+                        AND (l.partner_id IS NULL)\
+                        AND (account_account.type IN %s)\
+                        AND (COALESCE(date_maturity,date) BETWEEN %s AND %s)\
+                        AND ((reconcile_id IS NULL)\
+                        OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+                        AND '+ self.query + '\
+                        AND account_account.active ' , (tuple(self.ACCOUNT_TYPE), form[str(i)]['start'], form[str(i)]['stop'], self.date_from,))
+            t = self.cr.fetchall()
+            d = {}
+            for i in t:
+                d['With out Partner'] = i[0]
+            history.append(d)
+        
+        values = {}
+        if self.direction_selection == 'future':
+            before = False
+            if future_past.has_key('With out Partner'):
+                before = [ future_past['With out Partner'] ]
+            self.total_account[6] = self.total_account[6] + (before and before[0] or 0.0)
+            values['direction'] = before and before[0] or 0.0
+        elif self.direction_selection == 'past':
+            after = False
+            if future_past.has_key('With out Partner'): 
+                after = [ future_past['With out Partner'] ]
+            self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
+            values['direction'] = after and after[0] or ""
+        
+        for i in range(5):
+            during = False
+            if history[i].has_key('With out Partner'):
+                during = [ history[i]['With out Partner'] ]
+            self.total_account[(i)] = self.total_account[(i)] + (during and during[0] or 0)
+            values[str(i)] = during and during[0] or ""
+
+        total = False
+        if totals.has_key( 'With out Partner' ):
+            total = [ totals['With out Partner'] ]
+        values['total'] = total and total[0] or 0.0
+        ## Add for total
+        self.total_account[(i+1)] = self.total_account[(i+1)] + (total and total[0] or 0.0)
+        values['name'] = 'With out Partner'
+
+        if values['total']:
+            res.append(values)
 
         total = 0.0
         totals = {}
