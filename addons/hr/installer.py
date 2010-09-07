@@ -26,10 +26,7 @@ class hr_installer(osv.osv_memory):
     _columns = {
         # Human Resources Management
         'hr_holidays': fields.boolean('Holidays / Leaves Management',
-            help="Tracks employee leaves allocations, requests and planning."
-                 "\n\nCan also plug into OpenERP's agendas and calendars "
-                 "applications in order to display accepted leaves requests on"
-                 " OpenERP's calendars."),
+            help="Tracks employee leaves, allocation requests and planning."),
         'hr_expense': fields.boolean('Expenses',
             help="Tracks and manages employee expenses, and can "
                  "automatically re-invoice clients if the expenses are "
@@ -44,8 +41,8 @@ class hr_installer(osv.osv_memory):
         'hr_evaluation': fields.boolean('Periodic Evaluations',
             help="Lets you create and manage the periodic evaluation and "
                  "performance review of employees."),
-        'hr_attendance': fields.boolean('Attendances (Sign In/Out)',
-            help="Simplifies the management of employee attendances."),
+        'hr_attendance': fields.boolean('Attendances',
+            help="Simplifies the management of employee's attendances."),
         'hr_payroll': fields.boolean('Payroll',
             help="Generic Payroll system"),
         'hr_payroll_account': fields.boolean('Payroll Accounting',

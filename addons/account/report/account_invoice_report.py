@@ -48,7 +48,7 @@ class account_invoice_report(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
         'price_total_tax': fields.float('Total With Tax', readonly=True),
-        'price_average': fields.float('Average Price', readonly=True),
+        'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'nbr':fields.integer('# of Lines', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
@@ -116,7 +116,15 @@ class account_invoice_report(osv.osv):
                         else
                          ai.amount_total
                          end) as price_total_tax,
-                    sum(ail.quantity*ail.price_unit)/sum(ail.quantity*u.factor)*count(ail.product_id)::decimal(16,2) as price_average,
+                    (case when ai.type in ('out_refund','in_invoice') then
+                      sum(ail.quantity*ail.price_unit*-1)
+                    else
+                      sum(ail.quantity*ail.price_unit)
+                    end)/(case when ai.type in ('out_refund','in_invoice') then
+                      sum(ail.quantity*u.factor*-1)
+                    else
+                      sum(ail.quantity*u.factor)
+                    end) as price_average,
                     sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
                         from account_move_line as aml
                         left join account_invoice as a ON (a.move_id=aml.move_id)

@@ -51,16 +51,15 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="True" colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
+                <tree toolbar="True" string="Analytic Account">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="partner_id"/>
                     <field name="quantity"/>
-                    <field name="quantity_max"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
                     <field name="company_currency_id"/>
-                    <field name="date" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -188,22 +187,29 @@
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
                     <group col='6' colspan='4'>
+                    	<filter string="Sale" domain="[('journal_id.type','=','sale')]" icon="terp-sale"/>
+						<filter string="Purchase" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase"/>
+						<separator orientation="vertical"/>
+                        <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="account_id" select="1" groups="base.group_extended"/>
-                        <field name="amount" select="1"/>
                         <field name="date" select="1"/>
+                        <field name="account_id" select="1" groups="base.group_extended"/>
                         <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
-                    <group col='6' colspan='4'>
-                        <field name="journal_id" select="1" widget="selection"/>
+                    <group string="Group By..." expand="0">
+                        <filter string="Analytic Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-blue"/>
+                        <filter string="Analytic Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
+                        <separator orientation="vertical"/>
+                        <filter string="General Account" context="{'group_by':'general_account_id'}" icon="terp-folder-green"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Product" context="{'group_by':'product_id'}" icon="terp-accessories-archiver"/>
                     </group>
                     <newline/>
-                    <group string="Group By..." expand="0">
-                        <filter string="General Account" context="{'group_by':'general_account_id'}"/>
-                        <filter string="Analytic Account" context="{'group_by':'account_id'}" groups="base.group_extended"/>
-                        <filter string="Analytic Journal" context="{'group_by':'journal_id'}"/>
-                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                    <group expand="0" string="Extended options...">
+                    	<field name="journal_id" widget="selection"/>
+                    	<field name="product_id" widget="selection"/>
+                    	<field name="amount" select="1"/>
                     </group>
                 </search>
             </field>

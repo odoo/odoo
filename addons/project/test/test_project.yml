@@ -51,7 +51,6 @@
      new_prj = self.read(cr, uid, [new_id], ['name', 'state'])[0]
      state = new_prj['state']
      name = new_prj['name'] 
-     print "Project '%s' created"%name
      assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state          
 - 
   Reset project template to normal project  
@@ -122,12 +121,12 @@
 -
   Now in order to reactivate the task 'Technical Training', i click on the "Reactivate" button and fill the remaining hour field
 -
-  !record {model: config.compute.remaining, id: project_task_technicaltraining_remainingwiz0}:
+  !record {model: project.task.reevaluate, id: project_task_technicaltraining_remainingwiz0}:
     remaining_hours: 30.0
 - |
   I click the apply button
 -
-  !python {model: config.compute.remaining}: |
+  !python {model: project.task.reevaluate}: |
       self.compute_hours(cr, uid, [ref('project_task_technicaltraining_remainingwiz0')], {'active_id': ref("project_task_technicaltraining0"),'button_reactivate': True})
 - |
   Check if task 'Technical Training' in  open state and for other initial values
@@ -142,7 +141,7 @@
 - 
   Make a work task entry 'Training on OpenERP modules, models and classes' of 10 hours
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-05-31 15:04:22'
         hours: 10.0
@@ -159,7 +158,7 @@
 - 
   Make a work task entry 'Training on OpenERP xml views' of 10 hours
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-06-01 15:04:46'
         hours: 10.0
@@ -176,7 +175,7 @@
 - 
   Make a work task entry 'Training on workflows' of 10 hours        
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-06-02 15:05:24'
         hours: 10.0
@@ -193,12 +192,12 @@
 - 
   Set remaining hours of 10 hours for reevaluating the task  
 - 
-  !record {model: config.compute.remaining, id: config_compute_remaining_0}:
+  !record {model: project.task.reevaluate, id: config_compute_remaining_0}:
     remaining_hours: 10.0
 -
   Reevaluate the task
 - 
-  !python {model: config.compute.remaining}: |
+  !python {model: project.task.reevaluate}: |
     self.compute_hours(cr, uid, [ref("config_compute_remaining_0")], {"lang": "en_US",
       "project_id": False, "tz": False, "active_model": "project.task", "search_default_project_id":
       False, "search_default_user_id": 1, "search_default_current": 1, "active_ids":
@@ -216,7 +215,7 @@
 - 
   Make a work task entry 'Training on reports and wizards' of 10 hours
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-05-31 15:08:40'
         hours: 10.0
@@ -248,12 +247,12 @@
 -
   Reactivate task       
 - 
-  !record {model: config.compute.remaining, id: config_compute_remaining_1}:
+  !record {model: project.task.reevaluate, id: config_compute_remaining_1}:
     remaining_hours: 10.0   
 - 
   Reevaluate the task with 10 hours remaining
 - 
-  !python {model: config.compute.remaining}: |
+  !python {model: project.task.reevaluate}: |
     self.compute_hours(cr, uid, [ref("config_compute_remaining_1")], {"lang": "en_US",
       "project_id": False, "tz": False, "button_reactivate": True, "active_model":
       "project.task", "search_default_project_id": False, "search_default_user_id":
@@ -271,7 +270,7 @@
 - 
   Make a work task entry 'Training on yml' of 5 hours
 - 
-  !record {model: project.task, id: project_task_technicaltraining0}:
+  !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-05-31 16:55:27'
         hours: 5.0

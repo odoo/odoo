@@ -37,7 +37,7 @@
 -
   !python {model: account.invoice}: |
     acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
-    assert acc_id.move_id, "Move not created"
+    assert (not acc_id.move_id), "Move falsely created at pro-forma"
 -
   I create invoice by clicking on Create button
 -
@@ -47,90 +47,20 @@
 -
   !assert {model: account.invoice, id: account_invoice_customer0}:
     - state == 'open'
-    
+
 -
   I check that now there is a move attached to the invoice
 -
   !python {model: account.invoice}: |
     acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
-    assert acc_id.move_id, "Move created"
+    assert acc_id.move_id, "Move not created for open invoice"
 -
-  I create a record for partial payment of 1000 EUR.
--
-  !record {model: account.invoice.pay, id: account_invoice_pay_first0}:
-    amount: 1000.0
-    date: '2010-05-26'
-    journal_id: account.sales_journal
-    name: First payment for [PC3] Medium PC to Distrib PC
-    period_id: account.period_5
--
-  I make partial payment by clicking on Partial Payment button
--
-  !python {model: account.invoice.pay}: |
-    self.pay_and_reconcile(cr, uid, [ref("account_invoice_pay_first0")], {"lang":
-      'en_US', "active_model": "account.invoice", "tz": False, "record_id": 3, "active_ids":
-      [ref("account_invoice_customer0")], "type": "out_invoice", "active_id": ref("account_invoice_customer0"),
-      })
--
-  I check that the invoice state is still open
--
-  !assert {model: account.invoice, id: account_invoice_customer0}:
-    - state == 'open'
--
-  I make second partial payment of 6000 EUR.
--
-  !record {model: account.invoice.pay, id: account_invoice_pay_second0}:
-    amount: 6000.0
-    date: '2010-05-28'
-    journal_id: account.sales_journal
-    name: Second payment for [PC3] Medium PC to Distrib PC
-    period_id: account.period_5
--
-  I make partial payment by clicking on Partial Payment button
-
--
-  !python {model: account.invoice.pay}: |
-    self.pay_and_reconcile(cr, uid, [ref("account_invoice_pay_second0")], {"lang":
-      'en_US', "active_model": "account.invoice", "tz": False, "record_id": 3, "active_ids":
-      [ref("account_invoice_customer0")], "type": "out_invoice", "active_id": ref("account_invoice_customer0"),
-      })
--
-  I make final partial payment of 2000 EUR
--
-  !record {model: account.invoice.pay, id: account_invoice_pay_final0}:
-    amount: 2000.0
-    date: '2010-05-30'
-    journal_id: account.sales_journal
-    name: Final payment for [PC3] Medium PC to Distrib PC
-    period_id: account.period_5
-
--
-  I make partial payment by clicking on Partial Payment button
-
--
-  !python {model: account.invoice.pay}: |
-    self.pay_and_reconcile(cr, uid, [ref("account_invoice_pay_final0")], {"lang":
-      'en_US', "active_model": "account.invoice", "tz": False, "record_id": 3, "active_ids":
-      [ref("account_invoice_customer0")], "type": "out_invoice", "active_id": ref("account_invoice_customer0"),
-      })
-
--
-  I check that the invoice state is now Done
--
-  !assert {model: account.invoice, id: account_invoice_customer0}:
-    - state == 'paid'
--
-  I check that an payment entry gets created in the account.move.line
--
-  !python {model: account.invoice}: |
-    acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
-    assert(acc_id.move_id)
--
-  I refund the invoice Using Credit Note
+  I refund the invoice Using Refund Button
 -
   !record {model: account.invoice.refund, id: account_invoice_refund_0}:
     description: Refund To China Export
     period: account.period_5
+    filter_refund: refund
 -
   I clicked on refund button
 -

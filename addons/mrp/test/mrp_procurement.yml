@@ -318,7 +318,7 @@
     from tools.translate import _
     prod_obj = self.pool.get('mrp.production')
     prod_ids = prod_obj.search(cr, uid, [('product_id.name','=','Shirt')])
-    self.do_produce(cr, uid, [1], context={'active_ids': prod_ids})
+    self.do_produce(cr, uid, [ref('mrp_product_produce0')], context={'active_ids': prod_ids})
 -
   I create record for remaining products with quantity 35.00.
 -
@@ -334,7 +334,7 @@
     from tools.translate import _
     stock_obj = self.pool.get('stock.move')
     stock_ids = stock_obj.search(cr, uid, [('product_id.name','=','Buttons')])
-    self.do_move_consume(cr, uid, [1], context={'active_ids': stock_ids})
+    self.do_move_consume(cr, uid, [ref('stock_move_consume0')], context={'active_ids': stock_ids})
 -
   And finally production order is done.
 -

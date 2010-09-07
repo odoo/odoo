@@ -46,13 +46,13 @@ class account_voucher_unreconcile(osv.osv_memory):
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
-                    recs = [line.reconcile_id.id]
-            
-            for rec in recs:
-                reconcile_pool.unlink(cr, uid, rec)
-            
-            if res.remove:
-                voucher_pool.cancel_voucher(cr, uid, [context.get('active_id')], context)
+                    recs += [line.reconcile_id.id]
+                if line.reconcile_partial_id:
+                    recs += [line.reconcile_partial_id.id]
+            #for rec in recs:
+            reconcile_pool.unlink(cr, uid, recs)
+#            if res.remove:
+            voucher_pool.cancel_voucher(cr, uid, [context.get('active_id')], context)
 #                wf_service = netsvc.LocalService("workflow")
 #                wf_service.trg_validate(uid, 'account.voucher', context.get('active_id'), 'cancel_voucher', cr)
             

@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import fields, osv
@@ -50,13 +51,12 @@ class account_budget_report(osv.osv_memory):
         data_model = self.pool.get(datas['model']).browse(cr, uid, context['active_id'])
         if not data_model.dotation_ids:
             raise osv.except_osv(_('Insufficient Data!'),_('No Depreciation or Master Budget Expenses Found on Budget %s!') % data_model.name)
-
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.budget',
             'datas': datas,
             }
+
 account_budget_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

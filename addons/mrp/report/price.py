@@ -130,7 +130,7 @@ class report_custom(report_rml):
                     <col t='yes'>%s</col>
                     <col t='yes'>%s</col>
                 </row>
-        """ % (_('Componet'), _('Componet suppliers'), _('Quantity'), _('Uom'), _('Cost Price per Uom'), _('Supplier Price per Uom'))
+        """ % (_('Component'), _('Component suppliers'), _('Quantity'), _('Uom'), _('Cost Price per Uom'), _('Supplier Price per Uom'))
 
         company_currency = user_pool.browse(cr, uid, uid).company_id.currency_id.id
         for product in product_pool.browse(cr, uid, ids, context=context):

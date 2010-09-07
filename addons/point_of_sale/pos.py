@@ -1271,46 +1271,6 @@ class pos_payment(osv.osv):
 
 pos_payment()
 
-class account_move_line(osv.osv):
-
-    _inherit = 'account.move.line'
-    def create(self, cr, user, vals, context=None):
-        pos_obj = self.pool.get('pos.order')
-        val_name = vals.get('name', '')
-        val_ref = vals.get('ref', '')
-        if (val_name and 'POS' in val_name) and (val_ref and 'PACK' in val_ref):
-            aaa = re.search(r'Stock move.\((.*)\)', vals.get('name'))
-            name_pos = aaa.groups()[0]
-            pos_id = name_pos.replace('POS ','')
-            if pos_id and pos_id.isdigit():
-                pos_curr = pos_obj.browse(cr,user,int(pos_id))
-                pos_curr = pos_curr  and pos_curr.contract_number or ''
-                vals['ref'] = pos_curr or vals.get('ref')
-        return super(account_move_line, self).create(cr, user, vals, context)
-
-account_move_line()
-
-
-class account_move(osv.osv):
-
-    _inherit = 'account.move'
-    def create(self, cr, user, vals, context=None):
-        pos_obj = self.pool.get('pos.order')
-        val_name = vals.get('name', '')
-        val_ref = vals.get('ref', '')
-        if (val_name and 'POS' in val_name) and (val_ref and 'PACK' in val_ref):
-            aaa = re.search(r'Stock move.\((.*)\)', vals.get('name'))
-            name_pos = aaa.groups()[0]
-            pos_id = name_pos.replace('POS ','')
-            if pos_id and pos_id.isdigit():
-                pos_curr = pos_obj.browse(cr,user,int(pos_id))
-                pos_curr = pos_curr  and pos_curr.contract_number or ''
-                vals['ref'] = pos_curr or vals.get('ref')
-        return super(account_move, self).create(cr, user, vals, context)
-
-account_move()
-
-
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {

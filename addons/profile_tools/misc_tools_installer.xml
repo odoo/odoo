@@ -10,8 +10,8 @@
           <form position="attributes">
             <attribute name="string">Tools Modules Configuration</attribute>
           </form>
-	      <xpath expr='//separator[@string="vsep"]' position='attributes'>
-          	  <attribute name='string'></attribute>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                <attribute name='string'></attribute>
           </xpath>
 
           <separator string="title" position="attributes">
@@ -19,7 +19,7 @@
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string">Here are a few useful applications which, while they do not directly contribute to your business, can help you to improve your organization.</attribute>
+            <attribute name="string">Here are applications which, while they do not directly contribute to your business, can help you to improve your organization.</attribute>
           </xpath>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
               <attribute name="string">Configure</attribute>
@@ -28,6 +28,7 @@
             <field name="lunch"/>
             <field name="subscription"/>
             <field name="survey"/>
+            <field name="idea"/>
             <field name="audittrail"/>
           </group>
         </data>
@@ -48,16 +49,5 @@
       <field name="action_id" ref="action_misc_tools_installer"/>
       <field name="sequence">3</field>
     </record>
-    <record id="misc_ir_actions_todo_tree" model="ir.ui.view">
-		    <field name="model">ir.actions.todo</field>
-		    <field name="name">misc_installer_action_replace</field>
-		    <field name="type">tree</field>
-		    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-			<field name="arch" type="xml">
-	 			<xpath expr="//button[@string='Launch']" position="replace">
-        			<button name="%(action_misc_tools_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-  				</xpath>
-  			</field>
-	</record>
   </data>
 </openerp>

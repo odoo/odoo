@@ -55,7 +55,7 @@ class account_fiscal_position(osv.osv):
         if not fposition_id :
             return account_id
         for pos in fposition_id.account_ids:
-            if pos.account_src_id.id==account_id:
+            if pos.account_src_id.id == account_id:
                 account_id = pos.account_dest_id.id
                 break
         return account_id
@@ -187,7 +187,7 @@ class res_partner(osv.osv):
             help="This payment term will be used instead of the default one for the current partner"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
-        'last_reconciliation_date': fields.datetime('Last Reconciliation Date', help='Date on which partner account entries reconciled last time')
+        'last_reconciliation_date': fields.datetime('Last Reconciliation Date', help='Date on which the partner accounting entries were reconciled last time')
     }
 res_partner()
 

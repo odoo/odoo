@@ -20,9 +20,7 @@
 ##############################################################################
 
 import base64
-
 from osv import osv, fields
-
 import os
 
 # from psycopg2 import Binary
@@ -48,12 +46,12 @@ class document_file(osv.osv):
         result = {}
         bin_size = context.get('bin_size', False)
         for fbro in fbrl:
-                fnode = nodes.node_file(None, None, nctx, fbro)
-                if not bin_size:
-                        data = fnode.get_data(cr, fbro)
-                        result[fbro.id] = base64.encodestring(data or '')
-                else:
-                        result[fbro.id] = fnode.get_data_len(cr, fbro)
+            fnode = nodes.node_file(None, None, nctx, fbro)
+            if not bin_size:
+                    data = fnode.get_data(cr, fbro)
+                    result[fbro.id] = base64.encodestring(data or '')
+            else:
+                    result[fbro.id] = fnode.get_data_len(cr, fbro)
 
         return result
 
@@ -144,6 +142,7 @@ class document_file(osv.osv):
         return super(document_file, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        result = False
         if not isinstance(ids, list):
             ids = [ids]
         res = self.search(cr, uid, [('id', 'in', ids)])
@@ -165,7 +164,6 @@ class document_file(osv.osv):
                 dbro = None
                 dnode = None
             ids2 = []
-            result = False
             for fbro in self.browse(cr, uid, ids, context=context):
                 if ('parent_id' not in vals or fbro.parent_id.id == vals['parent_id']) \
                     and ('name' not in vals or fbro.name == vals['name']) :
@@ -192,7 +190,7 @@ class document_file(osv.osv):
         return result
 
     def create(self, cr, uid, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
         vals['parent_id'] = context.get('parent_id', False) or vals.get('parent_id', False)
         if not vals['parent_id']:
@@ -240,7 +238,7 @@ class document_file(osv.osv):
             return bro.address_id.partner_id.id
         return False
 
-    def unlink(self, cr, uid, ids, context={}):
+    def unlink(self, cr, uid, ids, context=None):
         stor = self.pool.get('document.storage')
         unres = []
         # We have to do the unlink in 2 stages: prepare a list of actual
@@ -250,7 +248,15 @@ class document_file(osv.osv):
 
         for f in self.browse(cr, uid, ids, context):
             # TODO: update the node cache
-            r = stor.prepare_unlink(cr, uid, f.parent_id.storage_id, f)
+            par = f.parent_id
+            storage_id = None
+            while par:
+                if par.storage_id:
+                    storage_id = par.storage_id
+                    break
+                par = par.parent_id
+            assert storage_id, "Strange, found file #%s w/o storage!" % f.id
+            r = stor.prepare_unlink(cr, uid, storage_id, f)
             if r:
                 unres.append(r)
         res = super(document_file, self).unlink(cr, uid, ids, context)

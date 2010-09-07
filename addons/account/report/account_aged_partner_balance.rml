@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-    <template pageSize="(1120.0,770.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <template pageSize="(1120.0,770.0)" title="Aged Trial balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
        <frame id="first" x1="20.0" y1="35.0" width="1080" height="650"/>
     </pageTemplate>
@@ -23,7 +23,7 @@
     <blockTableStyle id="Table_header_Content">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-    </blockTableStyle>    
+    </blockTableStyle>
     <blockTableStyle id="Tableau1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -33,7 +33,7 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,2" stop="-1,-1"/>
-      
+
       <blockValign value="TOP"/>
       <blockAlignment value="LEFT" start="2,1" stop="-1,-1"/>
     </blockTableStyle>
@@ -68,7 +68,7 @@
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="4,1" stop="4,1"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
-    
+
     <blockTableStyle id="Tableau3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -107,7 +107,7 @@
 	<paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
 	<paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
 	<paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-	<paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>		    
+	<paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
   </stylesheet>
   <story>
     <para style="P9">
@@ -147,7 +147,7 @@
           <para style="terp_default_Centre_8">[[ get_fiscalyear(data) or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ data['form']['date_from'] ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date_from'],date=True) ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ get_partners(data) ]]</para>
@@ -155,13 +155,13 @@
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True)]]</para>
         </td>
-      </tr>      
+      </tr>
       </blockTable>
   	<para style="P9">
       <font color="white"> </font>
     </para>  <para style="P9">
       <font color="white"> </font>
-    </para>      
+    </para>
     <blockTable colWidths="300.0,100.0,100.0,100.0,100.0,105.0,105.0,125.0" style="Table2" repeatRows="1">
       <tr>
         <td>
@@ -189,9 +189,9 @@
           <para style="P8">Total</para>
         </td>
       </tr>
-      
+
       <tr>
-      
+
         <td>
           <para style="P3"> <font color="white">[[ (get_lines(data['form']), 'partner') == False or removeParentNode('para')  ]]</font></para>
           <para style="P9"><font color="white"> </font></para>
@@ -226,7 +226,7 @@
           <para style="Total_right">[[ formatLang(get_total('5') or 0.00) ]]</para>
         </td>
       </tr>
-      
+
       <tr>
         <td>
           <para style="P3">[[ repeatIn(get_lines(data['form']), 'partner') ]]</para>
@@ -255,7 +255,7 @@
         </td>
       </tr>
     </blockTable>
-    
+
     <para style="P9">
       <font color="white"> </font>
     </para>

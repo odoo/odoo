@@ -21,6 +21,7 @@
 ##############################################################################
 
 import time
+import netsvc
 
 from osv import fields,osv
 from tools.translate import _
@@ -39,6 +40,7 @@ class purchase_requisition(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
         'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
     _defaults = {
@@ -50,6 +52,15 @@ class purchase_requisition(osv.osv):
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
 
+    def copy(self, cr, uid, id, default=None,context={}):
+        if not default:
+            default = {}
+        default.update({
+            'state':'draft',
+            'purchase_ids':[],
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
+        })
+        return super(purchase_requisition, self).copy(cr, uid, id, default, context)
     def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids):
@@ -63,9 +74,6 @@ class purchase_requisition(osv.osv):
         return True
 
     def tender_in_progress(self, cr, uid, ids, context=None):
-        for quotations in self.browse(cr, uid, ids):
-            if not quotations.purchase_ids:
-                raise osv.except_osv(_('Purchase order required'),('You should have atleast one purchase order line defined for this tender'))
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
         for (id,name) in self.name_get(cr, uid, ids):
                     message = _('Tender') + " '" + name + "' "+ _(" is In Progress")
@@ -171,6 +179,8 @@ class procurement_order(osv.osv):
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
                     'origin': procurement.name,
                     'date_end': procurement.date_planned,
+                    'warehouse_id':procurement.purchase_id and procurement.purchase_id.warehouse_id.id,
+                    'company_id':procurement.company_id.id,
                     'line_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,

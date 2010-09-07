@@ -55,7 +55,8 @@ class survey(osv.osv):
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
         'date_open': fields.datetime('Survey Open Date', readonly=1),
         'date_close': fields.datetime('Survey Close Date', readonly=1),
-        'max_response_limit': fields.integer('Maximum Answer Limit'),
+        'max_response_limit': fields.integer('Maximum Answer Limit',
+                     help="Set to one if survey is answerable only once"),
         'response_user': fields.integer('Maximum Answer per User',
                      help="Set to one if  you require only one Answer per user"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
@@ -569,7 +570,7 @@ class survey_answer(osv.osv):
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
     }
     _defaults = {
-         'sequence' : lambda * a: 1,
+#         'sequence' : lambda * a: 1,
          'type' : lambda * a: 'char',
          'in_visible_answer_type':_get_in_visible_answer_type,
     }
@@ -691,7 +692,7 @@ class survey_request(osv.osv):
     }
     _defaults = {
         'state': lambda * a: 'draft',
-        'date_deadline': lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
+#        'date_deadline': lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
     }
     def survey_req_waiting_answer(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, { 'state' : 'waiting_answer'})

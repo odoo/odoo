@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Voucher" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -142,16 +142,9 @@
     <para style="P7">
       <font color="white"> </font>
     </para>
-    <para style="P21">Cash Receipt Voucher [[ (voucher.type == 'rec_voucher' or removeParentNode('para')) and '' ]]</para>
-    <para style="P2">Cash Payment Voucher [[ (voucher.type == 'pay_voucher' or removeParentNode('para')) and '' ]]</para>
-    <para style="P21">Bank Receipt Voucher [[ (voucher.type == 'bank_rec_voucher' or removeParentNode('para')) and '' ]]</para>
-    <para style="P2">Bank Payment Voucher [[ (voucher.type == 'bank_pay_voucher' or removeParentNode('para')) and '' ]]</para>
-    <para style="P2">Contra Voucher [[ (voucher.type == 'cont_voucher' or removeParentNode('para')) and '' ]]</para>
-    <para style="P2">Journal Sale Voucher [[ (voucher.type == 'journal_sale_vou' or removeParentNode('para')) and '' ]]</para>
-    <para style="P2">Journal Purchase Voucher [[ (voucher.type == 'journal_pur_voucher' or removeParentNode('para')) and '' ]]</para>
-    <para style="P2">Journal Voucher [[ (voucher.type == 'journal_voucher' or removeParentNode('para')) and '' ]]</para>
+    <para style="P21">[[ voucher.journal_id.name ]]</para>
     <para style="P20">
-      <font color="white"> </font>
+    <font color="white"> </font>
     </para>
     <blockTable colWidths="49.0,143.0,116.0,69.0,106.0" style="Table1">
       <tr>
