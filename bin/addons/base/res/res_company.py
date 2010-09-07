@@ -203,7 +203,7 @@ class res_company(osv.osv):
         return """
 <header>
 <pageTemplate>
-    <frame id="first" x1="25" y1="25" width="1070" height="717"/>
+    <frame id="first" x1="22.0" y1="22.0" width="1080" height="700"/>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
