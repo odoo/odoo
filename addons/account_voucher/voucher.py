@@ -427,23 +427,23 @@ class account_voucher(osv.osv):
 
     # TODO
     def onchange_payment(self, cr, uid, ids, pay_now, journal_id, partner_id, ttype='sale'):
+        res = {}
         if not partner_id:
-            return {}
-        partner_pool = self.pool.get('res.partner')
+            return res
         res = {'account_id':False}
+        partner_pool = self.pool.get('res.partner')
+        journal_pool = self.pool.get('account.journal')
         if pay_now == 'pay_later':
             partner = partner_pool.browse(cr, uid, partner_id)
-            if ttype == 'sale':
-                res.update({
-                    'account_id':partner.property_account_receivable.id,
-                })
-            elif ttype == 'purchase':
-                res.update({
-                    'account_id':partner.property_account_payable.id,
-                })
-        return {
-            'value':res
-        }
+            journal = journal_pool.browse(cr, uid, journal_id)
+            if journal.type in ('sale','sale_refund'):
+                account_id = partner.property_account_receivable.id
+            elif journal.type in ('purchase', 'purchase_refund','expense'):
+                account_id = partner.property_account_payable.id
+            else:
+                account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
+            res['account_id'] = account_id
+        return {'value':res}
 
     def action_move_line_create(self, cr, uid, ids, *args):
     
