@@ -86,7 +86,7 @@
 -
   !python {model: procurement.order}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','!=','confirmed')])
+    proc_ids = self.search(cr, uid, [('state','=','confirmed')])
     assert proc_ids, _('No Procurements!')
 -
   The scheduler runs.
@@ -110,6 +110,8 @@
     assert order_ids, _('No manufacturing order!')
 -
   I start producing that product first. So I marked it as started.
+-
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
 -
   I create record for producing products with quantity 5.00.
 -

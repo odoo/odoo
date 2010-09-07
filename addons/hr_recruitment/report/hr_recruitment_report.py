@@ -46,30 +46,7 @@ class hr_recruitment_report(osv.osv):
         res = {}
         state_perc = 0.0
         avg_ans = 0.0
-
-        for case in self.browse(cr, uid, ids, context):
-            if field_name != 'avg_answers':
-                state = field_name[5:]
-                cr.execute("select count(*) from crm_lead where \
-                    section_id =%s and state='%s'"%(case.section_id.id, state))
-                state_cases = cr.fetchone()[0]
-                perc_state = (state_cases / float(case.nbr)) * 100
-
-                res[case.id] = perc_state
-            else:
-                model_name = self._name.split('report.')
-                if len(model_name) < 2:
-                    res[case.id] = 0.0
-                else:
-                    model_name = model_name[1]
-
-                    cr.execute("select count(*) from crm_case_log l, ir_model m \
-                         where l.model_id=m.id and m.model = '%s'" , model_name)
-                    logs = cr.fetchone()[0]
-
-                    avg_ans = logs / case.nbr
-                    res[case.id] = avg_ans
-
+        #TODO: Calculate avg_answer, perc_done, perc_cancel
         return res
 
     _columns = {
@@ -88,15 +65,11 @@ class hr_recruitment_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
         'date': fields.date('Date', readonly=True),
         'date_closed': fields.date('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('object_id.model', '=', 'hr.applicant')]"),
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
         'salary_prop' : fields.float("Salary Proposed"),

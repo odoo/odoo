@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Packing" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="0.0" y1="57.0" width="538" height="728"/>
     </pageTemplate>
@@ -136,7 +136,7 @@
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]]</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.zip or '' ]] [[ picking.address_id and picking.address_id.city or '']]</para>
-          
+
           <para style="terp_default_2">
             <font color="white"> </font>
           </para>
@@ -276,7 +276,7 @@
         <font color="white"> </font>
       </para>
     </section>
-	
+
 	<para style="terp_default_Bold_9">[[ ([line for line in picking.move_lines if (line.state == 'draft' )])  and 'Non Assigned Products:' or removeParentNode('para') ]]</para>
 	 <section>
       <blockTable colWidths="197.0,68.0,61.0,57,46.0,26.0,74.0" style="Move_Line_Content_Other_State">
