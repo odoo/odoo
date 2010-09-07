@@ -25,6 +25,7 @@
             <field name="arch" type="xml">
                 <search string="Analytic Account">
                     <group col="8" colspan="4">
+                        <filter icon="terp-go-today" string="Overpassed Account" domain="[('date','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Overpassed Account"/>
                         <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
                         <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
                         <separator orientation="vertical"/>
@@ -174,7 +175,7 @@
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total quantity"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
                     <field domain="[('type','=','normal')]" name="account_id" groups="base.group_extended"/>
                     <field invisible="True" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="amount" sum="Total amount"/>
@@ -259,7 +260,7 @@
                     <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="journal_id"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field invisible="True" name="general_account_id"/>
                     <field name="amount"/>

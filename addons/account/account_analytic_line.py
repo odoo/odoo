@@ -46,7 +46,7 @@ class account_analytic_line(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
-    _order = 'date'
+    _order = 'date desc'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
@@ -73,13 +73,16 @@ class account_analytic_line(osv.osv):
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
-            unit=False, context=None):
+            unit=False, journal_id=False, context=None):
         if context==None:
             context={}
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
         company_obj=self.pool.get('res.company')
+        analytic_journal_obj=self.pool.get('account.analytic.journal')
+        product_price_type_obj = self.pool.get('product.price.type')
         if  prod_id:
+            result = 0.0
             prod = product_obj.browse(cr, uid, prod_id)
             a = prod.product_tmpl_id.property_account_expense.id
             if not a:
@@ -91,16 +94,27 @@ class account_analytic_line(osv.osv):
                                 (prod.name, prod.id,))
             if not company_id:
                 company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
-
+            flag = False
             # Compute based on pricetype
-            pricetype=self.pool.get('product.price.type').browse(cr, uid, company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
+            pricetype=product_price_type_obj.browse(cr, uid, company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
+            if journal_id:
+                journal = analytic_journal_obj.browse(cr, uid, journal_id)
+                if journal.type == 'sale':
+                    product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context)
+                    if product_price_type_ids:
+                        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
             # Take the company currency as the reference one
+            if pricetype.field == 'list_price':
+                flag = True
             amount_unit = prod.price_get(pricetype.field, context)[prod.id]
             amount = amount_unit*unit_amount or 1.0
             prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
             amount = amount_unit*unit_amount or 1.0
+            result = round(amount, prec)
+            if not flag:
+                result *= -1
             return {'value': {
-                'amount': - round(amount, prec),
+                'amount': result,
                 'general_account_id': a,
                 }}
         return {}
