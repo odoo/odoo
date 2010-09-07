@@ -240,10 +240,10 @@ class users(osv.osv):
                  " aren't configured, it won't be possible to email new "
                  "users."),
         'signature': fields.text('Signature', size=64),
-        'address_id': fields.many2one('res.partner.address', 'Address'),
+        'address_id': fields.many2one('res.partner.address', 'Company Address'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action'),
-        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
+        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action',help="Always Display Tips"),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 
