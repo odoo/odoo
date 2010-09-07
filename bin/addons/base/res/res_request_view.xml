@@ -88,6 +88,17 @@
                 </search>
             </field>
         </record>    
+        <record id="res_request_calendar_view" model="ir.ui.view">
+            <field name="name">res.request.calendar</field>
+            <field name="model">res.request</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Requests" date_start="create_date" color="act_to">
+                    <field name="name"/>
+                    <field name="act_to"/>
+                </calendar>
+            </field>
+        </record>
         <record id="res_request-act" model="ir.actions.act_window">
             <field name="name">Requests</field>
             <field name="type">ir.actions.act_window</field>

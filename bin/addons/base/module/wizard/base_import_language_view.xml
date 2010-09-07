@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_base_import_language" model="ir.ui.view">
+            <field name="name">Import Language</field>
+            <field name="model">base.language.import</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Import language">
+            <notebook colspan="4">
+                <page string="Import Data">
+                    <group colspan="4" col="4">
+                        <separator string="Import New Language" colspan="4"/>
+                        <field name="name" width="200"/>
+                        <field name="code"/>
+                        <field name="data" colspan="4"/>
+                    </group>
+                    <separator string="" colspan="4"/>
+                    <group colspan="2" col="2">
+                    </group>
+                    <group colspan="2" col="2">
+                        <button special="cancel" string="_Close" icon="gtk-cancel"/>
+                        <button name="import_lang" string="_Import" type="object" icon="gtk-ok"/>
+                    </group>
+                </page>
+                <page string="Help">
+                    <label string="You have to import a .CSV file which is encoded in UTF-8."/>
+                    <label string="Please check that the first line of your file is one of the following:" colspan="4" align="0.0"/>
+                    <label string="type,name,res_id,src,value" colspan="4"/>
+                    <label string="module,type,name,res_id,src,value" colspan="4"/>
+                    <label string="You can also import .po files." colspan="4" align="0.0"/>
+                </page>
+            </notebook>
+            
+            </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_import_language" model="ir.actions.act_window">
+            <field name="name">Import Language</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.language.import</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+        name="Import a Translation File"
+        action="action_view_base_import_language"
+        id="menu_view_base_import_language"
+        parent="menu_translation_export"/>
+
+    </data>
+</openerp>
