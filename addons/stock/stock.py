@@ -1260,6 +1260,7 @@ class stock_picking(osv.osv):
         @param ids: List of Picking Ids
         @param context: A standard dictionary for contextual values
         """
+        msg=''
         for pick in self.browse(cr, uid, ids, context=context):
             type_list = {
                 'out':'Picking List',
@@ -1268,8 +1269,10 @@ class stock_picking(osv.osv):
                 'delivery': 'Delivery order'
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or 'n/a') + "' "
+            if pick.min_date:
+                msg=datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d') + "'."
             state_list = {
-                          'confirmed': "is scheduled for the '" + datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d') + "'.",
+                          'confirmed': "is scheduled for the '" + msg ,
                           'assigned': 'is ready to process.',
                           'cancel': 'is Cancelled.',
                           'done': 'is processed.',
