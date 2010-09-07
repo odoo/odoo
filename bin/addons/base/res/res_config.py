@@ -330,7 +330,7 @@ class res_config_installer(osv.osv_memory):
 
     def _already_installed(self, cr, uid, context=None):
         """ For each module (boolean fields in a res.config.installer),
-        check if it's already installed (neither uninstallable nor uninstalled)
+        check if it's already installed (either 'to install', 'to upgrade' or 'installed')
         and if it is, check it by default
         """
         modules = self.pool.get('ir.module.module')
@@ -341,7 +341,7 @@ class res_config_installer(osv.osv_memory):
             cr, uid,
             modules.search(cr, uid,
                            [('name','in',selectable),
-                            ('state','not in',['uninstallable', 'uninstalled'])],
+                            ('state','in',['to install', 'installed', 'to upgrade'])],
                            context=context),
             context=context)
 
