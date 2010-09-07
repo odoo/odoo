@@ -965,6 +965,24 @@ class account_move_line(osv.osv):
                                 'has been confirmed!') % res[2])
         return res
 
+    def _remove_move_reconcile(self, cr, uid, move_ids=[], context=None):
+        # Function remove move rencocile ids related with moves
+        obj_move_line = self.pool.get('account.move.line')
+        obj_move_rec = self.pool.get('account.move.reconcile')
+        unlink_ids = []
+        if not move_ids:
+            return True
+        recs = obj_move_line.read(cr, uid, move_ids, ['reconcile_id','reconcile_partial_id'])
+        full_recs = filter(lambda x: x['reconcile_id'], recs)
+        rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
+        part_recs = filter(lambda x: x['reconcile_partial_id'], recs)
+        part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
+        unlink_ids += rec_ids
+        unlink_ids += part_rec_ids
+        if len(unlink_ids):
+            obj_move_rec.unlink(cr, uid, unlink_ids)
+        return True
+
     def unlink(self, cr, uid, ids, context={}, check=True):
         self._update_check(cr, uid, ids, context)
         result = False

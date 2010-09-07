@@ -86,17 +86,9 @@ class account_fiscalyear_close(osv.osv_memory):
 
         move_ids = obj_acc_move_line.search(cr, uid, [
             ('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])
+
         if move_ids:
-            recs = obj_acc_move_line.read(cr, uid, move_ids, ['reconcile_id', 'reconcile_partial_id'])
-            unlink_ids = []
-            full_recs = filter(lambda x: x['reconcile_id'], recs)
-            rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
-            part_recs = filter(lambda x: x['reconcile_partial_id'], recs)
-            part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
-            unlink_ids += rec_ids
-            unlink_ids += part_rec_ids
-            if len(unlink_ids):
-                obj_rec.unlink(cr, uid, unlink_ids)
+            obj_acc_move_line._remove_move_reconcile(cr, uid, move_ids, context=context)
             obj_acc_move_line.unlink(cr, uid, move_ids, context=context)
 
         cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
