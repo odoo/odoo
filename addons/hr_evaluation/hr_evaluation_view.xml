@@ -340,15 +340,45 @@
             </field>
         </record>
 
+        <record id="view_evaluation_calendar" model="ir.ui.view">
+            <field name="name">Interview Request</field>
+            <field name="model">hr.evaluation.interview</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Interview Request" color="user_to_review_id" date_start="date_deadline">
+                	<field name="request_id"/>
+                </calendar>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_hr_evaluation_interview_tree">
             <field name="name">Interview Requests</field>
             <field name="res_model">hr.evaluation.interview</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hr_evaluation_interview_form"/>
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
             <field name="context">{"search_default_todo":1,"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
             <field name="help">Interview Requests are generated automatically by OpenERP according to employees evaluation plan. Each user receives automatic emails and requests to perform evaluation of their collegues periodically.</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="hr_evaluation_interview_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_hr_evaluation_interview_tree"/>
+            <field name="act_window_id" ref="action_hr_evaluation_interview_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="hr_evaluation_interview_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_hr_evaluation_interview_form"/>
+            <field name="act_window_id" ref="action_hr_evaluation_interview_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_view_evaluation_calendar">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="view_evaluation_calendar"/>
+            <field name="act_window_id" ref="action_hr_evaluation_interview_tree"/>
         </record>
 
         <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
