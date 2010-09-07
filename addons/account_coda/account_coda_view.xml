@@ -2,42 +2,42 @@
 <openerp>
 <data>
 
-	<record model="ir.ui.view" id="view_account_coda_form">
-		<field name="name">account.coda.form</field>
-		<field name="model">account.coda</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Coda import">
-				<field name="name" />
-				<field name="journal_id" />
-				<field name="date" />
-				<field name="user_id" />
-				<field name="company_id" widget="selection" groups="base.group_multi_company"/>
-				<notebook colspan="4">
-					<page string="Log">
-					   <field name="note" colspan="4" nolabel="1"/>
-					</page>
-					<page string="Statements">
-					   <field name="statement_ids" colspan="4" nolabel="1"/>
-					</page>
-				</notebook>
-			</form>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_account_coda_form">
+        <field name="name">account.coda.form</field>
+        <field name="model">account.coda</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Coda import">
+                <field name="name" />
+                <field name="journal_id" />
+                <field name="date" />
+                <field name="user_id" />
+                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                <notebook colspan="4">
+                    <page string="Log">
+                       <field name="note" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Statements">
+                       <field name="statement_ids" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_account_coda_tree">
-		<field name="name">account.coda.tree</field>
-		<field name="model">account.coda</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Coda import">
-				<field name="journal_id" />
-				<field name="date" />
-				<field name="user_id" />
-				<field name="company_id" widget="selection" groups="base.group_multi_company"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_account_coda_tree">
+        <field name="name">account.coda.tree</field>
+        <field name="model">account.coda</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Coda import">
+                <field name="journal_id" />
+                <field name="date" />
+                <field name="user_id" />
+                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
 
       <record id="view_aaccount_coda_filter" model="ir.ui.view">
             <field name="name">account.coda.select</field>
@@ -63,28 +63,28 @@
             </field>
         </record>
 
-	<record model="ir.actions.act_window" id="action_account_coda">
-		<field name="name">Statements</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">account.coda</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+    <record model="ir.actions.act_window" id="action_account_coda">
+        <field name="name">Statements</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.coda</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
         <field name="context">{"search_default_user_id":uid}</field>
-		<field name="search_view_id" ref="view_aaccount_coda_filter"/>
-	</record>
+        <field name="search_view_id" ref="view_aaccount_coda_filter"/>
+    </record>
 
-	<menuitem name="Coda Import Logs" parent="account.menu_finance_bank_and_cash" id="menu_account_coda_statement" action="action_account_coda" groups="base.group_extended" sequence="32"/>
+    <menuitem name="Coda Import Logs" parent="account.menu_finance_bank_and_cash" id="menu_account_coda_statement" action="action_account_coda" groups="base.group_extended" sequence="32"/>
 
-	<menuitem name="Import Coda Statements" action="action_account_coda_import" parent="account.menu_account_coda"
-	 id="menu_account_coda_import" sequence="20"/>
+    <menuitem name="Import Coda Statements" action="action_account_coda_import" parent="account.menu_account_coda"
+     id="menu_account_coda_import" sequence="20"/>
 
-	<act_window name="Coda File"
-		domain="[('statement_ids', 'in', [active_id])]"
-		res_model="account.coda"
-		src_model="account.bank.statement"
-		view_type="form"
-		view_mode="tree,form"
- 		id="act_account_payment_account_bank_statement"/>
+    <act_window name="Coda File"
+        domain="[('statement_ids', 'in', [active_id])]"
+        res_model="account.coda"
+        src_model="account.bank.statement"
+        view_type="form"
+        view_mode="tree,form"
+         id="act_account_payment_account_bank_statement"/>
 
-	</data>
+    </data>
 </openerp>
