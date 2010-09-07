@@ -658,7 +658,7 @@ class stock_picking(osv.osv):
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not from Picking")], "Invoice Status",
+            ("none", "Not from Picking")], "Invoice Control",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
     }

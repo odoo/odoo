@@ -607,19 +607,22 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Picking list">
+                <form string="Internal Picking list">
                     <group colspan="4" col="6">
-                        <field name="name" readonly="1"/>
-                        <field name="origin"/>
-                        <field name="backorder_id" groups="base.group_extended" readonly="1"/>
-                        <field name="date"/>
-                        <field name="min_date"/>
-                        <field name="type"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <group colspan="4" col="4">
+                            <field name="name" readonly="1"/>
+                            <field name="origin"/>
+                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" colspan="4"/>
+                            <field name="backorder_id" readonly="1" groups="base.group_extended"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="date"/>
+                            <field name="min_date" readonly="1"/>
+                            <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
-                        <page string="General Information">
+                        <page string="Products">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines}">
                                 <tree colors="grey:scrapped == True" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
@@ -723,15 +726,16 @@
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
+                        <page string="Additional info" groups="base.group_extended,base.group_multi_company">
+                            <field name="auto_picking" groups="base.group_extended"/>
+                            <field name="invoice_state" groups="base.group_extended"/>
+                            <field name="date_done" groups="base.group_extended"/>
+                            <field name="move_type" groups="base.group_extended"/>
+                            <field name="type" groups="base.group_extended"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
-                        </page>
-                        <page string="Other info" groups="base.group_extended">
-                            <field name="auto_picking"/>
-                            <field name="invoice_state"/>
-                            <field name="date_done"/>
-                            <newline/>
-                            <field name="move_type"/>
                         </page>
                     </notebook>
                 </form>
@@ -788,21 +792,23 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Picking list">
+                <form string="Delivery Picking list">
                     <group col="6" colspan="4" attrs="{'readonly': [('state','not in',['draft','auto'])]}">
-                        <field name="name" readonly="1"/>
-                        <field name="address_id" required="1"/>
-                        <field name="origin"/>
-                        <field name="backorder_id" groups="base.group_extended" readonly="1"/>
-                        <field name="date" />
-                        <field name="min_date"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        <field name="type" invisible="1"/>
-                        <field name="invoice_state" invisible="1"/>
+                        <group colspan="4" col="4">
+                            <field name="name" readonly="1"/>
+                            <field name="origin" readonly="1"/>
+                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" colspan="4"/>
+                            <field name="invoice_state"/>
+                            <field name="backorder_id" readonly="1" groups="base.group_extended"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="date"/>
+                            <field name="min_date" readonly="1"/>
+                            <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        </group>
                     </group>
-                        <notebook colspan="4">
-                        <page string="General Information">
+                    <notebook colspan="4">
+                        <page string="Products">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}" >
                                 <tree colors="grey:scrapped == True" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
@@ -905,14 +911,16 @@
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
+                        <page string="Additional info" groups="base.group_extended,base.group_multi_company">
+                            <field name="auto_picking" groups="base.group_extended"/>
+                            <field name="invoice_state" groups="base.group_extended"/>
+                            <field name="date_done" groups="base.group_extended"/>
+                            <field name="move_type" groups="base.group_extended"/>
+                            <field name="type" groups="base.group_extended"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
-                        </page>
-                        <page string="Other info" groups="base.group_extended">
-                            <field name="auto_picking"/>
-                            <newline/>
-                            <field name="date_done"/>
-                            <field name="move_type"/>
                         </page>
                     </notebook>
                 </form>
@@ -1004,20 +1012,23 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Picking list">
+                <form string="Outgoing Picking list">
                     <group col="6" colspan="4">
-                        <field name="address_id" required="1" />
-                        <field name="min_date"/>
-                        <field name="name" readonly="1"/>
-                        <field name="invoice_state"/>
-                        <field name="backorder_id" readonly="1"/>
-                        <field name="origin" readonly="1"/>
-                        <field name="type" invisible="1"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <group colspan="4" col="4">
+                            <field name="name" readonly="1"/>
+                            <field name="origin" readonly="1"/>
+                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" colspan="4"/>
+                            <field name="invoice_state"/>
+                            <field name="backorder_id" readonly="1" groups="base.group_extended"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="date"/>
+                            <field name="min_date" readonly="1"/>
+                            <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
-                        <page string="General Information">
+                        <page string="Products">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}" >
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id"/>
@@ -1116,14 +1127,15 @@
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
+                        <page string="Additional info" groups="base.group_extended,base.group_multi_company">
+                            <field name="auto_picking" groups="base.group_extended"/>
+                            <field name="date_done" groups="base.group_extended"/>
+                            <field name="move_type" groups="base.group_extended"/>
+                            <field name="type" groups="base.group_extended"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
-                        </page>
-                        <page string="Other info" groups="base.group_extended">
-                            <field name="auto_picking"/>
-                            <newline/>
-                            <field name="date_done"/>
-                            <field name="move_type"/>
                         </page>
                     </notebook>
                 </form>
@@ -1215,16 +1227,18 @@
             <field name="arch" type="xml">
                 <form string="Input Picking List">
                     <group colspan="4" col="6">
-                        <field name="name" readonly="1"/>
-                        <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" />
-                        <field name="origin"/>
-                        <field name="backorder_id" readonly="1" groups="base.group_extended"/>
-                        <field name="date"/>
-                        <field name="type"/>
-                        <field name="min_date" readonly="1"/>
-                        <field name="invoice_state" string="Invoice Control"/>
-                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <group colspan="4" col="4">
+                            <field name="name" readonly="1"/>
+                            <field name="origin"/>
+                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" colspan="4"/>
+                            <field name="invoice_state" string="Invoice Control"/>
+                            <field name="backorder_id" readonly="1" groups="base.group_extended"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="date"/>
+                            <field name="min_date" readonly="1"/>
+                            <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -1323,6 +1337,10 @@
 								<button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
+                        </page>
+                        <page string="Additional Info" groups="base.group_extended,base.group_multi_company">
+                            <field name="type" groups="base.group_extended"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
