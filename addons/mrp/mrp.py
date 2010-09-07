@@ -467,9 +467,8 @@ class mrp_production(osv.osv):
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
-        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
-        'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
-
+        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder', store=True),
+        'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder', store=True),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
