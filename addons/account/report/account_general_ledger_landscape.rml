@@ -3,9 +3,6 @@
    <template pageSize="(1120.5,767.8)" title="General Ledger" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20" >
     <pageTemplate id="first">
       <frame id="first" x1="22.0" y1="31.0" width="1080" height="680"/>
-			<pageGraphics>
-
-			</pageGraphics>
     </pageTemplate>
   </template>
    <stylesheet>
@@ -179,9 +176,6 @@
 	<paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
   </stylesheet>
   <story>
-  <para style="P9">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
@@ -189,9 +183,6 @@
         </td>
       </tr>
     </blockTable>
-    <para style="P9">
-      <font color="white"> </font>
-    </para>
    <para>[[ repeatIn(objects, 'a') ]]</para>
 
     <para style="terp_default_8">
@@ -269,7 +260,7 @@
       <blockTable rowHeights="0.65cm" colWidths="66.0,35.0,150.0, 90.0,60.0,330.0,50.0,69.0,72.0,64.0,62.0" style="tbl_content">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
       	<tr>
         	<td>
-          		<blockTable colWidths="404.0,375.0,69.0,72.0,64.0,59.00" style="Table5">
+          		<blockTable colWidths="404.0,372.0,69.0,72.0,64.0,59.00" style="Table5">
 	        		<tr>
 		    			<td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
 		    			<td><para style="Standard"></para></td>
