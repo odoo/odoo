@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import crm_add_note
 import crm_send_email
 import crm_forward_to_partner
 
