@@ -62,18 +62,23 @@ class account_common_report(osv.osv_memory):
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
         if filter == 'filter_period' and fiscalyear_id:
             start_period = end_period = False
-            cr.execute('SELECT p.id FROM account_fiscalyear AS f \
-                        LEFT JOIN account_period AS p on p.fiscalyear_id=f.id \
-                        WHERE p.id IN \
-                            (SELECT id FROM account_period \
-                            WHERE p.fiscalyear_id = f.id \
-                            AND p.date_start IN \
-                                (SELECT max(date_start) from account_period WHERE p.fiscalyear_id = f.id)\
-                            OR p.date_stop IN \
-                                (SELECT min(date_stop) from account_period WHERE p.fiscalyear_id = f.id)) \
-                            AND f.id = ' + str(fiscalyear_id) + ' order by p.date_start')
+            cr.execute('''
+                SELECT * FROM (SELECT p.id 
+                               FROM account_period p 
+                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id) 
+                               WHERE f.id = %s 
+                               ORDER BY p.date_start ASC
+                               LIMIT 1) AS period_start
+                UNION
+                SELECT * FROM (SELECT p.id
+                               FROM account_period p
+                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
+                               WHERE f.id = %s
+                               AND p.date_start < NOW()
+                               ORDER BY p.date_stop DESC
+                               LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
             periods =  [i[0] for i in cr.fetchall()]
-            if periods:
+            if periods and len(periods) > 1:
                 start_period = periods[0]
                 end_period = periods[1]
             res['value'] = {'period_from': start_period, 'period_to': end_period, 'date_from': False, 'date_to': False}
