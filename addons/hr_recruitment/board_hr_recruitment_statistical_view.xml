@@ -31,6 +31,8 @@
         <field name="name">board.hr.applicants.status.form</field>
         <field name="model">board.board</field>
         <field name="inherit_id" ref="hr.board_hr_form"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
           <xpath expr="/form/hpaned/child2" position="inside">
             <action colspan="4" height="220" name="%(action_applicants_status)d" string="Applicants Status"/>
           </xpath>
