@@ -97,6 +97,7 @@ class account_fiscalyear_close(osv.osv_memory):
             unlink_ids += part_rec_ids
             if len(unlink_ids):
                 obj_rec.unlink(cr, uid, unlink_ids)
+            obj_acc_move_line.unlink(cr, uid, move_ids, context=context)
 
         cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
         result = cr.dictfetchall()
