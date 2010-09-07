@@ -57,6 +57,7 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_move_line = self.pool.get('account.move.line')
         obj_acc_account = self.pool.get('account.account')
         obj_acc_journal_period = self.pool.get('account.journal.period')
+        obj_rec = self.pool.get('account.move.reconcile')
 
         data =  self.read(cr, uid, ids, context=context)
 
@@ -84,20 +85,28 @@ class account_fiscalyear_close(osv.osv_memory):
                     _('The journal must have centralised counterpart'))
 
         move_ids = obj_acc_move_line.search(cr, uid, [
-            ('journal_id','=',new_journal.id),('period_id.fiscalyear_id','=',new_fyear.id)])
+            ('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])
         if move_ids:
-            raise osv.except_osv(_('UserError'),
-                    _('The opening journal must not have any entry in the new fiscal year !'))
+            recs = obj_acc_move_line.read(cr, uid, move_ids, ['reconcile_id', 'reconcile_partial_id'])
+            unlink_ids = []
+            full_recs = filter(lambda x: x['reconcile_id'], recs)
+            rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
+            part_recs = filter(lambda x: x['reconcile_partial_id'], recs)
+            part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
+            unlink_ids += rec_ids
+            unlink_ids += part_rec_ids
+            if len(unlink_ids):
+                obj_rec.unlink(cr, uid, unlink_ids)
+
         cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
         result = cr.dictfetchall()
         fy_ids = ','.join([str(x['id']) for x in result])
         query_line = obj_acc_move_line._query_get(cr, uid,
                 obj='account_move_line', context={'fiscalyear': fy_ids})
-        cr.execute('select id from account_account WHERE active')
+        cr.execute('select id from account_account WHERE active AND company_id = %s', (old_fyear.company_id.id,))
         ids = map(lambda x: x[0], cr.fetchall())
         for account in obj_acc_account.browse(cr, uid, ids,
             context={'fiscalyear': fy_id}):
-
             accnt_type_data = account.user_type
             if not accnt_type_data:
                 continue
