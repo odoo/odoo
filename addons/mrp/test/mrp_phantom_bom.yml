@@ -207,7 +207,7 @@
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
-      search: "[('state','=','confirmed')]"
+      search: "[]"
 -
   I am checking Internal picking. I see one picking for Orange juice and its 
   stock moves for Oranges, Sugar and Water made correctly.
@@ -283,7 +283,7 @@
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
-      search: "[('state','!=','confirmed')]"
+      search: "[]"
 -
   I check my internal picking of "Orange Juice" is done.
 -

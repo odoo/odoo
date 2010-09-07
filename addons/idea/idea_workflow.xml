@@ -50,22 +50,10 @@
             <field name="signal">idea_close</field>
         </record>
 
-        <record model="workflow.transition" id="t3">
-            <field name="act_from" ref="act_draft" />
-            <field name="act_to" ref="act_cancel" />
-            <field name="signal">idea_cancel</field>
-        </record>
-
         <record model="workflow.transition" id="t4">
             <field name="act_from" ref="act_open" />
             <field name="act_to" ref="act_cancel" />
             <field name="signal">idea_cancel</field>
-        </record>
-
-        <record model="workflow.transition" id="t5">
-            <field name="act_from" ref="act_cancel" />
-            <field name="act_to" ref="act_draft" />
-            <field name="signal">idea_draft</field>
         </record>
 
     </data>

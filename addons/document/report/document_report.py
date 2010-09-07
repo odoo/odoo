@@ -71,12 +71,7 @@ class report_files_partner(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
-        'directory': fields.char('Directory',size=64,readonly=True),
-        'create_date': fields.datetime('Date Created', readonly=True),
-        'change_date': fields.datetime('Modified Date', readonly=True),
-        'file_size': fields.integer('File Size', readonly=True),
         'nbr':fields.integer('# of Files', readonly=True),
-        'type':fields.char('Directory Type',size=64,readonly=True),
         'partner':fields.char('Partner',size=64,readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
