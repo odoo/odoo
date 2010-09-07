@@ -1,7 +1,7 @@
 from crm import crm
 from osv import fields, osv
 from tools.translate import _
-
+import base64
 
 AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
 
@@ -14,7 +14,8 @@ class crm_add_note(osv.osv_memory):
     _columns = {
         'body': fields.text('Note Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To',
-                                  required=True),
+                                  required=True), 
+        'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
     }
 
     def action_add(self, cr, uid, ids, context=None):
@@ -33,8 +34,11 @@ class crm_add_note(osv.osv_memory):
             case = case_list[0]
             user_obj = self.pool.get('res.users')
             user_name = user_obj.browse(cr, uid, [uid], context=context)[0].name
-            case_pool.history(cr, uid, [case], _("Note"), history=True,
-                              details=obj.body, email_from=user_name)
+            attach = [
+                (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
+            ]
+            case_pool.history(cr, uid, [case], _("Note"), history=False,
+                              details=obj.body, email_from=user_name, attach=attach)
 
             if obj.state == 'unchanged':
                 pass

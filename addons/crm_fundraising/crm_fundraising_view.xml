@@ -197,7 +197,11 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <button colspan="4" string="Send New Email"
+                             <button string="Add New Note"
+                                name="%(crm.action_crm_add_note)d"
+                                context="{'model': 'crm.lead' }"
+                                icon="terp-document-new" type="action" />
+                            <button string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.fundraising'}"
                                 icon="terp-mail-message-new" type="action" />

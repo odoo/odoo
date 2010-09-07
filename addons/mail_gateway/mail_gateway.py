@@ -122,19 +122,22 @@ class mailgate_thread(osv.osv):
         obj = self.pool.get('mailgate.message')
 
         for case in cases:
+            attachments = []
+            for att in attach:
+                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
+
             data = {
                 'name': keyword,
                 'user_id': uid,
                 'model' : case._name,
                 'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'message_id': message_id,
+                'message_id': message_id, 
+                'description': details or (hasattr(case, 'description') and case.description or False), 
+                'attachment_ids': [(6, 0, attachments)]
             }
-            attachments = []
-            if history:
-                for att in attach:
-                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
 
+            if history:
                 for param in (email, email_cc, email_bcc):
                     if isinstance(param, list):
                         param = ", ".join(param)
@@ -187,6 +190,8 @@ class mailgate_message(osv.osv):
                 msg_txt = (message.user_id.name or '/') + _('  on ') + format_date_tz(message.date, tz) + ':\n\t'
                 if message.name == _('Opportunity'):
                     msg_txt += _("Converted to Opportunity")
+                elif message.name == _('Note'):
+                    msg_txt += _("Added Note: ") + (message.description or '')
                 else:
                     msg_txt += _("Changed Status to: ") + message.name
             result[message.id] = msg_txt
