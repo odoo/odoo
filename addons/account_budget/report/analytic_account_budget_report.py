@@ -180,6 +180,6 @@ class analytic_account_budget_report(report_sxw.rml_parse):
 
         return result
 
-report_sxw.report_sxw('report.account.analytic.account.budget', 'account.analytic.account', 'addons/account_budget/report/analytic_account_budget_report.rml',parser=analytic_account_budget_report,header=False)
+report_sxw.report_sxw('report.account.analytic.account.budget', 'account.analytic.account', 'addons/account_budget/report/analytic_account_budget_report.rml',parser=analytic_account_budget_report,header='internal')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
