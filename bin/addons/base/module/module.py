@@ -255,7 +255,7 @@ class module(osv.osv):
             try:
                 self._check_external_dependencies(terp)
             except Exception, e:
-                raise orm.except_orm(_('Error'), _('Unable %s the module "%s" because an external dependencie is not met: %s' % (newstate, module.name, e.args[0])))
+                raise orm.except_orm(_('Error'), _('Unable %s the module "%s" because an external dependencie is not met: %s') % (newstate, module.name, e.args[0]))
             if not module.dependencies_id:
                 mdemo = module.demo
             if module.state in states_to_update:
