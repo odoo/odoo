@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 import netsvc
@@ -54,7 +55,7 @@ class account_automatic_reconcile(osv.osv_memory):
         'date2': time.strftime('%Y-%m-%d'),
         'reconciled': _get_reconciled,
         'unreconciled': _get_unreconciled,
-        'power':2
+        'power': 2
     }
 
     #TODO: cleanup and comment this code... For now, it is awfulllll
@@ -240,7 +241,7 @@ class account_automatic_reconcile(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': context,
-            'nodestroy':True,
+            'nodestroy':True,  #remove me
         }
 
 account_automatic_reconcile()
