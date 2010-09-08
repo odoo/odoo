@@ -24,14 +24,14 @@ from tools.translate import _
 
 class stock_fill_inventory(osv.osv_memory):
     _name = "stock.fill.inventory"
-    _description = "Fill Inventory"
+    _description = "Import Inventory"
     _columns = {
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'recursive': fields.boolean("Include all children for the location"),
     }
 
     def fill_inventory(self, cr, uid, ids, context):
-        """ To fill stock inventory according to products available in the selected locations.
+        """ To Import stock inventory according to products available in the selected locations.
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in

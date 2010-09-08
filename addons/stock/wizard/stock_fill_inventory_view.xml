@@ -2,12 +2,12 @@
 <openerp>
     <data>
    		<record id="view_stock_fill_inventory" model="ir.ui.view">
-            <field name="name">Fill Inventory</field>
+            <field name="name">Import Inventory</field>
             <field name="model">stock.fill.inventory</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Fill Inventory">
-             		<separator string="Fill Inventory for specific location" colspan="4" />
+              <form string="Import Inventory">
+             		<separator string="Import current product inventory from the following location" colspan="4" />
                 	<field name="location_id"/>
                 	<newline/>
                 	<field name="recursive"/>
@@ -19,7 +19,7 @@
             </field>
 		</record>
 
-         <act_window name="Fill Inventory"		    
+         <act_window name="Import Inventory"		    
 		    res_model="stock.fill.inventory"
 		    src_model="stock.inventory"
 		    view_mode="form"
