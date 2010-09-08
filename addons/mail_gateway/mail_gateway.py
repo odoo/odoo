@@ -255,11 +255,16 @@ class mailgate_tool(osv.osv_memory):
 
         msg_pool = self.pool.get('mailgate.message')
         for res_id in res_ids:
+            case = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
+            if not partner_id and model == 'res.partner':
+                partner_id = res_id
             msg_data = {
                 'name': msg.get('subject', 'No subject'),
                 'date': msg.get('date'),
                 'description': msg.get('body', msg.get('from')),
                 'history': True,
+                'partner_id': partner_id,
                 'res_model': model,
                 'email_cc': msg.get('cc'),
                 'email_from': msg.get('from'),
