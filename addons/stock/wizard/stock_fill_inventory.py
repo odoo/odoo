@@ -64,7 +64,7 @@ class stock_fill_inventory(osv.osv_memory):
             for product_id in res.keys():
                 prod = product_obj.browse(cr, uid, [product_id])[0]
                 uom = prod.uom_id.id
-                context.update({'uom': uom})
+                context.update(uom=uom, compute_child=False)
                 amount = stock_location_obj._product_get(cr, uid,
                          location, [product_id], context=context)[product_id]
 
