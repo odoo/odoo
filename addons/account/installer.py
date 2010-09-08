@@ -556,21 +556,23 @@ class account_installer(osv.osv_memory):
                         ir_values.set(cr, uid, key='default', key2=False, name=name, models =[('product.product',False)], value=[value])
 
             if 'date_start' in res and 'date_stop' in res:
-                name = code = res['date_start'][:4]
-                if int(name) != int(res['date_stop'][:4]):
-                    name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
-                    code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
-                vals = {'name': name,
-                        'code': code,
-                        'date_start': res['date_start'],
-                        'date_stop': res['date_stop'],
-                        'company_id': res['company_id']
-                       }
-                fy_id = fy_obj.create(cr, uid, vals, context=context)
-                if res['period'] == 'month':
-                    fy_obj.create_period(cr, uid, [fy_id])
-                elif res['period'] == '3months':
-                    fy_obj.create_period3(cr, uid, [fy_id])
+                f_ids = res_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id','=',res['company_id'])])
+                if not f_ids:
+                    name = code = res['date_start'][:4]
+                    if int(name) != int(res['date_stop'][:4]):
+                        name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
+                        code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
+                    vals = {'name': name,
+                            'code': code,
+                            'date_start': res['date_start'],
+                            'date_stop': res['date_stop'],
+                            'company_id': res['company_id']
+                           }
+                    period_id = res_obj.create(cr, uid, vals, context=context)
+                    if res['period'] == 'month':
+                        res_obj.create_period(cr, uid, [period_id])
+                    elif res['period'] == '3months':
+                        res_obj.create_period3(cr, uid, [period_id])
 
 #        #fially inactive the demo chart of accounts
 #        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])

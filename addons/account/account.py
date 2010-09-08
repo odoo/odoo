@@ -162,8 +162,8 @@ class account_account_type(osv.osv):
         'note': fields.text('Description'),
     }
     _defaults = {
-        'close_method': lambda *a: 'none',
-        'sign': lambda *a: 1,
+        'close_method': 'none',
+        'sign': 1,
     }
     _order = "code"
 
@@ -753,7 +753,7 @@ class account_fiscalyear(osv.osv):
         'state': fields.selection([('draft','Open'), ('done','Closed')], 'State', readonly=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start"
@@ -988,8 +988,8 @@ class account_journal_period(osv.osv):
         return super(account_journal_period, self).unlink(cr, uid, ids, context)
 
     _defaults = {
-        'state': lambda *a: 'draft',
-        'active': lambda *a: True,
+        'state': 'draft',
+        'active': True,
     }
     _order = "period_id"
 
@@ -1117,10 +1117,10 @@ class account_move(osv.osv):
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
     _defaults = {
-        'name': lambda *a: '/',
-        'state': lambda *a: 'draft',
+        'name': '/',
+        'state': 'draft',
         'period_id': _get_period,
-        'date': lambda *a:time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
@@ -1611,8 +1611,8 @@ class account_tax_code(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
     _defaults = {
         'company_id': _default_company,
-        'sign': lambda *args: 1.0,
-        'notprintable': lambda *a: False,
+        'sign': 1.0,
+        'notprintable': False,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -2125,11 +2125,11 @@ class account_subscription(osv.osv):
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
-        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
-        'period_type': lambda *a: 'month',
-        'period_total': lambda *a: 12,
-        'period_nbr': lambda *a: 1,
-        'state': lambda *a: 'draft',
+        'date_start': time.strftime('%Y-%m-%d'),
+        'period_type': 'month',
+        'period_total': 12,
+        'period_nbr': 1,
+        'state': 'draft',
     }
     def state_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
@@ -2246,9 +2246,9 @@ class account_account_template(osv.osv):
     }
 
     _defaults = {
-        'reconcile': lambda *a: False,
-        'type' : lambda *a :'view',
-        'nocreate': lambda *a: False,
+        'reconcile': False,
+        'type' : 'view',
+        'nocreate': False,
     }
 
     _check_recursion = check_cycle
@@ -2341,8 +2341,8 @@ class account_tax_code_template(osv.osv):
     }
 
     _defaults = {
-        'sign': lambda *args: 1.0,
-        'notprintable': lambda *a: False,
+        'sign': 1.0,
+        'notprintable': False,
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -2442,17 +2442,17 @@ class account_tax_template(osv.osv):
     _defaults = {
         'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
         'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
-        'applicable_type': lambda *a: 'true',
-        'type': lambda *a: 'percent',
-        'amount': lambda *a: 0,
-        'sequence': lambda *a: 1,
-        'tax_group': lambda *a: 'vat',
-        'ref_tax_sign': lambda *a: 1,
-        'ref_base_sign': lambda *a: 1,
-        'tax_sign': lambda *a: 1,
-        'base_sign': lambda *a: 1,
-        'include_base_amount': lambda *a: False,
-        'type_tax_use': lambda *a: 'all',
+        'applicable_type': 'true',
+        'type': 'percent',
+        'amount': 0,
+        'sequence': 1,
+        'tax_group': 'vat',
+        'ref_tax_sign': 1,
+        'ref_base_sign': 1,
+        'tax_sign': 1,
+        'base_sign': 1,
+        'include_base_amount': False,
+        'type_tax_use': 'all',
     }
     _order = 'sequence'
 
@@ -2533,7 +2533,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
         'chart_template_id': _get_chart,
-        'code_digits': lambda *a:6,
+        'code_digits': 6,
         'seq_journal': True
     }
 
