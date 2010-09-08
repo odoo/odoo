@@ -68,7 +68,7 @@ class configmanager(object):
             'import_partial': "",
             'pidfile': None,
             'logfile': None,
-            'logrotate': '1',
+            'logrotate': True,
             'smtp_server': 'localhost',
             'smtp_user': False,
             'smtp_port':25,
@@ -88,6 +88,8 @@ class configmanager(object):
             'static_http_enable': False,
             'static_http_document_root': None,
             'static_http_url_prefix': None,
+            'secure_cert_file': 'server.cert',
+            'secure_pkey_file': 'server.pkey',
         }
 
         self.misc = {}
@@ -119,8 +121,8 @@ class configmanager(object):
         group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", help="specify the TCP IP address for the XML-RPC Secure protocol")
         group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", help="specify the TCP port for the XML-RPC Secure protocol", type="int")
         group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", help="disable the XML-RPC Secure protocol")
-        group.add_option("--cert-file", dest="secure_cert_file", default="server.cert", help="specify the certificate file for the SSL connection")
-        group.add_option("--pkey-file", dest="secure_pkey_file", default="server.pkey", help="specify the private key file for the SSL connection")
+        group.add_option("--cert-file", dest="secure_cert_file", help="specify the certificate file for the SSL connection")
+        group.add_option("--pkey-file", dest="secure_pkey_file", help="specify the private key file for the SSL connection")
         parser.add_option_group(group)
 
         # NET-RPC
@@ -129,21 +131,21 @@ class configmanager(object):
         group.add_option("--netrpc-port", dest="netrpc_port", help="specify the TCP port for the NETRPC protocol", type="int")
         group.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable the NETRPC protocol")
         parser.add_option_group(group)
-        
+
         # Static HTTP
         group = optparse.OptionGroup(parser, "Static HTTP service")
         group.add_option("--static-http-enable", dest="static_http_enable", action="store_true", default=False, help="enable static HTTP service for serving plain HTML files")
         group.add_option("--static-http-document-root", dest="static_http_document_root", help="specify the directory containing your static HTML files (e.g '/var/www/')")
         group.add_option("--static-http-url-prefix", dest="static_http_url_prefix", help="specify the URL root prefix where you want web browsers to access your static HTML files (e.g '/')")
         parser.add_option_group(group)
-        
+
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
         parser.add_option("--without-demo", dest="without_demo",
                           help="load demo data for a module (use \"all\" for all modules)", default=False)
         parser.add_option("-u", "--update", dest="update",
                           help="update a module (use \"all\" for all modules)")
         parser.add_option("--cache-timeout", dest="cache_timeout",
-                          help="set the timeout for the cache system", default=100000, type="int")
+                          help="set the timeout for the cache system", type="int")
         parser.add_option("-t", "--timezone", dest="timezone", help="specify reference timezone for the server (e.g. Europe/Brussels")
 
         # stops the server from launching after initialization
@@ -166,7 +168,7 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--no-logrotate", dest="logrotate", action="store_false",
-                         default=None, help="do not rotate the logfile")
+                         help="do not rotate the logfile")
         group.add_option("--syslog", action="store_true", dest="syslog",
                          default=False, help="Send the log to the syslog server")
         group.add_option('--log-level', dest='log_level', type='choice', choices=self._LOGLEVELS.keys(),
@@ -175,12 +177,12 @@ class configmanager(object):
 
         # SMTP Group
         group = optparse.OptionGroup(parser, "SMTP Configuration")
-        group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
-        group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
-        group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
-        group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
-        group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
-        group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
+        group.add_option('--email-from', dest='email_from', help='specify the SMTP email address for sending email')
+        group.add_option('--smtp', dest='smtp_server', help='specify the SMTP server for sending email')
+        group.add_option('--smtp-port', dest='smtp_port', help='specify the SMTP port', type="int")
+        group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', help='specify the SMTP server support SSL or not')
+        group.add_option('--smtp-user', dest='smtp_user', help='specify the SMTP username for sending email')
+        group.add_option('--smtp-password', dest='smtp_password', help='specify the SMTP password for sending email')
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Database related options")
@@ -190,7 +192,7 @@ class configmanager(object):
         group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path")
         group.add_option("--db_host", dest="db_host", help="specify the database host")
         group.add_option("--db_port", dest="db_port", help="specify the database port", type="int")
-        group.add_option("--db_maxconn", dest="db_maxconn", default='64',
+        group.add_option("--db_maxconn", dest="db_maxconn", type='int',
                          help="specify the the maximum number of physical connections to posgresql")
         group.add_option("-P", "--import-partial", dest="import_partial",
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
@@ -216,7 +218,7 @@ class configmanager(object):
         parser.add_option_group(group)
 
         security = optparse.OptionGroup(parser, 'Security-related options')
-        security.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
+        security.add_option('--no-database-list', action="store_false", dest='list_db', help="disable the ability to return the list of databases")
         security.add_option('--enable-code-actions', action='store_true',
                             dest='server_actions_allow_code', default=False,
                             help='Enables server actions of state "code". Warning, this is a security risk.')
@@ -267,8 +269,8 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
-                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 
+                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
+                'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
@@ -280,9 +282,9 @@ class configmanager(object):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
-        keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
+        keys = ['language', 'translate_out', 'translate_in', 'debug_mode', 'smtp_ssl'
                 'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
-                'list_db', 'server_actions_allow_code', 'xmlrpcs', 
+                'list_db', 'server_actions_allow_code', 'xmlrpcs',
                 'test_file', 'test_disable', 'test_commit'
                 ]
 
