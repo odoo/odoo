@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Report Modules Configuration</attribute>
+            <attribute name="string">Reporting Application Configuration</attribute>
           </form>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
                   <attribute name='string'></attribute>
@@ -35,7 +35,7 @@
     </record>
 
     <record id="action_report_designer_installer" model="ir.actions.act_window">
-      <field name="name">Report Modules Installation</field>
+      <field name="name">Report Applications Installation</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">report_designer.installer</field>
       <field name="view_id" ref="view_report_designer_installer"/>

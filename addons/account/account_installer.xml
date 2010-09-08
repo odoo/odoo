@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
             <data>
                 <form position="attributes">
-                    <attribute name="string">Accounting Modules Configuration</attribute>
+                    <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
                     <attribute name="string">Configure Your Accounting System</attribute>
@@ -66,13 +66,13 @@
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
-                        <attribute name="string">Accounting Modules Configuration</attribute>
+                        <attribute name="string">Accounting Application Configuration</attribute>
                     </form>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Extra Accounting Modules</attribute>
+                        <attribute name="string">Extra Accounting Applications</attribute>
                     </separator>
                     <xpath expr="//label[@string='description']" position="attributes">
-                        <attribute name="string">From this screen, you can install extra accounting modules in your accounting system. Select the modules to directly install them. If you do not think you need any of these right now, you can easily install them later.</attribute>
+                        <attribute name="string">From this screen, you can install extra accounting applications in your accounting system. Select the applications to directly install them. If you do not think you need any of these right now, you can easily install them later.</attribute>
                     </xpath>
                     <xpath expr='//separator[@string="vsep"]' position='attributes'>
                         <attribute name='string'></attribute>
@@ -100,7 +100,7 @@
         </record>
 
         <record id="action_account_installer" model="ir.actions.act_window">
-            <field name="name">Accounting Modules Installation</field>
+            <field name="name">Accounting Applications Installation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer.modules</field>
             <field name="view_id" ref="view_account_modules_installer"/>

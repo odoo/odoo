@@ -16,7 +16,7 @@
                   </xpath>
                 <xpath expr="//label[@string='description']"
                        position="attributes">
-                  <attribute name="string">Install more modules. A few modules are proposed according to the Association Profile you selected. You will be able to install them based on our requirements.</attribute>
+                  <attribute name="string">Install more applications. A few applications are proposed according to the Association Profile you selected. You will be able to install them based on our requirements.</attribute>
                 </xpath>
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
@@ -37,7 +37,7 @@
         </record>
 
         <record id="action_config_install_module" model="ir.actions.act_window">
-            <field name="name">Association Profile : Install Extra Modules</field>
+            <field name="name">Association Profile : Install Extra Applications</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">profile.association.config.install_modules_wizard</field>
             <field name="view_id" ref="view_confirm_install_module_form"/>

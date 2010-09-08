@@ -10,10 +10,10 @@
       <field name="arch" type="xml">
         <data>
             <form position="attributes">
-                <attribute name="string">Human Resources Modules Configuration</attribute>
+                <attribute name="string">Human Resources Application Configuration</attribute>
             </form>
             <separator string="title" position="attributes">
-                <attribute name="string">Select Human Resources Modules To Install</attribute>
+                <attribute name="string">Select Human Resources Applications To Install</attribute>
             </separator>
             <xpath expr='//separator[@string="vsep"]' position='attributes'>
                 <attribute name='string'></attribute>
@@ -40,7 +40,7 @@
     </record>
 
     <record id="action_hr_installer" model="ir.actions.act_window">
-      <field name="name">Human Resources Modules Installation</field>
+      <field name="name">Human Resources Applications Installation</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">hr.installer</field>
       <field name="view_id" ref="view_hr_installer"/>

@@ -43,7 +43,7 @@
         </record>
 
         <record id="action_outlook_installer" model="ir.actions.act_window">
-            <field name="name">Outlook Module Installation</field>
+            <field name="name">Outlook Application Installation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">outlook.installer</field>
             <field name="view_id" ref="view_outlook_installer"/>
@@ -66,12 +66,12 @@
             <field name="arch" type="xml">
                 <form string= "Outlook Plug-In Configuration">
                     <group colspan="4">
-                        <separator string="Configure Outlook Module" colspan="4"/>
+                        <separator string="Configure Outlook Application" colspan="4"/>
                         <group colspan="4" col="10">
                             <group colspan="2">
                                 <image name="gtk-dialog-info"/>
                                     <newline/>
-                                <label align="0.0" string="This Module allows you to select an object that you would like to add to your email and its attachments from MS Outlook. You can select a partner, a task, a project, an analytical account, or any other object and Archived selected mail in mailgate.messages with attachments" width="200"/>
+                                <label align="0.0" string="This Application allows you to select an object that you would like to add to your email and its attachments from MS Outlook. You can select a partner, a task, a project, an analytical account, or any other object and Archived selected mail in mailgate.messages with attachments" width="200"/>
                             </group>
                             <group colspan="8">
                                 <field name="outlook" invisible="1"/>
@@ -97,7 +97,7 @@
         </record>
 
         <record id="action_outlook_wizard" model="ir.actions.act_window">
-            <field name="name">Outlook Module Installation</field>
+            <field name="name">Outlook Application Installation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">outlook.installer</field>
             <field name="view_id" ref="view_outlook_wizard"/>

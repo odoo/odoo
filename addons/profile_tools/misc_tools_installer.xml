@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Tools Modules Configuration</attribute>
+            <attribute name="string">Tools Application Configuration</attribute>
           </form>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
                 <attribute name='string'></attribute>
@@ -36,7 +36,7 @@
     </record>
 
     <record id="action_misc_tools_installer" model="ir.actions.act_window">
-      <field name="name">Tools Modules Installation</field>
+      <field name="name">Tools Applications Installation</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">misc_tools.installer</field>
       <field name="view_id" ref="view_misc_tools_installer"/>

@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Install OpenERP Modules</attribute>
+            <attribute name="string">Install OpenERP Applications</attribute>
           </form>
           <xpath expr="//label[@string='description']"
                  position="attributes">
@@ -19,7 +19,7 @@
                     <attribute name='rowspan'>15</attribute>
           </xpath>
           <separator string="title" position="attributes">
-            <attribute name="string">Install Generic Modules</attribute>
+            <attribute name="string">Install Generic Applications</attribute>
           </separator>
           <group colspan="8">
             <field name="crm" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
@@ -29,7 +29,7 @@
             <field name="hr" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="point_of_sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
             <field name="marketing" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="profile_tools" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
             <field name="report_designer" groups="base.group_extended" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <separator string="Install Specific Business Modules" colspan="4"/>
+            <separator string="Install Specific Business Applications" colspan="4"/>
             <field name="association" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
             <field name="auction" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
             <field name="product_expiry" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
@@ -39,7 +39,7 @@
     </record>
 
     <record id="action_base_setup_installer" model="ir.actions.act_window">
-      <field name="name">Base Setup Modules Installation</field>
+      <field name="name">Base Setup Applications Installation</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">base.setup.installer</field>
       <field name="view_id" ref="view_base_setup_installer"/>
