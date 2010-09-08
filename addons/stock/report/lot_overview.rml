@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Location Content" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Location Overview" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -40,7 +40,7 @@
       <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
     </blockTableStyle>
-    <blockTableStyle id="Table2">
+    <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
@@ -78,7 +78,7 @@
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_9" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -89,7 +89,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_header_Centre">Location Content</para>
+    <para style="terp_header_Centre">Location Overview</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -119,7 +119,7 @@
         <blockTable colWidths="152.0,82.0,59.0,59.0,58.0,72.0" style="Table7">
           <tr>
             <td>
-              <para style="terp_default_Bold_9">[[ ob['location_name'] ]]</para>
+              <para style="terp_default_Bold_9">[[ (not ob['product']) and removeParentNode('blockTable') ]] [[ ob['location_name'] ]]</para>
             </td>
             <td>
               <para style="terp_default_Bold_9">
@@ -178,9 +178,7 @@
         <blockTable colWidths="38.0,366.0,78.0" style="Table10">
           <tr>
             <td>
-              <para style="terp_default_9">
-                <font color="white"> </font>
-              </para>
+              <para style="terp_tblheader_Details">[[ (not ob['product']) and removeParentNode('blockTable') ]]</para>
             </td>
             <td>
               <para style="terp_default_Bold_9">Total:</para>
@@ -192,7 +190,7 @@
         </blockTable>
       </section>
     </section>
-    <blockTable colWidths="71.0,334.0,77.0" repeatRows="1" style="Table2">
+    <blockTable colWidths="71.0,334.0,77.0" repeatRows="1" style="Table1">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Grand Total:</para>
@@ -207,7 +205,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="terp_default_2">
       <font color="white"> </font>
     </para>
   </story>
