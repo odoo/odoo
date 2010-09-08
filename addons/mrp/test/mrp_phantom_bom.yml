@@ -200,7 +200,7 @@
 -
   !python {model: procurement.order}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','=','confirmed')])
+    proc_ids = self.search(cr, uid, [('product_id','in',[ref('product_product_orange0'),ref('product_product_sugar0'),ref('product_product_water0')])])
     assert proc_ids, _('No Procurements!')
 -
   The scheduler runs.
