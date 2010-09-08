@@ -92,7 +92,7 @@ var myPrefObserver =
 
     createContactAddress: function()
 	{
-	  	document.getElementById("txtname").value = getPartnerName();
+	  	document.getElementById("txtselectpartner").value = getPartnerName();
         document.getElementById("txtcontactname").value = getSenderName();
         document.getElementById("txtstreet").value = getStreet();
         document.getElementById("txtstreet2").value = getStreet2();
