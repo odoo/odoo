@@ -122,10 +122,14 @@ class mailgate_thread(osv.osv):
         obj = self.pool.get('mailgate.message')
 
         for case in cases:
+            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
+            if not partner_id and case._name == 'res.partner':
+                partner_id = case.id
             data = {
                 'name': keyword,
                 'user_id': uid,
                 'model' : case._name,
+                'partner_id': partner_id,
                 'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'message_id': message_id,
@@ -153,7 +157,7 @@ class mailgate_thread(osv.osv):
                          case.user_id.address_id.email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
-                    'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False,
+                    'partner_id': partner_id,
                     'references': references,
                     'message_id': message_id,
                     'attachment_ids': [(6, 0, attachments)]
