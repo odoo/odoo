@@ -125,7 +125,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
                         'partner_phone' : opp.phone or (opp.partner_address_id and opp.partner_address_id.phone or False),
                         'partner_mobile' : opp.partner_address_id and opp.partner_address_id.mobile or False,
                         'priority': opp.priority,
-                        'opp_id': opp.id
+                        'opportunity_id': opp.id
                 }, context=context)
 
                 phonecall_obj.case_open(cr, uid, [new_case])

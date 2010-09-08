@@ -22,12 +22,15 @@
             </field>
 		</record>
 
-        <act_window name="Create Invoice"		    
-		    res_model="stock.invoice.onshipping"
-		    src_model="stock.picking"
-		    view_mode="form"
-		    target="new"        
-            key2="client_action_multi"    
-		    id="action_stock_invoice_onshipping"/>		
+        <record id="action_stock_invoice_onshipping" model="ir.actions.act_window">
+             <field name="name">Create Invoice</field>
+             <field name="res_model">stock.invoice.onshipping</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="view_stock_invoice_onshipping"/>
+             <field name="target">new</field>
+       </record>
+     
     </data>
 </openerp>

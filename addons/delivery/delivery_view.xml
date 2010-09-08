@@ -99,8 +99,8 @@
                     <field name="max_value" nolabel="1"/>
                     <field name="list_price"/>
                     <field name="standard_price" groups="base.group_extended"/>
-                    <field name="price_type"/>
-                    <field name="variable_factor"/>
+                    <field name="price_type"  />
+                    <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
                 </form>
             </field>
         </record>
