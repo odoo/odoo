@@ -143,7 +143,7 @@ class hr_employee(osv.osv):
 
     def onchange_user(self, cr, uid, ids, user_id, context=None):
         mail = self.pool.get('res.users').browse(cr,uid,user_id)
-        return {'value': {'work_email':mail}}          
+        return {'value': {'work_email':mail.user_email}}          
         
     def _get_photo(self, cr, uid, context=None):
         return open(os.path.join(
