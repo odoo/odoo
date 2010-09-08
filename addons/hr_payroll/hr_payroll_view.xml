@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <!-- Root Menus -->
-        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" groups="base.group_system,group_hr_payroll"/>
+        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" groups="base.group_system,group_hr_payroll" sequence="9"/>
         <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_system"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
@@ -84,12 +84,6 @@
             <field name="view_id" ref="hr_passport_tree"/>
             <field name="search_view_id" ref="view_hr_passport_filter"/>
         </record>
-        <menuitem id="passport_configure" parent="hr.menu_hr_configuration" name="Passport"/>
-        <menuitem
-            id="menu_action_hr_passport_tree"
-            action="action_hr_passport_tree"
-            parent="passport_configure"
-        />
         <!-- End Passport Views -->
 
         <!-- Employee View -->
