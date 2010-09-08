@@ -758,14 +758,45 @@ class account_fiscalyear(osv.osv):
     }
     _order = "date_start"
 
+    def _check_fiscal_year(self, cr, uid, ids, context=None):
+        current_fiscal_yr = self.browse(cr, uid, ids, context=context)[0]
+        obj_fiscal_ids = self.search(cr, uid, [('company_id', '=', current_fiscal_yr.company_id.id)], context=context)
+        obj_fiscal_ids.remove(ids[0])
+        data_fiscal_yr = self.browse(cr, uid, obj_fiscal_ids, context=context)
+
+#        # To check for gap between fiscal year
+#        old_latest_fy = self.search(cr, uid, [('date_stop', '<', datetime.strptime(current_fiscal_yr['date_start'], '%Y-%m-%d') ), ('company_id', '=', current_fiscal_yr.company_id.id), ('id', '!=', current_fiscal_yr.id )], order='date_stop desc', limit=1, context=context)
+#        data_old_latest_fy = self.browse(cr, uid, old_latest_fy, context=context)
+#        if data_old_latest_fy and data_old_latest_fy[0].company_id.id == current_fiscal_yr['company_id'].id and \
+#            datetime.strptime(data_old_latest_fy[0].date_stop, '%Y-%m-%d') + timedelta(days=1) != datetime.strptime(current_fiscal_yr['date_start'], '%Y-%m-%d'):
+#            return False
+#
+#        next_latest_fy = self.search(cr, uid, [('date_start', '>', datetime.strptime(current_fiscal_yr['date_stop'], '%Y-%m-%d') ), ('company_id', '=', current_fiscal_yr.company_id.id), ('id', '!=', current_fiscal_yr.id )], order='date_start', limit=1, context=context)
+#        data_next_latest_fy = self.browse(cr, uid, next_latest_fy, context=context)
+#        if data_next_latest_fy and data_next_latest_fy[0].company_id.id == current_fiscal_yr['company_id'].id and \
+#            datetime.strptime(current_fiscal_yr['date_stop'], '%Y-%m-%d') + timedelta(days=1) != datetime.strptime(data_next_latest_fy[0].date_start, '%Y-%m-%d'):
+#            return False
+
+        for old_fy in data_fiscal_yr:
+            if old_fy.company_id.id == current_fiscal_yr['company_id'].id:
+                # Condition to check if the current fiscal year falls in between any previously defined fiscal year
+                if old_fy.date_start <= current_fiscal_yr['date_start'] <= old_fy.date_stop or \
+                    old_fy.date_start <= current_fiscal_yr['date_stop'] <= old_fy.date_stop:
+                    return False
+                # Condition to check whether there exist any previously defined fiscal year falling in between the newly created fiscal year
+    #            elif current_fiscal_yr['date_start'] <= old_fy.date_start <= current_fiscal_yr['date_stop'] or current_fiscal_yr['date_start'] <= old_fy.date_stop <= current_fiscal_yr['date_stop']:
+#                    return False
+        return True
+
     def _check_duration(self,cr,uid,ids):
-        obj_fy=self.browse(cr,uid,ids[0])
+        obj_fy = self.browse(cr,uid,ids[0])
         if obj_fy.date_stop < obj_fy.date_start:
             return False
         return True
 
     _constraints = [
-        (_check_duration, 'Error ! The duration of the Fiscal Year is invalid. ', ['date_stop'])
+        (_check_duration, 'Error ! The duration of the Fiscal Year is invalid. ', ['date_stop']),
+        (_check_fiscal_year, 'Error ! This Fiscal Year overlaps an existing Fiscal Year',['date_start', 'date_stop'])
     ]
 
     def create_period3(self,cr, uid, ids, context={}):
