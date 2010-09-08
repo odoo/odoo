@@ -39,6 +39,7 @@ def check_ssl():
 
 class configmanager(object):
     def __init__(self, fname=None):
+        hasSSL = check_ssl()
         self.options = {
             'email_from':False,
             'interface': '',    # this will bind the server to all interfaces
@@ -81,8 +82,13 @@ class configmanager(object):
             'login_message': False,
             'list_db': True,
         }
+        if hasSSL:
+            self.options.update({
+                'secure_cert_file': 'server.cert',
+                'secure_pkey_file': 'server.pkey',
+                'smtp_ssl': False,
+            })
 
-        hasSSL = check_ssl()
 
         self._LOGLEVELS = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
                           for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC', 'NOTSET')])
@@ -107,7 +113,7 @@ class configmanager(object):
         parser.add_option("-u", "--update", dest="update",
                           help="update a module (use \"all\" for all modules)")
         parser.add_option("--cache-timeout", dest="cache_timeout",
-                          help="set the timeout for the cache system", default=100000, type="int")
+                          help="set the timeout for the cache system", type="int")
 
         # stops the server from launching after initialization
         parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False,
@@ -115,17 +121,15 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
-        parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
+        parser.add_option('--price_accuracy', dest='price_accuracy', type='int', help='specify the price accuracy')
 
         if hasSSL:
             group = optparse.OptionGroup(parser, "SSL Configuration")
-            group.add_option("-S", "--secure", dest="secure",
+            group.add_option("-S", "--secure", dest="secure", action='store_true',
                              help="launch server over https instead of http")
             group.add_option("--cert-file", dest="secure_cert_file",
-                              default="server.cert",
                               help="specify the certificate file for the SSL connection")
             group.add_option("--pkey-file", dest="secure_pkey_file",
-                              default="server.pkey",
                               help="specify the private key file for the SSL connection")
             parser.add_option_group(group)
 
@@ -140,12 +144,13 @@ class configmanager(object):
 
         # SMTP Group
         group = optparse.OptionGroup(parser, "SMTP Configuration")
-        group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
-        group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
-        group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
-        group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
-        group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
-        group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
+        group.add_option('--email-from', dest='email_from', help='specify the SMTP email address for sending email')
+        group.add_option('--smtp', dest='smtp_server', help='specify the SMTP server for sending email')
+        group.add_option('--smtp-port', dest='smtp_port', help='specify the SMTP port', type="int")
+        if hasSSL:
+            group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', help='specify the SMTP server support SSL or not')
+        group.add_option('--smtp-user', dest='smtp_user', help='specify the SMTP username for sending email')
+        group.add_option('--smtp-password', dest='smtp_password', help='specify the SMTP password for sending email')
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Database related options")
@@ -155,7 +160,7 @@ class configmanager(object):
         group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path")
         group.add_option("--db_host", dest="db_host", help="specify the database host")
         group.add_option("--db_port", dest="db_port", help="specify the database port", type="int")
-        group.add_option("--db_maxconn", dest="db_maxconn", default='64',
+        group.add_option("--db_maxconn", dest="db_maxconn", type='int',
                          help="specify the the maximum number of physical connections to posgresql")
         group.add_option("-P", "--import-partial", dest="import_partial",
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
@@ -181,7 +186,7 @@ class configmanager(object):
         parser.add_option_group(group)
 
         security = optparse.OptionGroup(parser, 'Security-related options')
-        security.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
+        security.add_option('--no-database-list', action="store_false", dest='list_db', help="disable the ability to return the list of databases")
         security.add_option('--enable-code-actions', action='store_true',
                             dest='server_actions_allow_code', default=False,
                             help='Enables server actions of state "code". Warning, this is a security risk.')
@@ -225,12 +230,12 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout', 'smtp_ssl', 
+                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
 
         if hasSSL:
-            keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
+            keys.extend(['secure_cert_file', 'secure_pkey_file'])
 
         for arg in keys:
             if getattr(opt, arg):
@@ -241,7 +246,7 @@ class configmanager(object):
                 'list_db', 'server_actions_allow_code']
 
         if hasSSL and not  self.options['secure']:
-            keys.append('secure')
+            keys.extend(['secure', 'smtp_ssl'])
 
         for arg in keys:
             if getattr(opt, arg) is not None:
@@ -345,7 +350,7 @@ class configmanager(object):
         if not contains_addons:
             raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, value))
 
-        
+
         setattr(parser.values, option.dest, res)
 
     def load(self):
