@@ -41,7 +41,7 @@
                     <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
                         <button name="%(stock.action_view_stock_inventory_line_split)d"
                             string="Split inventory lines" groups="base.group_extended"
-                            type="action" icon="gtk-justify-fill"/>
+                            type="action" icon="terp-stock_effects-object-colorize"/>
                 </form>
             </field>
         </record>
@@ -101,19 +101,20 @@
                                 <field name="state" />
                                 <button name="%(stock.action_view_stock_inventory_line_split)d"
                                     string="Split inventory lines" groups="base.group_extended"
-                                    type="action" icon="gtk-justify-fill" states="draft"/>
+                                    type="action" icon="terp-stock_effects-object-colorize" states="draft"/>
                             </tree>
                             <form string="Products ">
                                 <field colspan="4" context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
                                 <field  domain="[('usage','=','internal')]" name="location_id"/>
+                                <group colspan="2" col="4">
                                 <field name="prod_lot_id" groups="base.group_extended"/>
-                                <group colspan="2" col="3">
                                     <button name="%(stock.action_view_stock_inventory_line_split)d"
                                         string="Split inventory lines" groups="base.group_extended"
-                                        type="action" icon="gtk-justify-fill"/>
+                                        type="action" icon="terp-stock_effects-object-colorize"/>
                                 </group>
+                                
                             </form>
                         </field>
                     </page><page string="Posted Inventory" groups="base.group_extended">
@@ -133,7 +134,7 @@
                     <field name="state"/>
                     <group col="4" colspan="2">
                         <button name="action_done" states="draft" string="Confirm Inventory" type="object" icon="gtk-apply"/>
-                        <button name="action_cancel" states="cancel" string="Set to Draft" type="object" icon="gtk-cancel"/>
+                        <button name="action_cancel" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                         <button name="action_cancel_inventary" states="draft" string="Cancel Inventory" type="object" icon="gtk-cancel"/>
                     </group>
 
