@@ -2375,7 +2375,10 @@ class orm(orm_template):
                 for f in val:
                     res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
                     for record in res:
-                        record[f] = res2[record['id']]
+                        if res2 and (record['id'] in res2):
+                            record[f] = res2[record['id']]
+                        else:
+                            record[f] = []
 
 #for f in fields_post:
 #    # get the value of that field for all records/ids
