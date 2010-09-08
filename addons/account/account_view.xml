@@ -1577,9 +1577,9 @@
                     <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                     <field name="analytic_account_id"/>
                     <field name="partner_id"/>
-                    <field name="quantity"/>
                     <field name="debit" select="1"/>
                     <field name="credit" select="1"/>
+                     <field name="quantity"/>
                     <field name="date_maturity"/>
                 </form>
             </field>
@@ -1594,7 +1594,6 @@
                     <field name="name" select="1"/>
                     <field name="journal_id" select="1"/>
                     <field name="company_id" select="1" widget='selection' groups="base.group_multi_company"/>
-                    <field name="date" context="{'date': date}"/>
                     <field colspan="4" nolabel="1" name="lines_id" height="250" widget="one2many_list"/>
                     <separator string="Legend" colspan="4"/>
                     <field name="legend" colspan="4" nolabel="1"/>

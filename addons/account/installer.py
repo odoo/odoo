@@ -556,7 +556,7 @@ class account_installer(osv.osv_memory):
                         ir_values.set(cr, uid, key='default', key2=False, name=name, models =[('product.product',False)], value=[value])
 
             if 'date_start' in res and 'date_stop' in res:
-                f_ids = res_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id','=',res['company_id'])])
+                f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id','=',res['company_id'])])
                 if not f_ids:
                     name = code = res['date_start'][:4]
                     if int(name) != int(res['date_stop'][:4]):
@@ -568,11 +568,11 @@ class account_installer(osv.osv_memory):
                             'date_stop': res['date_stop'],
                             'company_id': res['company_id']
                            }
-                    period_id = res_obj.create(cr, uid, vals, context=context)
+                    fiscal_id = fy_obj.create(cr, uid, vals, context=context)
                     if res['period'] == 'month':
-                        res_obj.create_period(cr, uid, [period_id])
+                        fy_obj.create_period(cr, uid, [fiscal_id])
                     elif res['period'] == '3months':
-                        res_obj.create_period3(cr, uid, [period_id])
+                        fy_obj.create_period3(cr, uid, [fiscal_id])
 
 #        #fially inactive the demo chart of accounts
 #        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
