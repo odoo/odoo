@@ -159,6 +159,9 @@ class account_move_line(osv.osv):
         return context
 
     def _default_get(self, cr, uid, fields, context={}):
+    
+        if not context.get('journal_id', False) and not context.get('search_default_journal_id', False):
+            raise osv.except_osv(_('Warning !'), _('Select the journal to encode entry !'))
         
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
