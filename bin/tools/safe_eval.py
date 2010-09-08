@@ -264,6 +264,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'reduce': reduce,
                 'filter': filter,
                 'round': round,
+                'len': len
             }
     )
     return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
