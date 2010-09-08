@@ -73,7 +73,7 @@ class ir_rule(osv.osv):
         'global': True,
     }
     _sql_constraints = [
-        ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have at least one checked access right !'),
+        ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have at least one checked access right'),
     ]
     _constraints = [
         (_check_model_obj, 'Rules are not supported for osv_memory objects !', ['model_id'])

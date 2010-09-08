@@ -32,7 +32,7 @@ import traceback
 import logging
 from psycopg2 import IntegrityError, errorcodes
 from tools.func import wraps
-from tools.translate import _
+
 
 module_list = []
 module_class_list = {}
@@ -64,7 +64,7 @@ class osv_pool(netsvc.Service):
             except IntegrityError, inst:
                 for key in self._sql_error.keys():
                     if key in inst[0]:
-                        self.abortResponse(1, _('Constraint Error'), 'warning', _(self._sql_error[key]))
+                        self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
                 if inst.pgcode == errorcodes.NOT_NULL_VIOLATION:
                     msg = 'The operation cannot be completed, probably due to the following:\n' \
                           '- deletion: you may be trying to delete a record while other records still reference it\n' \

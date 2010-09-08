@@ -133,38 +133,22 @@ class GettextAlias(object):
             frame = inspect.stack()[1][0]
         except:
             return source
-        
-        def get_cr(fframe):
-            cr = fframe.f_locals.get('cr',False)
-            if not cr:
-                db = fframe.f_locals.get('dbname',False) or fframe.f_locals.get('db',False)
-                if db:
-                    cr = pooler.get_db(db).cursor()
-            return cr
-        
-        def get_lang(fframe,cr):
-            # if context passed in local params
-            lang = fframe.f_locals.get('context',{}).get('lang', False)
-            #if context found in kwargs
-            kwargs = fframe.f_locals.get('kwargs',False)
-            if kwargs and isinstance(kwargs,dict) and kwargs.get('context',False):
-                lang =  context.get('lang',False)
-            if cr and not lang:# get the user's preferred language
-                uid = fframe.f_locals.get('uid',False) or fframe.f_locals.get('user',False)
-                if uid:
-                    cr.execute("select context_lang from res_users where id=%s",(uid,))
-                    lang = cr.fetchone()[0]
-            return lang
-        
-        cr = get_cr(frame)
-        if not cr and frame.f_back: # if cursor not found get the cursor from the previous frame
-            cr = get_cr(frame.f_back)
-        lang = get_lang(frame,cr)
-        if not lang and frame.f_back: # if language not found get the language from the previous frame
-            lang = get_lang(frame.f_back,cr) 
-        if not (lang and cr):
+
+        cr = frame.f_locals.get('cr')
+        try:
+            lang = (frame.f_locals.get('context') or {}).get('lang', False)
+            if not (cr and lang):
+                args = frame.f_locals.get('args',False)
+                if args:
+                    lang = args[-1].get('lang',False)
+                    if frame.f_globals.get('pooler',False):
+                        cr = pooler.get_db(frame.f_globals['pooler'].pool_dic.keys()[0]).cursor()
+            if not (lang and cr):
+                return source
+        except:
             return source
-        cr.execute('select value from ir_translation where lang=%s and type in (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
+
+        cr.execute('select value from ir_translation where lang=%s and type IN (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
         res_trans = cr.fetchone()
         return res_trans and res_trans[0] or source
 _ = GettextAlias()
