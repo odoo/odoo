@@ -2169,7 +2169,8 @@ class orm(orm_template):
     _sql_constraints = []
     _table = None
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
-
+    __logger = logging.getLogger('orm')
+    __schema = logging.getLogger('orm.schema')
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2371,7 +2372,6 @@ class orm(orm_template):
                     cr.execute(update_query, (ss[1](val), key))
 
     def _check_removed_columns(self, cr, log=False):
-        logger = netsvc.Logger()
         # iterate on the database columns to drop the NOT NULL constraints
         # of fields which were required but have been removed (or will be added by another module)
         columns = [c for c in self._columns if not (isinstance(self._columns[c], fields.function) and not self._columns[c].store)]
@@ -2386,14 +2386,15 @@ class orm(orm_template):
 
         for column in cr.dictfetchall():
             if log:
-                logger.notifyChannel("orm", netsvc.LOG_DEBUG, "column %s is in the table %s but not in the corresponding object %s" % (column['attname'], self._table, self._name))
+                self.__logger.debug("column %s is in the table %s but not in the corresponding object %s",
+                                    column['attname'], self._table, self._name)
             if column['attnotnull']:
                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
-                logging.getLogger('schema').info("Table '%s': column '%s': dropped NOT NULL constraint" % (self._table, column['attname']))
+                self.__schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
+                                    self._table, column['attname'])
 
     def _auto_init(self, cr, context={}):
         store_compute = False
-        logger = netsvc.Logger()
         create = False
         todo_end = []
         self._field_create(cr, context=context)
@@ -2404,7 +2405,7 @@ class orm(orm_template):
                 cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'", "''")))
                 create = True
 
-                logging.getLogger('schema').info("Table '%s': created" % (self._table, ))
+                self.__schema.debug("Table '%s': created", self._table)
 
             cr.commit()
             if self._parent_store:
@@ -2416,13 +2417,18 @@ class orm(orm_template):
                     cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
                     cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
                     if 'parent_left' not in self._columns:
-                        logger.notifyChannel('orm', netsvc.LOG_ERROR, 'create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)' % (self._table, ))
-                        logging.getLogger('schema').info("Table '%s': added column '%s' with definition=%s" % (self._table, 'parent_left', 'INTEGER'))
+                        self.__logger.error('create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)',
+                                            self._table)
+                        self.__schema.debug("Table '%s': added column '%s' with definition=%s",
+                                            self._table, 'parent_left', 'INTEGER')
                     if 'parent_right' not in self._columns:
-                        logger.notifyChannel('orm', netsvc.LOG_ERROR, 'create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)' % (self._table, ))
-                        logging.getLogger('schema').info("Table '%s': added column '%s' with definition=%s" % (self._table, 'parent_right', 'INTEGER'))
+                        self.__logger.error('create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)',
+                                            self._table)
+                        self.__schema.debug("Table '%s': added column '%s' with definition=%s",
+                                            self._table, 'parent_right', 'INTEGER')
                     if self._columns[self._parent_name].ondelete != 'cascade':
-                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "The column %s on object %s must be set as ondelete='cascade'" % (self._parent_name, self._name))
+                        self.__logger.error("The column %s on object %s must be set as ondelete='cascade'",
+                                            self._parent_name, self._name)
 
                     cr.commit()
                     store_compute = True
@@ -2443,7 +2449,8 @@ class orm(orm_template):
                     if not cr.rowcount:
                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, logs[k]))
                         cr.commit()
-                        logging.getLogger('schema').info("Table '%s': added column '%s' with definition=%s" % (self._table, k, logs[k]))
+                        self.__schema.debug("Table '%s': added column '%s' with definition=%s",
+                                            self._table, k, logs[k])
 
             self._check_removed_columns(cr, log=False)
 
@@ -2472,9 +2479,8 @@ class orm(orm_template):
                         res = cr.fetchone()[0]
                         if not res:
                             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY (%s) REFERENCES "%s" ON DELETE SET NULL' % (self._obj, f._fields_id, f._table))
-                            logging.getLogger('schema').info("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE SET NULL" % (
+                            self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE SET NULL",
                                 self._obj, f._fields_id, f._table)
-                            )
                 elif isinstance(f, fields.many2many):
                     cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (f._rel,))
                     if not cr.dictfetchall():
@@ -2487,7 +2493,8 @@ class orm(orm_template):
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
                         cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
                         cr.commit()
-                        logging.getLogger('schema').info("Create table '%s': relation between '%s' and '%s'" % (f._rel, self._table, ref))
+                        self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
+                                            f._rel, self._table, ref)
                 else:
                     cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
                                "FROM pg_class c,pg_attribute a,pg_type t " \
@@ -2508,7 +2515,8 @@ class orm(orm_template):
                             cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % (self._table, f.oldname, k))
                             res = res_old
                             res[0]['attname'] = k
-                            logging.getLogger('schema').info("Table '%s': renamed column '%s' to '%s'" % (self._table, f.oldname, k))
+                            self.__schema.debug("Table '%s': renamed column '%s' to '%s'",
+                                                self._table, f.oldname, k)
 
                     if len(res) == 1:
                         f_pg_def = res[0]
@@ -2517,10 +2525,12 @@ class orm(orm_template):
                         f_pg_notnull = f_pg_def['attnotnull']
                         if isinstance(f, fields.function) and not f.store and\
                                 not getattr(f, 'nodrop', False):
-                            logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
+                            self.__logger.info('column %s (%s) in table %s removed: converted to a function !\n',
+                                               k, f.string, self._table)
                             cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (self._table, k))
                             cr.commit()
-                            logging.getLogger('schema').info("Table '%s': dropped column '%s' with cascade" % (self._table, k))
+                            self.__schema.debug("Table '%s': dropped column '%s' with cascade",
+                                                 self._table, k)
                             f_obj_type = None
                         else:
                             f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
@@ -2542,7 +2552,8 @@ class orm(orm_template):
                                 cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
                                 cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                 cr.commit()
-                                logging.getLogger('schema').info("Table '%s': column '%s' (type varchar) changed size from %s to %s" % (self._table, k, f_pg_size, f.size))
+                                self.__schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
+                                    self._table, k, f_pg_size, f.size)
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
                                     if f_pg_type != f_obj_type:
@@ -2552,7 +2563,8 @@ class orm(orm_template):
                                         cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
                                         cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                         cr.commit()
-                                        logging.getLogger('schema').info("Table '%s': column '%s' changed type from %s to %s" % (self._table, k, c[0], c[1]))
+                                        self.__schema.debug("Table '%s': column '%s' changed type from %s to %s",
+                                            self._table, k, c[0], c[1])
                                     break
 
                             if f_pg_type != f_obj_type:
@@ -2572,9 +2584,8 @@ class orm(orm_template):
                                     cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, k, newname))
                                     cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
                                     cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'", "''")))
-                                    logging.getLogger('schema').info("Table '%s': column '%s' has changed type (DB=%s, def=%s), data moved to column %s !" % (
+                                    self.__schema.debug("Table '%s': column '%s' has changed type (DB=%s, def=%s), data moved to column %s !",
                                         self._table, k, f_pg_type, f._type, newname)
-                                    )
 
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
@@ -2594,18 +2605,19 @@ class orm(orm_template):
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
                                     cr.commit()
-                                    logging.getLogger('schema').info("Table '%s': column '%s': added NOT NULL constraint" % (self._table, k))
+                                    self.__schema.debug("Table '%s': column '%s': added NOT NULL constraint",
+                                                        self._table, k)
                                 except Exception:
                                     msg = "Table '%s': unable to set a NOT NULL constraint on column '%s' !\n"\
                                         "If you want to have it, you should update the records and execute manually:\n"\
-                                        "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (
-                                        self._table, k, self._table, k)
-                                    logger.notifyChannel('schema', netsvc.LOG_WARNING, msg)
+                                        "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
+                                    self.__schema.warn(msg, self._table, k, self._table, k)
                                 cr.commit()
                             elif not f.required and f_pg_notnull == 1:
                                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
                                 cr.commit()
-                                logging.getLogger('schema').info("Table '%s': column '%s': dropped NOT NULL constraint" % (self._table, k))
+                                self.__schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
+                                                    self._table, k)
                             # Verify index
                             indexname = '%s_%s_index' % (self._table, k)
                             cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
@@ -2618,13 +2630,13 @@ class orm(orm_template):
                                     msg = "Table '%s': Adding (b-tree) index for text column '%s'."\
                                         "This is probably useless (does not work for fulltext search) and prevents INSERTs of long texts"\
                                         " because there is a length limit for indexable btree values!\n"\
-                                        "Use a search view instead if you simply want to make the field searchable." % (self._table, k, f._type)
-                                    logger.notifyChannel('schema', netsvc.LOG_WARNING, msg)
+                                        "Use a search view instead if you simply want to make the field searchable."
+                                    self.__schema.warn(msg, self._table, k, f._type)
                             if res2 and not f.select:
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
                                 cr.commit()
-                                msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore" % (self._table, k, f._type)
-                                logger.notifyChannel('schema', netsvc.LOG_WARNING, msg)
+                                msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore"
+                                self.__schema.warn(msg, self._table, k, f._type)
 
                             if isinstance(f, fields.many2one):
                                 ref = self.pool.get(f._obj)._table
@@ -2650,15 +2662,17 @@ class orm(orm_template):
                                             cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
                                             cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
                                             cr.commit()
-                                            logging.getLogger('schema').info("Table '%s': column '%s': XXX" % (self._table, k))
+                                            self.__schema.debug("Table '%s': column '%s': XXX",
+                                                self._table, k)
                     elif len(res) > 1:
-                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error, column %s->%s has multiple instances !" % (self._table, k))
+                        netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, "Programming error, column %s->%s has multiple instances !" % (self._table, k))
                     if not res:
                         if not isinstance(f, fields.function) or f.store:
                             # add the missing field
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
                             cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'", "''")))
-                            logging.getLogger('schema').info("Table '%s': added column '%s' with definition=%s" % (self._table, k, get_pg_type(f)[1]))
+                            self.__schema.debug("Table '%s': added column '%s' with definition=%s",
+                                self._table, k, get_pg_type(f)[1])
 
                             # initialize it
                             if not create and k in self._defaults:
@@ -2671,7 +2685,7 @@ class orm(orm_template):
                                 query = 'UPDATE "%s" SET "%s"=%s' % (self._table, k, ss[0])
                                 cr.execute(query, (ss[1](default),))
                                 cr.commit()
-                                logger.notifyChannel('data', netsvc.LOG_DEBUG, "Table '%s': setting default value of new column %s" % (self._table, k))
+                                netsvc.Logger().notifyChannel('data', netsvc.LOG_DEBUG, "Table '%s': setting default value of new column %s" % (self._table, k))
 
                             if isinstance(f, fields.function):
                                 order = 10
@@ -2688,21 +2702,22 @@ class orm(orm_template):
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
                                     cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (self._table, k, ref, f.ondelete))
-                                    logging.getLogger('schema').info("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s" % (
-                                        self._table, k, ref, f.ondelete))
+                                    self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
+                                        self._table, k, ref, f.ondelete)
                             if f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
                             if f.required:
                                 try:
                                     cr.commit()
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
-                                    logging.getLogger('schema').info("Table '%s': column '%s': added a NOT NULL constraint" % (self._table, k))
+                                    self.__schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
+                                        self._table, k)
                                 except Exception:
                                     msg = "WARNING: unable to set column %s of table %s not null !\n"\
                                         "Try to re-run: openerp-server.py --update=module\n"\
                                         "If it doesn't work, update records and execute manually:\n"\
-                                        "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (k, self._table, self._table, k)
-                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, msg)
+                                        "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
+                                    self.__logger.warn(msg, k, self._table, self._table, k)
                             cr.commit()
             for order, f, k in todo_update_store:
                 todo_end.append((order, self._update_store, (f, k)))
@@ -2756,9 +2771,9 @@ class orm(orm_template):
                 try:
                     cr.execute(sql_action['query'])
                     cr.commit()
-                    logging.getLogger('schema').info(sql_action['msg_ok'])
+                    self.__schema.debug(sql_action['msg_ok'])
                 except:
-                    logger.notifyChannel('schema', netsvc.LOG_WARNING, sql_action['msg_err'])
+                    self.__schema.warn(sql_action['msg_err'])
                     cr.rollback()
 
         if create:
