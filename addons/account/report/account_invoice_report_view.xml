@@ -78,8 +78,8 @@
                            icon="terp-gtk-media-pause"
                            domain="['|', ('state','=','proforma'),('state','=','proforma2')]"
                            help = "Pro-forma Invoices"/>
-                  <separator orientation="vertical"/>
-                   	<filter icon="terp-check" string="Customer"
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-check" string="Customer"
                             domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"
                             help="Customer Invoices And Refunds"/>
                     <filter icon="terp-check"
@@ -87,19 +87,19 @@
                             separator="1"
                             domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
                             help="Supplier Invoices And Refunds"/>
- 				  <separator orientation="vertical"/>
-	               <filter icon="terp-dolar" string="Invoice"
-	                        domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"
-	                        help="Customer And Supplier Invoices"/>
-	               <filter icon="terp-dolar_ok!"
-	                        string="Refund"
-	                        separator="1"
-	                        domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"
-	                        help="Customer And Supplier Refunds"/>
- 				  <separator orientation="vertical"/>
-                  <field name="partner_id"/>
-                  <field name="user_id" />
-                  <field name="categ_id" />
+                   <separator orientation="vertical"/>
+                   <filter icon="terp-dolar" string="Invoice"
+                            domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"
+                            help="Customer And Supplier Invoices"/>
+                   <filter icon="terp-dolar_ok!"
+                            string="Refund"
+                            separator="1"
+                            domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"
+                            help="Customer And Supplier Refunds"/>
+                   <separator orientation="vertical"/>
+                   <field name="partner_id"/>
+                   <field name="user_id" />
+                   <field name="categ_id" />
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
