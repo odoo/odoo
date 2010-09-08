@@ -103,7 +103,7 @@ class stock_return_picking(osv.osv_memory):
             return_history = {}
             for m_line in pick.move_lines:
                 return_history[m_line.id] = 0
-                for rec in m_line.move_stock_return_history:
+                for rec in m_line.move_history_ids2:
                     return_history[m_line.id] += rec.product_qty
             res['fields'].clear()
             arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
@@ -169,7 +169,7 @@ class stock_return_picking(osv.osv_memory):
             new_qty = data['return%s' % move.id]
             returned_qty = move.product_qty
     
-            for rec in move.move_stock_return_history:
+            for rec in move.move_history_ids2:
                 returned_qty -= rec.product_qty
     
             if returned_qty != new_qty:
@@ -182,7 +182,7 @@ class stock_return_picking(osv.osv_memory):
                 'picking_id':new_picking, 'state':'draft',
                 'location_id':new_location, 'location_dest_id':move.location_id.id,
                 'date':date_cur, 'date_planned':date_cur,})
-            move_obj.write(cr, uid, [move.id], {'move_stock_return_history':[(4,new_move)]})
+            move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
     
         if set_invoice_state_to_none:
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'})

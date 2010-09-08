@@ -21,13 +21,10 @@
 import os
 
 import pooler
-import osv
-import tools
-from tools import config
 from tools.translate import _
 from osv import osv, fields
 import logging
-
+import addons
 class abstract_quality_check(object):
     '''
         This Class is abstract class for all test
@@ -86,12 +83,10 @@ class abstract_quality_check(object):
         #The tests have to subscribe itselfs in this list, that contains
         #all the test that have to be performed.
         self.tests = []
-        self.list_folders = os.listdir(config['addons_path'] +
-            '/base_module_quality/')
-        for item in self.list_folders:
-            self.item = item
-            path = config['addons_path']+'/base_module_quality/'+item
-            if os.path.exists(path + '/' + item + '.py') and item not in ['report', 'wizard', 'security']:
+        module_path = addons.get_module_path('base_module_quality')
+        for item in os.listdir(module_path):
+            path = module_path + '/' + item
+            if os.path.isdir(path) and os.path.exists(path + '/' + item + '.py') and item not in ['report', 'wizard', 'security']:
                 item2 = 'base_module_quality.' + item +'.' + item
                 x_module = __import__(item2)
                 x_file = getattr(x_module, item)
@@ -216,6 +211,7 @@ class module_quality_check(osv.osv):
         So here the detail result is in html format and summary will be in text_wiki format.
         '''
         pool = pooler.get_pool(cr.dbname)
+        log = logging.getLogger('module.quality')
         obj_module = pool.get('ir.module.module')
         if not module_state:
             module_id = obj_module.search(cr, uid, [('name', '=', module_name)])
@@ -226,15 +222,22 @@ class module_quality_check(osv.osv):
         score_sum = 0.0
         ponderation_sum = 0.0
         create_ids = []
+        module_path = addons.get_module_path(module_name)
+        log.info('Performing quality tests for %s', module_name)
         for test in abstract_obj.tests:
-            ad = tools.config['addons_path']
-            if module_name == 'base':
-                ad = tools.config['root_path']+'/addons'
-            module_path = os.path.join(ad, module_name)
             val = test.quality_test()
-            if val.active:
+            if not val.active:
+                log.info('Skipping inactive step %s for %s', val.name, module_name)
+                continue
+
+            log.info('Performing step %s for %s', val.name, module_name)
+            # Get a separate cursor per test, so that an SQL error in one
+            # will not block the others.
+            cr2 = pooler.get_db(cr.dbname).cursor()
+
+            try:
                 if not val.bool_installed_only or module_state == "installed":
-                    val.run_test(cr, uid, str(module_path))
+                    val.run_test(cr2, uid, str(module_path))
                     if not val.error:
                         data = {
                             'name': val.name,
@@ -266,6 +269,12 @@ class module_quality_check(osv.osv):
                         'summary': _("The module has to be installed before running this test.")
                     }
                 create_ids.append((0, 0, data))
+                log.info('Finished quality test step')
+            except Exception, e:
+                log.exception("Could not finish test step %s due to %s", val.name, e)
+            finally:
+                cr2.rollback()
+                cr2.close()
         final_score = ponderation_sum and '%.2f' % (score_sum / ponderation_sum * 100) or 0
         data = {
             'name': module_name,
