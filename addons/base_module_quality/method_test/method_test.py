@@ -53,21 +53,21 @@ This test checks if the module classes are raising exception when calling basic 
                 pool.get(obj).search(cr, uid, [])
                 temp.append(_('Ok'))
                 ok_count += 1
-            except:
+            except Exception:
                 temp.append(_('Exception'))
                 ex_count += 1
             try:
                 pool.get(obj).fields_view_get(cr, uid,)
                 temp.append(_('Ok'))
                 ok_count += 1
-            except:
+            except Exception:
                 temp.append(_('Exception'))
                 ex_count += 1
             try:
                 pool.get(obj).read(cr, uid, [])
                 temp.append(_('Ok'))
                 ok_count += 1
-            except:
+            except Exception:
                 temp.append(_('Exception'))
                 ex_count += 1
             result_dict[obj] = temp
@@ -78,6 +78,7 @@ This test checks if the module classes are raising exception when calling basic 
         return None
 
     def get_result(self, dict_method):
+        # TODO: improve
         header = ('{| border="1" cellspacing="0" cellpadding="5" align="left" \n! %-40s \n! %-16s \n! %-20s \n! %-16s ', [_('Object Name'), 'search()', 'fields_view_get()', 'read()'])
         detail = ""
         if not self.error:
