@@ -282,7 +282,7 @@ class configmanager(object):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
-        keys = ['language', 'translate_out', 'translate_in', 'debug_mode', 'smtp_ssl'
+        keys = ['language', 'translate_out', 'translate_in', 'debug_mode', 'smtp_ssl',
                 'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
                 'list_db', 'server_actions_allow_code', 'xmlrpcs',
                 'test_file', 'test_disable', 'test_commit'
