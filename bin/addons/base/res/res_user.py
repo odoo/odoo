@@ -243,7 +243,7 @@ class users(osv.osv):
         'address_id': fields.many2one('res.partner.address', 'Company Address'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action'),
-        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action',help="Always Display Tips"),
+        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 
@@ -264,7 +264,7 @@ class users(osv.osv):
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
-        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to display tips on each menu action"),
+        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
 
     }
 
