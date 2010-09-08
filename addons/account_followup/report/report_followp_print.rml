@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Follow Up" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="42.0" y1="28.0" width="511" height="786"/>
     </pageTemplate>
@@ -136,7 +136,7 @@
           <para style="terp_tblheader_Details_Centre">Ref</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Maturity Date</para>
+          <para style="terp_tblheader_Details_Centre">Due Date</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Amount In Currency</para>
@@ -169,7 +169,7 @@
             <para style="terp_default_Centre_9">[[ line['ref'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ line['date_maturity'] ]]</para>
+            <para style="terp_default_Centre_9">[[ line['date_maturity'] and formatLang(line['date_maturity'], date=True) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line['amount_currency'] )]] [[ line['currency_id'] and line['currency_id'][1] or '' ]] </para>

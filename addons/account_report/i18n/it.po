@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-19 05:41+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-09-07 15:43+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-20 03:36+0000\n"
+"X-Launchpad-Export-Date: 2010-09-08 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_report
@@ -31,7 +31,7 @@ msgstr "Seleziona un file PDF"
 #. module: account_report
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nome modello non valido nella definizione dell'azione."
+msgstr "Nome del modello non valido nella definizione dell'azione."
 
 #. module: account_report
 #: view:account.report.report:0
@@ -41,7 +41,7 @@ msgstr "Operatori:"
 #. module: account_report
 #: field:account.report.report,parent_id:0
 msgid "Parent"
-msgstr "Genitore"
+msgstr "Padre"
 
 #. module: account_report
 #: field:account.report.report,disp_graph:0
@@ -61,7 +61,7 @@ msgstr "Altri"
 #. module: account_report
 #: view:account.report.report:0
 msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "Copy text   \t balance(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: rml:print.indicators:0
@@ -76,12 +76,12 @@ msgstr "Note"
 #. module: account_report
 #: view:account.report.report:0
 msgid "= Goodness Indicator Limit:"
-msgstr ""
+msgstr "= Limite Indicatore di bontà"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Very bad"
-msgstr "Pessima"
+msgstr "Pessimo"
 
 #. module: account_report
 #: field:account.report.history,val:0
@@ -92,13 +92,13 @@ msgstr "Valore"
 #. module: account_report
 #: view:account.report.report:0
 msgid "= Badness Indicator Limit:"
-msgstr ""
+msgstr "= Limite indicatore del Peggiore"
 
 #. module: account_report
 #: view:account.report.report:0
 #: selection:account.report.report,status:0
 msgid "Bad"
-msgstr "Cattiva"
+msgstr "Cattivo"
 
 #. module: account_report
 #: wizard_view:print.indicators.pdf,init:0
@@ -113,12 +113,12 @@ msgstr ""
 #. module: account_report
 #: field:account.report.report,badness_limit:0
 msgid "Badness Indicator Limit"
-msgstr ""
+msgstr "Limite indicatore del Peggiore"
 
 #. module: account_report
 #: selection:account.report.report,status:0
 msgid "Very Bad"
-msgstr "Pessima"
+msgstr "Pessimo"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.account_report_history_record_structure
@@ -128,17 +128,17 @@ msgstr "Storico dell'indicatore"
 #. module: account_report
 #: view:account.report.report:0
 msgid "credit(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "credit(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Report Amount:"
-msgstr ""
+msgstr "Report Importi:"
 
 #. module: account_report
 #: model:ir.actions.report.xml,name:account_report.fiscal_statements
 msgid "Fiscal Statements"
-msgstr ""
+msgstr "Dichiarazione Fiscale"
 
 #. module: account_report
 #: wizard_button:print.indicators,init,next:0
@@ -175,7 +175,7 @@ msgstr ""
 #: view:account.report.report:0
 #: selection:account.report.report,status:0
 msgid "Good"
-msgstr "Buona"
+msgstr "Buono"
 
 #. module: account_report
 #: view:account.report.history:0
@@ -185,12 +185,12 @@ msgstr "Report Storico Conti"
 #. module: account_report
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
+msgstr "XML non valido per la struttura della vista"
 
 #. module: account_report
 #: help:account.report.report,badness_limit:0
 msgid "This Value sets the limit of badness."
-msgstr "Questo valore è impostato al limite del peggiore."
+msgstr "Questo valore imposta il valore limite del peggiore."
 
 #. module: account_report
 #: wizard_field:print.indicators,init,select_base:0
@@ -200,7 +200,7 @@ msgstr "Seleziona il criterio"
 #. module: account_report
 #: view:account.report.report:0
 msgid "debit(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "debit(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -221,7 +221,7 @@ msgstr ""
 #: view:account.report.report:0
 #: selection:account.report.report,status:0
 msgid "Very Good"
-msgstr "Molto bene"
+msgstr "Molto Buono"
 
 #. module: account_report
 #: field:account.report.report,note:0
@@ -245,6 +245,9 @@ msgid ""
 "When the indicators are printed, if one indicator is set with this field to "
 "True, then it will display one more graphs with all its children in tree"
 msgstr ""
+"Quando gli 'indicatori saranno stampati, se un indicatore è impostato, con "
+"questo campo, a Vero, allora verranno visualizzati uno o più grafici con "
+"tuttii i figli nell'albero"
 
 #. module: account_report
 #: selection:account.report.report,status:0
@@ -356,7 +359,7 @@ msgstr ""
 #. module: account_report
 #: help:account.report.report,goodness_limit:0
 msgid "This Value sets the limit of goodness."
-msgstr ""
+msgstr "Questo valore imposta il limite della Bontà."
 
 #. module: account_report
 #: model:ir.actions.wizard,name:account_report.wizard_print_indicators
@@ -396,13 +399,13 @@ msgstr "Stampe per personale contabile"
 #. module: account_report
 #: field:account.report.report,goodness_limit:0
 msgid "Goodness Indicator Limit"
-msgstr ""
+msgstr "Limite dell'indicatore di bontà"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_other
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_other
 msgid "Other reports"
-msgstr "Modulo: account_report"
+msgstr "Altri Report"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -410,6 +413,9 @@ msgid ""
 "Note: The second arguement 'fiscalyear' and 'period' are optional "
 "arguements.If the value is -1,previous fiscalyear or period is considered."
 msgstr ""
+"Nota: Il secondo argomento 'Anno Fiscale' e 'Periodo' sono considerati "
+"opzionali. Se il valore è -1, sono presi in considerazione i precedenti Anni "
+"Fiscali e Periodo."
 
 #. module: account_report
 #: rml:print.indicators:0
@@ -420,7 +426,7 @@ msgstr ")"
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_fiscal
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_fiscal
 msgid "Fiscal Statements reporting"
-msgstr ""
+msgstr "Stampa dichiarazioni fiscali"
 
 #. module: account_report
 #: selection:print.indicators,init,select_base:0
@@ -436,7 +442,7 @@ msgstr "Indicatori"
 #. module: account_report
 #: wizard_view:print.indicators.pdf,init:0
 msgid "Print Indicators with PDF"
-msgstr ""
+msgstr "Stampa indicatori con PDF"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_indicator
@@ -459,7 +465,7 @@ msgstr "Seleziona il criterio"
 #. module: account_report
 #: view:account.report.report:0
 msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
-msgstr ""
+msgstr "tax_code(['ACCOUNT_TAX_CODE',],period)"
 
 #. module: account_report
 #: field:account.report.history,fiscalyear_id:0
@@ -526,8 +532,12 @@ msgid ""
 "    Indicators\n"
 "    "
 msgstr ""
+"Stampe contabili e finanziarie\n"
+"    Dichiarazioni fiscali\n"
+"    Indicatori\n"
+"    "
 
 #. module: account_report
 #: selection:account.report.report,type:0
 msgid "Fiscal Statement"
-msgstr ""
+msgstr "Dichiarazione Fiscale"

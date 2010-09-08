@@ -90,16 +90,22 @@ class base_setup_installer(osv.osv_memory):
         'crm': True,
         }
 
-    def _if_mrp(self, cr, uid, ids, context=None):
-        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
-               .view == 'simple':
-            return ['mrp_jit']
-        return None
-
     def _if_knowledge(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
                .view == 'simple':
             return ['document_ftp']
+        return None
+
+    def _if_misc_tools(self, cr, uid, ids, context=None):
+        interface = self.pool.get('res.users').browse(cr, uid, uid, context=context).view
+        if interface == 'simple' or interface =='extended' :
+            return ['profile_tools']
+        return None
+
+    def _if_account(self, cr, uid, ids, context=None):
+        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
+               .view == 'simple':
+            return ['account_voucher']
         return None
 
     def onchange_moduleselection(self, cr, uid, ids, *args):

@@ -53,7 +53,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         if pick.invoice_state == 'invoiced':
             raise osv.except_osv(_('UserError'), _('Invoice is already created.'))
         if pick.invoice_state == 'none':
-            raise osv.except_osv(_('UserError'), _('Invoice cannot be created from Picking.'))
+            raise osv.except_osv(_('UserError'), _('This picking does not require any invoicing.'))
         if pick.move_lines:
             usage = pick.move_lines[0].location_id.usage
 

@@ -459,9 +459,9 @@ class mrp_production(osv.osv):
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))], readonly=True),
+        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),
         'move_created_ids': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))], readonly=True),
+        'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))]),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
@@ -690,25 +690,25 @@ class mrp_production(osv.osv):
             produced_qty = production_qty
             
         for produced_product in production.move_created_ids2:
-            if (produced_product.scraped) or (produced_product.product_id.id<>production.product_id.id):
+            if (produced_product.scrapped) or (produced_product.product_id.id<>production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
 
         if production_mode in ['consume','consume_produce']:
             consumed_products = {}
             check = {}
-            scraped = map(lambda x:x.scraped,production.move_lines2).count(True)
+            scrapped = map(lambda x:x.scrapped,production.move_lines2).count(True)
             
             for consumed_product in production.move_lines2:
                 consumed = consumed_product.product_qty
-                if consumed_product.scraped:
+                if consumed_product.scrapped:
                     continue
                 if not consumed_products.get(consumed_product.product_id.id, False):
                     consumed_products[consumed_product.product_id.id] = consumed_product.product_qty
                     check[consumed_product.product_id.id] = 0
                 for f in production.product_lines:
                     if f.product_id.id == consumed_product.product_id.id:
-                        if (len(production.move_lines2) - scraped) > len(production.product_lines):
+                        if (len(production.move_lines2) - scrapped) > len(production.product_lines):
                             check[consumed_product.product_id.id] += consumed_product.product_qty
                             consumed = check[consumed_product.product_id.id]
                         rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed 
@@ -730,7 +730,7 @@ class mrp_production(osv.osv):
             stock_mov_obj.write(cr, uid, final_product_todo, vals)
             produced_products = {}
             for produced_product in production.move_created_ids2:
-                if produced_product.scraped:
+                if produced_product.scrapped:
                     continue
                 if not produced_products.get(produced_product.product_id.id, False):
                     produced_products[produced_product.product_id.id] = 0

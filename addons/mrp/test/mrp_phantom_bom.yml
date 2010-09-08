@@ -67,7 +67,11 @@
   !record {model: product.product, id: product_product_water0}:
     categ_id: product.cat1
     name: Water
-    procure_method: make_to_stock
+    procure_method: make_to_order
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_agrolait
+        min_qty: 2.0
     supply_method: buy
     type: consu
     uom_id: product_uom_litre0
@@ -196,14 +200,14 @@
 -
   !python {model: procurement.order}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','!=','confirmed')])
+    proc_ids = self.search(cr, uid, [('state','=','confirmed')])
     assert proc_ids, _('No Procurements!')
 -
   The scheduler runs.
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
-      search: "[('state','=','confirmed')]"
+      search: "[]"
 -
   I am checking Internal picking. I see one picking for Orange juice and its 
   stock moves for Oranges, Sugar and Water made correctly.
@@ -256,7 +260,7 @@
 -
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
-     picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Tang'),('state','=','assigned')])
+     picking_ids = pick_obj.search(cr, uid, [('type','=','in'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
             'delivery_date': partial.date         
@@ -274,4 +278,29 @@
                         'product_currency': m.product_currency
                     })
      pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
-
+-
+  Again the scheduler runs.
+-
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
+      search: "[]"
+-
+  I check my internal picking of "Orange Juice" is done.
+-
+  !python {model: stock.picking}: |
+    from tools.translate import _
+    pick_ids = self.search(cr, uid, [('type','=','internal'),('state','=','done')])
+    assert pick_ids, _('Internal Picking is not done yet!')
+-
+  I check my manufacturing order for "Orange Juice" is ready or not.
+-
+  !python {model: mrp.production}: |
+    from tools.translate import _
+    pick_ids = self.search(cr, uid, [('state','=','ready'),('id','=',ref('mrp_production_mo0'))])
+    assert pick_ids, _('Manufacturing order is not ready!')
+-
+  I start the production order.
+-
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
+    
+    

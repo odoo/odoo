@@ -50,8 +50,9 @@ class outlook_installer(osv.osv_memory):
         'outlook' : True,
         'name' : 'OpenERP-Outlook-PlugIn.zip',
         'doc_name' : 'Installation Guide to OpenERP Outlook Plug-in.doc',
-        'description' : """* Save the Outlook plug­-in.
-* Follow these steps to install outlook plug­in.
+        'description' : """
+* Save the Outlook plug­-in.
+* Follows these steps to install outlook plug­in.
 Pre-requirements :
     1. Python 2.6+ .
     2. Python for Windows extensions - PyWin32 this module for python must be installed for appropriate version of the Python.

@@ -51,7 +51,8 @@ class thunderbird_installer(osv.osv_memory):
         'thunderbird' : True,
         'name' : 'openerp_plugin.xpi',
         'pdf_name' : 'Installation Guide to OpenERP Thunderbid Plug-in.pdf',
-        'description' : """* Save the Thunderbird plug-­in.
+        'description' : """
+        * Save the Thunderbird plug-­in.
         * Follow these steps to install Thunderbird plug-­in.
             1. From Menu Bar of Thunderbird, open Tools ­> Add-ons.
             2. Click "Install" button.
