@@ -166,7 +166,7 @@ if tools.config['netrpc']:
 
 LST_SIGNALS = ['SIGINT', 'SIGTERM']
 if os.name == 'posix':
-    LST_SIGNALS.extend(['SIGUSR1','SIGQUIT'])
+    LST_SIGNALS.extend(['SIGQUIT'])
 
 
 SIGNALS = dict(
@@ -192,6 +192,25 @@ def handler(signum, _):
 
 for signum in SIGNALS:
     signal.signal(signum, handler)
+
+
+import threading
+import traceback
+def dumpstacks(signum, _):
+    # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
+
+    id2name = dict([(th.ident, th.name) for th in threading.enumerate()])
+    code = []
+    for threadId, stack in sys._current_frames().items():
+        code.append("\n# Thread: %s(%d)" % (id2name[threadId], threadId))
+        for filename, lineno, name, line in traceback.extract_stack(stack):
+            code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+            if line:
+                code.append("  %s" % (line.strip()))
+
+    logger.notifyChannel("dumpstacks", netsvc.LOG_INFO, "\n".join(code))
+
+signal.signal(signal.SIGUSR1, dumpstacks)
 
 if tools.config['pidfile']:
     fd = open(tools.config['pidfile'], 'w')
