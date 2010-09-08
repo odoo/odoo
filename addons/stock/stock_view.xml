@@ -119,7 +119,7 @@
                         </field>
                     </page><page string="Posted Inventory" groups="base.group_extended">
   						<field colspan="2" name="move_ids" nolabel="1"  readonly="1" widget="one2many_list">
-                                <tree colors="grey:scrapped == True" string="Stock Moves">
+                                <tree string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
