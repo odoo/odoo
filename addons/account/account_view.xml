@@ -1075,8 +1075,8 @@
                     <group col='10' colspan='4'>
                         <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
                         <separator orientation="vertical"/>
+                        <filter icon="terp-document-new" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
-                        <filter icon="terp-stock_symbol-selection" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                         <separator orientation="vertical"/>
                         <filter
                             icon="terp-dolar_ok!"
@@ -1333,7 +1333,7 @@
             <field name="arch" type="xml">
                 <search string="Search Move">
                     <group col='8' colspan='4'>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Journal Entries"/>
+                        <filter icon="terp-document-new" string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_zoom" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="Journal Entries to Review"/>
