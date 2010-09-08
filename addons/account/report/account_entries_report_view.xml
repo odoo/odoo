@@ -52,14 +52,14 @@
         <field name="arch" type="xml">
             <search string="Entries Analysis">
                 <group colspan="10" col="12">
-	                <filter icon="terp-go-year" string="This Year"
-	                		name="year"
-							domain="[('period_id','in','current_year')]"        				
-	                        help="Entries created in current year"/>
-	                <filter icon="terp-go-month" string="This Month"
-	                        name="period"
-	                        domain="[('period_id','in','current_period')]"
-	                        help="Entries created in current period"/>
+                    <filter icon="terp-go-year" string="This Year"
+                            name="year"
+                            domain="[('period_id','in','current_year')]"                        
+                            help="Entries created in current year"/>
+                    <filter icon="terp-go-month" string="This Month"
+                            name="period"
+                            domain="[('period_id','in','current_period')]"
+                            help="Entries created in current period"/>
                     <separator orientation="vertical"/>
                     <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft entries"/>
                     <filter string="Posted" icon="terp-camera_test" domain="[('state','=','posted')]" help = "Posted entries"/>
@@ -106,7 +106,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="date_created"/>
-                	<field name="date"/>
+                    <field name="date"/>
                     <field name="date_maturity"/>
                  </group>
             </search>
