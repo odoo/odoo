@@ -606,6 +606,7 @@
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
             <field name="type">form</field>
+            <field eval="12" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Internal Picking list">
                     <group colspan="4" col="6">
@@ -1880,7 +1881,7 @@
             <field name="name">Products</field>
             <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
             <field eval="True" name="object"/>
-        </record>    
+        </record>
 
 
         <record id="ir_act_product_location_open" model="ir.values">
@@ -1889,7 +1890,7 @@
             <field name="name">Open Products</field>
             <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
             <field eval="True" name="object"/>
-        </record>  
+        </record>
 
         <!-- Graph Views -->
         <!--  Products To Received Vs Planned -->
