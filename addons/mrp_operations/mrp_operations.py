@@ -75,7 +75,7 @@ class mrp_production_workcenter_line(osv.osv):
     _order = "sequence, date_planned"
     
     _columns = {
-       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Canceled'),('done','Finished')],'State', readonly=True,
+       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Cancelled'),('done','Finished')],'State', readonly=True,
                                  help="* When a work order is created it is set in 'Draft' state.\n" \
                                        "* When user sets work order in start mode that time it will be set in 'In Progress' state.\n" \
                                        "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pause' state.\n" \
@@ -93,7 +93,7 @@ class mrp_production_workcenter_line(osv.osv):
             string='Production State', readonly=True),
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product',
             readonly=True),
-       'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True),
+       'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True, store=True),
        'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='UOM',readonly=True),
     }
     
@@ -263,7 +263,7 @@ class mrp_production(osv.osv):
                     dt = dt_end
                 if context.get('__last_update'):
                     del context['__last_update']
-                if (wc.date_planned<dt.strftime('%Y-%m-%d %H:%M:%S')) or mini:
+                if (wc.date_planned < dt.strftime('%Y-%m-%d %H:%M:%S')) or mini:
                     self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
                         'date_planned':dt.strftime('%Y-%m-%d %H:%M:%S')
                     }, context=context, update=False)

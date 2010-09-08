@@ -28,9 +28,7 @@ class stock_partial_move(osv.osv_memory):
     _description = "Partial Move"
     _columns = {
         'date': fields.datetime('Date', required=True),
-        'partner_id': fields.many2one('res.partner',string="Partner"),
         'type': fields.char("Type", size=3),
-        'address_id': fields.many2one('res.partner.address', 'Address', help="Address where goods are to be delivered"),
      }
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -66,12 +64,6 @@ class stock_partial_move(osv.osv_memory):
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
                     	<field name="date"  colspan="2"/>
-                     <group colspan="4" attrs="{'invisible':[('type','=','in')]}">
-                        <field name="partner_id"  attrs="{'required':[('type','!=','in')]}" />
-                        <field name="address_id"  attrs="{'required':[('type','!=','in')]}"/>
-                        <field name="type" invisible="1"/>
-                        <newline/>
-                        </group>
                         <separator colspan="4" string="Move Detail"/>
                         """
         _moves_fields = result['fields']
@@ -164,21 +156,7 @@ class stock_partial_move(osv.osv_memory):
             if m.state in ('done', 'cancel'):
                 continue
             res['type'] = m.picking_id and m.picking_id.type or ''
-            address_ids = list(set([(pick.address_id and pick.address_id.id, pick.address_id and pick.address_id.partner_id and  pick.address_id.partner_id.id) for pick in move_obj.browse(cr, uid, move_ids)]))
-            address_ids1 = list(set([(pick.address_id and pick.address_id.id, pick.address_id and pick.address_id.partner_id and  pick.address_id.partner_id.id) for pick in move_obj.browse(cr, uid, move_ids) if pick.address_id]))
-            if len(address_ids1) == 1:
-                if m.picking_id and m.picking_id.type=='out':
-                    res['address_id'] = address_ids[0][0] or False
-                    res['partner_id'] = address_ids[0][1] or False
-            if  m.picking_id and m.picking_id.type=='in':
-                    res['partner_id'] = m.company_id.partner_id.id or False
-                    if  m.company_id.partner_id:
-                        address_default = [add.id for add in  m.company_id.partner_id.address if add.type=='default']
-                        address_delivery = [add.id for add in  m.company_id.partner_id.address if add.type=='delivery']
-                    if len(address_delivery):
-                        res['address_id'] =  address_delivery and address_delivery[0] or False
-                    else:
-                        res['address_id'] =  address_default and address_default[0] or False
+    
 
             if 'move%s_product_id'%(m.id) in fields:
                 res['move%s_product_id'%(m.id)] = m.product_id.id
@@ -230,8 +208,6 @@ class stock_partial_move(osv.osv_memory):
         move_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context)
         partial_datas = {
-            'partner_id' : partial.partner_id and partial.partner_id.id or False,
-            'address_id' : partial.address_id and partial.address_id.id or False,
             'delivery_date' : partial.date
         }
         for m in move_obj.browse(cr, uid, move_ids):

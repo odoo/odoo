@@ -467,9 +467,8 @@ class mrp_production(osv.osv):
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
-        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
-        'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
-
+        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder', store=True),
+        'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder', store=True),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -690,25 +689,25 @@ class mrp_production(osv.osv):
             produced_qty = production_qty
             
         for produced_product in production.move_created_ids2:
-            if (produced_product.scraped) or (produced_product.product_id.id<>production.product_id.id):
+            if (produced_product.scrapped) or (produced_product.product_id.id<>production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
 
         if production_mode in ['consume','consume_produce']:
             consumed_products = {}
             check = {}
-            scraped = map(lambda x:x.scraped,production.move_lines2).count(True)
+            scrapped = map(lambda x:x.scrapped,production.move_lines2).count(True)
             
             for consumed_product in production.move_lines2:
                 consumed = consumed_product.product_qty
-                if consumed_product.scraped:
+                if consumed_product.scrapped:
                     continue
                 if not consumed_products.get(consumed_product.product_id.id, False):
                     consumed_products[consumed_product.product_id.id] = consumed_product.product_qty
                     check[consumed_product.product_id.id] = 0
                 for f in production.product_lines:
                     if f.product_id.id == consumed_product.product_id.id:
-                        if (len(production.move_lines2) - scraped) > len(production.product_lines):
+                        if (len(production.move_lines2) - scrapped) > len(production.product_lines):
                             check[consumed_product.product_id.id] += consumed_product.product_qty
                             consumed = check[consumed_product.product_id.id]
                         rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed 
@@ -730,7 +729,7 @@ class mrp_production(osv.osv):
             stock_mov_obj.write(cr, uid, final_product_todo, vals)
             produced_products = {}
             for produced_product in production.move_created_ids2:
-                if produced_product.scraped:
+                if produced_product.scrapped:
                     continue
                 if not produced_products.get(produced_product.product_id.id, False):
                     produced_products[produced_product.product_id.id] = 0
