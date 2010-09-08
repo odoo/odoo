@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
 
 class stock_move_track(osv.osv_memory):
     _name = "stock.move.track"
@@ -220,7 +219,6 @@ class split_in_production_lot(osv.osv_memory):
         @return:
         """
         prodlot_obj = self.pool.get('stock.production.lot')
-        ir_sequence_obj = self.pool.get('ir.sequence')
         move_obj = self.pool.get('stock.move')
         new_move = []
         for data in self.browse(cr, uid, ids):

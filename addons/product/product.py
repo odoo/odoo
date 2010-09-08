@@ -21,13 +21,10 @@
 
 from osv import osv, fields
 import decimal_precision as dp
-import pooler
 
 import math
-import logging
 from _common import rounding
 
-from tools import config
 from tools.translate import _
 
 def is_pair(x):

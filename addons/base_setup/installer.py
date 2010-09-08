@@ -19,7 +19,6 @@
 #
 ##############################################################################
 from osv import fields, osv
-import netsvc
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'

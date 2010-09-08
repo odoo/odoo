@@ -19,11 +19,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
-from datetime import datetime, timedelta
+from datetime import datetime
 from osv import osv, fields
 from tools.translate import _
-import ir
 import netsvc
 import time
 
@@ -250,7 +248,6 @@ class mrp_bom(osv.osv):
         @param properties: List of related properties.
         @return: False or BoM id.
         """
-        bom_result = False
         cr.execute('select id from mrp_bom where product_id=%s and bom_id is null order by sequence', (product_id,))
         ids = map(lambda x: x[0], cr.fetchall())
         max_prop = 0
@@ -681,7 +678,6 @@ class mrp_production(osv.osv):
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id)
         
-        raw_product_todo = []
         final_product_todo = []
 
         produced_qty = 0
@@ -800,7 +796,6 @@ class mrp_production(osv.osv):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
-        move_ids = []
         self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 

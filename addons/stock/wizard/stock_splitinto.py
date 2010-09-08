@@ -69,7 +69,7 @@ class stock_split_into(osv.osv_memory):
                     'state': move.state,
                     'product_uos': move.product_uom.id
                 }
-                    current_move = move_obj.copy(cr, uid, move.id, default_val)
+                    move_obj.copy(cr, uid, move.id, default_val)
         return {}
 stock_split_into()
 

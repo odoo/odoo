@@ -21,7 +21,6 @@
 
 
 from osv import fields,osv
-import time
 import tools
 
 class report_document_user(osv.osv):

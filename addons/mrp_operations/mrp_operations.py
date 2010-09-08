@@ -21,7 +21,6 @@
 
 from osv import fields
 from osv import osv
-import ir
 import datetime
 import netsvc
 import time
@@ -135,8 +134,6 @@ class mrp_production_workcenter_line(osv.osv):
         result = super(mrp_production_workcenter_line, self).write(cr, uid, ids, vals, context=context)
         prod_obj = self.pool.get('mrp.production')
         if vals.get('date_planned', False) and update:
-            pids = {}
-            pids2 = {}
             for prod in self.browse(cr, uid, ids, context=context):
                 if prod.production_id.workcenter_lines:
                     dstart = min(vals['date_planned'], prod.production_id.workcenter_lines[0]['date_planned'])
@@ -496,25 +493,25 @@ class mrp_operations_operation(osv.osv):
                 production_obj=self.pool.get('mrp.production').browse(cr,uid,vals['production_id'])
                 wc_op_id.append(self.pool.get('mrp.production.workcenter.line').create(cr,uid,{'production_id':vals['production_id'],'name':production_obj.product_id.name,'workcenter_id':vals['workcenter_id']}))
             if code.start_stop=='start':
-                tmp=self.pool.get('mrp.production.workcenter.line').action_start_working(cr,uid,wc_op_id)
+                self.pool.get('mrp.production.workcenter.line').action_start_working(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_start_working', cr)
                 
 
             if code.start_stop=='done':
-                tmp=self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,wc_op_id)
+                self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_done', cr)
                 self.pool.get('mrp.production').write(cr,uid,vals['production_id'],{'date_finnished':DateTime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
             if code.start_stop=='pause':
-                tmp=self.pool.get('mrp.production.workcenter.line').action_pause(cr,uid,wc_op_id)
+                self.pool.get('mrp.production.workcenter.line').action_pause(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_pause', cr)
 
             if code.start_stop=='resume':
-                tmp=self.pool.get('mrp.production.workcenter.line').action_resume(cr,uid,wc_op_id)
+                self.pool.get('mrp.production.workcenter.line').action_resume(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_resume', cr)
 
             if code.start_stop=='cancel':
-                tmp=self.pool.get('mrp.production.workcenter.line').action_cancel(cr,uid,wc_op_id)
+                self.pool.get('mrp.production.workcenter.line').action_cancel(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_cancel', cr)
 
         if not self.check_operation(cr, uid, vals):
