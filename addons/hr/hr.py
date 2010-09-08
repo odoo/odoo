@@ -122,7 +122,7 @@ class hr_employee(osv.osv):
         'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail'),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
-        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True,help='It is linked to Department',readonly=True),
+        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True, readonly=True, help="It is linked with manager of Department"),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel','category_id','emp_id','Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
@@ -130,16 +130,20 @@ class hr_employee(osv.osv):
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo')
     }
-    def onchange_company(self, cr, uid, ids, company, context=None):    
-        return {'value': {'address_id': company}}   
-        
-    def onchange_department(self, cr, uid, ids, department_id, context=None):  
-        return {'value': {'parent_id':department_id}}         
-        
-    def onchange_user(self, cr, uid, ids, user_id, context=None):  
-        user_obj = self.pool.get('res.users')
-        t = user_obj.browse(cr,uid,user_id)
-        return {'value': {'work_email':t.user_email}}             
+
+    def onchange_company(self, cr, uid, ids, company, context=None):
+        company_id = self.pool.get('res.company').browse(cr,uid,company)
+        for address in company_id.partner_id.address:
+            return {'value': {'address_id': address.id}}
+        return {'value':{}}
+
+    def onchange_department(self, cr, uid, ids, department_id, context=None):
+        manager = self.pool.get('hr.department').browse(cr, uid, department_id).manager_id.id
+        return {'value': {'parent_id':manager or False}}
+
+    def onchange_user(self, cr, uid, ids, user_id, context=None):
+        mail = self.pool.get('res.users').browse(cr,uid,user_id)
+        return {'value': {'work_email':mail}}          
         
     def _get_photo(self, cr, uid, context=None):
         return open(os.path.join(
