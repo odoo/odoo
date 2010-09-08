@@ -23,20 +23,6 @@ import time
 from osv import fields, osv
 from tools.translate import _
 
-class account_move_line_reconcile_prompt(osv.osv_memory):
-    """
-    Asks user he wants to reconcile entries or not.
-    """
-    _name = 'account.move.line.reconcile.prompt'
-    _description = 'Account move line reconcile'
-    _columns = {
-    }
-
-    def ask_reconcilation(self, cr, uid, ids, context):
-        return self.pool.get('account.move.line.reconcile').partial_check(cr, uid, ids, context)
-
-account_move_line_reconcile_prompt()
-
 class account_move_line_reconcile(osv.osv_memory):
     """
     Account move line reconcile wizard, it checks for the write off the reconcile entry or directly reconcile.
@@ -62,38 +48,6 @@ class account_move_line_reconcile(osv.osv_memory):
         if 'writeoff' in fields:
             res.update({'writeoff':data['writeoff']})
         return res
-
-    def partial_check(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        data = self.trans_rec_get(cr, uid, ids, context)
-        if context is None:
-            context = {}
-        if data['writeoff'] == 0:
-            model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_account_move_line_reconcile_full')], context=context)
-            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-            return {
-                'name': _('Reconcile'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'account.move.line.reconcile',
-                'views': [(resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                }
-        else :
-            model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_account_move_line_reconcile_partial')], context=context)
-            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-            return {
-                'name': _('Reconcile'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'account.move.line.reconcile',
-                'views': [(resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                }
 
     def trans_rec_get(self, cr, uid, ids, context=None):
         account_move_line_obj = self.pool.get('account.move.line')
