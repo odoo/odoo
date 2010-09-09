@@ -28,7 +28,7 @@ class stock_fill_inventory(osv.osv_memory):
     _columns = {
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'recursive': fields.boolean("Include children",help="If checked, products contained in child locations of selected location will be included as well."),
-        'set_stock_zero': fields.boolean("Set to zero",help="If checked, all product quantities will be set to zero to help ensure a real physical inventory is done and when set all inventory lines that are added to the inventory should have zero as quantity"),
+        'set_stock_zero': fields.boolean("Set to zero",help="If checked, all product quantities will be set to zero to help ensure a real physical inventory is done"),
     }
 
     def fill_inventory(self, cr, uid, ids, context):
