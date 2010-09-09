@@ -44,39 +44,24 @@ class stock_fill_inventory(osv.osv_memory):
         location_obj = self.pool.get('stock.location')
         product_obj = self.pool.get('product.product')
         stock_location_obj = self.pool.get('stock.location')
-        for fill_inventory in self.browse(cr, uid, ids):
-            res = {}
-            res_location = {}
-            if fill_inventory.recursive :
-                location_ids = location_obj.search(cr, uid, [('location_id',
-                                 'child_of', fill_inventory.location_id.id)])
-                for location in location_ids :
-                    res = location_obj._product_get(cr, uid, location)
-                    res_location[location] = res
-            if fill_inventory.set_stock_zero:
-                loc = fill_inventory.location_id.id
-                cr.execute('select distinct location_id,product_id \
-                            from stock_inventory_line \
-                            where inventory_id=%s', (context['active_id'],))
-                inv = cr.fetchall()
-                cr.execute('select distinct product_id from stock_move where \
-                            location_dest_id=%s or location_id=%s', (loc, loc,))
-                stock = cr.fetchall()
-                for s in stock:
-                    if (loc, s[0]) not in inv:
-                        p = product_obj.browse(cr, uid, s[0])
-                        inventory_line_obj.create(cr, uid, {
-                            'inventory_id': context['active_id'],
-                            'location_id': loc,
-                            'product_id': s[0],
-                            'product_uom': p.uom_id.id,
-                            'product_qty': 0.0,
-                            })                    
-            else:
-                context.update({'compute_child': False})
-                res = location_obj._product_get(cr, uid,
-                            fill_inventory.location_id.id, context=context)
-                res_location[fill_inventory.location_id.id] = res
+        if ids and len(ids): 
+            ids = ids[0]
+        else:
+             return {}    
+        fill_inventory = self.browse(cr, uid, ids)
+        res = {}
+        res_location = {}
+        if fill_inventory.recursive :
+            location_ids = location_obj.search(cr, uid, [('location_id',
+                             'child_of', fill_inventory.location_id.id)])
+            for location in location_ids :
+                res = location_obj._product_get(cr, uid, location)
+                res_location[location] = res
+        else:
+            context.update({'compute_child': False})
+            res = location_obj._product_get(cr, uid,
+                        fill_inventory.location_id.id, context=context)
+            res_location[fill_inventory.location_id.id] = res
     
         product_ids = []
         for location in res_location.keys():
@@ -85,9 +70,11 @@ class stock_fill_inventory(osv.osv_memory):
                 prod = product_obj.browse(cr, uid, [product_id])[0]
                 uom = prod.uom_id.id
                 context.update(uom=uom, compute_child=False)
-                amount = stock_location_obj._product_get(cr, uid,
+                if fill_inventory.set_stock_zero:
+                    amount = 0
+                else:    
+                    amount = stock_location_obj._product_get(cr, uid,
                          location, [product_id], context=context)[product_id]
-
                 if(amount):
                     line_ids=inventory_line_obj.search(cr, uid,
                         [('inventory_id', '=', context['active_ids']),
