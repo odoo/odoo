@@ -301,12 +301,12 @@
                         />
                         <separator orientation="vertical"/>
                         <field name="name" string="Opportunity"/>
+                        <field name="partner_id"/>
                         <field name="user_id">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
                                 help="Unassigned Opportunities" />
                         </field>
-                        <field name="email_from"/>
                         <field name="section_id"
                             default="context.get('section_id', False)"
                             context="{'invisible_section': False}"
