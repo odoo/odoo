@@ -144,7 +144,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         # Searching for action rules
         cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
                         LEFT JOIN ir_model model on (model.id = rule.model_id) \
-                        where active")
+                        WHERE active")
         res = cr.fetchall()
         # Check if any rule matching with current object
         for obj_name, rule_id in res:
