@@ -29,6 +29,11 @@ import re
 import time
 import tools
 
+
+def get_datetime(date_field):
+    return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
+
+
 class base_action_rule(osv.osv):
     """ Base Action Rules """
 
@@ -216,24 +221,24 @@ the rule to mark CC(mail to any other person defined in actions)."),
             model_pool = self.pool.get(model)
             last_run = False
             if rule.last_run:
-                last_run = datetime.strptime(rule.last_run[:19], '%Y-%m-%d %H:%M:%S')
+                last_run = get_datetime(rule.last_run)
             now = datetime.now()
             for obj_id in model_pool.search(cr, uid, [], context=context):
                 obj = model_pool.browse(cr, uid, obj_id, context=context)
                 # Calculate when this action should next occur for this object
                 base = False
                 if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
-                    base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                    base = get_datetime(obj.create_date)
                 elif rule.trg_date_type=='action_last' and hasattr(obj, 'create_date'):
                     if hasattr(obj, 'date_action_last') and obj.date_action_last:
-                        base = datetime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
+                        base = get_datetime(obj.date_action_last)
                     else:
-                        base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                        base = get_datetime(obj.create_date)
                 elif rule.trg_date_type=='deadline' and hasattr(obj, 'date_deadline') \
                                 and obj.date_deadline:
-                    base = datetime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
+                    base = get_datetime(obj.date_deadline)
                 elif rule.trg_date_type=='date' and hasattr(obj, 'date') and obj.date:
-                    base = datetime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
+                    base = get_datetime(obj.date)
                 if base:
                     fnct = {
                         'minutes': lambda interval: timedelta(minutes=interval), 
