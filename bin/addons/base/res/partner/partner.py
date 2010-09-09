@@ -305,7 +305,10 @@ class res_partner_address(osv.osv):
                 if r['name'] and (r['city'] or r['country_id']):
                     addr += ', '
                 addr += (r['country_id'] and r['country_id'][1] or '') + ' ' + (r['city'] or '') + ' '  + (r['street'] or '')
-                res.append((r['id'], addr.strip() or '/'))
+                if context.get('contact_display', 'contact')=='partner_address':
+                    res.append((r['id'], r['partner_id'][1] +','+ addr.strip() or '/'))
+                else:
+                    res.append((r['id'], addr.strip() or '/'))
         return res
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -313,7 +316,7 @@ class res_partner_address(osv.osv):
             args=[]
         if not context:
             context={}
-        if context.get('contact_display', 'contact')=='partner':
+        if context.get('contact_display', 'contact')=='partner ' or context.get('contact_display', 'contact')=='partner_address '  :
             ids = self.search(cr, user, [('partner_id',operator,name)], limit=limit, context=context)
         else:
             if not name:
