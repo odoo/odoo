@@ -2344,14 +2344,19 @@ class stock_inventory(osv.osv):
         """
         if context is None:
             context = {}
+
+        # to perform the correct inventory corrections we need analyze stock location by
+        # location, never recursively, so we use a special context
+        product_context = dict(context, compute_child=False)
+
+        location_obj = self.pool.get('stock.location')
         for inv in self.browse(cr, uid, ids):
             move_ids = []
             move_line = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-
-                amount = self.pool.get('stock.location')._product_get(cr, uid, line.location_id.id, [pid], {'uom': line.product_uom.id})[pid]
-                #TOCHECK: Why put restriction like new inventory qty should greater available qty ?
+                product_context.update(uom=line.product_uom.id)
+                amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
