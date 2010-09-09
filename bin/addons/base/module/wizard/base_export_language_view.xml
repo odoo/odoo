@@ -4,25 +4,33 @@
 
         <record id="wizard_lang_export" model="ir.ui.view">
             <field name="name">Export a Translation File</field>
-            <field name="model">base.export.language</field>
+            <field name="model">base.language.export</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form col="3" string="Export language">
+                <form string="Export language">
                     <notebook>
                         <page string="Export Data">
-                            <group col="2" colspan="4" fill="0" states="choose">
-                                <separator colspan="2" string="Export translation file"/>
+                            <group colspan="4" states="choose">
+                                <separator colspan="4" string="Export translation file"/>
                                 <field name="lang" required="1"/>
                                 <field name="format" required="1"/>
                                 <field height="200" name="modules" nolabel="1" colspan="4"/>
                                 <field invisible="1" name="state"/>
                             </group>
-                            <group col="1" fill="0" states="get">
-                                <separator string="Export done"/>
-                                <field name="name" invisible="1"/>
-                                <field name="data" nolabel="1" readonly="1" fieldname="name"/>
-                                <field height="80" name="advice" nolabel="1"/>
+                            <group colspan="4" states="get">
+                                <separator string="Export done" colspan="4"/>
+                                <field name="name" invisible="1" colspan="4"/>
+                                <field name="data" nolabel="1" readonly="1" fieldname="name" colspan="4"/>
+                                <field height="80" name="advice" nolabel="1" colspan="4"/>
                             </group>
+                            <separator string="" colspan="4"/>
+                                <group col="2" colspan="2">
+                                </group>
+                                <group col="2" colspan="2">
+                                    <button icon="gtk-cancel" name="act_cancel" special="cancel" states="choose" string="_Close" type="object"/>
+                                    <button icon="gtk-ok" name="act_getfile" states="choose" string="_Export" type="object"></button>
+                                    <button icon="gtk-close" name="act_destroy" special="cancel" states="get" string="_Close" type="object"/>
+                                </group>    
                         </page>
                         <page string="Help">
                             <label align="0.0" colspan="4" string="The official translations pack of all OpenERP/OpenObjects module are managed through launchpad. We use their online interface to synchronize all translations efforts."/>
@@ -31,12 +39,6 @@
                             <label align="0.0" colspan="4" string="https://translations.launchpad.net/openobject"/>
                         </page>
                     </notebook>
-
-                    <group col="2" colspan="3" fill="0">
-                        <button icon="gtk-cancel" name="act_cancel" special="cancel" states="choose" string="Close" type="object"/>
-                        <button icon="gtk-ok" name="act_getfile" states="choose" string="Get file" type="object"></button>
-                        <button icon="gtk-close" name="act_destroy" special="cancel" states="get" string="Close" type="object"/>
-                    </group>
                 </form>
             </field>
         </record>
@@ -44,7 +46,7 @@
         <record id="action_wizard_lang_export" model="ir.actions.act_window">
             <field name="name">Export a Translation File</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">base.export.language</field>
+            <field name="res_model">base.language.export</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
