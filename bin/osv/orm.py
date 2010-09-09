@@ -3062,7 +3062,7 @@ class orm(orm_template):
                     field_val = False
                     if f in self._columns.keys():
                         ftype = self._columns[f]._type
-                    elif key in self._inherit_fields.keys():
+                    elif f in self._inherit_fields.keys():
                         ftype = self._inherit_fields[f][2]._type
                     else:
                         continue
