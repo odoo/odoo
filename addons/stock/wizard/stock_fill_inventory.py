@@ -70,12 +70,11 @@ class stock_fill_inventory(osv.osv_memory):
                 prod = product_obj.browse(cr, uid, [product_id])[0]
                 uom = prod.uom_id.id
                 context.update(uom=uom, compute_child=False)
-                if fill_inventory.set_stock_zero:
-                    amount = 0
-                else:    
-                    amount = stock_location_obj._product_get(cr, uid,
+                amount = stock_location_obj._product_get(cr, uid,
                          location, [product_id], context=context)[product_id]
                 if(amount):
+                    if fill_inventory.set_stock_zero:
+                        amount = 0                    
                     line_ids=inventory_line_obj.search(cr, uid,
                         [('inventory_id', '=', context['active_ids']),
                          ('location_id', '=', location),
