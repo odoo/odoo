@@ -36,8 +36,6 @@
                             <field name="date_action"/>
                             <field name="title_action"/>
                             <field name="priority" string="Priority"/>
-                            <button string="Merge with other Opportunity"
-                                name="%(merge_opportunity_act)d" icon="gtk-add" type="action" />
                             <newline/>
                             <field name="type" invisible="1"/>
                         </group>
@@ -55,9 +53,9 @@
                                         attrs="{'invisible':[('partner_id','!=',False)]}"/>
                                 </group>
                                 <field name="partner_address_id"
-                                string="Contact"
-                                on_change="onchange_partner_address_id(partner_address_id, email_from)"
-                                colspan="1" />
+                                    string="Contact"
+                                    on_change="onchange_partner_address_id(partner_address_id, email_from)"
+                                    colspan="1" />
                                 <field name="email_from" string="Email" />
                                 <field name="phone"/>
                             </group>
@@ -142,9 +140,9 @@
                                     <group col="4" colspan="4">
                                         <field name="email_from"/>
                                         <field name="date"/>
-                                        <field name="email_to" widget="char" size="512"/>
-                                        <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
+                                        <field name="email_to" size="512"/>
+                                        <field name="email_cc" size="512"/>
+                                        <field name="name" colspan="4"/>
                                         <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
