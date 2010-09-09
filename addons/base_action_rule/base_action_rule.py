@@ -229,28 +229,33 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 base = False
                 if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
                     base = obj.create_date
-                elif rule.trg_date_type=='action_last' and hasattr(obj, 'create_date'):
+                elif (rule.trg_date_type=='action_last'
+                        and hasattr(obj, 'create_date')):
                     if hasattr(obj, 'date_action_last') and obj.date_action_last:
                         base = obj.date_action_last
                     else:
                         base = obj.create_date
-                elif rule.trg_date_type=='deadline' and hasattr(obj, 'date_deadline') \
-                                and obj.date_deadline:
+                elif (rule.trg_date_type=='deadline'
+                        and hasattr(obj, 'date_deadline')
+                        and obj.date_deadline):
                     base = obj.date_deadline
-                elif rule.trg_date_type=='date' and hasattr(obj, 'date') and obj.date:
+                elif (rule.trg_date_type=='date'
+                        and hasattr(obj, 'date')
+                        and obj.date):
                     base = obj.date
                 if base:
                     fnct = {
-                        'minutes': lambda interval: timedelta(minutes=interval), 
-                        'day': lambda interval: timedelta(days=interval), 
-                        'hour': lambda interval: timedelta(hours=interval), 
-                        'month': lambda interval: timedelta(months=interval), 
+                        'minutes': lambda interval: timedelta(minutes=interval),
+                        'day': lambda interval: timedelta(days=interval),
+                        'hour': lambda interval: timedelta(hours=interval),
+                        'month': lambda interval: timedelta(months=interval),
                     }
                     base = get_datetime(base)
                     d = base + fnct[rule.trg_date_range_type](rule.trg_date_range)
                 if (not last_run or (last_run <= d < now)):
                     self._action(cr, uid, [rule.id], [obj], context=context)
-            rule_pool.write(cr, uid, [rule.id], {'last_run': now}, context=context)
+            rule_pool.write(cr, uid, [rule.id], {'last_run': now},
+                            context=context)
 
     def format_body(self, body):
         """ Foramat Action rule's body
