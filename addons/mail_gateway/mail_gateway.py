@@ -126,10 +126,14 @@ class mailgate_thread(osv.osv):
             for att in attach:
                     attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
 
+            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
+            if not partner_id and case._name == 'res.partner':
+                partner_id = case.id
             data = {
                 'name': keyword,
                 'user_id': uid,
                 'model' : case._name,
+                'partner_id': partner_id,
                 'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'message_id': message_id, 
@@ -156,7 +160,7 @@ class mailgate_thread(osv.osv):
                          case.user_id.address_id.email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
-                    'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False,
+                    'partner_id': partner_id,
                     'references': references,
                     'message_id': message_id,
                     'attachment_ids': [(6, 0, attachments)]
@@ -260,11 +264,16 @@ class mailgate_tool(osv.osv_memory):
 
         msg_pool = self.pool.get('mailgate.message')
         for res_id in res_ids:
+            case = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
+            if not partner_id and model == 'res.partner':
+                partner_id = res_id
             msg_data = {
                 'name': msg.get('subject', 'No subject'),
                 'date': msg.get('date'),
                 'description': msg.get('body', msg.get('from')),
                 'history': True,
+                'partner_id': partner_id,
                 'res_model': model,
                 'email_cc': msg.get('cc'),
                 'email_from': msg.get('from'),
