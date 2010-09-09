@@ -32,14 +32,6 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_hr_form"/>
         </record>
-		<menuitem id="menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>
-		<menuitem id="menu_hr_dasboard" name="Dashboard" parent="menu_hr_reporting" sequence="0" groups="base.group_system,base.group_hr_manager,base.group_hr_user"/>
-        <menuitem
-            action="open_board_hr"
-            icon="terp-graph"
-            id="menu_hr_project"
-            parent="menu_hr_dasboard"
-            sequence="4"/>
         <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15" action="open_board_hr"/>
     </data>
 </openerp>

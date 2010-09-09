@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+    
+        <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0" groups="base.group_system,base.group_hr_manager,base.group_hr_user"/>
+        <menuitem
+            action="hr.open_board_hr"
+            icon="terp-graph"
+            id="base.menu_hr_project"
+            parent="base.menu_hr_dasboard"
+            sequence="4"/>
         <record id="action_view_holiday_status_board" model="ir.actions.act_window">
             <field name="name">My Leaves</field>
             <field name="type">ir.actions.act_window</field>
