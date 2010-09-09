@@ -152,7 +152,10 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 continue
             else:
                 obj = self.pool.get(obj_name)
-                self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
+                # If the rule doesn't involve a time condition, run it immediately
+                # Otherwise we let the scheduler run the action
+                if self.browse(cr, uid, rule_id, context=context).trg_date_type == 'none':
+                    self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
         return True
 
     def _create(self, old_create, model, context=None):
