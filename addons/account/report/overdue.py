@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -46,15 +46,18 @@ class Overdue(report_sxw.rml_parse):
         result = {
                   'name': False,
                   'street': False,
+                  'street2': False,
                   'city' : False,
                   'zip' : False,
+                  'state_id':False,
                   'country_id' : False,
                  }
         if adr_id:
             result = res_partner_address.read(self.cr, self.uid, [adr_id], context=self.context.copy())
             result[0]['country_id'] = result[0]['country_id'] and result[0]['country_id'][1] or False
-            return result   
-         
+            result[0]['state_id'] = result[0]['state_id'] and result[0]['state_id'][1] or False
+            return result
+
         res.append(result)
         return res
 
@@ -80,12 +83,12 @@ class Overdue(report_sxw.rml_parse):
                     ('state', '<>', 'draft'), ('reconcile_id', '=', False)])
         movelines = moveline_obj.browse(self.cr, self.uid, movelines)
         return movelines
-        
+
     def _message(self, obj, company):
         company_pool = pooler.get_pool(self.cr.dbname).get('res.company')
-        message = company_pool.browse(self.cr, self.uid, company.id, {'lang':obj.lang}).overdue_msg 
+        message = company_pool.browse(self.cr, self.uid, company.id, {'lang':obj.lang}).overdue_msg
         return message
-        
+
 report_sxw.report_sxw('report.account.overdue', 'res.partner',
         'addons/account/report/overdue.rml', parser=Overdue)
 
