@@ -110,7 +110,7 @@
             <rng:attribute name="object" />
             <rng:attribute name="source" />
             <rng:attribute name="destination" />
-			<rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
+            <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
             <rng:optional><rng:attribute name="label"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
@@ -177,9 +177,9 @@
 
     <rng:define name="html">
         <rng:element name="html">
-        	<rng:zeroOrMore>
-        			<rng:text/>
-        			<rng:ref name="any"/>
+            <rng:zeroOrMore>
+                    <rng:text/>
+                    <rng:ref name="any"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -195,6 +195,7 @@
             <rng:optional><rng:attribute name="fill"/></rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="width"/></rng:optional>
+            <rng:optional><rng:attribute name="wrap"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="notebook"/>
