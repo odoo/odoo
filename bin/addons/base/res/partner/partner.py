@@ -306,7 +306,7 @@ class res_partner_address(osv.osv):
                     addr += ', '
                 addr += (r['country_id'] and r['country_id'][1] or '') + ' ' + (r['city'] or '') + ' '  + (r['street'] or '')
                 if context.get('contact_display', 'contact')=='partner_address':
-                    res.append((r['id'], r['partner_id'][1] +','+ addr.strip() or '/'))
+                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr.strip() or '/')))
                 else:
                     res.append((r['id'], addr.strip() or '/'))
         return res
