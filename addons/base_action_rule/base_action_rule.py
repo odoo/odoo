@@ -212,8 +212,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         rules = self.browse(cr, uid, rule_ids, context=context)
         for rule in rules:
-            print "RULE: %s" % (rule,)
-            print " %s" % (rule.last_run,)
             model = rule.model_id.model
             model_pool = self.pool.get(model)
             last_run = False
@@ -221,7 +219,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 last_run = datetime.strptime(rule.last_run[:19], '%Y-%m-%d %H:%M:%S')
             now = datetime.now()
             for obj_id in model_pool.search(cr, uid, [], context=context):
-                print "  OBJ: %s" % (obj_id,)
                 obj = model_pool.browse(cr, uid, obj_id, context=context)
                 # Calculate when this action should next occur for this object
                 base = False
@@ -245,9 +242,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                         'month': lambda interval: timedelta(months=interval), 
                     }
                     d = base + fnct[rule.trg_date_range_type](rule.trg_date_range)
-                    print "    D: %s" % (d,)
                 if (not last_run or (last_run <= d < now)):
-                    print "   RUNNING"
                     self._action(cr, uid, [rule.id], [obj], context=context)
             rule_pool.write(cr, uid, [rule.id], {'last_run': now}, context=context)
 
