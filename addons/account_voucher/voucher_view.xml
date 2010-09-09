@@ -13,6 +13,7 @@
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="period_id" groups="base.group_extended" invisible="context.get('visible', True)"/>
+                    <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                     <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
@@ -27,10 +28,10 @@
             <field name="arch" type="xml">
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
                         <field name="name" colspan="4"/>
-                        <field name="type" on_change="onchange_partner_id(partner_id, journal_id)"/>
                         <field name="reference" select="1"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
+                        <field name="type" on_change="onchange_partner_id(partner_id, journal_id)"/>
                         <field name="journal_id" widget="selection" select="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
                         <field name="account_id" widget="selection" invisible="True"/>
                     </group>

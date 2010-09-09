@@ -136,7 +136,7 @@ class account_voucher_open(osv.osv_memory):
             'view_mode': 'tree,graph,form',
             'res_model': 'account.voucher',
             'view_id': False,
-            'context': "{'journal_id': %d, 'search_default_journal_id':%d, 'search_default_period_id':%d, 'partner_id':%s}" % (journal_id, journal_id, period_id, context.get('partner_id',False)),
+            'context': "{'search_default_journal_id':%d, 'search_default_period_id':%d, 'partner_id':%s}" % (journal_id, period_id, context.get('partner_id',False)),
             'type': 'ir.actions.act_window',
             'search_view_id': res_id
         }
