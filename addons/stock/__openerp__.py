@@ -49,7 +49,6 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "wizard/stock_move_view.xml",
         "wizard/stock_partial_picking_view.xml",
         "wizard/stock_partial_move_view.xml",
-        "wizard/stock_inventory_set_stock_zero_view.xml",
         "wizard/stock_fill_inventory_view.xml",
         "wizard/stock_invoice_onshipping_view.xml",
         "wizard/stock_inventory_merge_view.xml",

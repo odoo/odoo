@@ -27,7 +27,8 @@ class stock_fill_inventory(osv.osv_memory):
     _description = "Import Inventory"
     _columns = {
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'recursive': fields.boolean("Include all children for the location"),
+        'recursive': fields.boolean("Include children",help="If checked, products contained in child locations of selected location will be included as well."),
+        'set_stock_zero': fields.boolean("Set to zero",help="If checked, all product quantities will be set to zero to help ensure a real physical inventory is done and when set all inventory lines that are added to the inventory should have zero as quantity"),
     }
 
     def fill_inventory(self, cr, uid, ids, context):
@@ -52,12 +53,31 @@ class stock_fill_inventory(osv.osv_memory):
                 for location in location_ids :
                     res = location_obj._product_get(cr, uid, location)
                     res_location[location] = res
+            if fill_inventory.set_stock_zero:
+                loc = fill_inventory.location_id.id
+                cr.execute('select distinct location_id,product_id \
+                            from stock_inventory_line \
+                            where inventory_id=%s', (context['active_id'],))
+                inv = cr.fetchall()
+                cr.execute('select distinct product_id from stock_move where \
+                            location_dest_id=%s or location_id=%s', (loc, loc,))
+                stock = cr.fetchall()
+                for s in stock:
+                    if (loc, s[0]) not in inv:
+                        p = prod_obj.browse(cr, uid, s[0])
+                        invent_line_obj.create(cr, uid, {
+                            'inventory_id': context['active_id'],
+                            'location_id': loc,
+                            'product_id': s[0],
+                            'product_uom': p.uom_id.id,
+                            'product_qty': 0.0,
+                            })                    
             else:
                 context.update({'compute_child': False})
                 res = location_obj._product_get(cr, uid,
                             fill_inventory.location_id.id, context=context)
                 res_location[fill_inventory.location_id.id] = res
-
+    
         product_ids = []
         for location in res_location.keys():
             res = res_location[location]
