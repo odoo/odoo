@@ -66,7 +66,7 @@ class payment_order_create(osv.osv_memory):
         if not line_ids: return {}
 
         payment = order_obj.browse(cr, uid, context['active_id'], context=context)
-        t = payment.mode and payment.mode.type.id or None
+        t = None
         line2bank = line_obj.line2bank(cr, uid, line_ids, t, context)
 
         ## Finally populate the current payment with new lines:
