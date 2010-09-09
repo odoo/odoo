@@ -33,7 +33,7 @@
             </field>
         </record>
         <record id="mrp_property_group_action" model="ir.actions.act_window">
-            <field name="name">Property Categories</field>
+            <field name="name">Property Groups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.property.group</field>
             <field name="view_type">form</field>
@@ -82,8 +82,8 @@
                 <search string="Search">
                    <group col='15' colspan='4'>
                        <field name="name"/>
-                       <field name="group_id"  widget="selection" />
                        <field name="composition"/>
+                       <field name="group_id"  widget="selection" />
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
