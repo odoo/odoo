@@ -113,6 +113,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), 
         'act_email_from' : fields.char('Email From', size=64, required=False,
                 help="Use a python expression to specify the right field on which one than we will use for the 'From' field of the header"),
+        'last_run': fields.datetime('Last Run', readonly=1),
     }
 
     _defaults = {
@@ -204,8 +205,48 @@ the rule to mark CC(mail to any other person defined in actions)."),
         """
         rule_pool = self.pool.get('base.action.rule')
         rule_ids = rule_pool.search(cr, uid, [], context=context)
-        return self._register_hook(cr, uid, rule_ids, context=context)
-        
+        self._register_hook(cr, uid, rule_ids, context=context)
+
+        rules = self.browse(cr, uid, rule_ids, context=context)
+        for rule in rules:
+            print "RULE: %s" % (rule,)
+            print " %s" % (rule.last_run,)
+            model = rule.model_id.model
+            model_pool = self.pool.get(model)
+            last_run = False
+            if rule.last_run:
+                last_run = datetime.strptime(rule.last_run[:19], '%Y-%m-%d %H:%M:%S')
+            now = datetime.now()
+            for obj_id in model_pool.search(cr, uid, [], context=context):
+                print "  OBJ: %s" % (obj_id,)
+                obj = model_pool.browse(cr, uid, obj_id, context=context)
+                # Calculate when the action should next occur for this object
+                base = False
+                if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
+                    base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                elif rule.trg_date_type=='action_last' and hasattr(obj, 'create_date'):
+                    if hasattr(obj, 'date_action_last') and obj.date_action_last:
+                        base = datetime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
+                    else:
+                        base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                elif rule.trg_date_type=='deadline' and hasattr(obj, 'date_deadline') \
+                                and obj.date_deadline:
+                    base = datetime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
+                elif rule.trg_date_type=='date' and hasattr(obj, 'date') and obj.date:
+                    base = datetime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
+                if base:
+                    fnct = {
+                        'minutes': lambda interval: timedelta(minutes=interval), 
+                        'day': lambda interval: timedelta(days=interval), 
+                        'hour': lambda interval: timedelta(hours=interval), 
+                        'month': lambda interval: timedelta(months=interval), 
+                    }
+                    d = base + fnct[rule.trg_date_range_type](rule.trg_date_range)
+                    print "    D: %s" % (d,)
+                if (not last_run or (last_run <= d < now)):
+                    print "   RUNNING"
+                    self._action(cr, uid, [rule.id], [obj], context=context)
+            rule_pool.write(cr, uid, [rule.id], {'last_run': now}, context=context)
 
     def format_body(self, body):
         """ Foramat Action rule's body
@@ -377,7 +418,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if context is None:
             context = {}
 
-
         context.update({'action': True})
         if not scrit:
             scrit = []
@@ -388,41 +428,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 ok = self.do_check(cr, uid, action, obj, context=context)
                 if not ok:
                     continue
-
-                base = False
-                if action.trg_date_type=='create' and hasattr(obj, 'create_date'):
-                    base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif action.trg_date_type=='action_last' and hasattr(obj, 'create_date'):
-                    if hasattr(obj, 'date_action_last') and obj.date_action_last:
-                        base = datetime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
-                    else:
-                        base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif action.trg_date_type=='deadline' and hasattr(obj, 'date_deadline') \
-                                and obj.date_deadline:
-                    base = datetime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
-                elif action.trg_date_type=='date' and hasattr(obj, 'date') and obj.date:
-                    base = datetime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
-                if base:
-                    fnct = {
-                        'minutes': lambda interval: timedelta(minutes=interval), 
-                        'day': lambda interval: timedelta(days=interval), 
-                        'hour': lambda interval: timedelta(hours=interval), 
-                        'month': lambda interval: timedelta(months=interval), 
-                    }
-                    d = base + fnct[action.trg_date_range_type](action.trg_date_range)
-                    dt = d.strftime('%Y-%m-%d %H:%M:%S')
-                    ok = False
-                    if hasattr(obj, 'date_action_last') and hasattr(obj, 'date_action_next'):
-                        ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
-                                ((not obj.date_action_next) or \
-                                (dt >= obj.date_action_next and \
-                                obj.date_action_last < obj.date_action_next))
-                        if not ok:
-                            if not obj.date_action_next or dt < obj.date_action_next:
-                                obj.date_action_next = dt
-                                model_obj.write(cr, uid, [obj.id], {'date_action_next': dt}, context)
-                else:
-                    ok = action.trg_date_type == 'none'
 
                 if ok:
                     self.do_action(cr, uid, action, model_obj, obj, context)
