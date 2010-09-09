@@ -251,8 +251,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
                         'month': lambda interval: timedelta(months=interval),
                     }
                     base = get_datetime(base)
-                    d = base + fnct[rule.trg_date_range_type](rule.trg_date_range)
-                if (not last_run or (last_run <= d < now)):
+                    delay = fnct[rule.trg_date_range_type](rule.trg_date_range)
+                    action_date = base + delay
+                if (not last_run or (last_run <= action_date < now)):
                     self._action(cr, uid, [rule.id], [obj], context=context)
             rule_pool.write(cr, uid, [rule.id], {'last_run': now},
                             context=context)
