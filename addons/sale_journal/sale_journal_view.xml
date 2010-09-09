@@ -116,11 +116,11 @@
             <field name="arch" type="xml">
                 <search string="Sales by Journal">
                     <group col="8" colspan="4">
-						<filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Sale Journals which are in draft state"/>
-                        <filter icon="gtk-open" string="Open" domain="[('state','=','open')]" help="Open Sale Journals"/>
-                        <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Sale Journals which are cancelled"/>
-                        <filter icon="terp-check" string="Confirm" domain="[('state','=','confirm')]" help="Confirmed Sale Journals"/>
-                        <filter icon="terp-camera_test" string="Close" domain="[('state','=','done')]" help="Sale Journals which are closed"/>
+						<filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Sales Journal which are in draft state"/>
+                        <filter icon="gtk-open" string="Open" domain="[('state','=','open')]" help="Open Sales Journal"/>
+                        <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Sales Journal which are cancelled"/>
+                        <filter icon="terp-check" string="Confirm" domain="[('state','=','confirm')]" help="Confirmed Sales Journal"/>
+                        <filter icon="terp-camera_test" string="Close" domain="[('state','=','done')]" help="Sales Journal which are closed"/>
                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="code"/>
