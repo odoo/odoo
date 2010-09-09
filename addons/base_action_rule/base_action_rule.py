@@ -220,7 +220,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             for obj_id in model_pool.search(cr, uid, [], context=context):
                 print "  OBJ: %s" % (obj_id,)
                 obj = model_pool.browse(cr, uid, obj_id, context=context)
-                # Calculate when the action should next occur for this object
+                # Calculate when this action should next occur for this object
                 base = False
                 if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
                     base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
