@@ -74,7 +74,7 @@ class account_invoice_1(report_sxw.rml_parse):
                 sub_total[i]=entry.price_subtotal
                 i=i+1
                 res['note']=entry.note
-                res['currency']=invoice.currency_id.code
+                res['currency']=invoice.currency_id.symbol
                 res['type']=entry.state
 
                 if entry.uos_id.id==False:
@@ -107,7 +107,7 @@ class account_invoice_1(report_sxw.rml_parse):
 
                     j=j+1
                     res['price_subtotal']="%.2f"%(sum)
-                    res['currency']=invoice.currency_id.code
+                    res['currency']=invoice.currency_id.symbol
                     res['quantity']=''
                     res['price_unit']=''
                     res['discount']=''
@@ -138,7 +138,7 @@ class account_invoice_1(report_sxw.rml_parse):
                 else:
                     res['name']=entry.name
                     res['price_subtotal']=''
-                    res['currency']=invoice.currency_id.code
+                    res['currency']=invoice.currency_id.symbol
 
             result.append(res)
         return result

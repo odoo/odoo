@@ -240,7 +240,7 @@
     <blockTable colWidths="177.0,177.0,177.0" style="Table_General_Detail_Content">
       <tr>
         <td>
-          <para style="terp_default_Centre_9">[[ o.name or ' ' ]]</para>
+          <para style="terp_default_Centre_9">[[ o.name or ' ' ]] <font color="white"> </font></para>
         </td>
         <td>
           <para style="terp_default_Centre_9">[[ formatLang(o.date_invoice,date=True) ]]</para>
@@ -271,7 +271,7 @@
           <para style="terp_tblheader_Details_Right">Disc.(%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Price</para>
+          <para style="terp_tblheader_Details_Centre">Price([[ o.currency_id.code ]])</para>
         </td>
       </tr>
     </blockTable>
