@@ -85,6 +85,7 @@ class account_move_line_reconcile(osv.osv_memory):
         ids = self.pool.get('account.period').find(cr, uid, dt=date, context=context)
         if len(ids):
             period_id = ids[0]
+        context.update({'stop_reconcile': True})
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                                         period_id, journal_id, context=context)
         return {}
@@ -151,6 +152,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         if len(ids):
             period_id = ids[0]
 
+        context.update({'stop_reconcile': True})
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                 period_id, journal_id, context=context)
         return {}
