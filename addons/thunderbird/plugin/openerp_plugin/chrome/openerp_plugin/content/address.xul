@@ -3,7 +3,7 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/address.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.createContactAddress()" height="480" width="764">
+	title="&title.label;" onload="myPrefObserver.createContactAddress();" height="480" width="764">
 
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
@@ -23,9 +23,10 @@
 	</hbox>
 	<hbox>
         <label  align="right" id="name"  value="&name.value;" width="80" />
-		<textbox id="txtname" align="right" width="270" readonly="true"/>
+		<textbox id="txtselectpartner" align="right" width="270" readonly="true"/>
         <spacer width="5"/>
          <button label="New Partner" image="&imagecreate.value;" oncommand="CreatePartner.onMenuItemCommand(event);" width="133"/>
+        <button label="Search Partner" image="&imagesearch.value;" oncommand="Select.onMenuItemCommand(event);getPartnerList();" width="128"/>
 	</hbox>
     <separator class="groove-thin" orient="horizontal" width="94"/> 
    </groupbox>
