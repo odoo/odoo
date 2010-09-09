@@ -238,19 +238,6 @@ class payment_line(osv.osv):
                     line.amount_currency, context=ctx)
         return res
 
-    def _value_date(self, cursor, user, ids, name, args, context=None):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cursor, user, ids, context=context):
-            if line.order_id.date_prefered == 'fixed':
-                res[line.id] = line.order_id.date_scheduled
-            elif line.order_id.date_prefered == 'due':
-                res[line.id] = line.due_date or time.strftime('%Y-%m-%d')
-            else:
-                res[line.id] = time.strftime('%Y-%m-%d')
-        return res
-
     def _get_currency(self, cr, uid, context):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         if user.company_id:
