@@ -64,8 +64,8 @@ class stock_fill_inventory(osv.osv_memory):
                 stock = cr.fetchall()
                 for s in stock:
                     if (loc, s[0]) not in inv:
-                        p = prod_obj.browse(cr, uid, s[0])
-                        invent_line_obj.create(cr, uid, {
+                        p = product_obj.browse(cr, uid, s[0])
+                        inventory_line_obj.create(cr, uid, {
                             'inventory_id': context['active_id'],
                             'location_id': loc,
                             'product_id': s[0],
