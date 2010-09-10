@@ -1212,7 +1212,7 @@ class account_invoice_line(osv.osv):
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
             price = line.price_unit * (1-(line.discount or 0.0)/100.0)
-            taxes = tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, price, line.quantity)
+            taxes = tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, price, line.quantity, product=line.product_id, address_id=line.invoice_id.address_invoice_id, partner=line.invoice_id.partner_id)
             res[line.id] = taxes['total']
             if line.invoice_id:
                 cur = line.invoice_id.currency_id
