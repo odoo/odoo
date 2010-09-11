@@ -302,7 +302,7 @@ class payroll_register(osv.osv):
 
                 pline = {
                     'advice_id':pid,
-                    'name':slip.employee_id.otherid,
+                    'name':slip.employee_id.identification_id,
                     'employee_id':slip.employee_id.id,
                     'amount':slip.other_pay + slip.net,
                     'bysal':slip.net
@@ -432,7 +432,7 @@ class payroll_advice_line(osv.osv):
             sids = slip_pool.search(cr, uid, [('paid','=',False),('state','=','confirm'),('date','>=',dates[0]), ('employee_id','=',employee_id), ('date','<=',dates[1])], context=context)
             if sids:
                 slip = slip_pool.browse(cr, uid, sids[0], context=context)
-                vals['name'] = slip.employee_id.otherid
+                vals['name'] = slip.employee_id.identification_id
                 vals['amount'] = slip.net + slip.other_pay
                 vals['bysal'] = slip.net
         return {
@@ -1314,7 +1314,7 @@ class hr_employee(osv.osv):
     _description = 'Employee'
 
     _columns = {
-        'pan_no':fields.char('PAN No', size=64, required=False, readonly=False),
+#        'pan_no':fields.char('PAN No', size=64, required=False, readonly=False),
         'esp_account':fields.char('EPS Account', size=64, required=False, readonly=False, help="EPS Account"),
         'pf_account':fields.char('PF Account', size=64, required=False, readonly=False, help="Providend Fund Account"),
         'pg_joining': fields.date('PF Join Date'),

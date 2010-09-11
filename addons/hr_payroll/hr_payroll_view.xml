@@ -97,7 +97,7 @@
                     <page string="Miscellaneous">
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
-                            <field name="pan_no" select="1"/>
+                            <field name="otherid" select="1"/>
                             <field name="bank_account_id"/>
                             <field name="place_of_birth"/>
                             <field name="children"/>
@@ -210,7 +210,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="otherid" position="after">
+                <field name="identification_id" position="after">
                     <field name="passport_id"/>
                 </field>
             </field>

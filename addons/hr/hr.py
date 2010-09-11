@@ -110,7 +110,7 @@ class hr_employee(osv.osv):
         'birthday': fields.date("Date of Birth"),
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
         'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
-        'otherid': fields.char('Other ID', size=32),
+        'identification_id': fields.char('Identification No', size=32),
         'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
         'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
         'bank_account': fields.char('Bank Account', size=64),
