@@ -369,6 +369,7 @@ class account_account(osv.osv):
             ('other', 'Regular'),
             ('receivable', 'Receivable'),
             ('payable', 'Payable'),
+            ('liquidity','Liquidity'),
             ('consolidation', 'Consolidation'),
             ('closed', 'Closed'),
         ], 'Internal Type', required=True, help="This type is used to differentiate types with "\

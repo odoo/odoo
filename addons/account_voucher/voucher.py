@@ -57,6 +57,9 @@ class account_voucher(osv.osv):
         journal_pool = self.pool.get('account.journal')
         if context.get('journal_id', False):
             return context.get('journal_id')
+        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+            return context.get('search_default_journal_id')
+            
         ttype = context.get('type', 'bank')
         res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
         return res and res[0] or False
