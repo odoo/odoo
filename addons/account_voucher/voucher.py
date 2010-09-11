@@ -84,7 +84,7 @@ class account_voucher(osv.osv):
     
     def _get_partner(self, cr, uid, context={}):
         return context.get('partner_id', False)
-        
+    
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "date desc, id desc"

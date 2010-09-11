@@ -45,7 +45,7 @@
                                     <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
                                     <field name="account_id" 
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                          domain="[('user_type.report_type','=','asset'), ('type','=','other')]"/>
+                                          domain="[('type','=','liquidity')]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
                                     <field name="reference"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
