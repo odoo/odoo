@@ -51,7 +51,7 @@ idea_category()
 class idea_idea(osv.osv):
     """ Idea """
     _name = 'idea.idea'
-    _rec_name = 'title'
+    _rec_name = 'name'
 
     def _vote_avg_compute(self, cr, uid, ids, name, arg, context = None):
 
@@ -153,7 +153,7 @@ class idea_idea(osv.osv):
 
     _columns = {
         'user_id': fields.many2one('res.users', 'Creator', required=True, readonly=True),
-        'title': fields.char('Idea Summary', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Idea Summary', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft':[('readonly',False)]}),
         'comment_ids': fields.one2many('idea.comment', 'idea_id', 'Comments'),
         'created_date': fields.datetime('Creation date', readonly=True),

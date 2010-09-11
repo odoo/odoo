@@ -38,67 +38,54 @@ class project_task_delegate(osv.osv_memory):
         'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', required=True, help="New state of your own task. Pending will be reopened automatically when the delegated task is closed")
     }
 
-    def _get_name(self, cr, uid, context=None):
+    def default_get(self, cr, uid, fields, context=None):
+        """
+        This function gets default values
+        """
+        res = super(project_task_delegate, self).default_get(cr, uid, fields, context=context)
         if context is None:
             context = {}
-        if 'active_id' in context:
-            task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
+        record_id = context and context.get('active_id', False) or False
+        task_pool = self.pool.get('project.task')
+        task = task_pool.browse(cr, uid, record_id, context=context)
+        project = task.project_id
+        manager = project.user_id or False
+        partner = task.partner_id or task.project_id.partner_id
+        
+        if 'name' in fields:
             if task.name.startswith(_('CHECK: ')):
                 newname = str(task.name).replace(_('CHECK: '), '')
             else:
                 newname = task.name or ''
-            return newname
-        return ''
-
-    def _get_plan_hour(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if 'active_id' in context:
-            task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
-            return task.remaining_hours
-        return 0.0
-
-    def _get_prefix(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if 'active_id' in context:
-            task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
+            res.update({'name': newname})
+        if 'planned_hours' in fields:
+            res.update({'planned_hours': task.remaining_hours or 0.0})
+        if 'prefix' in fields:
             if task.name.startswith(_('CHECK: ')):
                 newname = str(task.name).replace(_('CHECK: '), '')
             else:
                 newname = task.name or ''
-            return _('CHECK: ') + newname
-        return ''
+            prefix = _('CHECK: ') + newname
+            res.update({'prefix': prefix})
+        if 'new_task_description' in fields:
+            res.update({'new_task_description': task.description})
+        return res
 
-    def _get_new_desc(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if 'active_id' in context:
-            task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
-            return task.description
-        return ''
 
     _defaults = {
-       'name': _get_name,
-       'planned_hours': _get_plan_hour,
        'planned_hours_me': 1.0,
-       'prefix': _get_prefix,
-       'new_task_description': _get_new_desc,
        'state': 'pending',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        users_obj = self.pool.get('res.users')
-        obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
-        tm = obj_tm and obj_tm.name or 'Hours'
-
         res = super(project_task_delegate, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
-
+        users_pool = self.pool.get('res.users')
+        obj_tm = users_pool.browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = obj_tm and obj_tm.name or 'Hours'
         if tm in ['Hours','Hour']:
             return res
 
         eview = etree.fromstring(res['arch'])
-
         def _check_rec(eview):
             if eview.attrib.get('widget','') == 'float_time':
                 eview.set('widget','float')
@@ -107,47 +94,19 @@ class project_task_delegate(osv.osv_memory):
             return True
 
         _check_rec(eview)
-
         res['arch'] = etree.tostring(eview)
-
-        for f in res['fields']:
-            if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
-
+        for field in res['fields']:
+            if 'Hours' in res['fields'][field]['string']:
+                res['fields'][field]['string'] = res['fields'][field]['string'].replace('Hours',tm)
         return res
 
-    def validate(self, cr, uid, ids, context=None):
+    def delegate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        task_obj = self.pool.get('project.task')
-        user_obj = self.pool.get('res.users')
+        task_id = context.get('active_id', False)
+        task_pool = self.pool.get('project.task')
         delegate_data = self.read(cr, uid, ids, context=context)[0]
-        task = task_obj.browse(cr, uid, context['active_id'], context=context)
-        newname = delegate_data['prefix'] or ''
-        new_task_id = task_obj.copy(cr, uid, task.id, {
-            'name': delegate_data['name'],
-            'user_id': delegate_data['user_id'],
-            'planned_hours': delegate_data['planned_hours'],
-            'remaining_hours': delegate_data['planned_hours'],
-            'parent_ids': [(6, 0, [task.id])],
-            'state': 'draft',
-            'description': delegate_data['new_task_description'] or '',
-            'child_ids': [],
-            'work_ids': []
-        }, context)
-        task_obj.write(cr, uid, [task.id], {
-            'remaining_hours': delegate_data['planned_hours_me'],
-            'planned_hours': delegate_data['planned_hours_me'] + (task.effective_hours or 0.0),
-            'name': newname,
-        }, context)
-        if delegate_data['state'] == 'pending':
-            task_obj.do_pending(cr, uid, [task.id], context)
-        else:
-            context.update({'mail_send': False} )
-            task_obj.do_close(cr, uid, [task.id], context)
-            delegrate_user = user_obj.browse(cr, uid, delegate_data['user_id'], context=context)
-            message = _('Task ') + " '" + delegate_data['name'] + "' "+ _("is Delegated to User:") +" '"+ delegrate_user.name +"' "
-            self.log(cr, uid, task.id, message)
+        task_pool.do_delegate(cr, uid, task_id, delegate_data, context=context)
         return {}
 
 project_task_delegate()

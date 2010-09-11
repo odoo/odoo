@@ -24,7 +24,7 @@
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Resource" colspan="2" />
-                        <field name="object_id" select="1"/>
+                        <field name="object_id"/>
                         <field name="partner_field_id"/>
                     </group>
                     <group colspan="2" col="2">
@@ -33,9 +33,9 @@
                     </group>
                 </group>
                 <field name="activity_ids" nolabel = "1" colspan="4" default_get="{'default_object_id': object_id}" />
-                <separator string="Status" colspan="4" />
+                <separator string="" colspan="4" />
                 <group col="10" colspan="4">
-                    <field name="state" readonly="1" select="2" nolabel="1"/>
+                    <field name="state" readonly="1" />
                     <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
                     <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
                     <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
@@ -157,7 +157,7 @@
                     <field name="date_run" readonly="1"/>
                     <field name="date_done" readonly="1"/>
                 </group>
-                <separator string="Status" colspan="4"/>
+                <separator string="" colspan="4"/>
                 <group col="6" colspan="4">
                     <field name="state" readonly="1"/>
                     <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
@@ -376,9 +376,9 @@
                     <separator string="Error Message" colspan="4"/>
                     <field name="error_msg" nolabel="1" colspan="4"/>
                 </group>
-                <separator string="Status" colspan="4"/>
+                <separator string="" colspan="4"/>
                 <group colspan="4" col="11">
-                    <field name="state" nolabel="1" readonly="True" select="1"/>
+                    <field name="state" readonly="True"/>
                     <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
                     <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
                     <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>

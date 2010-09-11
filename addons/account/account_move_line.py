@@ -439,7 +439,7 @@ class account_move_line(osv.osv):
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
 
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
+        'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
             store={
                 'account.move': (_get_move_lines, ['date'], 20)
@@ -986,9 +986,10 @@ class account_move_line(osv.osv):
             if 'period_id' in vals and 'period_id' not in context:
                 period_id = vals['period_id']
             elif 'journal_id' not in context and 'move_id' in vals:
-                m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
-                journal_id = m.journal_id.id
-                period_id = m.period_id.id
+                if vals['move_id']:
+                    m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
+                    journal_id = m.journal_id.id
+                    period_id = m.period_id.id
             else:
                 journal_id = context.get('journal_id',False)
                 period_id = context.get('period_id',False)

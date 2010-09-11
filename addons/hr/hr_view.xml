@@ -102,7 +102,7 @@
                     <separator orientation="vertical" />
                     <field name="name"/>
                     <field name="department_id" widget="selection">
-                    <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" help="My Departments Employee"/>
+                    <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" string="My Departments Employee"/>
                     </field>
                     <field name="job_id" widget="selection"/>
                     <field name="parent_id"/>
@@ -189,7 +189,7 @@
         </record>
 
         <menuitem action="action_hr_marital_status" id="hr_menu_marital_status"
-            parent="hr.menu_view_employee_category_configuration_form" sequence="3"/>
+            parent="hr.menu_view_employee_category_configuration_form" sequence="3" groups="base.group_extended"/>
 
         <!--
         =======================
@@ -320,7 +320,6 @@
                     <group col="6" colspan="4">
                     <field name="name" />
                     <field name="department_id" />
-                    <newline/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
@@ -355,6 +354,7 @@
                 <tree string="Job">
                     <field name="name" />
                     <field name="department_id" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
                     <field name="state"/>
@@ -370,10 +370,8 @@
                 <search string="Jobs">
                     <filter icon="terp-check" domain="[('state','in',('open','recruit'))]" string="Current"
                         name="Current" help="Open and in recruitment positions"/>
-                    <filter icon="terp-camera_test" domain="[('state','=','open')]" string="Open"
-                        help="Open Positions"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="Recruitment"
+                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
                         help="In Recruitment"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
@@ -383,6 +381,7 @@
                     <newline />
                     <group expand="0" string="Group By...">
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                     </group>
                 </search>
              </field>

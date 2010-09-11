@@ -54,3 +54,19 @@
   !python {model: account.invoice}: |
     acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
     assert acc_id.move_id, "Move not created for open invoice"
+-
+  I refund the invoice Using Refund Button
+-
+  !record {model: account.invoice.refund, id: account_invoice_refund_0}:
+    description: Refund To China Export
+    period: account.period_5
+    filter_refund: refund
+-
+  I clicked on refund button
+-
+  !python {model: account.invoice.refund}: |
+    self.invoice_refund(cr, uid, [ref("account_invoice_refund_0")], {"lang": 'en_US', "tz": False, "active_model": "account.invoice", "active_ids": [ref("account.account_invoice_customer0")], "type": "out_invoice", "active_id": ref("account.account_invoice_customer0"), })
+-
+  I checked that a new entry with state "Draft" created in account move line
+
+

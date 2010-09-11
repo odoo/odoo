@@ -37,11 +37,11 @@
     so = self.browse(cr, uid, ref("sale_order_so9"))
     assert so.picking_ids,"Picking has not been generated for sale_order_so9"
 -
-  Then I click on the "Products Received" button of Incoming Shipments
+  Then I confirm the picking
 -
   !record {model: stock.partial.picking, id: stock_partial_picking_0}:
     date: '2010-07-17 17:52:09'
--    
+-
   Then I done the picking
 - 
   !python {model: stock.picking }: |
@@ -86,7 +86,7 @@
     inv_brw = self.browse(cr,uid,ids)[0]
     for inv_lines in inv_brw.invoice_line:
       qty1 = inv_lines.quantity
-    assert ('qty1','=','qty'), "Quantities are not same"
+    assert qty1==qty, "Quantities are not same"
 -    
   I open the Invoice for the SO.
 -
@@ -99,40 +99,22 @@
     for invoice in invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
 -
-  Creating a account invoice pay entry.
+  Assign analytic jounal into bank journal
+- 
+  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
+    analytic_journal_id: account.cose_journal_sale
 -
-  !record {model: account.invoice.pay, id: account_invoice_pay_tst1}:
-    amount: 40000.0
-    date: '2010-07-17'
-    journal_id: sale.account_journal_bankjournal0
-    name: tst
-    period_id: account.period_5
+  I pay the invoice
 -
-  I pay the invoice.
--
-  !python {model: account.invoice.pay}: |
+  !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
-    self.wo_check(cr, uid, [ref("account_invoice_pay_tst1")], {"lang": "en_US", "tz":
-      False, "active_model": 'account.invoice', "active_ids": [so.invoice_ids[0].id], "type":
-      "out_invoice", "active_id": so.invoice_ids[0].id, })
--
-  Creating an account invoice pay writeoff entry.
--
-  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
-    analytic_id: account.analytic_customers
-    comment: Write-Off
-    writeoff_acc_id: account.a_sale
-    writeoff_journal_id: sale.account_journal_bankjournal0
--
-  Pay and Reconcile the Invoice.
--
-  !python {model: account.invoice.pay.writeoff}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
-    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
-      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
-      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id })
+    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
+    self.pay_and_reconcile(cr, uid, invoice_id,
+        40000.0, ref('account.cash'), ref('account.period_9'),
+        ref('sale.account_journal_bankjournal0'), ref('account.cash'),
+        ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
+        name='test')
 -
   I verify the invoice are in paid state or not. 
 -
@@ -141,10 +123,10 @@
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so9"))
     invoice_ids = so.invoice_ids
     for invoice in invoice_ids:
-        assert (invoice.state) =='paid', "Invoice for SO is not in done state."
+        assert invoice.state =='paid', "Invoice for SO is not in done state."
 -
   I check that Paid has been set to true.
 -
   !python {model: sale.order}: |
     sale_id=self.browse(cr, uid, ref("sale_order_so9"))
-    assert(sale_id.invoiced == True), "Paid has not been set to true"
+    assert sale_id.invoiced == True, "Paid has not been set to true"

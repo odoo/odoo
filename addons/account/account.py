@@ -1082,7 +1082,7 @@ class account_move(osv.osv):
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
-        'narration':fields.text('Narration', select=True),
+        'narration':fields.text('Narration'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
     _defaults = {
@@ -1151,24 +1151,17 @@ class account_move(osv.osv):
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
-        def _get_chart_account(cursor, user, account):
-            if account.parent_id:
-                chart_account = _get_chart_account(cursor, user, account.parent_id)
-            else:
-                chart_account = account
-            return chart_account
-
         for move in self.browse(cursor, user, ids):
-            lines = move.line_id
-            if lines:
-                ref_line = lines[0]
-                ref_chart_account = _get_chart_account(cursor, user, ref_line.account_id)
-                parent_left = ref_chart_account.parent_left
-                parent_right = ref_chart_account.parent_right
-                result = True
-                for line in lines[1:]:
-                   if not (line.account_id.parent_left >= parent_left and line.account_id.parent_left <= parent_right):
-                         raise osv.except_osv(_('Error !'), _('You cannot validate a move unless accounts in its entry lines are in same Chart Of Accounts !'))
+            top = None
+            for line in move.line_id:
+                account = line.account_id
+                while account:
+                    account2 = account
+                    account = account.parent_id
+                if not top:
+                    top = account2.id
+                elif top<>account2.id:
+                    raise osv.except_osv(_('Error !'), _('You cannot validate a Journal Entry unless all journal items are in same chart of accounts !'))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context={}):
@@ -2046,7 +2039,7 @@ class account_model_line(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency'),
 
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Maturity date', help="The maturity date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."),
+        'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Due date', help="The due date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."),
         'date': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Current Date', required=True, help="The date of the generated entries"),
     }
     _defaults = {

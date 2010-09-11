@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+
+        <record id="act_pay_voucher" model="ir.actions.act_window">
+            <field name="name">Sales Payment</field>
+            <field name="res_model">account.voucher.open</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>
+            <field name="context">{'journal_type':'bank', 'type':'receipt', 'partner_id': partner_id}</field>
+            <field name="view_id" ref="account_open_vouchers_view"/>
+            <field name="target">new</field>
+        </record>
         <record model="ir.ui.view" id="view_sale_receipt_form">
             <field name="name">account.voucher.sale.form</field>
             <field name="model">account.voucher</field>
@@ -9,7 +19,7 @@
                 <form string="Sales Receipt">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id)" string="Customer"/>
-                        <field name="journal_id"  domain="[('type','=','sale')]" widget="selection" on_change="onchange_journal(journal_id)"/>
+                        <field name="journal_id" domain="[('type','in',['sale','purchase_refund'])]" widget="selection" on_change="onchange_journal(journal_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="4"/>
                         <field name="date" on_change="onchange_date(date)"/>
@@ -17,7 +27,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Information">
-                            <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id, 'type':type, partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Sales Lines" editable="bottom">
                                     <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection"/>
                                     <field name="name"/>
@@ -33,22 +43,22 @@
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
-                                    <field name="account_id" 
+                                    <field name="account_id"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                          domain="[('user_type.report_type','=','asset')]"/>
+                                          domain="[('user_type.report_type','=','asset'), ('type','=','other')]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
                                     <field name="reference"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
                                     />
                                 </group>
-                                <group col="3" colspan="1">
-                                    <separator string="Total" colspan="3"/>
-                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" on_change="onchange_price(line_ids, tax_id, partner_id)" nolabel="1"/>
+                                <group col="4" colspan="1">
+                                    <separator string="Total" colspan="4"/>
+                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" on_change="onchange_price(line_ids, tax_id, partner_id)" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label colspan="1" string=""/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended">
+                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
@@ -60,28 +70,29 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
+                        <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'title':'Sales Payment', 'journal_type':'bank', 'type':'receipt', 'partner_id': partner_id}" type="action" string="Pay" attrs="{'invisible':[('pay_now','!=','pay_now'),('state','!=','posted')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
             </field>
         </record>
-        
+
         <!-- Sales Voucher -->
         <record id="action_sale_receipt" model="ir.actions.act_window">
             <field name="name">Sales Receipt</field>
             <field name="res_model">account.voucher.open</field>
             <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type','=','sale'), ('type','=','sale')]</field>
+            <field name="domain">[('journal_id.type','in',['sale','purchase_refund']), ('type','=','sale')]</field>
             <field name="context">{'journal_type':'sale', 'type':'sale'}</field>
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
         </record>
         <menuitem id="menu_action_sale_receipt" icon="STOCK_JUSTIFY_FILL"
-        action="action_sale_receipt" parent="account.menu_finance_receivables" sequence="14"/>
-        
+        action="action_sale_receipt" parent="account.menu_finance_receivables" sequence="10"/>
+
         <!--  Purchase Vouchers -->
         <record model="ir.ui.view" id="view_purchase_receipt_form">
             <field name="name">account.voucher.purchase.form</field>
@@ -91,7 +102,7 @@
                 <form string="Vendor Bills">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" string="Vendor" on_change="onchange_partner_id(partner_id, journal_id, amount)"/>
-                        <field name="journal_id" domain="[('type','=','purchase')]" widget="selection" select="1" on_change="onchange_journal(journal_id)"/>
+                        <field name="journal_id" domain="[('type','in',['purchase','sale_refund'])]" widget="selection" select="1" on_change="onchange_journal(journal_id)"/>
                         <field name="reference" select="1"/>
                         <field name="name" colspan="4"/>
                         <field name="number"/>
@@ -112,20 +123,22 @@
                                 <separator string="Internal Notes" colspan="2"/>
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
-                            <group col="4" colspan="1">
-                                <group col="2" colspan="1">
-                                    <separator string="Other Information" colspan="2"/>
-                                    <field name="date" string="Bill Date" select="1" on_change="onchange_date(date)"/>
-                                </group>
+                            <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Terms" colspan="2"/>
                                     <field name="term_id" widget="selection" on_change="onchange_term_id(term_id, amount)"/>
+                                    <field name="date" string="Bill Date" select="1" on_change="onchange_date(date)"/>
                                     <field name="date_due"/>
                                     <field name="amount" required="0" string="Amount Due"/>
                                 </group>
+                                <group col="4" colspan="1">
+                                    <separator string="Total" colspan="4"/>
+                                    <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all'))]"/><field name="tax_amount" on_change="onchange_price(line_ids, tax_id, partner_id)" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
+                                </group>
                             </group>
                         </page>
-                        <page string="Journal Items">
+                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
@@ -137,8 +150,8 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
@@ -149,13 +162,13 @@
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.voucher.open</field>
             <field name="view_type">form</field>
-            <field name="domain">[('journal_id.type','=','purchase'), ('type','=','purchase')]</field>
+            <field name="domain">[('journal_id.type','in',['purchase','sale_refund']), ('type','=','purchase')]</field>
             <field name="context">{'journal_type':'purchase', 'type':'purchase'}</field>
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
         </record>
-        <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL" 
-        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="14"/>        
-        
+        <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL"
+        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
+
     </data>
 </openerp>

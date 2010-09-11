@@ -189,33 +189,6 @@
             </field>
         </record>
 
-        <record id="view_config_compute_remaining" model="ir.ui.view">
-            <field name="name">Compute Remaining Hours </field>
-            <field name="model">config.compute.remaining</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Reevaluate Hours">
-                    <separator colspan="4" string="Change Remaining Time"/>
-                    <newline/>
-                    <field name="remaining_hours" widget="float_time"/>
-                    <separator string="" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <button icon="gtk-close" special="cancel" string="Close"/>
-                        <button icon="gtk-apply" name="compute_hours" string="Update" type="object" default_focus="1"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_config_compute_remaining" model="ir.actions.act_window">
-            <field name="name">Compute Remaining Hours</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">config.compute.remaining</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
         <!-- Task -->
         <record id="view_task_form2" model="ir.ui.view">
             <field name="name">project.task.form</field>
@@ -244,7 +217,7 @@
                             </group>
                             <group col="3" colspan="2">
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
-                                <button name="%(action_config_compute_remaining)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
+                                <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
 
                                 <field name="delay_hours" widget="float_time"/>
                             </group>
@@ -263,10 +236,10 @@
                                 <field name="state" select="1"/>
                                 <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent"/>
                                 <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute"/>
-                                <button name="%(action_config_compute_remaining)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
+                                <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
                                 <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
                                 <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
-                                <button name="do_close" states="pending,open" string="Done" type="object" icon="gtk-apply"/>
+                                <button name="%(action_project_task_close)d" states="pending,open" string="Done" type="action" icon="gtk-apply"/>
                                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -343,7 +316,7 @@
                     <field name="state" invisible="context.get('set_visible',False)"/>
                     <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
                     <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending" help="For changing to delegate state"/>
-                    <button name="do_close" states="draft,pending,open" string="Done" type="object" icon="gtk-apply" help="For changing to done state"/>
+                    <button name="%(action_project_task_close)d" states="draft,pending,open" string="Done" type="action" icon="gtk-apply" help="For changing to done state"/>
                     <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
                 </tree>
             </field>

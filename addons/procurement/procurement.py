@@ -179,7 +179,7 @@ class procurement_order(osv.osv):
         @param proc: Current procurement.
         @return: Quantity or False.
         """
-        if proc.product_id.type == 'product':
+        if proc.product_id.type == 'product' and proc.move_id:
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos_qty
         return False
@@ -189,7 +189,7 @@ class procurement_order(osv.osv):
         @param proc: Current procurement.
         @return: UoS or False.
         """
-        if proc.product_id.type == 'product':
+        if proc.product_id.type == 'product' and proc.move_id:
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos.id
         return False
@@ -228,13 +228,6 @@ class procurement_order(osv.osv):
         return False
 
     def check_produce_service(self, cr, uid, procurement, context=[]):
-        """ Checks project_mrp install or not.
-         @return: True or False"""
-        obj_module = self.pool.get('ir.module.module')
-        module_id = obj_module.search(cr, uid, [('name', '=', 'project_mrp'),('state', '=', 'installed')])
-        if module_id:
-            return True
-        cr.execute('update procurement_order set message=%s where id=%s', (_('Project_mrp module not installed !'), procurement.id))
         return False
 
     def check_produce_product(self, cr, uid, procurement, context=[]):
@@ -405,7 +398,7 @@ class procurement_order(osv.osv):
         todo2 = []
         move_obj = self.pool.get('stock.move')
         for proc in self.browse(cr, uid, ids):
-            if proc.close_move:
+            if proc.close_move and proc.move_id:
                 if proc.move_id.state not in ('done', 'cancel'):
                     todo2.append(proc.move_id.id)
             else:
@@ -430,7 +423,7 @@ class procurement_order(osv.osv):
         """
         ok = False
         for procurement in self.browse(cr, uid, ids):
-            if procurement.move_id.state == 'assigned' or procurement.move_id.state == 'done':
+            if procurement.move_id and procurement.move_id.state == 'assigned' or procurement.move_id.state == 'done':
                 self.action_done(cr, uid, [procurement.id])
                 ok = True
         return ok

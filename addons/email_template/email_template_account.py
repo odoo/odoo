@@ -138,7 +138,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                                   ('suspended', 'Suspended'),
                                   ('approved', 'Approved')
                                   ],
-                        'Status', required=True, readonly=True),
+                        'State', required=True, readonly=True),
     }
 
     _defaults = {

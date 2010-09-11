@@ -91,15 +91,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Period">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="fiscalyear_id"/>
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
-                    <field name="state" select="1"/>
+                    <field name="state"/>
                     <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert" groups="account.group_account_manager"/>
                 </form>
             </field>
@@ -110,20 +110,40 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
               <tree colors="blue:state in ('draft');gray:state in ('done') " string="Period">
-                    <field name="code"/>
                     <field name="name"/>
+                    <field name="code"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="special"/>
                     <field name="state"/>
+                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert" groups="account.group_account_manager"/>
+                    <button name="%(action_account_period_close)d" states="draft" string="Close Period" type="action" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
+
+        <record id="view_account_period_search" model="ir.ui.view">
+            <field name="name">account.period.search</field>
+            <field name="model">account.period</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Period">
+                    <group>
+                        <filter string="Draft" name="draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <separator orientation="vertical"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_account_period_form" model="ir.actions.act_window">
             <field name="name">Periods</field>
             <field name="res_model">account.period</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,search</field>
+            <field name="context">{'search_default_draft': 1}</field>
         </record>
         <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23"/>
 
@@ -491,7 +511,7 @@
                         <field name="balance_end_real"/>
                         <field name="currency" invisible="1"/>
                         <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action" icon="gtk-dnd"
+                            string="Import Invoices" type="action" icon="gtk-execute"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
                     </group>
                     <notebook colspan="4">
@@ -560,6 +580,8 @@
             <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
         <menuitem string="Bank Statements" action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_bank_and_cash" sequence="7"/>
+        <menuitem name="Statements Reconciliation" action="action_bank_statement_tree" id="menu_menu_Bank_process" parent="menu_finance_periodical_processing_bank" sequence="7"/>
+
 
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
             <field name="name">Draft statements</field>
@@ -1098,7 +1120,7 @@
             icon="STOCK_JUSTIFY_FILL"
             id="menu_action_account_moves_all"
             parent="account.menu_finance_entries"
-            sequence="4"
+            sequence="1"
             groups="group_account_user,group_account_manager,base.group_system"
         />
 
@@ -1458,7 +1480,7 @@
             id="action_account_manual_reconcile" name="Journal Items"
             res_model="account.move.line"
             view_id="view_move_line_tree"/>
-            />
+
 
         <menuitem
                 name="Manual Reconcilication" icon="STOCK_EXECUTE"
@@ -1835,7 +1857,7 @@
 
         <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_move_line" name="Journal Items" res_model="account.move.line" src_model="account.journal"/>
 
-        <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
 
         <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
 
@@ -2433,7 +2455,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_start" readonly="1" string="Opening Balance"/>
+                            <field name="balance_start" attrs="{'readonly':[('state','in',('open','confirm'))]}" string="Opening Balance"/>
                             <field name="total_entry_encoding"/>
                         </group>
                         <group col="2" colspan="2">
