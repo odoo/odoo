@@ -79,6 +79,10 @@ class pos_make_payment(osv.osv_memory):
                 res.update({'payment_date':current_date})
             if 'payment_name'  in fields:
                 res.update({'payment_name':'Payment'})
+            if 'partner_id' in fields:
+                res.update({'partner_id': order.partner_id.id or False})
+            if 'pricelist_id' in fields:
+                res.update({'pricelist_id': order.pricelist_id.id or False})
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
