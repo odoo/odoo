@@ -429,6 +429,9 @@ class hr_applicant(crm.crm_case, osv.osv):
             message = _('Applicant ') + " '" + name + "' "+ _("is Hired.")
             self.log(cr, uid, id, message)
 
+        stage_id = self.pool.get('hr.recruitment.stage').search(cr, uid, [('name','=','Contract Signed')])
+        self.write(cr, uid, ids,{'stage_id':stage_id[0]})
+
         applicant = self.browse(cr, uid, ids)[0]
         if applicant['job_id'] :
             emp_id = employee_obj.create(cr,uid,{'name':applicant['name'],'job_id':applicant['job_id']['id']})
