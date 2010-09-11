@@ -150,7 +150,7 @@
             <field name="help">The employee directory contains all data related to your employees: from their photo up to their hourly estimated costs for the timesheets. Employees are managed by departments and can be linked to users to manage their access rights.</field>
         </record>
 
-        <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
+        <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main" groups="base.group_system,base.group_hr_manager,base.group_hr_user"/>
 
         <!--
         =======================
