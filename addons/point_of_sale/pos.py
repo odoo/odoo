@@ -1274,9 +1274,9 @@ pos_payment()
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'income_pdt': fields.boolean('Product for Incoming'),
+        'income_pdt': fields.boolean('Product for Input'),
         'expense_pdt': fields.boolean('Product for expenses'),
-        'am_out': fields.boolean('Controle for Outgoing Operations'),
+        'am_out': fields.boolean('Controle for Output Operations'),
         'disc_controle': fields.boolean('Discount Controle '),
     }
     _defaults = {

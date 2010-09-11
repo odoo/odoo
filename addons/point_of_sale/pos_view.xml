@@ -74,7 +74,6 @@
                                 <field name="date_payment" groups="base.group_extended"/>
                             </group>
                             <group colspan="4">
-                                <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)" invisible="1"/>
                                 <field name="sale_journal" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
                                 <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
                             </group>
