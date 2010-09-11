@@ -225,7 +225,7 @@
                 <form string="Contract">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="employee_id" select="1"/>
+                        <field name="employee_id" select="1" on_change="on_change_employee_id(employee_id)"/>
                         <field name="job_id"/>
                         <field name="wage"/>
                         <field name="wage_type_id" widget="selection"/>
