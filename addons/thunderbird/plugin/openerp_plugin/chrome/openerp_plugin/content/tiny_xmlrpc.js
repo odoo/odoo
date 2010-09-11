@@ -1048,8 +1048,7 @@ var listSearchContactdetailHandler = {
                  document.getElementById("txtmobile").value =strlSearchResultValue;}
 
             if(strlSearchResult=="email"&& strlSearchResultValue!=''){
-                alert("Contact is available.");
-                document.getElementById("txtemail").value =strlSearchResultValue;}
+                 document.getElementById("txtemail").value =strlSearchResultValue;}
 
             if(strlSearchResult=="res_id"){
                  setResourceId(strlSearchResultValue);

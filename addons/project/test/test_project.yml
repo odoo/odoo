@@ -50,11 +50,11 @@
      new_id = new_prj['res_id']
      new_prj = self.read(cr, uid, [new_id], ['name', 'state'])[0]
      state = new_prj['state']
-     name = new_prj['name']
-     assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state
--
-  Reset project template to normal project
--
+     name = new_prj['name'] 
+     assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state          
+- 
+  Reset project template to normal project  
+- 
   !python {model: project.project}: |
     self.reset_project(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids":
       [ref("project.menu_open_view_project_all")], "tz": False, "active_model":
@@ -171,10 +171,10 @@
        - remaining_hours == 10
        - effective_hours == 20.0
        - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours
--
-  Make a work task entry 'Training on workflows' of 10 hours
--
+       - delay_hours == total_hours - planned_hours           
+- 
+  Make a work task entry 'Training on workflows' of 10 hours        
+- 
   !record {model: project.task, id: project_task_technicaltraining0, context: {'withoutemployee': True}}:
     work_ids:
       - date: '2010-06-02 15:05:24'
@@ -188,10 +188,10 @@
        - remaining_hours == 0
        - effective_hours == 30.0
        - total_hours == effective_hours + remaining_hours
-       - delay_hours == total_hours - planned_hours
--
-  Set remaining hours of 10 hours for reevaluating the task
--
+       - delay_hours == total_hours - planned_hours       
+- 
+  Set remaining hours of 10 hours for reevaluating the task  
+- 
   !record {model: project.task.reevaluate, id: config_compute_remaining_0}:
     remaining_hours: 10.0
 -
@@ -239,15 +239,17 @@
   Check if task in done state
 -
   !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: Task is in done state}:
-       - state == "done"
+       - state == "done"  
+       
+       
 -
-  Test for task reactivation
+  Test for task reactivation      
 -
-  Reactivate task
--
+  Reactivate task       
+- 
   !record {model: project.task.reevaluate, id: config_compute_remaining_1}:
-    remaining_hours: 10.0
--
+    remaining_hours: 10.0   
+- 
   Reevaluate the task with 10 hours remaining
 -
   !python {model: project.task.reevaluate}: |

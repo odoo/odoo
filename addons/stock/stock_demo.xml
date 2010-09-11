@@ -224,7 +224,6 @@
         </record>
         <record id="stock_location_shop0" model="stock.location">
             <field model="res.partner.address" name="address_id" search="[('name','=','Fabien')]"/>
-            <field eval="&quot;&quot;&quot;fifo&quot;&quot;&quot;" name="allocation_method"/>
             <field name="location_id" ref="stock.stock_location_company"/>
             <field name="company_id" ref="res_company_shop0"/>
             <field eval="&quot;&quot;&quot;internal&quot;&quot;&quot;" name="usage"/>

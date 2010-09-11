@@ -694,15 +694,14 @@ class sale_order(osv.osv):
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
 
             val = {}
-            if picking_id:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-
             for proc_id in proc_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
 
+            if picking_id:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+                
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
 

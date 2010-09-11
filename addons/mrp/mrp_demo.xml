@@ -713,6 +713,9 @@
             <field name="product_qty">12.0</field>
         <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm1"/>
     </record>
+    
+    <!-- Run Scheduler -->
+    <function model="procurement.order" name="run_scheduler"/>
 
     </data>
 </openerp>

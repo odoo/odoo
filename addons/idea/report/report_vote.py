@@ -54,10 +54,10 @@ class report_vote(osv.osv):
                select
                     min(iv.id) as id,
                     count(*) as nbr,
-                    to_date(to_char(iv.date, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
-                    to_char(iv.date, 'YYYY') as year,
-                    to_char(iv.date, 'MM') as month,
-                    to_char(iv.date, 'YYYY-MM-DD') as day,
+                    to_date(to_char(ii.open_date, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
+                    to_char(ii.open_date, 'YYYY') as year,
+                    to_char(ii.open_date, 'MM') as month,
+                    to_char(ii.open_date, 'YYYY-MM-DD') as day,
                     iv.user_id as user_id,
                     iv.idea_id as idea_id,
                     ii.state as idea_state,
@@ -68,8 +68,8 @@ class report_vote(osv.osv):
                     idea_vote as iv
                     left join idea_idea as ii on (ii.id = iv.idea_id)
                 group by
-                    iv.id ,to_char(iv.date, 'dd-MM-YYYY'),to_char(iv.date, 'YYYY'),
-                    to_char(iv.date, 'MM'),to_char(iv.date, 'YYYY-MM-DD'),ii.state,
+                    iv.id ,to_char(ii.open_date, 'dd-MM-YYYY'),to_char(ii.open_date, 'YYYY'),
+                    to_char(ii.open_date, 'MM'),to_char(ii.open_date, 'YYYY-MM-DD'),ii.state,
                     iv.user_id,ii.user_id,ii.category_id,iv.idea_id
             )
             """)

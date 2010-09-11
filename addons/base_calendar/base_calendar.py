@@ -403,6 +403,7 @@ property or property parameter."),
             else:
                 return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
         try:
+            # FIXME: why isn't this in CalDAV?
             import vobject
         except ImportError:
             return res
@@ -941,7 +942,7 @@ class calendar_event(osv.osv):
         if not start_date:
             return value
         if not end_date and not duration:
-            duration = 8.00
+            duration = 1.00
             value['duration'] = duration
 
         if allday: # For all day event
@@ -1113,8 +1114,8 @@ class calendar_event(osv.osv):
                         ('cancelled', 'Cancelled')], 'State', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for a recurring calendar component."),
-        'exrule': fields.char('Exception Rule', size=352, help="defines a \
-rule or repeating pattern for an exception to a recurrence set"),
+        'exrule': fields.char('Exception Rule', size=352, help="Defines a \
+rule or repeating pattern of time to exclude from the recurring rule."),
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \
                                     string='Recurrent Rule', store=True, \
                                     fnct_inv=_set_rrulestring, help='Defines a\
@@ -1123,8 +1124,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency', states={'done': [('readonly', True)]}),
-        'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]}),
+                            ('yearly', 'Yearly'), ('custom', 'Custom')], 
+                            'Recurrency', states={'done': [('readonly', True)]},
+                            help="Let the event automatically repeat at that interval"),
+        'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]},
+                        help="Set an alarm at this time, before the event occurs" ),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
         'recurrent_uid': fields.integer('Recurrent ID'),
         'recurrent_id': fields.datetime('Recurrent ID date'),
@@ -1133,15 +1137,15 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
         'freq': fields.selection([('None', 'No Repeat'), \
-                                ('secondly', 'Secondly'), \
-                                ('minutely', 'Minutely'), \
-                                ('hourly', 'Hourly'), \
-                                ('daily', 'Daily'), \
-                                ('weekly', 'Weekly'), \
-                                ('monthly', 'Monthly'), \
-                                ('yearly', 'Yearly')], 'Frequency'),
-        'interval': fields.integer('Interval'),
-        'count': fields.integer('Count'),
+                                ('hourly', 'Hours'), \
+                                ('daily', 'Days'), \
+                                ('weekly', 'Weeks'), \
+                                ('monthly', 'Months'), \
+                                ('yearly', 'Years'), \
+                                ('secondly', 'Seconds'), \
+                                ('minutely', 'Minutes') ], 'Frequency'),
+        'interval': fields.integer('Interval', help="Repeat every x"),
+        'count': fields.integer('Count', help="Repeat max that times"),
         'mo': fields.boolean('Mon'),
         'tu': fields.boolean('Tue'),
         'we': fields.boolean('Wed'),

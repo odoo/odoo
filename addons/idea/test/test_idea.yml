@@ -32,8 +32,9 @@
 
 - |
   In order to check voting statistics in real systems I will create 2 new Users "test_idea_user1".
--
-  !record {model: res.users, id: test_idea_user1}:
+
+- 
+  !record {model: res.users, id: test_idea_user1}: 
     company_id: base.main_company
     context_lang: en_US
     login: test_idea_user1
@@ -41,8 +42,8 @@
     password: test_idea_user1
     groups_id: [ base.group_tool_user, ]
 - |
-  And I will also create user2.
--
+  And I will also create user2.    
+- 
   !record {model: res.users, id: test_idea_user2}:
     company_id: base.main_company
     context_lang: en_US
@@ -71,8 +72,8 @@
   !python {model: idea.post.vote}: |
     uid2 = ref('test_idea_user2')
     new_id = self.create(cr, uid2, {'vote': 100, 'note': 'We can learn many things from technical presentation'}, {"active_ids": [ref("idea_idea_0")]})
-    self.do_vote(cr, uid2, [new_id], {'active_ids': [ref('idea_idea_0')]})
-
+    self.do_vote(cr, uid2, [new_id], {'active_ids': [ref('idea_idea_0')]})  
+        
 - |
   I can see that the Average score changed in "Average score" field with value 75
 -

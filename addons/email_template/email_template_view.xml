@@ -109,17 +109,17 @@
                                     </page>
                                 </notebook>
                                 <button name="%(wizard_email_template_preview)d" string="Preview Template"
-                                    type="action" colspan="4" target="new" />
+                                    type="action" colspan="4" target="new" icon="gtk-zoom-fit"/>
                             </group>
                         </page>
                         <page string="Advanced">
                             <group colspan="2" col="2">
                                 <group colspan="2" col="2">
                                     <separator string="Actions" colspan="2"/>
-                                    <button name="create_action" string="Create Action" type="object" colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
+                                    <button name="create_action" string="Create Action" type="object" icon="gtk-execute"  colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
                                     <field name="ref_ir_act_window"/>
                                     <field name="ref_ir_value"/>
-                                    <button name="delete_action" string="Delete Action" type="object" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
+                                    <button name="delete_action" string="Delete Action" type="object" icon="gtk-delete" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
                                 </group>
                                 <group colspan="2" col="2">
                                     <separator string="Advanced Options" colspan="2"/>

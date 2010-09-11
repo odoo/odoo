@@ -25,7 +25,7 @@
                                 <field name="smtptls" select="2" />
                                 <field name="auto_delete" />
                             </group>
-                            <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" />
+                            <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" icon="gtk-network"/>
                             <separator string="User Information" colspan="4" />
                             <group col="2" colspan="2">
                                 <field name="email_id" select="1" colspan="2" />
@@ -41,10 +41,10 @@
                     </notebook>
                     <group colspan="4" col="10">
                         <field name="state" select="1"/>
-                        <button string="Approve Account" name="button_approval" states="draft" type="workflow"/>
-                        <button string="Suspend Account" name="button_suspended" states="approved" type="workflow"  />
-                        <button string="Request Re-activation" name="get_reapprove" states="suspended" type="workflow" />
-                        <button string="Send/Receive" name="send_receive" states="approved" type="object" />
+                        <button string="Approve Account" name="button_approval" states="draft" type="workflow" icon="terp-camera_test"/>
+                        <button string="Suspend Account" name="button_suspended" states="approved" type="workflow" icon="gtk-cancel"/>
+                        <button string="Request Re-activation" name="get_reapprove" states="suspended" type="workflow" icon="gtk-convert"/>
+                        <button string="Send/Receive" name="send_receive" states="approved" type="object" icon="terp-check"/>
                     </group>
                 </form>
             </field>

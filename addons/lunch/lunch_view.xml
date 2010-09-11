@@ -371,7 +371,7 @@
                         name="month"
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-%%m-01'))]"
                         help="Box amount in current month"/>
-                        <filter icon="terp-go-week"
+                        <filter icon="terp-go-month"
                          string="    Month-1    "
                          separator="1"
                          domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"

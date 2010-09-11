@@ -340,6 +340,7 @@
                 <field name="date"/>
                 <field name="state"/>
                 <field name="res_id" invisible="1"/>
+                <field name="campaign_id" invisible="1"/>
                 <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
                 <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
                 <button string="Cancel" states="todo" name="button_cancel" type="object" icon="terp-gtk-stop"/>
@@ -404,7 +405,7 @@
                <field name="date" select="1"/>
                <newline/>
                <group expand="0" string="Group By..." colspan="10" col="12">
-                   <!--filter string="Campaign" name="campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" /-->
+                   <filter string="Campaign" name="campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
                    <filter string="Segment" name="segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}" />
                    <filter string="Activity" name="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}" />
                    <filter string="Resource" name="resource" icon="terp-accessories-archiver" context="{'group_by':'res_id'}" />
