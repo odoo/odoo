@@ -585,7 +585,7 @@ class pos_order(osv.osv):
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
         args['account_id'] = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def.id or curr_c.account_receivable.id
         if data.get('is_acc',False):
-            args['is_acc']=data['is_acc']
+            args['is_acc'] = data['is_acc']
             args['account_id']= prod_obj.browse(cr,uid, data['product_id']).property_account_income and prod_obj.browse(cr,uid, data['product_id']).property_account_income.id
             if not args['account_id']:
                 raise osv.except_osv(_('Error'), _('Please provide an account for the product: %s')%(prod_obj.browse(cr,uid, data['product_id']).name))
@@ -635,7 +635,7 @@ class pos_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_write(uid, 'pos.order', order_id, cr)
 
-        return order_line_id
+        return order_line_id, price
 
     def refund(self, cr, uid, ids, context=None):
         """Create a copy of order  for refund order"""      

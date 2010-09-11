@@ -19,9 +19,10 @@
 				    <!--field name="payment_name" /-->
 				    <field name="invoice_wanted" />
 				    <field name="num_sale" />
-				    <field name="is_acc" />
+				    <field name="is_acc"/>
 				    <group attrs="{'invisible':[('is_acc','=',False)]}" colspan="4" col="2">
-				    	<field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]"/>
+				    	<field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]"
+				    	       on_change="onchange_product_id(product_id, amount)"/>
 				    </group>
 				    <newline/>
 				    <group attrs="{'invisible':[('invoice_wanted','=',False)]}" colspan="4">

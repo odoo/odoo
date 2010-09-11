@@ -127,6 +127,18 @@ class pos_make_payment(osv.osv_memory):
                     """
         return result
 
+    def onchange_product_id(self, cr, uid, ids, product_id, amount):
+        """ Changes amount if product_id changes.
+        @param product_id: Changed product_id
+        @param amount: Amount to be paid
+        @return: Dictionary of changed values
+        """
+        prod_obj = self.pool.get('product.product')
+        if product_id:
+            product = prod_obj.browse(cr, uid, product_id)
+            amount = amount + product.list_price
+        return {'value': {'amount': amount}}
+
     def check(self, cr, uid, ids, context):
 
         """Check the order:
@@ -139,8 +151,12 @@ class pos_make_payment(osv.osv_memory):
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids)[0]
         invoice_wanted = data['invoice_wanted']
+        is_accompte = data['is_acc']
         # Todo need to check ...
-
+        if is_accompte:
+            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], 1.0, context)
+            amount = order.amount_total - order.amount_paid + price
+        
         if amount != 0.0:
             order_obj.write(cr, uid, [active_id], {'invoice_wanted': invoice_wanted, 'partner_id': data['partner_id']})
             order_obj.add_payment(cr, uid, active_id, data, context=context)
@@ -209,7 +225,7 @@ class pos_make_payment(osv.osv_memory):
 
     _columns = {
         'journal':fields.selection(pos_box_entries.get_journal, "Cash Register",required=True),
-        'product_id': fields.many2one('product.product', "Acompte"),
+        'product_id': fields.many2one('product.product', "Accompte"),
         'amount':fields.float('Amount', digits=(16,2) ,required= True),
         'payment_name': fields.char('Payment name', size=32, required=True),
         'payment_date': fields.date('Payment date', required=True),
