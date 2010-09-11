@@ -43,13 +43,11 @@ class pos_close_statement(osv.osv_memory):
         cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
         j_ids = map(lambda x1: x1[0], cr.fetchall())
         journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)])
-
+        ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', journal_ids)])
         for journal in journal_obj.browse(cr, uid, journal_ids):
-            ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             if not ids:
-                raise osv.except_osv(_('Message'), _('Journals are already closed'))
+                raise osv.except_osv(_('Message'), _('Registers are already closed.'))
             else:
-                list_statement.append(ids[0])
                 if not journal.check_dtls:
                     statement_obj.button_confirm_cash(cr, uid, ids, context)
 
@@ -61,7 +59,7 @@ class pos_close_statement(osv.osv_memory):
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {
-            'domain': "[('id','in'," + str(list_statement) + ")]",
+            'domain': "[('id','in'," + str(ids) + ")]",
             'name': 'Close Statements',
             'view_type': 'form',
             'view_mode': 'tree,form',

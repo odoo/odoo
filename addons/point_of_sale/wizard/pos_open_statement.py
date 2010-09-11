@@ -49,7 +49,7 @@ class pos_open_statement(osv.osv_memory):
         for journal in journal_obj.browse(cr, uid, journal_ids):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             if len(ids):
-                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s". \n Please close the cashbox related to. ' %(journal.name)))
+                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s".\nPlease close its related Register.' %(journal.name)))
 
             statement_ids = sorted(statement_obj.search(cr, uid, [('state', '=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)]))
             if statement_ids:

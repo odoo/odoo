@@ -57,7 +57,7 @@
         </record>
 
         <record id="action_new_bank_statement_all_tree" model="ir.actions.act_window">
-            <field name="name">All Register</field>
+            <field name="name">Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
@@ -90,13 +90,13 @@
             id="menu_point_open_config" sequence="1"/>
         <menuitem
             name="Open Registers" parent="menu_point_open_config"
-            string="Open my Cash Register"
+            string="Open Registers"
             action="action_pos_open_statement"
             id="menu_open_statement" sequence="1" />
 
         <menuitem
             name="Close Registers" parent="menu_point_open_config"
-            string="Close my Cash Register"
+            string="Close Registers"
             action="action_pos_close_statement"
             id="menu_close_statement" sequence="2" />
 
