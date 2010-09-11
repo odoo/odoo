@@ -201,6 +201,10 @@ function setDbName(argDbName){
 	getPref().setCharPref('serverdbname',argDbName);
 }
 
+//set webserver url
+function setWebServerURL(argWebServerURL){
+	getPref().setCharPref('webserverurl',argWebServerURL);
+}
 //set preference value of username for login
 function setUsername(argUsername){
 	getPref().setCharPref('username',argUsername);
@@ -399,6 +403,11 @@ function getDbName(){
 	return getPref().getCharPref('serverdbname');
 }
 
+//get webserver url
+function getWebServerURL(){
+	return getPref().getCharPref('webserverurl');
+}
+
 //get username from config settings
 function getUsername(){
 	return getPref().getCharPref('username');
@@ -459,7 +468,8 @@ function getSenderName(){
         }
 }
 
-//ger partner name
+
+//get partner name
 function getPartnerName(){
 	return getPref().getCharPref('partnername');
 }
@@ -909,31 +919,46 @@ function createMenuItem(aLabel) {
 }
 
 
-function listinstallmodule( result ) {
-	if ( rpc.onfault( result ) ) 
-	{ 
-		setmodule_install('no')
+var listinstallmodulehandler = {
+    onResult: function(client, context, result) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+		var arrIdList = result.QueryInterface(Components.interfaces.nsISupportsArray);
+		var count = arrIdList.Count();
+        if (count > 0) 
+        { 
+	        setmodule_install('yes')
+        }
+	
+	},
+	onFault: function (client, ctxt, fault) {
+        setmodule_install('no')
+	},
+
+	onError: function (client, ctxt, status, errorMsg) {
+        setmodule_install('no')
 	}
 }
 
 function module_install()
 {
-	setmodule_install("yes")
+	setmodule_install("no")
 	var branchobj = getPref();
 	setServerService('xmlrpc/object');
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 	var xmlRpcClient = getXmlRpc();
-	strDbName = branchobj.getCharPref("serverdbname");
-	struid = branchobj.getIntPref('userid');
-	strpass = branchobj.getCharPref("password");
-	strmethod = 'search';
-	strobj = 'thunderbird.partner'; // TOFIX: Find module 'thunderbird' into 'module.module' model.
-	var temp = new Array()
-	server=getServer()
-	port=getPort()
-	basicList=getBasicList()
-	rpc.addserver('object',basicList[3] , basicList[4],'/xmlrpc/object');
-	srcids=rpc.ask( 'object', 'execute', [basicList[0],basicList[1],basicList[2],strobj,strmethod,[]],listinstallmodule)
+    var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strDbName.data = branchobj.getCharPref("serverdbname");
+	var struid = xmlRpcClient.createType(xmlRpcClient.INT,{});
+	struid.data = branchobj.getIntPref('userid');
+	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strpass.data = branchobj.getCharPref("password");
+	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strmethod.data = 'name_search';
+	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strobj.data = 'ir.model';
+    var strvalue = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+    strvalue.data = 'thunderbird.partner';
+    xmlRpcClient.asyncCall(listinstallmodulehandler,null,'execute',[ strDbName,struid,strpass,strobj,strmethod, strvalue],6);
 }
 
 
@@ -951,7 +976,7 @@ var listSearchContactHandler = {
                  setPartnerName(strlSearchResultValue);
                  var t = getPartnerName();}
 
-             if(strlSearchResult=="contactname"){
+            if(strlSearchResult=="contactname"){
                  setSenderName(strlSearchResultValue);
                  var t = getSenderName();}
             
@@ -1679,6 +1704,16 @@ function createInstance(name,test){
 }
 
 //xmlrpc request handler for handling the login information
+function check_module_install(count){
+    if (getmodule_install() == "no")
+    {
+        if (count <= 0){ return false; }
+        count = count - 1;
+        return check_module_install(count)
+    }
+    return true
+}
+    
 var listLoginHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
@@ -1686,8 +1721,14 @@ var listLoginHandler = {
 		if(login.type == 12){
 			login = result.QueryInterface(Components.interfaces.nsISupportsPRInt32)
 			setUserId(login.data);
-			alert('Successfully Login To OpenERP.');
-            window.close();
+            module_install();
+            alert('Successfully Login To OpenERP.');
+            if (check_module_install(5) == false){
+                alert("Please install the thunderbird module on your '" + getDbName() +"' database and try again !");
+            }
+			else{
+                window.close();
+            }
 		}
 		else{
 			alert("Login Failed");
@@ -1744,6 +1785,7 @@ function testConnection(){
 	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strpass.data = getPref().getCharPref('password');
 	xmlRpcClient.asyncCall(listLoginHandler,null,'login',[strDbName,strusername,strpass],3);
+    
 }
 
 

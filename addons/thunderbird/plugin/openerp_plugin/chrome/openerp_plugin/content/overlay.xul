@@ -49,13 +49,20 @@
 		label= "Open Contact"
 		oncommand="Address.onMenuItemCommand(event);" />
 </toolbarpalette> 
-
 <toolbarpalette id="MailToolbarPalette">
 	<toolbarbutton id="GA-button2"
 		class="toolbarbutton-1"
+		image="&partnericon.value;"
+		label= "Open Partner"
+        oncommand="open_partner();"
+		  />
+</toolbarpalette>
+<toolbarpalette id="MailToolbarPalette">
+	<toolbarbutton id="GA-button3"
+		class="toolbarbutton-1"
 		image="&imagearchive.value;"
 		label= "Open Document"
-		oncommand="archivemail();"  />
+		oncommand="open_document();"  />
 </toolbarpalette> 
 
 
