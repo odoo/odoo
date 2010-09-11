@@ -2228,6 +2228,7 @@ class account_account_template(osv.osv):
             ('payable','Payable'),
             ('view','View'),
             ('consolidation','Consolidation'),
+            ('liquidity','Liquidity'),
             ('other','Others'),
             ('closed','Closed'),
             ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
