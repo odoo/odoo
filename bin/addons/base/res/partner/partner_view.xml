@@ -11,9 +11,6 @@
         <menuitem id="menu_config_address_book" name="Address Book" parent="menu_base_config" sequence="2"
             groups="group_system"/>
 
-<!--        <menuitem id="menu_config_crm_address_contact" name="Contacts" parent="menu_config_address_book" sequence="4"-->
-<!--            groups="group_system"/>-->
-
         <!--
           =====================
           Partner Address
@@ -52,11 +49,12 @@
                 <tree string="Partner Addresses">
                     <field name="partner_id"/>
                     <field name="name"/>
-                    <field name="type"/>
-                    <field name="street"/>
+                    <field name="phone"/>
+                    <field name="email"/>
                     <field name="zip"/>
                     <field name="city"/>
                     <field name="country_id"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
@@ -235,10 +233,9 @@
                     <field name="name"/>
                     <field name="ref" groups="base.group_extended"/>
                     <field name="phone"/>
+                    <field name="email"/>
                     <field name="city"/>
                     <field name="country"/>
-                    <field name="email"/>
-                    <field name="lang"/>
                     <field name="user_id"/>
                 </tree>
             </field>
