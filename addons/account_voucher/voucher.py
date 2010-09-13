@@ -281,17 +281,14 @@ class account_voucher(osv.osv):
         journal = journal_pool.browse(cr, uid, journal_id)
         partner = partner_pool.browse(cr, uid, partner_id)
         account_id = False
-        term_id = False
         if journal.type in ('sale','sale_refund'):
             account_id = partner.property_account_receivable.id
         elif journal.type in ('purchase', 'purchase_refund','expense'):
             account_id = partner.property_account_payable.id
         else:
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
-        default['value'].update({
-            'account_id':account_id,
-            'term_id':term_id
-        })
+
+        default['value']['account_id'] = account_id
         if journal.type not in ('cash', 'bank'):
             return default
         
@@ -354,7 +351,6 @@ class account_voucher(osv.osv):
                 default['value']['pre_line'] = 1
             elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1                
-        
         return default
 
     def onchange_date(self, cr, user, ids, date, context={}):
