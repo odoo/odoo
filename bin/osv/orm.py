@@ -1729,6 +1729,7 @@ class orm_template(object):
             resprint = ir_values_obj.get(cr, user, 'action',
                     'client_print_multi', [(self._name, False)], False,
                     context)
+            resaction = []
             resaction = ir_values_obj.get(cr, user, 'action',
                     'client_action_multi', [(self._name, False)], False,
                     context)
@@ -1750,10 +1751,6 @@ class orm_template(object):
                 'action': resaction,
                 'relate': resrelate
             }
-        if result['type'] == 'form' and result['arch'].count("default_focus") > 1:
-            msg = "Form View contain more than one default_focus attribute"
-            netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
-            raise except_orm('View Error !', msg)
         return result
 
     _view_look_dom_arch = __view_look_dom_arch
@@ -2229,18 +2226,24 @@ class orm(orm_template):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
 
+        assert not groupby or groupby in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
+
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         sum = {}
-
         flist = ''
         group_by = groupby
         if groupby:
-            if fget.get(groupby, False) and fget[groupby]['type'] in ('date', 'datetime'):
-                flist = "to_char(%s,'yyyy-mm') as %s " % (groupby, groupby)
-                groupby = "to_char(%s,'yyyy-mm')" % (groupby)
+            if fget.get(groupby, False):
+                if fget[groupby]['type'] in ('date', 'datetime'):
+                    flist = "to_char(%s,'yyyy-mm') as %s " % (groupby, groupby)
+                    groupby = "to_char(%s,'yyyy-mm')" % (groupby)
+                else:
+                    flist = groupby
             else:
-                flist = groupby
+                # Don't allow arbitrary values, as this would be a SQL injection vector! 
+                raise except_orm(_('Invalid group_by'),
+                                 _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(groupby,))
 
 
         fields_pre = [f for f in float_int_fields if
@@ -3062,7 +3065,7 @@ class orm(orm_template):
                     field_val = False
                     if f in self._columns.keys():
                         ftype = self._columns[f]._type
-                    elif key in self._inherit_fields.keys():
+                    elif f in self._inherit_fields.keys():
                         ftype = self._inherit_fields[f][2]._type
                     else:
                         continue
