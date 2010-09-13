@@ -324,12 +324,6 @@
     <images/>
   </stylesheet>
   <story>
-   <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-     <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="539.0" style="Table_header">
       <tr>
         <td>
@@ -462,13 +456,13 @@
           <para style="terp_default_Bold_9">Balance Brought Forward</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit())) ]]</para>
+          <para style="P5">[[ formatLang((sum_debit())) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_credit())) ]]</para>
+          <para style="P5">[[ formatLang((sum_credit())) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit() - sum_credit())) ]]</para>
+          <para style="P5">[[ formatLang((sum_debit() - sum_credit())) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -482,13 +476,13 @@
           <para style="P2">[[ p.ref ]] - [[ p.name ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit_partner(p))) ]]</para>
+          <para style="P5">[[ formatLang((sum_debit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_credit_partner(p))) ]]</para>
+          <para style="P5">[[ formatLang((sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]]</para>
+          <para style="P5">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -496,13 +490,13 @@
           <para style="terp_default_Centre_9" leftIndent="35.0">Initial Balance</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][0] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][0])]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][1] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][1]) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][2] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][2]) ]] [[ company.currency_id.symbol ]]</para>
         </td>
     </tr>
     </blockTable>
@@ -523,13 +517,13 @@
             <para style="P3">[[ line['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['debit'])) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang((line['debit'])) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['credit'])) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang((line['credit'])) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['progress'])) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang((line['progress'])) ]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -559,7 +553,7 @@
           <para style="terp_tblheader_Details_Right">Balance([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Currency ([[ get_currency(data) ]])</para>
+          <para style="terp_tblheader_Details_Right">Currency</para>
         </td>
       </tr>
     </blockTable>
@@ -570,13 +564,13 @@
           <para style="terp_default_Bold_9">Balance Brought Forward</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit())) ]]</para>
+          <para style="P5">[[ formatLang((sum_debit())) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_credit())) ]]</para>
+          <para style="P5">[[ formatLang((sum_credit())) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit() - sum_credit())) ]]</para>
+          <para style="P5">[[ formatLang((sum_debit() - sum_credit())) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="P5">
@@ -594,13 +588,13 @@
           <para style="P2">[[ p.ref ]] - [[ p.name ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit_partner(p))) ]]</para>
+          <para style="P5">[[ formatLang((sum_debit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_credit_partner(p))) ]]</para>
+          <para style="P5">[[ formatLang((sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]]</para>
+          <para style="P5">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="P5">
@@ -613,13 +607,13 @@
          <para style="terp_default_Centre_9" leftIndent="35.0">Initial Balance</para>
         </td>
          <td>
-          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][0] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][0]) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][1] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][1]) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ get_intial_balance(p)[0][2] or 0.0 ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][2]) ]] [[ company.currency_id.symbol ]]</para>
         </td>
    		<td>
           <para style="terp_default_Right_9"></para>
@@ -643,13 +637,13 @@
             <para style="P3">[[ line['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['debit'])) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang((line['debit'])) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['credit'])) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang((line['credit'])) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['progress'])) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang((line['progress'])) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line['amount_currency'] or '') ]] [[ line['currency_code'] or '' ]]</para>
