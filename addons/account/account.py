@@ -1537,9 +1537,9 @@ class account_tax_code(osv.osv):
         if context is None:
             context = {}
         move_state = ('posted', )
-        if 'state' in context and context['state'] == 'all':
+        if context.get('state', False) == 'all':
             move_state = ('draft', 'posted', )
-        if 'fiscalyear_id' in context and context['fiscalyear_id']:
+        if context.get('fiscalyear_id', False):
             fiscalyear_id = context['fiscalyear_id']
         else:
             fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
@@ -1557,9 +1557,9 @@ class account_tax_code(osv.osv):
         if context is None:
             context = {}
         move_state = ('posted', )
-        if 'state' in context and context['state'] == 'all':
+        if context.get('state', False) == 'all':
             move_state = ('draft', 'posted', )
-        if 'period_id' in context and context['period_id']:
+        if context.get('period_id', False):
             period_id = context['period_id']
         else:
             period_id = self.pool.get('account.period').find(cr, uid)
