@@ -16,7 +16,7 @@
 
         
         <record id="process_node_minimumstockrule0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
+            <field name="menu_id" ref="procurement.menu_stock_order_points"/>
             <field name="model_id" ref="procurement.model_stock_warehouse_orderpoint"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Linked to the 'Minimum stock rule' supplying method.&quot;&quot;&quot;" name="note"/>
@@ -85,7 +85,7 @@
         </record>
 
         <record id="process_node_productminimumstockrule0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
+            <field name="menu_id" ref="procurement.menu_stock_order_points"/>
             <field name="model_id" ref="procurement.model_stock_warehouse_orderpoint"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Minimum Stock&quot;&quot;&quot;" name="name"/>
