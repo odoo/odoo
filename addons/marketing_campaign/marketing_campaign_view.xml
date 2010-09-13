@@ -32,14 +32,14 @@
                         <field name="fixed_cost"/>
                     </group>
                 </group>
-                <field name="activity_ids" nolabel = "1" colspan="4" default_get="{'default_object_id': object_id}" />
+                <field name="activity_ids" nolabel = "1" colspan="4" context="{'default_object_id': object_id, 'default_campaign_id': active_id}" />
                 <separator string="" colspan="4" />
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" />
                     <button name="state_running_set" string="Run" states="draft,done,cancelled" icon="gtk-apply"/>
                     <button name="state_draft_set" string="Set to Draft" states="done,cancelled" icon="gtk-convert"/>
                     <button name="state_done_set" string="Close" states="running" icon="terp-dialog-close"/>
-                    <button name="state_cancel_set" string="Cancelled" states="running" icon="terp-gtk-stop"/>
+                    <button name="state_cancel_set" string="Cancel" states="running" icon="terp-gtk-stop"/>
                 </group>
               </form>
         </field>
@@ -139,18 +139,19 @@
                     <separator string="Segment" colspan="4"/>
                     <field name="name"/>
                     <field name="campaign_id" select="1" on_change="onchange_campaign_id(campaign_id)"/>
+                    <field name="object_id" invisible="1"/>
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Filter" colspan="4"/>
-                    <field name="ir_filter_id" select="1"/>
+                    <field name="ir_filter_id" domain="[('model_id', '=', object_id)]"/>
                 </group>
                 <newline/>
-                <group colspan="2" col="2">
+                <group colspan="2" col="4">
                    <separator string="Synchronization" colspan="4"/>
-                   <field name="sync_mode" required="True"/>
-                   <field name="sync_last_date"/>
-                   <label string="" colspan="1"/>
-                   <button string="Synchronize" states="running" name="synchroniz" icon="terp-project" type="object"/>
+                   <field name="sync_mode" required="True" colspan="4"/>
+                   <field name="sync_last_date" colspan="3"/>
+                   <button string="Synchronize Manually" states="running" name="synchroniz" icon="terp-project" type="object"/>
+                   <field name="date_next_sync" colspan="3"/>
                 </group>
                 <group colspan="2" col="2">
                     <separator string="History" colspan="2"/>
@@ -179,6 +180,7 @@
                 <field name="campaign_id"/>
                 <field name="date_run"/>
                 <field name="sync_last_date"/>
+                <button string="Synchronize Manually" states="running" name="synchroniz" icon="terp-project" type="object"/>
                 <field name="state" />
             </tree>
         </field>
@@ -193,9 +195,9 @@
                <filter icon="terp-check" string="Running" name="running" domain="[('state','=','running')]"/>
                <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
                <separator orientation="vertical"/>
-               <filter icon="terp-project" string="Newly Created" domain="[('sync_mode','=','create_date')]"/>
-               <filter icon="terp-project" string="Newly Modified" domain="[('sync_mode','=','write_date')]"/>
-               <filter icon="terp-project" string="All" domain="[('sync_mode','=','all')]"/>
+               <filter icon="terp-project" string="Newly Created" help="Sync mode: only records created after last sync" domain="[('sync_mode','=','create_date')]"/>
+               <filter icon="terp-project" string="Newly Modified" help="Sync mode: only records updated after last sync" domain="[('sync_mode','=','write_date')]"/>
+               <filter icon="terp-project" string="All" help="Sync mode: all records" domain="[('sync_mode','=','all')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
                <field name="campaign_id" select="1"/>
@@ -207,7 +209,7 @@
                    <separator orientation="vertical"/>
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
                    <separator orientation="vertical"/>
-                   <filter string="Run Date" name="Date Run" icon="terp-go-month" context="{'group_by':'date_run'}" />
+                   <filter string="Launch Date" name="Launch Date" icon="terp-go-month" context="{'group_by':'date_run'}" />
                </group>
            </search>
        </field>
@@ -246,6 +248,7 @@
                     <field name="signal" groups="base.group_extended"/>
                     <field name="start"/>
                     <field name="object_id" invisible="1"/>
+                    <field name="campaign_id" invisible="1"/>
                 </group>
                 <group colspan='2' col='2'>
                     <separator string="Cost / Revenue" colspan="4"/>
@@ -271,37 +274,35 @@
                         <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]" />
                     </group>
                 </group>
-                <group colspan="4" col="2">
-                    <separator string="Transitions" colspan="2"/>
-                    <field name="from_ids" nolabel="1" mode="tree,form" default_get="{'default_activity_to_id': active_id}">
-                        <tree string="Incoming Transitions" editable="bottom">
-                            <field name="activity_from_id"/>
-                            <field name='trigger'/>
-                            <field name="interval_nbr"/>
-                            <field name="interval_type"/>
-                        </tree>
-                        <form string="Incoming Transitions">
-                            <field name="activity_from_id"/>
-                            <field name='trigger'/>
-                            <field name="interval_nbr"/>
-                            <field name="interval_type"/>
-                        </form>
-                    </field>
-                    <field name="to_ids" nolabel="1" mode="tree,form" default_get="{'default_activity_from_id': active_id}">
-                        <tree string="Outgoing Transitions" editable="bottom">
-                            <field name="activity_to_id"/>
-                            <field name='trigger'/>
-                            <field name="interval_nbr"/>
-                            <field name="interval_type"/>
-                        </tree>
-                        <form string="Outgoing Transitions">
-                            <field name="activity_to_id"/>
-                            <field name='trigger'/>
-                            <field name="interval_nbr"/>
-                            <field name="interval_type"/>
-                        </form>
-                     </field>
-                </group>
+                <separator string="Transitions" colspan="4"/>
+                <field name="from_ids" nolabel="1" mode="tree,form" context="{'default_activity_to_id': active_id}" colspan="2">
+                    <tree string="Incoming Transitions" editable="bottom">
+                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name='trigger'/>
+                        <field name="interval_nbr"/>
+                        <field name="interval_type"/>
+                    </tree>
+                    <form string="Incoming Transitions">
+                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name='trigger'/>
+                        <field name="interval_nbr"/>
+                        <field name="interval_type"/>
+                    </form>
+                </field>
+                <field name="to_ids" nolabel="1" mode="tree,form" context="{'default_activity_from_id': active_id}" colspan="2">
+                    <tree string="Outgoing Transitions" editable="bottom">
+                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name='trigger'/>
+                        <field name="interval_nbr"/>
+                        <field name="interval_type"/>
+                    </tree>
+                    <form string="Outgoing Transitions">
+                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]"/>
+                        <field name='trigger'/>
+                        <field name="interval_nbr"/>
+                        <field name="interval_type"/>
+                    </form>
+                </field>
             </form>
         </field>
     </record>
@@ -333,13 +334,15 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="red:state in ('exception');black:state in ('todo');gray:state in ('cancelled')" string="Marketing Campaign Activities">
+                <field name="campaign_id"/>
                 <field name="segment_id"/>
                 <field name="activity_id" />
+                <field name="object_id" invisible="1"/>
+                <field name="res_id" invisible="1"/>
                 <field name="res_name" />
                 <field name="partner_id"/>
                 <field name="date"/>
                 <field name="state"/>
-                <field name="res_id" invisible="1"/>
                 <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
                 <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
                 <button string="Cancel" states="todo" name="button_cancel" type="object" icon="terp-gtk-stop"/>
@@ -393,21 +396,28 @@
        <field name="type">search</field>
        <field name="arch" type="xml">
            <search string="Marketing Campaign Activities">
-               <filter icon="terp-go-today" string="Today" name="today" domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"/>
-               <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','todo')]"/>
-               <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
-               <separator orientation="vertical"/>
-               <field name="segment_id" select="1"/>
-               <field name="res_name" select="1"/>
-               <field name="res_id" select="1"/>
-               <field name="partner_id" select="1"/>
-               <field name="date" select="1"/>
+               <group colspan="4" col="10">
+                <filter icon="terp-go-today" string="Today" name="today" domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"/>
+                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','todo')]"/>
+                <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
+                <separator orientation="vertical"/>
+                <field name="campaign_id"/>
+                <field name="segment_id"/>
+                <field name="date"/>
+                <newline/>
+                <field name="object_id"/>
+                <field name="res_name"/>
+                <field name="res_id"/>
+                <field name="partner_id"/>
+               </group>
                <newline/>
                <group expand="0" string="Group By..." colspan="10" col="12">
-                   <!--filter string="Campaign" name="campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" /-->
+                   <filter string="Campaign" name="campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
                    <filter string="Segment" name="segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}" />
                    <filter string="Activity" name="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}" />
-                   <filter string="Resource" name="resource" icon="terp-accessories-archiver" context="{'group_by':'res_id'}" />
+                   <separator orientation="vertical"/>
+                   <filter string="Resource" name="resource" icon="terp-accessories-archiver" context="{'group_by':'object_id'}" />
+                   <filter string="Resource ID" name="res_id" icon="terp-accessories-archiver" context="{'group_by':'res_id'}" />
                    <separator orientation="vertical"/>
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
                    <separator orientation="vertical"/>
@@ -425,7 +435,7 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_marketing_campaign_workitem_tree"/>
         <field name="search_view_id" ref="view_marketing_campaign_workitem_search"/>
-        <field name="context">{'group_by': [], 'search_default_todo': 1}</field>
+        <field name="context">{'group_by': [], 'search_default_todo': 1, 'search_default_today': 1}</field>
     </record>
 
     <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="30"/>
@@ -442,7 +452,7 @@
     <!-- Campaign Followups -->
     <act_window domain="[('campaign_id', '=', active_id)]"
         id="act_marketing_campaing_followup"
-        name="Campaign Follow-ups" res_model="marketing.campaign.workitem"
+        name="Campaign Follow-up" res_model="marketing.campaign.workitem"
         src_model="marketing.campaign" view_mode="tree,form"
         view_type="form" />
 

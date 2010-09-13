@@ -1,6 +1,6 @@
 ## -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -52,12 +52,12 @@ class bom_structure(report_sxw.rml_parse):
                     if level>0 and level<6:
                         level -= 1
             return result
-        
+
         children = _get_rec(object,level)
-        
+
         return children
 
-report_sxw.report_sxw('report.bom.structure','mrp.bom','mrp/report/bom_structure.rml',parser=bom_structure)
+report_sxw.report_sxw('report.bom.structure','mrp.bom','mrp/report/bom_structure.rml',parser=bom_structure,header='internal')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

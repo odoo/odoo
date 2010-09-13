@@ -33,14 +33,8 @@ class StockMove(osv.osv):
     
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
-        'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
     
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
-        default['procurements'] = []
-        return super(StockMove, self).copy(cr, uid, id, default, context)
-
     def _action_explode(self, cr, uid, move, context={}):
         """ Explodes pickings.
         @param move: Stock moves
@@ -151,17 +145,6 @@ StockMove()
 
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
-
-    def test_finnished(self, cursor, user, ids):
-        wf_service = netsvc.LocalService("workflow")
-        res = super(StockPicking, self).test_finnished(cursor, user, ids)
-        for picking in self.browse(cursor, user, ids):
-            for move in picking.move_lines:
-                if move.state == 'done' and move.procurements:
-                    for procurement in move.procurements:
-                        wf_service.trg_validate(user, 'procurement.order',
-                                procurement.id, 'button_check', cursor)
-        return res
 
     #
     # Explode picking by replacing phantom BoMs

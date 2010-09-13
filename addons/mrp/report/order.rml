@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Production Order" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="34.0" y1="42.0" width="527" height="758"/>
     </pageTemplate>
@@ -17,15 +17,9 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
@@ -34,15 +28,9 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
@@ -133,7 +121,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table10">
       <blockAlignment value="LEFT"/>
@@ -142,7 +129,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -181,7 +167,7 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="terp_default_8">[[ repeatIn(objects,'o') ]] </para>
+    <para style="terp_default_8">[[repeatIn(objects,'o')]] </para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -189,45 +175,39 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="193.0,83.0,122.0,129.0" style="Table3">
+    <blockTable colWidths="200.0,199.0,128.0" style="Table2">
       <tr>
+        <td>
+          <para style="terp_tblheader_General_Centre">Source Document</para>
+        </td>
         <td>
           <para style="terp_tblheader_General_Centre">Product </para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Quantity</para>
         </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Priority</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Note</para>
-        </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="193.0,83.0,122.0,129.0" style="Table5">
+    <blockTable colWidths="200.0,199.0,129.0" style="Table2">
       <tr>
+        <td>
+          <para style="terp_default_Centre_8">[[ o.origin ]]</para>
+        </td>
         <td>
           <para style="terp_default_Centre_8">[[ o.product_id.code ]] [[ o.product_id.name ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[formatLang(o.product_qty) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[o.priority or '']]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ o.product_id.description or '' ]]</para>
+          <para style="terp_default_Centre_8">[[formatLang(o.product_qty) ]] [[ o.product_uom.name ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="193.0,83.0,122.0,129.0" repeatRows="1" style="Table1">
+    <blockTable colWidths="193.0,92.0,114.0,129.0" repeatRows="1" style="Table1">
       <tr>
         <td>
-          <para style="terp_tblheader_General_Centre">Planned Date</para>
+          <para style="terp_tblheader_General_Centre">Scheduled Date</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Printing date</para>
@@ -241,7 +221,7 @@
       </tr>
     </blockTable>
     <section>
-      <blockTable colWidths="193.0,83.0,122.0,129.0" style="Table2">
+      <blockTable colWidths="193.0,92.0,114.0,129.0" style="Table2">
         <tr>
           <td>
             <para style="terp_default_Centre_8">[[ formatLang(o.date_planned, date_time = True) ]]</para>
@@ -261,7 +241,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_Bold_8">Work Orders <font face="Helvetica" size="10.0">[[ o.workcenter_lines ==[] and removeParentNode('para')]]</font></para>
+    <para style="terp_default_Bold_8">Work Orders [[ o.workcenter_lines ==[] and removeParentNode('para')]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -271,7 +251,7 @@
           <para style="terp_tblheader_General_Centre">Sequence</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Name <font face="Helvetica" size="10.0">[[ o.workcenter_lines ==[] and removeParentNode('blockTable')]]</font></para>
+          <para style="terp_tblheader_Details_Centre">Name [[ o.workcenter_lines ==[] and removeParentNode('blockTable')]]</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">WorkCenter</para>
@@ -316,7 +296,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="250.0,66.0,107.0,104.0" style="Table8">
+    <blockTable colWidths="256.0,61.0,107.0,104.0" style="Table8">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Product </para>
@@ -336,16 +316,13 @@
       <para style="terp_default_Bold_9">Products to Consume [[ o.move_lines ==[] and removeParentNode('section')]]</para>
       <section>
         <para style="terp_default_8">[[ repeatIn(o.move_lines,'line') ]]</para>
-        <blockTable colWidths="250.0,42.0,23.0,109.0,104.0" style="Table9">
+        <blockTable colWidths="250.0,65.0,108.0,104.0" style="Table9">
           <tr>
             <td>
               <para style="terp_default_9">[[ line.product_id.code ]] [[ line.product_id.name ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9">[[ formatLang( line.product_qty) ]] </para>
-            </td>
-            <td>
-              <para style="terp_default_9">[[line.product_uom.name]]</para>
+              <para style="terp_default_Right_9">[[ formatLang( line.product_qty) ]] [[ line.product_uom.name]] </para>
             </td>
             <td>
               <para style="terp_default_Centre_9">[[ line.location_id.name ]]</para>
@@ -357,20 +334,20 @@
         </blockTable>
       </section>
     </section>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
     <section>
       <para style="terp_default_Bold_9">Consumed Products [[ o.move_lines2 ==[] and removeParentNode('section')]]</para>
       <section>
         <para style="terp_default_8">[[ repeatIn(o.move_lines2,'line2') ]]</para>
-        <blockTable colWidths="251.0,41.0,23.0,109.0,104.0" style="Table10">
+        <blockTable colWidths="251.0,66.0,106.0,104.0" style="Table10">
           <tr>
             <td>
               <para style="terp_default_9">[[ line2.product_id.code ]] [[ line2.product_id.name ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9">[[ formatLang( line2.product_qty) ]] </para>
-            </td>
-            <td>
-              <para style="terp_default_9">[[line2.product_uom.name]]</para>
+              <para style="terp_default_Right_9">[[ formatLang( line2.product_qty) ]] [[ line2.product_uom.name]] </para>
             </td>
             <td>
               <para style="terp_default_Centre_9">[[ line2.location_id.name ]]</para>

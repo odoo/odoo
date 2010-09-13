@@ -41,8 +41,8 @@ class survey_send_invitation(osv.osv_memory):
                                 'survey_id', "Answer", required=1),
         'send_mail': fields.boolean('Send mail for new user'),
         'send_mail_existing': fields.boolean('Send reminder for existing user'),
-        'mail_subject': fields.char('Subject', size=256, required=1),
-        'mail_subject_existing': fields.char('Subject', size=256, required=1),
+        'mail_subject': fields.char('Subject', size=256),
+        'mail_subject_existing': fields.char('Subject', size=256),
         'mail_from': fields.char('From', size=256, required=1),
         'mail': fields.text('Body')
     }
@@ -100,7 +100,7 @@ class survey_send_invitation(osv.osv_memory):
         survey_ref= self.pool.get('survey')
 
         model_data_obj = self.pool.get('ir.model.data')
-        group_id = model_data_obj._get_id(cr, uid, 'survey', 'base.group_tool_user')
+        group_id = model_data_obj._get_id(cr, uid, 'base', 'group_tool_user')
         group_id = model_data_obj.browse(cr, uid, group_id, context=context).res_id
 
         act_id = self.pool.get('ir.actions.act_window')

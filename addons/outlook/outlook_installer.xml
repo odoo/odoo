@@ -9,13 +9,13 @@
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
-                        <attribute name="string">Outlook Plug-In Installation</attribute>
+                        <attribute name="string">Outlook Plug-In Configuration</attribute>
                     </form>
                     <separator string="title" position="attributes">
                         <attribute name="string">Outlook</attribute>
                     </separator>
                     <xpath expr="//label[@string='description']" position="attributes">
-                        <attribute name="string">This Module allows you to select an object that you would like to add to your email and its attachments from MS Outlook. You can select a partner, a task, a project, an analytical account, or any other object and Archived selected mail in mailgate.messages with attachments.</attribute>
+                        <attribute name="string">This plug-in allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one.</attribute>
                     </xpath>
                     <xpath expr="//button[@string='Install Modules']" position="attributes">
                         <attribute name="string">Configure</attribute>
@@ -34,7 +34,7 @@
                                 <newline/>
                             <field name="doc_file" filename="doc_name"/>
                                 <newline/>
-                            <separator string="Outlook plugin installation note." colspan="4"/>
+                            <separator string="Installation and Configuration Steps" colspan="4"/>
                             <field name="description" nolabel="1" colspan="8"/>
                         </group>
                     </group>

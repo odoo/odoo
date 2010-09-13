@@ -135,12 +135,12 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             if activity.type != 'email':
                 continue
             if not activity.email_template_id.from_account:
-                raise osv.except_osv(_("Error"), _("The campaign cannot be started: an email account is missing in the email activity '%s'")%activity.name)
+                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is missing in email activity '%s'")%activity.name)
             if activity.email_template_id.from_account.state != 'approved':
-                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is not approved in the email activity '%s'")%activity.name)
+                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is not approved in email activity '%s'")%activity.name)
 
         if not has_start and not has_signal_without_from:
-            raise osv.except_osv(_("Error"), _("The campaign hasn't any starting activity nor any activity with a signal and no previous activity."))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity (or any activity with a signal and no previous activity)"))
 
         return self.write(cr, uid, ids, {'state': 'running'})
 
@@ -213,27 +213,31 @@ class marketing_campaign_segment(osv.osv):
     _name = "marketing.campaign.segment"
     _description = "Campaign Segment"
 
+    def _get_next_sync(self, cr, uid, ids, fn, args, context=None):
+        # next auto sync date is same for all segments
+        sync_job = self.pool.get('ir.model.data').get_object(cr, uid, 'marketing_campaign', 'ir_cron_marketing_campaign_every_day', context=context)
+        next_sync = sync_job and sync_job.nextcall or False
+        return dict.fromkeys(ids, next_sync)
+
     _columns = {
         'name': fields.char('Name', size=64,required=True),
-        'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
-             required=True, select=1, ondelete="cascade"),
-        'object_id': fields.related('campaign_id','object_id',
-                                      type='many2one', relation='ir.model',
-                                      string='Object'),
-        'ir_filter_id': fields.many2one('ir.filters', 'Filter', help="Filter to select the matching resource records that belong to this segment. New filters can be created and saved using the advanced search on the list view of the Resource"),
+        'campaign_id': fields.many2one('marketing.campaign', 'Campaign', required=True, select=1, ondelete="cascade"),
+        'object_id': fields.related('campaign_id','object_id', type='many2one', relation='ir.model', string='Resource'),
+        'ir_filter_id': fields.many2one('ir.filters', 'Filter', help="Filter to select the matching resource records that belong to this segment. New filters can be created and saved using the advanced search on the list view of the Resource. If no filter is set, all records are selected without filtering. The synchronization mode may also add a criterion to the filter."),
         'sync_last_date': fields.datetime('Last Synchronization', help="Date on which this segment was synchronized last time (automatically or manually)"),
-        'sync_mode': fields.selection([('create_date', 'If record created after last sync'),
-                                      ('write_date', 'If record modified after last sync (no duplicates)'),
+        'sync_mode': fields.selection([('create_date', 'Only records created after last sync'),
+                                      ('write_date', 'Only records modified after last sync (no duplicates)'),
                                       ('all', 'All records (no duplicates)')],
-                                      'Workitem creation mode',
-                                      help="Determines how new campaign workitems are created for resource records matching this segment. This is used when segments are synchronized manually, or automatically via the scheduled job."),
+                                      'Synchronization mode',
+                                      help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign."),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled')],
                                    'State',),
-        'date_run': fields.datetime('Launching Date', help="Initial start date of this segment."),
+        'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
+        'date_next_sync': fields.function(_get_next_sync, method=True, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
     }
 
     _defaults = {
@@ -264,7 +268,6 @@ class marketing_campaign_segment(osv.osv):
             if model_name:
                 mod_name = model_name[0]['model']
                 res['domain'] = {'ir_filter_id': [('model_id', '=', mod_name)]}
-                res['context'] = {'default_model_id': model_name[0]['model']}
         else:
             res['value'] = {'ir_filter_id': False}
         return res
@@ -526,7 +529,18 @@ class marketing_campaign_transition(osv.osv):
         'interval_type': 'days',
         'trigger': 'time',
     }
+    def _check_campaign(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.activity_from_id.campaign_id != obj.activity_to_id.campaign_id:
+                return False
+        return True
 
+    _constraints = [
+            (_check_campaign, _('The To/From Activity of transition must be of the same Campaign '), ['activity_from_id,activity_to_id']),
+        ]
+ 
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
@@ -581,9 +595,9 @@ class marketing_campaign_workitem(osv.osv):
         'activity_id': fields.many2one('marketing.campaign.activity','Activity',
              required=True, readonly=True),
         'campaign_id': fields.related('activity_id', 'campaign_id',
-             type='many2one', relation='marketing.campaign', string='Campaign', readonly=True),
+             type='many2one', relation='marketing.campaign', string='Campaign', readonly=True, store=True),
         'object_id': fields.related('activity_id', 'campaign_id', 'object_id',
-             type='many2one', relation='ir.model', string='Resource', select=1, readonly=True),
+             type='many2one', relation='ir.model', string='Resource', select=1, readonly=True, store=True),
         'res_id': fields.integer('Resource ID', select=1, readonly=True),
         'res_name': fields.function(_res_name_get, method=True, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),

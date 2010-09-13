@@ -20,12 +20,12 @@
                             <separator string="Server Information" colspan="4" />
                             <group colspan="4" col="4">
                                 <field name="smtpserver" select="1"/>
+                                <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" icon="gtk-network" colspan="2"/>
                                 <field name="smtpport" select="2" />
                                 <field name="smtpssl" select="2" />
                                 <field name="smtptls" select="2" />
                                 <field name="auto_delete" />
                             </group>
-                            <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" />
                             <separator string="User Information" colspan="4" />
                             <group col="2" colspan="2">
                                 <field name="email_id" select="1" colspan="2" />
@@ -41,10 +41,10 @@
                     </notebook>
                     <group colspan="4" col="10">
                         <field name="state" select="1"/>
-                        <button string="Approve Account" name="button_approval" states="draft" type="workflow"/>
-                        <button string="Suspend Account" name="button_suspended" states="approved" type="workflow"  />
-                        <button string="Request Re-activation" name="get_reapprove" states="suspended" type="workflow" />
-                        <button string="Send/Receive" name="send_receive" states="approved" type="object" />
+                        <button string="Approve Account" name="button_approval" states="draft" type="workflow" icon="terp-camera_test"/>
+                        <button string="Suspend Account" name="button_suspended" states="approved" type="workflow" icon="gtk-cancel"/>
+                        <button string="Request Re-activation" name="get_reapprove" states="suspended" type="workflow" icon="gtk-convert"/>
+                        <button string="Send/Receive" name="send_receive" states="approved" type="object" icon="terp-check"/>
                     </group>
                 </form>
             </field>
@@ -55,14 +55,15 @@
             <field name="model">email_template.account</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree  colors="blue:state in ('draft');black:state in ('suspended','approved')" string="SMTP Server">
-                    <field name="name" select="2" />
-                    <field name="email_id" select="2" />
-                    <field name="smtpuname" select="2" />
-                    <field name="user" select="2" />
-                    <field name="smtpserver" select="2" />
-                    <field name="smtpport" select="2" />
-                    <field name="state" select="2" />
+                <tree colors="blue:state in ('draft');black:state in ('suspended','approved')" string="Email Accounts">
+                    <field name="name" />
+                    <field name="email_id" />
+                    <field name="smtpuname" />
+                    <field name="user" />
+                    <field name="smtpserver" />
+                    <field name="smtpport" />
+                    <field name="auto_delete" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -72,7 +73,7 @@
            <field name="model">email_template.account</field>
            <field name="type">search</field>
            <field name="arch" type="xml">
-               <search string="Accounts">
+               <search string="Email Accounts">
                     <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
                     <filter icon="terp-camera_test" string="Approved" domain="[('state','=','approved')]"/>
                     <filter icon="terp-emblem-important" string="Suspended" domain="[('state','=','suspended')]"/>

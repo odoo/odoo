@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import time
@@ -63,7 +63,7 @@ class pos_sales_user_today_current_user(report_sxw.rml_parse):
     def _get_data_current_user_qty(self, user):
         return self.qty
 
-report_sxw.report_sxw('report.pos.sales.user.today.current.user', 'pos.order', 'addons/point_of_sale/report/pos_sales_user_today_current_user.rml', parser=pos_sales_user_today_current_user)
+report_sxw.report_sxw('report.pos.sales.user.today.current.user', 'pos.order', 'addons/point_of_sale/report/pos_sales_user_today_current_user.rml', parser=pos_sales_user_today_current_user,header='internal')
 
 
 

@@ -10,6 +10,8 @@
             <field name="arch" type="xml">
                 <search string="Product">
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
+		   <filter icon="terp-accessories-archiver" string="Consumable"
+                        domain="[('type','=', 'consumable')]"/>                   
                    <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
                    <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>

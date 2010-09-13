@@ -71,12 +71,8 @@ class report_files_partner(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
-        'directory': fields.char('Directory',size=64,readonly=True),
-        'create_date': fields.datetime('Date Created', readonly=True),
-        'change_date': fields.datetime('Modified Date', readonly=True),
         'file_size': fields.integer('File Size', readonly=True),
         'nbr':fields.integer('# of Files', readonly=True),
-        'type':fields.char('Directory Type',size=64,readonly=True),
         'partner':fields.char('Partner',size=64,readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
@@ -85,15 +81,17 @@ class report_files_partner(osv.osv):
          tools.drop_view_if_exists(cr, 'report_files_partner')
          cr.execute("""
             CREATE VIEW report_files_partner as (
-                select min(f.id) as id,count(*) as nbr,
-                       to_char(f.create_date,'YYYY') as name,
-                       min(to_char(f.create_date,'MM')) as month,
-                       p.name as partner
-                from ir_attachment f
-                inner join res_partner p
-                on (f.partner_id=p.id)
-                where f.datas_fname is not null
-                group by p.name, to_char(f.create_date,'YYYY')
+                SELECT min(f.id) AS id,
+                       COUNT(*) AS nbr,
+                       to_char(date_trunc('month', f.create_date),'YYYY') AS name,
+                       to_char(date_trunc('month', f.create_date),'MM') AS month,
+                       SUM(f.file_size) AS file_size,
+                       p.name AS partner
+                       
+                FROM ir_attachment f
+                  LEFT JOIN res_partner p ON (f.partner_id=p.id)
+                WHERE f.datas_fname IS NOT NULL
+                GROUP BY p.name, date_trunc('month', f.create_date)
              )
          """)
 report_files_partner()

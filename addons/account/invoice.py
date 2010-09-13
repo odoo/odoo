@@ -399,8 +399,8 @@ class account_invoice(osv.osv):
                         pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
                     rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value_reference','res_id'])
                     pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value_reference','res_id'])
-                    rec_res_id = rec_line_data and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
-                    pay_res_id = pay_line_data and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
+                    rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
+                    pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
                         raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
@@ -495,8 +495,8 @@ class account_invoice(osv.osv):
                         pay_pro_id = property_obj.search(cr, uid, [('name','=','property_account_payable'),('company_id','=',company_id)])
                     rec_line_data = property_obj.read(cr, uid, rec_pro_id, ['name','value_reference','res_id'])
                     pay_line_data = property_obj.read(cr, uid, pay_pro_id, ['name','value_reference','res_id'])
-                    rec_res_id = rec_line_data and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
-                    pay_res_id = pay_line_data and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
+                    rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
+                    pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
                         raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
@@ -1309,7 +1309,12 @@ class account_invoice_line(osv.osv):
                 else:
                     app_acc_in = in_acc_cate
             else:
-                app_acc_in = account_obj.browse(cr, uid, in_pro_id)[0]
+                # Get the fields from the ir.property record
+                my_value = property_obj.read(cr,uid,in_pro_id,['name','value_reference','res_id'])
+                # Parse the value_reference field to get the ID of the account.account record
+                account_id = int (my_value[0]["value_reference"].split(",")[1])
+                # Use the ID of the account.account record in the browse for the account.account record
+                app_acc_in = account_obj.browse(cr, uid, [account_id])[0]                
             if not exp_pro_id:
                 ex_acc = res.product_tmpl_id.property_account_expense
                 ex_acc_cate = res.categ_id.property_account_expense_categ
@@ -1481,6 +1486,24 @@ account_invoice_line()
 class account_invoice_tax(osv.osv):
     _name = "account.invoice.tax"
     _description = "Invoice Tax"
+    
+    def _count_factor(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for invoice_tax in self.browse(cr, uid, ids, context=context):
+            res[invoice_tax.id] = {
+                'factor_base': 1.0,
+                'factor_tax': 1.0,
+            }
+            if invoice_tax.amount <> 0.0:
+                factor_tax = invoice_tax.tax_amount / invoice_tax.amount
+                res[invoice_tax.id]['factor_tax'] = factor_tax
+                
+            if invoice_tax.base <> 0.0:
+                factor_base = invoice_tax.base_amount / invoice_tax.base
+                res[invoice_tax.id]['factor_base'] = factor_base
+                
+        return res
+    
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
         'name': fields.char('Tax Description', size=64, required=True),
@@ -1495,33 +1518,34 @@ class account_invoice_tax(osv.osv):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
+        'factor_base' : fields.function(_count_factor, method=True, string='Multipication factor for Base code', type='float', multi="all"),
+        'factor_tax' : fields.function(_count_factor, method=True, string='Multipication factor Tax code', type='float', multi="all")
     }
 
     def base_change(self, cr, uid, ids, base, currency_id=False, company_id=False, date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency = False
+        factor = 1
+        if ids:
+            factor = self.read(cr, uid, ids[0], ['factor_base'])['factor_base']
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            base = cur_obj.compute(cr, uid, currency_id, company_currency, base, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            base = cur_obj.compute(cr, uid, currency_id, company_currency, base*factor, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'base_amount':base}}
 
     def amount_change(self, cr, uid, ids, amount, currency_id=False, company_id=False, date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency = False
-        tax_sign = 1
+        factor = 1
         if ids:
-            tax_amount = self.read(cr, uid, ids[0], ['tax_amount'])['tax_amount']
-            if tax_amount < 0:
-                tax_sign = -1
-            elif tax_amount == 0:
-                tax_sign = 0
+            factor = self.read(cr, uid, ids[0], ['factor_tax'])['factor_tax']
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*tax_sign, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*factor, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'tax_amount': amount}}
 
     _order = 'sequence'

@@ -37,13 +37,17 @@ class mrp_installer(osv.osv_memory):
                  "procurement scheduler manually."),
         'mrp_operations': fields.boolean('Manufacturing Operations',
             help="Enhances production orders with readiness states as well "
-                 "as the dates of start and end of execution of the order."),
+                 "as the date of start and end of execution of the order."),
         'mrp_subproduct': fields.boolean('MRP Subproducts',
             help="Enables multiple product output from a single production "
-                 "order: without this, a productio order can have only one "
+                 "order: without this, a production order can have only one "
                  "output product."),
         'mrp_repair': fields.boolean('Repairs',
             help="Enables warranty and repair management (and their impact "
                  "on stocks and invoicing)."),
         }
+
+    _defaults = {
+        'mrp_jit': lambda self,cr,uid,*a: self.pool.get('res.users').browse(cr, uid, uid).view == 'simple',
+    }
 mrp_installer()

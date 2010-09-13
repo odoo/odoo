@@ -32,10 +32,10 @@ from report.interface import toxml
 one_day = DateTime.RelativeDateTime(days=1)
 month2name = [0, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-def hour2str(h):
-    hours = int(h)
-    minutes = int(round((h - hours) * 60, 0))
-    return '%02dh%02d' % (hours, minutes)
+#def hour2str(h):
+#    hours = int(h)
+#    minutes = int(round((h - hours) * 60, 0))
+#    return '%02dh%02d' % (hours, minutes)
 
 class report_custom(report_rml):
 
@@ -67,7 +67,7 @@ class report_custom(report_rml):
                     '''
                     cr.execute(sql, (today.strftime('%Y-%m-%d %H:%M:%S'), tomor.strftime('%Y-%m-%d %H:%M:%S'), emp['id']))
                     attendences = cr.dictfetchall()
-                    wh = 0
+                    wh = 0.0
                     # Fake sign ins/outs at week ends, to take attendances across week ends into account
                     if attendences and attendences[0]['action'] == 'sign_out':
                         attendences.insert(0, {'name': today.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_in'})
@@ -80,8 +80,8 @@ class report_custom(report_rml):
                             wh += (dt - ldt).hours
                         ldt = dt
                     # Week xml representation
-                    wh = hour2str(wh)
-                    today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, wh)
+#                    wh = hour2str(wh)
+                    today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, round(wh,2))
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
                 user_xml.append(user_repr % '\n'.join(days_xml))
