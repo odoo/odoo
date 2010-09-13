@@ -29,23 +29,19 @@ class project_task(osv.osv):
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null')
     }
 
-    def do_close(self, cr, uid, ids, *args):
-        res = super(project_task, self).do_close(cr, uid, ids, *args)
-        tasks = self.browse(cr, uid, ids)
-        for task in tasks:
+    def do_close(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids):
             if task.procurement_id:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', task.procurement_id.id, 'subflow.done', cr)
-        return res
+        return super(project_task, self).do_close(cr, uid, ids, context=context)
 
     def do_cancel(self, cr, uid, ids, *args):
-        res = super(project_task, self).do_cancel(cr, uid, ids, *args)
-        tasks = self.browse(cr, uid, ids)
-        for task in tasks:
+        for task in self.browse(cr, uid, ids):
             if task.procurement_id:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', task.procurement_id.id, 'subflow.cancel', cr)
-        return True
+        return super(project_task, self).do_cancel(cr, uid, ids, *args)
 
 project_task()
 

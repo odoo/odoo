@@ -55,21 +55,22 @@ class account_use_model(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-
+        move_ids = []
+        entry = {}
         data =  self.read(cr, uid, ids, context=context)[0]
         record_id = context and context.get('model_line', False) or False
         if record_id:
             data_model = account_model_obj.browse(cr, uid, data['model'])
         else:
             data_model = account_model_obj.browse(cr, uid, context['active_ids'])
-        move_ids = []
         for model in data_model:
+            entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%d')}
             period_id = account_period_obj.find(cr, uid, context=context)
             if not period_id:
                 raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
             period_id = period_id[0]
             move_id = account_move_obj.create(cr, uid, {
-                'ref': model.name,
+                'ref': entry['name'],
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
             })

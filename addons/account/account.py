@@ -162,8 +162,8 @@ class account_account_type(osv.osv):
         'note': fields.text('Description'),
     }
     _defaults = {
-        'close_method': lambda *a: 'none',
-        'sign': lambda *a: 1,
+        'close_method': 'none',
+        'sign': 1,
     }
     _order = "code"
 
@@ -369,6 +369,7 @@ class account_account(osv.osv):
             ('other', 'Regular'),
             ('receivable', 'Receivable'),
             ('payable', 'Payable'),
+            ('liquidity','Liquidity'),
             ('consolidation', 'Consolidation'),
             ('closed', 'Closed'),
         ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
@@ -750,19 +751,34 @@ class account_fiscalyear(osv.osv):
         'state': fields.selection([('draft','Open'), ('done','Closed')], 'State', readonly=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start"
 
+    def _check_fiscal_year(self, cr, uid, ids, context=None):
+        current_fiscal_yr = self.browse(cr, uid, ids, context=context)[0]
+        obj_fiscal_ids = self.search(cr, uid, [('company_id', '=', current_fiscal_yr.company_id.id)], context=context)
+        obj_fiscal_ids.remove(ids[0])
+        data_fiscal_yr = self.browse(cr, uid, obj_fiscal_ids, context=context)
+
+        for old_fy in data_fiscal_yr:
+            if old_fy.company_id.id == current_fiscal_yr['company_id'].id:
+                # Condition to check if the current fiscal year falls in between any previously defined fiscal year
+                if old_fy.date_start <= current_fiscal_yr['date_start'] <= old_fy.date_stop or \
+                    old_fy.date_start <= current_fiscal_yr['date_stop'] <= old_fy.date_stop:
+                    return False
+        return True
+
     def _check_duration(self,cr,uid,ids):
-        obj_fy=self.browse(cr,uid,ids[0])
+        obj_fy = self.browse(cr,uid,ids[0])
         if obj_fy.date_stop < obj_fy.date_start:
             return False
         return True
 
     _constraints = [
-        (_check_duration, 'Error ! The duration of the Fiscal Year is invalid. ', ['date_stop'])
+        (_check_duration, 'Error! The duration of the Fiscal Year is invalid. ', ['date_stop']),
+        (_check_fiscal_year, 'Error! You cannot define overlapping fiscal years',['date_start', 'date_stop'])
     ]
 
     def create_period3(self,cr, uid, ids, context={}):
@@ -954,8 +970,8 @@ class account_journal_period(osv.osv):
         return super(account_journal_period, self).unlink(cr, uid, ids, context)
 
     _defaults = {
-        'state': lambda *a: 'draft',
-        'active': lambda *a: True,
+        'state': 'draft',
+        'active': True,
     }
     _order = "period_id"
 
@@ -1083,10 +1099,10 @@ class account_move(osv.osv):
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
     _defaults = {
-        'name': lambda *a: '/',
-        'state': lambda *a: 'draft',
+        'name': '/',
+        'state': 'draft',
         'period_id': _get_period,
-        'date': lambda *a:time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
@@ -1502,9 +1518,9 @@ class account_tax_code(osv.osv):
         if context is None:
             context = {}
         move_state = ('posted', )
-        if 'state' in context and context['state'] == 'all':
+        if context.get('state', False) == 'all':
             move_state = ('draft', 'posted', )
-        if 'fiscalyear_id' in context and context['fiscalyear_id']:
+        if context.get('fiscalyear_id', False):
             fiscalyear_id = context['fiscalyear_id']
         else:
             fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
@@ -1522,9 +1538,9 @@ class account_tax_code(osv.osv):
         if context is None:
             context = {}
         move_state = ('posted', )
-        if 'state' in context and context['state'] == 'all':
+        if context.get('state', False) == 'all':
             move_state = ('draft', 'posted', )
-        if 'period_id' in context and context['period_id']:
+        if context.get('period_id', False):
             period_id = context['period_id']
         else:
             period_id = self.pool.get('account.period').find(cr, uid)
@@ -1577,8 +1593,8 @@ class account_tax_code(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
     _defaults = {
         'company_id': _default_company,
-        'sign': lambda *args: 1.0,
-        'notprintable': lambda *a: False,
+        'sign': 1.0,
+        'notprintable': False,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1972,16 +1988,15 @@ class account_model(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
         'legend' :fields.text('Legend', readonly=True, size=100),
-        'date': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Current Date', required=True, help="The date of the generated entries"),
     }
 
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-        'date': 'today'
     }
     def generate(self, cr, uid, ids, datas={}, context={}):
         move_ids = []
+        entry = {}
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         pt_obj = self.pool.get('account.payment.term')
@@ -1995,8 +2010,9 @@ class account_model(osv.osv):
         period_id = period_id[0]
 
         for model in self.browse(cr, uid, ids, context):
+            entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%d')}
             move_id = account_move_obj.create(cr, uid, {
-                'ref': model.name,
+                'ref': entry['name'],
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
                 'date': context.get('date',time.strftime('%Y-%m-%d'))
@@ -2091,11 +2107,11 @@ class account_subscription(osv.osv):
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
-        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
-        'period_type': lambda *a: 'month',
-        'period_total': lambda *a: 12,
-        'period_nbr': lambda *a: 1,
-        'state': lambda *a: 'draft',
+        'date_start': time.strftime('%Y-%m-%d'),
+        'period_type': 'month',
+        'period_total': 12,
+        'period_nbr': 1,
+        'state': 'draft',
     }
     def state_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
@@ -2193,6 +2209,7 @@ class account_account_template(osv.osv):
             ('payable','Payable'),
             ('view','View'),
             ('consolidation','Consolidation'),
+            ('liquidity','Liquidity'),
             ('other','Others'),
             ('closed','Closed'),
             ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
@@ -2212,9 +2229,9 @@ class account_account_template(osv.osv):
     }
 
     _defaults = {
-        'reconcile': lambda *a: False,
-        'type' : lambda *a :'view',
-        'nocreate': lambda *a: False,
+        'reconcile': False,
+        'type' : 'view',
+        'nocreate': False,
     }
 
     _check_recursion = check_cycle
@@ -2307,8 +2324,8 @@ class account_tax_code_template(osv.osv):
     }
 
     _defaults = {
-        'sign': lambda *args: 1.0,
-        'notprintable': lambda *a: False,
+        'sign': 1.0,
+        'notprintable': False,
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -2408,17 +2425,17 @@ class account_tax_template(osv.osv):
     _defaults = {
         'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
         'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
-        'applicable_type': lambda *a: 'true',
-        'type': lambda *a: 'percent',
-        'amount': lambda *a: 0,
-        'sequence': lambda *a: 1,
-        'tax_group': lambda *a: 'vat',
-        'ref_tax_sign': lambda *a: 1,
-        'ref_base_sign': lambda *a: 1,
-        'tax_sign': lambda *a: 1,
-        'base_sign': lambda *a: 1,
-        'include_base_amount': lambda *a: False,
-        'type_tax_use': lambda *a: 'all',
+        'applicable_type': 'true',
+        'type': 'percent',
+        'amount': 0,
+        'sequence': 1,
+        'tax_group': 'vat',
+        'ref_tax_sign': 1,
+        'ref_base_sign': 1,
+        'tax_sign': 1,
+        'base_sign': 1,
+        'include_base_amount': False,
+        'type_tax_use': 'all',
     }
     _order = 'sequence'
 
@@ -2499,7 +2516,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
         'chart_template_id': _get_chart,
-        'code_digits': lambda *a:6,
+        'code_digits': 6,
         'seq_journal': True
     }
 

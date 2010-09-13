@@ -540,7 +540,7 @@
                                     <field name="date"/>
                                     <field name="name"/>
                                     <field name="type"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
@@ -1579,9 +1579,9 @@
                     <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                     <field name="analytic_account_id"/>
                     <field name="partner_id"/>
-                    <field name="quantity"/>
                     <field name="debit" select="1"/>
                     <field name="credit" select="1"/>
+                     <field name="quantity"/>
                     <field name="date_maturity"/>
                 </form>
             </field>
@@ -1596,7 +1596,6 @@
                     <field name="name" select="1"/>
                     <field name="journal_id" select="1"/>
                     <field name="company_id" select="1" widget='selection' groups="base.group_multi_company"/>
-                    <field name="date" context="{'date': date}"/>
                     <field colspan="4" nolabel="1" name="lines_id" height="250" widget="one2many_list"/>
                     <separator string="Legend" colspan="4"/>
                     <field name="legend" colspan="4" nolabel="1"/>
@@ -1771,13 +1770,38 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');gray:state in ('done');black:state in ('running')" string="Entry Subscription">
-                    <field name="ref"/>
                     <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="ref"/>
                     <field name="date_start"/>
                     <field name="state"/>
                 </tree>
             </field>
         </record>
+
+       	<record id="view_subscription_search" model="ir.ui.view">
+            <field name="name">account.subscription.search</field>
+            <field name="model">account.subscription</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Entry Subscription">
+                    <group col="8" colspan="4">
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Subscription"/>
+                        <filter icon="terp-camera_test" string="Running" domain="[('state','=','running')]" help="Running Subscription"/>
+                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="model_id"/>
+                        <field name="date_start"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Model" icon="terp-folder-orange" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="view_subscription_form" model="ir.ui.view">
             <field name="name">account.subscription.form</field>
             <field name="model">account.subscription</field>
@@ -1820,6 +1844,7 @@
             <field name="res_model">account.subscription</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_subscription_search"/>
         </record>
         <menuitem name="Define Recurring Entries" action="action_subscription_form" id="menu_action_subscription_form" sequence="1" parent="account.menu_finance_recurrent_entries"/>
 

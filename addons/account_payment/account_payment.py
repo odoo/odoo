@@ -133,6 +133,29 @@ class payment_order(osv.osv):
         })
         return super(payment_order, self).copy(cr, uid, id, default, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        payment_line_obj = self.pool.get('payment.line')
+        payment_line_ids = []
+        if (vals.get('date_prefered', False) == 'fixed' and not vals.get('date_scheduled', False)) or vals.get('date_scheduled', False):
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_ids.append(line.id)
+            payment_line_obj.write(cr, uid, payment_line_ids, {'date':vals.get('date_scheduled', False)}, context=context)
+        elif vals.get('date_prefered', False) == 'due':
+            vals.update({'date_scheduled':False})
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_obj.write(cr, uid, [line.id], {'date':line.ml_maturity_date}, context=context)
+        elif vals.get('date_prefered', False) == 'now':
+            vals.update({'date_scheduled':False})
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_ids.append(line.id)
+            payment_line_obj.write(cr, uid, payment_line_ids, {'date': False}, context=context)
+        return super(payment_order, self).write(cr, uid, ids, vals, context=context)
+
 payment_order()
 
 class payment_line(osv.osv):
@@ -236,19 +259,6 @@ class payment_line(osv.osv):
             res[line.id] = currency_obj.compute(cursor, user, line.currency.id,
                     line.company_currency.id,
                     line.amount_currency, context=ctx)
-        return res
-
-    def _value_date(self, cursor, user, ids, name, args, context=None):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cursor, user, ids, context=context):
-            if line.order_id.date_prefered == 'fixed':
-                res[line.id] = line.order_id.date_scheduled
-            elif line.order_id.date_prefered == 'due':
-                res[line.id] = line.due_date or time.strftime('%Y-%m-%d')
-            else:
-                res[line.id] = time.strftime('%Y-%m-%d')
         return res
 
     def _get_currency(self, cr, uid, context):
@@ -359,7 +369,6 @@ class payment_line(osv.osv):
                 data['date'] = line.date_maturity
             elif date_prefered == 'fixed':
                 data['date'] = date_scheduled
-
         return {'value': data}
 
     def onchange_amount(self, cr, uid, ids, amount, currency, cmpny_currency, context=None):

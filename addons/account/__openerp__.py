@@ -46,7 +46,6 @@ module named account_voucher.
     "depends" : ["product", "analytic", "process","board"],
     'update_xml': [
         'security/account_security.xml',
-        'security/analytic_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
         'account_wizard.xml',

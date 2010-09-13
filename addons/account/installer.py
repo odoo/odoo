@@ -469,7 +469,7 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        res_obj = self.pool.get('account.fiscalyear')
+        fy_obj = self.pool.get('account.fiscalyear')
         data_pool = self.pool.get('ir.model.data')
         obj_acc = self.pool.get('account.account')
         super(account_installer, self).execute(cr, uid, ids, context=context)
@@ -531,7 +531,7 @@ class account_installer(osv.osv_memory):
                         'company_id': company_id.id,
                         'sign': 1,
                         'parent_id':pur_tax_parent_id
-                        }
+                    }
                     new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
                     purchase_tax = obj_tax.create(cr, uid,
                                             {'name':'TAX%s%%'%(p_tax*100),
@@ -556,21 +556,23 @@ class account_installer(osv.osv_memory):
                         ir_values.set(cr, uid, key='default', key2=False, name=name, models =[('product.product',False)], value=[value])
 
             if 'date_start' in res and 'date_stop' in res:
-                name = code = res['date_start'][:4]
-                if int(name) != int(res['date_stop'][:4]):
-                    name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
-                    code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
-                vals = {'name': name,
-                        'code': code,
-                        'date_start': res['date_start'],
-                        'date_stop': res['date_stop'],
-                        'company_id': res['company_id']
-                       }
-                period_id = res_obj.create(cr, uid, vals, context=context)
-                if res['period'] == 'month':
-                    res_obj.create_period(cr, uid, [period_id])
-                elif res['period'] == '3months':
-                    res_obj.create_period3(cr, uid, [period_id])
+                f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id','=',res['company_id'])])
+                if not f_ids:
+                    name = code = res['date_start'][:4]
+                    if int(name) != int(res['date_stop'][:4]):
+                        name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
+                        code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
+                    vals = {'name': name,
+                            'code': code,
+                            'date_start': res['date_start'],
+                            'date_stop': res['date_stop'],
+                            'company_id': res['company_id']
+                           }
+                    fiscal_id = fy_obj.create(cr, uid, vals, context=context)
+                    if res['period'] == 'month':
+                        fy_obj.create_period(cr, uid, [fiscal_id])
+                    elif res['period'] == '3months':
+                        fy_obj.create_period3(cr, uid, [fiscal_id])
 
 #        #fially inactive the demo chart of accounts
 #        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
