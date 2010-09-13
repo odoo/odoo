@@ -83,6 +83,7 @@ class configmanager(object):
             'list_db' : True,
             'timezone' : False, # to override the default TZ
             'test_file' : False,
+            'test_report_directory' : False,
             'test_disable' : False,
             'test_commit' : False,
             'static_http_enable': False,
@@ -158,6 +159,7 @@ class configmanager(object):
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", help="Launch a YML test file.")
+        group.add_option("--test-report-directory", dest="test_report_directory", help="If set, will save sample of all reports in this directory.")
         group.add_option("--test-disable", action="store_true", dest="test_disable",
                          default=False, help="Disable loading test files.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
@@ -282,11 +284,12 @@ class configmanager(object):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
-        keys = ['language', 'translate_out', 'translate_in', 'debug_mode', 'smtp_ssl',
-                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
-                'list_db', 'server_actions_allow_code', 'xmlrpcs',
-                'test_file', 'test_disable', 'test_commit'
-                ]
+        keys = [
+            'language', 'translate_out', 'translate_in', 'debug_mode', 'smtp_ssl',
+            'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
+            'list_db', 'server_actions_allow_code', 'xmlrpcs',
+            'test_file', 'test_disable', 'test_commit', 'test_report_directory'
+        ]
 
         for arg in keys:
             if getattr(opt, arg) is not None:
