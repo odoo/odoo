@@ -141,6 +141,7 @@ class account_bank_statement(osv.osv):
         'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly', True)]}),
         'balance_end': fields.function(_end_balance, method=True, string='Balance'),
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, required=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
             states={'confirm':[('readonly', True)]}),
@@ -710,6 +711,7 @@ class account_bank_statement_line(osv.osv):
         'reconcile_amount': fields.function(_reconcile_amount,
             string='Amount reconciled', method=True, type='float'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement lines."),
+        'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, required=True),
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
