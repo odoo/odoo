@@ -136,7 +136,7 @@ class pos_make_payment(osv.osv_memory):
         prod_obj = self.pool.get('product.product')
         if product_id:
             product = prod_obj.browse(cr, uid, product_id)
-            amount = amount + product.list_price
+            amount = amount - product.list_price
         return {'value': {'amount': amount}}
 
     def check(self, cr, uid, ids, context):
@@ -154,8 +154,8 @@ class pos_make_payment(osv.osv_memory):
         is_accompte = data['is_acc']
         # Todo need to check ...
         if is_accompte:
-            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], 1.0, context)
-            amount = order.amount_total - order.amount_paid + price
+            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], -1.0, context)
+            amount = order.amount_total - order.amount_paid - price
         
         if amount != 0.0:
             order_obj.write(cr, uid, [active_id], {'invoice_wanted': invoice_wanted, 'partner_id': data['partner_id']})
@@ -225,11 +225,11 @@ class pos_make_payment(osv.osv_memory):
 
     _columns = {
         'journal':fields.selection(pos_box_entries.get_journal, "Cash Register",required=True),
-        'product_id': fields.many2one('product.product', "Accompte"),
+        'product_id': fields.many2one('product.product', "Advance"),
         'amount':fields.float('Amount', digits=(16,2) ,required= True),
         'payment_name': fields.char('Payment name', size=32, required=True),
         'payment_date': fields.date('Payment date', required=True),
-        'is_acc': fields.boolean('Accompte'),
+        'is_acc': fields.boolean('Advance'),
         'invoice_wanted': fields.boolean('Invoice'),
         'num_sale':fields.char('Num.File', size=32),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),

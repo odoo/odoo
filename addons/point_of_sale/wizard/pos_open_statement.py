@@ -83,6 +83,8 @@ class pos_open_statement(osv.osv_memory):
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
         id3 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
+        result = data_obj._get_id(cr, uid, 'point_of_sale', 'view_pos_open_cash_statement_filter')
+        search_id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
@@ -93,8 +95,10 @@ class pos_open_statement(osv.osv_memory):
             'name': 'Open Statement',
             'view_type': 'form',
             'view_mode': 'tree,form',
+            'search_view_id': search_id['res_id'],
             'res_model': 'account.bank.statement',
             'views': [(id2, 'tree'),(id3, 'form')],
+            'context': {'search_default_open': 1},
             'type': 'ir.actions.act_window'
         }
 pos_open_statement()
