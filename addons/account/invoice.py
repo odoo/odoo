@@ -1471,6 +1471,24 @@ account_invoice_line()
 class account_invoice_tax(osv.osv):
     _name = "account.invoice.tax"
     _description = "Invoice Tax"
+    
+    def _count_factor(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for invoice_tax in self.browse(cr, uid, ids, context=context):
+            res[invoice_tax.id] = {
+                'factor_base': 1.0,
+                'factor_tax': 1.0,
+            }
+            if invoice_tax.amount <> 0.0:
+                factor_tax = invoice_tax.tax_amount / invoice_tax.amount
+                res[invoice_tax.id]['factor_tax'] = factor_tax
+                
+            if invoice_tax.base <> 0.0:
+                factor_base = invoice_tax.base_amount / invoice_tax.base
+                res[invoice_tax.id]['factor_base'] = factor_base
+                
+        return res
+    
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
         'name': fields.char('Tax Description', size=64, required=True),
@@ -1485,33 +1503,34 @@ class account_invoice_tax(osv.osv):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
+        'factor_base' : fields.function(_count_factor, method=True, string='Multipication factor for Base code', type='float', multi="all"),
+        'factor_tax' : fields.function(_count_factor, method=True, string='Multipication factor Tax code', type='float', multi="all")
     }
 
     def base_change(self, cr, uid, ids, base, currency_id=False, company_id=False, date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency = False
+        factor = 1
+        if ids:
+            factor = self.read(cr, uid, ids[0], ['factor_base'])['factor_base']
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            base = cur_obj.compute(cr, uid, currency_id, company_currency, base, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            base = cur_obj.compute(cr, uid, currency_id, company_currency, base*factor, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'base_amount':base}}
 
     def amount_change(self, cr, uid, ids, amount, currency_id=False, company_id=False, date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency = False
-        tax_sign = 1
+        factor = 1
         if ids:
-            tax_amount = self.read(cr, uid, ids[0], ['tax_amount'])['tax_amount']
-            if tax_amount < 0:
-                tax_sign = -1
-            elif tax_amount == 0:
-                tax_sign = 0
+            factor = self.read(cr, uid, ids[0], ['factor_tax'])['factor_tax']
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*tax_sign, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*factor, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'tax_amount': amount}}
 
     _order = 'sequence'

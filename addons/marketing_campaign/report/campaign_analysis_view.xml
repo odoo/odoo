@@ -9,6 +9,7 @@
             <tree string="Marketing Reports">
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="date" invisible="1"/>
                 <field name="campaign_id" invisible="1"/>
                 <field name="activity_id" invisible="1"/>
@@ -28,7 +29,7 @@
         <field name="model">campaign.analysis</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Marketing Reports">
+            <search string="Campaign Analysis">
                    <group>
                     <filter icon="terp-go-year"
                             string="This Year"
@@ -66,7 +67,7 @@
                     <separator orientation="vertical"/>
                     <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
@@ -75,7 +76,7 @@
     </record>
 
     <record id="action_campaign_analysis_all" model="ir.actions.act_window">
-        <field name="name">Campaigns</field>
+        <field name="name">Campaign Analysis</field>
         <field name="res_model">campaign.analysis</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree</field>
