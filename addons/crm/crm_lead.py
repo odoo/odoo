@@ -119,7 +119,7 @@ class crm_lead(crm_case, osv.osv):
         'write_date': fields.datetime('Update Date' , readonly=True),
 
         # Lead fields
-        'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
+        'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
@@ -148,7 +148,7 @@ class crm_lead(crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }

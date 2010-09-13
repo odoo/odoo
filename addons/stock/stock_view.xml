@@ -257,7 +257,7 @@
                     <newline/>
                     <field name="author_id" readonly="1"/>
                     <newline/>
-					<separator string="Description" colspan="4"/>
+                    <separator string="Description" colspan="4"/>
                     <field colspan="4" name="description" nolabel="1"/>
                 </form>
             </field>
@@ -576,7 +576,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Entry Lines">
-                	<group height="200" width="500">
+                    <group height="200" width="500">
                     <field name="address_id" invisible="True" context="{'contact_display':'partner'}"/>
                     <field name="picking_id" invisible="True"/>
                     <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"  height="100" width="500"/><newline/>
@@ -589,14 +589,14 @@
                </field>
         </record>
 
-  	<act_window name="Unreceived Products"		    
-		    res_model="stock.picking.move.wizard"
-		    src_model="stock.picking"
-		    view_mode="form"
-		    target="new"        
+      <act_window name="Unreceived Products"            
+            res_model="stock.picking.move.wizard"
+            src_model="stock.picking"
+            view_mode="form"
+            target="new"        
             key2="client_action_multi"
-		    id="act_stock_picking_move_wizard"/>		
-		    	
+            id="act_stock_picking_move_wizard"/>        
+                
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>
@@ -624,8 +624,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="%(action_partial_picking)d" states="assigned" string="Approve" type="action" icon="gtk-go-forward" help="Approve Picking"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.   Do you want to continue?"/>
+                    <button name="%(action_partial_picking)d" states="confirmed,assigned" string="Approve" type="action" icon="gtk-go-forward" help="Approve Picking"/>
                 </tree>
             </field>
         </record>
@@ -1151,7 +1150,7 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Done" type="action" icon="gtk-execute"/>
-								<button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
+                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -1362,7 +1361,7 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
-								<button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
+                                <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -1817,7 +1816,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-			<field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
+            <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context">{"search_default_receive":1}</field>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
