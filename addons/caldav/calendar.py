@@ -186,6 +186,8 @@ def map_data(cr, uid, obj, context=None):
             if field_type == 'selection':
                 if not map_val:
                     continue
+                if type(map_val) == list and len(map_val): #TOFIX: why need to check this
+                    map_val = map_val[0]
                 mapping = obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
                     map_val = mapping.get(map_val.lower(), False)
