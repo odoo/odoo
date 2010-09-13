@@ -7,9 +7,9 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Work Ccenters load">
-                    <field name="name" select="1"/>
-                    <field name="workcenter_id" select="1"/>
+                <tree string="Work Centers load">
+                    <field name="name"/>
+                    <field name="workcenter_id"/>
                     <field name="cycle"/>
                     <field name="hour"/>
                 </tree>
@@ -22,26 +22,23 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Work Center load" type="bar">
-                    <field name="name"/>
+                    <field group="True" name="name"/>
                     <field name="cycle" operator="+"/>
                     <field name="hour" operator="+"/>
                     <field group="True" name="workcenter_id"/>
                 </graph>
             </field>
         </record>
-
-
-        <record id="view_workcenter_load_form" model="ir.ui.view">
-            <field name="name">report.workcenter.load.form</field>
+        
+        <record id="view_workcenter_load_search" model="ir.ui.view">
+            <field name="name">report.workcenter.load.search</field>
             <field name="model">report.workcenter.load</field>
-            <field name="type">form</field>
+            <field name="type">search</field>
             <field name="arch" type="xml">
-                <form string="Work Center load" type="bar">
-                    <field name="name" select="1"/>
-                    <field name="workcenter_id" select="1"/>
-                    <field name="cycle"/>
-                    <field name="hour"/>
-                </form>
+                <search string="Work Center load">
+                    <field name="name"/>
+                    <field name="workcenter_id" widget="selection"/>
+                </search>
             </field>
         </record>
         <record id="action_report_workcenter_load_tree" model="ir.actions.act_window">
@@ -49,6 +46,7 @@
             <field name="res_model">report.workcenter.load</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_workcenter_load_search"/>
             <field name="help">Work Center Load is a projection of load in a work center given a period. The load is express in hour and cycle (for machines).</field>
         </record>
         <menuitem id="next_id_77" name="Reporting"
