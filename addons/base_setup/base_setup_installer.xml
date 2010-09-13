@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Install OpenERP Applications</attribute>
+            <attribute name="string">Install Applications</attribute>
           </form>
           <xpath expr="//label[@string='description']"
                  position="attributes">
@@ -18,9 +18,13 @@
                     <attribute name='string'></attribute>
                     <attribute name='rowspan'>15</attribute>
           </xpath>
+          <xpath expr="//button[@string='Install Modules']" position="attributes">
+                    <attribute name="string">Install</attribute>
+          </xpath>
           <separator string="title" position="attributes">
-            <attribute name="string">Install Generic Applications</attribute>
+            <attribute name="string">Install Applications</attribute>
           </separator>
+            
           <group colspan="8">
             <field name="crm" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
             <field name="project" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="knowledge" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
@@ -39,7 +43,7 @@
     </record>
 
     <record id="action_base_setup_installer" model="ir.actions.act_window">
-      <field name="name">Base Setup Applications Installation</field>
+      <field name="name">Install Applications</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">base.setup.installer</field>
       <field name="view_id" ref="view_base_setup_installer"/>

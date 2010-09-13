@@ -12,11 +12,11 @@
           </form>
 
           <separator string="title" position="attributes">
-            <attribute name="string">Configure Your CRM System</attribute>
+            <attribute name="string">Configure Your CRM Application</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string">You can enhance OpenERP's basic CRM support with a few additional OpenERP applications</attribute>
+            <attribute name="string">You can enhance OpenERP's basic CRM support with a few additional OpenERP modules</attribute>
           </xpath>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
               <attribute name='rowspan'>13</attribute>
@@ -49,7 +49,7 @@
     </record>
 
     <record id="action_crm_installer" model="ir.actions.act_window">
-      <field name="name">CRM Applications Installation</field>
+      <field name="name">CRM Application Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">crm.installer</field>
       <field name="view_id" ref="view_crm_installer"/>

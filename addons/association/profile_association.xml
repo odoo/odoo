@@ -2,14 +2,14 @@
 <openerp>
     <data>
         <record id="view_confirm_install_module_form" model="ir.ui.view">
-            <field name="name">Association Profile : Install extra modules</field>
+            <field name="name">Association Application Configuration</field>
             <field name="model">profile.association.config.install_modules_wizard</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
               <data>
                 <form position="attributes">
-                  <attribute name="string">Association Profile Configuration</attribute>
+                  <attribute name="string">Association Application Configuration</attribute>
                 </form>
                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
                     <attribute name='string'></attribute>
@@ -37,7 +37,7 @@
         </record>
 
         <record id="action_config_install_module" model="ir.actions.act_window">
-            <field name="name">Association Profile : Install Extra Applications</field>
+            <field name="name">Association Application Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">profile.association.config.install_modules_wizard</field>
             <field name="view_id" ref="view_confirm_install_module_form"/>

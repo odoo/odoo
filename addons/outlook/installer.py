@@ -40,7 +40,7 @@ class outlook_installer(osv.osv_memory):
     _columns = {
         'name':fields.char('File name', size=34),
         'doc_name':fields.char('File name', size=64),
-        'outlook':fields.boolean('Outlook Application ', help="Allows you to select an object that you’d like to add to your email and its attachments."),
+        'outlook':fields.boolean('Outlook Plug-in ', help="Allows you to select an object that you’d like to add to your email and its attachments."),
         'plugin_file':fields.binary('Outlook Plug-in', readonly=True, help="outlook plug-in file. Save as this file and install this plug-in in outlook."),
         'doc_file':fields.binary('Installation Manual', help="The documentation file :- how to install Outlook Plug-in.", readonly=True),
         'description':fields.text('Description', readonly=True)

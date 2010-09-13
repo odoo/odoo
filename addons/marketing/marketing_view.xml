@@ -15,7 +15,7 @@
                     <attribute name="string">Marketing Application Configuration</attribute>
                   </form>
                   <separator string="title" position="attributes">
-                    <attribute name="string">Select Marketing Applications to Install</attribute>
+                    <attribute name="string">Configure Your Marketing Application</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']"
                          position="attributes">
@@ -39,7 +39,7 @@
         </record>
 
         <record id="action_marketing_installer" model="ir.actions.act_window">
-            <field name="name">Marketing Applications Installation</field>
+            <field name="name">Marketing Applications Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">marketing.installer</field>
             <field name="view_id" ref="view_marketing_installer"/>
