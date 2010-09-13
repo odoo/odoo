@@ -176,6 +176,14 @@ class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
+    def truncate_data(self, cr, uid, data, context=None):
+        data_list = data and data.split('\n') or []
+        if len(data_list) > 3:
+            res = '\n\t'.join(data_list[:3]) + '...'
+        else:
+            res = '\n\t'.join(data_list)
+        return res
+
     def _get_display_text(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
@@ -186,11 +194,14 @@ class mailgate_message(osv.osv):
             if message.history:
                 msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
                 if message.description:
-                    msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
+                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
             else:
-                msg_txt = (message.user_id.name or '/') + _('  on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
                 if message.name == _('Opportunity'):
                     msg_txt += _("Converted to Opportunity")
+                elif message.name == _('Note'):
+                    msg_txt = (message.user_id.name or '/') + _(' added note on ') + format_date_tz(message.date, tz) + ':\n\t'
+                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
                 else:
                     msg_txt += _("Changed Status to: ") + message.name
             result[message.id] = msg_txt
