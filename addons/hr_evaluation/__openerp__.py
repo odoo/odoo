@@ -44,7 +44,7 @@
         "hr_evaluation_view.xml",
         "report/hr_evaluation_report_view.xml"
         ],
-#    "test": ["test/test_hr_evaluation.yml"],
+    "test": ["test/test_hr_evaluation.yml"],
     "active": False,
     "installable": True
 }

@@ -28,7 +28,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>                        
-                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>                        
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>                        
                          <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"
                             default="context.get('report', False)"/>
@@ -221,7 +221,7 @@
             <field name="arch" type="xml">
                 <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1');gray:state in ('cancel')">
                     <field name="employee_id"/>
-                    <field name="department_id"/>
+                    <field name="department_id" invisible="not context.get('set_visible',False)"/>
                     <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
                     <field name="date_from"/>
                     <field name="date_to"/>
