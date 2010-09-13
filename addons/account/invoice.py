@@ -397,10 +397,10 @@ class account_invoice(osv.osv):
                         rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
-                    rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value','res_id'])
-                    pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value','res_id'])
-                    rec_res_id = rec_line_data and int(rec_line_data[0]['value'].split(',')[1]) or False
-                    pay_res_id = pay_line_data and int(pay_line_data[0]['value'].split(',')[1]) or False
+                    rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value_reference','res_id'])
+                    pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value_reference','res_id'])
+                    rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
+                    pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
                         raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
@@ -493,10 +493,10 @@ class account_invoice(osv.osv):
                         rec_pro_id = property_obj.search(cr, uid, [('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = property_obj.search(cr, uid, [('name','=','property_account_payable'),('company_id','=',company_id)])
-                    rec_line_data = property_obj.read(cr, uid, rec_pro_id, ['name','value','res_id'])
-                    pay_line_data = property_obj.read(cr, uid, pay_pro_id, ['name','value','res_id'])
-                    rec_res_id = rec_line_data and int(rec_line_data[0]['value'].split(',')[1]) or False
-                    pay_res_id = pay_line_data and int(pay_line_data[0]['value'].split(',')[1]) or False
+                    rec_line_data = property_obj.read(cr, uid, rec_pro_id, ['name','value_reference','res_id'])
+                    pay_line_data = property_obj.read(cr, uid, pay_pro_id, ['name','value_reference','res_id'])
+                    rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
+                    pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
                         raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
@@ -1299,7 +1299,12 @@ class account_invoice_line(osv.osv):
                 else:
                     app_acc_in = in_acc_cate
             else:
-                app_acc_in = account_obj.browse(cr, uid, in_pro_id)[0]
+                # Get the fields from the ir.property record
+                my_value = property_obj.read(cr,uid,in_pro_id,['name','value_reference','res_id'])
+                # Parse the value_reference field to get the ID of the account.account record
+                account_id = int (my_value[0]["value_reference"].split(",")[1])
+                # Use the ID of the account.account record in the browse for the account.account record
+                app_acc_in = account_obj.browse(cr, uid, [account_id])[0]                
             if not exp_pro_id:
                 ex_acc = res.product_tmpl_id.property_account_expense
                 ex_acc_cate = res.categ_id.property_account_expense_categ
