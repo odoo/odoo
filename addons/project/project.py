@@ -302,6 +302,19 @@ class task(osv.osv):
     }
     _order = "sequence, priority, date_deadline, id"
 
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from project_task where id in %s', (tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_id'])
+    ]
     #
     # Override view according to the company definition
     #
