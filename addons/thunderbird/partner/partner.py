@@ -207,7 +207,7 @@ class thunderbird_partner(osv.osv_memory):
                 'phone': address.phone or '',
                 'mobile': address.mobile or '',
                 'fax': address.fax or '',
-                'partner_id': address.partner_id and address.partner_id.id or '',
+                'partner_id': address.partner_id and str(address.partner_id.id) or '',
                 'res_id': str(address.id),
             }
         return res.items()
