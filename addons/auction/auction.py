@@ -56,7 +56,9 @@ class auction_dates(osv.osv):
                 tmp[id]=sum[0]
         return tmp
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
         reads = self.read(cr, uid, ids, ['name', 'auction1'], context)
@@ -230,7 +232,7 @@ class auction_lot_category(osv.osv):
     }
 auction_lot_category()
 
-def _type_get(self, cr, uid,ids):
+def _type_get(self, cr, uid):
     cr.execute('select name, name from auction_lot_category order by name')
     return cr.fetchall()
 
@@ -474,15 +476,19 @@ class auction_lots(osv.osv):
     ]
 
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
         result = [ (r['id'], str(r['obj_num'])+' - '+r['name']) for r in self.read(cr, user, ids, ['name','obj_num'])]
         return result
 
-    def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
+    def name_search(self, cr, user, name, args=[], operator='ilike', context=None):
+        if context is None:
+            context = {}
         try:
-            ids = self.search(cr, user, [('obj_num','=',int(name))]+ args)
+            ids = self.search(cr, user, [('obj_num','=',int(name))]+ args,context=context)
         except:
             ids = []
         if not ids:
