@@ -34,11 +34,10 @@ class account_fiscalyear_close(osv.osv_memory):
        'fy2_id': fields.many2one('account.fiscalyear', \
                                  'New Fiscal Year', required=True),
        'journal_id': fields.many2one('account.journal', \
-                                 'Opening Entries Journal', required=True),
+                                 'Opening Entries Journal', required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts and with a centralized counterpart.'),
        'period_id': fields.many2one('account.period', \
                                  'Opening Entries Period', required=True),
        'report_name': fields.char('Name of new entries',size=64, required=True),
-       'sure': fields.boolean('Check this box'),
     }
     _defaults = {
         'report_name':'End of Fiscal Year Entry',
@@ -58,15 +57,13 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_move_line = self.pool.get('account.move.line')
         obj_acc_account = self.pool.get('account.account')
         obj_acc_journal_period = self.pool.get('account.journal.period')
+        obj_rec = self.pool.get('account.move.reconcile')
 
         data =  self.read(cr, uid, ids, context=context)
 
         if context is None:
             context = {}
-        if not data[0]['sure']:
-            raise osv.except_osv(_('UserError'), _('Closing of fiscal year cancelled, please check the box !'))
         fy_id = data[0]['fy_id']
-
 
         cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)" , (str(data[0]['fy2_id']),))
         fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
@@ -88,20 +85,21 @@ class account_fiscalyear_close(osv.osv_memory):
                     _('The journal must have centralised counterpart'))
 
         move_ids = obj_acc_move_line.search(cr, uid, [
-            ('journal_id','=',new_journal.id),('period_id.fiscalyear_id','=',new_fyear.id)])
+            ('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])
+
         if move_ids:
-            raise osv.except_osv(_('UserError'),
-                    _('The opening journal must not have any entry in the new fiscal year !'))
+            obj_acc_move_line._remove_move_reconcile(cr, uid, move_ids, context=context)
+            obj_acc_move_line.unlink(cr, uid, move_ids, context=context)
+
         cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
         result = cr.dictfetchall()
         fy_ids = ','.join([str(x['id']) for x in result])
         query_line = obj_acc_move_line._query_get(cr, uid,
                 obj='account_move_line', context={'fiscalyear': fy_ids})
-        cr.execute('select id from account_account WHERE active')
+        cr.execute('select id from account_account WHERE active AND company_id = %s', (old_fyear.company_id.id,))
         ids = map(lambda x: x[0], cr.fetchall())
         for account in obj_acc_account.browse(cr, uid, ids,
             context={'fiscalyear': fy_id}):
-
             accnt_type_data = account.user_type
             if not accnt_type_data:
                 continue

@@ -141,6 +141,7 @@ class account_bank_statement(osv.osv):
         'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly', True)]}),
         'balance_end': fields.function(_end_balance, method=True, string='Balance'),
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, required=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
             states={'confirm':[('readonly', True)]}),
@@ -626,13 +627,15 @@ account_bank_statement_reconcile_line()
 class account_bank_statement_line(osv.osv):
 
     def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context=None):
+        res_users_obj = self.pool.get('res.users')
+        res_currency_obj = self.pool.get('res.currency')
         res = {'value': {}}
         obj_partner = self.pool.get('res.partner')
         if context is None:
             context = {}
         if not partner_id:
             return res
-
+        account_id = False
         line = self.browse(cursor, user, line_id)
         if not line or (line and not line[0].account_id):
             part = obj_partner.browse(cursor, user, partner_id, context=context)
@@ -642,9 +645,7 @@ class account_bank_statement_line(osv.osv):
                 account_id = part.property_account_receivable.id
             res['value']['account_id'] = account_id
 
-        if not line or (line and not line[0].amount):
-            res_users_obj = self.pool.get('res.users')
-            res_currency_obj = self.pool.get('res.currency')
+        if account_id and (not line or (line and not line[0].amount)) and not context.get('amount', False):
             company_currency_id = res_users_obj.browse(cursor, user, user,
                     context=context).company_id.currency_id.id
             if not currency_id:
@@ -710,6 +711,7 @@ class account_bank_statement_line(osv.osv):
         'reconcile_amount': fields.function(_reconcile_amount,
             string='Amount reconciled', method=True, type='float'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement lines."),
+        'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, required=True),
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
