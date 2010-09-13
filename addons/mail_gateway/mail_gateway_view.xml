@@ -189,6 +189,12 @@
             view_id="view_mailgate_message_tree"
             />
 
+        <act_window
+        id="act_res_partner_open_email" name="Open Documents"
+        res_model="ir.attachment"
+        src_model="mailgate.message"
+         key2="client_action_multi"/>
+
       <menuitem name="Mail" id="menu_base_config_mail"
         parent="base.menu_base_partner" sequence="5" />
 
