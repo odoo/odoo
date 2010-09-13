@@ -30,6 +30,20 @@ class stock_fill_inventory(osv.osv_memory):
         'recursive': fields.boolean("Include children",help="If checked, products contained in child locations of selected location will be included as well."),
         'set_stock_zero': fields.boolean("Set to zero",help="If checked, all product quantities will be set to zero to help ensure a real physical inventory is done"),
     }
+    def view_init(self, cr, uid, fields_list, context=None):
+        """
+         Creates view dynamically and adding fields at runtime.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary
+         @return: New arch of view with new columns.
+        """
+        res = super(stock_fill_inventory, self).view_init(cr, uid, fields_list, context=context)
+        stock = self.pool.get('stock.inventory').browse(cr, uid, context.get('active_id', False) )
+        if stock.state=='done':
+                raise osv.except_osv('Error!','Stock Inventory is done')
+        True
 
     def fill_inventory(self, cr, uid, ids, context):
         """ To Import stock inventory according to products available in the selected locations.
