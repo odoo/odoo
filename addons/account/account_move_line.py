@@ -754,8 +754,7 @@ class account_move_line(osv.osv):
         if res:
             if res[1] != 'draft':
                 raise osv.except_osv(_('UserError'),
-                        _('The account move (%s) for centralisation ' \
-                                'has been confirmed!') % res[2])
+                        _('The account move (%s) for centralisation has been confirmed!') % res[2])
         return res
 
     def unlink(self, cr, uid, ids, context={}, check=True):

@@ -2774,10 +2774,8 @@ msgstr "Mutatie regels"
 #. module: account
 #: code:addons/account/account_move_line.py:0
 #, python-format
-msgid "The account move (%s) for centralisation ' \\n"
-"                                'has been confirmed!"
-msgstr "De boeking (%s) voor centralisatie ' \\n"
-"                                'is bevestigd!"
+msgid "The account move (%s) for centralisation has been confirmed!"
+msgstr "De boeking (%s) voor centralisatie is bevestigd!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -6260,48 +6258,8 @@ msgstr "Verkoopdagboek"
 #. module: account
 #: code:addons/account/account.py:0
 #, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                # If the move is balanced\n"
-"                # Add to the list of valid moves\n"
-"                # (analytic lines will be created later for valid moves)\n"
-"                valid_moves.append(move)\n"
-"\n"
-"                # Check whether the move lines are confirmed\n"
-"                \n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                # Update the move lines (set them as valid)\n"
-"\n"
-"                self.pool.get('account.move.line"
-msgstr "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                # If the move is balanced\n"
-"                # Add to the list of valid moves\n"
-"                # (analytic lines will be created later for valid moves)\n"
-"                valid_moves.append(move)\n"
-"\n"
-"                # Check whether the move lines are confirmed\n"
-"                \n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                # Update the move lines (set them as valid)\n"
-"\n"
-"                self.pool.get('account.move.line"
+msgid "Couldn't create move with currency different from the secondary currency of the account '%s - %s'. Clear the secondary currency field of the account definition if you want to accept all currencies."
+msgstr ""
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,fy_id:0
