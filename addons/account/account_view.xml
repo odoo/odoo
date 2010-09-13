@@ -334,8 +334,8 @@
                 <tree string="Account Journal">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="type" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
+                    <field name="type"/>
+                    <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -347,12 +347,14 @@
             <field name="arch" type="xml">
                 <tree string="Search Account Journal">
                     <group>
-                    <filter domain="[('type', '=', 'sale')]" string="Sale Journals" icon="terp-sale"/>
-                    <filter domain="[('type', '=', 'purchase')]" string="Purchase Journals" icon="terp-purchase"/>
-                    <filter domain="[('centralisation', '=', 'True')]" string="Centralized Journals" icon="terp-stock"/>
+                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Customer Journals" icon="terp-sale"/>
+                    <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Vendor Journals" icon="terp-purchase"/>
+                   <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity Journals" icon="terp-dolar"/>
+                    <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Global Journals" icon="terp-stock"/>
                     <separator orientation="vertical"/>
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
