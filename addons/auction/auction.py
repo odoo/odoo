@@ -232,7 +232,7 @@ class auction_lot_category(osv.osv):
     }
 auction_lot_category()
 
-def _type_get(self, cr, uid):
+def _type_get(self, cr, uid,context=None):
     cr.execute('select name, name from auction_lot_category order by name')
     return cr.fetchall()
 
