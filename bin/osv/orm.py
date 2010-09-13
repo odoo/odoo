@@ -2226,18 +2226,24 @@ class orm(orm_template):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
 
+        assert not groupby or groupby in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
+
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         sum = {}
-
         flist = ''
         group_by = groupby
         if groupby:
-            if fget.get(groupby, False) and fget[groupby]['type'] in ('date', 'datetime'):
-                flist = "to_char(%s,'yyyy-mm') as %s " % (groupby, groupby)
-                groupby = "to_char(%s,'yyyy-mm')" % (groupby)
+            if fget.get(groupby, False):
+                if fget[groupby]['type'] in ('date', 'datetime'):
+                    flist = "to_char(%s,'yyyy-mm') as %s " % (groupby, groupby)
+                    groupby = "to_char(%s,'yyyy-mm')" % (groupby)
+                else:
+                    flist = groupby
             else:
-                flist = groupby
+                # Don't allow arbitrary values, as this would be a SQL injection vector! 
+                raise except_orm(_('Invalid group_by'),
+                                 _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(groupby,))
 
 
         fields_pre = [f for f in float_int_fields if
