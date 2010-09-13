@@ -433,11 +433,11 @@ class hr_applicant(crm.crm_case, osv.osv):
         self.write(cr, uid, ids,{'stage_id':stage_id[0]})
 
         applicant = self.browse(cr, uid, ids)[0]
-        if applicant['job_id'] :
-            emp_id = employee_obj.create(cr,uid,{'name':applicant['name'],'job_id':applicant['job_id']['id']})
-            job_data = job_obj.browse(cr,uid, [applicant['job_id']['id']])[0]
+        if applicant.job_id :
+            emp_id = employee_obj.create(cr,uid,{'name':applicant.name,'job_id':applicant.job_id.id})
+            job_data = job_obj.browse(cr,uid, applicant.job_id.id)
             expected_emp = job_data['expected_employees'] - 1
-            job_obj.write(cr,uid, [applicant['job_id']['id']],{'expected_employees':expected_emp})
+            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
 
         return res
 
