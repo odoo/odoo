@@ -581,7 +581,7 @@
                     <field name="picking_id" invisible="True"/>
                     <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"  height="100" width="500"/><newline/>
                     <group colspan="4">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
                         <button name="action_move" string="Add" type="object" icon="gtk-add"/>
                     </group>
                     </group>
@@ -750,7 +750,7 @@
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Approve" type="action" icon="gtk-apply"/>
                                 <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -810,7 +810,7 @@
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
                     <button name="%(action_partial_picking)d" states="assigned" string="Approve" type="action" icon="gtk-go-forward" help="Approve Delivery"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the delivery.    Do you want to continue?"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the delivery.    Do you want to continue?"/>
                 </tree>
             </field>
         </record>
@@ -923,7 +923,7 @@
                                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
-                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+                                        <button name="action_cancel" states="assigned" string="_Cancel" type="object" icon="gtk-cancel"/>
                                     </group>
                                 </form>
                             </field>
@@ -935,7 +935,7 @@
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Products Sent" type="action" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -1139,7 +1139,7 @@
                                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
-                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+                                        <button name="action_cancel" states="assigned" string="_Cancel" type="object" icon="gtk-cancel"/>
                                     </group>
                                 </form>
                             </field>
@@ -1151,7 +1151,7 @@
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Done" type="action" icon="gtk-execute"/>
                                 <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -1243,7 +1243,7 @@
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
                     <button name="%(action_partial_picking)d" states="assigned" string="Approve" type="action" icon="gtk-ok" help="Receive products"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
         </record>
@@ -1350,7 +1350,7 @@
                                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
-                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+                                        <button name="action_cancel" states="assigned" string="_Cancel" type="object" icon="gtk-cancel"/>
                                     </group>
                                 </form>
                             </field>
@@ -1362,7 +1362,7 @@
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
                                 <button name="%(action_partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
                                 <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-document-new" attrs="{'invisible':[('invoice_state','!=','2binvoiced')]}"/>                                
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Additional Info" groups="base.group_extended,base.group_multi_company">
@@ -1598,7 +1598,7 @@
                     <group col="4" colspan="2">
                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                         <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
                     </group>
                 </form>
@@ -1767,7 +1767,7 @@
                     <group col="5" colspan="2">
                         <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                         <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="%(action_partial_move)d" states="assigned,confirmed" string="Partial" type="action" icon="gtk-justify-fill"/>
                         <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
                     </group>
