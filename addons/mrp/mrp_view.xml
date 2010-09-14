@@ -33,7 +33,7 @@
             </field>
         </record>
         <record id="mrp_property_group_action" model="ir.actions.act_window">
-            <field name="name">Property Categories</field>
+            <field name="name">Property Groups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.property.group</field>
             <field name="view_type">form</field>
@@ -82,8 +82,8 @@
                 <search string="Search">
                    <group col='15' colspan='4'>
                        <field name="name"/>
-                       <field name="group_id"  widget="selection" />
                        <field name="composition"/>
+                       <field name="group_id"  widget="selection" />
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
@@ -132,7 +132,7 @@
                     <field name="name"/>
                     <field name="resource_id"/>
                     <field name="resource_type"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -193,7 +193,7 @@
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                     </group>
                </search>
@@ -253,9 +253,9 @@
             <field name="arch" type="xml">
                 <form string="Routing">
                     <separator colspan="4" string="General Information"/>
-                    <field name="name" select="1"/>
-                    <field name="active" select="1" groups="base.group_extended"/>
-                    <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="active" groups="base.group_extended"/>
+                    <field name="code"/>
                     <field name="location_id"/>
                     <separator colspan="4" string="Description"/>
                     <field colspan="4" name="note" nolabel="1"/>
@@ -276,12 +276,25 @@
                 </tree>
             </field>
         </record>
+        <record id="mrp_routing_search_view" model="ir.ui.view">
+            <field name="name">mrp.routing.search</field>
+            <field name="model">mrp.routing</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <search string="Routing">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="location_id"/>
+                </search>
+            </field>
+        </record>
         <record id="mrp_routing_action" model="ir.actions.act_window">
             <field name="name">Routings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.routing</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
+            <field name="search_view_id" ref="mrp_routing_search_view"/>
             <field name="help">Routings define the assembly operations to be done in work centers for manufacturing a certain product. They are usually attached to bills of materials which will define the assembly of products required for manufacture or for finished products.</field>
         </record>
         <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="40" />
