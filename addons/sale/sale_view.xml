@@ -107,7 +107,7 @@
                         <field name="invoiced"/>
                     </group>
                     <notebook colspan="5">
-                        <page string="Sale Order">
+                        <page string="Sales Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
@@ -255,10 +255,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]" help="Sale Orders that haven't yet be confirmed"/>
+                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
                     <filter icon="terp-check" string="Sales" domain="[('state','in',('manual','progress'))]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sale Orders ready to be invoiced"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="date_order" select="1" string="Order date" />
@@ -286,11 +286,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="help">The sale order manages the invoicing, the product fullfilment and the
+            <field name="help">The sales order manages the invoicing, the product fullfilment and the
 delivery processes. OpenERP can handle products, services and
-consumables so that a sale order can trigger tasks, manufacturing
+consumables so that a sales order can trigger tasks, manufacturing
 orders, purchases, etc. It support several invoicing methods according
-to your configuration: from the sale order, from the pickings, etc.
+to your configuration: from the sales order, from the pickings, etc.
             </field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
@@ -436,7 +436,7 @@ to your configuration: from the sale order, from the pickings, etc.
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sale Order Lines related to a Sale Order of mine"/>
+                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sale Order Lines related to a Sales Order of mine"/>
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
@@ -517,7 +517,7 @@ to your configuration: from the sale order, from the pickings, etc.
         <!-- configartion view -->
 
         <record id="view_config_picking_policy" model="ir.ui.view">
-            <field name="name">Configure Picking Policy for Sale Order </field>
+            <field name="name">Configure Picking Policy for Sales Order </field>
             <field name="model">sale.config.picking_policy</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_view_base"/>
@@ -528,7 +528,7 @@ to your configuration: from the sale order, from the pickings, etc.
                 </form>
                 <separator string="title" position="attributes">
                 <attribute name="string"
-                       >Configure Sale Order Logistic</attribute>
+                       >Configure Sales Order Logistic</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">Setup your sales workflow and default values.</attribute>
@@ -550,7 +550,7 @@ to your configuration: from the sale order, from the pickings, etc.
         </record>
 
         <record id="action_config_picking_policy" model="ir.actions.act_window">
-            <field name="name">Configure Picking Policy for Sale Order</field>
+            <field name="name">Configure Picking Policy for Sales Order</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.config.picking_policy</field>
             <field name="view_id" ref="view_config_picking_policy"/>
