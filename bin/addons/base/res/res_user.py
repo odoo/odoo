@@ -560,7 +560,7 @@ class res_config_view(osv.osv_memory):
                                  'Interface', required=True ),
     }
     _defaults={
-        'view':lambda *args: 'simple',
+        'view': lambda s,cr,uid,c: s.pool.get('res.users').browse(cr, uid, uid, c).view
     }
 
     def execute(self, cr, uid, ids, context=None):
