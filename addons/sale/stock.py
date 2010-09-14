@@ -186,6 +186,7 @@ class stock_picking(osv.osv):
                         'quantity': sale_line.product_uos_qty,
                         'invoice_line_tax_id': [(6, 0, tax_ids)],
                         'account_analytic_id': account_analytic_id,
+                        'notes':sale_line.notes
                     }, context=context)
                     self.pool.get('sale.order.line').write(cursor, user, [sale_line.id], {'invoiced':True,
                         'invoice_lines': [(6, 0, [invoice_line_id])],

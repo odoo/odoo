@@ -1038,12 +1038,6 @@ class stock_picking(osv.osv):
                     uos_id = move_line.product_uom.id
 
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
-                notes = False
-                if ('sale_line_id' in move_line._columns.keys()) and move_line.sale_line_id:
-                    notes = move_line.sale_line_id.notes
-                elif ('purchase_line_id' in move_line._columns.keys()) and move_line.purchase_line_id:
-                    notes = move_line.purchase_line_id.notes
-
                 invoice_line_id = invoice_line_obj.create(cr, uid, {
                     'name': name,
                     'origin': origin,
@@ -1056,7 +1050,6 @@ class stock_picking(osv.osv):
                     'quantity': move_line.product_uos_qty or move_line.product_qty,
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
                     'account_analytic_id': account_analytic_id,
-                    'note': notes,
                 }, context=context)
                 self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
