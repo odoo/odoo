@@ -166,6 +166,7 @@ class account_voucher(osv.osv):
                 voucher_line_pool.write(cr, uid, [line.id], {'amount':line.amount, 'untax_amount':line.untax_amount})
                 
             if not voucher.tax_id:
+                self.write(cr, uid, [voucher.id], {'amount':voucher_amount, 'tax_amount':0.0})
                 continue
             
             tax = [tax_pool.browse(cr, uid, voucher.tax_id.id)]
@@ -223,11 +224,24 @@ class account_voucher(osv.osv):
             voucher_total += line_amount
         
         total = voucher_total
+        total_tax = 0.0
+        if tax_id:
+            tax = [tax_pool.browse(cr, uid, tax_id)]
+            if partner_id:
+                partner = partner_pool.browse(cr, uid, partner_id) or False
+                taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                tax = tax_pool.browse(cr, uid, taxes)
+            
+            if not tax[0].price_include:
+                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes'):
+                    total_tax += tax_line.get('amount')
+                total += total_tax
         
         res.update({
             'amount':total,
             'tax_amount':total_tax
         })
+
         return {
             'value':res
         }
@@ -370,7 +384,7 @@ class account_voucher(osv.osv):
             }
         }
 
-    def onchange_journal(self, cr, uid, ids, journal_id):
+    def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context={}):
         if not journal_id:
             return False
         journal_pool = self.pool.get('account.journal')
@@ -379,8 +393,10 @@ class account_voucher(osv.osv):
         tax_id = False
         if account_id and account_id.tax_ids:
             tax_id = account_id.tax_ids[0].id
-                   
-        return {'value':{'tax_id':tax_id}}
+        
+        vals = self.onchange_price(cr, uid, ids, line_ids, tax_id, partner_id, context)
+        vals['value'].update({'tax_id':tax_id})
+        return vals
 
     def proforma_voucher(self, cr, uid, ids):
         self.action_move_line_create(cr, uid, ids)
