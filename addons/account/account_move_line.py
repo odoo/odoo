@@ -159,7 +159,10 @@ class account_move_line(osv.osv):
         return context
 
     def _default_get(self, cr, uid, fields, context={}):
-
+    
+        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')
+        
         period_obj = self.pool.get('account.period')
 
         context = self.convert_to_period(cr, uid, context)
@@ -459,7 +462,7 @@ class account_move_line(osv.osv):
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         #TODO: remove this
         #'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
-        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
 
     }
 
@@ -965,6 +968,24 @@ class account_move_line(osv.osv):
                                 'has been confirmed!') % res[2])
         return res
 
+    def _remove_move_reconcile(self, cr, uid, move_ids=[], context=None):
+        # Function remove move rencocile ids related with moves
+        obj_move_line = self.pool.get('account.move.line')
+        obj_move_rec = self.pool.get('account.move.reconcile')
+        unlink_ids = []
+        if not move_ids:
+            return True
+        recs = obj_move_line.read(cr, uid, move_ids, ['reconcile_id','reconcile_partial_id'])
+        full_recs = filter(lambda x: x['reconcile_id'], recs)
+        rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
+        part_recs = filter(lambda x: x['reconcile_partial_id'], recs)
+        part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
+        unlink_ids += rec_ids
+        unlink_ids += part_rec_ids
+        if len(unlink_ids):
+            obj_move_rec.unlink(cr, uid, unlink_ids)
+        return True
+
     def unlink(self, cr, uid, ids, context={}, check=True):
         self._update_check(cr, uid, ids, context)
         result = False
@@ -986,7 +1007,7 @@ class account_move_line(osv.osv):
             if 'period_id' in vals and 'period_id' not in context:
                 period_id = vals['period_id']
             elif 'journal_id' not in context and 'move_id' in vals:
-                if vals['move_id']:
+                if vals.get('move_id', False):
                     m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
                     journal_id = m.journal_id.id
                     period_id = m.period_id.id
@@ -1086,9 +1107,9 @@ class account_move_line(osv.osv):
         self._check_date(cr, uid, vals, context, check)
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
-        if 'journal_id' in vals and 'journal_id' not in context:
+        if 'journal_id' in vals:
             context['journal_id'] = vals['journal_id']
-        if 'period_id' in vals and 'period_id' not in context:
+        if 'period_id' in vals:
             context['period_id'] = vals['period_id']
         if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
             m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
@@ -1097,7 +1118,6 @@ class account_move_line(osv.osv):
 
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-
         move_id = vals.get('move_id', False)
         journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
         is_new_move = False

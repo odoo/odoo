@@ -19,7 +19,7 @@
 ##############################################################################
 
 {
-    "name":"Margins in Sale Orders",
+    "name":"Margins in Sales Order",
     "version":"1.0",
     "category" : "Generic Modules/Sales & Purchases",
     "description": """ 

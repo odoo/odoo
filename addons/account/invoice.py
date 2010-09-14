@@ -397,10 +397,10 @@ class account_invoice(osv.osv):
                         rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
-                    rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value','res_id'])
-                    pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value','res_id'])
-                    rec_res_id = rec_line_data and int(rec_line_data[0]['value'].split(',')[1]) or False
-                    pay_res_id = pay_line_data and int(pay_line_data[0]['value'].split(',')[1]) or False
+                    rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value_reference','res_id'])
+                    pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value_reference','res_id'])
+                    rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
+                    pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
                         raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
@@ -493,10 +493,10 @@ class account_invoice(osv.osv):
                         rec_pro_id = property_obj.search(cr, uid, [('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = property_obj.search(cr, uid, [('name','=','property_account_payable'),('company_id','=',company_id)])
-                    rec_line_data = property_obj.read(cr, uid, rec_pro_id, ['name','value','res_id'])
-                    pay_line_data = property_obj.read(cr, uid, pay_pro_id, ['name','value','res_id'])
-                    rec_res_id = rec_line_data and int(rec_line_data[0]['value'].split(',')[1]) or False
-                    pay_res_id = pay_line_data and int(pay_line_data[0]['value'].split(',')[1]) or False
+                    rec_line_data = property_obj.read(cr, uid, rec_pro_id, ['name','value_reference','res_id'])
+                    pay_line_data = property_obj.read(cr, uid, pay_pro_id, ['name','value_reference','res_id'])
+                    rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
+                    pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
                         raise osv.except_osv(_('Configuration Error !'),
                             _('Can not find account chart for this company, Please Create account.'))
@@ -529,7 +529,7 @@ class account_invoice(osv.osv):
         if company_id and type:
             if type in ('out_invoice'):
                 journal_type = 'sale'
-            elif type in ('out_refund'):  
+            elif type in ('out_refund'):
                 journal_type = 'sale_refund'
             elif type in ('in_refund'):
                 journal_type = 'purchase_refund'
@@ -802,6 +802,17 @@ class account_invoice(osv.osv):
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
                 raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
 
+            if inv.payment_term:
+                total_fixed = total_percent = 0
+                for line in inv.payment_term.line_ids:
+                    if line.value == 'fixed':
+                        total_fixed += line.value_amount
+                    if line.value == 'procent':
+                        total_percent += line.value_amount
+                total_fixed = (total_fixed * 100) / inv.amount_total
+                if (total_fixed + total_percent) > 100:
+                    raise osv.except_osv(_('Error !'), _("You cannot create an invoice !\nAs you have defined payment term and so the total of invoice should be greater than the computed amount for journal entries using payment term"))
+
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
 
@@ -912,7 +923,6 @@ class account_invoice(osv.osv):
             # account move reference when creating the same invoice after a cancelled one:
             self.pool.get('account.move').post(cr, uid, [move_id], context={'invoice':inv})
         self._log_event(cr, uid, ids)
-
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -1202,7 +1212,7 @@ class account_invoice_line(osv.osv):
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
             price = line.price_unit * (1-(line.discount or 0.0)/100.0)
-            taxes = tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, price, line.quantity)
+            taxes = tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, price, line.quantity, product=line.product_id, address_id=line.invoice_id.address_invoice_id, partner=line.invoice_id.partner_id)
             res[line.id] = taxes['total']
             if line.invoice_id:
                 cur = line.invoice_id.currency_id
@@ -1299,7 +1309,12 @@ class account_invoice_line(osv.osv):
                 else:
                     app_acc_in = in_acc_cate
             else:
-                app_acc_in = account_obj.browse(cr, uid, in_pro_id)[0]
+                # Get the fields from the ir.property record
+                my_value = property_obj.read(cr,uid,in_pro_id,['name','value_reference','res_id'])
+                # Parse the value_reference field to get the ID of the account.account record
+                account_id = int (my_value[0]["value_reference"].split(",")[1])
+                # Use the ID of the account.account record in the browse for the account.account record
+                app_acc_in = account_obj.browse(cr, uid, [account_id])[0]                
             if not exp_pro_id:
                 ex_acc = res.product_tmpl_id.property_account_expense
                 ex_acc_cate = res.categ_id.property_account_expense_categ
