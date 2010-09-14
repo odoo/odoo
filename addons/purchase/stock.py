@@ -86,6 +86,9 @@ class stock_picking(osv.osv):
                 user, picking, move_line)
 
     def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
+        if move_line.purchase_line_id:
+            invoice_line_obj = self.pool.get('account.invoice.line')
+            invoice_line_obj.write(cursor, user, [invoice_line_id], {'note':  move_line.purchase_line_id.notes,})            
         return super(stock_picking, self)._invoice_line_hook(cursor, user,
                 move_line, invoice_line_id)
 
