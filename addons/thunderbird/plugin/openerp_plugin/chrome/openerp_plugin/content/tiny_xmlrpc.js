@@ -1387,7 +1387,9 @@ function dictcontact(a,b){
 var listArchiveHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+        list_documents = document.getElementById('listSearchBox')
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
+        alert("Mail is Already Archived Successfully.")
 
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1427,6 +1429,7 @@ function parse_eml(){
 		var output = sis.read( sis.available() );
 		return output
     }
+    
 }
 function upload_archivemail()
 {

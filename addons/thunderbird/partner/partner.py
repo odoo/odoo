@@ -152,15 +152,24 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         ref_ids = str(dictcreate.get('ref_ids')).split(';')
         msg = dictcreate.get('message')
+        msg = self.pool.get('email.server.tools').parse_message(msg)
         server_tools_pool = self.pool.get('email.server.tools')
+        message_id = msg.get('message-id', False)
+        msg_pool = self.pool.get('mailgate.message')
+        msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
+        res = {}
+        if msg_ids and len(msg_ids):
+                return 0
+
         for ref_id in ref_ids:
+            msg_new = dictcreate.get('message')
             ref = ref_id.split(',')
             model = ref[0]
             model_obj = self.pool.get(model)
             model_data = model_obj.search(cr, uid,[('name', 'ilike', ref[1])])
             if model_data:
                 res_id = int(model_data[0])
-                server_tools_pool.history_message(cr, uid, model, res_id, msg)
+                server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
         return True
 
     def process_email(self, cr, uid, vals):
@@ -168,22 +177,6 @@ class thunderbird_partner(osv.osv_memory):
         model = str(dictcreate.get('model'))
         message = dictcreate.get('message')
         return self.pool.get('email.server.tools').process_email(cr, uid, model, message, attach=True, context=None)
-
-    def search_message(self, cr, uid, message, context=None):
-        #@param message: string of mail which is read from EML File
-        #@return model,res_id
-        msg_pool = self.pool.get('mailgate.message')
-        msg = self.pool.get('email.server.tools').parse_message(message)
-        message_id = msg.get('message-id', False)
-        model = False
-        res_id = False
-        if message_id:
-            msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
-            if msg_ids and len(msg_ids):
-                msg = msg_pool.browse(cr, uid, msg_ids[0])
-                model = msg.model
-                res_id = msg.res_id
-        return (model,res_id)
 
     def search_contact(self, cr, user, email):
         address_pool = self.pool.get('res.partner.address')
