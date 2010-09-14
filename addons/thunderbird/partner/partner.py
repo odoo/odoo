@@ -158,7 +158,6 @@ class thunderbird_partner(osv.osv_memory):
             model = ref[0]
             model_obj = self.pool.get(model)
             model_data = model_obj.search(cr, uid,[('name', 'ilike', ref[1])])
-            res = ref[1]
             if model_data:
                 res_id = int(model_data[0])
                 server_tools_pool.history_message(cr, uid, model, res_id, msg)
