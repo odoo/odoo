@@ -661,34 +661,6 @@ class account_voucher(osv.osv):
             default['date'] = time.strftime('%Y-%m-%d')
         return super(account_voucher, self).copy(cr, uid, id, default, context)
 
-#    # TODO: remove this
-#    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-#        """
-#        Returns views and fields for current model where view will depend on {view_type}.
-#        @param view_id: list of fields, which required to read signatures
-#        @param view_type: defines a view type. it can be one of (form, tree, graph, calender, gantt, search, mdx)
-#        @param context: context arguments, like lang, time zone
-#        @param toolbar: contains a list of reports, wizards, and links related to current model
-#        
-#        @return: Returns a dict that contains definition for fields, views, and toolbars
-#        """
-#        data_pool = self.pool.get('ir.model.data')
-#        journal_pool = self.pool.get('account.journal')
-#        voucher_type = {
-#            'sale':'view_sale_receipt_form',
-#            'purchase':'view_purchase_receipt_form',
-#            'payment':'view_vendor_payment_form',
-#            'receipt':'view_vendor_receipt_form'
-#        }
-#        if view_type == 'form':
-#            tview = voucher_type.get(context.get('type'))
-#            tview = tview or 'view_voucher_form'
-#            result = data_pool._get_id(cr, uid, 'account_voucher', tview)
-#            view_id = data_pool.browse(cr, uid, result, context=context).res_id
-#        
-#        res = super(account_voucher, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-#        return res
-
 account_voucher()
 
 class account_voucher_line(osv.osv):

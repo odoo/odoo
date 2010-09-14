@@ -46,18 +46,6 @@
                                     <field name="account_analytic_id" groups="base.group_extended"/>
                                 </tree>
                             </field>
-                            
-                            <!--
-                            <field name="line_dr_ids" attrs="{'invisible':[('type','in',['sale', 'receipt', False])]}" on_change="onchange_price(line_dr_ids, False, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
-                                <tree string="Purchase and Payments" editable="top">
-                                    <field name="account_id"/>
-                                    <field name="name"/>
-                                    <field name="amount" sum="Total Amount"/>
-                                    <field name="type" groups="base.group_extended"/>
-                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
-                                </tree>
-                            </field>
-                            -->
                             <group col="2" colspan="3">
                                 <separator string="Internal Notes" colspan="2"/>
                                 <field name="narration" colspan="2" nolabel="1"/>
