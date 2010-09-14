@@ -156,8 +156,12 @@ class thunderbird_partner(osv.osv_memory):
         for ref_id in ref_ids:
             ref = ref_id.split(',')
             model = ref[0]
-            res_id = int(ref[1])
-            server_tools_pool.history_message(cr, uid, model, res_id, msg)
+            model_obj = self.pool.get(model)
+            model_data = model_obj.search(cr, uid,[('name', 'ilike', ref[1])])
+            res = ref[1]
+            if model_data:
+                res_id = int(model_data[0])
+                server_tools_pool.history_message(cr, uid, model, res_id, msg)
         return True
 
     def process_email(self, cr, uid, vals):

@@ -1219,8 +1219,8 @@ var listSearchCheckboxHandler = {
 					listcell.setAttribute("height",12);
 					listcell.setAttribute("label",arrFinalList[i][j][1]); //stores the name ofthe record
 		  			listItem.appendChild(listcell);
-		  			listItem.value = arrFinalList[i][j][0]; //stores the id of the record
-		  			listItem.label = arr1[i]; // stores the value of the object
+		  			listItem.value = arrFinalList[i][j][1]; //stores the name of the record
+		  			listItem.label = arr1[i]; // stores the value of the object   
 					cmbSearchList.appendChild(listItem);
 		  		}
 			}
@@ -1463,14 +1463,16 @@ function upload_archivemail()
     var a = ['ref_ids','message'];
 	var b = [ref_ids, eml_string];
     var arrofarr = dictcontact(a,b);
+
     xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-    alert("Mail Archived Successfully.");
+    alert("Mail Archived Successfully to" +" " + ":" + " "+ list_documents.value);
 	window.close();
     
 }
 
 function create_archivemail(){
-	var popup = document.getElementById("section").selectedItem; // a <menupopup> element
+	var popup = document.getElementById("section").selectedItem; 
+    // a <menupopup> element
 
 	if (String(popup) != "null"){
 		object=popup.value;
@@ -1495,7 +1497,7 @@ function create_archivemail(){
 		var b = [object, eml_string];
 		var arrofarr = dictcontact(a,b);
 		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Document Created Successfully.");
+        alert("Document Created Successfully For " +" " + ":" + " "+ popup.label);
 		}
     	window.close();
 	}
@@ -1986,7 +1988,7 @@ var listsearchAttachmentHandler = {
 				count += 1
 				var hbox = document.createElement("vbox");
 				var checkbox1 = document.createElement("checkbox");
-
+            
 				checkbox1.setAttribute("label",object[i]);
 				checkbox1.setAttribute("id","cbx"+(i+1));
 				checkbox1.setAttribute("width",150)
