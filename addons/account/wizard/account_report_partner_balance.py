@@ -29,13 +29,13 @@ class account_partner_balance(osv.osv_memory):
     _name = 'account.partner.balance'
     _description = 'Print Account Partner Balance'
     _columns = {
-        'initial_balance': fields.boolean('Include Initial Balances'
-                                    ,help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
+#        'initial_balance': fields.boolean('Include Initial Balances'
+#                                    ,help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
         'display_partner': fields.selection([('non-zero_balance', 'With balance is not equal to 0'), ('all', 'All Partners')]
                                     ,'Display Partners')
                 }
     _defaults = {
-        'initial_balance': True,
+#        'initial_balance': True,
         'display_partner': 'non-zero_balance'
                 }
 
@@ -43,7 +43,7 @@ class account_partner_balance(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['initial_balance', 'display_partner'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['display_partner'])[0])
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',
