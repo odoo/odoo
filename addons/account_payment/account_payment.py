@@ -23,20 +23,6 @@ import time
 from osv import osv, fields
 import netsvc
 
-class payment_type(osv.osv):
-    _name= 'payment.type'
-    _description= 'Payment Type'
-    _columns= {
-        'name': fields.char('Name', size=64, required=True, help='Payment Type'),
-        'code': fields.char('Code', size=64, required=True, help='Specifies the Code for Payment Type'),
-        'suitable_bank_types': fields.many2many('res.partner.bank.type',
-            'bank_type_payment_type_rel',
-            'pay_type_id', 'bank_type_id',
-            'Suitable bank types')
-            }
-
-payment_type()
-
 class payment_mode(osv.osv):
     _name= 'payment.mode'
     _description= 'Payment Mode'
@@ -47,21 +33,19 @@ class payment_mode(osv.osv):
         'journal': fields.many2one('account.journal', 'Journal', required=True,
             domain=[('type', '=', 'cash')], help='Cash Journal for the Payment Mode'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'type': fields.many2one('payment.type', 'Payment type', required=True, help='Select the Payment Type for the Payment Mode.'),
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
+
     def suitable_bank_types(self, cr, uid, payment_code=None, context={}):
         """Return the codes of the bank type that are suitable
         for the given payment type code"""
         if not payment_code:
             return []
-        cr.execute(""" select t.code
-            from res_partner_bank_type t
-            join bank_type_payment_type_rel r on (r.bank_type_id = t.id)
-            join payment_type pt on (r.pay_type_id = pt.id)
-            join payment_mode pm on (pm.type = pt.id)
+        cr.execute(""" select pb.state
+            from res_partner_bank pb
+            join payment_mode pm on (pm.bank_id = pb.id)
             where pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
 
@@ -148,6 +132,29 @@ class payment_order(osv.osv):
             'reference': self.pool.get('ir.sequence').get(cr, uid, 'payment.order')
         })
         return super(payment_order, self).copy(cr, uid, id, default, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        payment_line_obj = self.pool.get('payment.line')
+        payment_line_ids = []
+        if (vals.get('date_prefered', False) == 'fixed' and not vals.get('date_scheduled', False)) or vals.get('date_scheduled', False):
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_ids.append(line.id)
+            payment_line_obj.write(cr, uid, payment_line_ids, {'date':vals.get('date_scheduled', False)}, context=context)
+        elif vals.get('date_prefered', False) == 'due':
+            vals.update({'date_scheduled':False})
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_obj.write(cr, uid, [line.id], {'date':line.ml_maturity_date}, context=context)
+        elif vals.get('date_prefered', False) == 'now':
+            vals.update({'date_scheduled':False})
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_ids.append(line.id)
+            payment_line_obj.write(cr, uid, payment_line_ids, {'date': False}, context=context)
+        return super(payment_order, self).write(cr, uid, ids, vals, context=context)
 
 payment_order()
 
@@ -252,19 +259,6 @@ class payment_line(osv.osv):
             res[line.id] = currency_obj.compute(cursor, user, line.currency.id,
                     line.company_currency.id,
                     line.amount_currency, context=ctx)
-        return res
-
-    def _value_date(self, cursor, user, ids, name, args, context=None):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cursor, user, ids, context=context):
-            if line.order_id.date_prefered == 'fixed':
-                res[line.id] = line.order_id.date_scheduled
-            elif line.order_id.date_prefered == 'due':
-                res[line.id] = line.due_date or time.strftime('%Y-%m-%d')
-            else:
-                res[line.id] = time.strftime('%Y-%m-%d')
         return res
 
     def _get_currency(self, cr, uid, context):
@@ -375,7 +369,6 @@ class payment_line(osv.osv):
                 data['date'] = line.date_maturity
             elif date_prefered == 'fixed':
                 data['date'] = date_scheduled
-
         return {'value': data}
 
     def onchange_amount(self, cr, uid, ids, amount, currency, cmpny_currency, context=None):
@@ -419,7 +412,6 @@ class payment_line(osv.osv):
                     if bank.state in bank_type:
                         data['bank_id'] = bank.id
                         break
-
         return {'value': data}
 
     def fields_get(self, cr, uid, fields=None, context=None):

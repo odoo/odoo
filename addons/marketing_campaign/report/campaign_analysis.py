@@ -44,11 +44,12 @@ class campaign_analysis(osv.osv):
     _columns = {
         'res_id' : fields.integer('Resource', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'),
-                    ('03','March'), ('04','April'),('05','May'), ('06','June'),
-                    ('07','July'), ('08','August'), ('09','September'),
-                    ('10','October'), ('11','November'), ('12','December')],
-                    'Month', readonly=True),
+        'month': fields.selection([('01','January'), ('02','February'),
+                                     ('03','March'), ('04','April'),('05','May'), ('06','June'),
+                                     ('07','July'), ('08','August'), ('09','September'),
+                                     ('10','October'), ('11','November'), ('12','December')],
+                                  'Month', readonly=True),
+        'day': fields.char('Day', size=10, readonly=True),
         'date': fields.date('Date', readonly=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
                                                                 readonly=True),
@@ -63,6 +64,9 @@ class campaign_analysis(osv.osv):
                                     type="float" ),
         'revenue': fields.float('Revenue',digits=(16,2),readonly=True),
         'count' : fields.integer('# of Actions', readonly=True),
+        'state': fields.selection([('todo', 'To Do'),
+                                   ('exception', 'Exception'), ('done', 'Done'),
+                                   ('cancelled', 'Cancelled')], 'State', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'campaign_analysis')
@@ -73,6 +77,7 @@ class campaign_analysis(osv.osv):
                 min(wi.res_id) as res_id,
                 to_char(wi.date::date, 'YYYY') as year,
                 to_char(wi.date::date, 'MM') as month,
+                to_char(wi.date::date, 'YYYY-MM-DD') as day,
                 wi.date::date as date,
                 s.campaign_id as campaign_id,
                 wi.activity_id as activity_id,
