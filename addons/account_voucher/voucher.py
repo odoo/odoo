@@ -268,9 +268,9 @@ class account_voucher(osv.osv):
             'value':{},
         }
         
-        if not journal_id or not journal_id:
+        if not partner_id or not journal_id:
             return default
-            
+        
         partner_pool = self.pool.get('res.partner')
         journal_pool = self.pool.get('account.journal')
 

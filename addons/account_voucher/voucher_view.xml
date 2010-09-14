@@ -42,8 +42,8 @@
                                     <field name="account_id"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total Amount"/>
-                                    <field name="type"/>
-                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
+                                    <field name="type" groups="base.group_extended"/>
+                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                                 </tree>
                             </field>
                             
@@ -52,8 +52,8 @@
                                     <field name="account_id"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total Amount"/>
-                                    <field name="type"/>
-                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
+                                    <field name="type" groups="base.group_extended"/>
+                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
