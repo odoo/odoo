@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,16 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import datetime
 
 from report.interface import report_rml
-from report.interface import toxml 
+from report.interface import toxml
 from tools.translate import _
-
+import time
 import pooler
 
 def lengthmonth(year, month):
@@ -52,7 +52,7 @@ class report_custom(report_rml):
 
         date_xml.append('</days>')
         date_xml.append('<cols>2.5cm%s,2cm</cols>\n' % (',0.7cm' * lengthmonth(som.year, som.month)))
-        
+
         # Computing the attendence by analytical account
         cr.execute(
             "select line.date, (unit_amount * unit.factor) as amount, account_id, account.name "\
@@ -70,12 +70,19 @@ class report_custom(report_rml):
             day = int(presence['date'][-2:])
             account = accounts.setdefault((presence['account_id'], presence['name']), {})
             account[day] = account.get(day, 0.0) + presence['amount']
-        
+
         xml = '''
         <time-element date="%s">
             <amount>%.2f</amount>
         </time-element>
         '''
+        header_xml = '''
+        <header>
+        <date>%s</date>
+        <company>%s</company>
+        </header>
+        ''' % (time.strftime('%m/%d/%Y %H:%M'),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+
         account_xml = []
         for account, telems in accounts.iteritems():
             aid, aname = account
@@ -93,10 +100,11 @@ class report_custom(report_rml):
         # Computing the xml
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
+        %s
         <employee>%s</employee>
         %s
         </report>
-        ''' % (toxml(emp), '\n'.join(date_xml) + '\n'.join(account_xml))
+        ''' % (header_xml,toxml(emp), '\n'.join(date_xml) + '\n'.join(account_xml))
         return xml
 
 report_custom('report.hr.analytical.timesheet', 'hr.employee', '', 'addons/hr_timesheet/report/user_timesheet.xsl')
