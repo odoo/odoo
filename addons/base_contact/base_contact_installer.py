@@ -29,7 +29,7 @@ class base_contact_installer(osv.osv_memory):
     _columns = {
         'name': fields.char('Name', size=64),
         'migrate': fields.boolean('Migrate', help="If you select this, all addresses will be migrated."),
-        'nomigrate': fields.boolean('NoMigrate', help="If you select this, all addresses will be not migrated."),
+        'nomigrate': fields.boolean('NoMigrate', help="If you select this, all addresses will not be migrated."),
     }
 
     def execute(self, cr, uid, ids, context=None):

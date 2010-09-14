@@ -60,6 +60,21 @@ class mrp_property(osv.osv):
         'composition': lambda *a: 'min',
     }
 mrp_property()
+
+class StockMove(osv.osv):
+    _inherit = 'stock.move'
+    
+    _columns= {
+        'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
+    }
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default['procurements'] = []
+        return super(StockMove, self).copy(cr, uid, id, default, context)
+
+StockMove()
+
 class procurement_order(osv.osv):
     """
     Procurement Orders
@@ -120,7 +135,9 @@ class procurement_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
+                raise osv.except_osv(_('Invalid action !'), 
+                        _('Cannot delete Procurement Order(s) which are in %s State!') % \
+                        s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
@@ -179,7 +196,7 @@ class procurement_order(osv.osv):
         @param proc: Current procurement.
         @return: Quantity or False.
         """
-        if proc.product_id.type == 'product':
+        if proc.product_id.type == 'product' and proc.move_id:
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos_qty
         return False
@@ -189,7 +206,7 @@ class procurement_order(osv.osv):
         @param proc: Current procurement.
         @return: UoS or False.
         """
-        if proc.product_id.type == 'product':
+        if proc.product_id.type == 'product' and proc.move_id:
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos.id
         return False
@@ -228,13 +245,6 @@ class procurement_order(osv.osv):
         return False
 
     def check_produce_service(self, cr, uid, procurement, context=[]):
-        """ Checks project_mrp install or not.
-         @return: True or False"""
-        obj_module = self.pool.get('ir.module.module')
-        module_id = obj_module.search(cr, uid, [('name', '=', 'project_mrp'),('state', '=', 'installed')])
-        if module_id:
-            return True
-        cr.execute('update procurement_order set message=%s where id=%s', (_('Project_mrp module not installed !'), procurement.id))
         return False
 
     def check_produce_product(self, cr, uid, procurement, context=[]):
@@ -289,7 +299,8 @@ class procurement_order(osv.osv):
             if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
                 return False
             if not procurement.product_id.seller_ids:
-                cr.execute('update procurement_order set message=%s where id=%s', (_('No supplier defined for this product !'), procurement.id))
+                cr.execute('update procurement_order set message=%s where id=%s', 
+                        (_('No supplier defined for this product !'), procurement.id))
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
@@ -298,7 +309,8 @@ class procurement_order(osv.osv):
                     return False
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
-                cr.execute('update procurement_order set message=%s where id=%s', (_('No address defined for the supplier'), procurement.id))
+                cr.execute('update procurement_order set message=%s where id=%s', 
+                        (_('No address defined for the supplier'), procurement.id))
                 return False
         return True
 
@@ -318,7 +330,8 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity in Procurement Order(s), it should not be less than 1!'))
+                raise osv.except_osv(_('Data Insufficient !'), 
+                    _('Please check the Quantity in Procurement Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -337,7 +350,7 @@ class procurement_order(osv.osv):
                     })
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
-                    message = _('Procurement ') + " '" + procurement.name + "' "+ _("is running.")
+                    message = _("Procurement '%s' is running.") % procurement.name
                     self.log(cr, uid, procurement.id, message)
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
         return True
@@ -346,7 +359,8 @@ class procurement_order(osv.osv):
         """ Changes procurement state to Running and writes message.
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'running', 'message': _('from stock: products assigned.')})
+        self.write(cr, uid, ids, {'state': 'running', 
+                'message': _('from stock: products assigned.')})
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context={}):
@@ -368,11 +382,16 @@ class procurement_order(osv.osv):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
                 if not cr.fetchone()[0]:
-                    cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock and no minimum orderpoint rule defined.'), procurement.id))
-                    message = _('Procurement ') + " '" + procurement.name + "' "+ _("has an exception.") + _('Not enough stock and no minimum orderpoint rule defined.')
+                    cr.execute('update procurement_order set message=%s where id=%s', 
+                            (_('Not enough stock and no minimum orderpoint rule defined.'), 
+                            procurement.id))
+                    message = _("Procurement '%s' has an exception." \
+                            "Not enough stock and no minimum orderpoint rule defined.") % \
+                            procurement.name
                     self.log(cr, uid, procurement.id, message)
             if procurement.state=='exception' and procurement.message=='':
-                cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock '), procurement.id))
+                cr.execute('update procurement_order set message=%s where id=%s',
+                        (_('Not enough stock '), procurement.id) )
 
         return ok
 
@@ -405,7 +424,7 @@ class procurement_order(osv.osv):
         todo2 = []
         move_obj = self.pool.get('stock.move')
         for proc in self.browse(cr, uid, ids):
-            if proc.close_move:
+            if proc.close_move and proc.move_id:
                 if proc.move_id.state not in ('done', 'cancel'):
                     todo2.append(proc.move_id.id)
             else:
@@ -430,7 +449,7 @@ class procurement_order(osv.osv):
         """
         ok = False
         for procurement in self.browse(cr, uid, ids):
-            if procurement.move_id.state == 'assigned' or procurement.move_id.state == 'done':
+            if procurement.move_id and procurement.move_id.state == 'assigned' or procurement.move_id.state == 'done':
                 self.action_done(cr, uid, [procurement.id])
                 ok = True
         return ok
@@ -451,7 +470,7 @@ class procurement_order(osv.osv):
             if procurement.move_id:
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
-                    message = _('Procurement ') + " '" + procurement.name + "' "+ _("is done.")
+                    message = _("Procurement '%s' is done.") % procurement.name
                     self.log(cr, uid, procurement.id, message)
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
         wf_service = netsvc.LocalService("workflow")
@@ -471,6 +490,21 @@ class procurement_order(osv.osv):
 
 procurement_order()
 
+class StockPicking(osv.osv):
+    _inherit = 'stock.picking'
+
+    def test_finnished(self, cursor, user, ids):
+        wf_service = netsvc.LocalService("workflow")
+        res = super(StockPicking, self).test_finnished(cursor, user, ids)
+        for picking in self.browse(cursor, user, ids):
+            for move in picking.move_lines:
+                if move.state == 'done' and move.procurements:
+                    for procurement in move.procurements:
+                        wf_service.trg_validate(user, 'procurement.order',
+                                procurement.id, 'button_check', cursor)
+        return res
+    
+StockPicking()
 
 class stock_warehouse_orderpoint(osv.osv):
     """
@@ -507,7 +541,8 @@ class stock_warehouse_orderpoint(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
     _sql_constraints = [
-        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
+        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 
+                _('Qty Multiple must be greater than zero.')),
     ]
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):

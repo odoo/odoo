@@ -31,13 +31,11 @@
                             <field name="probability"/>
                             <field name="date_deadline" string="Expected Closing"/>
                             <button string="Schedule/Log Call"
-                            name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"  />
+                            name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
                             <newline/>
                             <field name="date_action"/>
                             <field name="title_action"/>
                             <field name="priority" string="Priority"/>
-                            <button string="Merge with other Opportunity"
-                                name="%(merge_opportunity_act)d" icon="gtk-add" type="action" />
                             <newline/>
                             <field name="type" invisible="1"/>
                         </group>
@@ -55,9 +53,9 @@
                                         attrs="{'invisible':[('partner_id','!=',False)]}"/>
                                 </group>
                                 <field name="partner_address_id"
-                                string="Contact"
-                                on_change="onchange_partner_address_id(partner_address_id, email_from)"
-                                colspan="1" />
+                                    string="Contact"
+                                    on_change="onchange_partner_address_id(partner_address_id, email_from)"
+                                    colspan="1" />
                                 <field name="email_from" string="Email" />
                                 <field name="phone"/>
                             </group>
@@ -142,9 +140,9 @@
                                     <group col="4" colspan="4">
                                         <field name="email_from"/>
                                         <field name="date"/>
-                                        <field name="email_to" widget="char" size="512"/>
-                                        <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
+                                        <field name="email_to" size="512"/>
+                                        <field name="email_cc" size="512"/>
+                                        <field name="name" colspan="4"/>
                                         <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
@@ -228,6 +226,7 @@
                         <field name="partner_id"/>
                         <field name="country_id" invisible="context.get('invisible_country', True)" />
                         <field name="date_action"/>
+                        <field name="title_action" />
                         <field name="stage_id"/>
                         <field name="partner_assigned_id" invisible="1"/>
                         <button name="stage_previous" string="Previous Stage"
@@ -235,7 +234,7 @@
                         <button name="stage_next" string="Next Stage"
                             states="open,pending" type="object"
                             icon="gtk-go-forward" />
-                        <field name="planned_revenue" sum="Total of Planned Revenue"/>
+                        <field name="planned_revenue" sum="Expected Revenues"/>
                         <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
                         <field name="section_id"
                             invisible="context.get('invisible_section', True)" />
@@ -249,9 +248,6 @@
                         <button name="case_pending" string="Pending"
                             states="open,draft" type="object"
                             icon="gtk-media-pause" />
-                        <button name="case_mark_lost" string="Lost"
-                            states="open,pending" type="object"
-                            icon="gtk-cancel" />
                         <button name="case_close" string="Won"
                             states="open,draft,pending" type="object"
                             icon="gtk-apply" />
@@ -302,12 +298,12 @@
                         />
                         <separator orientation="vertical"/>
                         <field name="name" string="Opportunity"/>
+                        <field name="partner_id"/>
                         <field name="user_id">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
                                 help="Unassigned Opportunities" />
                         </field>
-                        <field name="email_from"/>
                         <field name="section_id"
                             default="context.get('section_id', False)"
                             context="{'invisible_section': False}"

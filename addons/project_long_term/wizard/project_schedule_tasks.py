@@ -73,8 +73,6 @@ class project_schedule_task(osv.osv_memory):
         return resource_objs
 
     def compute_date(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         """
         Schedule the tasks according to resource available and priority.
         """
@@ -84,7 +82,8 @@ class project_schedule_task(osv.osv_memory):
         user_obj = self.pool.get('res.users')
 
         if context is None:
-            context = {}
+            # It makes no sense to continue on empty context
+            return { 'warning': _("You must select some project phase to compute on")}
 
         if not 'active_id' in context:
             return {}
@@ -135,15 +134,18 @@ class project_schedule_task(osv.osv_memory):
                     hours = str(each_task.planned_hours )+ 'H'
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
+                    resc = False
                     if each_task.user_id:
-                       for resrce in resources:
+                        for resrce in resources:
                             if resrce.__name__ == each_task.user_id.name:
-                               task = create_tasks(i, hours, priorty, resrce)
-                    else:
-                        task = create_tasks(i, hours, priorty)
+                                resc = resrce
+                                break
+                    
+                    task = create_tasks(i, hours, priorty, resc)
                     i += 1
 
             project = BalancedProject(Project)
+          
             loop_no = 0
             # Write back the computed dates
             for t in project:
@@ -160,6 +162,8 @@ class project_schedule_task(osv.osv_memory):
                                                     }, context=ctx)
 
                 loop_no += 1
+        else:
+            return {"warning": _("No tasks to compute for this phase") }
         return {}
 
 project_schedule_task()

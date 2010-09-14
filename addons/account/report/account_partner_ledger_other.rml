@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Partner Ledger" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -180,7 +180,7 @@
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="6,-1" stop="6,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="7,0" stop="7,-1"/>
       <lineStyle kind="LINEAFTER" colorName="#cccccc" start="7,0" stop="7,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="7,0" stop="7,0"/>     
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="7,0" stop="7,0"/>
 
     </blockTableStyle>
     <blockTableStyle id="Table9">
@@ -196,7 +196,7 @@
     <blockTableStyle id="Table_header">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-    </blockTableStyle>    
+    </blockTableStyle>
     <blockTableStyle id="Table_header_1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -320,7 +320,7 @@
     <paraStyle name="Table index 1" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica"/>
     <paraStyle name="Table" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Table index heading" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="16.0" leading="20" spaceBefore="12.0" spaceAfter="6.0"/>
-	<paraStyle name="terp_default_Right_1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>    
+	<paraStyle name="terp_default_Right_1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <images/>
   </stylesheet>
   <story>
@@ -333,7 +333,7 @@
     <blockTable colWidths="539.0" style="Table_header">
       <tr>
         <td>
-          <para style="terp_header_Centre">Third Party Ledger</para>
+          <para style="terp_header_Centre">Partner Ledger</para>
         </td>
         <tr>
           <td>
@@ -391,10 +391,10 @@
                   </tr>
                   <tr>
                     <td>
-                      <para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para>
+                      <para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para>
                     </td>
                     <td>
-                      <para style="terp_default_Centre_8">[[ get_end_date(data) ]]</para>
+                      <para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para>
                     </td>
                   </tr>
                 </blockTable>
@@ -446,13 +446,13 @@
           <para style="terp_tblheader_Details">Entry Label</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Debit</para>
+          <para style="terp_tblheader_Details_Right">Debit([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Credit</para>
+          <para style="terp_tblheader_Details_Right">Credit([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Balance</para>
+          <para style="terp_tblheader_Details_Right">Balance([[ get_currency(data) ]])</para>
         </td>
       </tr>
     </blockTable>
@@ -472,11 +472,11 @@
         </td>
       </tr>
     </blockTable>
-    
+
 	<section>
 	<para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
     <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table2">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
-	
+
       <tr>
         <td>
           <para style="P2">[[ p.ref ]] - [[ p.name ]]</para>
@@ -535,7 +535,7 @@
       </blockTable>
     </section>
     </section>
-    <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]] 
+    <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -550,21 +550,21 @@
           <para style="terp_tblheader_Details">Entry Label</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Debit</para>
+          <para style="terp_tblheader_Details_Right">Debit([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Credit</para>
+          <para style="terp_tblheader_Details_Right">Credit([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Balance</para>
+          <para style="terp_tblheader_Details_Right">Balance([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Currency</para>
+          <para style="terp_tblheader_Details_Right">Currency ([[ get_currency(data) ]])</para>
         </td>
       </tr>
     </blockTable>
     <para style="P4"/>
-    <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table5">[[ display_currency(data) == True or removeParentNode('blockTable') ]] 
+    <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table5">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_default_Bold_9">Balance Brought Forward</para>
@@ -588,7 +588,7 @@
     <section>
     <para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
     <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table6">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
- 
+
       <tr>
         <td>
           <para style="P2">[[ p.ref ]] - [[ p.name ]]</para>
@@ -623,8 +623,8 @@
         </td>
    		<td>
           <para style="terp_default_Right_9"></para>
-        </td>    
-        </tr>   
+        </td>
+        </tr>
     </blockTable>
     <section>
       <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>

@@ -27,14 +27,14 @@
     "category": "Generic Modules/Projects & Services",
     "depends": ["resource", "project"],
     "description": """
-
-        Long Term Project management module that tracks planning, scheduling, resources allocation.
-        Mainly used with Big project management.
-            - Project Phases will be maintained by Manager of the project
-            - Compute Phase Scheduling: Compute start date and end date of the phases which are in draft,open and pending state of the project given.
-                                        If no project given then all the draft,open and pending state phases will be taken
-            - Compute Task Scheduling: This works same as the scheduler button on project.phase. It takes the project as argument and computes all the open,draft and pending tasks
-            - Schedule Tasks: All the tasks which are in draft,pending and open state are scheduled with taking the phase's start date
+Long Term Project management module that tracks planning, scheduling, resources allocation.
+Features.
+    - Manage Big project.
+    - Define various Phases of Project.
+    - Compute Phase Scheduling: Compute start date and end date of the phases which are in draft,open and pending state of the project given.
+      If no project given then all the draft,open and pending state phases will be taken
+    - Compute Task Scheduling: This works same as the scheduler button on project.phase. It takes the project as argument and computes all the open,draft and pending tasks
+    - Schedule Tasks: All the tasks which are in draft,pending and open state are scheduled with taking the phase's start date
 
     """,
     "init_xml": [],

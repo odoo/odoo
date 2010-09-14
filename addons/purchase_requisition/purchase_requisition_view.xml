@@ -2,17 +2,6 @@
 <openerp>
     <data>
 
-    <record model="ir.ui.view" id="purchase_order_tree_inherit">
-        <field name="name">purchase.order.tree.inherit</field>
-        <field name="type">tree</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="requisition_id" groups="base.group_extended"/>
-            </field>
-        </field>
-    </record>
 
     <record model="ir.ui.view" id="purchase_order_form_inherit">
         <field name="name">purchase.order.form.inherit</field>
@@ -20,12 +9,23 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
-            <field name="partner_ref" position="after">
+            <field name="shipped" position="after">
                 <field name="requisition_id" groups="base.group_extended"/>
             </field>
         </field>
     </record>
 
+    <record model="ir.ui.view" id="purchase_order_search_inherit">
+        <field name="name">purchase.order.list.select.inherit</field>
+        <field name="type">form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="/search/group/filter[@string='To Invoice']" position="after">
+             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]" separator="1"/>
+            </xpath>
+        </field>
+    </record>
     <record model="ir.ui.view" id="view_purchase_requisition_form">
         <field name="name">purchase.requisition.form</field>
         <field name="type">form</field>
@@ -39,6 +39,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="origin"/>
+                    <field name="warehouse_id" groups="base.group_extended" widget="selection"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <notebook colspan="4">
@@ -77,12 +78,15 @@
                                 <field name="minimum_planned_date"/>
                                 <field name="origin"/>
                                 <field name="state"/>
+								<button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
+                                <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
+                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
                             </tree>
                          </field>
                         <separator colspan="4" string=""/>
                          <group col="8" colspan="4">
                           <label colspan="6"  string=""/>
-                        <button name="%(action_purchase_requisition_partner)d" string="Requests for Quotation" type="action" icon="gtk-execute"
+                        <button name="%(action_purchase_requisition_partner)d" string="Request a Quotation" type="action" icon="gtk-execute"
                            attrs="{'readonly': [('state', '=', 'done')]}" />
                         </group>
                    </page>
@@ -123,6 +127,7 @@
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="user_id" />
+                    <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <field name="exclusive" />
                 </group>
                 <newline/>
@@ -181,5 +186,12 @@
             </xpath>
         </field>
     </record>
+	<act_window
+            domain="[('requisition_id', '=', active_id)]"
+            id="act_res_partner_2_purchase_order"
+            name="Purchase orders"
+            res_model="purchase.order"
+            src_model="purchase.requisition"/>
+    
     </data>
 </openerp>

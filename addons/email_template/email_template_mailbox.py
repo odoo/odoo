@@ -63,6 +63,7 @@ class email_template_mailbox(osv.osv):
     
     def send_this_mail(self, cr, uid, ids=None, context=None):
         result = True
+        attachment_pool = self.pool.get('ir.attachment')
         for id in (ids or []):
             try:
                 account_obj = self.pool.get('email_template.account')
@@ -70,7 +71,7 @@ class email_template_mailbox(osv.osv):
                 payload = {}
                 if values['attachments_ids']:
                     for attid in values['attachments_ids']:
-                        attachment = self.pool.get('ir.attachment').browse(cr, uid, attid, context)#,['datas_fname','datas'])
+                        attachment = attachment_pool.browse(cr, uid, attid, context)#,['datas_fname','datas'])
                         payload[attachment.datas_fname] = attachment.datas
                 result = account_obj.send_mail(cr, uid,
                               [values['account_id'][0]],
@@ -84,8 +85,15 @@ class email_template_mailbox(osv.osv):
                               message_id=values['message_id'], 
                               context=context)
                 if result == True:
-                    self.write(cr, uid, id, {'folder':'sent', 'state':'na', 'date_mail':time.strftime("%Y-%m-%d %H:%M:%S")}, context)
-                    self.historise(cr, uid, [id], "Email sent successfully", context)
+                    account = account_obj.browse(cr, uid, values['account_id'][0], context=context)
+                    if account.auto_delete:
+                        self.write(cr, uid, id, {'folder': 'trash'}, context=context)
+                        self.unlink(cr, uid, [id], context=context)
+                        # Remove attachments for this mail
+                        attachment_pool.unlink(cr, uid, values['attachments_ids'], context=context)
+                    else:
+                        self.write(cr, uid, id, {'folder':'sent', 'state':'na', 'date_mail':time.strftime("%Y-%m-%d %H:%M:%S")}, context)
+                        self.historise(cr, uid, [id], "Email sent successfully", context)
                 else:
                     error = result['error_msg']
                     self.historise(cr, uid, [id], error, context)
@@ -100,7 +108,7 @@ class email_template_mailbox(osv.osv):
     def historise(self, cr, uid, ids, message='', context=None):
         for id in ids:
             history = self.read(cr, uid, id, ['history'], context).get('history', '')
-            self.write(cr, uid, id, {'history':history or '' + "\n" + time.strftime("%Y-%m-%d %H:%M:%S") + ": " + tools.ustr(message)}, context)
+            self.write(cr, uid, id, {'history': (history or '' )+ "\n" + time.strftime("%Y-%m-%d %H:%M:%S") + ": " + tools.ustr(message)}, context)
     
     _columns = {
             'email_from':fields.char(
@@ -171,8 +179,7 @@ class email_template_mailbox(osv.osv):
                             ('na', 'Not Applicable'),
                             ('sending', 'Sending'),
                             ], 'Status', required=True),
-            'date_mail':fields.datetime(
-                            'Rec/Sent Date'),
+            'date_mail':fields.datetime('Rec/Sent Date', help="Date on which Email Sent or Received"),
             'history':fields.text(
                             'History', 
                             readonly=True, 
@@ -183,6 +190,24 @@ class email_template_mailbox(osv.osv):
         'state': lambda * a: 'na',
         'folder': lambda * a: 'outbox',
     } 
+
+    def unlink(self, cr, uid, ids, context=None):
+        """
+        It just changes the folder of the item to "Trash", if it is no in Trash folder yet, 
+        or completely deletes it if it is already in Trash.
+        """
+        if not context:
+            context = {}
+        to_update = []
+        to_remove = []
+        for mail in self.browse(cr, uid, ids, context=context):
+            if mail.folder == 'trash':
+                to_remove.append(mail.id)
+            else:
+                to_update.append(mail.id)
+        # Changes the folder to trash
+        self.write(cr, uid, to_update, {'folder': 'trash'}, context=context)
+        return super(email_template_mailbox, self).unlink(cr, uid, to_remove, context=context)
 
 email_template_mailbox()
 

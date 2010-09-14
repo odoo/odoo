@@ -2,10 +2,14 @@
 <openerp><data>
 
     <record id="analytic_comp_rule" model="ir.rule">
-        <field name="name">analytic company rule</field>
+        <field name="name">Analytic multi company rule</field>
         <field model="ir.model" name="model_id" ref="model_account_analytic_account"/>
         <field eval="True" name="global"/>
         <field name="domain_force">[('company_id','=',user.company_id.id)]</field>
     </record>
-
+    
+    <record id="group_analytic_accounting" model="res.groups">
+        <field name="name">Analytic Accounting</field>
+    </record>
+    
 </data></openerp>

@@ -59,26 +59,24 @@ class base_setup_installer(osv.osv_memory):
             help="Helps you manage your purchase-related processes such as "
                  "requests for quotations, supplier invoices, etc..."),
         'hr':fields.boolean('Human Resources',
-            help="Helps you manage your human resources by encoding your "
-                 "employee structure, generating work sheets, tracking "
-                 "attendance and more."),
+            help="Helps you manage your human resources by encoding your employees structure, generating work sheets, tracking attendance and more"),
         'point_of_sale':fields.boolean('Point of Sales',
             help="Helps you get the most out of your points of sales with "
                  "fast sale encoding, simplified payment mode encoding, "
                  "automatic picking lists generation and more."),
         'marketing':fields.boolean('Marketing',
             help="Helps you manage your marketing campaigns step by step."),
-        'misc_tools':fields.boolean('Miscellaneous Tools',
-            help="Lets you install various interesting but non-essential "
-                 "tools like Survey, Lunch,..."),
+        'profile_tools':fields.boolean('Miscellaneous Tools',
+            help="Lets you install various interesting but non-essential tools "
+                "like Survey, Lunch and Ideas box."),
         'report_designer':fields.boolean('Advanced Reporting',
             help="Lets you install various tools to simplify and enhance "
                  "OpenERP's report creation."),
         'thunderbird' :fields.boolean('Thunderbird'),
         # Vertical modules
         'product_expiry':fields.boolean('Food Industry',
-            help="Installs a preselected set of OpenERP "
-                 "applications which will help you manage foods."),
+            help="Installs a preselected set of OpenERP applications "
+                "which will help you manage your industry"),
         'association':fields.boolean('Associations',
             help="Installs a preselected set of OpenERP "
                  "applications which will help you manage your association "
@@ -92,16 +90,22 @@ class base_setup_installer(osv.osv_memory):
         'crm': True,
         }
 
-    def _if_mrp(self, cr, uid, ids, context=None):
-        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
-               .view == 'simple':
-            return ['mrp_jit']
-        return None
-
     def _if_knowledge(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
                .view == 'simple':
             return ['document_ftp']
+        return None
+
+    def _if_misc_tools(self, cr, uid, ids, context=None):
+        interface = self.pool.get('res.users').browse(cr, uid, uid, context=context).view
+        if interface == 'simple' or interface =='extended' :
+            return ['profile_tools']
+        return None
+
+    def _if_account(self, cr, uid, ids, context=None):
+        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
+               .view == 'simple':
+            return ['account_voucher']
         return None
 
     def onchange_moduleselection(self, cr, uid, ids, *args):

@@ -24,6 +24,7 @@ import decimal_precision as dp
 import pooler
 
 import math
+import logging
 from _common import rounding
 
 from tools import config
@@ -251,7 +252,7 @@ class product_template(osv.osv):
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
         'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State', help="Tells the user if he can use the product or not."),
         'uom_id': fields.many2one('product.uom', 'Default Unit Of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
-        'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
+        'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
         'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
@@ -719,21 +720,5 @@ class pricelist_partnerinfo(osv.osv):
     }
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
-
-class res_users(osv.osv):
-    _name = 'res.users'
-    _inherit = 'res.users'
-
-    def create(self, cr, uid, data, context={}):
-        user_id = super(res_users, self).create(cr, uid, data, context)
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'product', 'ir_ui_view_sc_product0')
-        view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-        copy_id = self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                    'user_id': user_id}, context=context)
-        return user_id
-
-res_users()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

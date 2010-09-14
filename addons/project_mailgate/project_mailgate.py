@@ -120,88 +120,37 @@ class project_tasks(osv.osv):
                                        message_id=message_id, attach=attach, \
                                        context=context)
         
-    def do_draft(self, cr, uid, ids, *args):
-        res = super(project_tasks, self).do_draft(cr, uid, ids, *args)
+    def do_draft(self, cr, uid, ids, *args, **kwargs):
+        res = super(project_tasks, self).do_draft(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
         self._history(cr, uid, tasks, _('Draft'))
         return res
     
-    def do_open(self, cr, uid, ids, *args):
-        res = super(project_tasks, self).do_open(cr, uid, ids, *args)
+    def do_open(self, cr, uid, ids, *args, **kwargs):
+        res = super(project_tasks, self).do_open(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
         self._history(cr, uid, tasks, _('Open'))
         return res
     
-    def do_pending(self, cr, uid, ids, *args):
-        res = super(project_tasks, self).do_pending(cr, uid, ids, *args)
+    def do_pending(self, cr, uid, ids, *args, **kwargs):
+        res = super(project_tasks, self).do_pending(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
         self._history(cr, uid, tasks, _('Pending'))
         return res
     
-    def do_close(self, cr, uid, ids, *args):
-        res = super(project_tasks, self).do_close(cr, uid, ids, *args)
+    def do_close(self, cr, uid, ids, *args, **kwargs):
+        res = super(project_tasks, self).do_close(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
             if task.state == 'done':
                 self._history(cr, uid, tasks, _('Done'))
         return res
     
-    def do_cancel(self, cr, uid, ids, *args):
-        res = super(project_tasks, self).do_cancel(cr, uid, ids, *args)
+    def do_cancel(self, cr, uid, ids, *args, **kwargs):
+        res = super(project_tasks, self).do_cancel(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
         self._history(cr, uid, tasks, _('Cancel'))
         return res
 
 project_tasks()
-
-class config_compute_remaining(osv.osv_memory):
-    _inherit = "config.compute.remaining"
-    _name='config.compute.remaining'
-    
-    def compute_hours(self, cr, uid, ids, context=None):
-        res = super(config_compute_remaining, self).compute_hours(cr, uid, ids, context=context)
-        task_obj = self.pool.get('project.task')
-        if 'active_id' in context:
-            task = task_obj.browse(cr, uid, context['active_id'])
-            if task.state == 'open':
-                task_obj._history(cr, uid, [task], _('Open'))
-        return res
-config_compute_remaining()
-    
-class project_close_task(osv.osv_memory):
-    _inherit = "close.task"
-    _name = "close.task"
-    
-    def close(self, cr, uid, ids, context=None):
-        res = super(project_close_task, self).close(cr, uid, ids, context=context)
-        if not context:
-            context={}
-        task_obj = self.pool.get('project.task')
-        
-        if 'task_id' in context:
-            task = task_obj.browse(cr, uid, context['task_id'], context=context)
-            task_obj._history(cr, uid, [task], _('Done'))
-        return res
-    
-    def confirm(self, cr, uid, ids, context=None):
-        res=super(project_close_task, self).confirm(cr, uid, ids, context=context)
-        task_obj = self.pool.get('project.task')
-        
-        if 'task_id' in context:
-            close_wizard = self.read(cr, uid, ids[0], [])
-            to_adr = []
-            to_adr.append(context.get('send_manager', '') and close_wizard.get('manager_email', '') or '')
-            to_adr.append(context.get('send_partner', '') and close_wizard.get('partner_email', '') or '')
-            description = close_wizard['description']
-            
-            task = task_obj.browse(cr, uid, context['task_id'], context=context)
-            subject = "Task '%s' closed" % task.name
-            from_adr = task.user_id.address_id.email
-            task_obj._history(cr, uid, [task], _('Send'), history=True, subject=subject, email=to_adr, details=description, email_from=from_adr)
-        if task.state == 'done':
-            task_obj._history(cr, uid, [task], _('Done'))
-        return res
-    
-project_close_task()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

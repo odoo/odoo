@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Analytic Balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
       <header>
@@ -18,22 +18,22 @@
 				<!--COL 1-->
 				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
 				<drawRightString x="20cm" y="28.1cm">Analytic Balance - [[ company.currency_id.name ]]</drawRightString>
-				
+
 				<!-- Header -->
-				
-				
+
+
 				<setFont name="Helvetica" size="9"/>
 				<drawString x="1.0cm" y="1cm"> [[ time.strftime("%Y-%m-%d %H:%M", time.localtime()) ]]</drawString>
 				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
 				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-				
+
 
 			    <lineMode width="0.7"/>
 				<lines>1cm 27.7cm 20cm 27.7cm</lines>
 				<setFont name="Helvetica" size="8"/>
-			
+
 			</pageGraphics>
-			</header>   
+			</header>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -51,12 +51,12 @@
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      
+
     </blockTableStyle>
     <blockTableStyle id="tbl_content">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      
+
     </blockTableStyle>
     <blockTableStyle id="tbl_data">
       <blockAlignment value="LEFT"/>
@@ -186,7 +186,7 @@
                 <td>
                   <para style="terp_default_Right_8">[[ formatLang(move_g['quantity']) ]]</para>
                 </td>
-              </tr>   
+              </tr>
       </blockTable>
       </section>
       <para style="terp_default_8">

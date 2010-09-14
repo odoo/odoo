@@ -31,7 +31,6 @@ import account_reconcile_partner_process
 import account_reconcile
 import account_unreconcile
 import account_invoice_refund
-import account_pay_invoice
 import account_move_journal
 import account_journal_select
 import account_move_bank_reconcile
@@ -48,6 +47,7 @@ import account_open_closed_fiscalyear
 import account_compare_account_balance_report
 import account_invoice_state
 import account_chart
+import account_tax_chart
 #TODO: remove this file no moe used
 # also remove related view fiel
 

@@ -113,8 +113,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), 
         'act_email_from' : fields.char('Email From', size=64, required=False,
                 help="Use a python expression to specify the right field on which one than we will use for the 'From' field of the header"),
-        'act_email_to' : fields.char('Email To', size=64, required=False,
-                help="Use a python expression to specify the right field on which one than we will use for the 'To' field of the header"),
     }
 
     _defaults = {
@@ -358,23 +356,19 @@ the rule to mark CC(mail to any other person defined in actions)."),
             emails += (action.act_email_cc or '').split(',')
         if action.act_mail_to_email:
             emails += (action.act_mail_to_email or '').split(',')
-        import pdb
-        #pdb.set_trace()
-
-        locals_for_emails = {
-            'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
-            'obj' : obj,
-        }
-
-        if action.act_email_to:
-            emails.append(safe_eval(action.act_email_to, {}, locals_for_emails))
-
         emails = filter(None, emails)
-
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
-            email_from = safe_eval(action.act_email_from, {}, locals_for_emails)
-            self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_from)
+            email_from = safe_eval(action.act_email_from, {}, {
+                'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
+                'obj' : obj,
+            })
+            def to_email(text):
+                return re.findall(r'([^ ,<@]+@[^> ,]+)', text or '')
+            emails = to_email(','.join(filter(None, emails)))
+            email_froms = to_email(email_from)
+            if email_froms:
+                self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_froms[0])
         return True
 
     def _action(self, cr, uid, ids, objects, scrit=None, context=None):

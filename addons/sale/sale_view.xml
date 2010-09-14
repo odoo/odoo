@@ -80,10 +80,9 @@
             <field name="arch" type="xml">
                 <tree string="Sales orders">
                     <field name="name"/>
+                    <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
-                    <field name="date_order"/>
-                    <field name="partner_shipping_id"/>
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
@@ -108,11 +107,11 @@
                         <field name="invoiced"/>
                     </group>
                     <notebook colspan="5">
-                        <page string="Sale Order">
+                        <page string="Sales Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
@@ -143,7 +142,7 @@
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
 
-                                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                                             <field colspan="4" name="name"/>
                                             <field name="price_unit"/>
                                             <field name="discount"/>
@@ -256,18 +255,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]" help="Sale Orders that haven't yet be confirmed"/>
+                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]" help="Sales Order that haven't yet been confirmed"/>
                     <filter icon="terp-check" string="Sales" domain="[('state','in',('manual','progress'))]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sale Orders ready to be invoiced"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
+                    <field name="date_order" select="1" string="Order date" />
                     <field name="partner_id" select="1"/>
                     <field name="user_id" select="1">
-                          <filter domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>
+                        <filter domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal"/>
                     </field>
-
-                    <field name="date_order" select="1" string="Order date" />
                     <newline/>
                     <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -288,11 +286,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="help">The sale order manages the invoicing, the product fullfilment and the
+            <field name="help">The sales order manages the invoicing, the product fullfilment and the
 delivery processes. OpenERP can handle products, services and
-consumables so that a sale order can trigger tasks, manufacturing
+consumables so that a sales order can trigger tasks, manufacturing
 orders, purchases, etc. It support several invoicing methods according
-to your configuration: from the sale order, from the pickings, etc.
+to your configuration: from the sales order, from the pickings, etc.
             </field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
@@ -385,15 +383,15 @@ to your configuration: from the sale order, from the pickings, etc.
                             <field name="product_uom"/>
                             <field name="product_id" readonly="1"/>
                             <field name="invoiced"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                             <separator colspan="4" string="Manual Designation"/>
-                            <field colspan="4" name="name"/>
+                            <field colspan="4" name="name" groups="base.group_extended"/>
                             <field name="price_unit"/>
                             <field name="discount"/>
                             <field name="type" groups="base.group_extended"/>
                             <field name="delay" groups="base.group_extended"/>
                             <field name="price_subtotal"/>
-                            <field name="th_weight"/>
+                            <field name="th_weight" groups="base.group_extended"/>
                             <separator colspan="4" string="Taxes"/>
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                             <separator colspan="4" string="States"/>
@@ -438,7 +436,7 @@ to your configuration: from the sale order, from the pickings, etc.
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sale Order Lines related to a Sale Order of mine"/>
+                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sale Order Lines related to a Sales Order of mine"/>
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
@@ -519,7 +517,7 @@ to your configuration: from the sale order, from the pickings, etc.
         <!-- configartion view -->
 
         <record id="view_config_picking_policy" model="ir.ui.view">
-            <field name="name">Configure Picking Policy for Sale Order </field>
+            <field name="name">Configure Picking Policy for Sales Order </field>
             <field name="model">sale.config.picking_policy</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_view_base"/>
@@ -530,7 +528,7 @@ to your configuration: from the sale order, from the pickings, etc.
                 </form>
                 <separator string="title" position="attributes">
                 <attribute name="string"
-                       >Configure Sale Order Logistic</attribute>
+                       >Configure Sales Order Logistic</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">Setup your sales workflow and default values.</attribute>
@@ -552,7 +550,7 @@ to your configuration: from the sale order, from the pickings, etc.
         </record>
 
         <record id="action_config_picking_policy" model="ir.actions.act_window">
-            <field name="name">Configure Picking Policy for Sale Order</field>
+            <field name="name">Configure Picking Policy for Sales Order</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.config.picking_policy</field>
             <field name="view_id" ref="view_config_picking_policy"/>

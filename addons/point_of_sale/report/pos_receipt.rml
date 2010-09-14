@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-    <template pageSize="(204.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <template pageSize="(204.0,842.0)" title="Receipt" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
         <pageTemplate id="first">
             <frame id="first" x1="0.0" y1="0.0" width="204" height="842"/>
         </pageTemplate>
@@ -136,7 +136,7 @@
                 </td>
                 <td>
                     <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][['%.f' % line.qty ]]</para>
-                    
+
                 </td>
                 <td>
                     <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][[ '%.2f' % net(line.id) ]] <font> [[ line and line.discount == 0.0 and removeParentNode('font') ]] ([[ '%.2f' % line.discount ]]%)</font></para>

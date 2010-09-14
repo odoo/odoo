@@ -98,6 +98,8 @@ class hr_employee(osv.osv):
         if context is None:
             context = {}
         result = {}
+        if not ids:
+            return result
         for id in ids:
             result[id] = 'absent'
         cr.execute('SELECT hr_attendance.action, hr_attendance.employee_id \

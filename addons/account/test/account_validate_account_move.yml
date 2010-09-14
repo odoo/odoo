@@ -37,7 +37,7 @@
 -
   I check that Initially account move state is "Draft"
 -
-  !assert {model: account.move, id: account_move_0}:
+  !assert {model: account.move, id: account_move_0, string: initialstatedraft}:
     - state == 'draft'
 -
   I validate this account move by using the 'Validate Journal Entries' wizard
@@ -46,15 +46,12 @@
     journal_id: account.bank_journal
     period_id: account.period_6
 -
-  I clicked on validate Button
+  I click on validate Button
 -
   !python {model: validate.account.move}: |
-    self.validate_move(cr, uid, [ref("validate_account_move_0")], {"lang": "en_US",
-      "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_validate_account_moves")],
-      "tz": False, "active_id": ref("account.menu_validate_account_moves"), })
-
+      self.validate_move(cr, uid, [ref("validate_account_move_0")], {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_validate_account_moves")], "tz": False, "active_id": ref("account.menu_validate_account_moves"), })
 -
   I check that the invoice state is now "Posted"
 -
-  !assert {model: account.move, id: account_move_0}:
+  !assert {model: account.move, id: account_move_0, string: moveincorrect}:
     - state == 'posted'

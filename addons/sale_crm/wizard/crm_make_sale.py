@@ -147,7 +147,9 @@ class crm_make_sale(osv.osv_memory):
                     value['discount']=line.discount
                     value['notes']=line.notes
                     sale_line_obj.create(cr, uid, value)
-                case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
+                stage_data = mod_obj._get_id(cr, uid, 'crm', 'stage_lead3')
+                stage_data = mod_obj.read(cr, uid, stage_data, ['res_id'])
+                case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id, 'stage_id': stage_data['res_id']})
                 new_ids.append(new_id)
                 message = _('Opportunity ') + " '" + case.name + "' "+ _("is converted to Sales Quotation.")
                 self.log(cr, uid, case.id, message)

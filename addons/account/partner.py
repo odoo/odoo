@@ -55,7 +55,7 @@ class account_fiscal_position(osv.osv):
         if not fposition_id :
             return account_id
         for pos in fposition_id.account_ids:
-            if pos.account_src_id.id==account_id:
+            if pos.account_src_id.id == account_id:
                 account_id = pos.account_dest_id.id
                 break
         return account_id

@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 07:09:51+0000\n"
-"PO-Revision-Date: 2010-08-20 07:09:51+0000\n"
+"POT-Creation-Date: 2010-08-20 07:09+0000\n"
+"PO-Revision-Date: 2010-08-30 12:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-08-31 03:59+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
@@ -94,7 +95,9 @@ msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
-msgid "The generated workitems will be linked to the partner related to the record. If the record is the partner itself left this field empty."
+msgid ""
+"The generated workitems will be linked to the partner related to the record. "
+"If the record is the partner itself left this field empty."
 msgstr ""
 
 #. module: marketing_campaign
@@ -115,7 +118,9 @@ msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
-msgid "Describe type of action to be performed on the Activity.Eg : Send email,Send paper.."
+msgid ""
+"Describe type of action to be performed on the Activity.Eg : Send email,Send "
+"paper.."
 msgstr ""
 
 #. module: marketing_campaign
@@ -153,10 +158,15 @@ msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
-msgid "Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+msgid ""
+"Test - It creates and process all the activities directly (without waiting "
+"for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but "
+"does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to "
+"validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and "
+"reports (be very careful with this mode, you're live!)"
 msgstr ""
 
 #. module: marketing_campaign
@@ -196,7 +206,9 @@ msgstr ""
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
-msgid "The campaign hasn't any starting activity nor any activity with a signal and no previous activity."
+msgid ""
+"The campaign hasn't any starting activity nor any activity with a signal and "
+"no previous activity."
 msgstr ""
 
 #. module: marketing_campaign
@@ -229,7 +241,9 @@ msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_mode:0
-msgid "Determines when new workitems should be created for records matching a segment."
+msgid ""
+"Determines when new workitems should be created for records matching a "
+"segment."
 msgstr ""
 
 #. module: marketing_campaign
@@ -245,21 +259,28 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.module.module,description:marketing_campaign.module_meta_information
-msgid "\n"
-"Allows you to setup leads automation through marketing campaigns. The campaigns\n"
+msgid ""
+"\n"
+"Allows you to setup leads automation through marketing campaigns. The "
+"campaigns\n"
 "are dynamic and multi-channels. The process:\n"
-"* Design marketing campaigns that incluces mail templates, reports to print,\n"
+"* Design marketing campaigns that incluces mail templates, reports to "
+"print,\n"
 "  miscelleanous actions, etc.\n"
 "* Define segments that are selections of target people\n"
 "* Launch your campaign to automate communications.\n"
 "\n"
-"If you need demo data, you can install the module marketing_campaign_crm_demo.\n"
+"If you need demo data, you can install the module "
+"marketing_campaign_crm_demo.\n"
 "    "
 msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
-msgid "Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
+msgid ""
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - object: the object this campaign item represents\n"
@@ -291,7 +312,9 @@ msgstr ""
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
-msgid "The campaign cannot be started: an email account is missing in the email activity '%s'"
+msgid ""
+"The campaign cannot be started: an email account is missing in the email "
+"activity '%s'"
 msgstr ""
 
 #. module: marketing_campaign
@@ -373,7 +396,9 @@ msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
-msgid "By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted."
+msgid ""
+"By activating this option, workitems that aren't executed because the "
+"condition is not met are marked as cancelled instead of being deleted."
 msgstr ""
 
 #. module: marketing_campaign
@@ -503,7 +528,8 @@ msgstr ""
 
 #. module: marketing_campaign
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: marketing_campaign
@@ -545,7 +571,9 @@ msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,signal:0
-msgid "An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent"
+msgid ""
+"An activity with a signal can be called programmatically. Be careful, the "
+"workitem is always created when a signal is sent"
 msgstr ""
 
 #. module: marketing_campaign
@@ -593,7 +621,9 @@ msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
-msgid "Fixed cost for the campaign (used for campaign analysis), see also variable cost on activities"
+msgid ""
+"Fixed cost for the campaign (used for campaign analysis), see also variable "
+"cost on activities"
 msgstr ""
 
 #. module: marketing_campaign
@@ -745,7 +775,9 @@ msgstr ""
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
-msgid "The campaign cannot be started: the email account is not approved in the email activity '%s'"
+msgid ""
+"The campaign cannot be started: the email account is not approved in the "
+"email activity '%s'"
 msgstr ""
 
 #. module: marketing_campaign
@@ -894,4 +926,3 @@ msgstr ""
 #: field:campaign.analysis,year:0
 msgid "Year"
 msgstr ""
-

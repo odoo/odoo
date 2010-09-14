@@ -38,7 +38,7 @@ class report_membership(osv.osv):
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True),                          
+        'date': fields.datetime('Create Date', readonly=True),                          
         'canceled_number': fields.integer('Canceled', readonly=True),
         'waiting_number': fields.integer('Waiting', readonly=True),
         'invoiced_number': fields.integer('Invoiced', readonly=True),
@@ -78,7 +78,7 @@ class report_membership(osv.osv):
         SUM(awaiting) as waiting_amount,
         year,
         month,
-        create_date,
+        date,
         partner_id,
         membership_id,
         state,
@@ -104,7 +104,7 @@ class report_membership(osv.osv):
             ELSE 0 END AS awaiting,
             TO_CHAR(ml.date_from, 'YYYY') AS year,
             TO_CHAR(ml.date_from, 'MM')as month,
-            TO_CHAR(ml.date_from, 'YYYY-MM-DD') as create_date,
+            TO_CHAR(ml.date_from, 'YYYY-MM-DD') as date,
             ai.partner_id AS partner_id,
             ai.currency_id AS currency,
             ai.state as state,
@@ -119,7 +119,7 @@ class report_membership(osv.osv):
             ON (ml.partner = p.id)
             GROUP BY TO_CHAR(ml.date_from, 'YYYY'),  TO_CHAR(ml.date_from, 'MM'), TO_CHAR(ml.date_from, 'YYYY-MM-DD'), ai.state, ai.partner_id,
             ai.currency_id, ml.id, ml.membership_id) AS foo
-        GROUP BY year, month, create_date, currency, partner_id, membership_id, state)
+        GROUP BY year, month, date, currency, partner_id, membership_id, state)
                 """)
         
 report_membership()

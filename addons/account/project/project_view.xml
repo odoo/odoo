@@ -8,7 +8,7 @@
             <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
+                <tree toolbar="1" colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account">
                     <field name="code"/>
                     <field name="complete_name"/>
                     <field name="quantity"/>
@@ -25,8 +25,9 @@
             <field name="arch" type="xml">
                 <search string="Analytic Account">
                     <group col="8" colspan="4">
-                        <filter icon="terp-check" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
+                        <filter icon="terp-go-today" string="Overpassed Account" domain="[('date','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Overpassed Account"/>
                         <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
+                        <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
@@ -38,7 +39,7 @@
                         <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Associated Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     </group>
                 </search>
@@ -51,7 +52,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="True" colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
+                <tree colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>
@@ -59,7 +60,7 @@
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
-                    <field name="company_currency_id"/>
+                    <field name="currency_id"/>
                     <field name="date" invisible="1"/>
                 </tree>
             </field>
@@ -77,7 +78,6 @@
                         <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended"/>
                         <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
                         <field name="type" select="2"/>
-                        <field name="company_currency_id" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
@@ -85,7 +85,6 @@
                             <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>
-
                             <newline/>
                             <field name="quantity_max"/>
                             <field name="user_id"/>
@@ -105,10 +104,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph,form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
-            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
         </record>
-        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="menu_analytic_accounting" groups="base.group_extended"/>
+        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="menu_analytic_accounting" groups="analytic.group_analytic_accounting"/>
 
         <record id="act_account_renew_view" model="ir.actions.act_window">
             <field name="name">Accounts to Renew</field>
@@ -122,16 +120,14 @@
 
         <record id="action_account_analytic_account_tree2" model="ir.actions.act_window">
             <field name="name">Chart of Analytic Accounts</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
-            <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
-            <field name="view_mode">form,graph</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="domain">[('parent_id','=',False)]</field>
             <field name="help">Analytic Charts of Accounts allows you to access to reports by analytic accounts (or cost accounts) . From this menu you can access to analytic balance, a report that relates the analytic accounts to the general accounts. It is useful for analyzing the profitability of projects, giving you the profitability of a project for the different operations that you used to carry out the project.</field>
         </record>
 
-        <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_generic_reporting" sequence="4" groups="base.group_extended"/>
+        <menuitem groups="analytic.group_analytic_accounting" id="next_id_40" name="Analytic" parent="account.menu_finance_generic_reporting" sequence="4"/>
 
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
@@ -139,23 +135,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry">
-                <separator string="General Information" colspan="4"/>
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="amount" select="2"/>
-                    <field name="date" select="1"/>
-                    <field name="account_id" select="1" groups="base.group_extended"/>
-                    <field name="journal_id" select="2"/>
-                    <field name="general_account_id" select="2"/>
-                    <field name="move_id" select="2"/>
-                <separator string="Optional Information" colspan="4"/>
-                    <field name="unit_amount" select="2"/>
-                    <field name="ref" select="2"/>
-                    <field name="currency_id" select="2"/>
-                    <field name="amount_currency" select="2"/>
-                    <field name="company_id" select="2" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="product_id" select="2"/>
-                    <field name="product_uom_id" select="2"/>
+                    <group colspan="4" col="6">
+                        <field name="name"/>
+                        <field name="ref"/>
+                        <field name="account_id"/>
+                        <field name="journal_id"/>
+                        <field name="date"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group colspan="2" col="4">
+                        <separator string="Amount" colspan="4"/>
+                        <field name="amount" colspan="4"/>
+                        <field name="amount_currency" colspan="2"/>
+                        <field name="currency_id" colspan="2" nolabel="1"/>
+                    </group>
+                    <group colspan="2" col="4">
+                        <separator string="Product Information" colspan="4"/>
+                        <field name="product_id" colspan="4"/>
+                        <field name="unit_amount" colspan="2"/>
+                        <field name="product_uom_id" colspan="2" nolabel="1"/>
+                    </group>
+                    <group colspan="2" col="2" groups="base.group_extended">
+                        <separator string="General Accounting" colspan="2"/>
+                        <field name="general_account_id"/>
+                        <field name="move_id" readonly="1"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -167,13 +171,13 @@
                 <tree editable="top" string="Analytic Entries">
                     <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="name"/>
+                    <field name="journal_id"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total quantity"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
                     <field domain="[('type','=','normal')]" name="account_id" groups="base.group_extended"/>
                     <field invisible="True" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="amount" sum="Total amount"/>
                     <field name="general_account_id"/>
-                    <field name="journal_id"/>
                     <field name="ref"/>
                     <field name="currency_id" />
                     <field name="amount_currency" />
@@ -188,22 +192,29 @@
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
                     <group col='6' colspan='4'>
+                        <filter string="Sale" domain="[('journal_id.type','=','sale')]" icon="terp-sale"/>
+                        <filter string="Purchase" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase"/>
+                        <separator orientation="vertical"/>
+                        <separator orientation="vertical"/>
+                        <field name="date" select="1"/>
                         <field name="name" select="1"/>
                         <field name="account_id" select="1" groups="base.group_extended"/>
-                        <field name="amount" select="1"/>
-                        <field name="date" select="1"/>
                         <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
-                    <group col='6' colspan='4'>
-                        <field name="journal_id" select="1" widget="selection"/>
+                    <group string="Group By..." expand="0">
+                        <filter string="Analytic Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-blue"/>
+                        <filter string="Analytic Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
+                        <separator orientation="vertical"/>
+                        <filter string="General Account" context="{'group_by':'general_account_id'}" icon="terp-folder-green"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Product" context="{'group_by':'product_id'}" icon="terp-accessories-archiver"/>
                     </group>
                     <newline/>
-                    <group string="Group By..." expand="0">
-                        <filter string="General Account" context="{'group_by':'general_account_id'}"/>
-                        <filter string="Analytic Account" context="{'group_by':'account_id'}" groups="base.group_extended"/>
-                        <filter string="Analytic Journal" context="{'group_by':'journal_id'}"/>
-                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                    <group expand="0" string="Extended options...">
+                        <field name="journal_id" widget="selection"/>
+                        <field name="product_id" widget="selection"/>
+                        <field name="amount" select="1"/>
                     </group>
                 </search>
             </field>
@@ -247,7 +258,7 @@
                     <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="journal_id"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field invisible="True" name="general_account_id"/>
                     <field name="amount"/>
@@ -289,8 +300,8 @@
             <field name="arch" type="xml">
                 <search string="Analytic Journals">
                   <group>
-                    <field name="name"/>
                       <field name="code"/>
+                      <field name="name"/>
                       <field name="type"/>
                   </group>
                   <newline/>
@@ -322,7 +333,7 @@
             <field name="view_mode">tree,form,search</field>
             <field name="search_view_id" ref="view_analytic_journal_search" />
         </record>
-        <menuitem action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" groups="base.group_extended"/>
+        <menuitem groups="analytic.group_analytic_accounting" action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" sequence="5"/>
 
         #
         # Open journal entries
@@ -334,7 +345,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_entries" groups="base.group_extended"/>
+        <menuitem groups="analytic.group_analytic_accounting" action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_entries"/>
 
         #
         # Reporting
@@ -346,7 +357,7 @@
             <field name="view_type">tree</field>
             <field name="help">To print an analytics (or costs) journal for a given period. The report give code, move name, account number, general amount and analytic amount.</field>
         </record>
-        <menuitem action="action_account_analytic_journal_tree" id="account_analytic_journal_print" parent="account.next_id_40" groups="base.group_extended"/>
+        <menuitem groups="analytic.group_analytic_accounting" action="action_account_analytic_journal_tree" id="account_analytic_journal_print" parent="account.next_id_40"/>
 
         #
         # Statistics
@@ -416,17 +427,14 @@
             </field>
         </record>
 
-        <record id="report_account_analytic_journal_tree" model="ir.actions.act_window">
-            <field name="name">Account cost and revenue by journal</field>
-            <field name="res_model">report.hr.timesheet.invoice.journal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="search_view_id" ref="report_hr_timesheet_invoice_journal_search"/>
-        </record>
-
-        <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" name="All Analytic Entries" res_model="account.analytic.line" src_model="account.analytic.account" view_mode="tree,form" view_type="form"/>
-
-        <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal" name="Costs &amp; Revenues" res_model="report.hr.timesheet.invoice.journal" src_model="account.analytic.account" view_mode="graph,tree,form" view_type="form"/>
+        <act_window 
+            context="{'search_default_account_id': [active_id], 'search_default_user_id': False}"
+            id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" 
+            name="All Analytic Entries" 
+            res_model="account.analytic.line" 
+            src_model="account.analytic.account" 
+            view_mode="tree,form" 
+            view_type="form"/>
 
         <record id="view_account_journal_1" model="ir.ui.view">
             <field name="name">account.journal.form.1</field>

@@ -18,40 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
-from osv import osv, fields
+from report import report_sxw
 
-class account_analytic_check(osv.osv_memory):
-    _name = 'account.analytic.check'
-    _description = 'Account Analytic Check'
+class report_planning(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context=None):
+        super(report_planning, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+        })
 
-    _columns = {
-        'date1': fields.date('Start of period', required=True),
-        'date2': fields.date('End of period', required=True),
-    }
-
-    _defaults = {
-        'date1':time.strftime('%Y-01-01'),
-        'date2':time.strftime('%Y-%m-%d')
-    }
-
-    def check_report(self, cr, uid, ids, context=None):
-        datas = {}
-        if context is None:
-            context = {}
-        data = self.read(cr, uid, ids)[0]
-        datas = {
-             'ids': context.get('active_ids',[]),
-             'model': 'account.account',
-             'form': data
-                 }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.analytic.account.analytic.check',
-            'datas': datas,
-            }
-
-account_analytic_check()
+report_sxw.report_sxw('report.report_account_analytic.planning.print','report_account_analytic.planning','addons/project_planning/report/report_planning.rml',parser=report_planning, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -985,8 +985,13 @@ var listSearchContactHandler = {
 
            if(strlSearchResult=="email" && strlSearchResultValue!=''){
                  setSenderEmail(strlSearchResultValue);
-                 var t = getSenderEmail();} 
+                 var t = getSenderEmail();
+                 window.open("chrome://openerp_plugin/content/address.xul", "", "chrome, resizable=yes");} 
     
+            if(strlSearchResult=="email" && strlSearchResultValue==''){
+                alert("Contact is not available.");
+            } 
+
             if(strlSearchResult=="res_id"){
                  setResourceId(strlSearchResultValue);
                  var t = getResourceId();}
@@ -1014,11 +1019,11 @@ var listSearchContactdetailHandler = {
             var strlSearchResultValue = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
             if(strlSearchResult=="email" && strlSearchResultValue=='')
             {
-                alert("Contact is not Available")
+                alert("Contact is not Available.")
                 document.getElementById("txtemail").value = sendername;
             } 
             if(strlSearchResult=="partner_name"){
-                 document.getElementById("txtname").value =strlSearchResultValue;}
+                 document.getElementById("txtselectpartner").value =strlSearchResultValue;}
 
             if(strlSearchResult=="contactname"){
                  document.getElementById("txtcontactname").value =strlSearchResultValue;}
@@ -1043,7 +1048,7 @@ var listSearchContactdetailHandler = {
                  document.getElementById("txtmobile").value =strlSearchResultValue;}
 
             if(strlSearchResult=="email"&& strlSearchResultValue!=''){
-                document.getElementById("txtemail").value =strlSearchResultValue;}
+                 document.getElementById("txtemail").value =strlSearchResultValue;}
 
             if(strlSearchResult=="res_id"){
                  setResourceId(strlSearchResultValue);
@@ -1080,7 +1085,7 @@ function searchContactdetail()
 	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strmethod.data = 'search_contact';
 	var strname = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strname.data =document.getElementById("txtemail").value;
+	strname.data = document.getElementById("txtemail").value;
 	xmlRpcClient.asyncCall(listSearchContactdetailHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strname ],6);
 }
 
@@ -1259,7 +1264,7 @@ function searchContact()
 	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strmethod.data = 'search_contact';
 	var strname = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strname.data =getSenderEmail();
+	strname.data = getSenderEmail();
   	
 	xmlRpcClient.asyncCall(listSearchContactHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strname ],6);
 }
@@ -1335,6 +1340,8 @@ function getPartnerList(){
 	strvalue.data = document.getElementById('txtselectpartner').value;
 	xmlRpcClient.asyncCall(listPartnerHandler,cmdPartnerList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
+
+
 //function to create the xmlrpc supported variables for xmlrpc request
 function dictcontact(a,b){
 	var temp = xmlRpcClient.createType(xmlRpcClient.ARRAY,{});
@@ -1527,7 +1534,7 @@ function createContact(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var a = ['partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
-	var b = [getPartnerId(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
+	var b = [getPartnerId(),document.getElementById("txtname").value,document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listCreateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
@@ -1548,7 +1555,7 @@ function UpdateContact(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var a = ['res_id','partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
-	var b = [getResourceId(),getPartnerName(),document.getElementById("txtcontactname").value,document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
+	var b = [getResourceId(),document.getElementById("txtselectpartner").value,document.getElementById("txtcontactname").value,document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listUpdateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }

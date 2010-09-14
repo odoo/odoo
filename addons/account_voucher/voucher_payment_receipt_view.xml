@@ -8,36 +8,63 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, type, journal_id)"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Vendor"/>
+                        <field name="journal_id"
+                            domain="[('type','in',['bank', 'cash'])]"
+                            widget="selection" select="1"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"
+                            string="Payment Method"/>
+                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"/>
+                        <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="4"/>
-                        <field name="journal_id" domain="[('type','in',['bank', 'cash'])]" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
-                        <field name="account_id" domain="[('type','=','other')]" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
-                        <field name="number"/>
+                        <field name="account_id"
+                            domain="[('type','=','other')]"
+                            widget="selection"
+                            on_change="onchange_account(account_id)"
+                            invisible="True"/>
+                        <field name="pre_line" invisible="1"/>
+                        <field name="type" invisible="True"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_ids" on_change="onchange_price(line_ids, False, False)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_dr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
                                 <tree string="Payment Lines" editable="bottom">
-                                    <field name="ref" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
-                                    <field name="amount"/>
-                                    <field name="account_id"/>
-                                    <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
-                                    <field name="account_analytic_id"/>
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                        on_change="onchange_move_line_id(move_line_id)"
+                                        domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        />
+                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','payable')]"/>
+                                    <field name="date_original" readonly="1"/>
+                                    <field name="date_due" readonly="1"/>
+                                    <field name="amount_original" readonly="1"/>
+                                    <field name="amount_unreconciled" sum="Open Balance" readonly="1"/>
+                                    <field name="amount" sum="Payment"/>
+                                </tree>
+                                <form string="Payment Information">
+                                    <label string="Form view not available for Payment Lines"/>
+                                </form>
+                            </field>
+                            <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
+                                <tree string="Credits" editable="bottom">
+                                    <field name="move_line_id"/>
+                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
+                                    <field name="date_original"/>
+                                    <field name="amount_original"/>
+                                    <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
-                                <separator string="Narration" colspan="2"/>
+                                <separator string="Internal Notes" colspan="2"/>
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="reference" select="1"/>
                                 <field name="date" select="1" on_change="onchange_date(date)"/>
                                 <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
-                                <field name="type" on_change="onchange_journal(journal_id,type)"/>
+                                <field name="number"/>
                             </group>
                         </page>
-                        <page string="Journal Items">
+                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
@@ -49,10 +76,10 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
+                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="%(action_view_account_voucher_unreconcile)d" string="Unreconcile" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
             </field>
@@ -67,7 +94,7 @@
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="16"
+        <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="12"
             id="menu_action_vendor_payment"  parent="account.menu_finance_payables"/>
 
         <record model="ir.ui.view" id="view_vendor_receipt_form">
@@ -77,13 +104,14 @@
             <field name="arch" type="xml">
                 <form string="Sales Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, journal_id, amount)" string="Customer"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" string="Customer"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"
                             string="Payment Method"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount)"/>
+                        <field name="amount"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="4"/>
                         <field name="account_id"
@@ -92,16 +120,17 @@
                             on_change="onchange_account(account_id)"
                             invisible="True"/>
                         <field name="pre_line" invisible="1"/>
+                        <field name="type" invisible="True"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
-                                <tree string="Invoices and outstanding payments" editable="bottom">
+                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
+                                <tree string="Invoices and outstanding transactions" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
-                                    <field name="account_id"  domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -112,7 +141,7 @@
                             <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
-                                    <field name="account_id"  domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
                                     <field name="date_original"/>
                                     <field name="amount_original"/>
                                     <field name="amount" sum="Payment"/>
@@ -129,7 +158,7 @@
                                 <field name="number"/>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended">
+                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
@@ -141,10 +170,10 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
+                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="%(action_view_account_voucher_unreconcile)d" string="Unreconcile" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
             </field>
@@ -159,7 +188,7 @@
             <field name="view_id" ref="account_open_vouchers_view"/>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_vendor_receipt" icon="STOCK_JUSTIFY_FILL" sequence="16"
+        <menuitem action="action_vendor_receipt" icon="STOCK_JUSTIFY_FILL" sequence="12"
             id="menu_action_vendor_receipt"  parent="account.menu_finance_receivables"/>
     </data>
 </openerp>

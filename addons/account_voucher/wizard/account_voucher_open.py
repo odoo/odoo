@@ -124,7 +124,7 @@ class account_voucher_open(osv.osv_memory):
         period_id = self._get_period(cr, uid, context)
         
         menu = self.pool.get('ir.ui.menu').browse(cr, uid, context.get('active_id'))
-        name = menu.name
+        name = context.get('title', menu.name)
         
         result = data_pool._get_id(cr, uid, 'account_voucher', 'view_voucher_filter_new')
         res_id = data_pool.browse(cr, uid, result, context=context).res_id
@@ -136,7 +136,7 @@ class account_voucher_open(osv.osv_memory):
             'view_mode': 'tree,graph,form',
             'res_model': 'account.voucher',
             'view_id': False,
-            'context': "{'journal_id': %d, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, period_id),
+            'context': "{'search_default_journal_id':%d, 'search_default_period_id':%d, 'partner_id':%s}" % (journal_id, period_id, context.get('partner_id',False)),
             'type': 'ir.actions.act_window',
             'search_view_id': res_id
         }

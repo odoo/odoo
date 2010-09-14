@@ -55,9 +55,7 @@ class project_with_message(osv.osv):
     _inherit = 'project.project'
     
     _columns = {
-        'message_ids':fields.one2many(
-            'project.messages', 'project_id', 'Messages',
-            ),
+        'message_ids':fields.one2many('project.messages', 'project_id', 'Messages'),
     }
 project_with_message()
 
