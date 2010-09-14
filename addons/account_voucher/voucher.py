@@ -134,8 +134,7 @@ class account_voucher(osv.osv):
         ],'Payment', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_id':fields.many2one('account.tax', 'Tax', readonly=True, states={'draft':[('readonly',False)]}),
         'pre_line':fields.boolean('Previous Payments ?', required=False),
-        'date_due': fields.date('Due Date'),
-#        'term_id':fields.many2one('account.payment.term', 'Term', required=False),
+        'date_due': fields.date('Due Date', readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
         'period_id': _get_period,
@@ -216,10 +215,7 @@ class account_voucher(osv.osv):
         
         for line in line_ids:
             line_amount = 0.0
-            if line[1]:
-                line_amount = voucher_line_pool.browse(cr, uid, line[1]).untax_amount
-            else:
-                line_amount = line[2].get('amount')
+            line_amount = line[2].get('amount')
             voucher_line_ids += [line[1]]
             voucher_total += line_amount
         
@@ -238,10 +234,9 @@ class account_voucher(osv.osv):
                 total += total_tax
         
         res.update({
-            'amount':total,
+            'amount':total or voucher_total,
             'tax_amount':total_tax
         })
-
         return {
             'value':res
         }
@@ -512,7 +507,7 @@ class account_voucher(osv.osv):
             if credit < 0:
                 debit = -credit
                 credit = 0.0
-
+            
             move_line = {
                 'name':inv.name or '/',
                 'debit':debit,
@@ -526,7 +521,9 @@ class account_voucher(osv.osv):
                 'date':inv.date,
                 'date_maturity':inv.date_due
             }
-            master_line = move_line_pool.create(cr, uid, move_line)
+
+            if (debit == 0.0 or credit == 0.0 or debit+credit > 0) and (debit > 0.0 or credit > 0.0):
+                master_line = move_line_pool.create(cr, uid, move_line)
 
             rec_list_ids = []
             line_total = debit - credit
@@ -540,6 +537,7 @@ class account_voucher(osv.osv):
                 if not line.amount:
                     continue
                 amount = currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, line.amount)
+                    
                 move_line = {
                     'journal_id':inv.journal_id.id,
                     'period_id':inv.period_id.id,
@@ -548,6 +546,7 @@ class account_voucher(osv.osv):
                     'move_id':move_id,
                     'partner_id':inv.partner_id.id,
                     'currency_id':inv.currency_id.id,
+                    'amount_currency':line.amount,
                     'analytic_account_id':line.account_analytic_id and line.account_analytic_id.id or False,
                     'quantity':1,
                     'credit':0.0,
@@ -568,11 +567,10 @@ class account_voucher(osv.osv):
                     line_total -= amount
                     move_line['credit'] = amount
 
-                if inv.tax_id:
+                if inv.tax_id and inv.type in ('sale', 'purchase'):
                     move_line.update({
                         'account_tax_id':inv.tax_id.id,
                     })
-                
                 master_line = move_line_pool.create(cr, uid, move_line)
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
@@ -590,7 +588,7 @@ class account_voucher(osv.osv):
                     'debit':diff<0 and -diff or 0.0,
                 }
                 account_id = False
-                if inv.journal_id.type in ('sale','sale_refund', 'cash','bank'):
+                if inv.journal_id.type in ('sale','sale_refund', 'cash', 'bank'):
                     account_id = inv.partner_id.property_account_receivable.id
                 else:
                     account_id = inv.partner_id.property_account_payable.id
@@ -601,7 +599,7 @@ class account_voucher(osv.osv):
                 'move_id': move_id,
                 'state':'posted'
             })
-            move_pool.post(cr, uid, [move_id], context={})
+            #move_pool.post(cr, uid, [move_id], context={})
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
                     move_line_pool.reconcile_partial(cr, uid, rec_ids)
