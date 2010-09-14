@@ -39,13 +39,16 @@ class stock_fill_inventory(osv.osv_memory):
          @param context: A standard dictionary
          @return: New arch of view with new columns.
         """
+        if context==None:
+            context={}
         res = super(stock_fill_inventory, self).view_init(cr, uid, fields_list, context=context)
-        stock = self.pool.get('stock.inventory').browse(cr, uid, context.get('active_id', False) )
-        if stock.state=='done':
+        if context.get('active_id', False):
+            stock = self.pool.get('stock.inventory').browse(cr, uid, context.get('active_id', False))
+            if stock.state=='done':
                 raise osv.except_osv('Error!','Stock Inventory is done')
         True
 
-    def fill_inventory(self, cr, uid, ids, context):
+    def fill_inventory(self, cr, uid, ids, context=None):
         """ To Import stock inventory according to products available in the selected locations.
         @param self: The object pointer.
         @param cr: A database cursor
@@ -54,6 +57,8 @@ class stock_fill_inventory(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context==None:
+            context={}        
         inventory_line_obj = self.pool.get('stock.inventory.line')
         location_obj = self.pool.get('stock.location')
         product_obj = self.pool.get('product.product')
