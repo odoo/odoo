@@ -20,7 +20,7 @@
                 </tree>
             </field>
         </record>
-
+        
         <record model="ir.ui.view" id="view_voucher_form">
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
@@ -28,39 +28,57 @@
             <field name="arch" type="xml">
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
+                        <field name="partner_id" required="1" on_change="onchange_journal_voucher(partner_id, journal_id)"/>
+                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(partner_id, journal_id)"/>
+                        <field name="type" required="1"/>
                         <field name="name" colspan="4"/>
                         <field name="reference" select="1"/>
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
-                        <field name="type" on_change="onchange_partner_id(partner_id, journal_id)"/>
-                        <field name="journal_id" widget="selection" select="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
                         <field name="account_id" widget="selection" invisible="True"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                            <field name="line_ids" on_change="onchange_price(line_ids, False, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
-                                <tree string="Voucher Lines" editable="top">
+                            <field name="line_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                                <tree string="Voucher Items" editable="bottom">
                                     <field name="account_id"/>
                                     <field name="name"/>
-                                    <field name="amount"/>
+                                    <field name="amount" sum="Total Amount"/>
                                     <field name="type"/>
-                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
+                                    <field name="account_analytic_id" groups="base.group_extended"/>
                                 </tree>
                             </field>
+                            
+                            <!--
+                            <field name="line_dr_ids" attrs="{'invisible':[('type','in',['sale', 'receipt', False])]}" on_change="onchange_price(line_dr_ids, False, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                                <tree string="Purchase and Payments" editable="top">
+                                    <field name="account_id"/>
+                                    <field name="name"/>
+                                    <field name="amount" sum="Total Amount"/>
+                                    <field name="type" groups="base.group_extended"/>
+                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
+                                </tree>
+                            </field>
+                            -->
                             <group col="2" colspan="3">
                                 <separator string="Internal Notes" colspan="2"/>
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
-                                <separator string="Other Information" colspan="2"/>
-                                <field name="amount" string="Total"/>
-                                <field name="number"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                <group col="2" colspan="1" >
+                                    <separator string="Other Information" colspan="2"/>
+                                    <field name="number"/>
+                                    <field name="date" on_change="onchange_date(date)"/>
+                                    <field name="currency_id" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                </group>
+                                <group col="4" colspan="1" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
+                                    <separator string="Total" colspan="4"/>
+                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
-                                <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
@@ -73,7 +91,7 @@
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
+                        <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
                     </group>
                 </form>
             </field>
@@ -83,48 +101,7 @@
             <field name="name">account.voucher.select</field>
             <field name="model">account.voucher</field>
             <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Vouchers">
-                    <group col='8' colspan='4'>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-check" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
-                        <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers" groups="base.group_extended"/>
-                        <separator orientation="vertical"/>
-                        <field name="number" select='1'/>
-                        <field name="account_id" select="1"/>
-                        <field name="partner_id" select='1'/>
-                        <field name="date" select='1'/>
-                    </group>
-                    <newline/>
-                    <group col='8' colspan='4'>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                        <field name="period_id" context="{'period_id': self}" groups="base.group_extended"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By..." col='8' colspan='4'>
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type', 'set_visible':True}"/>
-                        <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended options..." col='8' colspan='4'>
-                        <field name="reference" select="1"/>
-                        <field name="name" select='1'/>
-                        <field name="narration" select="1"/>
-                   </group>
-                </search>
-            </field>
-        </record>
-
-        <record id="view_voucher_filter_new" model="ir.ui.view">
-            <field name="name">account.voucher.select</field>
-            <field name="model">account.voucher</field>
-            <field name="type">search</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
                     <group col='8' colspan='4'>
@@ -133,9 +110,9 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
                         <separator orientation="vertical"/>
-                        <field name="date" select='1'/>
-                        <field name="number" select='1'/>
-                        <field name="partner_id" select='1'/>
+                        <field name="date"/>
+                        <field name="number"/>
+                        <field name="partner_id"/>
                     </group>
                     <newline/>
                     <group col='8' colspan='4'>
@@ -143,18 +120,19 @@
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="12" col="10">
+                    <group expand="0" string="Extended options..." col='8' colspan='4'>
+                        <field name="reference"/>
+                        <field name="name"/>
+                        <field name="narration"/>
+                        <field name="amount"/>
+                   </group>
+                   <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="10">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Extended options..." col='8' colspan='4'>
-                        <field name="reference" select="1"/>
-                        <field name="name" select='1'/>
-                        <field name="narration" select="1"/>
-                   </group>
                 </search>
             </field>
         </record>
@@ -199,7 +177,7 @@
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('state','=','posted')]</field>
             <field name="context">{'state':'posted'}</field>
-            <field name="search_view_id" ref="view_voucher_filter_new"/>
+            <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
 
     </data>

@@ -1117,7 +1117,6 @@ class account_move_line(osv.osv):
             context['period_id'] = m.period_id.id
 
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
-        company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
         move_id = vals.get('move_id', False)
         journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
         is_new_move = False
@@ -1156,7 +1155,10 @@ class account_move_line(osv.osv):
                     if a.id == vals['account_id']:
                         ok = True
                         break
-            if (account.currency_id) and 'amount_currency' not in vals and account.currency_id.id <> company_currency:
+
+            # Automatically convert in the account's secondary currency if there is one and
+            # the provided values were not already multi-currency
+            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
                 cur_obj = self.pool.get('res.currency')
                 ctx = {}
