@@ -49,6 +49,7 @@ class account_invoice_report(osv.osv):
         'price_total': fields.float('Total Without Tax', readonly=True),
         'price_total_tax': fields.float('Total With Tax', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
+        'currency_rate': fields.float('Currency Rate', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
@@ -110,12 +111,14 @@ class account_invoice_report(osv.osv):
                          ail.quantity*ail.price_unit * -1
                         else
                          ail.quantity*ail.price_unit
-                        end) as price_total,
+                        end) / cr.rate as price_total,
                     sum(case when ai.type in ('out_refund','in_invoice') then
                          ai.amount_total * -1
                         else
                          ai.amount_total
-                         end) as price_total_tax,
+                         end)/(select count(l.id) from account_invoice_line as l
+                            left join account_invoice as a ON (a.id=l.invoice_id)
+                            where a.id=ai.id) /cr.rate as price_total_tax,
                     (case when ai.type in ('out_refund','in_invoice') then
                       sum(ail.quantity*ail.price_unit*-1)
                     else
@@ -124,7 +127,8 @@ class account_invoice_report(osv.osv):
                       sum(ail.quantity*u.factor*-1)
                     else
                       sum(ail.quantity*u.factor)
-                    end) as price_average,
+                    end) / cr.rate as price_average,
+                    cr.rate as currency_rate,
                     sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
                         from account_move_line as aml
                         left join account_invoice as a ON (a.move_id=aml.move_id)
@@ -134,16 +138,20 @@ class account_invoice_report(osv.osv):
                       ai.residual * -1
                     else
                       ai.residual
-                    end)/(select count(l.*) from account_invoice_line as l
+                    end)/(select count(l.id) from account_invoice_line as l
                             left join account_invoice as a ON (a.id=l.invoice_id)
-                            where a.id=ai.id) as residual
+                            where a.id=ai.id) / cr.rate as residual
                 from account_invoice_line as ail
                 left join account_invoice as ai ON (ai.id=ail.invoice_id)
                 left join product_template pt on (pt.id=ail.product_id)
-                left join product_uom u on (u.id=ail.uos_id)
+                left join product_uom u on (u.id=ail.uos_id),
+                res_currency_rate cr 
+                where cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
+                and ((ai.date_invoice is not null and cr.name <= ai.date_invoice) or (ai.date_invoice is null and cr.name <= NOW())) limit 1)
                 group by ail.product_id,
                     ai.date_invoice,
                     ai.id,
+                    cr.rate,
                     to_char(ai.date_invoice, 'YYYY'),
                     to_char(ai.date_invoice, 'MM'),
                     to_char(ai.date_invoice, 'YYYY-MM-DD'),
