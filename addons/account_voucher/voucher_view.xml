@@ -37,8 +37,18 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                            <field name="line_ids" on_change="onchange_price(line_ids, False, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
-                                <tree string="Voucher Lines" editable="top">
+                            <field name="line_cr_ids" attrs="{'invisible':[('type','in',['purchase', 'payment', False])]}" on_change="onchange_price(line_cr_ids, False, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                                <tree string="Sales and Receipt" editable="top">
+                                    <field name="account_id"/>
+                                    <field name="name"/>
+                                    <field name="amount"/>
+                                    <field name="type"/>
+                                    <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
+                                </tree>
+                            </field>
+                            
+                            <field name="line_dr_ids" attrs="{'invisible':[('type','in',['sale', 'receipt', False])]}" on_change="onchange_price(line_dr_ids, False, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                                <tree string="Purchase and Payments" editable="top">
                                     <field name="account_id"/>
                                     <field name="name"/>
                                     <field name="amount"/>
