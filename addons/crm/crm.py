@@ -499,7 +499,7 @@ class crm_case_section(osv.osv):
 
     _name = "crm.case.section"
     _description = "Sales Teams"
-    _order = "name"
+    _order = "parent_id, name"
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
