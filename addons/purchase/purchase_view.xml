@@ -351,9 +351,9 @@
                         </group>
                         <newline/>
                         <group expand="0" string="Group By...">
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                         <filter string="Product" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                         </group>
                </search>
             </field>
@@ -377,7 +377,7 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">Purchase Lines not Invoiced</field>
+            <field name="name">Purchase Lines Not Invoiced</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('state','in',('confirmed','done')), ('invoiced','=',False)]</field>
