@@ -95,7 +95,6 @@ module named account_voucher.
         'account_invoice_workflow.xml',
         'project/project_view.xml',
         'project/project_report.xml',
-        'project/wizard/account_analytic_check_view.xml',
         'project/wizard/account_analytic_balance_report_view.xml',
         'project/wizard/account_analytic_cost_ledger_view.xml',
         'project/wizard/account_analytic_inverted_balance_report.xml',

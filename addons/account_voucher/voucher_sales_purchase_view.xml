@@ -4,11 +4,11 @@
 
         <record id="act_pay_voucher" model="ir.actions.act_window">
             <field name="name">Sales Payment</field>
-            <field name="res_model">account.voucher.open</field>
+            <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>
             <field name="context">{'journal_type':'bank', 'type':'receipt', 'partner_id': partner_id}</field>
-            <field name="view_id" ref="account_open_vouchers_view"/>
+            <field name="view_id" ref="view_vendor_receipt_form"/>
             <field name="target">new</field>
         </record>
         <record model="ir.ui.view" id="view_sale_receipt_form">
@@ -45,7 +45,7 @@
                                     <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
                                     <field name="account_id" 
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                          domain="[('user_type.report_type','=','asset'), ('type','=','other')]"/>
+                                          domain="[('type','=','liquidity')]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
                                     <field name="reference"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
@@ -71,10 +71,10 @@
                     <group col="10" colspan="4">
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
                         <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'title':'Sales Payment', 'journal_type':'bank', 'type':'receipt', 'partner_id': partner_id}" type="action" string="Pay" attrs="{'invisible':[('pay_now','!=','pay_now'),('state','!=','posted')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
             </field>
@@ -94,6 +94,15 @@
         action="action_sale_receipt" parent="account.menu_finance_receivables" sequence="10"/>
         
         <!--  Purchase Vouchers -->
+        <record id="act_pay_bills" model="ir.actions.act_window">
+            <field name="name">Bill Payment</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment'), ('partner_id','=',partner_id)]</field>
+            <field name="context">{'journal_type':'bank', 'type':'payment', 'partner_id': partner_id}</field>
+            <field name="view_id" ref="view_vendor_payment_form"/>
+            <field name="target">new</field>
+        </record>
         <record model="ir.ui.view" id="view_purchase_receipt_form">
             <field name="name">account.voucher.purchase.form</field>
             <field name="model">account.voucher</field>
@@ -126,7 +135,6 @@
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Terms" colspan="2"/>
-                                    <field name="term_id" widget="selection" on_change="onchange_term_id(term_id, amount)"/>
                                     <field name="date" string="Bill Date" select="1" on_change="onchange_date(date)"/>
                                     <field name="date_due"/>
                                     <field name="amount" required="0" string="Amount Due"/>
@@ -151,9 +159,10 @@
                     <group col="10" colspan="4">
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
+                        <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'title':'Bill Payment', 'journal_type':'bank', 'type':'payment', 'partner_id': partner_id}" type="action" string="Pay Bill" attrs="{'invisible':[('state','!=','posted')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
             </field>

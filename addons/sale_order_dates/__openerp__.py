@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-Add commitment, requested and effective dates on the sale order.
+Add commitment, requested and effective dates on the sales order.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

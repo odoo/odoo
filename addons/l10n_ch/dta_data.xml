@@ -138,15 +138,5 @@
 	<field name="readonly" eval="False"/>
   </record>
 
-
-  <!-- Define a payment type -->
-  <record model="payment.type" id="payment_type_dta">
-	<field name="name">DTA</field>
-	<field name="code">dta</field>
-	<field name="suitable_bank_types" 
-		   eval="[(6,0,[ref('dta_iban'),ref('bvrbank'),ref('bvrpost'),ref('bvbank'),ref('bvpost')])]"/>
-  </record>
-
-
 </data>
 </openerp>
