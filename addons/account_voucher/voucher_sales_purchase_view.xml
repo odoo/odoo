@@ -86,7 +86,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>
-            <field name="context">{'type':'receipt', 'partner_id': partner_id, 'referance':referance}</field>
+            <field name="context">{'type':'receipt', 'partner_id': partner_id, 'default_reference':reference}</field>
             <field name="view_id" ref="view_vendor_receipt_form"/>
             <field name="target">new</field>
         </record>
@@ -195,7 +195,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment'), ('partner_id','=',partner_id)]</field>
-            <field name="context">{'type':'payment', 'partner_id': partner_id, 'referance':reference}</field>
+            <field name="context">{'type':'payment', 'partner_id': partner_id, 'default_reference':reference}</field>
             <field name="view_id" ref="view_vendor_payment_form"/>
             <field name="target">new</field>
         </record>
