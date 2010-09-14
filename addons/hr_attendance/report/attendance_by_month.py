@@ -29,6 +29,8 @@ import pooler
 from report.interface import report_rml
 from report.interface import toxml
 
+from report import report_sxw
+
 one_day = DateTime.RelativeDateTime(days=1)
 month2name = [0, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -85,11 +87,22 @@ class report_custom(report_rml):
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
                 user_xml.append(user_repr % '\n'.join(days_xml))
+
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
+        header_xml = '''
+        <header>
+        <date>%s</date>
+        <company>%s</company>
+        </header>
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
+        %s
         </report>
-        ''' % '\n'.join(user_xml)
+        ''' % (header_xml,'\n'.join(user_xml))
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')
