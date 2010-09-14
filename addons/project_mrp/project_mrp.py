@@ -43,7 +43,7 @@ class project_task(osv.osv):
     def do_cancel(self, cr, uid, ids, *args, **kwargs):
         res = super(project_task, self).do_cancel(cr, uid, ids, *args, **kwargs)
         self._validate_subflows(cr, uid, ids)
-        return True
+        return res
 
 project_task()
 
