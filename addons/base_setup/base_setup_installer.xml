@@ -10,9 +10,8 @@
           <form position="attributes">
             <attribute name="string">Install Applications</attribute>
           </form>
-          <xpath expr="//label[@string='description']"
-                 position="attributes">
-            <attribute name="string">Select applications you want to install. If you don't think you need any of these right now, you can easily install them later.</attribute>
+          <xpath expr="//label[@string='description']" position="attributes">
+                <attribute name="string">Select the Applications you want your system to cover. If you are not sure about your exact needs at this stage, you can easily install them later.</attribute>
           </xpath>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
                     <attribute name='string'></attribute>
@@ -26,17 +25,17 @@
           </separator>
             
           <group colspan="8">
-            <field name="crm" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <field name="project" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="knowledge" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <field name="stock" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="mrp" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <field name="account" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="purchase" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <field name="hr" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="point_of_sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <field name="marketing" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/> <field name="profile_tools" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <field name="report_designer" groups="base.group_extended" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <separator string="Install Specific Business Applications" colspan="4"/>
-            <field name="association" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <field name="auction" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
-            <field name="product_expiry" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction)"/>
+            <field name="crm" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="project" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="knowledge" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="stock" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="mrp" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="account" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="purchase" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="hr" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="point_of_sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="marketing" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/> <field name="profile_tools" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="report_designer" groups="base.group_extended" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <separator string="Install Specific Industry Sector Applications" colspan="4"/>
+            <field name="association" attrs="{'readonly':['|',('auction','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="auction" attrs="{'readonly':['|',('association','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
+            <field name="product_expiry" attrs="{'readonly':['|',('association','=',True),('auction','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
           </group>
         </data>
       </field>

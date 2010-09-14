@@ -524,7 +524,7 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="arch" type="xml">
               <data>
                 <form position="attributes">
-                  <attribute name="string">Sales Configuration</attribute>
+                  <attribute name="string">Sales Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
                 <attribute name="string"
@@ -545,6 +545,7 @@ to your configuration: from the sales order, from the pickings, etc.
                   <field name="step"/>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
+               
               </data>
             </field>
         </record>
