@@ -320,17 +320,22 @@ class account_voucher(osv.osv):
             total_debit = currency_pool.compute(cr, uid, currency_id, company_currency, total_debit)
         elif company_currency != currency_id and ttype == 'receipt':
             total_credit = currency_pool.compute(cr, uid, currency_id, company_currency, total_credit)
-            
+        
         for line in moves:
-            if line.credit and line.reconcile_partial_id:
+            if line.credit and line.reconcile_partial_id and ttype == 'receipt':
+                continue
+            if line.debit and line.reconcile_partial_id and ttype == 'payment':
                 continue
             
             total_credit += line.credit or 0.0
             total_debit += line.debit or 0.0
 
         for line in moves:
-            if line.credit and line.reconcile_partial_id:
+            if line.credit and line.reconcile_partial_id and ttype == 'receipt':
                 continue
+            if line.debit and line.reconcile_partial_id and ttype == 'payment':
+                continue
+            
             rs = {
                 'name':line.move_id.name,
                 'type': line.credit and 'dr' or 'cr',
@@ -588,7 +593,8 @@ class account_voucher(osv.osv):
                     'debit':diff<0 and -diff or 0.0,
                 }
                 account_id = False
-                if inv.journal_id.type in ('sale','sale_refund', 'cash', 'bank'):
+                if inv.type in ('sale', 'receipt'):
+#                if inv.journal_id.type in ('sale','sale_refund', 'cash', 'bank'):
                     account_id = inv.partner_id.property_account_receivable.id
                 else:
                     account_id = inv.partner_id.property_account_payable.id
