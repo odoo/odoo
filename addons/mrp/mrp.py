@@ -176,8 +176,8 @@ class mrp_bom(osv.osv):
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
-                                 help= "If a sub-product is used in several products, it can be useful to create its own BoM."\
-                                 "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type."\
+                                 help= "If a sub-product is used in several products, it can be useful to create its own BoM. "\
+                                 "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type. "\
                                  "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
         'method': fields.function(_compute_type, string='Method', method=True, type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
@@ -476,7 +476,7 @@ class mrp_production(osv.osv):
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
-    _order = 'date_planned asc, priority desc';
+    _order = 'priority desc, date_planned asc';
     
     def _check_qty(self, cr, uid, ids):
         orders = self.browse(cr, uid, ids)

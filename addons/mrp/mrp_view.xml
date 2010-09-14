@@ -64,7 +64,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Properties">
-                    <separator colspan="4" string="General Information"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="group_id" select="1"/>
                     <field name="composition" select="1"/>
@@ -252,15 +251,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Routing">
-                    <separator colspan="4" string="General Information"/>
                     <field name="name"/>
-                    <field name="active" groups="base.group_extended"/>
                     <field name="code"/>
                     <field name="location_id"/>
-                    <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="note" nolabel="1"/>
-                    <separator colspan="4" string="Work Center Operations"/>
-                    <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
+                    <field name="active" groups="base.group_extended"/>
+                    <notebook colspan="4">
+	                    <page string="Work Center Operations">
+	                       <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
+	                    </page>
+	                    <page string="Notes">
+                           <field colspan="4" name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -380,7 +382,6 @@
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-
                    </group>
                 </search>
             </field>
@@ -510,10 +511,10 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft','confirmed');red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date;gray:state in ('done','cancel') " string="Manufacturing Orders">
                     <field name="name"/>
+                    <field name="date_planned"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
                     <field name="product_uom"/>
-                    <field name="date_planned"/>
                     <field name="routing_id" groups="base.group_extended"/>
                     <field name="hour_total" sum="Total Hours" groups="base.group_extended"/>
                     <field name="cycle_total" sum="Total Cycles" groups="base.group_extended"/>
@@ -638,16 +639,16 @@
                                            states="done,cancel"/>
                                    </tree>
                                </field>
-
+                            <separator colspan="4"/>
                             <group col="9" colspan="4">
                                 <field name="state"/>
-                                <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
+                                <button name="action_compute" states="draft" string="Compute Data" type="object" icon="terp-stock_format-scientific"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
-                                <button name="button_produce" states="ready" string="Start Production" icon="gtk-execute"/>
+                                <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
-                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-cancel"/>
-                                <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="gtk-convert"/>
+                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
+                                <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="terp-document-new"/>
                             </group>
                         </page>
                         <page string="Finished Products">
