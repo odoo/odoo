@@ -41,7 +41,7 @@
                                 <tree string="Sales and Receipt" editable="top">
                                     <field name="account_id"/>
                                     <field name="name"/>
-                                    <field name="amount"/>
+                                    <field name="amount" sum="Total Amount"/>
                                     <field name="type"/>
                                     <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
                                 </tree>
@@ -51,7 +51,7 @@
                                 <tree string="Purchase and Payments" editable="top">
                                     <field name="account_id"/>
                                     <field name="name"/>
-                                    <field name="amount"/>
+                                    <field name="amount" sum="Total Amount"/>
                                     <field name="type"/>
                                     <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
                                 </tree>
@@ -61,11 +61,17 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
-                                <separator string="Other Information" colspan="2"/>
-                                <field name="amount" string="Total"/>
-                                <field name="number"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                <group col="2" colspan="1" >
+                                    <separator string="Other Information" colspan="2"/>
+                                    <field name="number"/>
+                                    <field name="date" select="1" on_change="onchange_date(date)"/>
+                                    <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                </group>
+                                <group col="4" colspan="1" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
+                                    <separator string="Total" colspan="4"/>
+                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">

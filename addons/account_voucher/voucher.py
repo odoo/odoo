@@ -790,10 +790,10 @@ class account_voucher_line(osv.osv):
         journal = journal_pool.browse(cr, user, journal_id)
         account_id = False
         ttype = 'cr'
-        if journal.type in ('sale', 'purchase_refund'):
+        if journal.type in ('sale', 'sale_refund'):
             account_id = journal.default_credit_account_id and journal.default_credit_account_id.id or False
             ttype = 'cr'
-        elif journal.type in ('purchase', 'expense', 'sale_refund'):
+        elif journal.type in ('purchase', 'expense', 'purchase_refund'):
             account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
             ttype = 'dr'
         elif partner_id:
