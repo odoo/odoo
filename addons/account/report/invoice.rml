@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document filename="Invoice.pdf">
+<document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Invoice" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="34.0" y1="28.0" width="530" height="786"/>
@@ -77,16 +77,21 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table11">
+    <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
+    <paraStyle name="P1" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -307,9 +312,6 @@
       </tr>
     </blockTable>
     <para style="Text body"/>
-    <para style="Text body">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="167.0,59.0,56.0,247.0" style="Table9">
       <tr>
         <td>
@@ -330,7 +332,7 @@
     </blockTable>
     <section>
       <para style="terp_default_2">[[ repeatIn(o.tax_line,'t') ]]</para>
-      <blockTable colWidths="167.0,60.0,55.0,248.0" style="Table11">
+      <blockTable colWidths="167.0,60.0,55.0,248.0" style="Table2">
         <tr>
           <td>
             <para style="terp_default_8">[[ t.name ]]</para>
@@ -348,18 +350,29 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_8">
-        <font color="white"> </font>
-      </para>
-      <para style="terp_default_9">[[ (o.comment and format(o.comment )) or removeParentNode('para') ]]</para>
-      <para style="terp_default_8">
-        <font color="white"> </font>
-      </para>
-      <para style="terp_default_9">[[ (o.payment_term.note and format(o.payment_term and o.payment_term.note)) or removeParentNode('para') ]]</para>
-      <para style="terp_default_8">
-        <font color="white"> </font>
-      </para>
-      <para style="terp_default_9"><font face="Helvetica-Bold">Fiscal Position Remark :</font> [[ (o.fiscal_position.note and format(o.fiscal_position and o.fiscal_position.note)) or removeParentNode('para') ]]</para>
     </section>
+    <para style="terp_default_9">[[ (o.comment and format(o.comment )) or removeParentNode('para') ]]</para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_9">[[ (o.payment_term.note and format(o.payment_term and o.payment_term.note)) or removeParentNode('para') ]]</para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="111.0,419.0" style="Table1">
+      <tr>
+        <td>
+          <para style="P1">
+            <font face="Helvetica">Fiscal Position Remark :</font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ (o.fiscal_position.note and format(o.fiscal_position and o.fiscal_position.note)) or removeParentNode('blockTable') ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_2">
+      <font color="white"> </font>
+    </para>
   </story>
 </document>
