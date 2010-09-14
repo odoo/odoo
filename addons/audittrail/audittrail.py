@@ -318,7 +318,7 @@ class audittrail_objects_proxy(objects_proxy):
         try:
             proxy = pool.get(model)
             if proxy is None:
-                raise Exception('Unknow model: %r' % (model,))
+                raise Exception('Unknown model: %r' % (model,))
 
             logged_uids = []
             model_name = proxy._name
