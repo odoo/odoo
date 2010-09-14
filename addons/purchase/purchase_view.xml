@@ -322,19 +322,20 @@
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                             </group>
                         </page>
-                        <page string="Notes">
-                            <field colspan="4" name="notes" nolabel="1"/>
-                        </page>
-                        <page string="History" groups="base.group_extended">
-                               <separator colspan="4" string="Stock Moves"/>
-                               <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
-                        </page>
+               
                         <page string="Invoicing" groups="base.group_extended">
                             <separator colspan="4" string="Manual Invoices"/>
                             <field name="invoiced"/>
                             <newline/>
                             <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
                         </page>
+         				<page string="Notes">
+                            <field colspan="4" name="notes" nolabel="1"/>
+                        </page>
+                        <page string="History" groups="base.group_extended">
+                               <separator colspan="4" string="Stock Moves"/>
+                               <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
+                        </page>                        
                     </notebook>
                 </form>
             </field>
