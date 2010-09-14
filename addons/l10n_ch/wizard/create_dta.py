@@ -468,8 +468,8 @@ def _create_dta(obj, cr, uid, data, context=None):
                     'for the partner: ' + pline.partner_id.name + '\n' \
                     'on line: ' + pline.name)
 
-        if pline.order_id.date_planned:
-            date_value = mx.DateTime.strptime(pline.order_id.date_planned, '%Y-%m-%d')
+        if pline.order_id.date_scheduled:
+            date_value = mx.DateTime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')
         elif pline.date:
             date_value = mx.DateTime.strptime(pline.date, '%Y-%m-%d')
         else:

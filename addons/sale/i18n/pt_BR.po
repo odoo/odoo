@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-30 07:59+0000\n"
+"PO-Revision-Date: 2010-09-08 09:08+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-31 03:58+0000\n"
+"X-Launchpad-Export-Date: 2010-09-09 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Partial Delivery"
-msgstr ""
+msgstr "Entrega Parcial"
 
 #. module: sale
 #: view:sale.order:0
@@ -203,7 +203,7 @@ msgstr "Pendência no Embarque"
 #. module: sale
 #: field:sale.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: sale
 #: field:sale.order,origin:0
@@ -431,7 +431,7 @@ msgstr ""
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Packing"
-msgstr ""
+msgstr "Separação"
 
 #. module: sale
 #: rml:sale.order:0
@@ -474,7 +474,7 @@ msgstr ""
 #. module: sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "XML inválido para Arquitetura da View"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -484,7 +484,7 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Contas de Pagamento"
 
 #. module: sale
 #: constraint:product.template:0
@@ -517,13 +517,13 @@ msgstr "Pagamentos de Contas"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,end:0
 msgid "Close"
-msgstr ""
+msgstr "Encerrar"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Fatura Provisória"
 
 #. module: sale
 #: wizard_field:sale.order.line.make_invoice,init,grouped:0
@@ -545,13 +545,13 @@ msgstr "Desconto (%)"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "Draft customer invoice, to be reviewed by accountant."
-msgstr ""
+msgstr "Fatura Provisória do Cliente, a ser revisado pelo contador"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree3
 #: model:ir.ui.menu,name:sale.menu_action_order_tree3
 msgid "Sales Order To Be Invoiced"
-msgstr ""
+msgstr "Pedidos de Venda a Faturar"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
@@ -562,7 +562,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_order_tree10
 #: model:ir.ui.menu,name:sale.menu_action_order_tree10
 msgid "My Quotations"
-msgstr ""
+msgstr "Minhas Cotações"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
@@ -649,7 +649,7 @@ msgstr "Status"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
 msgid "Uninvoiced Lines"
-msgstr ""
+msgstr "Itens não faturados"
 
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
@@ -739,7 +739,7 @@ msgstr "Total de Mercadorias"
 #. module: sale
 #: field:sale.order.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação atual"
 
 #. module: sale
 #: field:sale.order,picking_policy:0
@@ -806,6 +806,8 @@ msgid ""
 "Invoice is created when 'Create Invoice' is being clicked after confirming "
 "the sale order. This transaction moves the sale order to invoices."
 msgstr ""
+"A Fatura é criada quando 'Criar Fatura' for clicada depois de confirmado o "
+"pedido de venda. Esta transação move o pedido de venda para faturas."
 
 #. module: sale
 #: view:sale.order:0
@@ -822,7 +824,7 @@ msgstr "Estabelecimento"
 #. module: sale
 #: rml:sale.order:0
 msgid "VAT"
-msgstr ""
+msgstr "VAT (imposto equivalente ao ICMS no Brasil)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -863,7 +865,7 @@ msgstr "Sua Referência"
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Delivery Order Only"
-msgstr ""
+msgstr "Somente solicitações de entrega"
 
 #. module: sale
 #: view:sale.order:0
@@ -895,7 +897,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Other data"
-msgstr ""
+msgstr "Outros dados"
 
 #. module: sale
 #: wizard_field:sale.advance_payment_inv,init,amount:0
@@ -973,13 +975,15 @@ msgstr "Em Progresso"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,init:0
 msgid "Advance Payment"
-msgstr ""
+msgstr "Pagamento Antecipado"
 
 #. module: sale
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"O nome do Objeto deve começar com x_ e não deve conter nenhum caracter "
+"especial!"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -1011,7 +1015,7 @@ msgstr "Criar Nota Fiscal"
 #: wizard_view:sale.order.line.make_invoice,init:0
 #: wizard_view:sale.order.make_invoice,init:0
 msgid "Do you really want to create the invoices ?"
-msgstr ""
+msgstr "Você realmente deseja criar as faturas ?"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
@@ -1177,7 +1181,7 @@ msgstr "Manual em Progresso"
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "Unidade de Medida do produto"
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1187,6 +1191,10 @@ msgid ""
 "and simple methods to deliver products to the customer in one or two "
 "operations by the worker."
 msgstr ""
+"Por default, o Open ERP é capaz de gerenciar movimentações complexas de "
+"produtos em seu armazém e de seus parceiros. Isto irá se configurar no "
+"método mais simples e usual do colaborador para despachar produtos para os "
+"clientes em uma ou duas operações."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -1211,12 +1219,12 @@ msgstr "Fatura Corrigida"
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Delay"
-msgstr ""
+msgstr "Atraso de entrega"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Related invoices"
-msgstr ""
+msgstr "módulo: vendas"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -1475,7 +1483,7 @@ msgstr "Retorno diário de Vendas no pPríodo de Um Ano"
 #. module: sale
 #: model:ir.ui.menu,name:sale.next_id_83
 msgid "Graphs"
-msgstr ""
+msgstr "Gráficos"
 
 #. module: sale
 #: selection:report.sale.order.category,state:0
@@ -1499,13 +1507,13 @@ msgstr "Em progresso"
 #: model:ir.actions.act_window,name:sale.action_order_category_tree
 #: model:ir.ui.menu,name:sale.menu_report_order_category
 msgid "Sales by Category of Product (this month)"
-msgstr ""
+msgstr "Vendas por Categoria de Produto (este mês)"
 
 #. module: sale
 #: model:ir.report.custom,name:sale.ir_report_custom_5
 #: model:ir.report.custom,title:sale.ir_report_custom_5
 msgid "Daily sales turnover over one year"
-msgstr ""
+msgstr "Giro diário das vendas em um ano"
 
 #. module: sale
 #: field:report.sale.order.category,name:0

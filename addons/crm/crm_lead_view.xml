@@ -57,6 +57,9 @@
                 <group colspan="4" col="7">
                     <field name="name" required="1" string="Name"/>
                     <field name="priority"/>
+                    <field name="categ_id"
+                        widget="selection"
+                        domain="[('object_id.model','=','crm.lead')]"/>
                     <button
                          name="convert_opportunity"
                          string="Convert to Opportunity"
@@ -71,10 +74,10 @@
                         domain="[('section_id','=',section_id), ('object_id.model', '=', 'crm.lead')]" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string="Previous"
-                            states="open,pending" type="object"
+                            states="open,pending,draft" type="object"
                             icon="gtk-go-back" />
                         <button name="stage_next" string="Next"
-                            states="open,pending" type="object"
+                            states="open,pending,draft" type="object"
                             icon="gtk-go-forward" />
                     </group>
                     <field name="type" invisible="1"/>
@@ -144,9 +147,6 @@
                         <field name="company_id"
                             groups="base.group_multi_company"
                             widget="selection" colspan="2" />
-                        <field name="categ_id"
-                            widget="selection"
-                            domain="[('object_id.model', '=', 'crm.lead')]" />
                         <field name="type_id" string="Campaign" select="1"/>
                         <field name="referred"/>
                     </group>
@@ -175,6 +175,7 @@
                     <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
                         <tree string="Communication history">
                             <field name="display_text" string="History Information"/>
+                            <field name="history" invisible="1"/>
                             <button
                                 string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
                                 name="%(crm.action_crm_send_mail)d"
@@ -210,11 +211,15 @@
                             </notebook>
                         </form>
                     </field>
-                    <button colspan="2" string="Send New Email"
+                    <button string="Add New Note"
+                        name="%(crm.action_crm_add_note)d"
+                        context="{'model': 'crm.lead' }"
+                        icon="terp-document-new" type="action" />
+                    <button string="Send New Email"
                         name="%(crm.action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
                         icon="terp-mail-message-new" type="action" />
-                    <button colspan="2" string="Forward"
+                    <button string="Forward"
                         name="%(crm_lead_forward_to_partner_act)d"
                         icon="terp-mail-forward" type="action" />
                  </page>
@@ -265,9 +270,6 @@
                 <button name="case_escalate" string="Escalate"
                     states="open,draft,pending" type="object"
                     icon="gtk-go-up" />
-                <button name="case_cancel" string="Cancel"
-                    states="draft,open,pending" type="object"
-                    icon="gtk-cancel" />
             </tree>
         </field>
     </record>

@@ -53,7 +53,7 @@ class account_installer(osv.osv_memory):
     _columns = {
         # Accounting
         'charts':fields.selection(_get_charts, 'Chart of Accounts',
-            required=False,
+            required=True,
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
                  "country."),
@@ -73,6 +73,21 @@ class account_installer(osv.osv_memory):
             return user.company_id.id
         return False
 
+    def _get_default_charts(self, cr, uid, context={}):
+        module_name = False
+        company_id = self._default_company(cr, uid, context=context)
+        company = self.pool.get('res.company').browse(cr, uid, company_id)
+        address_id = self.pool.get('res.partner').address_get(cr, uid, [company.partner_id.id])
+        if address_id['default']:
+            address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'])
+            code = address.country_id.code
+            module_name = (code and 'l10n_' + code.lower()) or False
+        if module_name:
+            module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', module_name)])
+            if module_id:
+                return module_name
+        return 'configurable'
+
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
@@ -80,7 +95,8 @@ class account_installer(osv.osv_memory):
         'sale_tax':lambda *a:0.0,
         'purchase_tax':lambda *a:0.0,
         'company_id': _default_company,
-        'bank_accounts_id':_get_default_accounts
+        'bank_accounts_id':_get_default_accounts, 
+        'charts': _get_default_charts
     }
 
     def on_change_tax(self, cr, uid, id, tax):
@@ -374,6 +390,7 @@ class account_installer(osv.osv_memory):
         #Sales Refund Journal
         vals_journal['name'] = _('Sales Refund Journal')
         vals_journal['type'] = 'sale_refund'
+        vals_journal['refund_journal'] = True
         vals_journal['code'] = _('SCNJ')
         vals_journal['sequence_id'] = seq_id_sale_refund
 
@@ -386,6 +403,7 @@ class account_installer(osv.osv_memory):
         # Purchase Refund Journal
         vals_journal['name'] = _('Purchase Refund Journal')
         vals_journal['type'] = 'purchase_refund'
+        vals_journal['refund_journal'] = True
         vals_journal['code'] = _('ECNJ')
         vals_journal['sequence_id'] = seq_id_purchase_refund
 
@@ -467,7 +485,7 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        res_obj = self.pool.get('account.fiscalyear')
+        fy_obj = self.pool.get('account.fiscalyear')
         data_pool = self.pool.get('ir.model.data')
         obj_acc = self.pool.get('account.account')
         super(account_installer, self).execute(cr, uid, ids, context=context)
@@ -495,6 +513,8 @@ class account_installer(osv.osv_memory):
                 sal_tax_parent_id = mod_obj.read(cr, uid, [sal_tax_parent], ['res_id'])[0]['res_id']
 
                 if s_tax*100 > 0.0:
+                    tax_account_ids = obj_acc.search(cr, uid, [('name','=','Tax Received')], context=context)
+                    sales_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code = {
                         'name': 'TAX%s%%'%(s_tax*100),
                         'code': 'TAX%s%%'%(s_tax*100),
@@ -509,18 +529,25 @@ class account_installer(osv.osv_memory):
                                             'amount':s_tax,
                                             'base_code_id':new_tax_code,
                                             'tax_code_id':new_tax_code,
-                                            'type_tax_use':'sale'
+                                            'type_tax_use':'sale',
+                                            'account_collected_id':sales_tax_account_id,
+                                            'account_paid_id':sales_tax_account_id
                                             })
+                    default_account_ids = obj_acc.search(cr, uid, [('name','=','Product Sales')],context=context)
+                    if default_account_ids:
+                        obj_acc.write(cr, uid, default_account_ids, {'tax_ids':[(6,0,[sales_tax])]})
                     tax_val.update({'taxes_id':[(6,0,[sales_tax])]})
                     default_tax.append(('taxes_id',sales_tax))
                 if p_tax*100 > 0.0:
+                    tax_account_ids = obj_acc.search(cr, uid, [('name','=','Tax Paid')], context=context)
+                    purchase_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code = {
                         'name': 'TAX%s%%'%(p_tax*100),
                         'code': 'TAX%s%%'%(p_tax*100),
                         'company_id': company_id.id,
                         'sign': 1,
                         'parent_id':pur_tax_parent_id
-                        }
+                    }
                     new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
                     purchase_tax = obj_tax.create(cr, uid,
                                             {'name':'TAX%s%%'%(p_tax*100),
@@ -528,8 +555,13 @@ class account_installer(osv.osv_memory):
                                              'amount':p_tax,
                                              'base_code_id':new_tax_code,
                                             'tax_code_id':new_tax_code,
-                                            'type_tax_use':'purchase'
+                                            'type_tax_use':'purchase',
+                                            'account_collected_id':purchase_tax_account_id,
+                                            'account_paid_id':purchase_tax_account_id
                                              })
+                    default_account_ids = obj_acc.search(cr, uid, [('name','=','Expenses')], context=context)
+                    if default_account_ids:
+                        obj_acc.write(cr, uid, default_account_ids, {'tax_ids':[(6,0,[purchase_tax])]})
                     tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
                     default_tax.append(('supplier_taxes_id',purchase_tax))
                 if len(tax_val):
@@ -540,21 +572,23 @@ class account_installer(osv.osv_memory):
                         ir_values.set(cr, uid, key='default', key2=False, name=name, models =[('product.product',False)], value=[value])
 
             if 'date_start' in res and 'date_stop' in res:
-                name = code = res['date_start'][:4]
-                if int(name) != int(res['date_stop'][:4]):
-                    name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
-                    code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
-                vals = {'name': name,
-                        'code': code,
-                        'date_start': res['date_start'],
-                        'date_stop': res['date_stop'],
-                        'company_id': res['company_id']
-                       }
-                period_id = res_obj.create(cr, uid, vals, context=context)
-                if res['period'] == 'month':
-                    res_obj.create_period(cr, uid, [period_id])
-                elif res['period'] == '3months':
-                    res_obj.create_period3(cr, uid, [period_id])
+                f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id','=',res['company_id'])])
+                if not f_ids:
+                    name = code = res['date_start'][:4]
+                    if int(name) != int(res['date_stop'][:4]):
+                        name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
+                        code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
+                    vals = {'name': name,
+                            'code': code,
+                            'date_start': res['date_start'],
+                            'date_stop': res['date_stop'],
+                            'company_id': res['company_id']
+                           }
+                    fiscal_id = fy_obj.create(cr, uid, vals, context=context)
+                    if res['period'] == 'month':
+                        fy_obj.create_period(cr, uid, [fiscal_id])
+                    elif res['period'] == '3months':
+                        fy_obj.create_period3(cr, uid, [fiscal_id])
 
 #        #fially inactive the demo chart of accounts
 #        data_id = data_pool.search(cr, uid, [('model','=','account.account'), ('name','=','chart0')])
@@ -609,12 +643,18 @@ class account_installer_modules(osv.osv_memory):
                  "per-partner policies."),
         'account_voucher':fields.boolean('Voucher Management',
             help="Account Voucher module includes all the basic requirements of "
-                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc... "),
+                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "),
+        'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
+            help="This module will support the Anglo-Saxons accounting methodology by "
+                "changing the accounting logic with stock transactions."),
 #        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
 #            help="Extension Account Voucher module includes allows to link payment / receipt "
 #                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
                  }
 
+    _defaults = {
+        'account_voucher': True,
+        }
 account_installer_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

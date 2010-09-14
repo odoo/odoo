@@ -241,7 +241,6 @@
                                 <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
                                 <button name="%(action_project_task_close)d" states="pending,open" string="Done" type="action" icon="gtk-apply"/>
                                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
- 								<button name="%(action_project_task_review)d" states="pending,open" string="Review" type="action" icon="gtk-convert"  />                                
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations">
@@ -301,7 +300,7 @@
                     <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                     <field name="user_id"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
-                    <field name="remaining_hours" widget="float_time" avg="Remaining Hours" invisible="context.get('set_visible',False)"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" invisible="context.get('set_visible',False)"/>
                     <field name="date_deadline" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
                         states="draft,open,pending"

@@ -8,6 +8,10 @@
     categ_id: product.cat1
     name: Beers
     procure_method: make_to_stock
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_agrolait
+        min_qty: 2.0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
@@ -19,6 +23,10 @@
     categ_id: product.cat1
     name: Beers Pack
     procure_method: make_to_stock
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_asus
+        min_qty: 2.0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
@@ -87,8 +95,9 @@
   converted to a picking of 24 beers and a pack of beer, so that my
   stock of beers remains exact.
 -
-  !assert {model: stock.picking, id: picking_out}:
-    - len(move_lines) == 2
+  !assert {model: stock.picking, id: picking_out, string: pack_of_beer_splitted}:
+    - len(move_lines) >= 2
     - move_lines[0].product_id.id <> move_lines[1].product_id.id
     - move_lines[0].product_id.id in (ref('product_product_beers0'), ref('product_product_beerspack0'))
     - move_lines[1].product_id.id in (ref('product_product_beers0'), ref('product_product_beerspack0'))
+    

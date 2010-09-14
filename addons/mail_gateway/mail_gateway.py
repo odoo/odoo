@@ -122,19 +122,26 @@ class mailgate_thread(osv.osv):
         obj = self.pool.get('mailgate.message')
 
         for case in cases:
+            attachments = []
+            for att in attach:
+                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
+
+            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
+            if not partner_id and case._name == 'res.partner':
+                partner_id = case.id
             data = {
                 'name': keyword,
                 'user_id': uid,
                 'model' : case._name,
+                'partner_id': partner_id,
                 'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'message_id': message_id,
+                'message_id': message_id, 
+                'description': details or (hasattr(case, 'description') and case.description or False), 
+                'attachment_ids': [(6, 0, attachments)]
             }
-            attachments = []
-            if history:
-                for att in attach:
-                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
 
+            if history:
                 for param in (email, email_cc, email_bcc):
                     if isinstance(param, list):
                         param = ", ".join(param)
@@ -153,7 +160,7 @@ class mailgate_thread(osv.osv):
                          case.user_id.address_id.email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
-                    'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False,
+                    'partner_id': partner_id,
                     'references': references,
                     'message_id': message_id,
                     'attachment_ids': [(6, 0, attachments)]
@@ -172,6 +179,14 @@ class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
+    def truncate_data(self, cr, uid, data, context=None):
+        data_list = data and data.split('\n') or []
+        if len(data_list) > 3:
+            res = '\n\t'.join(data_list[:3]) + '...'
+        else:
+            res = '\n\t'.join(data_list)
+        return res
+
     def _get_display_text(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
@@ -182,11 +197,14 @@ class mailgate_message(osv.osv):
             if message.history:
                 msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
                 if message.description:
-                    msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
+                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
             else:
-                msg_txt = (message.user_id.name or '/') + _('  on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
                 if message.name == _('Opportunity'):
                     msg_txt += _("Converted to Opportunity")
+                elif message.name == _('Note'):
+                    msg_txt = (message.user_id.name or '/') + _(' added note on ') + format_date_tz(message.date, tz) + ':\n\t'
+                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
                 else:
                     msg_txt += _("Changed Status to: ") + message.name
             result[message.id] = msg_txt
@@ -255,11 +273,16 @@ class mailgate_tool(osv.osv_memory):
 
         msg_pool = self.pool.get('mailgate.message')
         for res_id in res_ids:
+            case = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
+            if not partner_id and model == 'res.partner':
+                partner_id = res_id
             msg_data = {
                 'name': msg.get('subject', 'No subject'),
                 'date': msg.get('date'),
                 'description': msg.get('body', msg.get('from')),
                 'history': True,
+                'partner_id': partner_id,
                 'res_model': model,
                 'email_cc': msg.get('cc'),
                 'email_from': msg.get('from'),

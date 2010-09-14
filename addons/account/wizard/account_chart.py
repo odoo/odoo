@@ -24,7 +24,7 @@ from tools.translate import _
 
 class account_chart(osv.osv_memory):
     """
-    For Chart of Accounrs
+    For Chart of Accounts
     """
     _name = "account.chart"
     _description = "Account chart"

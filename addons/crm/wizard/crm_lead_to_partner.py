@@ -154,7 +154,7 @@ class crm_lead2partner(osv.osv_memory):
                         'mobile': lead.mobile,
                         'email': lead.email_from,
                         'fax': lead.fax,
-                        'title': lead.title,
+                        'title': lead.title and lead.title.id or False,
                         'function': lead.function,
                         'street': lead.street,
                         'street2': lead.street2,

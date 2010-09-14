@@ -34,13 +34,6 @@
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','draft')])
     assert order_id, _('No Work order!')
 -
-  I am checking Procurement orders. 
--
-  !python {model: procurement.order}: |
-    from tools.translate import _
-    proc_ids = self.search(cr, uid, [('state','=','confirmed')])
-    assert proc_ids, _('No Procurements!')
--
   The scheduler runs.
 -
   !function {model: procurement.order, name: run_scheduler}:

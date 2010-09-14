@@ -8,18 +8,18 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Tools Modules Configuration</attribute>
+            <attribute name="string">Extra Tools Configuration</attribute>
           </form>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
                 <attribute name='string'></attribute>
           </xpath>
 
           <separator string="title" position="attributes">
-            <attribute name="string">Tools</attribute>
+            <attribute name="string">Configure Extra Tools</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string">Here are a few useful applications which, while they do not directly contribute to your business, can help you to improve your organization.</attribute>
+            <attribute name="string">Here are applications that can help you improve your organization without being key in its management.</attribute>
           </xpath>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
               <attribute name="string">Configure</attribute>
@@ -28,6 +28,7 @@
             <field name="lunch"/>
             <field name="subscription"/>
             <field name="survey"/>
+            <field name="idea"/>
             <field name="audittrail"/>
           </group>
         </data>
@@ -35,7 +36,7 @@
     </record>
 
     <record id="action_misc_tools_installer" model="ir.actions.act_window">
-      <field name="name">Tools Modules Installation</field>
+      <field name="name">Tools Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">misc_tools.installer</field>
       <field name="view_id" ref="view_misc_tools_installer"/>

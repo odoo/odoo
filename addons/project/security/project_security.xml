@@ -22,10 +22,6 @@
         <field name="groups_id" eval="[(6,0,[ref('group_project_manager')])]"/>
     </record>
 
-    <record id="project.menu_board_project_manager" model="ir.ui.menu">
-        <field eval="[(4,ref('project.group_project_manager'))]" name="groups_id"/>
-    </record>
-    
     <record model="ir.rule" id="project_comp_rule">
         <field name="name">Project multi-company</field>
         <field name="model_id" ref="model_project_project"/>

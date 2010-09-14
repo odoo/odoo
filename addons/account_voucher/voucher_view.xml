@@ -12,7 +12,8 @@
                     <field name="reference"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
-                    <field name="period_id" invisible="context.get('visible', False)"/>
+                    <field name="period_id" groups="base.group_extended" invisible="context.get('visible', True)"/>
+                    <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                     <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
@@ -27,46 +28,37 @@
             <field name="arch" type="xml">
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, type)"/>
                         <field name="name" colspan="4"/>
-                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal(journal_id,type)"/>
-                        <field name="account_id" widget="selection" on_change="onchange_account(account_id)" readonly="1"/>
-                        <field name="type" on_change="onchange_journal(journal_id,type)"/>
+                        <field name="reference" select="1"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
+                        <field name="type" on_change="onchange_partner_id(partner_id, journal_id)"/>
+                        <field name="journal_id" widget="selection" select="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
+                        <field name="account_id" widget="selection" invisible="True"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                            <field name="line_ids" colspan="4" nolabel="1" height="180">
+                            <field name="line_ids" on_change="onchange_price(line_ids, False, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Voucher Lines" editable="top">
-                                    <field name="name" on_change="onchange_partner(parent.partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="account_id"/>
-                                    <field name="type" on_change="onchange_type(parent.partner_id,type,parent.type, parent.currency_id)"/>
+                                    <field name="name"/>
                                     <field name="amount"/>
-                                    <field name="ref"/>
+                                    <field name="type"/>
                                     <field name="account_analytic_id" domain="[('parent_id','!=',False)]"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
-                                <separator string="Narration" colspan="2"/>
+                                <separator string="Internal Notes" colspan="2"/>
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
-                                <group col="2" colspan="1" attrs="{'invisible': [('type','!=','sale')]}">
-                                    <separator string="Payment Options" colspan="2"/>
-                                    <field name="pay_now"/>
-                                    <field name="pay_journal_id" on_change="onchange_pay_journal(pay_journal_id,type)" attrs="{'readonly': [('pay_now','=',False)], 'required': [('pay_now','=',True)]}"/>
-                                    <field name="pay_account_id" attrs="{'readonly': [('pay_now','=',False)], 'required': [('pay_now','=',True)]}"/>
-                                    <field name="pay_amount"/>
-                                </group>
-                                <group col="2" colspan="1">
-                                    <separator string="Other Information" colspan="2"/>
-                                    <field name="number"/>
-                                    <field name="reference" select="1"/>
-                                    <field name="date" select="1" on_change="onchange_date(date)"/>
-                                    <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
-                                </group>
+                                <separator string="Other Information" colspan="2"/>
+                                <field name="amount" string="Total"/>
+                                <field name="number"/>
+                                <field name="date" select="1" on_change="onchange_date(date)"/>
+                                <field name="currency_id" select="1" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
                             </group>
                         </page>
-                        <page string="Journal Items">
+                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
                                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
@@ -78,9 +70,10 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="proforma_voucher" string="Create" states="draft" icon="terp-document-new"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
+                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
+                        <button name="%(action_view_account_voucher_unreconcile)d" string="Cancel" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
             </field>
@@ -139,19 +132,16 @@
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
-                        <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <field name="date" select='1'/>
                         <field name="number" select='1'/>
                         <field name="partner_id" select='1'/>
-                        <field name="journal_id" widget="selection" select="1"/>
-                        <field name="period_id" select="1"/>
                     </group>
-<!--                    <newline/>-->
-<!--                    <group col='8' colspan='4'>-->
-<!--                        <field name="journal_id" widget="selection" select="1"/>-->
-<!--                        <field name="period_id" select="1"/>-->
-<!--                    </group>-->
+                    <newline/>
+                    <group col='8' colspan='4'>
+                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
+                        <field name="period_id" groups="base.group_extended"/>
+                    </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>

@@ -87,6 +87,30 @@
 -
   !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
     - sum_remain == -5.50  
+
+- |
+  I cancel the order "LU002"
+- 
+  !record {model: lunch.order.cancel, id: lunch_order_cancel_0}:
+    {}
+- |
+  I click on "Yes" button of this wizard for cancel order. 
+      
+-
+  !python {model: lunch.order.cancel}: |
+    self.cancel(cr, uid, [ref('lunch_order_cancel_0')], {'active_ids': [ref('lunch_order_1')]})
+      
+- |
+  I test that the Cash Moves record have been removed for the order LU002.
+-
+  !assert {model: lunch.order, id: lunch_order_1}: 
+    - cashmove.id == False
+    
+- |
+  I check that the Total on the "Employee Cashbox" is -2.75
+-
+  !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
+    - sum_remain == -2.75
 - |
   I reset the "Employee Cashbox" to zero using the "Set CashBox to Zero" wizard.
 - 
@@ -103,28 +127,4 @@
 -
   !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
     - sum_remain == 0.00
-      
-- |
-  I cancel the order "LU002"
-- 
-  !record {model: lunch.order.cancel, id: lunch_order_cancel_0}:
-    {}
-- |
-  I click on "Yes" button of this wizard for cancel order. 
-      
--
-  !python {model: lunch.order.cancel}: |
-    self.cancel(cr, uid, [ref('lunch_order_cancel_0')], {'active_ids': [ref('lunch_order_1')]})
-      
-- |
-  I test that the Cash Moves revord have been removed for the order LU002.
--
-  !assert {model: lunch.order, id: lunch_order_1}: 
-    - cashmove.id == False
-    
-- |
-  I check that the Total on the "Employee Cashbox" is -2.75
--
-  !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
-    - sum_remain == -2.75
         

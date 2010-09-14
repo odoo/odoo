@@ -13,6 +13,8 @@
             <field name="context">{'object_id':'project.issue'}</field>
         </record>
 
+        <menuitem action="project_issue_categ_action" name="Categories" id="menu_project_issue_category_act" parent="menu_project_confi" />
+
         <record id="project_issue_stage_act" model="ir.actions.act_window">
             <field name="name">Issue Stages</field>
             <field name="res_model">crm.case.stage</field>
@@ -78,6 +80,7 @@
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
                                 <tree string="Communication history">
                                     <field name="display_text" string="History Information"/>
+                                    <field name="history" invisible="1"/>
                                     <button
                                         string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
                                         name="%(crm.action_crm_send_mail)d"
@@ -114,7 +117,11 @@
                                 </form>
                             </field>
                            <separator colspan="4"/>
-                           <button colspan="4" string="Send New Email"
+                            <button string="Add New Note"
+                                name="%(crm.action_crm_add_note)d"
+                                context="{'model': 'crm.lead' }"
+                                icon="terp-document-new" type="action" />
+                            <button string="Send New Email"
                                name="%(crm.action_crm_send_mail)d"
                                context="{'mail':'new', 'model': 'project.issue'}"
                                icon="terp-mail-message-new" type="action" />

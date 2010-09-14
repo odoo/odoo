@@ -87,7 +87,7 @@ class idea_post_vote(osv.osv_memory):
                    raise osv.except_osv(_('Warning !'),_("You can not give Vote for this idea more than %s times") % (user_limit))
 
             if idea.state != 'open':
-                raise osv.except_osv(_('Warning !'), _('Idea should be in \
+                raise osv.except_osv(_('Warning !'), _('Idea must be in \
 \'Open\' state before vote for that idea.'))
         return False
 

@@ -48,7 +48,8 @@ send an Email to Invited Person')
     }
 
     _defaults = {
-        'type': lambda *x: 'internal'
+        'type': 'internal',
+        'send_mail': True
     }
 
     def do_invite(self, cr, uid, ids, context=None):

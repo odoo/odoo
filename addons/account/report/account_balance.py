@@ -33,6 +33,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         self.sum_credit = 0.00
         self.date_lst = []
         self.date_lst_string = ''
+        self.result_acc = []
         self.localcontext.update({
             'time': time,
             'lines': self.lines,
@@ -68,6 +69,34 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         return super(account_balance ,self)._get_account(data)
 
     def lines(self, form, ids=[], done=None):#, level=1):
+        def _process_child(accounts,disp_acc,parent):
+                account_rec = [acct for acct in accounts if acct['id']==parent][0]
+                res = {
+                    'id': account_rec['id'],
+                   'type': account_rec['type'],
+                    'code': account_rec['code'],
+                    'name': account_rec['name'],
+                    'level': account_rec['level'],
+                    'debit': account_rec['debit'],
+                    'credit': account_rec['credit'],
+                    'balance': account_rec['balance'],
+                    'parent_id':account_rec['parent_id'],
+                    'bal_type':'',
+                }
+                self.sum_debit += account_rec['debit']
+                self.sum_credit += account_rec['credit']
+                if disp_acc == 'bal_movement':
+                    if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
+                        self.result_acc.append(res)
+                elif disp_acc == 'bal_solde':
+                    if  res['balance'] != 0:
+                        self.result_acc.append(res)
+                else:
+                    self.result_acc.append(res)
+                if account_rec['child_id']:
+                    for child in account_rec['child_id']:
+                        _process_child(accounts,disp_acc,child)
+                        
         obj_account = self.pool.get('account.account')
         if not ids:
             ids = self.ids
@@ -76,8 +105,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if not done:
             done={}
 
-        res = {}
-        result_acc = []
         ctx = self.context.copy()
 
         ctx['fiscalyear'] = form['fiscalyear_id']
@@ -86,38 +113,18 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         elif form['filter'] == 'filter_date':
             ctx['date_from'] = form['date_from']
             ctx['date_to'] =  form['date_to']
-
+        parents = ids
         child_ids = obj_account._get_children_and_consol(self.cr, self.uid, ids, ctx)
         if child_ids:
             ids = child_ids
-        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id','level'], ctx)
-        for account in accounts:
-            if account['id'] in done:
-                continue
-            done[account['id']] = 1
-            res = {
-                    'id': account['id'],
-                    'type': account['type'],
-                    'code': account['code'],
-                    'name': account['name'],
-                    'level': account['level'],
-                    'debit': account['debit'],
-                    'credit': account['credit'],
-                    'balance': account['balance'],
-                    'parent_id':account['parent_id'],
-                    'bal_type':'',
-                }
-            self.sum_debit += account['debit']
-            self.sum_credit += account['credit']
-            if form['display_account'] == 'bal_movement':
-                if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
-                    result_acc.append(res)
-            elif form['display_account'] == 'bal_solde':
-                if  res['balance'] != 0:
-                    result_acc.append(res)
-            else:
-                result_acc.append(res)
-        return result_acc
+        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id','level','child_id'], ctx)
+
+        for parent in parents:
+                if parent in done:
+                    continue
+                done[parent] = 1
+                _process_child(accounts,form['display_account'],parent)
+        return self.result_acc
 
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header="internal")
 

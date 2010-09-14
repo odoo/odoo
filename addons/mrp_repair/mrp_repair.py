@@ -397,6 +397,16 @@ class mrp_repair(osv.osv):
                             name = repair.name + '-' + fee.name
                         else:
                             name = fee.name
+                        if not fee.product_id:
+                            raise osv.except_osv(_('Warning !'), _('No product defined on Fees!'))
+                        
+                        if fee.product_id.property_account_income:
+                            account_id = fee.product_id.property_account_income
+                        elif fee.product_id.categ_id.property_account_income_categ:
+                            account_id = fee.product_id.categ_id.property_account_income_categ.id
+                        else:
+                            raise osv.except_osv(_('Error !'), _('No account defined for product "%s".') % fee.product_id.name)
+                        
                         invoice_fee_id = inv_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,
                             'name': name,

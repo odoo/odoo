@@ -12,7 +12,7 @@
             <field name="arch" type="xml">
                 <page string="History" position="inside">
                     <field name="opportunity_ids" colspan="4" nolabel="1">
-                         <tree string="Opportunities"  colors="blue:state=='pending';gray:state=='cancel'">
+                         <tree string="Leads and Opportunities"  colors="blue:state=='pending';gray:state=='cancel'">
                              <field name="create_date"/>
                              <field name="name"/>
                              <field name="type"/>
@@ -35,7 +35,7 @@
                              <button string="Convert to Opportunity"
                                  name="convert_opportunity"
                                  states="draft,open,pending" icon="gtk-index"
-                                 type="object" />
+                                 type="object" attrs="{'invisible':[('type','=','opportunity')]}" />
                              <button name="case_escalate" string="Escalate"
                                  states="open,draft,pending" type="object"
                                  icon="gtk-go-up" />
@@ -68,7 +68,7 @@
                              <button string="Convert to Opportunity"
                                  name="convert_opportunity"
                                  states="draft,open,pending" icon="gtk-index"
-                                 type="object" />
+                                 type="object" attrs="{'invisible':[('type','=','opportunity')]}" />
                              <button name="case_escalate" string="Escalate"
                                  states="open,draft,pending" type="object"
                                  icon="gtk-go-up" />

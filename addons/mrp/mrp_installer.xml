@@ -8,11 +8,11 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">MRP Modules Installation</attribute>
+            <attribute name="string">MRP Application Configuration</attribute>
           </form>
 
           <separator string="title" position="attributes">
-            <attribute name="string">Manufacturing Resource Planning</attribute>
+            <attribute name="string">Configure Your Manufacturing Resource Planning Application</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
@@ -36,7 +36,7 @@
     </record>
 
     <record id="action_mrp_installer" model="ir.actions.act_window">
-      <field name="name">MRP Modules Installation</field>
+      <field name="name">MRP Applications Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">mrp.installer</field>
       <field name="view_id" ref="view_mrp_installer"/>

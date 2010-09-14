@@ -73,7 +73,7 @@
                 <form string="Scrap Move">
                     <separator string="Scrap Products" colspan="4"/>
                     <field name="product_id" colspan="4" readonly="1"/>
-                    <field name="location_id" colspan="4" string="Dest. Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection"/>
+                    <field name="location_id" colspan="4" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection"/>
                     <field name="product_qty" colspan="2"/>
                     <field name="product_uom" nolabel="1" readonly="1"/>
                     <newline/>
@@ -121,24 +121,24 @@
 
                   <group colspan="4" attrs="{'invisible':[('use_exist','=',True)]}">
                         <field name="line_ids" colspan="4" nolabel="1">
-                            <tree string="Lots Number" editable="bottom">
+                            <tree string="Production Lot Numbers" editable="bottom">
                                 <field name="name" string="Lots"/>
                                 <field name="quantity" />
                             </tree>
-                            <form string="Lots Number">
-                                <field name="name" string="Lots"/>
+                            <form string="Production Lot Number">
+                                <field name="name" string="Lot number"/>
                                 <field name="quantity" />
                             </form>
                         </field>
                     </group>
                   <group colspan="4" attrs="{'invisible':[('use_exist','!=',True)]}">
                         <field name="line_exist_ids" colspan="4" nolabel="1">
-                            <tree string="Lots Number" editable="bottom">
-                                <field name="prodlot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
+                            <tree string="Production Lot Numbers" editable="bottom">
+                                <field name="prodlot_id" string="Lot number" domain="[('product_id','=',parent.product_id)]"/>
                                 <field name="quantity" />
                             </tree>
-                            <form string="Lots Number">
-                                <field name="prodlot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
+                            <form string="Production Lot Number">
+                                <field name="prodlot_id" string="Lot number" domain="[('product_id','=',parent.product_id)]"/>
                                 <field name="quantity" />
                             </form>
                         </field>

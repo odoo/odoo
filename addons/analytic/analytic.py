@@ -173,22 +173,12 @@ class account_analytic_account(osv.osv):
         res = self.name_get(cr, uid, ids)
         return dict(res)
 
-    def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
-        result = {}
-        for rec in self.browse(cr, uid, ids, context):
-            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code) or False
-        return result
-
-    def _get_account_currency(self, cr, uid, ids, field_name, arg, context=None):
-        result=self._get_company_currency(cr, uid, ids, field_name, arg, context={})
-        return result
-
     _columns = {
         'name' : fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
-        'code' : fields.char('Account Code', size=24),
-        'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type'),
-        'description' : fields.text('Description'),
+        'code': fields.char('Account Code', size=24),
+        'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
+        'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
@@ -203,7 +193,6 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
         'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed'),('template', 'Template')], 'State', required=True,
                                   help='* When an account is created its in \'Draft\' state.\
                                   \n* If any associated partner is there, it can be in \'Open\' state.\
@@ -211,7 +200,7 @@ class account_analytic_account(osv.osv):
                                   \n* And finally when all the transactions are over, it can be in \'Close\' state. \
                                   \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
                                  \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
-       'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency', store=True),
+       'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Account currency', store=True, readonly=True),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -233,16 +222,10 @@ class account_analytic_account(osv.osv):
     def check_recursion(self, cr, uid, ids, parent=None):
         return super(account_analytic_account, self).check_recursion(cr, uid, ids, parent=parent)
 
-    _order = 'parent_id desc,code'
+    _order = 'date_start desc,parent_id desc,code'
     _constraints = [
         (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id'])
     ]
-
-    def create(self, cr, uid, vals, context=None):
-        parent_id = vals.get('parent_id', 0)
-        if ('code' not in vals or not vals['code']) and not parent_id:
-            vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account')
-        return super(account_analytic_account, self).create(cr, uid, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -286,59 +269,15 @@ account_analytic_account()
 class account_analytic_line(osv.osv):
     _name = 'account.analytic.line'
     _description = 'Analytic Line'
-    def _amount_currency(self, cr, uid, ids, field_name, arg, context=None):
-        result = {}
-        for rec in self.browse(cr, uid, ids, context=context):
-            cmp_cur_id=rec.company_id.currency_id.id
-            aa_cur_id=rec.account_id.currency_id.id
-            # Always provide the amount in currency
-            if cmp_cur_id != aa_cur_id:
-                cur_obj = self.pool.get('res.currency')
-                ctx = {}
-                if rec.date and rec.amount:
-                    ctx['date'] = rec.date
-                    result[rec.id] = cur_obj.compute(cr, uid, rec.company_id.currency_id.id,
-                        rec.account_id.currency_id.id, rec.amount,
-                        context=ctx)
-            else:
-                result[rec.id]=rec.amount
-        return result
-
-    def _get_account_currency(self, cr, uid, ids, field_name, arg, context=None):
-        result = {}
-        for rec in self.browse(cr, uid, ids, context):
-            # Always provide second currency
-            result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
-        return result
-    def _get_account_line(self, cr, uid, ids, context=None):
-        aac_ids = {}
-        for acc in self.pool.get('account.analytic.account').browse(cr, uid, ids):
-            aac_ids[acc.id] = True
-        aal_ids = []
-        if aac_ids:
-            aal_ids = self.pool.get('account.analytic.line').search(cr, uid, [('account_id','in',aac_ids.keys())], context=context)
-        return aal_ids
 
     _columns = {
         'name' : fields.char('Description', size=256, required=True),
         'date' : fields.date('Date', required=True, select=1),
-        'amount' : fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price.'),
+        'amount' : fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.'),
         'unit_amount' : fields.float('Quantity', help='Specifies the amount of quantity to count.'),
         'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
-        'user_id' : fields.many2one('res.users', 'User',),
-        'company_id': fields.many2one('res.company','Company',required=True),
-        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
-                store={
-                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    'account.analytic.line': (lambda self, cr, uid, ids, c={}: ids, ['amount','unit_amount'],10),
-                },
-                help="The related account currency if not equal to the company one."),
-        'amount_currency': fields.function(_amount_currency, method=True, digits_compute= dp.get_precision('Account'), string='Amount currency',
-                store={
-                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    'account.analytic.line': (lambda self, cr, uid, ids, c={}: ids, ['amount','unit_amount'],10),
-                },
-                help="The amount expressed in the related account currency if not equal to the company one."),
+        'user_id' : fields.many2one('res.users', 'User'),
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
 
     }
     _defaults = {
@@ -346,7 +285,7 @@ class account_analytic_line(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
 
-    _order = 'date'
+    _order = 'date desc'
 
 account_analytic_line()
 

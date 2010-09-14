@@ -222,7 +222,7 @@ class History(osv.osv):
         'write_uid': lambda obj, cr, uid, context: uid,
     }
 
-    def getDiff(self, cr, uid, v1, v2, context={}):
+    def getDiff(self, cr, uid, v1, v2, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
@@ -236,7 +236,7 @@ class History(osv.osv):
         if text2:
             line2 = text2.splitlines(1)
         if (not line1 and not line2) or (line1 == line2):
-            raise osv.except_osv(_('Warning !'), _('There are no chnages in revisions'))
+            raise osv.except_osv(_('Warning !'), _('There are no changes in revisions'))
         diff = difflib.HtmlDiff()
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
 

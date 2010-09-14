@@ -186,6 +186,8 @@ def map_data(cr, uid, obj, context=None):
             if field_type == 'selection':
                 if not map_val:
                     continue
+                if type(map_val) == list and len(map_val): #TOFIX: why need to check this
+                    map_val = map_val[0]
                 mapping = obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
                     map_val = mapping.get(map_val.lower(), False)
@@ -598,7 +600,7 @@ class Calendar(CalDAV, osv.osv):
                 data_ids = mod_obj.search(cr, uid, line_domain, order="id", context=context)
                 for data in mod_obj.browse(cr, uid, data_ids, context):
                     ctx = parent and parent.context or None
-                    if data.recurrent_uid:
+                    if hasattr(data, 'recurrent_uid') and data.recurrent_uid:
                         # Skip for event which is child of other event
                         continue
                     node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)

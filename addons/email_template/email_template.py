@@ -133,22 +133,26 @@ class email_template(osv.osv):
                  'Recipient (To)',
                  size=250,
                  help="The Recipient of email. " 
-                 "Placeholders can be used here."),
+                 "Placeholders can be used here. "
+                 "e.g. ${object.email_to}"),
         'def_cc':fields.char(
                  'CC',
                  size=250,
                  help="Carbon Copy address(es), comma-separated."
-                 " Placeholders can be used here."),
+                    " Placeholders can be used here. "
+                    "e.g. ${object.email_cc}"),
         'def_bcc':fields.char(
                   'BCC',
                   size=250,
                   help="Blind Carbon Copy address(es), comma-separated."
-                  " Placeholders can be used here."),
+                    " Placeholders can be used here. "
+                    "e.g. ${object.email_bcc}"),
         'reply_to':fields.char('Reply-To', 
                     size=250, 
                     help="The address recipients should reply to,"
-                         " if different from the From address."
-                         " Placeholders can be used here."),
+                    " if different from the From address."
+                    " Placeholders can be used here. "
+                    "e.g. ${object.email_reply_to}"),
         'message_id':fields.char('Message-ID', 
                     size=250, 
                     help="Specify the Message-ID SMTP header to use in outgoing emails. Please note that this overrides the Resource tracking option! Placeholders can be used here."),
@@ -182,10 +186,9 @@ This is useful for CRM leads for example"),
                   help="the signature from the User details" 
                   " will be appended to the mail"),
         'file_name':fields.char(
-                'File Name Pattern',
+                'Report Filename',
                 size=200,
-                help="File name pattern can be specified with placeholders." 
-                "eg. 2009_SO003.pdf",
+                help="Name of the generated report file. Placeholders can be used in the filename. eg: 2009_SO003.pdf",
                 translate=True),
         'report_template':fields.many2one(
                   'ir.actions.report.xml',
@@ -642,8 +645,8 @@ This is useful for CRM leads for example"),
             # use provided message_id with placeholders
             mailbox_values.update({'message_id': get_value(cursor, user, record_id, template['message_id'], template, context)})
 
-        if template['track_campaign_item']:
-            # get appropriate message-id 
+        elif template['track_campaign_item']:
+            # get appropriate message-id
             mailbox_values.update({'message_id': tools.misc.generate_tracking_message_id(record_id)})
 
         if not mailbox_values['account_id']:
@@ -730,7 +733,7 @@ class email_template_preview(osv.osv_memory):
             context = {}
             #Fills up the selection box which allows records from the selected object to be displayed
         self.context = context
-        if 'template_id' in context.keys():
+        if 'template_id' in context:
             ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
             ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
             model_obj = self.pool.get(ref_obj_name)
@@ -741,6 +744,16 @@ class email_template_preview(osv.osv_memory):
             if default_id and default_id not in ref_obj_ids:
                 ref_obj_ids.insert(0, default_id)
             return model_obj.name_get(cr, uid, ref_obj_ids, context)
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        result = super(email_template_preview, self).default_get(cr, uid, fields, context=context)
+        if (not fields or 'rel_model_ref' in fields) and 'template_id' in context \
+           and not result.get('rel_model_ref'):
+            selectables = self._get_model_recs(cr, uid, context=context)
+            result['rel_model_ref'] = selectables and selectables[0][0] or False
+        return result
 
     def _default_model(self, cursor, user, context=None):
         """
@@ -782,7 +795,7 @@ class email_template_preview(osv.osv_memory):
     }
     _defaults = {
         'ref_template': lambda self, cr, uid, ctx:ctx['template_id'],
-        'rel_model': _default_model
+        'rel_model': _default_model,
     }
     def on_change_ref(self, cr, uid, ids, rel_model_ref, context=None):
         if context is None:

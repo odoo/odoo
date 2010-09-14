@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 19:46+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"PO-Revision-Date: 2010-09-03 08:02+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:51+0000\n"
+"X-Launchpad-Export-Date: 2010-09-04 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1764,7 +1764,7 @@ msgstr "Coûts & Revenus"
 #. module: account
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
-msgstr "Erreur ! Vous ne pouvez pas créer d'écritures récursives."
+msgstr "Erreur ! Vous ne pouvez pas créer des compte récursifs"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -3765,7 +3765,7 @@ msgstr "Avoir"
 #. module: account
 #: model:ir.actions.todo,note:account.config_fiscalyear
 msgid "Define Fiscal Years and Select Charts of Account"
-msgstr "Définir l'exercice fiscal et le plan comptable"
+msgstr "Définir l'exercice fiscal et choisir le plan comptable"
 
 #. module: account
 #: wizard_field:account.move.line.reconcile,addendum,period_id:0
@@ -6202,7 +6202,7 @@ msgstr "Sélectionner le COmpte Référence (pour la comparaison en %)"
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_account_balance_report
 msgid "Account balance-Compare Years"
-msgstr ""
+msgstr "Balance des Comptes - Comparer les Années"
 
 #. module: account
 #: model:ir.module.module,description:account.module_meta_information
@@ -6225,6 +6225,21 @@ msgid ""
 "    5. You have an option to print the desired report in Landscape format.\n"
 "    "
 msgstr ""
+"Le module de Balance des Comptes est une fonctionnalité additionnelle du "
+"module de Gestion Financière.\n"
+"\n"
+"    Ce module vous offre plusieurs options d'impression du bilan.\n"
+"\n"
+"    1. Comparaison des bilans de différentes années.\n"
+"\n"
+"    2. Affichage des écarts entre deux années en pourcentage ou en valeur.\n"
+"\n"
+"    3. Définition d'une valeur de référence à comparer à une seule année.\n"
+"\n"
+"    4. Affichage jusqu'à la date actuelle ou depuis la date de création.\n"
+"\n"
+"    5. Impression au format portrait ou paysage.\n"
+"    "
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -6240,7 +6255,7 @@ msgstr "Afficher le Rapport au Format Paysage"
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,format_perc:0
@@ -6275,13 +6290,13 @@ msgstr "1. Vous avez sélectionner plus de 3 années dans tous les cas."
 #. module: account
 #: model:ir.module.module,shortdesc:account.module_meta_information
 msgid "Accounting and financial management-Compare Accounts"
-msgstr ""
+msgstr "Gestion financière et comptable - Comparez les comptes"
 
 #. module: account
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
 msgid "Year :"
-msgstr ""
+msgstr "Année :"
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -6332,6 +6347,10 @@ msgid ""
 "credit/debit columns and % option.This can lead contents to be printed out "
 "of the paper.Please try again."
 msgstr ""
+"Vous avez choisi de comparer avec l’option supérieure à 1 an sur les "
+"colonnes de crédit/ débit et des %.\r\n"
+"Cela peut conduire le contenu à être imprimé en dehors de la plage du format "
+"de papier. Veuillez essayer à nouveau."
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,zero_years:0
@@ -6346,22 +6365,22 @@ msgstr "Personnaliser  le Rapport"
 #. module: account
 #: field:report.aged.receivable,name:0
 msgid "Month Range"
-msgstr ""
+msgstr "Plage mensuelle"
 
 #. module: account
 #: model:ir.actions.act_window,name:report_account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr ""
+msgstr "Factures créées depuis 15 jours"
 
 #. module: account
 #: model:ir.model,name:report_account.model_report_invoice_created
 msgid "Report of Invoices Created within Last 15 days"
-msgstr ""
+msgstr "Rapport des factures créées depuis 15 jours"
 
 #. module: account
 #: view:report.invoice.created:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Montant Total"
 
 #. module: account
 #: view:report.account.receivable:0
@@ -6381,17 +6400,18 @@ msgstr "Comptes recevables"
 #. module: account
 #: field:temp.range,name:0
 msgid "Range"
-msgstr ""
+msgstr "Intervalle"
 
 #. module: account
 #: model:ir.module.module,description:report_account.module_meta_information
 msgid "A module that adds new reports based on the account module."
 msgstr ""
+"Un module qui ajoute de nouveaux rapports basé sur le module account."
 
 #. module: account
 #: model:ir.module.module,shortdesc:report_account.module_meta_information
 msgid "Account Reporting - Reporting"
-msgstr ""
+msgstr "Rapports financiers et de comptabilité - Rapports"
 
 #. module: account
 #: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
@@ -6407,7 +6427,7 @@ msgstr "Semaine de l'année"
 #. module: account
 #: field:report.invoice.created,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Date de Création"
 
 #. module: account
 #: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
@@ -6418,7 +6438,7 @@ msgstr ""
 #. module: account
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Montant HT"
 
 #~ msgid "account.config.wizard"
 #~ msgstr "account.config.wizard"
