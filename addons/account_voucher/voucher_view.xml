@@ -20,7 +20,7 @@
                 </tree>
             </field>
         </record>
-
+        
         <record model="ir.ui.view" id="view_voucher_form">
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
@@ -28,11 +28,11 @@
             <field name="arch" type="xml">
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
+                        <field name="partner_id" required="1" on_change="onchange_journal_voucher(partner_id, journal_id)"/>
+                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(partner_id, journal_id)"/>
+                        <field name="type" required="1"/>
                         <field name="name" colspan="4"/>
                         <field name="reference" select="1"/>
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
-                        <field name="type" on_change="onchange_partner_id(partner_id, journal_id)"/>
-                        <field name="journal_id" widget="selection" select="1" on_change="onchange_partner_id(partner_id, journal_id)"/>
                         <field name="account_id" widget="selection" invisible="True"/>
                     </group>
                     <notebook colspan="4">

@@ -196,7 +196,6 @@ class account_voucher(osv.osv):
             self.write(cr, uid, [voucher.id], {'amount':total, 'tax_amount':total_tax})
         return True
     
-    # TODO: review this code.
     def onchange_price(self, cr, uid, ids, line_ids, tax_id, partner_id=False, context={}):
         tax_pool = self.pool.get('account.tax')
         partner_pool = self.pool.get('res.partner')
@@ -254,6 +253,44 @@ class account_voucher(osv.osv):
                 'date_due':due_date
             })
         return {'value':default}
+    
+    def onchange_journal_voucher(self, cr, uid, ids, partner_id=False, journal_id=False, context={}):
+        """price
+        Returns a dict that contains new values and context
+    
+        @param partner_id: latest value from user input for field partner_id
+        @param args: other arguments
+        @param context: context arguments, like lang, time zone
+        
+        @return: Returns a dict which contains new values, and context
+        """
+        default = {
+            'value':{},
+        }
+        
+        if not journal_id or not journal_id:
+            return default
+            
+        partner_pool = self.pool.get('res.partner')
+        journal_pool = self.pool.get('account.journal')
+
+        journal = journal_pool.browse(cr, uid, journal_id)
+        partner = partner_pool.browse(cr, uid, partner_id)
+        account_id = False
+        tr_type = False
+        if journal.type in ('sale','sale_refund'):
+            account_id = partner.property_account_receivable.id
+            tr_type = 'sale'
+        elif journal.type in ('purchase', 'purchase_refund','expense'):
+            account_id = partner.property_account_payable.id
+            tr_type = 'purchase'
+        else:
+            account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
+            tr_type = 'receipt'
+
+        default['value']['account_id'] = account_id
+        default['value']['type'] = tr_type
+        return default
     
     def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id=False, price=0.0, currency_id=False, ttype=False, context={}):
         """price
@@ -440,7 +477,7 @@ class account_voucher(osv.osv):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Voucher(s) which are already opened or paid !'))
         return super(account_voucher, self).unlink(cr, uid, ids, context=context)
 
-    # TODO
+    # TODO: may be we can remove this method if not used anyware
     def onchange_payment(self, cr, uid, ids, pay_now, journal_id, partner_id, ttype='sale'):
         res = {}
         if not partner_id:
@@ -755,6 +792,7 @@ class account_voucher_line(osv.osv):
         ttype = 'cr'
         if journal.type in ('sale', 'purchase_refund'):
             account_id = journal.default_credit_account_id and journal.default_credit_account_id.id or False
+            ttype = 'cr'
         elif journal.type in ('purchase', 'expense', 'sale_refund'):
             account_id = journal.default_debit_account_id and journal.default_debit_account_id.id or False
             ttype = 'dr'
