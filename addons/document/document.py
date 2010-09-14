@@ -144,6 +144,7 @@ class document_file(osv.osv):
         return super(document_file, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        result = False
         if not isinstance(ids, list):
             ids = [ids]
         res = self.search(cr, uid, [('id', 'in', ids)])

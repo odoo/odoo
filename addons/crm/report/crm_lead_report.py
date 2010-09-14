@@ -127,9 +127,9 @@ class crm_lead_report(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report AS (
                 SELECT
                     id,
-                    to_char(c.create_date, 'YYYY') as name,
-                    to_char(c.create_date, 'MM') as month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.date_deadline, 'YYYY') as name,
+                    to_char(c.date_deadline, 'MM') as month,
+                    to_char(c.date_deadline, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
@@ -145,7 +145,7 @@ class crm_lead_report(osv.osv):
                     c.partner_id,
                     c.country_id,
                     c.planned_revenue,
-                    c.planned_revenue*(c.probability/100) as probable_revenue, 
+                    c.planned_revenue*(c.probability/100) as probable_revenue,
                     1 as nbr,
                     0 as avg_answers,
                     0.0 as perc_done,

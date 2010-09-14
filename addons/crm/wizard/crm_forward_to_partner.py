@@ -27,6 +27,18 @@ from osv import osv, fields
 import tools
 from tools.translate import _
 
+FWD_TEMPLATE="""Hello,
+
+OpenERP Leads are now forwarded to our trusted partners, through the CRM, we hope that they provide you with interesting projects, we know that they have shown keen interest in our software.
+Below is an interesting lead for you.
+
+Please let us know about the advancements of this lead or if you are not able to answer to its requests by replying to this email. This way, we can keep track of closed leads or forward them to other partners.
+Don't forget to propose our maintenance at the beginning of your implementation projects, together with your services quotation. The maintenance provides unlimited bugfixing that will avoid you waste time on bugs detected during the implementation. It also provides free migration services for the current stable version at the time of signature; otherwise if we released a new version during your implementation, the customer would not always be able to easily migrate to newer versions.
+
+Kind regards, OpenERP Team
+
+"""
+
 class crm_lead_forward_to_partner(osv.osv_memory):
     """Forwards lead history"""
     _name = 'crm.lead.forward.to.partner'
@@ -110,7 +122,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         res_id = context.get('active_id')
         msg_val = self._get_case_history(cr, uid, history_type, res_id, context=context)
         if msg_val:
-            res = {'value': {'body' : '\n\n' + msg_val}}
+            res = {'value': {'body' : FWD_TEMPLATE + '\n\n' + msg_val}}
         return res
 
     def _get_case_history(self, cr, uid, history_type, res_id, context=None):
@@ -268,7 +280,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         body = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
         defaults.update({
             'subject' : '%s: %s' % (_('Fwd'), lead.name),
-            'body' : body,
+            'body' : FWD_TEMPLATE + '\n\n' + body,
         })
         return defaults
 

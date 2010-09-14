@@ -75,9 +75,9 @@ class account_aged_trial_balance(osv.osv_memory):
             for i in range(5)[::-1]:
                 stop = start - RelativeDateTime(days=period_length)
                 res[str(i)] = {
-                    'name' : str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length),
+                    'name' : (i!=0 and (str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length)) or ('+'+str(4 * period_length))),
                     'stop': start.strftime('%Y-%m-%d'),
-                    'start' : stop.strftime('%Y-%m-%d'),
+                    'start' : (i!=0 and stop.strftime('%Y-%m-%d') or time.strftime('01-01-1900')),
                     }
                 start = stop - RelativeDateTime(days=1)
         else:
