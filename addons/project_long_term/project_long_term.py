@@ -116,7 +116,7 @@ class project_phase(osv.osv):
         'sequence': 10,
         'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Day'))], context=c)[0]
     }
-    _order = "name"
+    _order = "project_id, date_start, sequence, name"
     _constraints = [
         (_check_recursion,'Loops in phases not allowed',['next_phase_ids', 'previous_phase_ids']),
         (_check_dates, 'Phase start-date must be lower than phase end-date.', ['date_start', 'date_end']),
