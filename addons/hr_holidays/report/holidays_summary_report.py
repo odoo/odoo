@@ -27,7 +27,7 @@ from report.interface import report_rml
 from report.interface import toxml
 
 import pooler
-
+import time
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
@@ -234,14 +234,23 @@ class report_custom(report_rml):
                     dept_done=1
                     emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
                     row_id = row_id +1
+
+        header_xml = '''
+        <header>
+        <date>%s</date>
+        <company>%s</company>
+        </header>
+        ''' % (time.strftime('%m/%d/%Y %H:%M'),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+
         # Computing the xml
         xml='''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
         %s
         %s
+        %s
         </report>
-        ''' % (months_xml,date_xml, emp_xml)
+        ''' % (header_xml,months_xml,date_xml, emp_xml)
 
         return xml
 
