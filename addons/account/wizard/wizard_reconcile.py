@@ -89,7 +89,11 @@ def _trans_rec_reconcile(self, cr, uid, data, context=None):
     return {}
 
 def _partial_check(self, cr, uid, data, context):
-    if _trans_rec_get(self,cr,uid, data, context)['writeoff'] == 0:
+    pool = pooler.get_pool(cr.dbname)
+    currency = pool.get('res.users').browse(cr, uid, uid, context).company_id.currency_id
+    writeoff = _trans_rec_get(self,cr, uid, data, context)['writeoff']
+    
+    if pool.get('res.currency').is_zero(cr, uid, currency, writeoff):
         return 'init_full'
     return 'init_partial'
 
