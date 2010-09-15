@@ -220,8 +220,8 @@ class hr_evaluation(osv.osv):
                 elif phase.action == "self":
                     childs = [evaluation.employee_id]
                 for child in childs:
-                    if not child.user_id:
-                        continue
+#                    if not child.user_id:
+#                        continue
 
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
