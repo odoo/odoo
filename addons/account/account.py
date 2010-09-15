@@ -2361,7 +2361,7 @@ class account_chart_template(osv.osv):
         'property_account_income_categ': fields.many2one('account.account.template','Income Category Account'),
         'property_account_expense': fields.many2one('account.account.template','Expense Account on Product Template'),
         'property_account_income': fields.many2one('account.account.template','Income Account on Product Template'),
-        'property_reserve_and_surplus_account': fields.many2one('account.account.template', 'Reserve and Surplus Account', domain=[('type', '=', 'payable')] , help='This Account is used for transferring Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be deducted.), Which is calculated from Profilt & Loss Report'),
+        'property_reserve_and_surplus_account': fields.many2one('account.account.template', 'Reserve and Profit/Loss Account', domain=[('type', '=', 'payable')] , help='This Account is used for transferring Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be deducted.), Which is calculated from Profilt & Loss Report'),
     }
 
 account_chart_template()

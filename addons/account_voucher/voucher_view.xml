@@ -28,8 +28,8 @@
             <field name="arch" type="xml">
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_journal_voucher(partner_id, journal_id)"/>
-                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(partner_id, journal_id)"/>
+                        <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="4"/>
                         <field name="reference" select="1"/>
@@ -37,7 +37,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                            <field name="line_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Voucher Items" editable="bottom">
                                     <field name="account_id"/>
                                     <field name="name"/>
@@ -55,11 +55,11 @@
                                     <separator string="Other Information" colspan="2"/>
                                     <field name="number"/>
                                     <field name="date" on_change="onchange_date(date)"/>
-                                    <field name="currency_id" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                    <field name="currency_id" invisible="True"/>
                                 </group>
                                 <group col="4" colspan="1" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
                                     <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label colspan="1" string=""/><field name="amount" string="Total"/>
                                 </group>
                             </group>

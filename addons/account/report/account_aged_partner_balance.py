@@ -49,6 +49,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
     def set_context(self, objects, data, ids, report_type=None):
         self.query = data['form'].get('query_line', '')
         self.direction_selection = data['form'].get('direction_selection', 'past')
+        self.target_move = data['form'].get('target_move', 'all')
         self.date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
         if (data['form']['result_selection'] == 'customer' ):
             self.ACCOUNT_TYPE = ['receivable']
@@ -271,7 +272,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             for i in t:
                 d['No Partner Defined'] = i[0]
             history.append(d)
-        
+
         values = {}
         if self.direction_selection == 'future':
             before = False
@@ -281,11 +282,11 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             values['direction'] = before and before[0] or 0.0
         elif self.direction_selection == 'past':
             after = False
-            if future_past.has_key('No Partner Defined'): 
+            if future_past.has_key('No Partner Defined'):
                 after = [ future_past['No Partner Defined'] ]
             self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
             values['direction'] = after and after[0] or ""
-        
+
         for i in range(5):
             during = False
             if history[i].has_key('No Partner Defined'):
