@@ -27,6 +27,8 @@ from tools.translate import _
 from osv import fields, osv
 from tools import email_send as email
 
+from operator import itemgetter
+
 class project_task_type(osv.osv):
     _name = 'project.task.type'
     _description = 'Task Stage'
@@ -395,7 +397,7 @@ class task(osv.osv):
              if task['date_start'] > task['date_end']:
                  return False
         return True
-
+    
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -451,9 +453,34 @@ class task(osv.osv):
     }
 
     _order = "sequence, priority, date_start, id"
+    
+    def _check_recursion(self, cr, uid, ids):
+        obj_task = self.browse(cr, uid, ids[0])
+        parent_ids = [x.id for x in obj_task.parent_ids]
+        children_ids = [x.id for x in obj_task.child_ids]
+        
+        if (obj_task.id in children_ids) or (obj_task.id in parent_ids):
+            return False
+        
+        while(ids):
+            cr.execute('SELECT DISTINCT task_id '\
+                       'FROM project_task_parent_rel '\
+                       'WHERE parent_id IN %s', (tuple(ids),))
+            child_ids = map(itemgetter(0), cr.fetchall())
+            c_ids = child_ids
+            if (list(set(parent_ids).intersection(set(c_ids)))) or (obj_task.id in c_ids):
+                return False
+            while len(c_ids):
+                s_ids = self.search(cr, uid, [('parent_ids', 'in', c_ids)])
+                if (list(set(parent_ids).intersection(set(s_ids)))):
+                    return False
+                c_ids = s_ids
+            ids = child_ids
+        return True
 
     _constraints = [
-        (_check_dates, 'Error! Task start-date must be lower then task end-date.', ['date_start', 'date_end'])
+        (_check_dates, 'Error! Task start-date must be lower then task end-date.', ['date_start', 'date_end']),
+        (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_ids'])
     ]
     #
     # Override view according to the company definition
