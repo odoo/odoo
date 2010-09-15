@@ -49,7 +49,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
     def set_context(self, objects, data, ids, report_type=None):
         self.query = data['form'].get('query_line', '')
         self.direction_selection = data['form'].get('direction_selection', 'past')
-        self.target_move = data['form'].get('direction_selection', 'past')
+        self.target_move = data['form'].get('target_move', 'all')
         self.date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
         if (data['form']['result_selection'] == 'customer' ):
             self.ACCOUNT_TYPE = ['receivable']
