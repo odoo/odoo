@@ -204,7 +204,6 @@ class account_cash_statement(osv.osv):
         return res
 
     _columns = {
-        'company_id':fields.many2one('res.company', 'Company', required=True, states={'draft': [('readonly', False)]}, readonly=True,),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True, domain=[('type', '=', 'cash')]),
         'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
@@ -224,22 +223,18 @@ class account_cash_statement(osv.osv):
         'state': lambda *a: 'draft',
         'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
         'user_id': lambda self, cr, uid, context=None: uid,
-        'company_id': _get_company,
         'starting_details_ids':_get_cash_open_box_lines,
         'ending_details_ids':_get_default_cash_close_box_lines
      }
 
     def create(self, cr, uid, vals, context=None):
-        company_id = vals and vals.get('company_id',False)
-        if company_id:
-            sql = [
-                ('company_id', '=', vals['company_id']),
+        sql = [
                 ('journal_id', '=', vals['journal_id']),
                 ('state', '=', 'open')
-            ]
-            open_jrnl = self.search(cr, uid, sql)
-            if open_jrnl:
-                raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
+        ]
+        open_jrnl = self.search(cr, uid, sql)
+        if open_jrnl:
+            raise osv.except_osv('Error', _('You can not have two open register for the same journal'))
 
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id']).type == 'cash':
             lines = end_lines = self._get_cash_close_box_lines(cr, uid, [], context)

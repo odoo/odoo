@@ -69,19 +69,19 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         return super(account_balance ,self)._get_account(data)
 
     def lines(self, form, ids=[], done=None):#, level=1):
-        def _process_child(accounts,disp_acc,parent):
+        def _process_child(accounts, disp_acc, parent):
                 account_rec = [acct for acct in accounts if acct['id']==parent][0]
                 res = {
                     'id': account_rec['id'],
-                   'type': account_rec['type'],
+                    'type': account_rec['type'],
                     'code': account_rec['code'],
                     'name': account_rec['name'],
                     'level': account_rec['level'],
                     'debit': account_rec['debit'],
                     'credit': account_rec['credit'],
                     'balance': account_rec['balance'],
-                    'parent_id':account_rec['parent_id'],
-                    'bal_type':'',
+                    'parent_id': account_rec['parent_id'],
+                    'bal_type': '',
                 }
                 self.sum_debit += account_rec['debit']
                 self.sum_credit += account_rec['credit']
@@ -96,7 +96,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                 if account_rec['child_id']:
                     for child in account_rec['child_id']:
                         _process_child(accounts,disp_acc,child)
-                        
+
         obj_account = self.pool.get('account.account')
         if not ids:
             ids = self.ids
@@ -113,6 +113,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         elif form['filter'] == 'filter_date':
             ctx['date_from'] = form['date_from']
             ctx['date_to'] =  form['date_to']
+        ctx['state'] = form['target_move']
         parents = ids
         child_ids = obj_account._get_children_and_consol(self.cr, self.uid, ids, ctx)
         if child_ids:
