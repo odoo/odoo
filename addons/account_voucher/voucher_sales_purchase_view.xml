@@ -96,7 +96,7 @@
             <field name="arch" type="xml">
                 <form string="Sales Receipt">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id)" string="Customer"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" string="Customer"/>
                         <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="4"/>
@@ -133,7 +133,7 @@
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
                                     <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
+                                    <label string="" colspan="1"/><field name="currency_id" invisible="True" nolabel="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
@@ -152,7 +152,7 @@
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
-                        <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'title':'Sales Payment', 'type':'receipt', 'partner_id': partner_id}" type="action" string="Pay" attrs="{'invisible':[('pay_now','!=','pay_now'),('state','!=','posted')]}"/>
+                        <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Sales Payment', 'type':'receipt', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay" attrs="{'invisible':['|', ('pay_now','!=','pay_now'), ('state','!=','posted')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>
@@ -204,7 +204,7 @@
             <field name="arch" type="xml">
                 <form string="Vendor Bills">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" string="Vendor" on_change="onchange_partner_id(partner_id, journal_id, amount)"/>
+                        <field name="partner_id" required="1" string="Vendor" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"/>
                         <field name="journal_id" domain="[('type','in',['purchase','purchase_refund'])]" widget="selection" select="1" on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="4"/>
@@ -235,7 +235,7 @@
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
                                     <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" groups="base.group_extended" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
+                                    <label string="" colspan="1"/><field name="currency_id" invisible="True" nolabel="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
@@ -254,7 +254,7 @@
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
-                        <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id}" type="action" string="Pay Bill" attrs="{'invisible':[('state','!=','posted')]}"/>
+                        <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|', ('pay_now','!=','pay_now'), ('state','!=','posted')]}"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </form>

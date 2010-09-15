@@ -55,7 +55,7 @@
                                     <separator string="Other Information" colspan="2"/>
                                     <field name="number"/>
                                     <field name="date" on_change="onchange_date(date)"/>
-                                    <field name="currency_id" attrs="{'readonly':[('type','in',['sale', 'purchase'])]}"/>
+                                    <field name="currency_id" invisible="True"/>
                                 </group>
                                 <group col="4" colspan="1" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
                                     <separator string="Total" colspan="4"/>
