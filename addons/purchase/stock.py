@@ -141,7 +141,7 @@ class stock_partial_move(osv.osv_memory):
         move_obj = self.pool.get('stock.move')  
         for m in move_obj.browse(cr, uid, context.get('active_ids', [])): 
             if (m.product_id.cost_method == 'average'):
-                if m.picking_id.type == 'out' and  m.purchase_line_id:
+                if m.picking_id.type == 'in' and  m.purchase_line_id:
                     res['move%s_product_price'%(m.id)] = m.purchase_line_id.price_unit           
                 if m.picking_id.purchase_id:
                     res['move%s_product_currency'%(m.id)] =  m.picking_id.purchase_id.pricelist_id.currency_id.id
