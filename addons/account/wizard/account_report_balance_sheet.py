@@ -34,7 +34,7 @@ class account_bs_report(osv.osv_memory):
 
     _columns = {
         'display_type': fields.boolean("Landscape Mode"),
-        'reserve_account_id': fields.many2one('account.account', 'Reserve & Surplus Account',required = True,
+        'reserve_account_id': fields.many2one('account.account', 'Reserve & Profit/Loss Account',required = True,
                                       help='This Account is used for trasfering Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report', domain = [('type','=','payable')]),
     }
 
@@ -60,7 +60,7 @@ class account_bs_report(osv.osv_memory):
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
         account = self.pool.get('account.account').browse(cr, uid, data['form']['chart_account_id'])
         if not account.company_id.property_reserve_and_surplus_account:
-            raise osv.except_osv(_('Warning'),_('Please define the Reserve and Surplus account for current user company !'))
+            raise osv.except_osv(_('Warning'),_('Please define the Reserve and Profit/Loss account for current user company !'))
         data['form']['reserve_account_id'] = account.company_id.property_reserve_and_surplus_account.id
         data['form'].update(self.read(cr, uid, ids, ['display_type'])[0])
         if data['form']['display_type']:
