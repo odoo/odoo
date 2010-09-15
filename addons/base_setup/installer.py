@@ -107,11 +107,13 @@ class base_setup_installer(osv.osv_memory):
             return ['account_voucher']
         return None
 
-    def onchange_moduleselection(self, cr, uid, ids, *args):
+    def onchange_moduleselection(self, cr, uid, ids, *args, **kargs):
+        value = {}
+        # Calculate progress
         closed, total = self.get_current_progress(cr, uid)
-
         progress = round(100. * closed / (total + len(filter(None, args))))
+        value.update({'progress':progress})
         if progress < 10.:
             progress = 10.
-        return {'value':{'progress':progress}}
+        return {'value':value}
 base_setup_installer()

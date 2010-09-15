@@ -499,10 +499,14 @@ class crm_case_section(osv.osv):
 
     _name = "crm.case.section"
     _description = "Sales Teams"
-    _order = "name"
+    _order = "complete_name"
+
+    def get_full_name(self, cr, uid, ids, field_name, arg, context={}):
+        return  dict(self.name_get(cr, uid, ids, context))
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
+        'complete_name': fields.function(get_full_name, method=True, type='char', size=256, readonly=True, store=True),
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
