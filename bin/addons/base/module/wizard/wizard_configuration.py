@@ -38,5 +38,6 @@ class wizard_configuration(wizard.interface):
         }
     }
 wizard_configuration('module.configuration')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

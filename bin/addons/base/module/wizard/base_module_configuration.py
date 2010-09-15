@@ -19,16 +19,5 @@
 #
 ##############################################################################
 
-import pooler
-from osv import osv, fields
-
-class base_module_configuration(osv.osv_memory):
-
-     _name = "base.module.configuration"
-
-     def config(self, cr, uid, data, context=None):
-        return self.pool.get('res.config').next(cr, uid, [], context=context)
-
-base_module_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
