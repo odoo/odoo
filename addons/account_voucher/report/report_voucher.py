@@ -54,7 +54,7 @@ class report_voucher(report_sxw.rml_parse):
         voucher_line = self.pool.get('account.voucher.line').search(self.cr, self.uid, [('partner_id','=',move_ids.partner_id.id), ('voucher_id','=',voucher_id)])
         if voucher_line:
             voucher = self.pool.get('account.voucher.line').browse(self.cr, self.uid, voucher_line)[0]
-            return voucher.ref
+            return voucher.name
         else:
             return
 report_sxw.report_sxw(

@@ -362,10 +362,10 @@
             <para style="P3">[[ line['code'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['ref'] ]]</para>
+            <para style="P3">[[ line['move_name'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['name'] ]]</para>
+            <para style="P3"><b>b</b>[[ (line['ref'] or '') + ' ' + line['name'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang((line['debit'])) ]]</para>
@@ -487,10 +487,10 @@
             <para style="P3">[[ line['code'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['ref'] ]]</para>
+            <para style="P3">[[ line['move_name'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['name'] ]]</para>
+            <para style="P3"><b>a</b>[[ (line['ref'] or '') + ' ' + line['name'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang((line['debit'])) ]]</para>
