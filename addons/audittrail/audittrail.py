@@ -208,7 +208,7 @@ class audittrail_objects_proxy(osv_pool):
         else:
             field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', '=', model.id)])
         field_id = field_ids and field_ids[0] or False
-        assert field_id, _("'%s' field is not exits in '%s' model" %(field_name, model.model))
+        assert field_id, _("'%s' field does not exist in '%s' model" %(field_name, model.model))
 
         field = field_pool.read(cr, uid, field_id)
         relation_model = field['relation']
@@ -254,7 +254,7 @@ class audittrail_objects_proxy(osv_pool):
             else:
                 field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', '=', model.id)])
             field_id = field_ids and field_ids[0] or False
-            assert field_id, _("'%s' field is not exits in '%s' model" %(line['name'], model.model))
+            assert field_id, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
 
             field = field_pool.read(cr, uid, field_id)
             old_value = 'old_value' in line and  line['old_value'] or ''
@@ -303,7 +303,7 @@ class audittrail_objects_proxy(osv_pool):
 
         model_ids = model_pool.search(cr, uid, [('model', '=', model)])
         model_id = model_ids and model_ids[0] or False
-        assert model_id, _("'%s' Model is not exits..." %(model))
+        assert model_id, _("'%s' Model does not exist..." %(model))
         model = model_pool.browse(cr, uid, model_id)
 
         if method in ('create'):
