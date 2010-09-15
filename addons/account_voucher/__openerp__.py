@@ -41,7 +41,6 @@
         "voucher_sequence.xml",
         "voucher_workflow.xml",
         "voucher_report.xml",
-        "wizard/account_voucher_open_view.xml",
         "wizard/account_voucher_unreconcile_view.xml",
         "voucher_view.xml",
         "voucher_payment_receipt_view.xml",
@@ -53,7 +52,6 @@
           "test/sales_receipt.yml",
           "test/sales_payment.yml",
     ],
-
     'certificate': '0037580727101',
     "active": False,
     "installable": True,
