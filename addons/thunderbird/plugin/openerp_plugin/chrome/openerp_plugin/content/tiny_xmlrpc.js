@@ -1073,6 +1073,7 @@ var listSearchContactdetailHandler = {
                  document.getElementById("txtmobile").value =strlSearchResultValue;}
 
             if(strlSearchResult=="email"&& strlSearchResultValue!=''){
+                 alert("Contact is Available.")
                  document.getElementById("txtemail").value =strlSearchResultValue;}
 
             if(strlSearchResult=="res_id"){
@@ -1365,6 +1366,7 @@ function getPartnerList(){
 	strvalue.data = document.getElementById('txtselectpartner').value;
 	xmlRpcClient.asyncCall(listPartnerHandler,cmdPartnerList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
+
 
 
 //function to create the xmlrpc supported variables for xmlrpc request
