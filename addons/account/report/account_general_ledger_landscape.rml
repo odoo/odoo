@@ -247,7 +247,7 @@
       <font color="white"> </font>
     </para>
 
-   	<blockTable colWidths="66.0,35.0,150.0, 90.0,60.0,330.0,50.0,69.0,72.0,64.0,58.0" style="tbl_header" repeatRows="1">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+   	<blockTable colWidths="66.0,35.0,120.0,90.0,60.0,230.0,150.0,69.0,72.0,64.0,88.0" style="tbl_header" repeatRows="1">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
        <tr>
           <td><para style="date">Date</para></td>
           <td><para style="P2">JNRL</para></td>
@@ -266,10 +266,10 @@
 
       <para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
 
-      <blockTable rowHeights="0.65cm" colWidths="66.0,35.0,150.0, 90.0,60.0,330.0,50.0,69.0,72.0,64.0,62.0" style="tbl_content">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+      <blockTable rowHeights="0.65cm" colWidths="66.0,35.0,120.0,90.0,60.0,230.0,150.0,73.0,73.0,73.0,85.00" style="tbl_content">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
       	<tr>
         	<td>
-          		<blockTable colWidths="404.0,375.0,69.0,72.0,64.0,59.00" style="Table5">
+          		<blockTable colWidths="404.0,335.0,75.0,75.0,75.0,79.00" style="Table5">
 	        		<tr>
 		    			<td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
 		    			<td><para style="Standard"></para></td>
@@ -298,7 +298,7 @@
 			<td><para style="P2_content">[[ line['lref'] ]]</para></td>
 			<td><para style="P2_content">[[ line['move'] ]]</para></td>
 			<td><para style="P3_content">[[ line['lname'] ]]</para></td>
-			<td><para style="P3_content">[[ strip_name(line['line_corresp'],15) ]]</para></td>
+			<td><para style="P3_content">[[ line['line_corresp'] ]]</para></td>
 			<td><para style="P4_content">[[ formatLang(line['debit']) ]] [[ company.currency_id.symbol ]]</para></td>
 			<td><para style="P4_content">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol ]]</para></td>
 			<td><para style="P4_content">[[ formatLang(line['progress']) ]] [[ company.currency_id.symbol ]]</para></td>
