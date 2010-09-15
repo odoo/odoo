@@ -1,0 +1,8 @@
+-
+  In order to test the PDF reports defined on stock inventory, we will print a Stock Inventory Move report
+- 
+  !python {model: stock.inventory}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.stock.inventory.move').create(cr, uid, [ref('stock.stock_inventory_0')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'stock-stock_inventory_move.'+format), 'wb+').write(data)

@@ -1,0 +1,8 @@
+-
+  In order to test the PDF reports defined on a stock, we will print a Stock Overview report
+- 
+  !python {model: stock.location}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.lot.stock.overview').create(cr, uid, [ref('stock.stock_location_14')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'stock-overview'+format), 'wb+').write(data)
