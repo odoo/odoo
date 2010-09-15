@@ -69,21 +69,14 @@ def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, 
               display[index]=' '
               count=''
 
-    xml = '''
-        <time-element index="%d">
-            <value>%s</value>
-        </time-element>
-        '''
-    time_xml = ([xml % (index, value) for index,value in display.iteritems()])
     data_xml=['<info id="%d" number="%d" val="%s" />' % (row_id,x,display[x]) for x in range(1,len(display)+1) ]
 
     # Computing the xml
     xml = '''
     %s
     <employee row="%d" id="%d" name="%s" sum="%s">
-    %s
     </employee>
-    ''' % (data_xml,row_id,dept, toxml(name),count, '\n'.join(time_xml))
+    ''' % (data_xml,row_id,dept, toxml(name),count)
 
     return xml
 
