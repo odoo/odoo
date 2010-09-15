@@ -176,7 +176,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                     after = [ future_past[partner['id']] ]
 
                 self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
-                values['direction'] = after and after[0] or ""
+                values['direction'] = after and after[0] or 0.0
 
             for i in range(5):
                 during = False
@@ -184,8 +184,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                     during = [ history[i][partner['id']] ]
                 # Ajout du compteur
                 self.total_account[(i)] = self.total_account[(i)] + (during and during[0] or 0)
-                values[str(i)] = during and during[0] or ""
-
+                values[str(i)] = during and during[0] or 0.0
             total = False
             if totals.has_key( partner['id'] ):
                 total = [ totals[partner['id']] ]
@@ -284,7 +283,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             for i in t:
                 d['No Partner Defined'] = i[0]
             history.append(d)
-        
+
         values = {}
         if self.direction_selection == 'future':
             before = False
@@ -294,11 +293,11 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             values['direction'] = before and before[0] or 0.0
         elif self.direction_selection == 'past':
             after = False
-            if future_past.has_key('No Partner Defined'): 
+            if future_past.has_key('No Partner Defined'):
                 after = [ future_past['No Partner Defined'] ]
             self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
             values['direction'] = after and after[0] or ""
-        
+
         for i in range(5):
             during = False
             if history[i].has_key('No Partner Defined'):
@@ -328,15 +327,15 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
     def _get_total(self,pos):
         period = self.total_account[int(pos)]
-        return period
+        return period or 0.0
 
     def _get_direction(self,pos):
         period = self.total_account[int(pos)]
-        return period
+        return period or 0.0
 
     def _get_for_period(self,pos):
         period = self.total_account[int(pos)]
-        return period
+        return period or 0.0
 
     def _get_partners(self,data):
         if data['form']['result_selection'] == 'customer':
