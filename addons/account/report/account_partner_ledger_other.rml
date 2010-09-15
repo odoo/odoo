@@ -431,7 +431,7 @@
                    <para style="P5">
             <font color="white"> </font>
           </para>
-    <blockTable colWidths="65.0,28.0,45.0,175.0,77.0,75.0,74.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="65.0,28.0,65.0,155.0,77.0,75.0,74.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -508,7 +508,7 @@
     </blockTable>
     <section>
       <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>
-      <blockTable colWidths="65.0,28.0,45.0,175.0,77.0,75.0,74.0" style="Table3">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+      <blockTable colWidths="65.0,28.0,65.0,155.0,77.0,75.0,74.0" style="Table3">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3">[[ formatLang(line['date'],date=True) ]]</para>
@@ -517,10 +517,10 @@
             <para style="P3">[[ line['code'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['ref'] ]]</para>
+            <para style="P3">[[ line['move_name'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['name'] ]]</para>
+            <para style="P3">[[ (line['ref'] or '')+ ' ' + line['name'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang((line['debit'])) ]]</para>
@@ -628,7 +628,7 @@
     </blockTable>
     <section>
       <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>
-      <blockTable colWidths="57.0,25.0,40.0,154.0,67.0,66.0,65.0,65.0" style="Table7">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+      <blockTable colWidths="57.0,25.0,60.0,134.0,67.0,66.0,65.0,65.0" style="Table7">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3"> [[ formatLang(line['date'],date=True) ]]</para>
@@ -637,10 +637,10 @@
             <para style="P3">[[ line['code'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['ref'] ]]</para>
+            <para style="P3">[[ line['move_name'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['name'] ]]</para>
+            <para style="P3">[[ (line['ref'] or '') + ' ' + line['name'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang((line['debit'])) ]]</para>
