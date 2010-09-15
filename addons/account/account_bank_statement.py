@@ -29,6 +29,25 @@ import decimal_precision as dp
 
 class account_bank_statement(osv.osv):
 
+    def create(self, cr, uid, vals, context=None):
+        seq = 0
+        if 'line_ids' in vals:
+            for line in vals['line_ids']:
+                seq += 1
+                line[2]['sequence'] = seq
+                vals[seq - 1] = line
+        return super(account_bank_statement, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
+        for statement in self.browse(cr, uid, ids, context):
+            seq = 0
+            for line in statement.line_ids:
+                seq += 1
+                if not line.sequence:
+                    self.pool.get('account.bank.statement.line').write(cr, uid, [line.id], {'sequence': seq}, context=context)
+        return res
+
     def button_import_invoice(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
@@ -141,7 +160,7 @@ class account_bank_statement(osv.osv):
         'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly', True)]}),
         'balance_end': fields.function(_end_balance, method=True, string='Balance'),
-        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
             states={'confirm':[('readonly', True)]}),
@@ -717,7 +736,6 @@ class account_bank_statement_line(osv.osv):
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'type': lambda *a: 'general',
-        'sequence': lambda *a: 10,
     }
 
 account_bank_statement_line()

@@ -70,7 +70,7 @@ class account_analytic_account(osv.osv):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date', False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency<0 and a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount<0 and a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
         r = dict(cr.fetchall())
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context)
 
@@ -90,7 +90,7 @@ class account_analytic_account(osv.osv):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency>0 and a.id IN %s GROUP BY a.id" ,(tuple(parent_ids),))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount>0 and a.id IN %s GROUP BY a.id" ,(tuple(parent_ids),))
         r = dict(cr.fetchall())
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context=context)
 
@@ -111,11 +111,10 @@ class account_analytic_account(osv.osv):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
 
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
-
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context=context)
 
     def _quantity_calc(self, cr, uid, ids, name, arg, context=None):
@@ -182,10 +181,10 @@ class account_analytic_account(osv.osv):
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
-        'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance',store=True),
-        'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit',store=True),
-        'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit',store=True),
-        'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity',store=True),
+        'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance'),
+        'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit'),
+        'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit'),
+        'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
         'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
         'partner_id' : fields.many2one('res.partner', 'Associated Partner'),
         'contact_id' : fields.many2one('res.partner.address', 'Contact'),
@@ -216,7 +215,7 @@ class account_analytic_account(osv.osv):
         'user_id' : lambda self, cr, uid, ctx : uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
         'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
-		'date_start': time.strftime('%Y-%m-%d')
+        'date_start': time.strftime('%Y-%m-%d')
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):
