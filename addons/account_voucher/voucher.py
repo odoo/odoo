@@ -254,7 +254,7 @@ class account_voucher(osv.osv):
             })
         return {'value':default}
     
-    def onchange_journal_voucher(self, cr, uid, ids, partner_id=False, journal_id=False, context={}):
+    def onchange_journal_voucher(self, cr, uid, ids, line_ids=False, tax_id=False, price=0.0, partner_id=False, journal_id=False, ttype=False, context={}):
         """price
         Returns a dict that contains new values and context
     
@@ -290,9 +290,13 @@ class account_voucher(osv.osv):
 
         default['value']['account_id'] = account_id
         default['value']['type'] = tr_type
+        
+        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context)
+        default['value'].update(vals.get('value'))
+        
         return default
     
-    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id=False, price=0.0, currency_id=False, ttype=False, context={}):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, context):
         """price
         Returns a dict that contains new values and context
     

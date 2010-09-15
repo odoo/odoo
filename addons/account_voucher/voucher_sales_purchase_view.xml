@@ -40,7 +40,6 @@
             </field>
         </record>
 
-
         <record id="view_voucher_filter_sale" model="ir.ui.view">
             <field name="name">account.voucher.sale.select</field>
             <field name="model">account.voucher</field>
@@ -79,7 +78,6 @@
                 </search>
             </field>
         </record>
-
 
         <record id="act_pay_voucher" model="ir.actions.act_window">
             <field name="name">Sales Payment</field>
@@ -216,7 +214,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Bill Information">
-                            <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, False, parent.partner_id)" default_get="{'journal_id':journal_id,'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id,'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Expense Lines" editable="bottom">
                                     <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"/>
                                     <field name="name"/>
