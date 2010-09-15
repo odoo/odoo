@@ -237,9 +237,17 @@
                 <form position="attributes">
                   <attribute name="string">Create User</attribute>
                 </form>
-
+                <xpath expr='//separator[@string="title"]' position='attributes'>
+                    <attribute name='string'>New User</attribute>
+              </xpath>
+                <xpath expr="//label[@string='description']"
+                     position="attributes">
+                <attribute name="string">Create additional users and assign them groups that will allow them to have access to selected functionalities within the system. Click on 'Done' if you do not wish to add more users at this stage, you can always do this later.</attribute>
+              </xpath>
+              <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                        <attribute name='string'></attribute>
+                    </xpath>
                 <group string="res_config_contents" position="replace">
-                  <separator string="New User" colspan="4"/>
                   <field name="name"/>
                   <field name="email"/>
                   <field name="login"/>
@@ -292,21 +300,21 @@
         </record>
 
         <record id="view_confirm_simple_view_form" model="ir.ui.view">
-            <field name="name">res.users.confirm.simple_view</field>
+            <field name="name">Configure Your Interface</field>
             <field name="model">res.config.view</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
                 <form position="attributes">
-                  <attribute name="string">Choose Your Interface</attribute>
+                  <attribute name="string">Configure Your Interface</attribute>
                 </form>
                 <xpath expr="//label[@string='description']"
                      position="attributes">
-                <attribute name="string">We suggest simplified interface, It has less options and fields but is easier to start with OpenERP. You will be able to switch to the extended interface later from your user preferences.</attribute>
+                <attribute name="string">OpenERP allows you to select between a simplified and extended interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface. You can always switch later from the user preferences.</attribute>
               </xpath>
               <xpath expr='//separator[@string="title"]' position='attributes'>
-                    <attribute name='string'>Choose Your Interface</attribute>
+                    <attribute name='string'>Configure Your Interface</attribute>
               </xpath>
               <xpath expr='//separator[@string="vsep"]' position='attributes'>
                     <attribute name='string'></attribute>
@@ -318,15 +326,12 @@
                     </group>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
-                <xpath expr='//button[@name="action_next"]' position='attributes'>
-                  <attribute name='string'>Set</attribute>
-                </xpath>
               </data>
             </field>
         </record>
 
         <record id="action_config_simple_view_form" model="ir.actions.act_window">
-            <field name="name">Select Your Interface</field>
+            <field name="name">Configure Your Interface</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.view</field>
             <field name="view_type">form</field>
