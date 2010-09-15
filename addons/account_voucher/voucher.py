@@ -74,6 +74,8 @@ class account_voucher(osv.osv):
                 return False
             journal_id = res[0]
         
+        if not journal_id:
+            return False
         journal = journal_pool.browse(cr, uid, journal_id)
         account_id = journal.default_credit_account_id or journal.default_debit_account_id
         if account_id and account_id.tax_ids:
@@ -705,16 +707,27 @@ class account_voucher_line(osv.osv):
     _order = "move_line_id"
     
     def _compute_balance(self, cr, uid, ids, name, args, context=None):
-        res = {}
+        currency_pool = self.pool.get('res.currency')
+        rs_data = {}
         for line in self.browse(cr, uid, ids):
+            res = {}
+            company_currency = line.voucher_id.journal_id.company_id.currency_id.id
+            voucher_currency = line.voucher_id.currency_id.id
             move_line = line.move_line_id or False
+            
             if not move_line:
-                res[line.id] = 0.0
+                res['amount_original'] = 0.0
+                res['amount_unreconciled'] = 0.0
+                
             elif move_line and move_line.credit > 0:
-                res[line.id] = move_line.credit
+                res['amount_original'] = currency_pool.compute(cr, uid, company_currency, voucher_currency, move_line.credit)
             else:
-                res[line.id] = move_line.debit
-        return res
+                res['amount_original'] = currency_pool.compute(cr, uid, company_currency, voucher_currency, move_line.debit)
+            
+            if move_line:
+                res['amount_unreconciled'] = currency_pool.compute(cr, uid, company_currency, voucher_currency, move_line.amount_unreconciled)
+            rs_data[line.id] = res
+        return rs_data
 
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher', required=1, ondelete='cascade'),
@@ -728,8 +741,10 @@ class account_voucher_line(osv.osv):
         'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
         'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly=1),
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
-        'amount_original': fields.function(_compute_balance, method=True, type='float', string='Originial Amount', store=True),
-        'amount_unreconciled': fields.related('move_line_id','amount_unreconciled', type='float', relation='account.move.line', string='Open Balance', store=True, readonly="1"),
+        'amount_original': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Originial Amount', store=True),
+        'amount_unreconciled': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Open Balance', store=True),
+        
+#        'amount_unreconciled': fields.related('move_line_id','amount_unreconciled', type='float', relation='account.move.line', string='Open Balance', store=True, readonly="1"),
     }
     _defaults = {
         'name': lambda *a: ''

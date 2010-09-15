@@ -59,7 +59,7 @@
                                 </group>
                                 <group col="4" colspan="1" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
                                     <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label colspan="1" string=""/><field name="amount" string="Total"/>
                                 </group>
                             </group>
