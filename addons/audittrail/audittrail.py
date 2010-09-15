@@ -315,6 +315,7 @@ class audittrail_objects_proxy(objects_proxy):
     def execute(self, db, uid, passwd, model, method, *args):
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
+        cr.autocommit(True)
         try:
             proxy = pool.get(model)
             if proxy is None:
