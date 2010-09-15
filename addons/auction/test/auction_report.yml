@@ -1,0 +1,17 @@
+-
+  In order to test the PDF reports defined on a Action Artist, we will print a Action Artist
+- 
+  !python {model: auction.lots}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.auction.artists').create(cr, uid, [ref('auction.auction_deposit_1_lot_1'),ref('auction.auction_deposit_1_lot_2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'action_artist_report.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a Action Bid, we will print a Action Bid
+- 
+  !python {model: auction.lots}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.auction.bids').create(cr, uid, [ref('auction.auction_date_1_bid_3'),ref('auction.auction_date_1_bid_4')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'action_bid_report.'+format), 'wb+').write(data)
