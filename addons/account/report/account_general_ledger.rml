@@ -176,7 +176,7 @@
 	<paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
   </stylesheet>
   <story>
-  <para style="P9">
+    <para style="P9">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="539.0" style="Table_Company_Name">
@@ -239,30 +239,30 @@
       <font color="white"> </font>
     </para>
 
-   <blockTable colWidths="66.0,124.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_header" repeatRows="1">[[data['form']['amount_currency'] == False or removeParentNode('blockTable')]]
+   <blockTable colWidths="66.0,44.0,80.0,60.0,92.5,66.5,64.5,71.5" style="tbl_header" repeatRows="1">[[data['form']['amount_currency'] == False or removeParentNode('blockTable')]]
         <tr>
-          <td><para style="date">Date</para></td>
+          <td><para style="P3">Date</para></td>
           <td><para style="P3">Partner</para></td>
           <td><para style="P3">Ref</para></td>
           <td><para style="P3">Move</para></td>
           <td><para style="P3">Entry Label</para></td>
-          <td><para style="P4">Debit([[ company.currency_id.code]])</para></td>
-          <td><para style="P4">Crebit([[ company.currency_id.code]])</para></td>
+          <td><para style="P9">Debit([[ company.currency_id.code]])</para></td>
+          <td><para style="P9">Crebit([[ company.currency_id.code]])</para></td>
           <td><para style="P9">Balance([[ company.currency_id.code]])</para></td>
         </tr>
      </blockTable>
       <section>
      <para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-     <blockTable colWidths="66.0,124.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_content">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+     <blockTable colWidths="66.0,44.0,80.0,60.0,92.5,66.5,64.5,71.5" style="tbl_content">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
-	        <blockTable colWidths="280.0,100.0,52.5,52.5,52.5" style="Table5">
+	        <blockTable colWidths="245.0,92.5,66.5,64.5,71.5" style="Table5">
 			<tr>
 			  <td><para style="Standard">[[ o.code or '']] [[ o.name or '']]</para></td>
 			  <td><para style="Standard"></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
-			  <td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
+			  <td><para style="P9b"><u>[[ formatLang(sum_balance_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
 			</tr>
 			</blockTable>
 			</td>
@@ -289,32 +289,32 @@
 
 
 
-     <blockTable colWidths="72.0,93.0,65.0,40.0,89.0,49.0,49.0,49.0,40.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+     <blockTable colWidths="70.0,40.0,60.0,65.0,89.0,53.0,53.0,58.0,58.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
         <tr>
-          <td><para style="date">Date</para></td>
+          <td><para style="P3">Date</para></td>
           <td><para style="P3">Partner</para></td>
           <td><para style="P3">Ref</para></td>
           <td><para style="P3">Move</para></td>
           <td><para style="P3">Entry Label</para></td>
-          <td><para style="P4">Debit([[ company.currency_id.code]])</para></td>
-          <td><para style="P4">Credit([[ company.currency_id.code]])</para></td>
+          <td><para style="P3">Debit([[ company.currency_id.code]])</para></td>
+          <td><para style="P3">Credit([[ company.currency_id.code]])</para></td>
           <td><para style="P4">Balance([[ company.currency_id.code]])</para></td>
           <td><para style="P4">Currency</para></td>
         </tr>
      </blockTable>
      <section>
      <para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-     <blockTable colWidths="72.0,93.0,65.0,40.0,89.0,49.0,49.0,49.0,50.0" style="tbl_content">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+     <blockTable colWidths="70.0,40.0,60.0,55.0,89.0,58.0,58.0,58.0,58.0" style="tbl_content">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
        <tr>
           <td>
-	      	<blockTable colWidths="260.00,93.0,49.0,49.0,48.0,40.00" style="Table5">
+	      	<blockTable colWidths="230.00,74.0,55.5,60.5,60.5,65.5" style="Table5">
 			<tr>
 			  <td><para style="Standard">[[ o.code or '' ]] [[ o.name or '' ]]</para></td>
 			  <td><para style="Standard"></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
 			  <td><para style="P9b"><u>[[formatLang(sum_balance_account(o, data['form'])) ]] [[ company.currency_id.symbol ]]</u></para></td>
-			 <td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o, data['form']) +o.currency_id.code or '' ]]</u></para></td>
+			 <td><para style="P9b"><u>[[ o.currency_id and sum_currency_amount_account(o, data['form']) +o.currency_id.symbol or '' ]]</u></para></td>
 			</tr>
 			</blockTable>
 		  </td>
