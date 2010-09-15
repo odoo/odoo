@@ -61,7 +61,7 @@
         'process/mrp_operation_process.xml'
     ],
     'demo_xml': ['mrp_operation_data.xml'],
-    'test': ['test/mrp_operations.yml'],
+    'test': ['test/mrp_operations.yml', 'test/mrp_operations_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0056233813133',

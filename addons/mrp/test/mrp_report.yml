@@ -1,0 +1,26 @@
+-
+  In order to test the PDF reports defined on a mrp, we will print a bom order
+-
+  !python {model: mrp.bom}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.bom.structure').create(cr, uid, [ref('mrp.mrp_bom_0'),ref('mrp.mrp_bom_1'),ref('mrp.mrp_bom_2'),ref('mrp.mrp_bom_23'),ref('mrp.mrp_bom_1901'),ref('mrp.mrp_bom_assemblysection0'),ref('mrp.mrp_bom_sidepanel0'),ref('mrp.mrp_bom_defaultbomforshelfofcm1'),ref('mrp.mrp_bom_sidepanel3')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp-bom_order.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a mrp, we will print a order
+-
+  !python {model: mrp.production}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.mrp.production.order').create(cr, uid, [ref('mrp.mrp_production_mo1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp-production_order.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a mrp, we will print a (mrp)Product-price order
+-
+  !python {model: product.product}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.product.price').create(cr, uid, [ref('product.product_product_0'), ref('product.product_product_pc2'), ref('product.product_product_cpu1'), ref('product.product_product_hdd1'), ref('product.product_product_fan'), ref('product.product_product_cpu1'), ref('product.product_product_ram512')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp-production-price_order.'+format), 'wb+').write(data)
