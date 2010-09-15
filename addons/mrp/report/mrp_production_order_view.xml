@@ -70,7 +70,7 @@
                    </group>
                    <newline/>
 
-                   <group expand="0" string="Group By...">
+                   <group expand="0" string="Group By">
                     	<filter string="Raw Material Location" icon="terp-gtk-jump-to-rtl" context="{'group_by':'location_src_id'}"/>
                     	<filter string="Finished Products Location" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_dest_id'}"/>
                     	<separator orientation="vertical"/>
@@ -86,7 +86,7 @@
                     	<filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                    </group>
                     <newline/>
-	                <group expand="0" string="Extended Filters..." groups="base.group_extended">
+	                <group expand="0" string="Extended Filters" groups="base.group_extended">
 	                    <filter icon="terp-emblem-important" string="Picking Exception" domain="[('state','=','picking_except')]"/>
 	                    <filter icon="terp-gtk-media-pause" string="Waiting Goods" domain="[('state','=','confirmed')]"/>
 	                    <filter icon="terp-camera_test" string="Ready to Produce" domain="[('state','=','ready')]"/>
