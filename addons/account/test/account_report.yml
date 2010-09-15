@@ -1,0 +1,17 @@
+-
+  In order to test the PDF reports defined on an invoice, we will print an invoice
+- 
+  !python {model: account.invoice}: |
+    print "aavoyuygugvyuvyug	"
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'invoice.'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on a partner, we will print a overdue report
+- 
+  !python {model: res.partner}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_asus'),ref('base.res_partner_agrolait'),ref('base.res_partner_c2c'),ref('base.res_partner_sednacom'),ref('base.res_partner_thymbra'),ref('base.res_partner_desertic_hispafuentes'),ref('base.res_partner_tinyatwork'),ref('base.res_partner_2'),ref('base.res_partner_3'),ref('base.res_partner_4'),ref('base.res_partner_5'),ref('base.res_partner_6'),ref('base.res_partner_maxtor'),ref('base.res_partner_seagate'),ref('base.res_partner_8'),ref('base.res_partner_9'),ref('base.res_partner_10'),ref('base.res_partner_11'),ref('base.res_partner_14'),ref('base.res_partner_15'),ref('base.res_partner_accent')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'overdue.'+format), 'wb+').write(data)    
