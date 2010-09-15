@@ -77,7 +77,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         })
         self.context = context
 
-    def _sum_currency_amount_account(self, account, form):
+    def _sum_currency_amount_account(self, account):
         self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s" %(account.id, self.query))
@@ -89,7 +89,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
 
-    def get_children_accounts(self, account, form):
+    def get_children_accounts(self, account):
         res = []
         ids_acc = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account.id)
         for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc):
@@ -100,7 +100,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             """ % (self.query)
             self.cr.execute(sql, (child_account.id,))
             num_entry = self.cr.fetchone()[0] or 0
-            sold_account = self._sum_balance_account(child_account,form)
+            sold_account = self._sum_balance_account(child_account)
             self.sold_accounts[child_account.id] = sold_account
             if self.display_account == 'bal_movement':
                 if child_account.type != 'view' and num_entry <> 0 :
@@ -115,7 +115,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             return [account]
         return res
 
-    def lines(self, account, form):
+    def lines(self, account):
         """ Return all the account_move_line of account with their account code counterparts """
         # First compute all counterpart strings for every move_id where this account appear.
         # Currently, the counterpart info is used only in landscape mode
@@ -191,7 +191,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
                 self.tot_currency = self.tot_currency + l['amount_currency']
         return res
 
-    def _sum_debit_account(self, account, form):
+    def _sum_debit_account(self, account):
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s "%(account.id, self.query))
@@ -204,7 +204,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             sum_debit += self.cr.fetchone()[0] or 0.0
         return sum_debit
 
-    def _sum_credit_account(self, account, form):
+    def _sum_credit_account(self, account):
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s "%(account.id, self.query))
@@ -217,7 +217,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             sum_credit += self.cr.fetchone()[0] or 0.0
         return sum_credit
 
-    def _sum_balance_account(self, account, form):
+    def _sum_balance_account(self, account):
         self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_balance "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s"%(account.id, self.query))
