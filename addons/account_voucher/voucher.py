@@ -122,7 +122,7 @@ class account_voucher(osv.osv):
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
         'amount': fields.float('Total', digits=(16, 2), required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_amount':fields.float('Tax Amount', digits=(14,2), readonly=True, states={'draft':[('readonly',False)]}),
-        'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Transaction referance number."),
+        'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Transaction reference number."),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Journal Items', readonly=True),
@@ -177,7 +177,7 @@ class account_voucher(osv.osv):
             total_tax = 0.0
             
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes'):
+                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes',[]):
                     total_tax += tax_line.get('amount')
                 total += total_tax
             else:
@@ -186,7 +186,7 @@ class account_voucher(osv.osv):
                     line_total = 0.0
                     line_tax = 0.0
                     
-                    for tax_line in tax_pool.compute_all(cr, uid, tax, line.untax_amount or line.amount, 1).get('taxes'):
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line.untax_amount or line.amount, 1).get('taxes',[]):
                         line_tax += tax_line.get('amount')
                         line_total += tax_line.get('price_unit')
                     total_tax += line_tax
@@ -228,7 +228,7 @@ class account_voucher(osv.osv):
                 tax = tax_pool.browse(cr, uid, taxes)
             
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes'):
+                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes',[]):
                     total_tax += tax_line.get('amount')
                 total += total_tax
         
@@ -660,49 +660,6 @@ class account_voucher(osv.osv):
         if 'date' not in default:
             default['date'] = time.strftime('%Y-%m-%d')
         return super(account_voucher, self).copy(cr, uid, id, default, context)
-
-    # TODO
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """
-        Returns views and fields for current model where view will depend on {view_type}.
-        @param view_id: list of fields, which required to read signatures
-        @param view_type: defines a view type. it can be one of (form, tree, graph, calender, gantt, search, mdx)
-        @param context: context arguments, like lang, time zone
-        @param toolbar: contains a list of reports, wizards, and links related to current model
-        
-        @return: Returns a dict that contains definition for fields, views, and toolbars
-        """
-        data_pool = self.pool.get('ir.model.data')
-        journal_pool = self.pool.get('account.journal')
-        voucher_type = {
-            'sale':'view_sale_receipt_form',
-            'purchase':'view_purchase_receipt_form',
-            'payment':'view_vendor_payment_form',
-            'receipt':'view_vendor_receipt_form'
-        }
-        if view_type == 'form':
-            tview = voucher_type.get(context.get('type'))
-            tview = tview or 'view_voucher_form'
-            result = data_pool._get_id(cr, uid, 'account_voucher', tview)
-            view_id = data_pool.browse(cr, uid, result, context=context).res_id
-        
-        res = super(account_voucher, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        
-        #Restrict the list of journal view in search view
-        if view_type == 'search':
-            type_search = {
-                'bank':[('type','in',['bank','cash'])],
-                'cash':[('type','in',['bank','cash'])],
-                'sale':[('type','in',['sale','sale_refund'])],
-                'purchase':[('type','in',['purchase','purchase_refund'])],
-                'expense':[('type','in',['purchase'])],
-                'sale_refund':[('type','in',['sale','sale_refund'])],
-                'purchase_refund':[('type','in',['purchase','purchase_refund'])]
-            }
-            domain = type_search.get(context.get('journal_type'))
-            journal_list = journal_pool.name_search(cr, uid, '', domain)
-            res['fields']['journal_id']['selection'] = journal_list
-        return res
 
 account_voucher()
 
