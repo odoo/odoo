@@ -1110,6 +1110,7 @@ class stock_picking(osv.osv):
 
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
+    # FIXME: needs refactoring, this code is partially duplicated in stock_move.do_partial()!
     def do_partial(self, cr, uid, ids, partial_datas, context=None):
         """ Makes partial picking and moves done.
         @param partial_datas : Dictionary containing details of partial picking
@@ -1117,6 +1118,10 @@ class stock_picking(osv.osv):
                           delivery moves with product_id, product_qty, uom
         @return: Dictionary of values
         """
+        if context is None:
+            context = {}
+        else:
+            context = dict(context)
         res = {}
         move_obj = self.pool.get('stock.move')
         product_obj = self.pool.get('product.product')
@@ -1152,17 +1157,21 @@ class stock_picking(osv.osv):
                     too_many.append(move)
 
                 # Average price computation
+                # FIXME: we should not use the company of the user to determine the currency of the 
+                # product valuation field, we should use the company to which the destination location
+                # belongs! 
                 if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
                     product = product_obj.browse(cr, uid, move.product_id.id)
                     user = users_obj.browse(cr, uid, uid)
-                    context['currency_id'] = move.company_id.currency_id.id
+                    move_currency_id = move.company_id.currency_id.id
+                    context['currency_id'] = move_currency_id
                     qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
                     pricetype = False
                     if user.company_id.property_valuation_price_type:
                         pricetype = price_type_obj.browse(cr, uid, user.company_id.property_valuation_price_type.id)
                     if pricetype and qty > 0:
                         new_price = currency_obj.compute(cr, uid, product_currency,
-                                user.company_id.currency_id.id, product_price)
+                                move_currency_id, product_price)
                         new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
                                 product.uom_id.id)
                         if product.qty_available <= 0:
@@ -1174,9 +1183,13 @@ class stock_picking(osv.osv):
                                 + (new_price * qty))/(product.qty_available + qty)
 
                         # Write the field according to price type field
-                        product_obj.write(cr, uid, [product.id],
-                                {pricetype.field: new_std_price})
-                        move_obj.write(cr, uid, [move.id], {'price_unit': new_price})
+                        product_obj.write(cr, uid, [product.id], {pricetype.field: new_std_price})
+
+                        # Record the values that were chosen in the wizard, so they can be
+                        # used for inventory valuation if real-time valuation is enabled.
+                        move_obj.write(cr, uid, [move.id], 
+                                {'price_unit': product_price,
+                                 'price_currency_id': product_currency})
 
 
             for move in too_few:
@@ -1475,8 +1488,8 @@ class stock_move(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
                                   help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
-        'price_unit': fields.float('Unit Price',
-            digits_compute= dp.get_precision('Account')),
+        'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
+        'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner", store=True, select=True),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order", select=True),
@@ -1853,48 +1866,107 @@ class stock_move(osv.osv):
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
         return True
 
-    def _get_accounting_values(self, cr, uid, move, context=None):
+    def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
+        """
+        Return the accounts and journal to use to post Journal Entries for the real-time
+        valuation of the move.
+        
+        :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
+        :raise: osv.except_osv() is any mandatory account or journal is not defined.
+        """
         product_obj=self.pool.get('product.product')
-        product_uom_obj = self.pool.get('product.uom')
-        price_type_obj = self.pool.get('product.price.type')
-        accounts = product_obj.get_product_accounts(cr,uid,move.product_id.id,context)
+        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
         acc_src = accounts['stock_account_input']
         acc_dest = accounts['stock_account_output']
         acc_variation = accounts.get('property_stock_variation', False)
         journal_id = accounts['stock_journal']
 
-        if context is None:
-            context = {}
-
         if not acc_src:
-            raise osv.except_osv(_('Error!'),  _('There is no stock input account defined ' \
-                                    'for this product: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'),  _('There is no stock input account defined for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
         if not acc_dest:
-            raise osv.except_osv(_('Error!'),  _('There is no stock output account defined ' \
-                                    'for this product: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'),  _('There is no stock output account defined for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
         if not journal_id:
-            raise osv.except_osv(_('Error!'), _('There is no journal defined '\
-                                    'on the product category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'), _('There is no journal defined on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
         if not acc_variation:
-            raise osv.except_osv(_('Error!'), _('There is no variation  account defined '\
-                                    'on the product category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'), _('There is no inventory variation account defined on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-        if acc_src != acc_dest:
-            default_uom = move.product_id.uom_id.id
-            q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
-            if move.product_id.cost_method == 'average' and move.price_unit:
-                amount = q * move.price_unit
-            # Base computation on valuation price type
-            else:
-                company_id = move.company_id.id
-                context['currency_id'] = move.company_id.currency_id.id
-                pricetype = price_type_obj.browse(cr,uid,move.company_id.property_valuation_price_type.id)
-                amount_unit = move.product_id.price_get(pricetype.field, context)[move.product_id.id]
-                amount = amount_unit * q or 1.0
-        return journal_id, acc_src, acc_dest, acc_variation, amount
+
+        return journal_id, acc_src, acc_dest, acc_variation
+
+    def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
+        """
+        Return the reference amount and reference currency representing the inventory valuation for this move.
+        These reference values should possibly be converted before being posted in Journals to adapt to the primary
+        and secondary currencies of the relevant accounts.
+        """
+        product_obj=self.pool.get('product.product')
+        product_uom_obj = self.pool.get('product.uom')
+        price_type_obj = self.pool.get('product.price.type')
+
+        # by default the reference currency is that of the move's company
+        reference_currency_id = move.company_id.currency_id.id
+
+        default_uom = move.product_id.uom_id.id
+        qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
+
+        # if product is set to average price and a specific value was entered in the picking wizard, 
+        # we use it
+        if move.product_id.cost_method == 'average' and move.price_unit:
+            reference_amount = qty * move.price_unit
+            reference_currency_id = move.price_currency_id.id or reference_currency_id
+
+        # Otherwise we default to the company's valuation price type, considering that the values of the 
+        # valuation field are expressed in the default currency of the move's company.
+        else:
+            if context is None:
+                context = {}
+            currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
+            pricetype = price_type_obj.browse(cr,uid,move.company_id.property_valuation_price_type.id)
+            amount_unit = move.product_id.price_get(pricetype.field, currency_ctx)[move.product_id.id]
+            reference_amount = amount_unit * qty or 1.0
+
+        return reference_amount, reference_currency_id
+
+
+    def _create_product_valuation_moves(self, cr, uid, move, context=None):
+        """
+        Generate the appropriate accounting moves if the product being moves is subject
+        to real_time valuation tracking, and the source or destination location is
+        a transit location or is outside of the company.
+        """
+        if move.product_id.valuation == 'real_time': # FIXME: product valuation should perhaps be a property?
+            if context is None:
+                context = {}
+            src_company_ctx = dict(context,force_company=move.location_id.company_id.id)
+            dest_company_ctx = dict(context,force_company=move.location_dest_id.company_id.id)
+            account_moves = []
+            # Outgoing moves (or cross-company output part)
+            if move.location_id.company_id \
+                and (move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'\
+                     or move.location_id.company_id != move.location_dest_id.company_id):
+                journal_id, acc_src, acc_dest, acc_variation = self._get_accounting_data_for_valuation(cr, uid, move, src_company_ctx)
+                reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
+                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_variation, acc_dest, reference_amount, reference_currency_id, context))]
+
+            # Incoming moves (or cross-company input part)
+            if move.location_dest_id.company_id \
+                and (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'\
+                     or move.location_id.company_id != move.location_dest_id.company_id):
+                journal_id, acc_src, acc_dest, acc_variation = self._get_accounting_data_for_valuation(cr, uid, move, dest_company_ctx)
+                reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
+                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_variation, reference_amount, reference_currency_id, context))]
+
+            move_obj = self.pool.get('account.move')
+            for j_id, move_lines in account_moves:
+                move_obj.create(cr, uid, 
+                        {'name': move.name,
+                         'journal_id': j_id,
+                         'line_id': move_lines,
+                         'ref': move.picking_id and move.picking_id.name})
+
 
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
@@ -1905,7 +1977,6 @@ class stock_move(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
         product_obj = self.pool.get('product.product')
-        move_obj = self.pool.get('account.move')
         if context is None:
             context = {}
         for move in self.browse(cr, uid, ids):
@@ -1923,42 +1994,7 @@ class stock_move(osv.osv):
                     if move.move_dest_id.auto_validate:
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
-            #
-            # Accounting Entries
-            #
-            acc_src = None
-            acc_dest = None
-            if move.product_id.valuation == 'real_time':
-                lines = []
-                if ((move.location_id.usage == 'internal' and move.location_dest_id.usage == 'customer') or (move.location_id.usage == 'internal' and move.location_dest_id.usage == 'transit')):
-                    if move.location_id.company_id:
-                        context.update({'force_company': move.location_id.company_id.id})
-                    journal_id, acc_src, acc_dest, acc_variation, amount = self._get_accounting_values(cr, uid, move, context)
-                    lines = [(journal_id, self.create_account_move(cr, uid, move, acc_dest, acc_variation, amount, context))]
-
-                elif ((move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'internal') or (move.location_id.usage == 'transit' and move.location_dest_id.usage == 'internal')):
-                    if move.location_dest_id.company_id:
-                        context.update({'force_company': move.location_dest_id.company_id.id})
-                    journal_id, acc_src, acc_dest, acc_variation, amount = self._get_accounting_values(cr, uid, move, context)
-                    lines = [(journal_id, self.create_account_move(cr, uid, move, acc_variation, acc_src, amount, context))]
-                elif (move.location_id.usage == 'internal' and move.location_dest_id.usage == 'internal' and move.location_id.company_id != move.location_dest_id.company_id):
-                    if move.location_id.company_id:
-                        context.update({'force_company': move.location_id.company_id.id})
-                    journal_id, acc_src, acc_dest, acc_variation, amount = self._get_accounting_values(cr, uid, move, context)
-                    line1 = [(journal_id, self.create_account_move(cr, uid, move, acc_dest, acc_variation, amount, context))]
-                    if move.location_dest_id.company_id:
-                        context.update({'force_company': move.location_dest_id.company_id.id})
-                    journal_id, acc_src, acc_dest, acc_variation, amount = self._get_accounting_values(cr, uid, move, context)
-                    line2 = [(journal_id, self.create_account_move(cr, uid, move, acc_variation, acc_src, amount, context))]
-                    lines = line1 + line2
-                for j_id, line in lines:
-                    move_obj.create(cr, uid, {
-                        'name': move.name,
-                        'journal_id': j_id,
-                        'type':'cont_voucher',
-                        'line_id': line,
-                        'ref': move.picking_id and move.picking_id.name,
-                    })
+            self._create_product_valuation_moves(cr, uid, move, context=context)
 
         self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
         wf_service = netsvc.LocalService("workflow")
@@ -1973,31 +2009,55 @@ class stock_move(osv.osv):
         picking_obj.log_picking(cr, uid, picking_ids, context=context)
         return True
 
-    def create_account_move(self, cr, uid, move,account_id, account_variation, amount, context=None):
-        if context is None:
-            context = {}
-        partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
-        lines=[(0, 0, {
-                'name': move.name,
-                'quantity': move.product_qty,
-                'product_id': move.product_id and move.product_id.id or False,
-                'credit': amount,
-                'account_id': account_id,
-                'ref': move.picking_id and move.picking_id.name or False,
-                'date': time.strftime('%Y-%m-%d')   ,
-                'partner_id': partner_id,
-                }),
-            (0, 0, {
-                'name': move.name,
-                'product_id': move.product_id and move.product_id.id or False,
-                'quantity': move.product_qty,
-                'debit': amount,
-                'account_id': account_variation,
-                'ref': move.picking_id and move.picking_id.name or False,
-                'date': time.strftime('%Y-%m-%d')   ,
-                'partner_id': partner_id,
-        })]
-        return lines
+    def _create_account_move_line(self, cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, context=None):
+        """
+        Generate the account.move.line values to post to track the stock valuation difference due to the 
+        processing of the given stock move.
+        """
+        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency 
+        partner_id = (move.picking_id.address_id and move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id) or False
+        debit_line_vals = {
+                    'name': move.name,
+                    'product_id': move.product_id and move.product_id.id or False,
+                    'quantity': move.product_qty,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': time.strftime('%Y-%m-%d')   ,
+                    'partner_id': partner_id,
+                    'debit': reference_amount,
+                    'account_id': dest_account_id,
+        }
+        credit_line_vals = {
+                    'name': move.name,
+                    'product_id': move.product_id and move.product_id.id or False,
+                    'quantity': move.product_qty,
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': time.strftime('%Y-%m-%d')   ,
+                    'partner_id': partner_id,
+                    'credit': reference_amount,
+                    'account_id': src_account_id,
+        }
+
+        # if we are posting to accounts in a different currency, provide correct values in both currencies correctly
+        # when compatible with the optional secondary currency on the account. 
+        # Financial Accounts only accept amounts in secondary currencies if there's no secondary currency on the account
+        # or if it's the same as that of the secondary amount being posted.
+        account_obj = self.pool.get('account.account')
+        src_acct, dest_acct = account_obj.browse(cr, uid, [src_account_id, dest_account_id], context=context)
+        src_main_currency_id = src_acct.company_id.currency_id.id
+        dest_main_currency_id = dest_acct.company_id.currency_id.id
+        cur_obj = self.pool.get('res.currency')
+        if reference_currency_id != src_main_currency_id:
+            # fix credit line:
+            credit_line_vals['credit'] = cur_obj.compute(cr, uid, reference_currency_id, src_main_currency_id, reference_amount, context=context)
+            if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
+                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
+        if reference_currency_id != dest_main_currency_id:
+            # fix debit line:
+            debit_line_vals['debit'] = cur_obj.compute(cr, uid, reference_currency_id, dest_main_currency_id, reference_amount, context=context)
+            if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
+                debit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
+
+        return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
@@ -2186,6 +2246,7 @@ class stock_move(osv.osv):
 
         return res
 
+    # FIXME: needs refactoring, this code is partially duplicated in stock_picking.do_partial()!
     def do_partial(self, cr, uid, ids, partial_datas, context=None):
         """ Makes partial pickings and moves done.
         @param partial_datas: Dictionary containing details of partial picking
@@ -2229,6 +2290,9 @@ class stock_move(osv.osv):
                 too_many.append(move)
 
             # Average price computation
+            # FIXME: we should not use the company of the user to determine the currency of the 
+            # product valuation field, we should use the company to which the destination location
+            # belongs! 
             if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
                 product = product_obj.browse(cr, uid, move.product_id.id)
                 user = users_obj.browse(cr, uid, uid)
@@ -2250,10 +2314,14 @@ class stock_move(osv.osv):
                         new_std_price = ((amount_unit * product.qty_available)\
                             + (new_price * qty))/(product.qty_available + qty)
 
-                    # Write the field according to price type field
-                    product_obj.write(cr, uid, [product.id],
-                            {pricetype.field: new_std_price})
-                    self.write(cr, uid, [move.id], {'price_unit': new_price})
+                    product_obj.write(cr, uid, [product.id],{pricetype.field: new_std_price})
+
+                    # Record the values that were chosen in the wizard, so they can be
+                    # used for inventory valuation if real-time valuation is enabled.
+                    self.write(cr, uid, [move.id], 
+                                {'price_unit': product_price,
+                                 'price_currency_id': product_currency,
+                                })
 
         for move in too_few:
             product_qty = move_product_qty[move.id]

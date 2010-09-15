@@ -29,7 +29,20 @@ class stock_move(osv.osv):
     _defaults = {
         'sale_line_id': False
     }
-    
+
+    def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
+        """
+        Overrides the default stock valuation to take into account the currency that was specified
+        on the sale order in case the valuation data was not directly specified during picking
+        confirmation.
+        """
+        reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
+        if move.product_id.cost_method != 'average' or not move.price_unit:
+            # no average price costing or cost not specified during picking validation, we will 
+            # plug the sale line values if they are found.
+            if move.purchase_line_id and move.picking_id.pricelist_id.currency_id:
+                reference_amount, reference_currency_id = move.purchase_line_id.price_unit, move.picking_id.pricelist_id.currency_id.id
+        return reference_amount, reference_currency_id
 stock_move()
 
 class stock_picking(osv.osv):
@@ -211,7 +224,7 @@ stock_picking()
 
 class stock_partial_picking(osv.osv_memory):
     _inherit = 'stock.partial.picking'
-      
+
     def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
         @param self: The object pointer.
@@ -226,16 +239,14 @@ class stock_partial_picking(osv.osv_memory):
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
             for m in pick.move_lines:
                 if (m.product_id.cost_method == 'average'):
-                    if pick.type == 'out' and pick.sale_id:
-                        if m.sale_line_id:
-                            res['move%s_product_price'%(m.id)] =  m.sale_line_id.price_unit
-                        if  pick.sale_id:
-                            res['move%s_product_currency'%(m.id)] =  pick.sale_id.pricelist_id.currency_id.id  
-        return res      
-stock_partial_picking() 
+                    if pick.type == 'out' and pick.sale_id and m.sale_line_id:
+                        res['move%s_product_price'%(m.id)] =  m.sale_line_id.price_unit
+                        res['move%s_product_currency'%(m.id)] =  pick.sale_id.pricelist_id.currency_id.id
+        return res
+stock_partial_picking()
 
 class stock_partial_move(osv.osv_memory):
-    _inherit = "stock.partial.move"   
+    _inherit = "stock.partial.move"
     def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
         @param self: The object pointer.
@@ -246,13 +257,12 @@ class stock_partial_move(osv.osv_memory):
         @return: A dictionary which of fields with values.
         """
         res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
-        move_obj = self.pool.get('stock.move')  
-        for m in move_obj.browse(cr, uid, context.get('active_ids', [])): 
+        move_obj = self.pool.get('stock.move')
+        for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
             if (m.product_id.cost_method == 'average'):
-                if m.picking_id.type == 'out' and  m.sale_line_id:
-                    res['move%s_product_price'%(m.id)] = m.sale_line_id.price_unit           
-                if  m.picking_id.sale_id:
-                    res['move%s_product_currency'%(m.id)] = m.picking_id.sale_id.pricelist_id.currency_id.id or False
-        return res     
-stock_partial_move()                                                                                                  
+                if m.picking_id.type == 'out' and  m.sale_line_id and m.picking_id.sale_id:
+                    res['move%s_product_price'%(m.id)] = m.sale_line_id.price_unit
+                    res['move%s_product_currency'%(m.id)] = m.picking_id.sale_id.pricelist_id.currency_id.id
+        return res
+stock_partial_move()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
