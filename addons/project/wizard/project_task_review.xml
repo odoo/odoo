@@ -8,15 +8,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               	<form string="Project Task Review">
-              	<separator string="Review Task " colspan="4"/>            
+              	<separator string="Review Task " colspan="4"/>
                       <group colspan="4">
 		                    <field name="user_id" colspan="4"/>
-			  				<separator string="Remark" colspan="4"/>   
-					  		<newline/>		                    
+			  				<separator string="Remark" colspan="4"/>
+					  		<newline/>
 		                   <field name="description" nolabel="1" colspan="4"/>
                       </group>
 		              <group colspan="4" >
-		            		<button icon="gtk-close" special="cancel" string="Close"/>
+		            		<button icon="gtk-close" special="cancel" string="Cancel"/>
 		            		<button icon="gtk-ok" name="review" string="Review" type="object"/>
 		              </group>
 			  	</form>

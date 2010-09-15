@@ -60,8 +60,9 @@
                         <field name="phase_id"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter name="resource" string="Resource" icon="terp-folder-blue" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
@@ -184,7 +185,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
-                <tree string="Project Phases">
+                <tree colors="grey:state in ('cancelled','done');blue:state in ('pending')" string="Project Phases">
                     <field name="name"/>
                     <field name="project_id" on_change="onchange_project(project_id)"/>
                     <field name="responsible_id"/>
@@ -228,23 +229,26 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
-                        <filter string="Draft" domain="[('state','=','draft')]" help="Draft Phases" icon="terp-check" default="1"/>
+                        <filter string="Draft" domain="[('state','=','draft')]" help="Draft Phases" icon="terp-document-new" default="1"/>
                         <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="Open Phases" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id">
-                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-blue"/>
+                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         </field>
                         <field name="responsible_id"/>
                         <field name="date_start"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
                         <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
-                        <filter string="Start Date" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'date_start'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
                     </group>
                 </search>
             </field>
@@ -257,7 +261,7 @@
             <field name="view_mode">tree,form,gantt,calendar</field>
             <field name="context">{'search_default_responsible_id':uid}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
-            <field name="help">You can subdivide your larger projects into several phases. For each phase, you can define your resources allocation (humans or engine), describe de differend task and link your phase with previous and next one, add constraints date and scheduling. A gantt view of your project phase is also available from this menu. Gantt view is a graphically draw of the project plan; it includes any task dependencies by visually adjusting task durations and priorities, and by linking tasks to each other.</field>            
+            <field name="help">You can subdivide your larger projects into several phases. For each phase, you can define your resources allocation (humans or engine), describe de differend task and link your phase with previous and next one, add constraints date and scheduling. A gantt view of your project phase is also available from this menu. Gantt view is a graphically draw of the project plan; it includes any task dependencies by visually adjusting task durations and priorities, and by linking tasks to each other.</field>
         </record>
 
         <record id="act_project_phase_list" model="ir.actions.act_window">
@@ -320,7 +324,7 @@
             name="Resource Allocations" parent="base.menu_project_long_term" sequence="2"/>
 
         <menuitem id="menu_pm_resources_project1"
-            groups="base.group_extended"  
+            groups="base.group_extended"
             name="Resources" parent="project.menu_definitions" sequence="3"/>
 
         <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_project_long_term" sequence="4" groups="project.group_project_user,project.group_project_manager,base.group_system"/>
