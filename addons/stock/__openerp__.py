@@ -74,7 +74,12 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "security/ir.model.access.csv",
         "board_warehouse_view.xml"
     ],
-    'test': ['test/stock_test.yml'],
+    'test': ['test/stock_test.yml',
+             'test/stock_inventory_move_report.yml',
+             'test/stock_lot_location_report.yml',
+             'test/stock_overview_report.yml',
+             'test/stock_overviewall_report.yml'
+             ],
     'installable': True,
     'active': False,
     'certificate': '0055421559965',
