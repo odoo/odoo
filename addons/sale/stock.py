@@ -232,5 +232,27 @@ class stock_partial_picking(osv.osv_memory):
                         if  pick.sale_id:
                             res['move%s_product_currency'%(m.id)] =  pick.sale_id.pricelist_id.currency_id.id  
         return res      
-stock_partial_picking()                                    
+stock_partial_picking() 
+
+class stock_partial_move(osv.osv_memory):
+    _inherit = "stock.partial.move"   
+    def default_get(self, cr, uid, fields, context=None):
+        """ To get default values for the object.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values
+        @param context: A standard dictionary
+        @return: A dictionary which of fields with values.
+        """
+        res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
+        move_obj = self.pool.get('stock.move')  
+        for m in move_obj.browse(cr, uid, context.get('active_ids', [])): 
+            if (m.product_id.cost_method == 'average'):
+                if m.picking_id.type == 'in' and  m.sale_id:
+                    res['move%s_product_price'%(m.id)] = m.sale_line_id.price_unit           
+                if  m.picking_id.sale_id:
+                    res['move%s_product_currency'%(m.id)] = m.picking_id.sale_id.pricelist_id.currency_id.id or False
+        return res     
+stock_partial_move()                                                                                                  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

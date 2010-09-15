@@ -164,29 +164,9 @@ class stock_partial_move(osv.osv_memory):
                 res['move%s_product_qty'%(m.id)] = m.product_qty
             if 'move%s_product_uom'%(m.id) in fields:
                 res['move%s_product_uom'%(m.id)] = m.product_uom.id
-            if (m.picking_id.type == 'out') and (m.product_id.cost_method == 'average') and 'sale_id' in m.picking_id._columns.keys():
-                price = 0
-                if hasattr(m, 'sale_line_id') and m.sale_line_id:
-                    price = m.sale_line_id.price_unit
-
+            if  m.product_id.cost_method == 'average' :
+                price = m.product_id.standard_price
                 currency = False
-                if hasattr(m.picking_id, 'sale_id') and m.picking_id.sale_id:
-                    currency = m.picking_id.sale_id.pricelist_id.currency_id.id
-
-                if 'move%s_product_price'%(m.id) in fields:
-                    res['move%s_product_price'%(m.id)] = price
-                if 'move%s_product_currency'%(m.id) in fields:
-                    res['move%s_product_currency'%(m.id)] = currency
-
-            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average') and 'purchase_id' in m.picking_id._columns.keys():
-                price = 0
-                if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
-                    price = m.purchase_line_id.price_unit
-
-                currency = False
-                if hasattr(m.picking_id, 'purchase_id') and m.picking_id.purchase_id:
-                    currency = m.picking_id.purchase_id.pricelist_id.currency_id.id
-
                 if 'move%s_product_price'%(m.id) in fields:
                     res['move%s_product_price'%(m.id)] = price
                 if 'move%s_product_currency'%(m.id) in fields:
