@@ -209,4 +209,28 @@ class stock_picking(osv.osv):
 
 stock_picking()
 
+class stock_partial_picking(osv.osv_memory):
+    _inherit = 'stock.partial.picking'
+      
+    def default_get(self, cr, uid, fields, context=None):
+        """ To get default values for the object.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values
+        @param context: A standard dictionary
+        @return: A dictionary which of fields with values.
+        """
+        pick_obj = self.pool.get('stock.picking')
+        res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
+        for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
+            for m in pick.move_lines:
+                if (m.product_id.cost_method == 'average'):
+                    if pick.type == 'out' and pick.sale_id:
+                        if m.sale_line_id:
+                            res['move%s_product_price'%(m.id)] =  m.sale_line_id.price_unit
+                        if  pick.sale_id:
+                            res['move%s_product_currency'%(m.id)] =  pick.sale_id.pricelist_id.currency_id.id  
+        return res      
+stock_partial_picking()                                    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
