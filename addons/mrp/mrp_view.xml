@@ -530,7 +530,7 @@
             <field name="model">mrp.production</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-                <gantt color="product_id" date_stop="date_finnished" date_start="date_start" string="Productions">
+                <gantt color="product_id" date_stop="date_finished" date_start="date_start" string="Productions">
                     <level object="mrp.routing" link="routing_id" domain="[]">
                         <field name="name"/>
                         <field name="origin"/>
@@ -696,7 +696,7 @@
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
                             <field name="date_start"/>
-                            <field name="date_finnished"/>
+                            <field name="date_finished"/>
                             <field name="picking_id" groups="base.group_extended"/>
                             <field name="move_prod_id" groups="base.group_extended"/>
                         </page>

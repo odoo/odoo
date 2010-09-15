@@ -101,7 +101,7 @@
                     <group colspan="2" col="2">
                         <separator string="Real" colspan="2"/>
                         <field name="date_start" readonly="1"/>
-                        <field name="date_finnished" readonly="1"/>
+                        <field name="date_finished" readonly="1"/>
                         <field name="delay" widget="float_time"/>
                     </group>
                     <group colspan="2" col="2">
@@ -170,7 +170,7 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">calendar</field>
         <field name="arch" type="xml">
-            <calendar color="product" date_stop="date_finnished" date_start="date_start" string="Operations">
+            <calendar color="product" date_stop="date_finished" date_start="date_start" string="Operations">
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
             </calendar>
