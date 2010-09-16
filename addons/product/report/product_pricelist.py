@@ -33,6 +33,7 @@ class product_pricelist(report_sxw.rml_parse):
             'time': time,
             'get_pricelist': self._get_pricelist,
             'get_currency': self._get_currency,
+            'get_currency_symbol': self._get_currency_symbol,
             'get_categories': self._get_categories,
             'get_price': self._get_price,
             'get_titles': self._get_titles,
@@ -68,6 +69,12 @@ class product_pricelist(report_sxw.rml_parse):
         pool = pooler.get_pool(self.cr.dbname)
         pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
         return pricelist['currency_id'][1]
+
+    def _get_currency_symbol(self, pricelist_id):
+        pool = pooler.get_pool(self.cr.dbname)
+        pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
+        symbol = pool.get('res.currency').read(self.cr, self.uid, [pricelist['currency_id'][0]], ['symbol'])[0]
+        return symbol['symbol'] or ''
 
     def _get_categories(self, products,form):
         cat_ids=[]
