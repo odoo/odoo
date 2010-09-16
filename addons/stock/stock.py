@@ -1682,7 +1682,23 @@ class stock_move(osv.osv):
                     result.setdefault(m.picking_id, [])
                     result[m.picking_id].append( (m, dest) )
         return result
-
+    def _create_chained_picking(self, cr, uid, pick_name,picking,ptype,move, context=None):
+        res_obj = self.pool.get('res.company')
+        picking_obj = self.pool.get('stock.picking')
+        pick_id= picking_obj.create(cr, uid, {
+                                'name': pick_name,
+                                'origin': str(picking.origin or ''),
+                                'type': ptype,
+                                'note': picking.note,
+                                'move_type': picking.move_type,
+                                'auto_picking': move[0][1][1] == 'auto',
+                                'stock_journal_id': move[0][1][3],
+                                'company_id': move[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context=context),
+                                'address_id': picking.address_id.id,
+                                'invoice_state': 'none',
+                                'date': picking.date,
+                            })
+        return pick_id
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move.
         @return: List of ids.
@@ -1708,20 +1724,7 @@ class stock_move(osv.osv):
                     pickid = check_picking_ids[0]
                 else:
                     if picking:
-                        pickid = picking_obj.create(cr, uid, {
-                            'name': pick_name,
-                            'origin': str(picking.origin or ''),
-                            'type': ptype,
-                            'note': picking.note,
-                            'move_type': picking.move_type,
-                            'auto_picking': todo[0][1][1] == 'auto',
-                            'stock_journal_id': todo[0][1][3],
-                            'company_id': todo[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context=context),
-                            'address_id': picking.address_id.id,
-                            'invoice_state': 'none',
-                            'date': picking.date,
-                            'sale_id':' sale_id' in picking._columns.keys() and  picking.sale_id.id or False
-                        })
+                        pickid = self._create_chained_picking(cr, uid, pick_name,picking,ptype,todo,context)
                     else:
                         pickid = False
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
