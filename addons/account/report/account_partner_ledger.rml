@@ -298,22 +298,6 @@
     <para style="P4">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Balance Brought Forward</para>
-        </td>
-        <td>
-          <para style="P5"><u>[[ formatLang((sum_debit())) ]] [[ company.currency_id.symbol ]]</u></para>
-        </td>
-        <td>
-          <para style="P5"><u>[[ formatLang((sum_credit())) ]] [[ company.currency_id.symbol ]]</u></para>
-        </td>
-        <td>
-          <para style="P5"><u>[[ formatLang((sum_debit() - sum_credit())) ]] [[ company.currency_id.symbol ]]</u></para>
-        </td>
-      </tr>
-    </blockTable>
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
@@ -413,24 +397,6 @@
     <para style="P4">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table5">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Balance Brought Forward</para>
-        </td>
-        <td>
-          <para style="P5"><u>[[ formatLang((sum_debit())) ]] [[ company.currency_id.symbol ]]</u></para>
-        </td>
-        <td>
-          <para style="P5"><u>[[ formatLang((sum_credit())) ]] [[ company.currency_id.symbol ]]</u></para>
-        </td>
-        <td>
-          <para style="P5"><u>[[ formatLang((sum_debit() - sum_credit())) ]] [[ company.currency_id.symbol ]]</u></para>
-        </td>
-          <td>
-        </td>
-      </tr>
-    </blockTable>
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>

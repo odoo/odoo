@@ -450,23 +450,6 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Balance Brought Forward</para>
-        </td>
-        <td>
-          <para style="P5">[[ formatLang((sum_debit())) ]] [[ company.currency_id.symbol ]]</para>
-        </td>
-        <td>
-          <para style="P5">[[ formatLang((sum_credit())) ]] [[ company.currency_id.symbol ]]</para>
-        </td>
-        <td>
-          <para style="P5">[[ formatLang((sum_debit() - sum_credit())) ]] [[ company.currency_id.symbol ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-
 	<section>
 	<para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
     <blockTable colWidths="314.0,77.0,75.0,74.0" style="Table2">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
@@ -558,27 +541,6 @@
       </tr>
     </blockTable>
     <para style="P4"/>
-    <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table5">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Balance Brought Forward</para>
-        </td>
-        <td>
-          <para style="P5">[[ formatLang((sum_debit())) ]] [[ company.currency_id.symbol ]]</para>
-        </td>
-        <td>
-          <para style="P5">[[ formatLang((sum_credit())) ]] [[ company.currency_id.symbol ]]</para>
-        </td>
-        <td>
-          <para style="P5">[[ formatLang((sum_debit() - sum_credit())) ]] [[ company.currency_id.symbol ]]</para>
-        </td>
-        <td>
-          <para style="P5">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-    </blockTable>
     <section>
     <para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
     <blockTable colWidths="276.0,67.0,66.0,65.0,65.0" style="Table6">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
