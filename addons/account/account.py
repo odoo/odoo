@@ -2442,14 +2442,14 @@ class account_tax_template(osv.osv):
 
 account_tax_template()
 
-# Fiscal Position Templates
+# Fiscal Mapping Templates
 
 class account_fiscal_position_template(osv.osv):
     _name = 'account.fiscal.position.template'
-    _description = 'Template for Fiscal Position'
+    _description = 'Template for Fiscal Mapping'
 
     _columns = {
-        'name': fields.char('Fiscal Position Template', size=64, translate=True, required=True),
+        'name': fields.char('Fiscal Mapping Template', size=64, translate=True, required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping')
@@ -2459,11 +2459,11 @@ account_fiscal_position_template()
 
 class account_fiscal_position_tax_template(osv.osv):
     _name = 'account.fiscal.position.tax.template'
-    _description = 'Fiscal Position Template Tax Mapping'
+    _description = 'Template Tax Fiscal Mapping'
     _rec_name = 'position_id'
 
     _columns = {
-        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
+        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Mapping', required=True, ondelete='cascade'),
         'tax_src_id': fields.many2one('account.tax.template', 'Tax Source', required=True),
         'tax_dest_id': fields.many2one('account.tax.template', 'Replacement Tax')
     }
@@ -2472,10 +2472,10 @@ account_fiscal_position_tax_template()
 
 class account_fiscal_position_account_template(osv.osv):
     _name = 'account.fiscal.position.account.template'
-    _description = 'Fiscal Position Template Account Mapping'
+    _description = 'Template Account Fiscal Mapping'
     _rec_name = 'position_id'
     _columns = {
-        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Position', required=True, ondelete='cascade'),
+        'position_id': fields.many2one('account.fiscal.position.template', 'Fiscal Mapping', required=True, ondelete='cascade'),
         'account_src_id': fields.many2one('account.account.template', 'Account Source', domain=[('type','<>','view')], required=True),
         'account_dest_id': fields.many2one('account.account.template', 'Account Destination', domain=[('type','<>','view')], required=True)
     }

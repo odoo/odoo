@@ -2436,14 +2436,14 @@
             </field>
          </record>
 
-         <!-- Fiscal Position Templates -->
+         <!-- Fiscal Mapping Templates -->
 
         <record id="view_account_position_template_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.template.form</field>
             <field name="model">account.fiscal.position.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Fiscal Position Template">
+                <form string="Fiscal Mapping Template">
                     <field name="name" select="1"/>
                     <field name="chart_template_id"/>
                     <newline/>
@@ -2475,14 +2475,14 @@
             <field name="model">account.fiscal.position.template</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Fiscal Position">
+                <tree string="Fiscal Mapping">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
 
         <record id="action_account_fiscal_position_template_form" model="ir.actions.act_window">
-            <field name="name">Fiscal Position Templates</field>
+            <field name="name">Fiscal Mapping Templates</field>
             <field name="res_model">account.fiscal.position.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
