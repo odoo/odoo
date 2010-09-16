@@ -16,20 +16,38 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
 
+-
+  In order to test the PDF reports defined on Account Move, we will print the Voucher Report
+- 
+  !python {model: account.move}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.account.move.voucher').create(cr, uid, [ref('account.account_move_0')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'account-voucher-report.'+format), 'wb+').write(data)
+
 #-
 #  Demo data for Account tax code
 #-
-# !record {model: account.tax.code, id: account_tax_code0}:
+#  !record {model: account.tax.code, id: account_tax_code_0}:
 #    name : Tax Code Test
 #-
 # Print Tax Code entries report
 #- 
 #  !python {model: account.tax.code}: |
 #    import netsvc, tools, os
-#    (data, format) = netsvc.LocalService('report.account.tax.code.entries').create(cr, uid, [ref("account.account_tax_code0")], {}, {})
+#    (data, format) = netsvc.LocalService('report.account.tax.code.entries').create(cr, uid, [ref('account.account_tax_code_0')], {}, {})
 #    if tools.config['test_report_directory']:
 #        file(os.path.join(tools.config['test_report_directory'], 'account-tax-code-entries.'+format), 'wb+').write(data)
 
+#-
+#  Print Vat Declaration Report
+#-
+#   !python {model: account.tax.code}: |
+#    import netsvc, tools, os
+#    data_dict = {'model': 'ir.ui.menu', 'form': {'based_on': 'invoices','company_id':ref('base.main_company'),'periods':[]}}
+#   (data, format) = netsvc.LocalService('report.account.vat.declaration').create(cr, uid, [ref("account.account_tax_code0")], data_dict, {})
+#    if tools.config['test_report_directory']:
+#       file(os.path.join(tools.config['test_report_directory'], 'account-vat-declaration.'+format), 'wb+').write(data)
 -
   In order to test the PDF reports defined on an invoice, we will print an invoice
 - 
@@ -57,7 +75,18 @@
             'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
         }
         start = stop - RelativeDateTime(days=1)
-    data_dict = {'model': 'ir.ui.menu', 'form': {'chart_account_id':ref('account.chart0'),'initial_balance': 1, 'periods': [], 'page_split': 0, 'date_from': time.strftime('%Y-%m-%d'), 'period_length': 30, 'amount_currency': 0,'query_line' : 'True', 'id': 1,'result_selection': 'customer','direction_selection': 'past'}}
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    fy_id = ref('account.data_fiscalyear')
+    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    
+    data_dict = {'model': 'ir.ui.menu', 'form': {'chart_account_id':ref('account.chart0'),'initial_balance': 1, 'periods': period_list,'journal_ids':journal_ids, 'page_split': 0, 'date_from': time.strftime('%Y-%m-%d'), 'period_length': 30, 'amount_currency': 0,'query_line' : query_line, 'result_selection': 'customer','direction_selection': 'past','fiscalyear_id':fy_id}}
     data_dict['form'].update(res)
     (data, format) = netsvc.LocalService('report.account.aged_trial_balance').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
@@ -85,7 +114,7 @@
 
  
 -
-  Print the Account Balance Sheet in Hotizontal mode
+  Print the Account Balance Sheet in Horizontal mode
 -
   !python {model: account.account}: |
     import netsvc, tools, os, time
@@ -132,7 +161,14 @@
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     journal_period_ids = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', journal_ids), ('period_id', 'in', period_list)], context=context)
 
-    data_dict = {'model': 'account.journal.period', 'id':journal_period_ids[0], 'form': {'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    data_dict = {'model': 'account.journal.period', 'id':journal_period_ids[0], 'form': {'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
     (data, format) = netsvc.LocalService('report.account.central.journal').create(cr, uid, journal_period_ids, data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-central_journal.'+format), 'wb+').write(data)
@@ -154,7 +190,14 @@
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     journal_period_ids = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', journal_ids), ('period_id', 'in', period_list)], context=context)
     
-    data_dict = {'model': 'ir.ui.menu','id':journal_period_ids[0], 'form': {'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids, 'active_ids':journal_period_ids}}
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    data_dict = {'model': 'ir.ui.menu','id':journal_period_ids[0], 'form': {'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids, 'active_ids':journal_period_ids}}
     (data, format) = netsvc.LocalService('report.account.general.journal').create(cr, uid, journal_period_ids, data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-general_journal.'+format), 'wb+').write(data)
@@ -168,7 +211,16 @@
     period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     acc_ids = [ref('account.bal'),ref('account.gpf')]
-    data_dict = {'model': 'account.account', 'form': {'initial_balance': 1,'initial_bal_query':' True ','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date','amount_currency': 0,'landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
+    
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    
+    data_dict = {'model': 'account.account', 'form': {'initial_balance': 1,'initial_bal_query': query_line,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date','amount_currency': 0,'landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
     (data, format) = netsvc.LocalService('report.account.general.ledger').create(cr, uid, acc_ids, data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger.'+format), 'wb+').write(data)
@@ -188,7 +240,16 @@
     period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     acc_ids = [ref('account.bal'),ref('account.gpf')]
-    data_dict = {'model': 'account.account', 'form': {'initial_balance': 1,'initial_bal_query':' True ','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date','amount_currency': 0,'landscape':1,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
+    
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    
+    data_dict = {'model': 'account.account', 'form': {'initial_balance': 1,'initial_bal_query':query_line,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date','amount_currency': 0,'landscape':1,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
     (data, format) = netsvc.LocalService('report.account.general.ledger_landscape').create(cr, uid, acc_ids, data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger-landscape.'+format), 'wb+').write(data)
@@ -210,7 +271,15 @@
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     journal_period_ids = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', journal_ids), ('period_id', 'in', period_list)], context=context)
 
-    data_dict = {'model': 'account.journal.period', 'id':journal_period_ids[0], 'form': {'sort_selection': 'date','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    
+    data_dict = {'model': 'account.journal.period', 'id':journal_period_ids[0], 'form': {'sort_selection': 'date','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
     (data, format) = netsvc.LocalService('report.account.journal.period.print').create(cr, uid, journal_period_ids, data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-print_journal.'+format), 'wb+').write(data)
@@ -228,8 +297,18 @@
 -
   !python {model: res.partner}: |
     import netsvc, tools, os, time
+    fy_id = ref('account.data_fiscalyear')
+    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'result_selection': 'customer','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':journal_ids,'display_partner': 'non-zero_balance','fiscalyear': ref('account.data_fiscalyear') ,'target_move': 'all','query_line':' True '}}
+
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    data_dict = {'model': 'ir.ui.menu', 'form': {'result_selection': 'customer','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':journal_ids,'display_partner': 'non-zero_balance','fiscalyear': fy_id ,'target_move': 'all','query_line':query_line}}
     (data, format) = netsvc.LocalService('report.account.partner.balance').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-partner_balance.'+format), 'wb+').write(data)
@@ -239,8 +318,19 @@
 -
   !python {model: res.partner}: |
     import netsvc, tools, os, time
+    fy_id = ref('account.data_fiscalyear')
+    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'initial_bal_query':' True ','amount_currency': 0,'reconcil': True,'initial_balance':1,'page_split': True,'result_selection': 'customer','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':journal_ids,'display_partner': 'non-zero_balance','fiscalyear': ref('account.data_fiscalyear') ,'target_move': 'all','query_line':'True '}}
+
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    
+    data_dict = {'model': 'ir.ui.menu', 'form': {'initial_bal_query':query_line,'amount_currency': 0,'reconcil': True,'initial_balance':1,'page_split': True,'result_selection': 'customer','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':journal_ids,'display_partner': 'non-zero_balance','fiscalyear': fy_id ,'target_move': 'all','query_line':query_line}}
     (data, format) = netsvc.LocalService('report.account.third_party_ledger').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-partner_ledger.'+format), 'wb+').write(data)
@@ -250,8 +340,18 @@
 -
   !python {model: res.partner}: |
     import netsvc, tools, os, time
+    fy_id = ref('account.data_fiscalyear')
+    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'initial_bal_query':' True ','amount_currency': 0,'reconcil': True,'initial_balance':1,'page_split': False,'result_selection': 'customer','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':journal_ids,'display_partner': 'non-zero_balance','fiscalyear': ref('account.data_fiscalyear') ,'target_move': 'all','query_line':' True '}}
+
+    obj_move = self.pool.get('account.move.line')
+    ctx = {}
+    ctx['fiscalyear'] = fy_id
+    ctx['journal_ids'] = journal_ids
+    ctx['chart_account_id'] = ref('account.chart0')
+    
+    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
+    data_dict = {'model': 'ir.ui.menu', 'form': {'initial_bal_query':query_line,'amount_currency': 0,'reconcil': True,'initial_balance':1,'page_split': False,'result_selection': 'customer','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':journal_ids,'display_partner': 'non-zero_balance','fiscalyear': fy_id ,'target_move': 'all','query_line':query_line}}
     (data, format) = netsvc.LocalService('report.account.third_party_ledger_other').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-partner_ledger-other.'+format), 'wb+').write(data)
@@ -283,5 +383,3 @@
     (data, format) = netsvc.LocalService('report.pl.account.horizontal').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-profit-loss-horizontal.'+format), 'wb+').write(data)
- 
- 
