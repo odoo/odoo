@@ -547,9 +547,6 @@ class account_voucher(osv.osv):
             if inv.move_id:
                 continue
 
-            if not inv.line_ids:
-                raise osv.except_osv(_('Error !'), _('You can not validate a voucher without lines !'))
-
             if inv.journal_id.sequence_id:
                 name = self.pool.get('ir.sequence').get_id(cr, uid, inv.journal_id.sequence_id.id)
             else:
