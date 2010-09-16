@@ -296,7 +296,8 @@
                     <field name="product_uom"/>
                     <field name="price_unit"/>
                     <field name="price_subtotal"/>
-                    <field name="invoiced"/>
+                    <field name="state" invisible="1"/>
+                    <field name="invoiced" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -325,7 +326,6 @@
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                             </group>
                         </page>
-               
                         <page string="Invoicing" groups="base.group_extended">
                             <separator colspan="4" string="Manual Invoices"/>
                             <field name="invoiced"/>
@@ -349,7 +349,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                		 <group>
+                		<group>
                         <field name="order_id"/>
                         <field name="product_id"/>
                         </group>
@@ -357,6 +357,7 @@
                         <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
+                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                         </group>
                </search>
