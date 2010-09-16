@@ -240,7 +240,7 @@ class Agent(object):
                 delattr(ct, 'dbname')
                 th = threading.Thread(target=fn, args=args, kwargs=kwargs)
                 th.start()
-            time.sleep(1)
+            time.sleep(60)
 
 threading.Thread(target=Agent.runner).start()
 
