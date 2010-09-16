@@ -36,7 +36,8 @@ class salary_structure_report(report_sxw.rml_parse):
             'get_type':self.get_type,
             'get_contract':self.get_contract,
             'get_line_amount_type':self.get_line_amount_type,
-            'get_line_type':self.get_line_type
+            'get_line_type':self.get_line_type,
+            'get_line_amount_symbol':self.get_line_amount_symbol
           })
 
     def get_contract(self,emp):
@@ -68,6 +69,10 @@ class salary_structure_report(report_sxw.rml_parse):
             return 'Percent(%)'
         else:
             return 'Fixed'
+
+    def get_line_amount_symbol(self,amount_type):
+        if amount_type != 'per':
+            return self.pool.get('res.users').browse(self.cr, self.uid,self.uid).company_id.currency_id.symbol
 
     def get_line_type(self,type):
         if type == 'allounce':
