@@ -39,6 +39,7 @@ import time
 import xmlrpclib
 import release
 from pprint import pformat
+import heapq
 
 SERVICES = {}
 GROUPS = {}
@@ -201,33 +202,48 @@ import tools
 init_logger()
 
 class Agent(object):
-    _timers = {}
+    __tasks = []
+    __tasks_by_db = {}
     _logger = Logger()
 
-    def setAlarm(self, fn, dt, db_name, *args, **kwargs):
-        wait = dt - time.time()
-        if wait > 0:
-            self._logger.notifyChannel('timers', LOG_DEBUG, "Job scheduled in %s seconds for %s.%s" % (wait, fn.im_class.__name__, fn.func_name))
-            timer = threading.Timer(wait, fn, args, kwargs)
-            timer.start()
-            self._timers.setdefault(db_name, []).append(timer)
-
-        for db in self._timers:
-            for timer in self._timers[db]:
-                if not timer.isAlive():
-                    self._timers[db].remove(timer)
+    @classmethod
+    def setAlarm(cls, fn, dt, db_name, *args, **kwargs):
+        task = [dt, db_name, fn, args, kwargs]
+        heapq.heappush(cls.__tasks, task)
+        cls.__tasks_by_db.setdefault(db_name, []).append(task)
 
     @classmethod
     def cancel(cls, db_name):
-        """Cancel all timers for a given database. If None passed, all timers are cancelled"""
-        for db in cls._timers:
-            if db_name is None or db == db_name:
-                for timer in cls._timers[db]:
-                    timer.cancel()
+        """Cancel all tasks for a given database. If None is passed, all tasks are cancelled"""
+        if db_name is None:
+            cls.__tasks, cls.__tasks_by_db = [], {}
+        else:
+            if db_name in cls.__tasks_by_db:
+                for task in cls.__tasks_by_db[db_name]:
+                    task[0] = 0
 
     @classmethod
     def quit(cls):
         cls.cancel(None)
+
+    @classmethod
+    def runner(cls):
+        ct = threading.currentThread()
+        while True:
+            while cls.__tasks and cls.__tasks[0][0] < time.time():
+                ts, db, fn, args, kwargs = heapq.heappop(cls.__tasks)
+                if not ts:
+                    # null timestamp -> cancelled task
+                    continue
+                ct.dbname = db   # hack hack
+                cls._logger.notifyChannel('timers', LOG_DEBUG, "Run %s.%s(*%r, **%r)" % (fn.im_class.__name__, fn.func_name, args, kwargs))
+                delattr(ct, 'dbname')
+                th = threading.Thread(target=fn, args=args, kwargs=kwargs)
+                th.start()
+            time.sleep(1)
+
+threading.Thread(target=Agent.runner).start()
+
 
 import traceback
 
