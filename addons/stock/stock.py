@@ -2064,7 +2064,7 @@ class stock_move(osv.osv):
         if reference_currency_id != dest_main_currency_id:
             # fix debit line:
             debit_line_vals['debit'] = cur_obj.compute(cr, uid, reference_currency_id, dest_main_currency_id, reference_amount, context=context)
-            if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
+            if (not dest_acct.currency_id) or dest_acct.currency_id.id == reference_currency_id:
                 debit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
 
         return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
