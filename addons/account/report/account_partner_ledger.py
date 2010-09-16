@@ -132,7 +132,7 @@ class third_party_ledger(rml_parse.rml_parse, common_report_header):
             "WHERE l.partner_id = %s " \
                 "AND l.account_id IN %s AND " + self.query +" " \
                 " " + RECONCILE_TAG + " "\
-                "ORDER BY l.id",
+                "ORDER BY l.date",
                 (partner.id, tuple(self.account_ids)))
         res = self.cr.dictfetchall()
         sum = 0.0
