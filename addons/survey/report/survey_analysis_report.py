@@ -115,18 +115,19 @@ class survey_analysis(report_rml):
                     <paraStyle name="P2" fontName="Helvetica" fontSize="14.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
                   </stylesheet>
                   <images/>
-                  <story>
-                    <para style="Title">Answer Summary</para>
-                    <para style="Standard"><font></font></para>
-                    <para style="P2">
-                      <font color="white"> </font>
-                    </para>"""
+                  """
 
         if datas.has_key('form') and datas['form']['survey_ids']:
            ids =  datas['form']['survey_ids']
 
         for survey in surv_obj.browse(cr, uid, ids):
-            rml += """<blockTable colWidths="280.0,100.0,120.0" style="Table_heading">
+            rml += """<story>
+                    <para style="Title">Answer Summary</para>
+                    <para style="Standard"><font></font></para>
+                    <para style="P2">
+                      <font color="white"> </font>
+                    </para>
+                    <blockTable colWidths="280.0,100.0,120.0" style="Table_heading">
                       <tr>
                         <td>
                           <para style="terp_tblheader_General_Centre">Survey Title </para>
@@ -420,9 +421,9 @@ class survey_analysis(report_rml):
                             <td><para style="Standard1">""" + tools.ustr(survey.tot_start_survey - que.tot_resp) + """</para></td>
                         </tr>
                         </blockTable>"""
-            rml += """<pageBreak/>"""
+            rml += """</story>"""
 
-        rml += """</story></document>"""
+        rml += """</document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
