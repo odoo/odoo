@@ -202,19 +202,19 @@ import tools
 init_logger()
 
 class Agent(object):
-    """Singleton that keep track of cancellable tasks to run at a given
+    """Singleton that keeps track of cancellable tasks to run at a given
        timestamp.
-       The tasks are caraterised by:
+       The tasks are caracterised by:
             * a timestamp
-            * the database name on which run the task
+            * the database on which the task run
             * the function to call
             * the arguments and keyword arguments to pass to the function
 
         Implementation details:
           Tasks are stored as list, allowing the cancellation by setting
           the timestamp to 0.
-          A heapq is used to store the tasks, so we don't need to sort
-          the tasks ourself.
+          A heapq is used to store tasks, so we don't need to sort
+          tasks ourself.
     """
     __tasks = []
     __tasks_by_db = {}
@@ -242,8 +242,8 @@ class Agent(object):
 
     @classmethod
     def runner(cls):
-        """Neverending function (intended to be ran in a decicated thread) that
-           check every 60 seconds the tasks to run.
+        """Neverending function (intended to be ran in a dedicated thread) that
+           checks every 60 seconds tasks to run.
         """
         current_thread = threading.currentThread()
         while True:
