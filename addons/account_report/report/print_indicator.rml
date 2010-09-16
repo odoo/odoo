@@ -119,7 +119,7 @@
 		</blockTable>
 		<blockTable colWidths="528.0" repeatRows="1" style="Table7">
 		<tr>
-			<td><para style="P5"> <font color="white">[['..........'*(o['level']) ]]</font> <font>[[ format(o['note']) or removeParentNode('blockTable') ]]</font></para></td>
+			<td><para style="P5"> <font color="white">[['..........'*(o['level']) ]]</font> <font>[[ format(o['note'] or  '') or removeParentNode('blockTable') ]]</font></para></td>
 		</tr>
 		</blockTable>
 	</section>
