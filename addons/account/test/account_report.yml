@@ -12,9 +12,32 @@
 - 
   !python {model: res.partner}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_asus'),ref('base.res_partner_agrolait'),ref('base.res_partner_c2c'),ref('base.res_partner_sednacom'),ref('base.res_partner_thymbra'),ref('base.res_partner_desertic_hispafuentes'),ref('base.res_partner_tinyatwork'),ref('base.res_partner_2'),ref('base.res_partner_3'),ref('base.res_partner_4'),ref('base.res_partner_5'),ref('base.res_partner_6'),ref('base.res_partner_maxtor'),ref('base.res_partner_seagate'),ref('base.res_partner_8'),ref('base.res_partner_9'),ref('base.res_partner_10'),ref('base.res_partner_11'),ref('base.res_partner_14'),ref('base.res_partner_15'),ref('base.res_partner_accent')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_asus'),ref('base.res_partner_agrolait'),ref('base.res_partner_c2c')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
+
+#-
+#  Demo data for Account tax code
+#-
+# !record {model: account.tax.code, id: account_tax_code0}:
+#    name : Tax Code Test
+#-
+# Print Tax Code entries report
+#- 
+#  !python {model: account.tax.code}: |
+#    import netsvc, tools, os
+#    (data, format) = netsvc.LocalService('report.account.tax.code.entries').create(cr, uid, [ref("account.account_tax_code0")], {}, {})
+#    if tools.config['test_report_directory']:
+#        file(os.path.join(tools.config['test_report_directory'], 'account-tax-code-entries.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on an invoice, we will print an invoice
+- 
+  !python {model: account.invoice}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 
 -
   Print the Aged Partner Balance Report
@@ -41,15 +64,26 @@
        file(os.path.join(tools.config['test_report_directory'], 'account-aged_partner_balance.'+format), 'wb+').write(data)
 
 -
-  Print the Account Balance Report in Landscape mode
+  Print the Compare Account Balance Report in Normal mode
+-
+  !python {model: account.account}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'account.account', 'form': {'id':ref('account.bal'),'chart_account_id':ref('account.chart0'),'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear': [ref('account.data_fiscalyear')] ,'target_move': 'all','periods': [],'context':{'state':'all'}}}
+    (data, format) = netsvc.LocalService('report.account.balance.account.balance').create(cr, uid, [ref('account.bal'),ref('account.gpf')], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-compare-account_balance.'+format), 'wb+').write(data)
+
+-
+  Print the Compare Account Balance Report in Landscape mode
 -
   !python {model: account.account}: |
     import netsvc, tools, os, time
     data_dict = {'model': 'account.account', 'form': {'id':ref('account.bal'),'chart_account_id':ref('account.chart0'),'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':1,'period_manner': 'actual','fiscalyear': [ref('account.data_fiscalyear')] ,'target_move': 'all','periods': [],'context':{'state':'all'}}}
     (data, format) = netsvc.LocalService('report.account.account.balance.landscape').create(cr, uid, [ref('account.bal'),ref('account.gpf')], data_dict, {'periods': []})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance-landscape.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'account-compare-account_balance-landscape.'+format), 'wb+').write(data)
 
+ 
 -
   Print the Account Balance Sheet in Hotizontal mode
 -
@@ -249,3 +283,5 @@
     (data, format) = netsvc.LocalService('report.pl.account.horizontal').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-profit-loss-horizontal.'+format), 'wb+').write(data)
+ 
+ 
