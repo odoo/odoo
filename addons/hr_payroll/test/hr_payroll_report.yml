@@ -17,3 +17,21 @@
         file(os.path.join(tools.config['test_report_directory'], 'hr_payslip_report.'+format), 'wb+').write(data)
     (data, format) = netsvc.LocalService('report.payslip.pdf').create(cr, uid, [ref('hr_payroll.hr_payslip_salaryslipofbonamyforjune0')], {}, {})
 
+-
+  Print the employee salary details 
+-
+  !python {model: hr.payslip}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'ir.ui.menu', 'form': {'fiscalyear_id': ref('account.data_fiscalyear'), 'employee_ids': [ref('hr.employee2')]}}
+    (data, format) = netsvc.LocalService('report.employees.salary').create(cr, uid, [], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_salary_detai_report.'+format), 'wb+').write(data)
+-
+  Print the employee yearly salary details 
+-
+  !python {model: hr.payslip}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'ir.ui.menu', 'form': {'fiscalyear_id': ref('account.data_fiscalyear'), 'salary_on': 'current_month', 'employee_ids': [ref('hr.employee2')]}}
+    (data, format) = netsvc.LocalService('report.year.salary').create(cr, uid, [], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_yearly_salary_detai_report.'+format), 'wb+').write(data)
