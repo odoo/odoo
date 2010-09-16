@@ -21,6 +21,7 @@
 
 import tools
 from osv import fields,osv
+import decimal_precision as dp
 
 class account_entries_report(osv.osv):
     _name = "account.entries.report"
@@ -39,6 +40,8 @@ class account_entries_report(osv.osv):
         'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'date': fields.date('Date', size=128, readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
@@ -68,6 +71,7 @@ class account_entries_report(osv.osv):
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
+
     _order = 'date desc'
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
@@ -133,6 +137,8 @@ class account_entries_report(osv.osv):
                 a.user_type as user_type,
                 1 as nbr,
                 l.quantity as quantity,
+                l.currency_id as currency_id,
+                l.amount_currency as amount_currency,
                 l.debit as debit,
                 l.credit as credit,
                 l.debit-l.credit as balance
