@@ -686,6 +686,27 @@ class account_journal(osv.osv):
             vals.update({'sequence_id' : self.create_sequence(cr, uid, vals, context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
+    def name_get(self, cr, user, ids, context={}):
+        """
+        Returns a list of tupples containing id, name.
+        result format : {[(id, name), (id, name), ...]}
+        
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param ids: list of ids for which name should be read
+        @param context: context arguments, like lang, time zone
+        
+        @return: Returns a list of tupples containing id, name
+        """
+        result = self.browse(cr, user, ids, context)
+        res = []
+        for rs in result:
+            name = rs.name 
+            if rs.currency:
+                name = "%s (%s)" % (rs.name, rs.currency.name)
+            res += [(rs.id, name)]
+        return res
+    
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
