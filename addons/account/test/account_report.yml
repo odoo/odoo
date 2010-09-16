@@ -5,12 +5,38 @@
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'invoice.'+format), 'wb+').write(data)
+        file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
+
 -
-  In order to test the PDF reports defined on a partner, we will print a overdue report
+  In order to test the PDF reports defined on a partner, we will print the Overdue Report
 - 
   !python {model: res.partner}: |
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_asus'),ref('base.res_partner_agrolait'),ref('base.res_partner_c2c'),ref('base.res_partner_sednacom'),ref('base.res_partner_thymbra'),ref('base.res_partner_desertic_hispafuentes'),ref('base.res_partner_tinyatwork'),ref('base.res_partner_2'),ref('base.res_partner_3'),ref('base.res_partner_4'),ref('base.res_partner_5'),ref('base.res_partner_6'),ref('base.res_partner_maxtor'),ref('base.res_partner_seagate'),ref('base.res_partner_8'),ref('base.res_partner_9'),ref('base.res_partner_10'),ref('base.res_partner_11'),ref('base.res_partner_14'),ref('base.res_partner_15'),ref('base.res_partner_accent')], {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'overdue.'+format), 'wb+').write(data)    
+        file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
+
+-
+  Print the Aged Partner Balance Report
+-
+  !python {model: res.partner}: |
+    import netsvc, tools, os, time
+    import datetime
+    from mx.DateTime import *
+    start = datetime.date.fromtimestamp(time.mktime(time.strptime(time.strftime('%Y-%m-%d'), "%Y-%m-%d")))
+    start = DateTime(int(start.year), int(start.month), int(start.day))
+    res = {}
+    for i in range(5)[::-1]:
+        stop = start - RelativeDateTime(days=30)
+        res[str(i)] = {
+            'name': (i!=0 and (str((5-(i+1)) * 30) + '-' + str((5-i) * 30)) or ('+'+str(4 * 30))),
+            'stop': start.strftime('%Y-%m-%d'),
+            'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
+        }
+        start = stop - RelativeDateTime(days=1)
+    data_dict = {'model': 'ir.ui.menu', 'form': {'initial_balance': 1, 'periods': [], 'page_split': 0, 'date_from': time.strftime('%Y-%m-%d'), 'period_length': 30, 'amount_currency': 0,'query_line' : 'True', 'id': 1,'result_selection': 'customer','direction_selection': 'past'}}
+    data_dict['form'].update(res)
+    (data, format) = netsvc.LocalService('report.account.aged_trial_balance').create(cr, uid, [], data_dict, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-aged_partner_balance.'+format), 'wb+').write(data)
+    
