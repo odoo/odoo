@@ -39,4 +39,24 @@
     (data, format) = netsvc.LocalService('report.account.aged_trial_balance').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-aged_partner_balance.'+format), 'wb+').write(data)
-    
+
+-
+  Print the Account Balance Report in Landscape mode
+-
+  !python {model: account.account}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'account.account', 'form': {'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':1,'period_manner': 'actual','fiscalyear': [ref('account.account_fiscalyear_fiscalyear0')] ,'target_move': 'all'}}
+    (data, format) = netsvc.LocalService('report.account.account.balance.landscape').create(cr, uid, [], data_dict, {'periods': [1, 83, 2, 3, 4, 5, 6, 7, 8, 9]})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance.'+format), 'wb+').write(data)
+
+-
+  Print the Account Balance Report in Landscape mode
+-
+  !python {model: account.account}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'account.account', 'form': {'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':1,'period_manner': 'actual','fiscalyear': [ref('account.account_fiscalyear_fiscalyear0')] ,'target_move': 'all'}}
+    (data, format) = netsvc.LocalService('report.account.account.balance.landscape').create(cr, uid, [], data_dict, {'periods': [1, 83, 2, 3, 4, 5, 6, 7, 8, 9]})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance.'+format), 'wb+').write(data)
+  
