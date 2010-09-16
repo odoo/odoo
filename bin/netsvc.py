@@ -207,8 +207,8 @@ class Agent(object):
     _logger = Logger()
 
     @classmethod
-    def setAlarm(cls, fn, dt, db_name, *args, **kwargs):
-        task = [dt, db_name, fn, args, kwargs]
+    def setAlarm(cls, function, timestamp, db_name, *args, **kwargs):
+        task = [timestamp, db_name, function, args, kwargs]
         heapq.heappush(cls.__tasks, task)
         cls.__tasks_by_db.setdefault(db_name, []).append(task)
 
@@ -228,18 +228,17 @@ class Agent(object):
 
     @classmethod
     def runner(cls):
-        ct = threading.currentThread()
+        current_thread = threading.currentThread()
         while True:
             while cls.__tasks and cls.__tasks[0][0] < time.time():
-                ts, db, fn, args, kwargs = heapq.heappop(cls.__tasks)
-                if not ts:
+                timestamp, dbname, function, args, kwargs = heapq.heappop(cls.__tasks)
+                if not timestamp:
                     # null timestamp -> cancelled task
                     continue
-                ct.dbname = db   # hack hack
-                cls._logger.notifyChannel('timers', LOG_DEBUG, "Run %s.%s(*%r, **%r)" % (fn.im_class.__name__, fn.func_name, args, kwargs))
-                delattr(ct, 'dbname')
-                th = threading.Thread(target=fn, args=args, kwargs=kwargs)
-                th.start()
+                current_thread.dbname = dbname   # hack hack
+                cls._logger.notifyChannel('timers', LOG_DEBUG, "Run %s.%s(*%r, **%r)" % (function.im_class.__name__, function.func_name, args, kwargs))
+                delattr(current_thread, 'dbname')
+                threading.Thread(target=function, args=args, kwargs=kwargs).start()
             time.sleep(60)
 
 threading.Thread(target=Agent.runner).start()
