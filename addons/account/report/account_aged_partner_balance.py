@@ -237,7 +237,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                     AND account_account.active ' ,(tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from))
         t = self.cr.fetchall()
         for i in t:
-            totals['No Partner Defined'] = i[0]
+            totals['Unknown Partner'] = i[0]
         future_past = {}
         if self.direction_selection == 'future':
             self.cr.execute('SELECT SUM(l.debit-l.credit) \
@@ -253,7 +253,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                         AND account_account.active ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from))
             t = self.cr.fetchall()
             for i in t:
-                future_past['No Partner Defined'] = i[0]
+                future_past['Unknown Partner'] = i[0]
         elif self.direction_selection == 'past': # Using elif so people could extend without this breaking
             self.cr.execute('SELECT SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am \
@@ -268,7 +268,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                         AND account_account.active ' , (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from))
             t = self.cr.fetchall()
             for i in t:
-                future_past['No Partner Defined'] = i[0]
+                future_past['Unknown Partner'] = i[0]
         history = []
 
         for i in range(5):
@@ -299,37 +299,37 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             t = self.cr.fetchall()
             d = {}
             for i in t:
-                d['No Partner Defined'] = i[0]
+                d['Unknown Partner'] = i[0]
             history.append(d)
 
         values = {}
         if self.direction_selection == 'future':
             before = False
-            if future_past.has_key('No Partner Defined'):
-                before = [ future_past['No Partner Defined'] ]
+            if future_past.has_key('Unknown Partner'):
+                before = [ future_past['Unknown Partner'] ]
             self.total_account[6] = self.total_account[6] + (before and before[0] or 0.0)
             values['direction'] = before and before[0] or 0.0
         elif self.direction_selection == 'past':
             after = False
-            if future_past.has_key('No Partner Defined'):
-                after = [ future_past['No Partner Defined'] ]
+            if future_past.has_key('Unknown Partner'):
+                after = [ future_past['Unknown Partner'] ]
             self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
             values['direction'] = after and after[0] or ""
 
         for i in range(5):
             during = False
-            if history[i].has_key('No Partner Defined'):
-                during = [ history[i]['No Partner Defined'] ]
+            if history[i].has_key('Unknown Partner'):
+                during = [ history[i]['Unknown Partner'] ]
             self.total_account[(i)] = self.total_account[(i)] + (during and during[0] or 0)
             values[str(i)] = during and during[0] or ""
 
         total = False
-        if totals.has_key( 'No Partner Defined' ):
-            total = [ totals['No Partner Defined'] ]
+        if totals.has_key( 'Unknown Partner' ):
+            total = [ totals['Unknown Partner'] ]
         values['total'] = total and total[0] or 0.0
         ## Add for total
         self.total_account[(i+1)] = self.total_account[(i+1)] + (total and total[0] or 0.0)
-        values['name'] = 'No Partner Defined'
+        values['name'] = 'Unknown Partner'
 
         if values['total']:
             res.append(values)
