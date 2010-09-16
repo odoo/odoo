@@ -43,8 +43,8 @@ class stock_move(osv.osv):
             if move.sale_line_id and move.picking_id.sale_id.pricelist_id:
                 reference_amount, reference_currency_id = move.sale_line_id.price_unit, move.picking_id.sale_id.pricelist_id.currency_id.id
         return reference_amount, reference_currency_id
-    def _create_chained_picking(self, cr, uid, pick_name,picking,ptype,todo, context=None):
-        res=super(stock_move, self)._create_chained_picking(cr, uid, pick_name,picking,ptype,todo, context=context)
+    def _create_chained_picking(self, cr, uid, pick_name,picking,ptype,move, context=None):
+        res=super(stock_move, self)._create_chained_picking(cr, uid, pick_name,picking,ptype,move, context=context)
         if picking.sale_id:
             picking_obj = self.pool.get('stock.picking').write(cr,uid,[res],{'sale_id':picking.sale_id.id})
         return res    
