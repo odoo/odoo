@@ -69,31 +69,4 @@ class account_cash_statement(osv.osv):
     
 account_cash_statement()
 
-class account_bank_statement_line(osv.osv):
-    
-    def _default_company(self, cr, uid, context={}):
-        """ To get default company for the object"
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of bank statement ids
-        @param context: A standard dictionary for contextual values 
-        @return: company 
-        """          
-        
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        
-        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-    
-    _inherit = 'account.bank.statement.line'
-    _columns = {
-        'company_id':fields.many2one('res.company', 'Company', required=True),
-    }
-    _defaults = {
-        'company_id': _default_company,
-    }
-account_bank_statement_line()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

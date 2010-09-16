@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Payment Advice" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Payroll Advice" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -63,7 +63,7 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P1" fontName="Helvetica"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -120,7 +120,7 @@
   </stylesheet>
   <story>
     <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
-    <para style="terp_tblheader_Details_Centre">Payment Advice</para>
+    <para style="terp_header_Centre">Payment Advice</para>
     <para style="terp_default_1">
       <font color="white"> </font>
     </para>
@@ -149,7 +149,7 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_Bold_9">[[o.bank or 'Bank']]</para>
+          <para style="terp_default_Bold_9">[[ o.bank or 'Bank' ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">
@@ -197,10 +197,10 @@
           <para style="terp_tblheader_Details">Name of the Employee</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Amount</para>
+          <para style="terp_tblheader_Details_Right">Amount([[ company.currency_id.code ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">By Sal</para>
+          <para style="terp_tblheader_Details_Right">By Sal([[ company.currency_id.code ]])</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Bank Account</para>
@@ -219,7 +219,7 @@
         <tr>
           <td>
             <para style="P1" leftIndent="15" bulletIndent="0">
-              <bullet size="8.0"><seq id="L1"/>.</bullet>
+              <bullet><seq id="L1"/>.</bullet>
               <font color="white"> </font>
             </para>
           </td>
@@ -227,10 +227,10 @@
             <para style="terp_default_9">[[ line['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['amount' ]) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['amount' ]) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['bysal']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['bysal']) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ line['acc_no'] ]]</para>
@@ -255,13 +255,13 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Total</para>
+          <para style="terp_tblheader_Details">Total([[ company.currency_id.code ]]):</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(get_total()) ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(get_total()) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(get_bysal_total()) ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(get_bysal_total()) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">
@@ -337,4 +337,3 @@
     </para>
   </story>
 </document>
-
