@@ -109,7 +109,7 @@
     
     (data, format) = netsvc.LocalService('report.account.central.journal').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-central_journal.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'account-central_journal-menu.'+format), 'wb+').write(data)
 -
   Print the General Journal Report - From Journal
 -
@@ -137,14 +137,14 @@
     data_dict = {'model': 'account.account', 'form': {'initial_balance': 1,'initial_bal_query':' True ','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date','amount_currency': 0,'landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
     (data, format) = netsvc.LocalService('report.account.general.ledger').create(cr, uid, acc_ids, data_dict, {})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_journal.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger.'+format), 'wb+').write(data)
 
     print "GL report from menu"
     data_dict.update({'model': 'ir.ui.menu'})
     data_dict['form'].update({'active_ids': acc_ids})
     (data, format) = netsvc.LocalService('report.account.general.ledger').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_journal-menu.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger-menu.'+format), 'wb+').write(data)
 -
   Print the General Ledger Report in Landscape Mode
 -
@@ -157,12 +157,45 @@
     data_dict = {'model': 'account.account', 'form': {'initial_balance': 1,'initial_bal_query':' True ','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date','amount_currency': 0,'landscape':1,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
     (data, format) = netsvc.LocalService('report.account.general.ledger_landscape').create(cr, uid, acc_ids, data_dict, {})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_journal-landscape.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger-landscape.'+format), 'wb+').write(data)
 
     print "GL report landscape mode from menu"
     data_dict.update({'model': 'ir.ui.menu'})
     data_dict['form'].update({'active_ids': acc_ids})
     (data, format) = netsvc.LocalService('report.account.general.ledger_landscape').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_journal-landscape-menu.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger-landscape-menu.'+format), 'wb+').write(data)
 
+-
+  Print Journal Report - From Model
+-
+  !python {model: account.journal.period}: |
+    import netsvc, tools, os, time
+    fy_id = ref('account.data_fiscalyear')
+    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    journal_period_ids = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', journal_ids), ('period_id', 'in', period_list)], context=context)
+
+    data_dict = {'model': 'account.journal.period', 'id':journal_period_ids[0], 'form': {'sort_selection': 'date','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
+    (data, format) = netsvc.LocalService('report.account.journal.period.print').create(cr, uid, journal_period_ids, data_dict, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-print_journal.'+format), 'wb+').write(data)
+       
+    print "Journal Report - From Menu"
+    data_dict.update({'model': 'ir.ui.menu'})
+    data_dict['form'].update({'active_ids':journal_period_ids})
+    
+    (data, format) = netsvc.LocalService('report.account.journal.period.print').create(cr, uid, [], data_dict, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-print_journal-menu.'+format), 'wb+').write(data)
+
+-
+  Print the Partner Balance Report
+-
+  !python {model: res.partner}: |
+    import netsvc, tools, os, time
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    data_dict = {'model': 'ir.ui.menu', 'form': {'result_selection': 'customer','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':journal_ids,'display_partner': 'non-zero_balance','fiscalyear': ref('account.data_fiscalyear') ,'target_move': 'all','query_line':' True '}}
+    (data, format) = netsvc.LocalService('report.account.partner.balance').create(cr, uid, [], data_dict, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-partner_balance.'+format), 'wb+').write(data)

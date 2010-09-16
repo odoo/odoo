@@ -56,7 +56,7 @@
 
         <record id="a_reserve_and_surplus" model="account.account.template">
             <field name="code">1113</field>
-            <field name="name">Reserve and Surplus Account</field>
+            <field name="name">Reserve and Profit/Loss Account</field>
             <field ref="cli" name="parent_id"/>
             <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
@@ -173,7 +173,7 @@
         </record>
 
         <record id="rev" model="account.account.template">
-            <field name="code">200</field>        
+            <field name="code">200</field>
             <field name="name">Revenue</field>
             <field ref="income_view" name="parent_id"/>
             <field name="type">view</field>

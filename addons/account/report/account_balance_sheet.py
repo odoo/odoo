@@ -98,7 +98,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         elif data['form']['filter'] == 'filter_date':
             ctx['date_from'] = data['form'].get('date_from', False)
             ctx['date_to'] =  data['form'].get('date_to', False)
-
+        ctx['state'] = data['form'].get('target_move', 'all')
         cal_list = {}
         pl_dict = {}
         account_dict = {}

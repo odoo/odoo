@@ -566,6 +566,42 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_bank_statement_periodic_form" model="ir.ui.view">
+            <field name="name">account.bank.statement.form</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bank Statement">
+                    <group col="7" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="date" select="1" on_change="onchange_date(date)"/>
+                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1"/>
+                        <newline/>
+                        <field name="period_id"/>
+                        <field name="balance_start"/>
+                        <field name="balance_end_real"/>
+                        <field name="currency" invisible="1"/>
+                        <button name="%(action_view_account_statement_from_invoice_lines)d"
+                            string="Import Invoices" type="action" icon="gtk-execute"
+                            attrs="{'invisible':[('state','=','confirm')]}"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Journal Entries">
+                            <field colspan="4" name="move_line_ids" nolabel="1" widget="many2many"/>
+                        </page>
+                    </notebook>
+                    <group col="8" colspan="4">
+                        <field name="state"/>
+                        <field name="balance_end"/>
+                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
+                        <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
@@ -586,8 +622,30 @@
             <field name="view_id" ref="view_bank_statement_form"/>
             <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
+
+		<record id="action_bank_statement_periodic_tree" model="ir.actions.act_window">
+            <field name="name">Bank Statements</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="context">{'journal_type':'bank'}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_bank_statement_periodic_tree_bank">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_bank_statement_tree"/>
+            <field name="act_window_id" ref="action_bank_statement_periodic_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_bank_statement_periodic_form_bank">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bank_statement_periodic_form"/>
+            <field name="act_window_id" ref="action_bank_statement_periodic_tree"/>
+        </record>
+
         <menuitem string="Bank Statements" action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_bank_and_cash" sequence="7"/>
-        <menuitem name="Statements Reconciliation" action="action_bank_statement_tree" id="menu_menu_Bank_process" parent="menu_finance_periodical_processing_bank" sequence="7"/>
+        <menuitem name="Statements Reconciliation" action="action_bank_statement_periodic_tree" id="menu_menu_Bank_process" parent="menu_finance_periodical_processing_bank" sequence="7"/>
 
 
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
@@ -2378,14 +2436,14 @@
             </field>
          </record>
 
-         <!-- Fiscal Position Templates -->
+         <!-- Fiscal Mapping Templates -->
 
         <record id="view_account_position_template_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.template.form</field>
             <field name="model">account.fiscal.position.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Fiscal Position Template">
+                <form string="Fiscal Mapping Template">
                     <field name="name" select="1"/>
                     <field name="chart_template_id"/>
                     <newline/>
@@ -2417,14 +2475,14 @@
             <field name="model">account.fiscal.position.template</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Fiscal Position">
+                <tree string="Fiscal Mapping">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
 
         <record id="action_account_fiscal_position_template_form" model="ir.actions.act_window">
-            <field name="name">Fiscal Position Templates</field>
+            <field name="name">Fiscal Mapping Templates</field>
             <field name="res_model">account.fiscal.position.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

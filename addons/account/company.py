@@ -29,7 +29,7 @@ class res_company(osv.osv):
             'account.account',
             type='many2one',
             relation='account.account',
-            string="Reserve and Surplus Account",
+            string="Reserve and Profit/Loss Account",
             method=True,
             view_load=True,
             domain="[('type', '=', 'payable')]",
