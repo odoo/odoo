@@ -187,7 +187,7 @@
             <para style="terp_default_Right_9">[[ (line['account_id']['type'] == 'receivable' and formatLang(line['credit']) or 0) or (line['account_id']['type'] == 'payable' and formatLang(line['debit'] * -1) or 0) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['date_maturity'] &lt; time.strftime('%Y-%m-%d'))) and (line['debit'] - line['credit']) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang((line['date_maturity'] &lt; time.strftime('%Y-%m-%d'))) and formatLang(line['debit'] - line['credit']) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ line['blocked'] and 'X' or '' ]]</para>
