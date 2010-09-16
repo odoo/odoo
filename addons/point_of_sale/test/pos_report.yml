@@ -1,0 +1,53 @@
+-
+  In order to test the PDF reports defined on a Point Of Sale, we will print a POS Detail Summary report
+- 
+  !python {model: pos.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.pos.details_summary').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-details_summary report'+format), 'wb+').write(data)
+        
+-
+  In order to test the PDF reports defined on a Point Of Sale, we will print a POS Invoice report
+- 
+  !python {model: pos.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-invoice report'+format), 'wb+').write(data)
+        
+-
+  In order to test the PDF reports defined on a Point Of Sale, we will print a POS Lines report
+- 
+  !python {model: pos.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.pos.lines').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-lines report'+format), 'wb+').write(data)
+        
+-
+  In order to test the PDF reports defined on a Point of Sale, we will print a POS Receipt report
+- 
+  !python {model: pos.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.pos.receipt').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt report'+format), 'wb+').write(data)
+        
+-
+  In order to test the PDF reports defined on a Point of Sale, we will print a POS Receipt With Reimbursement report
+- 
+  !python {model: pos.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.pos.receipt.with.remboursment').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt with reimbursement report'+format), 'wb+').write(data)
+        
+-
+  In order to test the PDF reports defined on a point of sale, we will print a POS Receipt Without Reimbursement report
+- 
+  !python {model: pos.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.pos.receipt.without.remboursment').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt without reimbursement report'+format), 'wb+').write(data)
