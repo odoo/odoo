@@ -46,6 +46,7 @@ class purchase_order_group(osv.osv_memory):
         if context.get('active_model','') == 'purchase.order' and len(context['active_ids']) < 2:
             raise osv.except_osv(_('Warning'),
             _('Please select multiple order inventories to merge in the list view.'))
+        return res
     def merge_orders(self, cr, uid, ids, context):
         """
              To merge similar type of purchase orders.
