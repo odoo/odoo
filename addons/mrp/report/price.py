@@ -150,8 +150,8 @@ class report_custom(report_rml):
                     <col> """ + _('Total Cost ') + _('of ') + str(number) +' '+ product.uom_id.name +'('+company_currency.code+')'+ """: </col>
                     <col/>
                     <col f='yes'/>
-                    <col f='yes'>"""+ rml_obj.formatLang(total_strd) +' '+ company_currency.symbol + """</col>
-                    <col f='yes'>"""+ rml_obj.formatLang(total) +' '+ company_currency.symbol + """</col>
+                    <col t='yes'>"""+ rml_obj.formatLang(total_strd) +' '+ company_currency.symbol + """</col>
+                    <col t='yes'>"""+ rml_obj.formatLang(total) +' '+ company_currency.symbol + """</col>
                     </row></lines>'"""
             else:
                 bom = bom_pool.browse(cr, uid, bom_id, context=context)
