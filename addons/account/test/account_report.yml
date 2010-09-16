@@ -34,7 +34,7 @@
             'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
         }
         start = stop - RelativeDateTime(days=1)
-    data_dict = {'model': 'ir.ui.menu', 'form': {'initial_balance': 1, 'periods': [], 'page_split': 0, 'date_from': time.strftime('%Y-%m-%d'), 'period_length': 30, 'amount_currency': 0,'query_line' : 'True', 'id': 1,'result_selection': 'customer','direction_selection': 'past'}}
+    data_dict = {'model': 'ir.ui.menu', 'form': {'chart_account_id':ref('account.chart0'),'initial_balance': 1, 'periods': [], 'page_split': 0, 'date_from': time.strftime('%Y-%m-%d'), 'period_length': 30, 'amount_currency': 0,'query_line' : 'True', 'id': 1,'result_selection': 'customer','direction_selection': 'past'}}
     data_dict['form'].update(res)
     (data, format) = netsvc.LocalService('report.account.aged_trial_balance').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
@@ -45,18 +45,39 @@
 -
   !python {model: account.account}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'account.account', 'form': {'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':1,'period_manner': 'actual','fiscalyear': [ref('account.account_fiscalyear_fiscalyear0')] ,'target_move': 'all'}}
-    (data, format) = netsvc.LocalService('report.account.account.balance.landscape').create(cr, uid, [], data_dict, {'periods': [1, 83, 2, 3, 4, 5, 6, 7, 8, 9]})
+    data_dict = {'model': 'account.account', 'form': {'id':ref('account.bal'),'chart_account_id':ref('account.chart0'),'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':1,'period_manner': 'actual','fiscalyear': [ref('account.account_fiscalyear_fiscalyear0')] ,'target_move': 'all','periods': [],'context':{'state':'all'}}}
+    (data, format) = netsvc.LocalService('report.account.account.balance.landscape').create(cr, uid, [ref('account.bal'),ref('account.gpf')], data_dict, {'periods': []})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance-landscape.'+format), 'wb+').write(data)
 
 -
-  Print the Account Balance Report in Landscape mode
+  Print the Account Balance Sheet in Hotizontal mode
 -
   !python {model: account.account}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'account.account', 'form': {'select_account': False,'format_perc':0,'show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':1,'period_manner': 'actual','fiscalyear': [ref('account.account_fiscalyear_fiscalyear0')] ,'target_move': 'all'}}
-    (data, format) = netsvc.LocalService('report.account.account.balance.landscape').create(cr, uid, [], data_dict, {'periods': [1, 83, 2, 3, 4, 5, 6, 7, 8, 9]})
+    data_dict = {'model': 'ir.ui.menu', 'form': {'reserve_account_id':ref('account.rsa') ,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 1,'journal_ids':[],'fiscalyear': ref('account.account_fiscalyear_fiscalyear0') ,'target_move': 'all'}}
+    (data, format) = netsvc.LocalService('report.account.balancesheet.horizontal').create(cr, uid, [], data_dict, {'periods': []})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance_sheet_horizontal.'+format), 'wb+').write(data)
+
+-
+  Print the Account Balance Sheet in Normal mode
+-
+  !python {model: account.account}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'ir.ui.menu', 'form': {'reserve_account_id':ref('account.rsa') ,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':[],'fiscalyear': ref('account.account_fiscalyear_fiscalyear0') ,'target_move': 'all'}}
+    (data, format) = netsvc.LocalService('report.account.balancesheet').create(cr, uid, [], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance_sheet.'+format), 'wb+').write(data)
+
+-
+  Print the Account Balance Report in Normal mode
+-
+  !python {model: account.account}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'account.account', 'form': {'chart_account_id':ref('account.chart0'),'select_account': False,'display_account':'bal_all','format_perc':0,'filter': 'filter_no','show_columns' :0, 'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': ref('account.account_fiscalyear_fiscalyear0') ,'target_move': 'all','periods': [],'id':ref('account.bal'),'context':{'state':'all'}}}
+    (data, format) = netsvc.LocalService('report.account.account.balance').create(cr, uid, [ref('account.bal'),ref('account.gpf')], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance-normal.'+format), 'wb+').write(data)
+
   
