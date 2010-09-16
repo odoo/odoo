@@ -473,6 +473,7 @@ var Address = {
 
 	onMenuItemCommand: function(){
        open_contact();
+       
 	}
 };
 
@@ -484,10 +485,11 @@ var Select = {
 	},
 
 	onMenuItemCommand: function(){
-         //document.getElementById("txtselectpartner").value="";
+        // document.getElementById("txtselectpartner").value="";
 		 window.open("chrome://openerp_plugin/content/selectpartner.xul", "", "chrome");
     }
 };
+
 
 var CreatePartner = {
 	onLoad: function(){

@@ -33,6 +33,7 @@ function selectPartner(){
 	}
 }
 
+
 //function for the intialization procedure //used while loading and unloading of the window
 var myPrefObserver =
 {

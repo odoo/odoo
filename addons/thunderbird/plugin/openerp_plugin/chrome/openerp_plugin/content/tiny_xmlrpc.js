@@ -1329,7 +1329,9 @@ var listPartnerHandler = {
 	  			listItem.value = arrPartnerList[i][0];
 	  			cmdPartnerList.appendChild(listItem);
 			}
+
 		}
+ 
 	},
 	onFault: function (client, ctxt, fault) {
 
@@ -1366,7 +1368,6 @@ function getPartnerList(){
 	strvalue.data = document.getElementById('txtselectpartner').value;
 	xmlRpcClient.asyncCall(listPartnerHandler,cmdPartnerList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
-
 
 
 //function to create the xmlrpc supported variables for xmlrpc request
