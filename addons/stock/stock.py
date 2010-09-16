@@ -60,7 +60,6 @@ class stock_journal(osv.osv):
     }
 
 stock_journal()
-
 #----------------------------------------------------------
 # Stock Location
 #----------------------------------------------------------
@@ -1090,7 +1089,15 @@ class stock_picking(osv.osv):
                 if move.state not in ('cancel',):
                     return False
         return True
-
+   
+    def allow_cancel(self, cr, uid, ids, context={}):
+        for pick in self.browse(cr, uid, ids, context=context):
+            if not pick.move_lines:
+                return True
+            for move in pick.move_lines:
+                if move.state == 'done':
+                    return False
+        return True
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
         if context is None:
