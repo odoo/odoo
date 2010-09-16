@@ -314,14 +314,14 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             if future_past.has_key('Unknown Partner'):
                 after = [ future_past['Unknown Partner'] ]
             self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
-            values['direction'] = after and after[0] or ""
+            values['direction'] = after and after[0] or 0.0
 
         for i in range(5):
             during = False
             if history[i].has_key('Unknown Partner'):
                 during = [ history[i]['Unknown Partner'] ]
             self.total_account[(i)] = self.total_account[(i)] + (during and during[0] or 0)
-            values[str(i)] = during and during[0] or ""
+            values[str(i)] = during and during[0] or 0.0
 
         total = False
         if totals.has_key( 'Unknown Partner' ):
