@@ -40,8 +40,8 @@ class stock_move(osv.osv):
         if move.product_id.cost_method != 'average' or not move.price_unit:
             # no average price costing or cost not specified during picking validation, we will 
             # plug the sale line values if they are found.
-            if move.purchase_line_id and move.picking_id.pricelist_id.currency_id:
-                reference_amount, reference_currency_id = move.purchase_line_id.price_unit, move.picking_id.pricelist_id.currency_id.id
+            if move.sale_line_id and move.picking_id.pricelist_id.currency_id:
+                reference_amount, reference_currency_id = move.sale_line_id.price_unit, move.picking_id.pricelist_id.currency_id.id
         return reference_amount, reference_currency_id
 stock_move()
 
