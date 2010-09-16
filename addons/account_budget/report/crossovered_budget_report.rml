@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
+<document filename="Budgets.pdf">
   <template pageSize="(595.0,842.0)" title="Budgets" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
@@ -90,17 +90,17 @@
   </stylesheet>
   <story>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
-    <blockTable colWidths="499.0" style="Table2">
+    <blockTable colWidths="482.0" style="Table2">
       <tr>
         <td>
-          <para style="terp_header_Centre">Budgets</para>
+          <para style="terp_header_Centre">Budget</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="249.0,249.0" style="Table1">
+    <blockTable colWidths="241.0,241.0" style="Table1">
       <tr>
         <td>
-          <para style="terp_default_9">Currency: [[ company.currency_id.name ]]</para>
+          <para style="terp_default_9"><font face="Helvetica-Bold">Currency: </font>[[ company.currency_id.name ]]</para>
         </td>
         <td>
           <para style="terp_default_Right_9">Printed at: [[ formatLang(time.strftime('%Y-%m-%d'),date=True) ]] at [[ time.strftime('%H:%M:%S')]]</para>
@@ -108,10 +108,10 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_9">Analysis from [[ formatLang(data['form']['date_from'],date=True) ]] to [[ formatLang(data['form']['date_to'],date=True) ]]</para>
+          <para style="terp_default_9"><font face="Helvetica-Bold">Analysis from</font> [[ formatLang(data['form']['date_from'],date=True) ]] to [[ formatLang(data['form']['date_to'],date=True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Bold_right_9">Budget : <font face="Helvetica" color="blue">[[ o.name ]]</font></para>
+          <para style="terp_default_Bold_right_9">Budget : <font color="Blue">[[ o.name ]]</font></para>
         </td>
       </tr>
     </blockTable>
@@ -127,13 +127,13 @@
           <para style="terp_tblheader_Details">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Theoretical Amount</para>
+          <para style="terp_tblheader_Details_Centre">Theoretical Amount([[ company.currency_id.code]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Planned Amount</para>
+          <para style="terp_tblheader_Details_Centre">Planned Amount([[ company.currency_id.code]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Practical Amount</para>
+          <para style="terp_tblheader_Details_Centre">Practical Amount([[ company.currency_id.code]])</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Perc(%)</para>
@@ -142,19 +142,19 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(funct(o,data['form']),'a') ]]</para>
-      <blockTable colWidths="191.0,82.0,81.0,84.0,61.0" style="Table4">
+      <blockTable colWidths="185.0,79.0,78.0,81.0,59.0" style="Table4">
         <tr>
           <td>
             <para style="terp_default_9"><font color="white">[['.....' *(a['status']-1) ]]</font><font face="Helvetica">[[ (a['status']==1 and (setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]] </font>[[ a['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]]</font> [[ '%.2f' % a['theo'] ]]</para>
+            <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]]</font> [[ '%.2f' % a['theo'] ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]] </font>[[ '%.2f' % a['pln'] ]]</para>
+            <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]] </font>[[ '%.2f' % a['pln'] ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]] </font>[[ '%.2f' % a['prac'] ]]</para>
+            <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]] </font>[[ '%.2f' % a['prac'] ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]] </font>[[ '%.2f' % a['perc'] ]]%</para>
@@ -162,19 +162,19 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="191.0,85.0,83.0,84.0,62.0" style="Table5">
+    <blockTable colWidths="185.0,82.0,80.0,81.0,60.0" style="Table5">
       <tr>
         <td>
-          <para style="terp_default_Bold_9"><font face="Helvetica">[[ repeatIn(funct_total(data['form']),'b') ]]</font><font face="Helvetica">Total </font>:</para>
+          <para style="terp_default_Bold_9"><font face="Helvetica">[[ repeatIn(funct_total(data['form']),'b') ]]</font><font face="Helvetica">Total ([[ company.currency_id.code]]) </font>:</para>
         </td>
         <td>
-          <para style="terp_default_Bold_right_9">[[ '%.2f' % b['tot_theo'] ]]</para>
+          <para style="terp_default_Bold_right_9">[[ formatLang(b['tot_theo']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_default_Bold_right_9">[[ '%.2f' % b['tot_pln'] ]]</para>
+          <para style="terp_default_Bold_right_9">[[ formatLang(b['tot_pln']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_default_Bold_right_9">[[ '%.2f' % b['tot_prac'] ]]</para>
+          <para style="terp_default_Bold_right_9">[[ formatLang(b['tot_prac']) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_right_9">[[ '%.2f' % b['tot_perc'] ]]%</para>

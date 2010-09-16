@@ -754,7 +754,7 @@ class res_company(osv.osv):
                  "computation for one sheet. Set this to 0 if you do not want any control."),
     }
     _defaults = {
-        'timesheet_range': lambda *args: 'month',
+        'timesheet_range': lambda *args: 'week',
         'timesheet_max_difference': lambda *args: 0.0
     }
 
