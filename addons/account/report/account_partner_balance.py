@@ -221,8 +221,8 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         for rec in full_account:
             if not rec.get('name', False):
-                rec.update({'name': 'No Partner Defined'})
-
+                rec.update({'name': 'Unknown Partner'})
+                
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
 #        if not self.initial_balance:
