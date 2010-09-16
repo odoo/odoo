@@ -102,10 +102,9 @@
         <field name="type">tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree string="Purchase Requisition">
+            <tree colors="grey:state in ('done');red:(state not in ('cancel','done')) and date_end > current_date" string="Purchase Requisition">
                 <field name="name"/>
                 <field name="user_id"/>
-                <field name="purchase_ids"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="origin"/>
@@ -137,8 +136,8 @@
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Date Start" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-                    <filter string="Date End" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
+                    <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                    <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
                 </group>
               </search>
             </field>
