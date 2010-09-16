@@ -412,8 +412,14 @@ class users(osv.osv):
         return self.name_get(cr, user, ids)
 
     def copy(self, cr, uid, id, default=None, context={}):
-        login = self.read(cr, uid, [id], ['login'])[0]['login']
-        default.update({'login': login+' (copy)'})
+        user2copy = self.read(cr, uid, [id], ['login','name'])[0]
+        if default is None:
+            default = {}
+        copy_pattern = _("%s (copy)")
+        default.update(login=(copy_pattern % user2copy['login']),
+                       name=(copy_pattern % user2copy['name']),
+                       address_id=False, # avoid sharing the address of the copied user!
+                       )
         return super(users, self).copy(cr, uid, id, default, context)
 
     def context_get(self, cr, uid, context=None):
