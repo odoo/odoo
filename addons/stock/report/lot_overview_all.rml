@@ -119,7 +119,7 @@
         <blockTable colWidths="152.0,82.0,59.0,59.0,58.0,72.0" style="Table7">
           <tr>
             <td>
-              <para style="terp_default_Bold_9">[[ ob['location_name'] ]]</para>
+              <para style="terp_default_Bold_9">[[ (not ob['product']) and removeParentNode('blockTable') ]][[ ob['location_name'] ]]</para>
             </td>
             <td>
               <para style="terp_default_Bold_9">
@@ -178,9 +178,7 @@
         <blockTable colWidths="38.0,366.0,78.0" style="Table10">
           <tr>
             <td>
-              <para style="terp_default_9">
-                <font color="white"> </font>
-              </para>
+              <para style="terp_tblheader_Details">[[ (not ob['product']) and removeParentNode('blockTable') ]]</para>
             </td>
             <td>
               <para style="terp_default_Bold_9">Total:</para>

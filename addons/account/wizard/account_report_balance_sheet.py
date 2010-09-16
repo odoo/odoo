@@ -47,10 +47,9 @@ class account_bs_report(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         res = super(account_bs_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         doc = etree.XML(res['arch'])
-        nodes = doc.xpath("//field[@name='journal_ids']")
+        nodes = doc.xpath("//page[@name='journal_ids']")
         for node in nodes:
-            node.set('readonly', '1')
-            node.set('required', '0')
+            node.set('invisible', '1')
         res['arch'] = etree.tostring(doc)
         return res
 

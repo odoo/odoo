@@ -82,7 +82,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
-            
+
         totals = {}
         self.cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am \
@@ -185,7 +185,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                     after = [ future_past[partner['id']] ]
 
                 self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
-                values['direction'] = after and after[0] or ""
+                values['direction'] = after and after[0] or 0.0
 
             for i in range(5):
                 during = False
@@ -193,8 +193,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                     during = [ history[i][partner['id']] ]
                 # Ajout du compteur
                 self.total_account[(i)] = self.total_account[(i)] + (during and during[0] or 0)
-                values[str(i)] = during and during[0] or ""
-
+                values[str(i)] = during and during[0] or 0.0
             total = False
             if totals.has_key( partner['id'] ):
                 total = [ totals[partner['id']] ]
@@ -271,6 +270,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             for i in t:
                 future_past['No Partner Defined'] = i[0]
         history = []
+
         for i in range(5):
             args_list = (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from,)
             dates_query = '(COALESCE(l.date_maturity,l.date)'
@@ -345,15 +345,15 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
     def _get_total(self,pos):
         period = self.total_account[int(pos)]
-        return period
+        return period or 0.0
 
     def _get_direction(self,pos):
         period = self.total_account[int(pos)]
-        return period
+        return period or 0.0
 
     def _get_for_period(self,pos):
         period = self.total_account[int(pos)]
-        return period
+        return period or 0.0
 
     def _get_partners(self,data):
         if data['form']['result_selection'] == 'customer':
