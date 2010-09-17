@@ -96,7 +96,8 @@ this if you want the rule to send an email to the partner."),
         res_count = True
         if action.trg_max_history:
             res_count = False
-            if len(obj.message_ids) <= action.trg_max_history:
+            history_ids = filter(lambda x: x.history, obj.message_ids)
+            if len(history_ids) <= action.trg_max_history:
                 res_count = True
         ok = ok and res_count
         return ok
@@ -120,7 +121,11 @@ this if you want the rule to send an email to the partner."),
                     write['email_cc'] = obj.email_cc+','+obj.act_email_cc
             else:
                 write['email_cc'] = obj.act_email_cc
-        
+
+        # Put state change by rule in communication history
+        if hasattr(obj, 'state') and action.act_state:
+            model_obj._history(cr, uid, [obj], _(action.act_state))
+
         model_obj.write(cr, uid, [obj.id], write, context)
         emails = []
 
