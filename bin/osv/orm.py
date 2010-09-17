@@ -2215,7 +2215,7 @@ class orm(orm_template):
         # Take care of adding join(s) if groupby is an '_inherits'ed field
         groupby_list = groupby
         if groupby:
-            if groupby and isinstance(groupby, list):
+            if isinstance(groupby, list):
                 groupby = groupby[0]
             tables, where_clause, qfield = self._inherits_join_calc(groupby, tables, where_clause)
 
@@ -2234,7 +2234,7 @@ class orm(orm_template):
         flist = ''
         group_by = groupby
         if groupby:
-            if fget.get(groupby, False):
+            if fget.get(groupby):
                 if fget[groupby]['type'] in ('date', 'datetime'):
                     flist = "to_char(%s,'yyyy-mm') as %s " % (groupby, groupby)
                     groupby = "to_char(%s,'yyyy-mm')" % (groupby)
@@ -2256,10 +2256,7 @@ class orm(orm_template):
                     flist += ','
                 flist += operator+'('+f+') as '+f
 
-        if groupby:
-            gb = ' group by '+groupby
-        else:
-            gb = ''
+        gb = groupby and (' group by '+groupby) or ''
         cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + gb + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
@@ -2268,7 +2265,15 @@ class orm(orm_template):
                 if val == None: r[fld] = False
             alldata[r['id']] = r
             del r['id']
-        data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or ['id'], context=context)
+        if groupby and fget[groupby]['type'] == 'many2one':
+            data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=groupby, context=context)
+            data_read = self.read(cr, uid, data_ids, groupby and [groupby] or ['id'], context=context)
+            # restore order of the search as read() uses the default _order:
+            data = [data_read[id] for id in data_ids]
+        else:
+            data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or ['id'], context=context)
+            if groupby:
+                data.sort(lambda x,y:cmp(x[groupby],y[groupby]))
         for d in data:
             if groupby:
                 d['__domain'] = [(groupby, '=', alldata[d['id']][groupby] or False)] + domain
