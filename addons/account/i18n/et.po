@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* account
+#	* account
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-06-25 18:22+0000\n"
+"PO-Revision-Date: 2010-08-08 05:46+0000\n"
 "Last-Translator: lyyser <logard.1961@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-26 03:57+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -92,7 +92,8 @@ msgid "Unreconciled entries"
 msgstr "Võrdlemata kirjed"
 
 #. module: account
-#: field:account.invoice.tax,base_code_id:0 field:account.tax,base_code_id:0
+#: field:account.invoice.tax,base_code_id:0
+#: field:account.tax,base_code_id:0
 #: field:account.tax.template,base_code_id:0
 msgid "Base Code"
 msgstr "Baaskood"
@@ -124,7 +125,8 @@ msgid "Residual"
 msgstr "Jääk"
 
 #. module: account
-#: field:account.tax,base_sign:0 field:account.tax,ref_base_sign:0
+#: field:account.tax,base_sign:0
+#: field:account.tax,ref_base_sign:0
 #: field:account.tax.template,base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Base Code Sign"
@@ -168,6 +170,9 @@ msgid ""
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
 msgstr ""
+"Kuupäev, pange -1 praeguse kuu viimase päeva näitamiseks. Kui see on "
+"positiivne, see annab järmise kuu päeva. Pange 0 netto päevade näitamiseks "
+"(muidu see on baseeritud kuu algusel)"
 
 #. module: account
 #: view:account.move:0
@@ -185,8 +190,10 @@ msgid "Move line select"
 msgstr "Liiguta valitud rida"
 
 #. module: account
-#: rml:account.journal.period.print:0 rml:account.tax.code.entries:0
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
+#: rml:account.journal.period.print:0
+#: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Entry label"
 msgstr "Kirje silt"
 
@@ -201,12 +208,14 @@ msgid "Period Sum"
 msgstr "Perioodi summa"
 
 #. module: account
-#: view:account.tax:0 view:account.tax.template:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 msgid "Compute Code (if type=code)"
 msgstr "Arvuta kood (kui tüüp=kood)"
 
 #. module: account
-#: view:account.move:0 view:account.move.line:0
+#: view:account.move:0
+#: view:account.move.line:0
 msgid "Account Entry Line"
 msgstr "Raamatupidamiskande rida"
 
@@ -223,9 +232,12 @@ msgstr "Perioodilised kirjed"
 #. module: account
 #: field:account.analytic.line,amount:0
 #: field:account.bank.statement.line,amount:0
-#: field:account.bank.statement.reconcile.line,amount:0 rml:account.invoice:0
-#: field:account.invoice.tax,amount:0 field:account.move,amount:0
-#: field:account.tax,amount:0 field:account.tax.template,amount:0
+#: field:account.bank.statement.reconcile.line,amount:0
+#: rml:account.invoice:0
+#: field:account.invoice.tax,amount:0
+#: field:account.move,amount:0
+#: field:account.tax,amount:0
+#: field:account.tax.template,amount:0
 #: xsl:account.transfer:0
 msgid "Amount"
 msgstr "Kogus"
@@ -262,7 +274,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: help:account.invoice,date_due:0 help:account.invoice,payment_term:0
+#: help:account.invoice,date_due:0
+#: help:account.invoice,payment_term:0
 msgid ""
 "If you use payment terms, the due date will be computed automatically at the "
 "generation of accounting entries. If you keep the payment term and the due "
@@ -271,12 +284,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: selection:account.tax,type:0 selection:account.tax.template,type:0
+#: selection:account.tax,type:0
+#: selection:account.tax.template,type:0
 msgid "Fixed"
 msgstr "Fikseeritud"
 
 #. module: account
-#: model:ir.actions.report.xml,name:account.account_overdue view:res.company:0
+#: model:ir.actions.report.xml,name:account.account_overdue
+#: view:res.company:0
 msgid "Overdue Payments"
 msgstr "Tasumata Maksed"
 
@@ -292,7 +307,8 @@ msgid "Select period"
 msgstr "Vali periood"
 
 #. module: account
-#: field:account.invoice,origin:0 field:account.invoice.line,origin:0
+#: field:account.invoice,origin:0
+#: field:account.invoice.line,origin:0
 msgid "Origin"
 msgstr "Päritolu"
 
@@ -322,10 +338,11 @@ msgid "Delta Debit"
 msgstr "Delta deebet"
 
 #. module: account
-#: rml:account.invoice:0 field:account.invoice,amount_tax:0
+#: rml:account.invoice:0
+#: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
 msgid "Tax"
-msgstr "Maksud"
+msgstr "Maks"
 
 #. module: account
 #: rml:account.general.journal:0
@@ -341,12 +358,14 @@ msgid "Analytic Account"
 msgstr "Analüütiline konto"
 
 #. module: account
-#: field:account.tax,child_depend:0 field:account.tax.template,child_depend:0
+#: field:account.tax,child_depend:0
+#: field:account.tax.template,child_depend:0
 msgid "Tax on Children"
 msgstr "Maks alamliikidele"
 
 #. module: account
-#: rml:account.central.journal:0 rml:account.general.journal:0
+#: rml:account.central.journal:0
+#: rml:account.general.journal:0
 #: field:account.journal,name:0
 msgid "Journal Name"
 msgstr "Päeviku nimi"
@@ -414,8 +433,11 @@ msgid "Contra"
 msgstr "Vastu"
 
 #. module: account
-#: field:account.analytic.account,state:0 field:account.bank.statement,state:0
-#: field:account.invoice,state:0 view:account.move:0 view:account.move.line:0
+#: field:account.analytic.account,state:0
+#: field:account.bank.statement,state:0
+#: field:account.invoice,state:0
+#: view:account.move:0
+#: view:account.move.line:0
 #: view:account.subscription:0
 msgid "State"
 msgstr "Olek"
@@ -427,7 +449,8 @@ msgid "Unpaid Supplier Refunds"
 msgstr "Maksmata tarnija hüvitised"
 
 #. module: account
-#: view:account.tax:0 view:account.tax.template:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 msgid "Special Computation"
 msgstr "Eriline arvutamine"
 
@@ -449,8 +472,10 @@ msgid "Disc.(%)"
 msgstr "Allah. (%)"
 
 #. module: account
-#: rml:account.general.ledger:0 field:account.model,ref:0
-#: field:account.move,ref:0 rml:account.overdue:0
+#: rml:account.general.ledger:0
+#: field:account.model,ref:0
+#: field:account.move,ref:0
+#: rml:account.overdue:0
 #: field:account.subscription,ref:0
 msgid "Ref"
 msgstr "Viide"
@@ -641,7 +666,8 @@ msgid "Sub-Total :"
 msgstr "Vahesumma:"
 
 #. module: account
-#: field:account.analytic.account,line_ids:0 view:account.analytic.line:0
+#: field:account.analytic.account,line_ids:0
+#: view:account.analytic.line:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
 #: model:ir.ui.menu,name:account.next_id_41
 msgid "Analytic Entries"
@@ -673,7 +699,8 @@ msgid "Select the Period for Analysis"
 msgstr "Vali periood analüüsi jaoks"
 
 #. module: account
-#: field:account.tax,ref_tax_sign:0 field:account.tax,tax_sign:0
+#: field:account.tax,ref_tax_sign:0
+#: field:account.tax,tax_sign:0
 #: field:account.tax.template,ref_tax_sign:0
 #: field:account.tax.template,tax_sign:0
 msgid "Tax Code Sign"
@@ -705,7 +732,8 @@ msgid "Field Name"
 msgstr "Välja nimi"
 
 #. module: account
-#: field:account.tax.code,sign:0 field:account.tax.code.template,sign:0
+#: field:account.tax.code,sign:0
+#: field:account.tax.code.template,sign:0
 msgid "Sign for parent"
 msgstr "Logi vanemana"
 
@@ -715,7 +743,8 @@ msgid "End of Year Entries Journal"
 msgstr "Aastalõpu kirjete päevik"
 
 #. module: account
-#: view:product.product:0 view:product.template:0
+#: view:product.product:0
+#: view:product.template:0
 msgid "Purchase Properties"
 msgstr "Ostu omadused"
 
@@ -735,9 +764,12 @@ msgid "Move Lines Created."
 msgstr "Liiguta loodud read."
 
 #. module: account
-#: field:account.fiscalyear,state:0 field:account.journal.period,state:0
-#: field:account.move,state:0 field:account.move.line,state:0
-#: field:account.period,state:0 field:account.subscription,state:0
+#: field:account.fiscalyear,state:0
+#: field:account.journal.period,state:0
+#: field:account.move,state:0
+#: field:account.move.line,state:0
+#: field:account.period,state:0
+#: field:account.subscription,state:0
 msgid "Status"
 msgstr "Olek"
 
@@ -890,8 +922,10 @@ msgstr "Vali kontoplaan"
 #: rml:account.analytic.account.balance:0
 #: rml:account.analytic.account.inverted.balance:0
 #: rml:account.analytic.account.quantity_cost_ledger:0
-#: field:account.analytic.line,unit_amount:0 rml:account.invoice:0
-#: field:account.invoice.line,quantity:0 field:account.model.line,quantity:0
+#: field:account.analytic.line,unit_amount:0
+#: rml:account.invoice:0
+#: field:account.invoice.line,quantity:0
+#: field:account.model.line,quantity:0
 #: field:account.move.line,quantity:0
 msgid "Quantity"
 msgstr "Kogus"
@@ -934,13 +968,16 @@ msgstr "Analüütiline arve"
 #: wizard_field:account.automatic.reconcile,init,period_id:0
 #: field:account.bank.statement,period_id:0
 #: wizard_field:account.central.journal.report,init,period_id:0
-#: view:account.fiscalyear:0 rml:account.general.journal:0
+#: view:account.fiscalyear:0
+#: rml:account.general.journal:0
 #: wizard_field:account.general.journal.report,init,period_id:0
 #: wizard_field:account.invoice.pay,init,period_id:0
-#: field:account.journal.period,period_id:0 field:account.move,period_id:0
+#: field:account.journal.period,period_id:0
+#: field:account.move,period_id:0
 #: wizard_field:account.move.journal,init,period_id:0
 #: field:account.move.line,period_id:0
-#: wizard_field:account.move.validate,init,period_id:0 view:account.period:0
+#: wizard_field:account.move.validate,init,period_id:0
+#: view:account.period:0
 #: wizard_field:account.print.journal.report,init,period_id:0
 #: field:account.subscription,period_nbr:0
 msgid "Period"
@@ -962,7 +999,8 @@ msgid "Net Total:"
 msgstr "Netosumma:"
 
 #. module: account
-#: view:account.fiscal.position:0 field:account.fiscal.position,name:0
+#: view:account.fiscal.position:0
+#: field:account.fiscal.position,name:0
 #: field:account.fiscal.position.account,position_id:0
 #: field:account.fiscal.position.account.template,position_id:0
 #: field:account.fiscal.position.tax,position_id:0
@@ -1084,7 +1122,8 @@ msgid "Fiscal Position Templates"
 msgstr "Finantspositsioonide mallid"
 
 #. module: account
-#: rml:account.invoice:0 field:account.invoice.line,price_unit:0
+#: rml:account.invoice:0
+#: field:account.invoice.line,price_unit:0
 msgid "Unit Price"
 msgstr "Ühiku hind"
 
@@ -1237,7 +1276,8 @@ msgid "Not reconciled transactions"
 msgstr "Võrdlemata tehingud"
 
 #. module: account
-#: view:account.fiscal.position:0 field:account.fiscal.position,tax_ids:0
+#: view:account.fiscal.position:0
+#: field:account.fiscal.position,tax_ids:0
 #: field:account.fiscal.position.template,tax_ids:0
 msgid "Tax Mapping"
 msgstr ""
@@ -1259,7 +1299,8 @@ msgid "Write-Off account"
 msgstr "Mahakandmiste konto"
 
 #. module: account
-#: field:account.model.line,model_id:0 field:account.subscription,model_id:0
+#: field:account.model.line,model_id:0
+#: field:account.subscription,model_id:0
 msgid "Model"
 msgstr "Mudel"
 
@@ -1285,9 +1326,11 @@ msgid "Select invoices you want to pay and manages advances"
 msgstr ""
 
 #. module: account
-#: selection:account.account,type:0 selection:account.account.template,type:0
+#: selection:account.account,type:0
+#: selection:account.account.template,type:0
 #: model:account.account.type,name:account.account_type_root
-#: selection:account.analytic.account,type:0 field:account.journal,view_id:0
+#: selection:account.analytic.account,type:0
+#: field:account.journal,view_id:0
 msgid "View"
 msgstr "Vaade"
 
@@ -1356,7 +1399,8 @@ msgstr "Konto tüübid"
 #: wizard_field:account.central.journal.report,init,journal_id:0
 #: wizard_field:account.general.journal.report,init,journal_id:0
 #: field:account.invoice,journal_id:0
-#: field:account.journal.period,journal_id:0 field:account.model,journal_id:0
+#: field:account.journal.period,journal_id:0
+#: field:account.model,journal_id:0
 #: field:account.move,journal_id:0
 #: wizard_field:account.move.bank.reconcile,init,journal_id:0
 #: wizard_field:account.move.journal,init,journal_id:0
@@ -1372,7 +1416,8 @@ msgid "Journal"
 msgstr "Päevik"
 
 #. module: account
-#: field:account.account,child_id:0 field:account.analytic.account,child_ids:0
+#: field:account.account,child_id:0
+#: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Alamkontod"
 
@@ -1398,7 +1443,8 @@ msgid "Statement reconcile line"
 msgstr ""
 
 #. module: account
-#: view:account.tax:0 view:account.tax.template:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 msgid "Keep empty to use the income account"
 msgstr "Hoia tühjana, et kasutada tulude kontot"
 
@@ -1525,7 +1571,8 @@ msgid "Account n°"
 msgstr "Konto nr."
 
 #. module: account
-#: view:account.tax:0 view:account.tax.template:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
 msgstr "Jäta tühjaks kasutamaks kulu kontot"
 
@@ -1535,7 +1582,8 @@ msgid "Account to reconcile"
 msgstr ""
 
 #. module: account
-#: rml:account.invoice:0 field:account.model.line,partner_id:0
+#: rml:account.invoice:0
+#: field:account.model.line,partner_id:0
 #: field:account.move.line,partner_id:0
 msgid "Partner Ref."
 msgstr "Partneri viide"
@@ -1547,12 +1595,14 @@ msgid "Receivable and Payable Accounts"
 msgstr "Nõuete ja võlgade kontod"
 
 #. module: account
-#: view:account.subscription:0 field:account.subscription,lines_id:0
+#: view:account.subscription:0
+#: field:account.subscription,lines_id:0
 msgid "Subscription Lines"
 msgstr "Tellimuse read"
 
 #. module: account
-#: selection:account.analytic.journal,type:0 selection:account.journal,type:0
+#: selection:account.analytic.journal,type:0
+#: selection:account.journal,type:0
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "Purchase"
@@ -1716,7 +1766,8 @@ msgid "Period length (days)"
 msgstr "Perioodi pikkus (päeva)"
 
 #. module: account
-#: selection:account.payment.term.line,value:0 selection:account.tax,type:0
+#: selection:account.payment.term.line,value:0
+#: selection:account.tax,type:0
 #: selection:account.tax.template,type:0
 msgid "Percent"
 msgstr "Protsent"
@@ -1727,7 +1778,8 @@ msgid "Charts"
 msgstr "Plaanid"
 
 #. module: account
-#: selection:account.analytic.journal,type:0 selection:account.journal,type:0
+#: selection:account.analytic.journal,type:0
+#: selection:account.journal,type:0
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "Sale"
@@ -1801,9 +1853,12 @@ msgstr ""
 
 #. module: account
 #: field:account.analytic.journal,type:0
-#: field:account.bank.statement.line,type:0 field:account.invoice,type:0
-#: field:account.journal,type:0 field:account.move,type:0
-#: field:account.move.reconcile,type:0 xsl:account.transfer:0
+#: field:account.bank.statement.line,type:0
+#: field:account.invoice,type:0
+#: field:account.journal,type:0
+#: field:account.move,type:0
+#: field:account.move.reconcile,type:0
+#: xsl:account.transfer:0
 msgid "Type"
 msgstr "Tüüp"
 
@@ -1951,7 +2006,8 @@ msgid "Journal-Period Name"
 msgstr ""
 
 #. module: account
-#: field:account.tax.code,name:0 field:account.tax.code.template,name:0
+#: field:account.tax.code,name:0
+#: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
 msgstr ""
 
@@ -1966,7 +2022,8 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
 #: field:account.bank.statement.reconcile,partner_id:0
-#: rml:account.general.ledger:0 field:account.invoice,partner_id:0
+#: rml:account.general.ledger:0
+#: field:account.invoice,partner_id:0
 #: field:account.move,partner_id:0
 #: wizard_field:account.partner.balance.report,init,result_selection:0
 #: wizard_field:account.third_party_ledger.report,init,result_selection:0
@@ -2039,8 +2096,10 @@ msgstr "Endine"
 #: field:account.bank.statement,currency:0
 #: field:account.bank.statement.reconcile,total_currency:0
 #: field:account.bank.statement.reconcile,total_second_currency:0
-#: rml:account.general.ledger:0 field:account.invoice,currency_id:0
-#: field:account.journal,currency:0 field:account.model.line,currency_id:0
+#: rml:account.general.ledger:0
+#: field:account.invoice,currency_id:0
+#: field:account.journal,currency:0
+#: field:account.model.line,currency_id:0
 #: field:account.move.line,currency_id:0
 msgid "Currency"
 msgstr "Valuuta"
@@ -2131,7 +2190,8 @@ msgid "Detail"
 msgstr "Detail"
 
 #. module: account
-#: selection:account.account,type:0 selection:account.account.template,type:0
+#: selection:account.account,type:0
+#: selection:account.account.template,type:0
 msgid "Consolidation"
 msgstr "Konsolideerimine"
 
@@ -2194,9 +2254,13 @@ msgid "Date Invoiced"
 msgstr "Arveldamise kuupäev"
 
 #. module: account
-#: help:account.balance.account.balance.report,init,periods:0
+#: help:account.account.balance.report,checktype,periods:0
+#: help:account.general.ledger.report,checktype,periods:0
+#: help:account.partner.balance.report,init,periods:0
+#: help:account.third_party_ledger.report,init,periods:0
+#: help:account.vat.declaration,init,periods:0
 msgid "All periods if empty"
-msgstr "Kõik perioodid kui tühi"
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.account_type_liability
@@ -2219,16 +2283,21 @@ msgid "The account basis of the tax declaration."
 msgstr ""
 
 #. module: account
-#: rml:account.analytic.account.journal:0 field:account.analytic.line,date:0
+#: rml:account.analytic.account.journal:0
+#: field:account.analytic.line,date:0
 #: field:account.bank.statement,date:0
 #: field:account.bank.statement.line,date:0
-#: field:account.bank.statement.reconcile,name:0 rml:account.general.ledger:0
+#: field:account.bank.statement.reconcile,name:0
+#: rml:account.general.ledger:0
 #: selection:account.general.ledger.report,checktype,sortbydate:0
-#: rml:account.journal.period.print:0 field:account.move,date:0
+#: rml:account.journal.period.print:0
+#: field:account.move,date:0
 #: rml:account.overdue:0
 #: wizard_field:account.subscription.generate,init,date:0
-#: field:account.subscription.line,date:0 rml:account.tax.code.entries:0
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
+#: field:account.subscription.line,date:0
+#: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: xsl:account.transfer:0
 msgid "Date"
 msgstr "Kuupäev"
@@ -2245,7 +2314,8 @@ msgid "Unreconcile"
 msgstr ""
 
 #. module: account
-#: field:account.tax,type:0 field:account.tax.template,type:0
+#: field:account.tax,type:0
+#: field:account.tax.template,type:0
 msgid "Tax Type"
 msgstr "Maksutüüp"
 
@@ -2255,7 +2325,8 @@ msgid "Statement Entries"
 msgstr ""
 
 #. module: account
-#: field:account.analytic.line,user_id:0 field:account.journal,user_id:0
+#: field:account.analytic.line,user_id:0
+#: field:account.journal,user_id:0
 msgid "User"
 msgstr "Kasutaja"
 
@@ -2341,7 +2412,8 @@ msgid "Date End"
 msgstr "Lõppkuupäev"
 
 #. module: account
-#: view:account.bank.statement:0 field:account.move.reconcile,line_id:0
+#: view:account.bank.statement:0
+#: field:account.move.reconcile,line_id:0
 #: model:ir.actions.act_window,name:account.action_move_line_search
 #: model:ir.actions.act_window,name:account.action_move_line_tree1
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
@@ -2349,7 +2421,8 @@ msgid "Entry Lines"
 msgstr "Kirje read"
 
 #. module: account
-#: view:account.tax:0 view:account.tax.template:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 msgid "Applicable Code (if type=code)"
 msgstr ""
 
@@ -2438,9 +2511,11 @@ msgstr ""
 #: wizard_button:account.general.journal.report,init,end:0
 #: wizard_button:account.general.ledger.report,account_selection,end:0
 #: wizard_button:account.general.ledger.report,checktype,end:0
-#: view:account.invoice:0 wizard_button:account.invoice.pay,addendum,end:0
+#: view:account.invoice:0
+#: wizard_button:account.invoice.pay,addendum,end:0
 #: wizard_button:account.invoice.pay,init,end:0
-#: wizard_button:account.invoice.refund,init,end:0 view:account.move:0
+#: wizard_button:account.invoice.refund,init,end:0
+#: view:account.move:0
 #: wizard_button:account.move.bank.reconcile,init,end:0
 #: wizard_button:account.move.journal,init,end:0
 #: wizard_button:account.move.line.reconcile,addendum,end:0
@@ -2459,7 +2534,8 @@ msgstr ""
 #: wizard_button:account.third_party_ledger.report,init,end:0
 #: wizard_button:account.vat.declaration,init,end:0
 #: wizard_button:account_use_models,init_form,end:0
-#: view:wizard.company.setup:0 view:wizard.multi.charts.accounts:0
+#: view:wizard.company.setup:0
+#: view:wizard.multi.charts.accounts:0
 msgid "Cancel"
 msgstr "Loobu"
 
@@ -2469,8 +2545,10 @@ msgid "Acc. Type Name"
 msgstr "Konto tüübi nimi"
 
 #. module: account
-#: help:account.tax,base_code_id:0 help:account.tax,ref_base_code_id:0
-#: help:account.tax,ref_tax_code_id:0 help:account.tax,tax_code_id:0
+#: help:account.tax,base_code_id:0
+#: help:account.tax,ref_base_code_id:0
+#: help:account.tax,ref_tax_code_id:0
+#: help:account.tax,tax_code_id:0
 #: help:account.tax.template,base_code_id:0
 #: help:account.tax.template,ref_base_code_id:0
 #: help:account.tax.template,ref_tax_code_id:0
@@ -2484,7 +2562,8 @@ msgid "Litigation"
 msgstr ""
 
 #. module: account
-#: view:account.move.line:0 wizard_view:account.move.validate,init:0
+#: view:account.move.line:0
+#: wizard_view:account.move.validate,init:0
 #: view:account.payment.term:0
 msgid "Information"
 msgstr "Info"
@@ -2594,7 +2673,8 @@ msgid "Price"
 msgstr "Hind"
 
 #. module: account
-#: rml:account.analytic.account.journal:0 rml:account.third_party_ledger:0
+#: rml:account.analytic.account.journal:0
+#: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
 msgid "-"
 msgstr ""
@@ -2661,13 +2741,17 @@ msgid "Invoice Reference"
 msgstr ""
 
 #. module: account
-#: field:account.account,name:0 field:account.account.template,name:0
+#: field:account.account,name:0
+#: field:account.account.template,name:0
 #: rml:account.analytic.account.inverted.balance:0
 #: field:account.bank.statement,name:0
 #: field:account.bank.statement.line,name:0
-#: field:account.chart.template,name:0 field:account.config.wizard,name:0
-#: field:account.model.line,name:0 field:account.move,name:0
-#: field:account.move.line,name:0 field:account.move.reconcile,name:0
+#: field:account.chart.template,name:0
+#: field:account.config.wizard,name:0
+#: field:account.model.line,name:0
+#: field:account.move,name:0
+#: field:account.move.line,name:0
+#: field:account.move.reconcile,name:0
 #: field:account.subscription,name:0
 msgid "Name"
 msgstr "Nimi"
@@ -2707,7 +2791,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: field:account.journal.column,view_id:0 view:account.journal.view:0
+#: field:account.journal.column,view_id:0
+#: view:account.journal.view:0
 #: field:account.journal.view,name:0
 #: model:ir.model,name:account.model_account_journal_view
 msgid "Journal View"
@@ -2800,11 +2885,16 @@ msgid "Full Account Name"
 msgstr "Täielik konto nimi"
 
 #. module: account
-#: rml:account.account.balance:0 rml:account.analytic.account.analytic.check:0
-#: rml:account.analytic.account.balance:0 rml:account.general.ledger:0
-#: rml:account.journal.period.print:0 rml:account.partner.balance:0
-#: rml:account.tax.code.entries:0 rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0 rml:account.vat.declaration:0
+#: rml:account.account.balance:0
+#: rml:account.analytic.account.analytic.check:0
+#: rml:account.analytic.account.balance:0
+#: rml:account.general.ledger:0
+#: rml:account.journal.period.print:0
+#: rml:account.partner.balance:0
+#: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
+#: rml:account.vat.declaration:0
 msgid "1cm 27.7cm 20cm 27.7cm"
 msgstr ""
 
@@ -2825,7 +2915,9 @@ msgid "Document: Customer account statement"
 msgstr ""
 
 #. module: account
-#: view:product.product:0 view:product.template:0 view:res.partner:0
+#: view:product.product:0
+#: view:product.template:0
+#: view:res.partner:0
 msgid "Accounting"
 msgstr "Raamatupidamine"
 
@@ -2870,8 +2962,10 @@ msgid "Centralisation"
 msgstr ""
 
 #. module: account
-#: field:account.invoice.tax,tax_code_id:0 field:account.tax,description:0
-#: field:account.tax,tax_code_id:0 field:account.tax.template,tax_code_id:0
+#: field:account.invoice.tax,tax_code_id:0
+#: field:account.tax,description:0
+#: field:account.tax,tax_code_id:0
+#: field:account.tax.template,tax_code_id:0
 #: model:ir.model,name:account.model_account_tax_code
 msgid "Tax Code"
 msgstr "Maksukood"
@@ -2911,12 +3005,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: selection:account.analytic.journal,type:0 selection:account.journal,type:0
+#: selection:account.analytic.journal,type:0
+#: selection:account.journal,type:0
 msgid "Situation"
 msgstr ""
 
 #. module: account
-#: rml:account.invoice:0 xsl:account.transfer:0
+#: rml:account.invoice:0
+#: xsl:account.transfer:0
 msgid "Document"
 msgstr "Dokument"
 
@@ -2954,7 +3050,8 @@ msgid "Cancel selected invoices"
 msgstr "Tühista valitud arved"
 
 #. module: account
-#: view:account.analytic.journal:0 field:account.analytic.line,journal_id:0
+#: view:account.analytic.journal:0
+#: field:account.analytic.line,journal_id:0
 #: field:account.journal,analytic_journal_id:0
 #: model:ir.actions.report.xml,name:account.analytic_journal_print
 #: model:ir.actions.wizard,name:account.account_analytic_account_journal_report
@@ -2977,23 +3074,28 @@ msgid "("
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0 view:account.period:0 view:account.subscription:0
+#: view:account.invoice:0
+#: view:account.period:0
+#: view:account.subscription:0
 msgid "Set to Draft"
 msgstr "Sea mustandiks"
 
 #. module: account
-#: help:account.invoice,origin:0 help:account.invoice.line,origin:0
+#: help:account.invoice,origin:0
+#: help:account.invoice.line,origin:0
 msgid "Reference of the document that produced this invoice."
 msgstr ""
 
 #. module: account
-#: selection:account.account,type:0 selection:account.account.template,type:0
+#: selection:account.account,type:0
+#: selection:account.account.template,type:0
 #: selection:account.aged.trial.balance,init,result_selection:0
 msgid "Payable"
 msgstr "Võlad"
 
 #. module: account
-#: rml:account.invoice:0 field:account.invoice.tax,base:0
+#: rml:account.invoice:0
+#: field:account.invoice.tax,base:0
 msgid "Base"
 msgstr "Baas"
 
@@ -3003,7 +3105,8 @@ msgid "Model Name"
 msgstr ""
 
 #. module: account
-#: selection:account.account,type:0 selection:account.account.template,type:0
+#: selection:account.account,type:0
+#: selection:account.account.template,type:0
 msgid "Others"
 msgstr "Muud"
 
@@ -3013,13 +3116,15 @@ msgid "8"
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0 view:account.move:0
+#: view:account.invoice:0
+#: view:account.move:0
 #: wizard_button:account.move.validate,init,validate:0
 msgid "Validate"
 msgstr "Valideeri"
 
 #. module: account
-#: view:account.model:0 field:account.model,legend:0
+#: view:account.model:0
+#: field:account.model,legend:0
 msgid "Legend"
 msgstr ""
 
@@ -3034,14 +3139,17 @@ msgid "account.move.line.select"
 msgstr ""
 
 #. module: account
-#: view:account.account:0 rml:account.account.balance:0
+#: view:account.account:0
+#: rml:account.account.balance:0
 #: wizard_field:account.account.balance.report,account_selection,Account_list:0
 #: wizard_field:account.automatic.reconcile,init,writeoff_acc_id:0
 #: field:account.bank.statement.line,account_id:0
 #: field:account.bank.statement.reconcile.line,account_id:0
-#: field:account.invoice,account_id:0 field:account.invoice.line,account_id:0
+#: field:account.invoice,account_id:0
+#: field:account.invoice.line,account_id:0
 #: field:account.journal,account_control_ids:0
-#: field:account.model.line,account_id:0 field:account.move.line,account_id:0
+#: field:account.model.line,account_id:0
+#: field:account.move.line,account_id:0
 #: wizard_field:account.move.line.reconcile.select,init,account_id:0
 #: wizard_field:account.move.line.unreconcile.select,init,account_id:0
 #: model:ir.model,name:account.model_account_account
@@ -3062,9 +3170,12 @@ msgid "By Date and Period"
 msgstr "Kuupäeva ja perioodi järgi"
 
 #. module: account
-#: view:account.account:0 view:account.account.template:0
-#: view:account.bank.statement:0 field:account.bank.statement.line,note:0
-#: field:account.fiscal.position,note:0 view:account.invoice.line:0
+#: view:account.account:0
+#: view:account.account.template:0
+#: view:account.bank.statement:0
+#: field:account.bank.statement.line,note:0
+#: field:account.fiscal.position,note:0
+#: view:account.invoice.line:0
 #: field:account.invoice.line,note:0
 msgid "Notes"
 msgstr "Märkused"
@@ -3077,7 +3188,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: rml:account.invoice:0 view:account.invoice:0
+#: rml:account.invoice:0
+#: view:account.invoice:0
 #: field:account.invoice.line,invoice_line_tax_id:0
 #: model:ir.actions.act_window,name:account.action_tax_form
 #: model:ir.ui.menu,name:account.menu_action_tax_form
@@ -3102,15 +3214,21 @@ msgid "Statement encoding produces payment entries"
 msgstr ""
 
 #. module: account
-#: field:account.account,code:0 rml:account.account.balance:0
-#: field:account.account.template,code:0 field:account.account.type,code:0
+#: field:account.account,code:0
+#: rml:account.account.balance:0
+#: field:account.account.template,code:0
+#: field:account.account.type,code:0
 #: rml:account.analytic.account.analytic.check:0
 #: rml:account.analytic.account.balance:0
 #: rml:account.analytic.account.inverted.balance:0
-#: rml:account.analytic.account.journal:0 field:account.analytic.line,code:0
-#: field:account.config.wizard,code:0 field:account.fiscalyear,code:0
-#: rml:account.general.journal:0 field:account.journal,code:0
-#: rml:account.partner.balance:0 field:account.period,code:0
+#: rml:account.analytic.account.journal:0
+#: field:account.analytic.line,code:0
+#: field:account.config.wizard,code:0
+#: field:account.fiscalyear,code:0
+#: rml:account.general.journal:0
+#: field:account.journal,code:0
+#: rml:account.partner.balance:0
+#: field:account.period,code:0
 msgid "Code"
 msgstr "Kood"
 
@@ -3120,7 +3238,8 @@ msgid "Financial Management"
 msgstr "Finantshaldus"
 
 #. module: account
-#: selection:account.account.type,close_method:0 selection:account.tax,type:0
+#: selection:account.account.type,close_method:0
+#: selection:account.tax,type:0
 #: selection:account.tax.template,type:0
 msgid "None"
 msgstr ""
@@ -3147,7 +3266,8 @@ msgid "Additionnal Information"
 msgstr "Lisainfo"
 
 #. module: account
-#: field:account.tax,name:0 field:account.tax.template,name:0
+#: field:account.tax,name:0
+#: field:account.tax.template,name:0
 #: rml:account.vat.declaration:0
 msgid "Tax Name"
 msgstr "Maksu Nimi"
@@ -3224,7 +3344,8 @@ msgid "Partner Balance"
 msgstr "Partneri bilanss"
 
 #. module: account
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Third Party Ledger"
 msgstr ""
 
@@ -3237,7 +3358,8 @@ msgstr ""
 
 #. module: account
 #: selection:account.tax,applicable_type:0
-#: field:account.tax,python_applicable:0 field:account.tax,python_compute:0
+#: field:account.tax,python_applicable:0
+#: field:account.tax,python_compute:0
 #: selection:account.tax,type:0
 #: selection:account.tax.template,applicable_type:0
 #: field:account.tax.template,python_applicable:0
@@ -3274,7 +3396,8 @@ msgid "Import invoice"
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0 view:wizard.company.setup:0
+#: view:account.invoice:0
+#: view:wizard.company.setup:0
 #: view:wizard.multi.charts.accounts:0
 msgid "Create"
 msgstr ""
@@ -3290,7 +3413,8 @@ msgid "Invoice line"
 msgstr ""
 
 #. module: account
-#: field:account.account,shortcut:0 field:account.account.template,shortcut:0
+#: field:account.account,shortcut:0
+#: field:account.account.template,shortcut:0
 msgid "Shortcut"
 msgstr "Otsetee"
 
@@ -3315,13 +3439,15 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: field:account.tax,parent_id:0 field:account.tax.template,parent_id:0
+#: field:account.tax,parent_id:0
+#: field:account.tax.template,parent_id:0
 msgid "Parent Tax Account"
 msgstr "Ülem maksukonto"
 
 #. module: account
 #: field:account.account,user_type:0
-#: field:account.account.template,user_type:0 view:account.account.type:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
 #: field:account.analytic.account,type:0
 #: model:ir.model,name:account.model_account_account_type
 msgid "Account Type"
@@ -3357,7 +3483,8 @@ msgid "Central Journal"
 msgstr ""
 
 #. module: account
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Balance brought forward"
 msgstr ""
 
@@ -3433,7 +3560,8 @@ msgid "Journal code"
 msgstr "Päeviku kood"
 
 #. module: account
-#: wizard_button:account.fiscalyear.close,init,close:0 view:account.model:0
+#: wizard_button:account.fiscalyear.close,init,close:0
+#: view:account.model:0
 msgid "Create entries"
 msgstr "Loo sissekanded"
 
@@ -3489,11 +3617,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: field:account.account.type,sequence:0 field:account.invoice.tax,sequence:0
-#: field:account.journal.column,sequence:0 field:account.model.line,sequence:0
+#: field:account.account.type,sequence:0
+#: field:account.invoice.tax,sequence:0
+#: field:account.journal.column,sequence:0
+#: field:account.model.line,sequence:0
 #: field:account.payment.term.line,sequence:0
 #: field:account.sequence.fiscalyear,sequence_id:0
-#: field:account.tax,sequence:0 field:account.tax.template,sequence:0
+#: field:account.tax,sequence:0
+#: field:account.tax.template,sequence:0
 #: field:fiscalyear.seq,sequence_id:0
 msgid "Sequence"
 msgstr "Järjekord"
@@ -3559,7 +3690,8 @@ msgstr ""
 
 #. module: account
 #: field:account.model.line,date_maturity:0
-#: field:account.move.line,date_maturity:0 rml:account.overdue:0
+#: field:account.move.line,date_maturity:0
+#: rml:account.overdue:0
 msgid "Maturity date"
 msgstr "Tähtaja kuupäev"
 
@@ -3579,7 +3711,8 @@ msgid "Account Configure Wizard "
 msgstr ""
 
 #. module: account
-#: field:account.config.wizard,date1:0 field:account.fiscalyear,date_start:0
+#: field:account.config.wizard,date1:0
+#: field:account.fiscalyear,date_start:0
 #: field:account.subscription,date_start:0
 msgid "Start Date"
 msgstr "Alguskuupäev"
@@ -3617,7 +3750,8 @@ msgid "Unreconciled"
 msgstr ""
 
 #. module: account
-#: field:account.account,note:0 field:account.account.template,note:0
+#: field:account.account,note:0
+#: field:account.account.template,note:0
 msgid "Note"
 msgstr ""
 
@@ -3641,7 +3775,8 @@ msgid "Entry Sequence"
 msgstr "Kirje järjekord"
 
 #. module: account
-#: selection:account.account,type:0 selection:account.account.template,type:0
+#: selection:account.account,type:0
+#: selection:account.account.template,type:0
 msgid "Closed"
 msgstr "Suletud"
 
@@ -3762,9 +3897,12 @@ msgid "Code/Date"
 msgstr "Kood/Kuupäev"
 
 #. module: account
-#: field:account.account,active:0 field:account.analytic.account,active:0
-#: field:account.analytic.journal,active:0 field:account.journal,active:0
-#: field:account.journal.period,active:0 field:account.payment.term,active:0
+#: field:account.account,active:0
+#: field:account.analytic.account,active:0
+#: field:account.analytic.journal,active:0
+#: field:account.journal,active:0
+#: field:account.journal.period,active:0
+#: field:account.payment.term,active:0
 #: field:account.tax,active:0
 msgid "Active"
 msgstr "Aktiivne"
@@ -3816,15 +3954,20 @@ msgid "Secondary Currency"
 msgstr "Teine Valuuta"
 
 #. module: account
-#: field:account.account,credit:0 rml:account.account.balance:0
+#: field:account.account,credit:0
+#: rml:account.account.balance:0
 #: field:account.analytic.account,credit:0
 #: rml:account.analytic.account.balance:0
 #: rml:account.analytic.account.cost_ledger:0
 #: rml:account.analytic.account.inverted.balance:0
-#: rml:account.central.journal:0 rml:account.journal.period.print:0
-#: field:account.model.line,credit:0 field:account.move.line,credit:0
-#: rml:account.partner.balance:0 rml:account.tax.code.entries:0
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
+#: rml:account.central.journal:0
+#: rml:account.journal.period.print:0
+#: field:account.model.line,credit:0
+#: field:account.move.line,credit:0
+#: rml:account.partner.balance:0
+#: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 #: field:report.hr.timesheet.invoice.journal,cost:0
 msgid "Credit"
@@ -3855,7 +3998,8 @@ msgid "Account Move"
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0 field:account.bank.statement,line_ids:0
+#: view:account.bank.statement:0
+#: field:account.bank.statement,line_ids:0
 msgid "Statement lines"
 msgstr ""
 
@@ -3947,15 +4091,18 @@ msgid "Journal Column"
 msgstr ""
 
 #. module: account
-#: selection:account.fiscalyear,state:0 selection:account.invoice,state:0
-#: selection:account.journal.period,state:0 selection:account.period,state:0
+#: selection:account.fiscalyear,state:0
+#: selection:account.invoice,state:0
+#: selection:account.journal.period,state:0
+#: selection:account.period,state:0
 #: selection:account.subscription,state:0
 msgid "Done"
 msgstr "Valmis"
 
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,periods:0
-#: field:account.config.wizard,period:0 view:account.fiscalyear:0
+#: field:account.config.wizard,period:0
+#: view:account.fiscalyear:0
 #: field:account.fiscalyear,period_ids:0
 #: wizard_field:account.general.ledger.report,checktype,periods:0
 #: wizard_field:account.partner.balance.report,init,periods:0
@@ -3968,7 +4115,8 @@ msgid "Periods"
 msgstr "Perioodid"
 
 #. module: account
-#: rml:account.invoice:0 view:account.invoice:0
+#: rml:account.invoice:0
+#: view:account.invoice:0
 #: field:account.move.line,invoice:0
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
@@ -3995,7 +4143,8 @@ msgid "Analytic costs to reinvoice purchases, timesheets, ..."
 msgstr ""
 
 #. module: account
-#: field:account.account,tax_ids:0 field:account.account.template,tax_ids:0
+#: field:account.account,tax_ids:0
+#: field:account.account.template,tax_ids:0
 msgid "Default Taxes"
 msgstr "Vaikimisi Maksud"
 
@@ -4049,7 +4198,8 @@ msgstr ""
 #. module: account
 #: field:account.analytic.account,name:0
 #: rml:account.analytic.account.analytic.check:0
-#: rml:account.analytic.account.balance:0 rml:account.central.journal:0
+#: rml:account.analytic.account.balance:0
+#: rml:account.central.journal:0
 msgid "Account Name"
 msgstr "Konto nimi"
 
@@ -4140,7 +4290,8 @@ msgid "Import file from your bank statement"
 msgstr "Impordi fail oma pangabilansist"
 
 #. module: account
-#: field:account.account,type:0 field:account.account.template,type:0
+#: field:account.account,type:0
+#: field:account.account.template,type:0
 msgid "Internal Type"
 msgstr "Sisemine tüüp"
 
@@ -4166,12 +4317,14 @@ msgid "Posted"
 msgstr ""
 
 #. module: account
-#: view:account.tax:0 view:account.tax.template:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 msgid "Credit Notes"
 msgstr "Krediidi Märkused"
 
 #. module: account
-#: field:account.config.wizard,date2:0 field:account.fiscalyear,date_stop:0
+#: field:account.config.wizard,date2:0
+#: field:account.fiscalyear,date_stop:0
 msgid "End Date"
 msgstr "Lõppkuupäev"
 
@@ -4192,7 +4345,8 @@ msgid "Day of the Month"
 msgstr "Päev kuus"
 
 #. module: account
-#: field:account.analytic.journal,line_ids:0 field:account.tax.code,line_ids:0
+#: field:account.analytic.journal,line_ids:0
+#: field:account.tax.code,line_ids:0
 msgid "Lines"
 msgstr "Read"
 
@@ -4210,7 +4364,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.tax:0 view:account.tax.template:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 msgid "Tax Declaration"
 msgstr "Maksudeklaratsioon"
 
@@ -4270,12 +4425,14 @@ msgid "The optional quantity on entries"
 msgstr ""
 
 #. module: account
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "JNRL"
 msgstr ""
 
 #. module: account
-#: view:account.fiscalyear:0 view:account.period:0
+#: view:account.fiscalyear:0
+#: view:account.period:0
 msgid "States"
 msgstr "Olekud"
 
@@ -4289,7 +4446,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_unreconciled
 msgid "Receivables & Payables"
-msgstr "Nõuded ja võlad"
+msgstr ""
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -4311,7 +4468,8 @@ msgstr "Alguskuupäev"
 #: rml:account.analytic.account.balance:0
 #: rml:account.analytic.account.inverted.balance:0
 #: rml:account.analytic.account.quantity_cost_ledger:0
-#: field:account.invoice,amount_total:0 field:account.invoice,check_total:0
+#: field:account.invoice,amount_total:0
+#: field:account.invoice,check_total:0
 msgid "Total"
 msgstr "Kokku"
 
@@ -4428,9 +4586,11 @@ msgstr ""
 #: field:account.fiscal.position,company_id:0
 #: field:account.fiscalyear,company_id:0
 #: wizard_field:account.general.ledger.report,checktype,company_id:0
-#: field:account.invoice,company_id:0 field:account.journal,company_id:0
+#: field:account.invoice,company_id:0
+#: field:account.journal,company_id:0
 #: wizard_field:account.partner.balance.report,init,company_id:0
-#: field:account.tax,company_id:0 field:account.tax.code,company_id:0
+#: field:account.tax,company_id:0
+#: field:account.tax.code,company_id:0
 #: wizard_field:account.third_party_ledger.report,init,company_id:0
 #: wizard_field:account.vat.declaration,init,company_id:0
 #: field:wizard.company.setup,company_id:0
@@ -4525,9 +4685,12 @@ msgid "Print Aged Trial Balance"
 msgstr ""
 
 #. module: account
-#: field:account.analytic.line,ref:0 field:account.bank.statement.line,ref:0
-#: field:account.model.line,ref:0 field:account.move.line,ref:0
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
+#: field:account.analytic.line,ref:0
+#: field:account.bank.statement.line,ref:0
+#: field:account.model.line,ref:0
+#: field:account.move.line,ref:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Ref."
 msgstr ""
 
@@ -4604,7 +4767,8 @@ msgid "Control Invoice"
 msgstr ""
 
 #. module: account
-#: selection:account.account,type:0 selection:account.account.template,type:0
+#: selection:account.account,type:0
+#: selection:account.account.template,type:0
 #: selection:account.aged.trial.balance,init,result_selection:0
 msgid "Receivable"
 msgstr "Nõuded"
@@ -4631,7 +4795,8 @@ msgstr "KM:"
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
 #: rml:account.analytic.account.quantity_cost_ledger:0
-#: rml:account.central.journal:0 rml:account.general.journal:0
+#: rml:account.central.journal:0
+#: rml:account.general.journal:0
 #: rml:account.invoice:0
 msgid "Total:"
 msgstr "Kokku:"
@@ -4642,7 +4807,8 @@ msgid "account.analytic.journal"
 msgstr ""
 
 #. module: account
-#: view:account.fiscal.position:0 field:account.fiscal.position,account_ids:0
+#: view:account.fiscal.position:0
+#: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
 msgstr ""
@@ -4658,7 +4824,8 @@ msgid "Account Reconciliation"
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0 selection:account.bank.statement,state:0
+#: view:account.bank.statement:0
+#: selection:account.bank.statement,state:0
 msgid "Confirm"
 msgstr "Kinnita"
 
@@ -4673,7 +4840,8 @@ msgid "Parent Account Template"
 msgstr "Ülemkonto mall"
 
 #. module: account
-#: help:account.tax,domain:0 help:account.tax.template,domain:0
+#: help:account.tax,domain:0
+#: help:account.tax.template,domain:0
 msgid ""
 "This field is only used if you develop your own module allowing developers "
 "to create specific taxes in a custom domain."
@@ -4691,7 +4859,8 @@ msgid "Analytic account"
 msgstr "Analüütiline konto"
 
 #. module: account
-#: rml:account.invoice:0 selection:account.invoice,type:0
+#: rml:account.invoice:0
+#: selection:account.invoice,type:0
 msgid "Supplier Invoice"
 msgstr "Tarnija arve"
 
@@ -4701,16 +4870,22 @@ msgid "Valid"
 msgstr "Kehtiv"
 
 #. module: account
-#: field:account.account,debit:0 rml:account.account.balance:0
+#: field:account.account,debit:0
+#: rml:account.account.balance:0
 #: field:account.analytic.account,debit:0
 #: rml:account.analytic.account.balance:0
 #: rml:account.analytic.account.cost_ledger:0
 #: rml:account.analytic.account.inverted.balance:0
-#: rml:account.central.journal:0 rml:account.general.ledger:0
-#: rml:account.journal.period.print:0 field:account.model.line,debit:0
-#: field:account.move.line,debit:0 rml:account.partner.balance:0
-#: rml:account.tax.code.entries:0 rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0 rml:account.vat.declaration:0
+#: rml:account.central.journal:0
+#: rml:account.general.ledger:0
+#: rml:account.journal.period.print:0
+#: field:account.model.line,debit:0
+#: field:account.move.line,debit:0
+#: rml:account.partner.balance:0
+#: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
+#: rml:account.vat.declaration:0
 #: field:report.hr.timesheet.invoice.journal,revenue:0
 msgid "Debit"
 msgstr "Deebet"
@@ -4772,7 +4947,8 @@ msgid "Reporting"
 msgstr "Aruandlus"
 
 #. module: account
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "/"
 msgstr "/"
 
@@ -4800,10 +4976,11 @@ msgstr "Grupeeri arve read"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 msgid "Configuration"
-msgstr "Seadistus"
+msgstr "Seadistused"
 
 #. module: account
-#: view:account.analytic.line:0 view:account.invoice:0
+#: view:account.analytic.line:0
+#: view:account.invoice:0
 msgid "Total amount"
 msgstr "Kogusumma"
 
@@ -4853,12 +5030,14 @@ msgid "Paid invoice"
 msgstr "Makstud arve"
 
 #. module: account
-#: view:account.tax:0 view:account.tax.template:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 msgid "Tax Definition"
 msgstr "Maksu definitsioon"
 
 #. module: account
-#: field:account.tax,tax_group:0 field:account.tax.template,tax_group:0
+#: field:account.tax,tax_group:0
+#: field:account.tax.template,tax_group:0
 msgid "Tax Group"
 msgstr "Maksu Grupp"
 
@@ -4899,7 +5078,8 @@ msgid "With movements"
 msgstr "Liikumistega"
 
 #. module: account
-#: field:account.tax,domain:0 field:account.tax.template,domain:0
+#: field:account.tax,domain:0
+#: field:account.tax.template,domain:0
 msgid "Domain"
 msgstr "Domeen"
 
@@ -4924,7 +5104,9 @@ msgid "Manually"
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0 view:account.tax:0 view:account.tax.template:0
+#: view:account.invoice:0
+#: view:account.tax:0
+#: view:account.tax.template:0
 #: selection:account.vat.declaration,init,based_on:0
 #: model:ir.actions.act_window,name:account.act_res_partner_2_account_invoice_opened
 #: model:ir.actions.act_window,name:account.action_invoice_tree
@@ -4941,7 +5123,8 @@ msgid "Payable Accounts"
 msgstr "Võlgade kontod"
 
 #. module: account
-#: view:account.invoice.line:0 field:account.invoice.tax,invoice_id:0
+#: view:account.invoice.line:0
+#: field:account.invoice.tax,invoice_id:0
 msgid "Invoice Line"
 msgstr "Arve rida"
 
@@ -4992,7 +5175,8 @@ msgid "The optional other currency if it is a multi-currency entry."
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0 field:account.invoice,payment_ids:0
+#: view:account.invoice:0
+#: field:account.invoice,payment_ids:0
 #: selection:account.vat.declaration,init,based_on:0
 msgid "Payments"
 msgstr "Maksed"
@@ -5038,9 +5222,12 @@ msgstr "Vali päevik ja makse kuupäev"
 #. module: account
 #: selection:account.analytic.account,state:0
 #: selection:account.bank.statement,state:0
-#: selection:account.fiscalyear,state:0 selection:account.invoice,state:0
-#: selection:account.journal.period,state:0 selection:account.move,state:0
-#: selection:account.move.line,state:0 selection:account.period,state:0
+#: selection:account.fiscalyear,state:0
+#: selection:account.invoice,state:0
+#: selection:account.journal.period,state:0
+#: selection:account.move,state:0
+#: selection:account.move.line,state:0
+#: selection:account.period,state:0
 #: selection:account.subscription,state:0
 msgid "Draft"
 msgstr "Mustand"
@@ -5067,7 +5254,8 @@ msgid "Are you sure ?"
 msgstr "Oled sa kindel?"
 
 #. module: account
-#: rml:account.invoice:0 view:account.invoice:0
+#: rml:account.invoice:0
+#: view:account.invoice:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
@@ -5103,16 +5291,22 @@ msgid "Supplier Invoice Process"
 msgstr "Tarnija arve protsess"
 
 #. module: account
-#: rml:account.account.balance:0 rml:account.analytic.account.analytic.check:0
-#: rml:account.analytic.account.balance:0 rml:account.general.ledger:0
-#: rml:account.journal.period.print:0 rml:account.partner.balance:0
-#: rml:account.tax.code.entries:0 rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0 rml:account.vat.declaration:0
+#: rml:account.account.balance:0
+#: rml:account.analytic.account.analytic.check:0
+#: rml:account.analytic.account.balance:0
+#: rml:account.general.ledger:0
+#: rml:account.journal.period.print:0
+#: rml:account.partner.balance:0
+#: rml:account.tax.code.entries:0
+#: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
+#: rml:account.vat.declaration:0
 msgid "Page"
 msgstr ""
 
 #. module: account
-#: view:account.move:0 view:account.move.line:0
+#: view:account.move:0
+#: view:account.move.line:0
 msgid "Optional Information"
 msgstr "Valikuline info"
 
@@ -5128,7 +5322,8 @@ msgid "Receivable and Payable"
 msgstr "Nõuded ja võlad"
 
 #. module: account
-#: rml:account.account.balance:0 rml:account.general.journal:0
+#: rml:account.account.balance:0
+#: rml:account.general.journal:0
 msgid ":"
 msgstr ":"
 
@@ -5151,7 +5346,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0 view:account.bank.statement.reconcile:0
+#: view:account.bank.statement:0
+#: view:account.bank.statement.reconcile:0
 #: view:account.subscription:0
 msgid "Compute"
 msgstr "Arvuta"
@@ -5195,7 +5391,8 @@ msgid "End of period"
 msgstr "Perioodi lõpp"
 
 #. module: account
-#: view:account.move:0 model:ir.model,name:account.model_account_move
+#: view:account.move:0
+#: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
 msgstr "Konto kirje"
 
@@ -5206,7 +5403,8 @@ msgid "General Journal"
 msgstr ""
 
 #. module: account
-#: field:account.account,balance:0 rml:account.account.balance:0
+#: field:account.account,balance:0
+#: rml:account.account.balance:0
 #: selection:account.account.type,close_method:0
 #: field:account.analytic.account,balance:0
 #: rml:account.analytic.account.balance:0
@@ -5214,9 +5412,12 @@ msgstr ""
 #: rml:account.analytic.account.inverted.balance:0
 #: field:account.bank.statement,balance_end:0
 #: field:account.bank.statement.reconcile,total_balance:0
-#: rml:account.general.ledger:0 field:account.move.line,balance:0
-#: rml:account.partner.balance:0 selection:account.payment.term.line,value:0
-#: selection:account.tax,type:0 rml:account.third_party_ledger:0
+#: rml:account.general.ledger:0
+#: field:account.move.line,balance:0
+#: rml:account.partner.balance:0
+#: selection:account.payment.term.line,value:0
+#: selection:account.tax,type:0
+#: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
 msgid "Balance"
 msgstr "Bilanss"
@@ -5260,8 +5461,11 @@ msgid "The sequence used for invoice numbers in this journal."
 msgstr ""
 
 #. module: account
-#: view:account.account:0 view:account.account.template:0
-#: view:account.journal:0 view:account.move:0 view:account.move.line:0
+#: view:account.account:0
+#: view:account.account.template:0
+#: view:account.journal:0
+#: view:account.move:0
+#: view:account.move.line:0
 msgid "General Information"
 msgstr "Üldine info"
 
@@ -5300,7 +5504,8 @@ msgid "List of Accounts"
 msgstr "Kontode nimekiri"
 
 #. module: account
-#: view:product.product:0 view:product.template:0
+#: view:product.product:0
+#: view:product.template:0
 msgid "Sales Properties"
 msgstr ""
 
@@ -5393,11 +5598,15 @@ msgstr ""
 #: view:account.analytic.account:0
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
-#: field:account.bank.statement.reconcile.line,name:0 rml:account.invoice:0
-#: field:account.invoice,name:0 field:account.invoice.line,name:0
+#: field:account.bank.statement.reconcile.line,name:0
+#: rml:account.invoice:0
+#: field:account.invoice,name:0
+#: field:account.invoice.line,name:0
 #: wizard_field:account.invoice.refund,init,description:0
-#: rml:account.overdue:0 field:account.payment.term,note:0
-#: field:account.tax.code,info:0 field:account.tax.code.template,info:0
+#: rml:account.overdue:0
+#: field:account.payment.term,note:0
+#: field:account.tax.code,info:0
+#: field:account.tax.code.template,info:0
 msgid "Description"
 msgstr "Kirjeldus"
 
@@ -5441,7 +5650,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: field:account.tax.code,code:0 field:account.tax.code.template,code:0
+#: field:account.tax.code,code:0
+#: field:account.tax.code.template,code:0
 msgid "Case Code"
 msgstr ""
 
@@ -5523,7 +5733,8 @@ msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.account_type_cash_moves
-#: selection:account.analytic.journal,type:0 selection:account.journal,type:0
+#: selection:account.analytic.journal,type:0
+#: selection:account.journal,type:0
 msgid "Cash"
 msgstr "Kassa"
 
@@ -5563,7 +5774,8 @@ msgid "Keep empty for all open fiscal year"
 msgstr "Jäta tühjaks kõigi avatud majandusaastate joks"
 
 #. module: account
-#: rml:account.invoice:0 selection:account.invoice,type:0
+#: rml:account.invoice:0
+#: selection:account.invoice,type:0
 msgid "Supplier Refund"
 msgstr "Tarnija tagasimakse"
 
@@ -5611,8 +5823,10 @@ msgstr ""
 "Seda kontot kasutatakse käesoleva kategooria lao väljundväärtuse hindamiseks"
 
 #. module: account
-#: help:account.tax,base_sign:0 help:account.tax,ref_base_sign:0
-#: help:account.tax,ref_tax_sign:0 help:account.tax,tax_sign:0
+#: help:account.tax,base_sign:0
+#: help:account.tax,ref_base_sign:0
+#: help:account.tax,ref_tax_sign:0
+#: help:account.tax,tax_sign:0
 #: help:account.tax.template,base_sign:0
 #: help:account.tax.template,ref_base_sign:0
 #: help:account.tax.template,ref_tax_sign:0
@@ -5646,8 +5860,10 @@ msgid "Name of the fiscal year as displayed on screens."
 msgstr "Majandusaasta nimi nagu kuvatakse ekraanil."
 
 #. module: account
-#: field:account.invoice,payment_term:0 view:account.payment.term:0
-#: field:account.payment.term,name:0 view:account.payment.term.line:0
+#: field:account.invoice,payment_term:0
+#: view:account.payment.term:0
+#: field:account.payment.term,name:0
+#: view:account.payment.term.line:0
 #: field:account.payment.term.line,payment_id:0
 #: model:ir.model,name:account.model_account_payment_term
 #: field:res.partner,property_payment_term:0
@@ -5705,7 +5921,8 @@ msgstr "Jah"
 
 #. module: account
 #: help:account.account,reconcile:0
-msgid "Check this if the user is allowed to reconcile entries in this account."
+msgid ""
+"Check this if the user is allowed to reconcile entries in this account."
 msgstr ""
 
 #. module: account
@@ -5716,21 +5933,22 @@ msgstr "Arvuta kirje kuupäevad"
 #. module: account
 #: view:board.board:0
 msgid "Analytic accounts to close"
-msgstr "Analüütilised kontod sulgeda"
+msgstr ""
 
 #. module: account
 #: view:board.board:0
 msgid "Draft invoices"
-msgstr "Arvete mustandid"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_board_account
 #: model:ir.ui.menu,name:account.menu_board_account
 msgid "Accounting Dashboard"
-msgstr "Raamatupdamise töölaud"
+msgstr ""
 
 #. module: account
-#: view:board.board:0 model:ir.actions.act_window,name:account.act_my_account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:account.act_my_account
 msgid "Accounts to invoice"
 msgstr ""
 
@@ -5738,7 +5956,7 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_to_invoice
 msgid "Costs to invoice"
-msgstr "Kulud arveldamiseks"
+msgstr ""
 
 #. module: account
 #: view:board.board:0
@@ -5748,69 +5966,69 @@ msgstr ""
 #. module: account
 #: model:ir.module.module,shortdesc:account.module_meta_information
 msgid "Board for accountant"
-msgstr "Töölaud raamatupidajale"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_income
 msgid "Income Accounts"
-msgstr "Tulude kontod"
+msgstr ""
 
 #. module: account
 #: view:board.board:0
 msgid "My indicators"
-msgstr "Minu näiturid"
+msgstr ""
 
 #. module: account
 #: view:board.board:0
 msgid "Account Board"
-msgstr "Raamatupidamise töölaud"
+msgstr ""
 
 #. module: account
 #: view:board.board:0
 msgid "Aged income"
-msgstr "Aegunud tulu"
+msgstr ""
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,show_columns:0
 msgid "Show Debit/Credit Information"
-msgstr "Näita Deebet/Kreedit informatsiooni"
+msgstr ""
 
 #. module: account
 #: selection:account.balance.account.balance.report,init,account_choice:0
 msgid "All accounts"
-msgstr "Kõik kontod"
+msgstr ""
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,period_manner:0
 msgid "Entries Selection Based on"
-msgstr "Kirjete valik põhineb"
+msgstr ""
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 #: wizard_view:account.balance.account.balance.report,zero_years:0
 msgid "Notification"
-msgstr "Teavitus"
+msgstr ""
 
 #. module: account
 #: selection:account.balance.account.balance.report,init,period_manner:0
 msgid "Financial Period"
-msgstr "Finantsperiood"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
 msgid "Account balance"
-msgstr "Kontojääk"
+msgstr ""
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Period(s)"
-msgstr "Vali periood(id)"
+msgstr ""
 
 #. module: account
 #: selection:account.balance.account.balance.report,init,compare_pattern:0
 msgid "Percentage"
-msgstr "Protsent"
+msgstr ""
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,compare_pattern:0
@@ -5868,7 +6086,7 @@ msgstr ""
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
 msgid "Total :"
-msgstr ""
+msgstr "Kokku :"
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,format_perc:0
@@ -5888,17 +6106,17 @@ msgstr "Aruande valikud"
 #. module: account
 #: selection:account.balance.account.balance.report,init,compare_pattern:0
 msgid "Don't Compare"
-msgstr "Ära Võrdle"
+msgstr "Ära võrdle"
 
 #. module: account
 #: wizard_field:account.balance.account.balance.report,init,account_choice:0
 msgid "Show Accounts"
-msgstr "Näita Kontosid"
+msgstr "Näita kontosid"
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "1. You have selected more than 3 years in any case."
-msgstr ""
+msgstr "1. Teie valisite rohkem kui kolm aastat igal juhul"
 
 #. module: account
 #: model:ir.module.module,shortdesc:account.module_meta_information
@@ -5909,7 +6127,7 @@ msgstr ""
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
 msgid "Year :"
-msgstr ""
+msgstr "Aasta :"
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -5934,12 +6152,12 @@ msgstr ""
 #. module: account
 #: help:account.balance.account.balance.report,init,select_account:0
 msgid "Keep empty for comparision to its parent"
-msgstr ""
+msgstr "Jätke tühjaks, et võrrelda selle vanemaga"
 
 #. module: account
 #: selection:account.balance.account.balance.report,init,period_manner:0
 msgid "Creation Date"
-msgstr "Loomise Kuupäev"
+msgstr "Loomise kuupäev"
 
 #. module: account
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -5951,9 +6169,9 @@ msgstr ""
 #. module: account
 #: wizard_view:account.balance.account.balance.report,zero_years:0
 msgid ""
-"You may have selected the compare options with more than 1 year with credit/"
-"debit columns and % option.This can lead contents to be printed out of the "
-"paper.Please try again."
+"You may have selected the compare options with more than 1 year with "
+"credit/debit columns and % option.This can lead contents to be printed out "
+"of the paper.Please try again."
 msgstr ""
 
 #. module: account
@@ -5972,12 +6190,12 @@ msgid "Month Range"
 msgstr "Kuu vahemik"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
+#: model:ir.actions.act_window,name:report_account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
 msgstr "Viimase 15 päeva jooksul loodud arved"
 
 #. module: account
-#: model:ir.model,name:account.model_report_invoice_created
+#: model:ir.model,name:report_account.model_report_invoice_created
 msgid "Report of Invoices Created within Last 15 days"
 msgstr "Viimase 15 päeva jooksul loodud arvete aruanne"
 
@@ -5992,12 +6210,12 @@ msgid "Accounts by type"
 msgstr "Kontod tüübi järgi"
 
 #. module: account
-#: model:ir.model,name:account.model_report_aged_receivable
+#: model:ir.model,name:report_account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
 msgstr "Aegunud nõuded kuni tänaseni"
 
 #. module: account
-#: model:ir.model,name:account.model_report_account_receivable
+#: model:ir.model,name:report_account.model_report_account_receivable
 msgid "Receivable accounts"
 msgstr "Laekumiskontod"
 
@@ -6007,25 +6225,25 @@ msgid "Range"
 msgstr "Vahemik"
 
 #. module: account
-#: model:ir.module.module,description:account.module_meta_information
+#: model:ir.module.module,description:report_account.module_meta_information
 msgid "A module that adds new reports based on the account module."
 msgstr "Moodul, mis lisab uusi aruandeid konto mooduli põhjal."
 
 #. module: account
-#: model:ir.module.module,shortdesc:account.module_meta_information
+#: model:ir.module.module,shortdesc:report_account.module_meta_information
 msgid "Account Reporting - Reporting"
 msgstr "Konto aruandlus - Aruandlus"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_receivable_graph
-#: model:ir.ui.menu,name:account.menu_account_receivable_graph
+#: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
+#: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
 msgid "Balance by Type of Account"
 msgstr "Bilanss kontotüübi järgi"
 
 #. module: account
 #: field:report.account.receivable,name:0
 msgid "Week of Year"
-msgstr "Nädal"
+msgstr ""
 
 #. module: account
 #: field:report.invoice.created,create_date:0
@@ -6033,7 +6251,7 @@ msgid "Create Date"
 msgstr "Loomise kuupäev"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_receivable_graph
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
 #: view:report.aged.receivable:0
 msgid "Aged Receivable"
 msgstr "Aegunud nõuded"
@@ -6042,3 +6260,75 @@ msgstr "Aegunud nõuded"
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
 msgstr "Maksuvaba summa"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Ettevaatust !"
+
+#, python-format
+#~ msgid "You must first select a partner !"
+#~ msgstr "Sa pead esmalt valima partneri !"
+
+#, python-format
+#~ msgid "End of Fiscal Year Entry"
+#~ msgstr "Majandusaasta lõpp"
+
+#, python-format
+#~ msgid "This period is already closed !"
+#~ msgstr "See periood on juba suletud !"
+
+#, python-format
+#~ msgid "Closing of fiscal year cancelled, please check the box !"
+#~ msgstr "Majandusaasta sulgemine tühistatud, palun märgi kastike !"
+
+#, python-format
+#~ msgid "Taxes missing !"
+#~ msgstr "Maks puudub !"
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Terviklikkuse viga !"
+
+#, python-format
+#~ msgid "You can not use an inactive account!"
+#~ msgstr "Sa ei saa kasutada mitteaktiivset kontot!"
+
+#, python-format
+#~ msgid "Bank Journal "
+#~ msgstr "Panga päevik "
+
+#, python-format
+#~ msgid "Account move line \"%s\" is not valid"
+#~ msgstr "Konto liigutuskirje \"%s\" ei ole õige"
+
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr "Teie ei saa lisada/muuta suletud päeviku kirjeid."
+
+#, python-format
+#~ msgid ""
+#~ "Specified Journal does not have any account move entries in draft state for "
+#~ "this period"
+#~ msgstr ""
+#~ "Valitud päevik ei sisalda konto liigutuskirjeid mustandolekus sellel "
+#~ "perioodil"
+
+#, python-format
+#~ msgid "You have to provide an account for the write off entry !"
+#~ msgstr "Te peate valima konto mahakandmise kirje jaoks !"
+
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "Puudub analüütiline päevik !"
+
+#, python-format
+#~ msgid "You can not use this general account in this journal !"
+#~ msgstr "Te ei saa kasutada üldist kontot selles päevikus !"
+
+#, python-format
+#~ msgid "The opening journal must not have any entry in the new fiscal year !"
+#~ msgstr "Avatav päevik ei tohi sisaldama kirjeid uues finantsaastas !"
+
+#, python-format
+#~ msgid "The account entries lines are not in valid state."
+#~ msgstr "Konto kirjete read ei ole õiges olekus."

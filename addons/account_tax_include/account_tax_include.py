@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import fields, osv
@@ -28,7 +29,7 @@ class account_invoice(osv.osv):
         'price_type': fields.selection([('tax_included','Tax included'),
                                         ('tax_excluded','Tax excluded')],
                                         'Price method', required=True, readonly=True,
-                                        states={'draft':[('readonly',False)]}),
+                                        states={'draft': [('readonly', False)]}),
     }
     _defaults = {
         'price_type': 'tax_excluded',
@@ -96,7 +97,7 @@ class account_invoice_line(osv.osv):
                 res[line.id]['price_subtotal'] = res[line.id]['price_subtotal_incl']
                 for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, res[line.id]['price_subtotal_incl']/line.quantity, line.quantity):
                     res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - tax['amount']
-                    res[line.id]['data'].append( tax)
+                    res[line.id]['data'].append(tax)
 
             res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], dec_obj.precision_get(cr, uid, 'Account'))
             res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], dec_obj.precision_get(cr, uid, 'Account'))
@@ -164,7 +165,7 @@ class account_invoice_line(osv.osv):
         #       print "str context:", context
 
         ctx = (context and context.copy()) or {}
-        ctx.update({'price_type': ctx.get('price_type','tax_excluded')})
+        ctx.update({'price_type': ctx.get('price_type', 'tax_excluded')})
         return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id=currency_id, context=ctx)
 
 account_invoice_line()

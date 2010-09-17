@@ -25,7 +25,7 @@
     'version': '0.1',
     'category': 'Profile',
     'description': """This module is to create Profile for Associates""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['membership', 'event'],
     'update_xml': ['security/ir.model.access.csv', 'profile_association.xml'],
     'demo_xml': [],

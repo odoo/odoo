@@ -7,6 +7,7 @@
 	<record id="product_uom_ltr" model="product.uom">
 		<field name="category_id" ref="product_uom_categ_vol"/>
 		<field name="name">LTR</field>
+		<field name="factor">1.0</field>
 	</record>
 	
 		<record id="product_product_jambon" model="product.product">
@@ -26,7 +27,7 @@
 			<field name="ean13">3307630302014</field>
 			<field name="categ_id" search="[]" model="product.category"/>
 		</record>
-		<record model="product.packaging">
+		<record id="product_package_jambon" model="product.packaging">
 			<field name="name">box of 10</field>
 			<field name="qty">12</field>
 			<field name="ul" ref="product.product_ul_box" />
@@ -55,7 +56,7 @@
 			<field name="ean13">3307631101876</field>
 			<field name="categ_id" search="[]" model="product.category"/>
 		</record>
-		<record model="product.packaging">
+		<record id="product_package_from" model="product.packaging">
 			<field name="name">Box of 5</field>
 			<field name="qty">12</field>
 			<field name="ul" ref="product.product_ul_box" />
@@ -84,7 +85,7 @@
 			<field name="ean13">3307631102323</field>
 			<field name="categ_id" search="[]" model="product.category"/>
 		</record>
-		<record model="product.packaging">
+		<record id="product_package_pain" model="product.packaging">
 			<field name="name">Bag of 2</field>
 			<field name="qty">6</field>
 			<field name="ul" ref="product.product_ul_box" />
@@ -113,7 +114,7 @@
 			<field name="ean13">3307630302045</field>
 			<field name="categ_id" search="[]" model="product.category"/>
 		</record>
-		<record model="product.packaging">
+		<record id="product_package_lait" model="product.packaging">
 			<field name="name">Boxes of 1 liter</field>
 			<field name="qty">4</field>
 			<field name="ul" ref="product.product_ul_box" />

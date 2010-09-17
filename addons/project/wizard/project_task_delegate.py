@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from lxml import etree
+
 from tools.translate import _
 from osv import fields, osv
 
@@ -41,7 +43,7 @@ class project_task_delegate(osv.osv_memory):
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             if task.name.startswith(_('CHECK: ')):
-                newname = task.name.strip(_('CHECK: '))
+                newname = str(task.name).replace(_('CHECK: '), '')
             else:
                 newname = task.name or ''
             return newname
@@ -61,10 +63,10 @@ class project_task_delegate(osv.osv_memory):
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             if task.name.startswith(_('CHECK: ')):
-                newname = task.name.strip(_('CHECK: '))
+                newname = str(task.name).replace(_('CHECK: '), '')
             else:
                 newname = task.name or ''
-            return _('CHECK: ')+ newname
+            return _('CHECK: ') + newname
         return ''
 
     def _get_new_desc(self, cr, uid, context=None):
@@ -83,7 +85,36 @@ class project_task_delegate(osv.osv_memory):
        'new_task_description': _get_new_desc,
        'state': 'pending',
     }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        users_obj = self.pool.get('res.users')
+        obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = obj_tm and obj_tm.name or 'Hours'
 
+        res = super(project_task_delegate, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
+
+        if tm in ['Hours','Hour']:
+            return res
+
+        eview = etree.fromstring(res['arch'])
+
+        def _check_rec(eview):
+            if eview.attrib.get('widget','') == 'float_time':
+                eview.set('widget','float')
+            for child in eview:
+                _check_rec(child)
+            return True
+
+        _check_rec(eview)
+
+        res['arch'] = etree.tostring(eview)
+
+        for f in res['fields']:
+            if 'Hours' in res['fields'][f]['string']:
+                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+
+        return res
+    
     def validate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -98,7 +129,7 @@ class project_task_delegate(osv.osv_memory):
             'planned_hours': delegate_data['planned_hours'],
             'remaining_hours': delegate_data['planned_hours'],
             'parent_ids': [(6, 0, [task.id])],
-            'state': 'open',
+            'state': 'draft',
             'description': delegate_data['new_task_description'] or '',
             'child_ids': [],
             'work_ids': []

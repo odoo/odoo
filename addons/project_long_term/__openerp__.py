@@ -22,7 +22,7 @@
 {
     "name": "Long Term Project Management",
     "version": "1.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Generic Modules/Projects & Services",
     "depends": ["resource", "project"],
@@ -46,7 +46,6 @@
               ],
     "update_xml": [
         "security/ir.model.access.csv",
-        "project_long_term_wizard.xml" ,
         "wizard/project_schedule_tasks_view.xml",
         "project_long_term_view.xml",
         "project_long_term_workflow.xml",
@@ -58,4 +57,5 @@
     'active': False,
     'certificate': None,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

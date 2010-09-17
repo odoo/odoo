@@ -1,8 +1,16 @@
 -
   I test the 'Payment Advice' in order to check the hr_payroll in OpenERP
 -
+  I Create a bank record
+-
+  !record {model: res.partner.bank, id: res_partner_bank_0}:
+    acc_number: '987654321'
+    partner_id: base.res_partner_desertic_hispafuentes
+    sequence: 0.0
+    state: bank
+-
   I create a new employee “Richard”
-- 
+-
   !record {model: hr.employee, id: hr_employee_richard0}:
     address_home_id: base.res_partner_address_2
     address_id: base.res_partner_address_9
@@ -24,10 +32,11 @@
     name: Richard
     pg_joining: '2009-12-01'
     property_bank_account: account.cash
+    bank_account_id: res_partner_bank_0
     salary_account: account.a_recv
     vehicle_distance: 0.0
 -
-  I create a new payroll structure for software developer 
+  I create a new payroll structure for software developer
 -
   !record {model: hr.payroll.structure, id: hr_payroll_structure_softwaredeveloper0}:
     code: SD
@@ -75,58 +84,60 @@
     name: Software Developer
 -
   I create a employee payslip record
-- 
+-
   !record {model: hr.payslip, id: hr_payslip_0}:
     bank_journal_id: account.bank_journal
     employee_id: hr_payroll.hr_employee_richard0
     journal_id: account.expenses_journal
-- 
+-
   I click on 'Compute Sheet' button
-- 
+-
   !workflow {model: hr.payslip, action: compute_sheet, ref: hr_payslip_0}
-- 
+-
+  just to test
+-
   !python {model: hr.payslip}: |
     self.compute_sheet(cr, uid, [ref("hr_payslip_0")], {"lang": "en_US", "tz": False,
       "active_model": "ir.ui.menu", "department_id": False, "active_ids": [ref("hr_payroll.menu_department_tree")],
       "section_id": False, "active_id": ref("hr_payroll.menu_department_tree"),
       })
 -
-  I check that an order which was in the "New Slip" state has transit to "Wating for Verification" state
+  I check that the order is now in "Waiting for Verification" state
 -
   !python {model: hr.payslip}: |
     from tools.translate import _
     payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
-    assert(payslip_brw.state == 'draft'), _('State not changed!') 
+    assert(payslip_brw.state == 'draft'), _('State not changed!')
 -
-  Then I click on Verify Sheet button
-- 
+  I click on Verify Sheet button.
+-
   !workflow {model: hr.payslip, action: verify_sheet, ref: hr_payslip_0}
 -
-  I check that an order which was in the "Wating for Verification" state has transit to "Wating for HR Verification" state
+  I check that the order is in the "Waiting for HR Verification" state
 -
   !python {model: hr.payslip}: |
     from tools.translate import _
     payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
-    assert(payslip_brw.state == 'hr_check'), _('State not changed!') 
+    assert(payslip_brw.state == 'hr_check'), _('State not changed!')
 -
-  Then I click on Complete HR Checking button
+  I click on Complete HR Checking button.
 -
   !workflow {model: hr.payslip, action: final_verify_sheet, ref: hr_payslip_0}
 -
- I check that an order which was in the "'Wating for HR Verification'" state has transit to "Confirm Sheet" state
+  I check that the order is in "Confirm Sheet" state.
 -
   !python {model: hr.payslip}: |
     from tools.translate import _
     payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
-    assert(payslip_brw.state == 'confirm'), _('State not changed!') 
--  
-  Then I click on Pay Salary button
-- 
+    assert(payslip_brw.state == 'confirm'), _('State not changed!')
+-
+  I click on Pay Salary button
+-
   !workflow {model: hr.payslip, action: process_sheet, ref: hr_payslip_0}
 -
-  I check that an order which was in the "Confirm Sheet" state has transit to "Paid Salary" state
+  I check that the order is in "Paid Salary" state.
 -
   !python {model: hr.payslip}: |
     from tools.translate import _
     payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
-    assert(payslip_brw.state == 'done'), _('State not changed!') 
+    assert(payslip_brw.state == 'done'), _('State not changed!')

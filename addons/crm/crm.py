@@ -121,7 +121,6 @@ class crm_case(object):
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
         stage = False
-        stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
                 st =  not context.get('force_domain', False) and case.stage_id.id  or False
@@ -141,8 +140,18 @@ class crm_case(object):
         if not context:
             context = {}
         stage_obj = self.pool.get('crm.case.stage')
-        tmp = self.read(cr, uid, ids, ['section_id'], context)[0]['section_id']
-        section_id = tmp and tmp[0] or False
+        res = self.read(cr, uid, ids, ['section_id', 'stage_id'], context)[0]
+        section_id = res['section_id'] and res['section_id'][0] or False
+        stage_id = res['stage_id'] and res['stage_id'][0] or False
+
+        # We select either the stages in the same section as the current stage
+        # if it a stage that does not have a section, or the stages of the 
+        # current section of the case
+        if stage_id:
+            stage_record = stage_obj.browse(cr, uid, stage_id)
+            if not stage_record.section_id:
+                section_id = False # only select stages without section
+
         domain = [('object_id.model', '=', self._name), ('section_id', '=', section_id)]
         if 'force_domain' in context and context['force_domain']:
             domain += context['force_domain']
@@ -150,6 +159,7 @@ class crm_case(object):
         s = {}
         previous = {}
         section = self._name
+
         for stage in stage_obj.browse(cr, uid, sid, context=context):
             s.setdefault(section, {})
             s[section][previous.get(section, False)] = stage.id
@@ -301,6 +311,13 @@ class crm_case(object):
         self.write(cr, uid, ids, {'state': 'cancel',
                                   'active': True})
         self._action(cr, uid, cases, 'cancel')
+        for case in cases:
+            message = "The " + self._description + " '" + case.name + "' has been Cancelled."
+            #TODO: Need to differentiate lead and opportunity
+#            if hasattr(case, 'type'):
+#                #TO CHECK: hasattr gives warning for other crm objects that don't have field 'type'
+#                message = "The " + (case.type or 'Case').title() + " '" + case.name + "' has been Cancelled."
+            self.log(cr, uid, case.id, message)
         return True
 
     def case_pending(self, cr, uid, ids, *args):
@@ -369,7 +386,10 @@ class crm_case(object):
                 if not destination:
                     src, dest = dest, src
                     if body and case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature)
+                        if body:
+                            body += '\n\n%s' % (case.user_id.signature)
+                        else:
+                            body = '\n\n%s' % (case.user_id.signature)
 
                 body = self.format_body(body)
 
@@ -422,7 +442,7 @@ class crm_case(object):
         rule_obj = self.pool.get('base.action.rule')
         model_obj = self.pool.get('ir.model')
         model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('name','=',model_ids[0])])
+        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
     def format_body(self, body):
@@ -441,14 +461,13 @@ class crm_case_section(osv.osv):
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'code': fields.char('Code', size=8),
-        'active': fields.boolean('Active', help="If the active field is set to \
-                        true, it will allow you to hide the sales team without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to "\
+                        "true, it will allow you to hide the sales team without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'change_responsible': fields.boolean('Change Responsible', help="Thick this box if you want that on escalation, the responsible of this sale team automatically becomes responsible of the lead/opportunity escaladed"),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address put \
-                        in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
@@ -586,8 +605,7 @@ class crm_case_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order \
-                        when displaying a list of case stages."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model', 'Object Name'),
         'probability': fields.float('Probability (%)', required=True),
         'on_change': fields.boolean('Change Probability Automatically', \
@@ -655,7 +673,7 @@ class crm_case_section_custom(osv.osv):
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'Responsible User'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section.custom', 'Parent Section'), 
         'note': fields.text('Notes'),
     }

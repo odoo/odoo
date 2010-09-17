@@ -24,7 +24,7 @@
     "name" : "",
     "version" : "1.1",
     "depends" : ['marketing_campaign'],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
     "description": """
     """,

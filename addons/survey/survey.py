@@ -124,7 +124,6 @@ class survey(osv.osv):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'survey.browse.response',
                 'datas': datas,
-                'nodestroy': True,
                 'context' : context
             }
         else:
@@ -135,7 +134,6 @@ class survey(osv.osv):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'survey.form',
                 'datas': datas,
-                'nodestroy':True,
                 'context' : context
             }
         return report

@@ -8,6 +8,7 @@
             <field name="name">Marketing Executive</field>
             <field name="company_id" ref="base.main_company"/>
         </record>
+
         <record id="hr_payslip_line_houserantallowance1" model="hr.payslip.line">
             <field name="amount_type">per</field>
             <field name="account_id" ref="account.a_expense"/>
@@ -19,6 +20,7 @@
             <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">House Rant Allowance</field>
         </record>
+
         <record id="hr_payslip_line_convanceallowance1" model="hr.payslip.line">
             <field name="amount_type">fix</field>
             <field name="account_id" ref="account.a_expense"/>
@@ -30,6 +32,7 @@
             <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Convance Allowance</field>
         </record>
+
         <record id="hr_payslip_line_professionaltax1" model="hr.payslip.line">
             <field name="amount_type">fix</field>
             <field name="account_id" ref="account.a_pay"/>
@@ -41,6 +44,7 @@
             <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Professional Tax</field>
         </record>
+
         <record id="hr_payslip_line_providentfund1" model="hr.payslip.line">
             <field name="amount_type">per</field>
             <field name="account_id" ref="account.a_pay"/>
@@ -52,7 +56,7 @@
             <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Provident Fund</field>
         </record>
-        
+
         <!-- Employee -->
         <record id="hr_employee_bonamy0" model="hr.employee">
             <field eval="0" name="manager"/>
@@ -62,7 +66,7 @@
             <field name="name">Bonamy</field>
             <field name="resource_type">user</field>
         </record>
-        
+
         <!-- Employee Contract -->
         <record id="hr_contract_firstcontract1" model="hr.contract">
             <field name="wage_type_id" ref="hr_contract.hr_contract_monthly_gross"/>
@@ -74,7 +78,7 @@
             <field eval="4000.0" name="wage"/>
             <field eval="5" name="working_days_per_week"/>
         </record>
-        
+
         <!-- Payslip -->
         <record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
             <field name="number">SLIP/001</field>
@@ -87,6 +91,6 @@
             <field name="bank_journal_id" ref="account.bank_journal"/>
             <field name="name">Salary Slip of Bonamy for June-2010</field>
         </record>
-        
+
     </data>
 </openerp>

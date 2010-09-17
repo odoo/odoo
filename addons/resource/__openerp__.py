@@ -23,7 +23,7 @@
 {
     "name" : "Resource",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category" : "Generic Modules/Projects & Services",
     "website" : "http://www.openerp.com",
     "description": """
@@ -34,7 +34,7 @@
      It also manages the leaves of every resource.
 
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'process'],
     'init_xml': [],

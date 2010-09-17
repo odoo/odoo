@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-09 14:12+0000\n"
-"Last-Translator: Carlo - didotech.com <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 09:18+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:52+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -207,7 +207,9 @@ msgstr ""
 "delegata l'attività."
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "Note"
@@ -223,7 +225,8 @@ msgid "Analysis"
 msgstr "Analisi"
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -249,12 +252,14 @@ msgstr ""
 "stessa notazione."
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "Annullato"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "Titolo Email"
 
@@ -321,7 +326,8 @@ msgid "Extra Info"
 msgstr "Informazioni Aggiuntive"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr "Partner"
 
@@ -400,7 +406,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Calcolaro come: Tempo impiegato + Tempo rimanente."
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "Tipo"
 
@@ -444,7 +451,8 @@ msgid "Planned Time"
 msgstr "Tempo pianificato"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "Esecuzione Attività"
@@ -497,17 +505,20 @@ msgid "Template"
 msgstr "Modello"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Configurazione"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "Data di inizio"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "Progetti"
 
@@ -559,17 +570,20 @@ msgstr "XML non valido per Visualizzazione Architettura!"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "Gestione Progetti"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Tempo impiegato"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "Attività"
 
@@ -659,7 +673,8 @@ msgstr "Esegui fatturazione per le linee dell'ordine di vendita"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "Bozza"
 
@@ -674,8 +689,10 @@ msgid "Project Manager"
 msgstr "Project Manager"
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "In sospeso"
@@ -700,7 +717,8 @@ msgid "Project Time Unit"
 msgstr "Unità di tempo del progetto"
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr "Nome Progetto"
 
@@ -885,8 +903,10 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "Completato"
@@ -895,7 +915,8 @@ msgstr "Completato"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -1075,7 +1096,8 @@ msgid "Template of Projects"
 msgstr "Modello dei Progetti"
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "Sequenza"
 
@@ -1139,7 +1161,8 @@ msgid "Delegate your task to the other user"
 msgstr "Delega la tua attività ad un altro utente"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "Mail Footer"
 
@@ -1193,7 +1216,8 @@ msgid "My Planning"
 msgstr ""
 
 #. module: project
-#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "I Miei Conti da Fatturare"
 

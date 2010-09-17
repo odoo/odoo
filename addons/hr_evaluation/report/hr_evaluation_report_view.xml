@@ -7,7 +7,8 @@
         <field name="model">hr.evaluation.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Evaluations Analysis">
+            <tree colors="blue:state in ('draft');black:state in ('wait','progress');gray:state in('done','cancel')"
+             string="Evaluations Analysis">
                 <field name="create_date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="deadline" invisible="1"/>
@@ -57,7 +58,7 @@
                    		help = "Final Validation Evaluations"/>
                    	<filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
   					<separator orientation="vertical"/>
-	                <field name="employee_id" widget="selection"/>
+	                <field name="employee_id"/>
 	                <field name="plan_id" widget="selection"/>
                 </group>
                 <newline/>
@@ -73,7 +74,7 @@
                     <filter string="Year" icon="terp-go-month" context="{'group_by':'year'}"/>
                 </group>
                 <newline/>
-				<group expand="0" string="Extended options..." groups="base.group_extended">
+				<group expand="0" string="Extended Filters..." groups="base.group_extended">
                 <field name="rating"/>
                 <separator orientation="vertical"/>
                 <field name="deadline"/>

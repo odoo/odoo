@@ -32,37 +32,38 @@ class hr_payroll_create_analytic(osv.osv_memory):
        }
 
    def do_duplicate(self, cr, uid, ids, context=None):
-
-        account_pool =self.pool.get('account.analytic.account')
+        account_pool = self.pool.get('account.analytic.account')
         func_pool = self.pool.get('hr.employee.grade')
         ad_pool = self.pool.get('hr.allounce.deduction.categoty')
-        data = self.read(cr,uid,ids)[0]
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids, context=context)[0]
         tpy = data['type']
         company = data['company_id']
 
-        function_ids = func_pool.search(cr, uid, [])
-        ad_ids = ad_pool.search(cr, uid, [])
+        function_ids = func_pool.search(cr, uid, [], context=context)
+        ad_ids = ad_pool.search(cr, uid, [], context=context)
 
         if tpy == 'bydeg':
-            for function in func_pool.browse(cr, uid, function_ids):
+            for function in func_pool.browse(cr, uid, function_ids, context=context):
                 res = {
                     'name':function.name,
                     'company_id':company
                 }
-                fid = account_pool.create(cr, uid, res)
+                fid = account_pool.create(cr, uid, res, context=context)
                 res = {
                     'name':'Basic Salary',
                     'company_id':company,
                     'parent_id': fid
                 }
-                account_pool.create(cr, uid, res)
-                for ad in ad_pool.browse(cr, uid, ad_ids):
+                account_pool.create(cr, uid, res, context=context)
+                for ad in ad_pool.browse(cr, uid, ad_ids, context=context):
                     res = {
                         'name':ad.name,
                         'company_id':company,
                         'parent_id': fid
                     }
-                    account_pool.create(cr, uid, res)
+                    account_pool.create(cr, uid, res, context=context)
 
 
 
@@ -71,28 +72,28 @@ class hr_payroll_create_analytic(osv.osv_memory):
                 'name':'Basic Salary',
                 'company_id':company
             }
-            adid = account_pool.create(cr, uid, res)
-            for function in func_pool.browse(cr, uid, function_ids):
+            adid = account_pool.create(cr, uid, res, context=context)
+            for function in func_pool.browse(cr, uid, function_ids, context=context):
                 res = {
                     'name':function.name,
                     'company_id':company,
                     'parent_id': adid
                 }
-                account_pool.create(cr, uid, res)
+                account_pool.create(cr, uid, res, context=context)
 
-            for ad in ad_pool.browse(cr, uid, ad_ids):
+            for ad in ad_pool.browse(cr, uid, ad_ids, context=context):
                 res = {
                     'name':ad.name,
                     'company_id':company,
                 }
-                adid = account_pool.create(cr, uid, res)
-                for function in func_pool.browse(cr, uid, function_ids):
+                adid = account_pool.create(cr, uid, res, context=context)
+                for function in func_pool.browse(cr, uid, function_ids, context=context):
                     res = {
                         'name':function.name,
                         'company_id':company,
                         'parent_id': adid
                     }
-                    account_pool.create(cr, uid, res)
+                    account_pool.create(cr, uid, res, context=context)
 
         return {}
 hr_payroll_create_analytic()

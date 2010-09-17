@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-06-14 14:56+0000\n"
-"Last-Translator: Grzegorz Grzelak (Cirrus.pl) <Unknown>\n"
+"PO-Revision-Date: 2010-08-15 09:58+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:54+0000\n"
+"X-Launchpad-Export-Date: 2010-08-16 06:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -728,7 +728,7 @@ msgstr "Od"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "weight"
-msgstr ""
+msgstr "waga"
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -854,7 +854,7 @@ msgstr "Brak"
 #: model:ir.actions.wizard,name:stock.action2
 #: model:ir.actions.wizard,name:stock.action_lot4
 msgid "Downstream traceability"
-msgstr ""
+msgstr "Śledzenie wstecz"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
@@ -2352,7 +2352,7 @@ msgstr "Wydanie zewnętrzne"
 #: model:ir.actions.wizard,name:stock.action4
 #: model:ir.actions.wizard,name:stock.action_lot2
 msgid "Upstream traceability"
-msgstr ""
+msgstr "Śledzenie wprzód"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0
@@ -2412,8 +2412,92 @@ msgstr "Stan przesunięcia"
 msgid "Physical Locations"
 msgstr "Strefy fizyczne"
 
+#, python-format
+#~ msgid "You cannot delete any record!"
+#~ msgstr "Nie możesz usunąć żadnego rekordu!"
+
+#, python-format
+#~ msgid "Error, no partner !"
+#~ msgstr "Błąd, brak partnera !"
+
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "Faktura nie została utworzona"
+
+#, python-format
+#~ msgid "Provide the quantities of the returned products."
+#~ msgstr "Podaj ilości zwróconych produktów"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Błąd"
+
+#, python-format
+#~ msgid "Invoice is already created."
+#~ msgstr "Faktura już została utworzona."
+
+#, python-format
+#~ msgid "Products: "
+#~ msgstr "Produkty: "
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Błąd!"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Ostrzeżenie"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Błąd !"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "do zafakturowania"
+
 #~ msgid "Stock Management"
 #~ msgstr "Zapasy"
+
+#, python-format
+#~ msgid "No product in this location."
+#~ msgstr "Brak produktów w tej strefie"
+
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Stan faktury"
+
+#, python-format
+#~ msgid "Delivered Qty"
+#~ msgstr "Ilość dostarczona"
+
+#, python-format
+#~ msgid "Please select at least two inventories."
+#~ msgstr "Wybierz co najmniej dwie inwentaryzacje"
+
+#, python-format
+#~ msgid "You can not remove a lot line !"
+#~ msgstr "Nie możesz usuwać pozycji partii !"
+
+#, python-format
+#~ msgid "Received Qty"
+#~ msgstr "Otrzymana ilość"
+
+#, python-format
+#~ msgid "No production sequence defined"
+#~ msgstr "Nie zdefiniowano numeracji produkcji"
+
+#, python-format
+#~ msgid "Message !"
+#~ msgstr "Wiadomość !"
+
+#, python-format
+#~ msgid "Please select one and only one inventory !"
+#~ msgstr "Wybierz tylko jedną inwentaryzację !"
+
+#, python-format
+#~ msgid "Produced Qty"
+#~ msgstr "Ilość wyprodukowana"
 
 #~ msgid ""
 #~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
@@ -2443,3 +2527,28 @@ msgstr "Strefy fizyczne"
 #~ "* Śledzenie partii (Od dostawcy/Od nabywcy, partie produkcyjne, numery "
 #~ "seryjne, ...)\n"
 #~ "    "
+
+#, python-format
+#~ msgid "You can only delete draft moves."
+#~ msgstr "Możesz usuwać tylko projekty przesunięć"
+
+#, python-format
+#~ msgid "Merging is only allowed on draft inventories."
+#~ msgstr "Łączenie jest dozwolone tylko na projektach inwentaryzacji"
+
+#, python-format
+#~ msgid "Unplanned Qty"
+#~ msgstr "Ilość nieplanowana"
+
+#, python-format
+#~ msgid ""
+#~ "Please put a partner on the picking list if you want to generate invoice."
+#~ msgstr "Podaj partnera do listy pobrań, jeśli chcesz wygenerować fakturę."
+
+#, python-format
+#~ msgid "Invoice cannot be created from Packing."
+#~ msgstr "Nie można utworzyć faktury z listy przesunięć"
+
+#, python-format
+#~ msgid "Return lines"
+#~ msgstr "Pozycje zwrotu"

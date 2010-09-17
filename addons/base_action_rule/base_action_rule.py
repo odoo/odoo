@@ -60,7 +60,8 @@ class base_action_rule(osv.osv):
         return [('', '')]
 
     _columns = {
-        'name': fields.many2one('ir.model', 'Object', required=True),
+        'name':  fields.char('Rule Name', size=64, required=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True),
         'create_date': fields.datetime('Create Date', readonly=1),
         'active': fields.boolean('Active', help="If the active field is set to False,\
  it will allow you to hide the rule without removing it."),
@@ -124,10 +125,22 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
     _order = 'sequence'
 
+    def onchange_model_id(self, cr, uid, ids, name):
+        #This is not a good solution as it will affect the domain only on onchange
+        res = {'domain':{'filter_id':[]}}
+        if name:
+            model_name = self.pool.get('ir.model').read(cr, uid, [name], ['model'])
+            if model_name:
+                mod_name = model_name[0]['model']
+                res['domain'] = {'filter_id': [('model_id','=',mod_name)]}
+        else:
+            res['value'] = {'filter_id':False}
+        return res
+
     def pre_action(self, cr, uid, ids, model, context=None):
         # Searching for action rules
         cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
-                        LEFT JOIN ir_model model on (model.id = rule.name) \
+                        LEFT JOIN ir_model model on (model.id = rule.model_id) \
                         where active")
         res = cr.fetchall()
         # Check if any rule matching with current object
@@ -164,7 +177,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if not context:
             context = {}
         for action_rule in self.browse(cr, uid, ids, context=context):
-            model = action_rule.name.model
+            model = action_rule.model_id.model
             obj_pool = self.pool.get(model)
             obj_pool.__setattr__('create', self._create(obj_pool.create, model, context=context))
             obj_pool.__setattr__('write', self._write(obj_pool.write, model, context=context))
@@ -246,7 +259,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param context: A standard dictionary for contextual values """
         ok = True
         if action.filter_id:
-            if action.name.model == action.filter_id.model_id:
+            if action.model_id.model == action.filter_id.model_id:
                 context.update(eval(action.filter_id.context))
                 obj_ids = obj._table.search(cr, uid, eval(action.filter_id.domain), context=context)
                 if not obj.id in obj_ids:
@@ -344,24 +357,24 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if not scrit:
             scrit = []
         for action in self.browse(cr, uid, ids):
-            model_obj = self.pool.get(action.name.model)
+            model_obj = self.pool.get(action.model_id.model)
             for obj in objects:
                 ok = self.do_check(cr, uid, action, obj, context=context)
                 if not ok:
                     continue
 
                 base = False
-                if hasattr(obj, 'create_date') and action.trg_date_type=='create':
+                if action.trg_date_type=='create' and hasattr(obj, 'create_date'):
                     base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif hasattr(obj, 'create_date') and action.trg_date_type=='action_last':
+                elif action.trg_date_type=='action_last' and hasattr(obj, 'create_date'):
                     if hasattr(obj, 'date_action_last') and obj.date_action_last:
                         base = datetime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
                     else:
                         base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif hasattr(obj, 'date_deadline') and action.trg_date_type=='deadline' \
+                elif action.trg_date_type=='deadline' and hasattr(obj, 'date_deadline') \
                                 and obj.date_deadline:
                     base = datetime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
-                elif hasattr(obj, 'date') and action.trg_date_type=='date' and obj.date:
+                elif action.trg_date_type=='date' and hasattr(obj, 'date') and obj.date:
                     base = datetime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
                 if base:
                     fnct = {

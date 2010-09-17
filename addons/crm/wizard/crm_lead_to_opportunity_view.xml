@@ -3,7 +3,7 @@
 
         <!-- Lead to Opportunity view -->
 
-          <record id="view_crm_lead2opportunity_create" model="ir.ui.view">
+      <record id="view_crm_lead2opportunity_create" model="ir.ui.view">
           <field name="name">crm.lead2opportunity.create</field>
           <field name="model">crm.lead2opportunity</field>
           <field name="type">form</field>
@@ -56,6 +56,26 @@
                     <button special="cancel" string="Cancel" icon="gtk-cancel"/>
                     <button special="cancel" name="action_skip" string="_Skip" type="object" icon="gtk-goto-last"/>
                     <button name="make_partner" string="Continue" type="object" icon="gtk-ok"/>
+                </group>
+            </form>
+          </field>
+       </record> 
+
+    <record id="view_crm_lead2opportunity_action" model="ir.ui.view">
+          <field name="name">crm.lead2opportunity.action.form</field>
+          <field name="model">crm.lead2opportunity.action</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+               <form string="Select Action">
+               <separator string="Select Action" colspan="4" />
+                <label string="If you select Merge with existing Opportunity, the lead details(with the communication history) will be merged with existing Opportunity of Selected partner." colspan="4"/>
+                <newline/>
+                <field name="name" colspan="4"/>
+                <separator colspan="4" />
+                <group col="4" colspan="4">
+                    <label colspan="2"/>
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="do_action" string="Next" type="object" icon="gtk-go-forward"/>
                 </group>
             </form>
           </field>

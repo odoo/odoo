@@ -21,7 +21,7 @@
 {
     "name" : "Invoice Payment/Receipt by Vouchers.",
     "version" : "1.0",
-    "author" : 'Tiny & Axelor',
+    "author" : 'OpenERP SA & Axelor',
     "description": """Extension Account Voucher module includes allows to link payment / receipt 
     entries with voucher, also automatically reconcile during the payment and receipt entries
     """,

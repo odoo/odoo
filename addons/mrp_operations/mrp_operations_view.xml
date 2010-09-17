@@ -3,7 +3,7 @@
 <data>
     <menuitem id="menu_mrp_planning" name="Planning"
         parent="base.menu_mrp_root" sequence="2"
-        groups="base.group_extended"/>
+        groups="base.group_extended,mrp.group_mrp_manager,mrp.group_mrp_user"/>
         
     <record id="mrp_production_form_inherit_view" model="ir.ui.view">
 	    <field name="name">mrp.production.form.inherit</field>
@@ -32,9 +32,13 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
            <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
-               <field name="state"/>
-               <button name="button_start_working" string="Start working" states="draft,pause" icon="gtk-go-forward"/>
-               <button name="button_done" string="Finished" states="startworking" icon="gtk-jump-to"/>
+                <button name="button_done" string="Finished" states="startworking" icon="gtk-ok"/>
+                <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-cancel"/>
+                <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
+                <button name="button_start_working" string="Start" states="draft" icon="gtk-go-forward"/>
+                <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
+                <field name="state"/>
            </xpath>
         </field>
     </record>
@@ -45,7 +49,7 @@
         <field name="type">tree</field>
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <tree string="Work Orders">
+            <tree string="Work Orders" colors="gray:state in ('done','cancel');black:state in ('draft','startworking');red: state=='pause'">
                 <field name="production_id"/>
                 <field name="date_planned"/>
                 <field name="product"/>
@@ -56,8 +60,12 @@
                 <field name="cycle"/>
                 <field name="hour"/>
                 <field name="state" />
-                <button name="button_start_working" string="Start working" states="draft,pause" icon="gtk-go-forward"/>
-                <button name="button_done" string="Finished" states="startworking" icon="gtk-jump-to"/>
+                <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
+                <button name="button_start_working" string="Start" states="draft" icon="gtk-go-forward"/>
+                <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
+                <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-cancel"/>
+                <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                <button name="button_done" string="Finished" states="startworking" icon="gtk-ok"/>
             </tree>
         </field>
     </record>
@@ -103,7 +111,7 @@
                         <field name="uom"/>
                     </group>
 
-                    <separator string="Status" colspan="4"/>
+                    <separator string="State" colspan="4"/>
                     <group colspan="8" col="8">
                         <field name="state"/>
                         <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
@@ -194,6 +202,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,gantt,calendar,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="help">Work Orders are manufacturing operations required to produce or assemble products. The different work orders will have different impacts on the costs of manufacture and planning depending on the available workload.</field>
     </record>
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_planning">
@@ -203,6 +212,7 @@
         <field name="view_type">form</field>
         <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
         <field name="view_mode">tree,form,graph,calendar</field>
+        <field name="help">To manufacture or assemble products, as well as using raw materials and finished product you must also handle manufacturing operations. Manufacturing operations are often called work orders. The different operations will have different impacts on the costs of manufacture and planning depending on the available workload.</field>
     </record>
 
 

@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Accounting',
     'description': """Financial and accounting reporting
     Balance Sheet Report""",
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [

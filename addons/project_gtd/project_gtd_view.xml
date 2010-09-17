@@ -9,7 +9,6 @@
             <tree string="Context">
                 <field name="sequence" invisible="1"/>
                 <field name="name" select="1"/>
-                <field name="project_default_id" select="1"/>
             </tree>
         </field>
     </record>
@@ -22,7 +21,6 @@
             <form string="Context">
                 <field name="name"/>
                 <field name="sequence"/>
-                <field name="project_default_id"/>
             </form>
         </field>
     </record>
@@ -33,7 +31,7 @@
     </record>
 
 <!--    <menuitem name="Time Management" id="menu_open_gtd_time" parent="project.menu_definitions" groups="group_project_getting"/>-->
-    <menuitem name="Contexts" id="menu_open_gtd_time_contexts" groups="group_project_getting" 
+    <menuitem name="Contexts" id="menu_open_gtd_time_contexts" groups="group_project_getting,base.group_system" 
                 parent="project.menu_tasks_config" action="open_gtd_context_tree"/>
 
     <record model="ir.ui.view" id="view_gtd_timebox_tree">
@@ -80,9 +78,9 @@
         <field name="inherit_id" ref="project.view_task_tree2" />
         <field name="arch" type="xml">
             <field name="remaining_hours" position="after">
-                <field string="Timebox" name="timebox_id" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',True)"/>
-                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',True)"/>
-                <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
+                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('gtd_visible',False)"/>
+                <field string="Timebox" name="timebox_id" groups="project_gtd.group_project_getting" invisible=" not context.get('gtd_visible', False)"/>
+                <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('gtd_visible',False)"/>
                 <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
         </field>
@@ -96,9 +94,10 @@
         <field name="arch" type="xml">
             <field name="progress" position="after">
                 <field name="context_id" widget="selection" groups="project_gtd.group_project_getting"/>
-                <field name="timebox_id" select="1" groups="project_gtd.group_project_getting"/>
+                <field name="timebox_id" widget="selection" select="1" groups="project_gtd.group_project_getting"/>
             </field>
         </field>
     </record>
+    
     </data>
 </openerp>

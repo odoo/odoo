@@ -54,7 +54,7 @@ for one account entry.
 The analytic plan validates the minimum and maximum percentage at the time of creation
 of distribution models.
         """,
-    'author'    : 'Tiny',
+    'author'    : 'OpenERP SA',
     'website'   : 'http://www.openerp.com',
     'depends'   : ['account', 'account_analytic_default'],
     'init_xml'  : [],

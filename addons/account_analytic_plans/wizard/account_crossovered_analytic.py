@@ -67,7 +67,6 @@ class account_crossovered_analytic(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.analytic.account.crossovered.analytic',
             'datas': datas,
-            'nodestroy': True
             }
 
 account_crossovered_analytic()

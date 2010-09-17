@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from lxml import etree
-import mx.DateTime
+
 import time
+from datetime import date, datetime, timedelta
 
 from tools.translate import _
 from osv import fields, osv
@@ -93,19 +93,19 @@ class project_phase(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
-        'date_start': fields.datetime('Start Date', help="Starting Date of the phase"),
-        'date_end': fields.datetime('End Date', help="Ending Date of the phase"),
-        'constraint_date_start': fields.datetime('Start Date', help='force the phase to start after this date'),
-        'constraint_date_end': fields.datetime('End Date', help='force the phase to finish before this date'),
+        'date_start': fields.date('Start Date', help="Starting Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'date_end': fields.date('End Date', help="Ending Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'constraint_date_start': fields.date('Start Date', help='force the phase to start after this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'constraint_date_end': fields.date('End Date', help='force the phase to finish before this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'project_id': fields.many2one('project.project', 'Project', required=True),
-        'next_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'prv_phase_id', 'next_phase_id', 'Next Phases'),
-        'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases'),
+        'next_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'prv_phase_id', 'next_phase_id', 'Next Phases', states={'cancelled':[('readonly',True)]}),
+        'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases', states={'cancelled':[('readonly',True)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of phases."),
-        'duration': fields.float('Duration', required=True, help="By default in days"),
-        'product_uom': fields.many2one('product.uom', 'Duration UoM', required=True, help="UoM (Unit of Measure) is the unit of measurement for Duration"),
-        'task_ids': fields.one2many('project.task', 'phase_id', "Project Tasks"),
-        'resource_ids': fields.one2many('project.resource.allocation', 'phase_id', "Project Resources"),
-        'responsible_id': fields.many2one('res.users', 'Responsible'),
+        'duration': fields.float('Duration', required=True, help="By default in days", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'product_uom': fields.many2one('product.uom', 'Duration UoM', required=True, help="UoM (Unit of Measure) is the unit of measurement for Duration", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'task_ids': fields.one2many('project.task', 'phase_id', "Project Tasks", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'resource_ids': fields.one2many('project.resource.allocation', 'phase_id', "Project Resources",states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'responsible_id': fields.many2one('res.users', 'Responsible', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
                                   \n If the phase is over, the states is set to \'Done\'.')
@@ -114,7 +114,7 @@ class project_phase(osv.osv):
         'responsible_id': lambda obj,cr,uid,context: uid,
         'state': 'draft',
         'sequence': 10,
-        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', 'day')], context=c)[0]
+        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Day'))], context=c)[0]
     }
     _order = "name"
     _constraints = [
@@ -126,13 +126,12 @@ class project_phase(osv.osv):
 
     def onchange_project(self, cr, uid, ids, project, context=None):
         result = {}
+        result['date_start'] = False
         project_obj = self.pool.get('project.project')
         if project:
             project_id = project_obj.browse(cr, uid, project, context=context)
-            if project_id.date_start:
-                result['date_start'] = mx.DateTime.strptime(project_id.date_start, "%Y-%m-%d").strftime('%Y-%m-%d %H:%M:%S')
-                return {'value': result}
-        return {'value': {'date_start': []}}
+            result['date_start'] = project_id.date_start
+        return {'value': result}
 
     def _check_date_start(self, cr, uid, phase, date_end, context=None):
        if context is None:
@@ -147,15 +146,15 @@ class project_phase(osv.osv):
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
        if resource_id:
 #            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
-            res = resource_obj.read(cr, uid, resource_id[0], ['calendar_id'], context=context)[0]
+            res = resource_obj.read(cr, uid, resource_id, ['calendar_id'], context=context)[0]
             cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
                 calendar_id = cal_id
        default_uom_id = self._get_default_uom_id(cr, uid)
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
        work_times = cal_obj.interval_min_get(cr, uid, calendar_id, date_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
-       dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
-       self.write(cr, uid, [phase.id], {'date_start': dt_start, 'date_end': date_end.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+       dt_start = work_times[0][0].strftime('%Y-%m-%d')
+       self.write(cr, uid, [phase.id], {'date_start': dt_start, 'date_end': date_end.strftime('%Y-%m-%d')}, context=context)
 
     def _check_date_end(self, cr, uid, phase, date_start, context=None):
        if context is None:
@@ -170,15 +169,15 @@ class project_phase(osv.osv):
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)], context=context)
        if resource_id:
 #            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
-            res = resource_obj.read(cr, uid, resource_id[0], ['calendar_id'], context=context)[0]
+            res = resource_obj.read(cr, uid, resource_id, ['calendar_id'], context=context)[0]
             cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
                 calendar_id = cal_id
        default_uom_id = self._get_default_uom_id(cr, uid)
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
        work_times = cal_obj.interval_get(cr, uid, calendar_id, date_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
-       dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-       self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'), 'date_end': dt_end}, context=context)
+       dt_end = work_times[-1][1].strftime('%Y-%m-%d')
+       self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d'), 'date_end': dt_end}, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         resource_calendar_obj = self.pool.get('resource.calendar')
@@ -190,6 +189,8 @@ class project_phase(osv.osv):
             return super(project_phase, self).write(cr, uid, ids, vals, context=context)
         # Consider calendar and efficiency if the phase is performed by a resource
         # otherwise consider the project's working calendar
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         phase = self.browse(cr, uid, ids[0], context=context)
         calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
         resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)],context=context)
@@ -199,21 +200,20 @@ class project_phase(osv.osv):
                     calendar_id = cal_id
         default_uom_id = self._get_default_uom_id(cr, uid)
         avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-
         # Change the date_start and date_end
         # for previous and next phases respectively based on valid condition
         if vals.get('date_start', False) and vals['date_start'] < phase.date_start:
-                dt_start = mx.DateTime.strptime(vals['date_start'], '%Y-%m-%d %H:%M:%S')
+                dt_start = datetime.strptime(vals['date_start'], '%Y-%m-%d')
                 work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 if work_times:
-                    vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+                    vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d')
                 for prv_phase in phase.previous_phase_ids:
                     self._check_date_start(cr, uid, prv_phase, dt_start, context=context)
         if vals.get('date_end', False) and vals['date_end'] > phase.date_end:
-                dt_end = mx.DateTime.strptime(vals['date_end'],'%Y-%m-%d %H:%M:%S')
+                dt_end = datetime.strptime(vals['date_end'], '%Y-%m-%d')
                 work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 if work_times:
-                    vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
+                    vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d')
                 for next_phase in phase.next_phase_ids:
                     self._check_date_end(cr, uid, next_phase, dt_end, context=context)
         return super(project_phase, self).write(cr, uid, ids, vals, context=context)
@@ -246,7 +246,9 @@ class project_resource_allocation(osv.osv):
     _rec_name = 'resource_id'
     _columns = {
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
-        'phase_id': fields.many2one('project.phase', 'Project Phase', required=True),
+        'phase_id': fields.many2one('project.phase', 'Project Phase', ondelete='cascade', required=True),
+        'phase_id_date_start': fields.related('phase_id', 'date_start', type='date', string='Starting Date of the phase'),
+        'phase_id_date_end': fields.related('phase_id', 'date_end', type='date', string='Ending Date of the phase'),
         'useability': fields.float('Usability', help="Usability of this resource for this project phase in percentage (=50%)"),
     }
     _defaults = {
@@ -259,7 +261,7 @@ class project(osv.osv):
     _inherit = "project.project"
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
-        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
     }
 
 project()

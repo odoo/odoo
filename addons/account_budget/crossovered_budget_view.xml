@@ -148,7 +148,7 @@
                             <field name="state" select="1"/>
                             <group col="4" colspan="2">
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-apply" />
-                                <button string="Validate" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
+                                <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
                                 <button string="Done" name="done" states="validate" type="workflow"   icon="gtk-jump-to" />
                                 <button string="Cancel" name="cancel" states="confirm,validate" type="workflow" icon="gtk-cancel"/>
                                 <!--<button string="Set to Draft" name="action_set_to_draft" states="cancel" type="object"/>-->
@@ -163,7 +163,7 @@
             <field name="model">crossovered.budget</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Budget">
+            	 <tree colors="blue:state in ('draft');gray:state in ('done','cancel');black:state in ('confirm','validate')" string="Budget">
                     <field name="name" colspan="1" select="1"/>
                     <field name="code" colspan="1" select="1" />
                     <field name="state"/>
@@ -181,7 +181,7 @@
                <search string="Budget">
                    <group col="20" colspan="4">
                        <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"  default="1"/>
-                       <filter string="To Validate" icon="terp-gtk-go-back-rtl" domain="[('state','=','validate')]" help="To Validate Budgets" />
+                       <filter string="To Approve" icon="terp-gtk-go-back-rtl" domain="[('state','=','validate')]" help="To Approve Budgets" />
                        <separator orientation="vertical"/>
                        <field name="name" select="1"/>
                        <field name="code" select="1" />

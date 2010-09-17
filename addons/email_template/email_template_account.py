@@ -59,21 +59,23 @@ class email_template_account(osv.osv):
         'user':fields.many2one('res.users',
                         'Related User', required=True,
                         readonly=True, states={'draft':[('readonly', False)]}),
-        'email_id': fields.char('Email ID',
+        'email_id': fields.char('From Email',
                         size=120, required=True,
                         readonly=True, states={'draft':[('readonly', False)]} ,
-                        help=" eg:yourname@yourdomain.com "),
+                        help="eg: yourname@yourdomain.com "),
         'smtpserver': fields.char('Server',
                         size=120, required=True,
                         readonly=True, states={'draft':[('readonly', False)]},
-                        help="Enter name of outgoing server,eg:smtp.gmail.com "),
+                        help="Enter name of outgoing server, eg:smtp.gmail.com "),
         'smtpport': fields.integer('SMTP Port ',
                         size=64, required=True,
                         readonly=True, states={'draft':[('readonly', False)]},
                         help="Enter port number,eg:SMTP-587 "),
         'smtpuname': fields.char('User Name',
                         size=120, required=False,
-                        readonly=True, states={'draft':[('readonly', False)]}),
+                        readonly=True, states={'draft':[('readonly', False)]},
+                        help="Specify the username if your SMTP server requires authentication, "
+                        "otherwise leave it empty."),
         'smtppass': fields.char('Password',
                         size=120, invisible=True,
                         required=False, readonly=True,
@@ -91,11 +93,11 @@ class email_template_account(osv.osv):
         'company':fields.selection([
                         ('yes', 'Yes'),
                         ('no', 'No')
-                        ], 'Company Mail A/c',
+                        ], 'Corporate',
                         readonly=True,
-                        help="Select if this mail account does not belong" \
-                        "to specific user but the organisation as a whole." \
-                        "eg:info@somedomain.com",
+                        help="Select if this mail account does not belong " \
+                        "to specific user but to the organization as a whole. " \
+                        "eg: info@companydomain.com",
                         required=True, states={
                                            'draft':[('readonly', False)]
                                            }),
@@ -316,8 +318,6 @@ class email_template_account(osv.osv):
                         msg['To'] = u','.join(addresses_l['To'])
                     if addresses_l['CC']:
                         msg['CC'] = u','.join(addresses_l['CC'])
-#                    if addresses_l['BCC']:
-#                        msg['BCC'] = u','.join(addresses_l['BCC'])
                     if body.get('text', False):
                         temp_body_text = body.get('text', '')
                         l = len(temp_body_text.replace(' ', '').replace('\r', '').replace('\n', ''))
@@ -347,7 +347,6 @@ class email_template_account(osv.osv):
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
                     return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 try:
-                    #print msg['From'],toadds
                     serv.sendmail(msg['From'], addresses_l['all'], msg.as_string())
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Server Send Error\nDescription: %s") % (id, error))
@@ -367,7 +366,6 @@ class email_template_account(osv.osv):
         logger = netsvc.Logger()
         #The standard email dates are of format similar to:
         #Thu, 8 Oct 2009 09:35:42 +0200
-        #print time_as_string
         date_as_date = False
         convertor = {'+':1, '-':-1}
         try:
@@ -406,7 +404,6 @@ class email_template_account(osv.osv):
                 offset = datetime.timedelta(hours=0)
             dt = dt + offset
             date_as_date = dt.strftime('%Y-%m-%d %H:%M:%S')
-            #print date_as_date
         except Exception, e:
             logger.notifyChannel(
                     _("Email Template"),

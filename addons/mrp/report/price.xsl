@@ -43,13 +43,6 @@
 	
 	<xsl:template match="report">
 		<xsl:apply-templates select="config"/>
-		<blockTable style="header">
-		 <xsl:attribute name="colWidths">
-			 <xsl:value-of select="./config/tableSize"/>
-		 </xsl:attribute>
-		
-		<xsl:apply-templates select="header"/>
-		</blockTable>
 		<xsl:apply-templates select="title"/>
 		<xsl:apply-templates select="lines"/>
 	</xsl:template>
@@ -82,6 +75,7 @@
 	</xsl:template>
 
 	<xsl:template match="lines">
+        <xsl:apply-templates select="title"/>
 		<blockTable>
 		<xsl:attribute name="style"><xsl:value-of select="@style"/></xsl:attribute>
 		 <xsl:attribute name="colWidths">

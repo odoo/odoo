@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-import decimal_precision as dp
 
 from osv import fields
 from osv import osv
@@ -94,11 +93,12 @@ class account_analytic_line(osv.osv):
             # Compute based on pricetype
             pricetype=self.pool.get('product.price.type').browse(cr, uid, company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
             # Take the company currency as the reference one
-            context['currency_id']=company_obj.browse(cr, uid, company_id).currency_id.id
-            amount_unit=prod.price_get(pricetype.field, context)[prod.id]
-            amount=amount_unit*unit_amount or 1.0
+            amount_unit = prod.price_get(pricetype.field, context)[prod.id]
+            amount = amount_unit*unit_amount or 1.0
+            prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+            amount = amount_unit*unit_amount or 1.0
             return {'value': {
-                'amount': - round(amount, 2),
+                'amount': - round(amount, prec),
                 'general_account_id': a,
                 }}
         return {}

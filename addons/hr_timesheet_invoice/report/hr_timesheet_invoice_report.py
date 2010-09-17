@@ -254,9 +254,9 @@ class report_random_timsheet(osv.osv):
                 line.id as id, line.account_id as analytic_account_id, line.name as name,
                 line.unit_amount as quantity, line.date as date, line.user_id as user_id
             from
-                account_analytic_line line, hr_department dept,hr_department_user_rel dept_user
+                account_analytic_line line, hr_department dept,hr_employee dept_user
             where
-                (dept.id = dept_user.department_id AND dept_user.user_id=line.user_id AND line.user_id is not null)
+                (dept.id = dept_user.department_id AND dept_user.id=line.user_id AND line.user_id is not null)
                 AND (dept.manager_id = """ + str(uid) + """ )
                 AND (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-3))
             LIMIT 10

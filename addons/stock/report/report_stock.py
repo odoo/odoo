@@ -24,9 +24,6 @@ from tools.translate import _
 import tools
 from tools.sql import drop_view_if_exists
 
-#
-# Check if it works with UoM ???
-#
 class stock_report_prodlots(osv.osv):
     _name = "stock.report.prodlots"
     _description = "Stock report by production lots"

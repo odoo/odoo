@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import datetime
 from resource.faces import *
 from new import classobj
@@ -92,7 +93,7 @@ class project_schedule_task(osv.osv_memory):
         if task_ids:
             task_ids.sort()
             tasks = task_obj.browse(cr, uid, task_ids, context=context)
-            start_date = str(phase.date_start)[:-9]
+            start_date = str(phase.date_start)
             if not phase.date_start:
                 if not phase.project_id.date_start:
                     start_date = datetime.datetime.now().strftime("%Y-%m-%d")

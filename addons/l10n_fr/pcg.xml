@@ -9,112 +9,128 @@
 
         Version du fichier : 12-04-2008
       -->
-        
+
         <!--  Account Types -->
-                <record id="account_type_dettes" model="account.account.type">
+        <record id="account_type_dettes" model="account.account.type">
             <field name="name">Dettes long terme</field>
             <field name="code">dettes</field>
+            <!-- <field name="report_type">?</field> -->
             <field name="close_method">balance</field>
         </record>
 
         <record id="account_type_immobilisations" model="account.account.type">
             <field name="name">Immobilisations</field>
             <field name="code">immobilization</field>
+            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
 
         <record id="account_type_stock" model="account.account.type">
             <field name="name">Stocks</field>
             <field name="code">stocks</field>
+            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
 
         <record id="account_type_cloture" model="account.account.type">
             <field name="name">Cloture</field>
             <field name="code">cloture</field>
+            <!-- <field name="report_type">?</field> -->
             <field name="close_method">balance</field>
         </record>
 
-                <record model="account.account.type" id="account_type_receivable" >
+        <record model="account.account.type" id="account_type_receivable" >
               <field name="name">Receivable</field>
               <field name="code">receivable</field>
+              <field name="report_type">asset</field>
               <field name="close_method">unreconciled</field>
-            </record>
+        </record>
 
-            <record model="account.account.type" id="account_type_payable" >
-              <field name="name">Payable</field>
-              <field name="code">payable</field>
-              <field name="close_method">unreconciled</field>
-            </record>
+        <record model="account.account.type" id="account_type_payable" >
+          <field name="name">Payable</field>
+          <field name="code">payable</field>
+          <field name="report_type">liability</field>
+          <field name="close_method">unreconciled</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_view">
-              <field name="name">View</field>
-              <field name="code">view</field>
-              <field name="close_method">none</field>
-            </record>
+        <record model="account.account.type" id="account_type_view">
+          <field name="name">View</field>
+          <field name="code">view</field>
+          <field name="close_method">none</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_income" >
-              <field name="name">Income</field>
-              <field name="code">income</field>
-              <field name="close_method">none</field>
-            </record>
+        <record model="account.account.type" id="account_type_income" >
+          <field name="name">Income</field>
+          <field name="code">income</field>
+          <field name="report_type">income</field>
+          <field name="close_method">none</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_expense">
-              <field name="name">Expense</field>
-              <field name="code">expense</field>
-              <field name="close_method">none</field>
-            </record>
+        <record model="account.account.type" id="account_type_expense">
+          <field name="name">Expense</field>
+          <field name="code">expense</field>
+          <field name="report_type">expense</field>
+          <field name="close_method">none</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_tax">
-              <field name="name">Tax</field>
-              <field name="code">tax</field>
-              <field name="close_method">unreconciled</field>
-            </record>
+        <record model="account.account.type" id="account_type_tax">
+          <field name="name">Tax</field>
+          <field name="code">tax</field>
+          <!-- <field name="report_type">?</field> -->
+          <field name="close_method">unreconciled</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_cash">
-              <field name="name">Cash</field>
-              <field name="code">cash</field>
-              <field name="close_method">balance</field>
-            </record>
+        <record model="account.account.type" id="account_type_cash">
+          <field name="name">Cash</field>
+          <field name="code">cash</field>
+          <field name="report_type">asset</field>
+          <field name="close_method">balance</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_asset">
-              <field name="name">Asset</field>
-              <field name="code">asset</field>
-              <field name="close_method">balance</field>
-            </record>
+        <record model="account.account.type" id="account_type_asset">
+          <field name="name">Asset</field>
+          <field name="code">asset</field>
+          <field name="report_type">asset</field>
+          <field name="close_method">balance</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_equity">
-              <field name="name">Equity</field>
-              <field name="code">equity</field>
-              <field name="close_method">balance</field>
-            </record>
+        <record model="account.account.type" id="account_type_equity">
+          <field name="name">Equity</field>
+          <field name="code">equity</field>
+          <field name="report_type">asset</field>
+          <field name="close_method">balance</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_provision">
-              <field name="name">Provisions</field>
-              <field name="code">provision</field>
-              <field name="close_method">balance</field>
-            </record>
+        <record model="account.account.type" id="account_type_provision">
+          <field name="name">Provisions</field>
+          <field name="code">provision</field>
+          <!-- <field name="report_type">?</field> -->
+          <field name="close_method">balance</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_commitment">
-              <field name="name">Engagements</field>
-              <field name="code">commitment</field>
-              <field name="close_method">balance</field>
-            </record>
+        <record model="account.account.type" id="account_type_commitment">
+          <field name="name">Engagements</field>
+          <field name="code">commitment</field>
+          <!-- <field name="report_type">?</field> -->
+          <field name="close_method">balance</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_stocks">
-              <field name="name">Actif circulant</field>
-              <field name="code">current asset</field>
-              <field name="close_method">balance</field>
-            </record>
+        <record model="account.account.type" id="account_type_stocks">
+          <field name="name">Actif circulant</field>
+          <field name="code">current asset</field>
+          <field name="report_type">asset</field>
+          <field name="close_method">balance</field>
+        </record>
 
-            <record model="account.account.type" id="account_type_special">
-              <field name="name">Comptes spéciaux</field>
-              <field name="code">special</field>
-              <field name="close_method">none</field>
-            </record>
-        
-        
-    <!-- Account Templates -->    
+        <record model="account.account.type" id="account_type_special">
+          <field name="name">Comptes spéciaux</field>
+          <field name="code">special</field>
+          <!-- <field name="report_type">?</field> -->
+          <field name="close_method">none</field>
+        </record>
+
+
+    <!-- Account Templates -->
     <record id="pcg_0" model="account.account.template">
       <field name="name">Plan Comptable Général</field>
       <field name="code">0</field>
@@ -4215,7 +4231,7 @@
 
       <field name="parent_id" ref="pcg_44566"/>
       <field name="reconcile" eval="True"/>
-    </record> 
+    </record>
 
     <record id="pcg_44567" model="account.account.template">
       <field name="name">Crédit de TVA à reporter</field>
@@ -9239,7 +9255,7 @@
       <field name="parent_id" ref="pcg_89"/>
     </record>
 
-   
+
     <!-- <record model="ir.property" id="account.property_account_receivable">
       <field name="value" eval="'account.account,'+str(ref('account.a_recv'))"/>
     </record>
@@ -9254,7 +9270,7 @@
 
     <record model="ir.property" id="account.property_account_income_categ">
       <field name="value" eval="'account.account,'+str(ref('account.a_sale'))"/>
-    </record> 
+    </record>
 
     <record model="account.journal" id="l10n_fr.opening_journal">
       <field name="default_debit_account_id" ref="pcg_890"/>
@@ -9264,7 +9280,7 @@
     <record model="account.journal" id="l10n_fr.closing_journal">
       <field name="default_debit_account_id" ref="pcg_891"/>
       <field name="default_credit_account_id" ref="pcg_891"/>
-    </record> 
+    </record>
 
     <record model="ir.values" id="l10n_fr.pl_credit">
       <field name="name">pl_credit</field>

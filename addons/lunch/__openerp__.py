@@ -21,7 +21,7 @@
 
 {
     "name": "Lunch Module",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "Description": """
     The lunch module is for keeping record of the order placed and payment of the orders.
     The products are defined under categories and the payment records are maintained user wise
@@ -39,6 +39,7 @@
     """,
     "init_xml": [],
     "update_xml": [
+        'security/lunch_security.xml',
         'security/ir.model.access.csv',
         'wizard/lunch_order_cancel_view.xml',
         'wizard/lunch_order_confirm_view.xml',

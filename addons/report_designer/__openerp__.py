@@ -24,7 +24,7 @@
     "name" : "Reporting Tools",
     "version" : "1.0",
     "depends" : ["base"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": "Tools",
     "description": """Installer for reporting tools selection
     """,

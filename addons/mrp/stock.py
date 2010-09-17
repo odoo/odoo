@@ -100,7 +100,6 @@ class StockMove(osv.osv):
                     'location_id': move.location_dest_id.id,
                     'auto_validate': True,
                     'picking_id': False,
-                    'location_id': dest,
                     'state': 'waiting'
                 })
                 for m in procurement_obj.search(cr, uid, [('move_id','=',move.id)], context):

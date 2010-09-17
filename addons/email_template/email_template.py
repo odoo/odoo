@@ -62,6 +62,7 @@ import email_template_engines
 import tools
 import report
 import pooler
+import logging
 
 def get_value(cursor, user, recid, message=None, template=None, context=None):
     """
@@ -71,7 +72,7 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
     @param recid: ID of the target record under evaluation
     @param message: The expression to be evaluated
     @param template: BrowseRecord object of the current template
-    @param context: Open ERP Context
+    @param context: OpenERP Context
     @return: Computed message (unicode) or u""
     """
     pool = pooler.get_pool(cursor.dbname)
@@ -99,6 +100,7 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
                 reply = templ.render(Context(env))
             return reply or False
         except Exception:
+            logging.exception("can't render %r", message)
             return u""
     else:
         return message
@@ -131,11 +133,13 @@ class email_template(osv.osv):
                    string="Enforce From Account",
                    help="Emails will be sent only from this account(which are approved)."),
         'from_email' : fields.related('enforce_from_account', 'email_id',
-                                                type='char', string='From',),        
+                                                type='char', string='From',
+                                                help='From Email (select mail account)',
+                                                readonly=True),        
         'def_to':fields.char(
-                 'Recepient (To)',
+                 'Recipient (To)',
                  size=250,
-                 help="The default recepient of email." 
+                 help="The default recipient of email." 
                  "Placeholders can be used here."),
         'def_cc':fields.char(
                  'Default CC',
@@ -170,7 +174,7 @@ class email_template(osv.osv):
         'use_sign':fields.boolean(
                   'Signature',
                   help="the signature from the User details" 
-                  "will be appened to the mail"),
+                  " will be appended to the mail"),
         'file_name':fields.char(
                 'File Name Pattern',
                 size=200,
@@ -464,18 +468,18 @@ class email_template(osv.osv):
                                           data,
                                           context)
         attachment_obj = self.pool.get('ir.attachment')
+
+        fname = tools.ustr(get_value(cursor, user, record_id,
+                                     template.file_name, template, context)
+                           or 'Report')
+        ext = '.' + format
+        if not fname.endswith(ext):
+            fname += ext
+
         new_att_vals = {
             'name':mail.subject + ' (Email Attachment)',
             'datas':base64.b64encode(result),
-            'datas_fname':tools.ustr(
-                             get_value(
-                                   cursor,
-                                   user,
-                                   record_id,
-                                   template.file_name,
-                                   template,
-                                   context
-                                   ) or 'Report') + "." + format,
+            'datas_fname': fname,
             'description':mail.subject or "No Description",
             'res_model':'email_template.mailbox',
             'res_id':mail.id
@@ -543,7 +547,7 @@ class email_template(osv.osv):
         if lang:
             ctx = context.copy()
             ctx.update({'lang':lang})
-            template = self.browse(cursor, user, template_id, context=ctx)
+            template = self.browse(cursor, user, template.id, context=ctx)
         mailbox_values = {
             'email_from': tools.ustr(from_account['name']) + \
                         "<" + tools.ustr(from_account['email_id']) + ">",
@@ -602,14 +606,12 @@ class email_template(osv.osv):
                 mailbox_values['body_text'] += sign
             if mailbox_values['body_html']:
                 mailbox_values['body_html'] += sign
-        print 'Creating', mailbox_values
         mailbox_id = self.pool.get('email_template.mailbox').create(
                                                              cursor,
                                                              user,
                                                              mailbox_values,
                                                              context)
 
-        print 'Sending', mailbox_id
         return mailbox_id
         
 
@@ -624,7 +626,6 @@ class email_template(osv.osv):
         template = self.browse(cursor, user, template_id, context=context)
         if not template:
             raise Exception("The requested template could not be loaded")
-        print 'loaded', record_ids
         result = True
         for record_id in record_ids:
             mailbox_id = self._generate_mailbox_item_from_template(
@@ -633,7 +634,6 @@ class email_template(osv.osv):
                                                                 template,
                                                                 record_id,
                                                                 context)
-            print 'loaded'
             mail = self.pool.get('email_template.mailbox').browse(
                                                         cursor,
                                                         user,
@@ -641,7 +641,7 @@ class email_template(osv.osv):
                                                         context=context
                                                               )
             if template.report_template:
-                self._generate_attach_reports(
+                self.generate_attach_reports(
                                               cursor,
                                               user,
                                               template,
@@ -683,7 +683,7 @@ class email_template_preview(osv.osv_memory):
         Returns the default value for model field
         @param cursor: Database Cursor
         @param user: ID of current user
-        @param context: Open ERP Context
+        @param context: OpenERP Context
         """
         return self.pool.get('email.template').read(
                                                    cursor,

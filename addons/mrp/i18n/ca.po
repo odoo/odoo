@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 07:38+0000\n"
+"PO-Revision-Date: 2010-08-07 03:03+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:55+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -56,7 +56,7 @@ msgstr "Revisió"
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
 msgid "Compute Stock Minimum Rules Only"
-msgstr "Calcula nomé regles d'estoc mínim"
+msgstr "Calcula només regles d'estoc mínim"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
@@ -91,12 +91,14 @@ msgid "Stockable Stock"
 msgstr "Estoc productes estocables"
 
 #. module: mrp
-#: field:mrp.procurement,origin:0 field:mrp.production,origin:0
+#: field:mrp.procurement,origin:0
+#: field:mrp.production,origin:0
 msgid "Origin"
 msgstr "Origen"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_configuration view:res.company:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_configuration
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Configuració"
 
@@ -131,8 +133,8 @@ msgstr "﻿XML invàlid per a la definició de la vista!"
 msgid ""
 "This is the days added to what you promise to customers for security purpose"
 msgstr ""
-"Aquests són els dies afegits als que els prometeu als clients per raons de "
-"seguretat"
+"Aquests són els dies afegits als dies que prometeu als clients per raons de "
+"seguretat."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -176,7 +178,8 @@ msgstr "Proveïments automàtics"
 
 #. module: mrp
 #: wizard_field:change_production_qty,confirm,product_qty:0
-#: field:mrp.bom,product_qty:0 field:mrp.production,product_qty:0
+#: field:mrp.bom,product_qty:0
+#: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "Qtat producte"
@@ -262,7 +265,8 @@ msgid "Internal Ref."
 msgstr "Ref. interna"
 
 #. module: mrp
-#: view:mrp.procurement:0 field:mrp.procurement,state:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,state:0
 #: field:mrp.production,state:0
 msgid "Status"
 msgstr "Estat"
@@ -304,19 +308,22 @@ msgstr "Estocable obtingut per estoc"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_action view:mrp.production:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
+#: view:mrp.production:0
 msgid "Production Orders"
 msgstr "Ordres de producció"
 
 #. module: mrp
-#: rml:bom.structure:0 field:mrp.procurement,product_qty:0
+#: rml:bom.structure:0
+#: field:mrp.procurement,product_qty:0
 #: rml:mrp.production.order:0
 #: wizard_field:product.product.procurement,init,qty:0
 msgid "Quantity"
 msgstr "Quantitat"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Not urgent"
 msgstr "No urgent"
 
@@ -362,7 +369,8 @@ msgid "Scheduled Date"
 msgstr ""
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Urgent"
 msgstr "Urgent"
 
@@ -479,7 +487,8 @@ msgid "Stockable Product Stock"
 msgstr "Estoc de producte estocable"
 
 #. module: mrp
-#: field:mrp.bom,product_uos:0 field:mrp.production.product.line,product_uos:0
+#: field:mrp.bom,product_uos:0
+#: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
 msgstr "UdV del producte"
 
@@ -596,7 +605,7 @@ msgstr "En producció"
 #. module: mrp
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr "Qtat múltiple"
+msgstr "Qtat. múltiple"
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -604,8 +613,10 @@ msgid "Waiting"
 msgstr "En espera"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_routing field:mrp.bom,routing_id:0
-#: field:mrp.production,routing_id:0 view:mrp.routing:0
+#: model:ir.model,name:mrp.model_mrp_routing
+#: field:mrp.bom,routing_id:0
+#: field:mrp.production,routing_id:0
+#: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
 msgstr "Procés productiu"
@@ -678,7 +689,8 @@ msgid "Production orders"
 msgstr "Ordres de producció"
 
 #. module: mrp
-#: field:mrp.bom,child_complete_ids:0 field:mrp.bom,child_ids:0
+#: field:mrp.bom,child_complete_ids:0
+#: field:mrp.bom,child_ids:0
 msgid "BoM Hyerarchy"
 msgstr "Jerarquia LdM"
 
@@ -706,7 +718,8 @@ msgid "Security Days"
 msgstr "Dies de seguretat"
 
 #. module: mrp
-#: view:mrp.production:0 field:mrp.production,cycle_total:0
+#: view:mrp.production:0
+#: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
 msgstr "Total cicles"
 
@@ -766,7 +779,9 @@ msgid "Production done"
 msgstr "Producció realitzada"
 
 #. module: mrp
-#: rml:bom.structure:0 field:mrp.bom,code:0 field:mrp.routing,code:0
+#: rml:bom.structure:0
+#: field:mrp.bom,code:0
+#: field:mrp.routing,code:0
 #: field:mrp.workcenter,code:0
 msgid "Code"
 msgstr "Codi"
@@ -778,7 +793,8 @@ msgstr "Núm. d'hores"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0
+#: field:mrp.property.group,name:0
 msgid "Property Group"
 msgstr "Grup de propietat"
 
@@ -793,12 +809,14 @@ msgid "References"
 msgstr "Referències"
 
 #. module: mrp
-#: wizard_button:change_production_qty,confirm,end:0 view:mrp.procurement:0
+#: wizard_button:change_production_qty,confirm,end:0
+#: view:mrp.procurement:0
 #: selection:mrp.procurement,state:0
 #: wizard_button:mrp.procurement.compute,init,end:0
 #: wizard_button:mrp.procurement.compute.all,init,end:0
 #: wizard_button:mrp.procurement.orderpoint.compute,init,end:0
-#: view:mrp.production:0 wizard_button:mrp.workcenter.load,init,end:0
+#: view:mrp.production:0
+#: wizard_button:mrp.workcenter.load,init,end:0
 #: wizard_button:product.product.procurement,init,end:0
 #: wizard_button:product_price,init,end:0
 msgid "Cancel"
@@ -882,10 +900,14 @@ msgid "Nbr of cycle"
 msgstr "Núm. de cicle"
 
 #. module: mrp
-#: field:mrp.bom,name:0 field:mrp.procurement,name:0
-#: rml:mrp.production.order:0 field:mrp.production.product.line,name:0
-#: field:mrp.property,name:0 field:mrp.routing,name:0
-#: field:mrp.routing.workcenter,name:0 field:stock.warehouse.orderpoint,name:0
+#: field:mrp.bom,name:0
+#: field:mrp.procurement,name:0
+#: rml:mrp.production.order:0
+#: field:mrp.production.product.line,name:0
+#: field:mrp.property,name:0
+#: field:mrp.routing,name:0
+#: field:mrp.routing.workcenter,name:0
+#: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
 msgstr "Nom"
 
@@ -923,7 +945,7 @@ msgstr "Eficiència temporal"
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr "Dies de seguritat per cada operació de fabricació."
+msgstr "Dies de seguretat per cada operació de fabricació."
 
 #. module: mrp
 #: wizard_view:mrp.procurement.compute.all,init:0
@@ -998,7 +1020,8 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:0
+#: model:ir.model,name:mrp.model_mrp_bom
+#: view:mrp.bom:0
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
 msgstr "Llista de material"
@@ -1059,7 +1082,8 @@ msgid "Sale Ref"
 msgstr "Ref. venda"
 
 #. module: mrp
-#: field:mrp.procurement,priority:0 field:mrp.production,priority:0
+#: field:mrp.procurement,priority:0
+#: field:mrp.production,priority:0
 #: rml:mrp.production.order:0
 msgid "Priority"
 msgstr "Prioritat (0=Molt urgent)"
@@ -1088,7 +1112,8 @@ msgstr "Reparació"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
-msgid "Location where the system will look for products used in raw materials."
+msgid ""
+"Location where the system will look for products used in raw materials."
 msgstr ""
 "Ubicació on el sistema cercarà productes utilitzats en les matèries primeres."
 
@@ -1126,7 +1151,8 @@ msgid "Max Quantity"
 msgstr "Quantitat màx"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_procurement view:mrp.procurement:0
+#: model:ir.model,name:mrp.model_mrp_procurement
+#: view:mrp.procurement:0
 msgid "Procurement"
 msgstr "Proveïment"
 
@@ -1176,7 +1202,8 @@ msgid "Procurement for raw materials."
 msgstr "Proveïment per matèria primeres."
 
 #. module: mrp
-#: view:mrp.procurement:0 field:mrp.procurement,note:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,note:0
 #: rml:mrp.production.order:0
 msgid "Note"
 msgstr "Nota"
@@ -1202,8 +1229,10 @@ msgid "Define a routing to describe the manufacturing steps."
 msgstr "Defineix un procés productiu per descriure els passos de fabricació"
 
 #. module: mrp
-#: field:mrp.bom,active:0 field:mrp.routing,active:0
-#: field:mrp.workcenter,active:0 field:stock.warehouse.orderpoint,active:0
+#: field:mrp.bom,active:0
+#: field:mrp.routing,active:0
+#: field:mrp.workcenter,active:0
+#: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr "Actiu"
 
@@ -1216,18 +1245,23 @@ msgstr "Proveir products"
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action_prop
-#: view:mrp.bom:0 field:mrp.bom,property_ids:0 view:mrp.procurement:0
-#: field:mrp.procurement,property_ids:0 view:mrp.property:0
+#: view:mrp.bom:0
+#: field:mrp.bom,property_ids:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,property_ids:0
+#: view:mrp.property:0
 msgid "Properties"
 msgstr "Propietats"
 
 #. module: mrp
-#: field:mrp.procurement,date_planned:0 field:mrp.production,date_planned:0
+#: field:mrp.procurement,date_planned:0
+#: field:mrp.production,date_planned:0
 msgid "Scheduled date"
 msgstr "Data planificada"
 
 #. module: mrp
-#: view:mrp.procurement:0 view:mrp.production:0
+#: view:mrp.procurement:0
+#: view:mrp.production:0
 msgid "Extra Information"
 msgstr "Informació extra"
 
@@ -1277,7 +1311,8 @@ msgid "Change Product Qty."
 msgstr "Canvia Qtat. producte"
 
 #. module: mrp
-#: selection:mrp.procurement,state:0 selection:mrp.production,state:0
+#: selection:mrp.procurement,state:0
+#: selection:mrp.production,state:0
 msgid "Done"
 msgstr "Realitzat"
 
@@ -1325,15 +1360,18 @@ msgid "Capacity per Cycle"
 msgstr "Capacitat per cicle"
 
 #. module: mrp
-#: field:mrp.bom,product_id:0 field:mrp.procurement,product_id:0
-#: field:mrp.production,product_id:0 rml:mrp.production.order:0
+#: field:mrp.bom,product_id:0
+#: field:mrp.procurement,product_id:0
+#: field:mrp.production,product_id:0
+#: rml:mrp.production.order:0
 #: field:mrp.production.product.line,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
 msgstr "Producte"
 
 #. module: mrp
-#: view:mrp.production:0 field:mrp.production,hour_total:0
+#: view:mrp.production:0
+#: field:mrp.production,hour_total:0
 msgid "Total Hours"
 msgstr "Total hores"
 
@@ -1348,7 +1386,8 @@ msgid "Product BoM Structure"
 msgstr "Estructura LdM del producte"
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0 field:mrp.production,product_uom:0
+#: field:mrp.bom,product_uom:0
+#: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
@@ -1375,12 +1414,15 @@ msgstr ""
 "Tipus de producte és estocable i mètode de proveïment és obtenir per estoc"
 
 #. module: mrp
-#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
+#: help:mrp.bom,date_start:0
+#: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
-msgstr "Validesa d'aquesta LdM o component. Deixar-lo buit si sempre és vàlid."
+msgstr ""
+"Validesa d'aquesta LdM o component. Deixar-lo buit si sempre és vàlid."
 
 #. module: mrp
-#: field:mrp.procurement,product_uos:0 field:mrp.production,product_uos:0
+#: field:mrp.procurement,product_uos:0
+#: field:mrp.production,product_uos:0
 msgid "Product UoS"
 msgstr "UdV del producte"
 
@@ -1392,12 +1434,14 @@ msgstr "UdM del producte"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: field:mrp.production.workcenter.line,workcenter_id:0
-#: field:mrp.routing.workcenter,workcenter_id:0 view:mrp.workcenter:0
+#: field:mrp.routing.workcenter,workcenter_id:0
+#: view:mrp.workcenter:0
 msgid "Workcenter"
 msgstr "Centre de producció"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Very Urgent"
 msgstr "Molt urgent"
 
@@ -1437,7 +1481,8 @@ msgid "Stockable Order Request"
 msgstr "Sol·licitud ordre estocable"
 
 #. module: mrp
-#: view:mrp.production:0 view:mrp.production.product.line:0
+#: view:mrp.production:0
+#: view:mrp.production.product.line:0
 msgid "Scheduled Products"
 msgstr "Productes planificats"
 
@@ -1465,7 +1510,8 @@ msgstr "Si el tipus de producte és estocable en ordre de proveïment"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
-#: view:mrp.production:0 rml:mrp.production.order:0
+#: view:mrp.production:0
+#: rml:mrp.production.order:0
 msgid "Work Orders"
 msgstr "Ordres de producció"
 
@@ -1705,7 +1751,8 @@ msgid "plus"
 msgstr "més"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0 field:mrp.procurement,bom_id:0
+#: field:mrp.bom.revision,bom_id:0
+#: field:mrp.procurement,bom_id:0
 msgid "BoM"
 msgstr "Llista de materials (LdM)"
 
@@ -1749,7 +1796,8 @@ msgid "last indice"
 msgstr "Últim índex"
 
 #. module: mrp
-#: field:mrp.bom,revision_ids:0 view:mrp.bom.revision:0
+#: field:mrp.bom,revision_ids:0
+#: view:mrp.bom.revision:0
 msgid "BoM Revisions"
 msgstr "Revisions llista de materials"
 
@@ -1759,19 +1807,22 @@ msgid "Retry"
 msgstr "Torna a intentar"
 
 #. module: mrp
-#: selection:mrp.procurement,state:0 selection:mrp.production,state:0
+#: selection:mrp.procurement,state:0
+#: selection:mrp.production,state:0
 msgid "Draft"
 msgstr "Esborrany"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Normal"
 msgstr "Normal"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_productionprocureproducts0
 msgid "When any procuere products, it comes into the prpcurement orders"
-msgstr "Quan algú abateix productes, es converteix en les ordres de proveïment"
+msgstr ""
+"Quan algú abateix productes, es converteix en les ordres de proveïment"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -1818,8 +1869,11 @@ msgid "from stock"
 msgstr "des d'estoc"
 
 #. module: mrp
-#: view:mrp.bom:0 view:mrp.property:0 view:mrp.property.group:0
-#: view:mrp.routing:0 view:mrp.routing.workcenter:0
+#: view:mrp.bom:0
+#: view:mrp.property:0
+#: view:mrp.property.group:0
+#: view:mrp.routing:0
+#: view:mrp.routing.workcenter:0
 msgid "General Information"
 msgstr "Informació general"
 
@@ -1872,10 +1926,14 @@ msgid "Change Product Qty"
 msgstr "Canvia Qtat. producte"
 
 #. module: mrp
-#: field:mrp.bom.revision,description:0 view:mrp.property:0
-#: field:mrp.property,description:0 field:mrp.property.group,description:0
-#: view:mrp.routing:0 field:mrp.routing,note:0
-#: field:mrp.routing.workcenter,note:0 view:mrp.workcenter:0
+#: field:mrp.bom.revision,description:0
+#: view:mrp.property:0
+#: field:mrp.property,description:0
+#: field:mrp.property.group,description:0
+#: view:mrp.routing:0
+#: field:mrp.routing,note:0
+#: field:mrp.routing.workcenter,note:0
+#: view:mrp.workcenter:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "Descripció"
@@ -1935,7 +1993,8 @@ msgid "On Stock"
 msgstr "En estoc"
 
 #. module: mrp
-#: field:mrp.bom,sequence:0 rml:mrp.production.order:0
+#: field:mrp.bom,sequence:0
+#: rml:mrp.production.order:0
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0
 msgid "Sequence"
@@ -1994,3 +2053,8 @@ msgstr "Variació del valor de l'estoc setmanal"
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
 msgstr "Variació del valor de l'estoc"
+
+#. module: mrp
+#: view:board.board:0
+msgid "Next production orders"
+msgstr ""

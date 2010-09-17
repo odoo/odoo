@@ -34,7 +34,6 @@
                     <newline/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" select="1"/>
                     <field name="amount"/>
                     <field name="general_account_id"/>
@@ -50,9 +49,13 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group col='8' colspan='4'>
+                        <filter icon="terp-personal+"
+                                domain="[('user_id','=',uid)]"
+                                string="My Working Hours" name="my" default="1"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
                         <separator orientation="vertical"/>
-                        <field name="user_id" select="1" widget="selection"/>
+                        <field name="user_id"/>
                         <field name="account_id" select="1" widget="selection"/>
                         <field name="date" select="1"/>
                     </group>
@@ -71,7 +74,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
             <field name="filter" eval="True"/>
-            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="context">{"search_default_user_id":uid, "search_default_my": 1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
         </record>
 
@@ -85,8 +88,8 @@
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
         </record>
 
-		<menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
-		<menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
+    <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
+    <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
 
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>

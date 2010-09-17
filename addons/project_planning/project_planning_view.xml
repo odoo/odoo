@@ -78,16 +78,16 @@
                                 </tree>
                                 <form string="Planning Lines">
                                     <field name="user_id" domain="[('id','child_of',[parent.user_id])]"/>
-                                    <field name="account_id" />
+                                    <field name="account_id"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
 <!--                                    WIDGET MANY2MANY GIVES ERROR-->
 <!--                                    <field name="task_ids" colspan="4" nolabel="1" widget="many2many"/>-->
                                        <field name="task_ids" colspan="4" nolabel="1" mode="tree,form">
                                         <form string="Tasks">
-                                                <group colspan="4" col="2">
+                                            <group colspan="4" col="2">
                                                 <field name="name" select="1"/>
-                                                <field name="project_id" required="1" select="1" domain="[('category_id','=',parent.account_id)]"/>
+                                                <field name="project_id" required="1" select="1" domain="[('analytic_account_id','=',parent.account_id)]"/>
                                             </group>
                                             <group colspan="4" col="4">
                                                 <field name="date_deadline"/>
@@ -123,7 +123,7 @@
                                                         <field name="sequence"/>
                                                     </group>
                                                 <separator string="Miscelleanous" colspan="4"/>
-                                                    <field name="type"/>
+                                                    <field name="type_id"/>
                                                     <field name="active"/>
                                                     <field name="partner_id"/>
                                                     <separator colspan="4" string="Notes"/>
@@ -216,13 +216,14 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="account_analytic_planning_view_search"/>
+            <field name="help">With its commun system for scheduling all resources of a company (people and materials), OpenERP allows you to encode then compute automatically tasks and phases scheduling, track resources allocation and availibility.</field>
         </record>
 <!--        <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main_pm" sequence="5"/>-->
         <menuitem id="base.menu_project_long_term" name="Long Term Planning"
             parent="base.menu_main_pm" />
 
         <menuitem action="action_account_analytic_planning_form"
-            id="menu_report_account_analytic_planning" parent="base.menu_project_long_term" sequence="3"/>
+            id="menu_report_account_analytic_planning" parent="base.menu_project_long_term" sequence="3" groups="project.group_project_user,project.group_project_manager,base.group_system"/>
 
         <!--
             Planning statistics

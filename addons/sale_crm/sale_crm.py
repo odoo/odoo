@@ -28,7 +28,7 @@ class sale_order(osv.osv):
     }
 
     def _get_section(self, cr, uid, context=None):
-       return context.get('context_section_id',False)
+       return context.get('context_section_id', False)
 
     _defaults = {
           'section_id': _get_section

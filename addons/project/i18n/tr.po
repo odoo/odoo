@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-02-14 21:38+0000\n"
-"Last-Translator: Oktay Altunergil <Unknown>\n"
+"PO-Revision-Date: 2010-08-15 09:36+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-08-16 06:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -211,7 +211,9 @@ msgstr ""
 "ihtiyacınız olan tahmini süre."
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "Notlar"
@@ -227,7 +229,8 @@ msgid "Analysis"
 msgstr "Tahlil"
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -253,12 +256,14 @@ msgstr ""
 "biçimini kullanın."
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "İptal Edilmiş"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "E-Posta Başlığı"
 
@@ -324,7 +329,8 @@ msgid "Extra Info"
 msgstr "İlave Bilgi"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr "Ortak"
 
@@ -403,7 +409,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr ""
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "Tür"
 
@@ -447,7 +454,8 @@ msgid "Planned Time"
 msgstr "Planlanan Süre"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "Görev İşi"
@@ -498,17 +506,20 @@ msgid "Template"
 msgstr "Şablon"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Ayarlar"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "Başlangıç Tarihi"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "Projeler"
 
@@ -560,17 +571,20 @@ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "Proje Yönetimi"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Harcanan Zaman"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "Görevler"
 
@@ -658,7 +672,8 @@ msgstr "Satış Emri satırlarından fatura tetikle."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "Taslak"
 
@@ -673,8 +688,10 @@ msgid "Project Manager"
 msgstr "Proje Yöneticisi"
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "Askıda"
@@ -699,7 +716,8 @@ msgid "Project Time Unit"
 msgstr "Proje Zaman Birimi"
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr "Proje Adı"
 
@@ -874,8 +892,10 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "Tamamlandı"
@@ -884,7 +904,8 @@ msgstr "Tamamlandı"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -1060,7 +1081,8 @@ msgid "Template of Projects"
 msgstr "Projeler Şablonu"
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "Silsile"
 
@@ -1122,7 +1144,8 @@ msgid "Delegate your task to the other user"
 msgstr "Görevinizi başka bir kullanıcıya aktarın."
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "E-Posta Alt Bilgisi"
 
@@ -1176,7 +1199,8 @@ msgid "My Planning"
 msgstr "Planlamam"
 
 #. module: project
-#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "Hesaplarımdan faturaya"
 

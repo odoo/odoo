@@ -22,7 +22,6 @@
 from osv import osv
 from tools.translate import _
 
-
 class pos_close_statement(osv.osv_memory):
     _name = 'pos.close.statement'
     _description = 'Close Statements'
@@ -38,27 +37,38 @@ class pos_close_statement(osv.osv_memory):
         """
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         list_statement = []
+        mod_obj = self.pool.get('ir.model.data')
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')
-        journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True), ('check_dtls', '=', False)])
-        journal_ids = journal_obj.browse(cr, uid, journal_lst)
-        for journal in journal_ids:
+        cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
+        j_ids = map(lambda x1: x1[0], cr.fetchall())
+        journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)])
+
+        for journal in journal_obj.browse(cr, uid, journal_ids):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
-            list_statement = ids
-            statement_obj.button_confirm(cr, uid, ids, context)
-        if not list_statement:
-            return {}
+            if not ids:
+                raise osv.except_osv(_('Message'), _('Journals are already closed'))
+            else:
+                list_statement.append(ids[0])
+                if not journal.check_dtls:
+                    statement_obj.button_confirm_cash(cr, uid, ids, context)
+
+        data_obj = self.pool.get('ir.model.data')
+        id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
+        id3 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {
-                'domain': "[('id','in', list_statement)]",
+                'domain': "[('id','in'," + str(list_statement) + ")]",
                 'name': 'Close Statements',
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'account.bank.statement',
-                'view_id': False,
-                'type': 'ir.actions.act_window'
-}   
+                'views': [(id2, 'tree'),(id3, 'form')],
+                'type': 'ir.actions.act_window'}
 
 pos_close_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -34,21 +34,23 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 }
 
     def populate_statement(self, cr, uid, ids, context=None):
-
+        
+        statement_id = context.get('statement_id', False)
+        if not statement_id:
+            return {}
+        data =  self.read(cr, uid, ids, context=context)[0]
+        line_ids = data['line_ids']
+        if not line_ids:
+            return {}
+        
         line_obj = self.pool.get('account.move.line')
         statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
         currency_obj = self.pool.get('res.currency')
         statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
-
-        data =  self.read(cr, uid, ids, context=context)[0]
-        line_ids = data['line_ids']
         line_date = time.strftime('%Y-%m-%d')
-
-        if not line_ids:
-            return {}
-        statement_id = 'statement_id' in context and context['statement_id']
         statement = statement_obj.browse(cr, uid, statement_id, context=context)
+        
         # for each selected move lines
         for line in line_obj.browse(cr, uid, line_ids, context=context):
             ctx = context.copy()
@@ -90,7 +92,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'ref': line.ref,
                 'reconcile_id': reconcile_id,
                 'date': time.strftime('%Y-%m-%d'), #time.strftime('%Y-%m-%d'), #line.date_maturity or,
-                }, context=context)
+            }, context=context)
         return {}
 
 account_statement_from_invoice_lines()
@@ -105,10 +107,10 @@ class account_statement_from_invoice(osv.osv_memory):
         'date': fields.date('Date payment',required=True),
         'journal_ids': fields.many2many('account.journal', 'account_journal_relation', 'account_id', 'journal_id', 'Journal'),
         'line_ids': fields.many2many('account.move.line', 'account_move_line_relation', 'move_id', 'line_id', 'Invoices'),
-        }
+    }
     _defaults = {
         'date':lambda *a: time.strftime('%Y-%m-%d'),
-        }
+    }
 
     def search_invoices(self, cr, uid, ids, context=None):
 

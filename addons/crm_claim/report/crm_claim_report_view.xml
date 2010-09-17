@@ -162,12 +162,12 @@
                             domain="[]" context="{'group_by':'name'}" />
                   </group>
                    <newline/>
-                   <group  expand="0" string="Extended options..." groups="base.group_extended">
+                   <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                          <filter icon="terp-dialog-close"
                     		string="Done"
                     		domain="[('state','=','done')]"/>
 
-                    	<filter icon="terp-gtk-stop"
+                    	<filter icon="gtk-cancel"
                     		string="Cancel"
                     		domain="[('state','=','cancel')]"/>
 
@@ -211,8 +211,8 @@
             <field name="act_window_id" ref="action_report_crm_claim"/>
         </record>
 
-       <menuitem name="Claims" id="menu_report_crm_claim_tree"
-           groups="base.group_extended"
+       <menuitem name="Claims Analysis" id="menu_report_crm_claim_tree"
+           groups="base.group_extended,base.group_sale_manager"
            action="action_report_crm_claim" parent="base.next_id_64" sequence="6"/>
 
 

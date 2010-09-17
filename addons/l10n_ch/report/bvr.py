@@ -34,7 +34,7 @@ import time
 from report import report_sxw
 from tools import mod10r
 import re
-import os 
+import os
 import sys
 import shutil
 from mx.DateTime import *
@@ -61,11 +61,11 @@ class account_invoice_bvr(report_sxw.rml_parse):
         if date_to_format:
             date_formatted = strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
-        
+
     def police_absolute_path(self, inner_path) :
         path = os.path.join(os.path.dirname(sys.argv[0]), inner_path)
         return  path
-        
+
     def copyocrbfile(self,file):
         src = self.police_absolute_path(file)
         file = os.path.basename(src)
@@ -74,10 +74,10 @@ class account_invoice_bvr(report_sxw.rml_parse):
             try:
                 shutil.copyfile(src,dest)
             except:
-                """print ocrbfile was not copy in /tmp/ please 
+                """print ocrbfile was not copy in /tmp/ please
                 copy it manually from l10_ch/report"""
-        
-            
+
+
 
     def comma_me(self,amount):
         if  type(amount) is float :
@@ -101,8 +101,8 @@ class account_invoice_bvr(report_sxw.rml_parse):
 
     def _get_ref(self, o):
         res = ''
-        if o.partner_bank.bvr_adherent_num:
-            res = o.partner_bank.bvr_adherent_num
+        if o.partner_bank_id.bvr_adherent_num:
+            res = o.partner_bank_id.bvr_adherent_num
         invoice_number = ''
         if o.number:
             invoice_number = re.sub('[^0-9]', '0', o.number)

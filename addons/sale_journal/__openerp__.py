@@ -46,7 +46,7 @@
 
     Some statistics by journals are provided.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['sale'],
     'init_xml': ['sale_journal_data.xml'],
@@ -54,8 +54,13 @@
         'security/ir.model.access.csv',
         'sale_journal_view.xml',
         'report/sale_journal_report_view.xml',
+        'report/picking_journal_report_view.xml',
     ],
     'demo_xml': ['sale_journal_demo.xml'],
+    'test': [
+             'test/sale_journal.yml',
+             'test/picking_journal.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0077661619085',

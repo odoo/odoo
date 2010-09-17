@@ -1,0 +1,35 @@
+-
+  In order to test mrp_jit module with OpenERP, I will create manufacturing order
+  and check whether the procurement orders run without scheduler or not.
+-
+  !record {model: mrp.production, id: mrp_production_mo0}:
+    bom_id: mrp.mrp_bom_1
+    company_id: base.main_company
+    date_planned: '2010-08-05 17:59:49'
+    location_dest_id: stock.stock_location_stock
+    location_src_id: stock.stock_location_stock
+    name: MO/00017
+    product_id: product.product_product_pc2
+    product_qty: 10.0
+    product_uom: product.product_uom_unit
+    product_uos_qty: 0.0
+    routing_id: mrp.mrp_routing_0
+- 
+  |
+  I confirm production order.
+- 
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo0}
+-
+  |
+  I check the procurement orders generated from the production order.
+-
+  |
+  It runs without using schedulers.
+-
+  !python {model: procurement.order}: |
+    prod_obj = self.pool.get('mrp.production')
+    production = prod_obj.browse(cr, uid, ref('mrp_production_mo0'))
+    products = map(lambda x:x.product_id.id, production.move_lines)
+    procurement_ids = self.search(cr, uid, [('product_id','in',products)])
+    procurements = self.browse(cr, uid, procurement_ids)
+    assert all(proc.state != 'confirmed' for proc in procurements), 'Procurement not scheduled!'

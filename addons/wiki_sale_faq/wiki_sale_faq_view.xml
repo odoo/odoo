@@ -8,20 +8,23 @@
            parent="base.menu_base_partner"/>
 
        <record model="ir.actions.act_window" id="action_document_form">
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">ir.attachment</field>
-        <field name="view_type">form</field>
-        <field name="domain" eval="[('parent_id','=',ref('dir_sale'))]"></field>
-    </record>
+           <field name="name">Documents</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">ir.attachment</field>
+           <field name="view_type">form</field>
+           <field name="domain" eval="[('parent_id','=',ref('dir_sale'))]"></field>
+           <field name="help">Documents give your access to all attached documents; it's a repository of all attached documents (mails, documents attached to a project, etc.)</field>
+       </record>
 
-         <record model="ir.actions.act_window" id="action_wiki_test">
-            <field name="name">Wiki Pages</field>
-            <field name="res_model">wiki.wiki</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain" eval="[('group_id','=',ref('wiki_groups_sale_faq'))]"/>
-            <field name="search_view_id" ref="wiki.view_wiki_filter"/>
-        </record>
+       <record model="ir.actions.act_window" id="action_wiki_test">
+           <field name="name">Wiki Pages</field>
+           <field name="res_model">wiki.wiki</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">tree,form</field>
+           <field name="domain" eval="[('group_id','=',ref('wiki_groups_sale_faq'))]"/>
+           <field name="search_view_id" ref="wiki.view_wiki_filter"/>
+           <field name="help">FAQ is a wiki page used to share frequently ask questions.</field>
+       </record>
 
         <menuitem
         name="Documents"

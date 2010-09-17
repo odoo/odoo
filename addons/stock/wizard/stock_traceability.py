@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import wizard
-import netsvc
-import time
-import pooler
-from osv import osv
+from osv import fields, osv
 
 class action_traceability(osv.osv_memory):
     """ 

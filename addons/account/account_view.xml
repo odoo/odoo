@@ -44,7 +44,7 @@
             <field name="model">account.fiscalyear</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Fiscalyear">
+                <tree colors="blue:state in ('draft');gray:state in ('done') " string="Fiscalyear">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="state"/>
@@ -113,7 +113,7 @@
             <field name="model">account.period</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Period">
+            	<tree colors="blue:state in ('draft');gray:state in ('done') " string="Period">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="date_start"/>
@@ -152,12 +152,16 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <newline/>
-                            <field name="currency_id"/>
-                            <field name="active"/>
-                            <field name="currency_mode"/>
-                            <field name="reconcile"/>
-                            <newline/>
+                            <group col="2" colspan="2">
+                                <separator string="Currency" colspan="2"/>
+                                <field name="currency_id"/>
+                                <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Reconcile" colspan="2"/>
+                                <field name="reconcile"/>
+<!--                                <field name="active"/>-->
+                            </group>
                             <separator string="Default Taxes" colspan="4"/>
                             <field colspan="4" name="tax_ids" nolabel="1" domain="[('parent_id','=',False)]"/>
                             <separator string="Consolidated Children" colspan="4"/>
@@ -197,12 +201,32 @@
             </field>
         </record>
 
+        <record id="view_account_list" model="ir.ui.view">
+            <field name="name">account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:type in ('view');black:type in ('other','receivable','payable','consolidation');gray:type in ('closed')" string="Chart of accounts" toolbar="1" >
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="user_type" invisible="1"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance"/>
+                    <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_currency_id"/>
+                </tree>
+            </field>
+        </record>
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="view_account_search"/>
+            <field name="view_id" ref="view_account_list"/>
         </record>
         <menuitem id="account_account_menu" name="Accounts" parent="menu_finance_accounting"/>
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
@@ -213,17 +237,15 @@
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
+                <tree colors="blue:type in ('view');black:type in ('other','receivable','payable','consolidation');gray:type in ('closed')" string="Chart of accounts" toolbar="1" >
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="parent_id" invisible="1"/>
-                    <field name="user_type" invisible="1"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_currency_id"/>
-                    <field name="type" invisible="1"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
@@ -237,10 +259,10 @@
 <!--        <menuitem action="action_account_tree" id="menu_action_account_tree" parent="account.account_account_menu"/>-->
 
         <!--
-    Journal
+        Journal
 
-    Account Journal Columns
-    -->
+        Account Journal Columns
+        -->
 
         <record id="view_journal_column_form" model="ir.ui.view">
             <field name="name">account.journal.column.form</field>
@@ -251,9 +273,6 @@
                     <field colspan="4" name="name" select="1"/>
                     <field name="field" select="1"/>
                     <field name="sequence"/>
-                    <newline/>
-                    <field name="readonly"/>
-                    <field name="required"/>
                 </form>
             </field>
         </record>
@@ -265,8 +284,6 @@
                 <tree string="Journal Column">
                     <field name="sequence"/>
                     <field name="name"/>
-                    <field name="required"/>
-                    <field name="readonly"/>
                 </tree>
             </field>
         </record>
@@ -277,11 +294,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Journal View">
-                    <field colspan="4" name="name" select="1"/>
+                    <field name="name" select="1"/>
                     <field colspan="4" name="columns_id" nolabel="1" widget="one2many_list"/>
                 </form>
             </field>
         </record>
+        <record id="action_account_journal_view" model="ir.actions.act_window">
+            <field name="name">Journal Views</field>
+            <field name="res_model">account.journal.view</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_low_level"/>
 
         <!--
     # Account Journal
@@ -365,7 +389,7 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Invoicing Data" colspan="4"/>
-                                <field name="invoice_sequence_id" groups="base.group_extended"/>
+<!--                                <field name="invoice_sequence_id"/>-->
                                 <field name="group_invoice_lines"/>
                             </group>
                             <group colspan="2" col="2" groups="base.group_extended">
@@ -395,18 +419,20 @@
             <field name="model">account.bank.statement</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Statement">
-                   <group col="10" colspan="4">
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Statement"/>
-                        <filter icon="terp-check" string="Posted" domain="[('state','=','confirm')]" help="Confirm confirm"/>
+                <search string="Search Bank Statements">
+                    <group col="8" colspan="4">
+                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
                         <field name="date"/>
+                        <field name="name"/>
                         <field name="journal_id"/>
                     </group>
-                    <group expand="0" string="Group By..." colspan="12" col="10">
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>
@@ -417,17 +443,17 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:balance_end_real!=balance_end and state=='draft';blue:state=='draft' and (balance_end_real==balance_end);black:state=='confirm'" string="Statement">
-                    <field name="date"/>
                     <field name="name"/>
-                    <field name="journal_id"/>
+                    <field name="date"/>
                     <field name="period_id"/>
+                    <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
                     <field name="balance_end"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
-                    <button type="object" string="Confirm" name="button_confirm_bank" states="open" icon="terp-gtk-go-back-rtl"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
+                    <button type="object" string="Confirm" name="button_confirm_cash" states="open" icon="terp-gtk-go-back-rtl"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
@@ -437,13 +463,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
-                    <group>
+                    <group col="8" colspan="4">
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                        <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                        <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
+                        <field name="journal_id" widget="selection"/>
                         <field name="date"/>
                         <field name="name"/>
-                        <field name="journal_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -460,13 +486,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank Statement">
-                    <group col="6" colspan="4">
+                    <group col="7" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date" select="1"/>
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1"/>
+                        <field name="date" select="1" on_change="onchange_date(date)"/>
+                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1"/>
+                        <newline/>
                         <field name="period_id"/>
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
+                        <button name="%(action_view_account_statement_from_invoice_lines)d"
+                            string="Import Invoices" type="action" icon="gtk-dnd"
+                            attrs="{'invisible':[('state','=','confirm')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Transaction">
@@ -502,12 +532,12 @@
                             <field colspan="4" name="move_line_ids" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="7" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_dummy" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -516,8 +546,9 @@
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="context">{'journal_type':'bank'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
             <field name="sequence" eval="1"/>
@@ -542,12 +573,12 @@
             <field name="filter" eval="True"/>
         </record>
 
-        <record id="action_bank_statement_tree2" model="ir.actions.act_window">
-            <field name="name">New Statement</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
+<!--        <record id="action_bank_statement_tree2" model="ir.actions.act_window">-->
+<!--            <field name="name">New Statement</field>-->
+<!--            <field name="res_model">account.bank.statement</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">form,tree</field>-->
+<!--        </record>-->
 
         <record id="view_bank_statement_reconcile" model="ir.ui.view">
             <field name="name">account.bank.statement.reconcile.form</field>
@@ -572,11 +603,11 @@
                             <field name="name"/>
                         </tree>
                     </field>
-                    <group col="5" colspan="4">
+                    <group col="7" colspan="4">
                         <field name="total_entry"/>
                         <field name="total_new"/>
                         <field name="total_balance"/>
-                        <button colspan="2" name="dummy" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="dummy" string="Compute" icon="terp-stock_format-scientific"/>
                     </group>
                 </form>
             </field>
@@ -627,7 +658,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_type_form" groups="base.group_extended" id="menu_action_account_type_form" parent="menu_low_level"/>
+        <menuitem action="action_account_type_form" groups="base.group_extended,base.group_system" id="menu_action_account_type_form" parent="menu_low_level"/>
         <!--
     Entries
     -->
@@ -636,14 +667,14 @@
             <field name="model">account.move</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Accounting Entries">
+                <tree colors="blue:state in ('draft');black:state in ('posted')" string="Accounting Entries">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="ref"/>
                     <field name="period_id"/>
                     <field name="journal_id"/>
                     <field name="partner_id"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -790,7 +821,7 @@
                             <field groups="base.group_extended" name="price_include"/>
                             <field name="type_tax_use"/>
                             <newline/>
-                            <field colspan="4" groups="base.group_extended" name="child_ids"/>
+                            <field colspan="4" groups="base.group_extended" name="child_ids" nolabel="1"/>
                         </page>
                         <page string="Tax Declaration">
                             <separator colspan="4" string="Invoices"/>
@@ -829,6 +860,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_tax_code_tree"/>
+            <field name="help">Chart of Taxes is a tree view reflecting the structure of the Tax Cases (or tax codes) and shows the current tax situation. The tax chart represents the amount of each area of the tax declaration for your country. It’s presented in a hierarchical structure, which can be modified to fit your needs.</field>
         </record>
         <menuitem
             action="action_tax_code_tree"
@@ -846,7 +878,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line" editable="top" on_write="on_create_write">
+                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"/>
                     <field name="move_id"/>
@@ -862,9 +894,9 @@
                     <field name="analytic_account_id"/>
                     <field name="amount_currency" groups="base.group_extended"/>
                     <field name="currency_id" groups="base.group_extended"/>
-                    <field name="state"/>
-                    <field name="reconcile_id"/>
                     <field name="reconcile_partial_id" groups="base.group_extended"/>
+                    <field name="reconcile_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -876,43 +908,70 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Account Entry Line">
-                    <notebook>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="ref"/>
+                        <field name="partner_id" select="1" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+
+                        <field name="journal_id"/>
+                        <field name="period_id"/>
+                        <field name="company_id" required="1" groups="base.group_multi_company"/>
+                    </group>
+                    <notebook colspan="4">
                         <page string="Information">
-                            <separator colspan="4" string="General Information"/>
-                            <field name="name" select="1"/>
-                            <field name="date" select="1"/>
-                            <field name="ref"/>
-                            <field name="invoice"/>
-                            <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="partner_id" select="1" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Amount"/>
+                                <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                <field name="debit"/>
+                                <field name="credit"/>
+                                <field name="quantity"/>
+                            </group>
 
-                            <field name="debit"/>
-                            <field name="credit"/>
-                            <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Accounting Documents"/>
+                                <field name="invoice"/>
+                                <field name="move_id" required="False"/>
+                                <field name="statement_id"/>
+                            </group>
 
-                            <separator colspan="4" string="Optional Information"/>
-                            <field name="currency_id"/>
-                            <field name="amount_currency"/>
-                            <field name="quantity"/>
-                            <field name="move_id" required="False"/>
-                            <newline/>
-                            <field name="statement_id"/>
-                            <field name="blocked"/>
-                            <field name="date_maturity"/>
-                            <field name="date_created"/>
-                            <newline/>
-                            <field name="tax_code_id"/>
-                            <field name="tax_amount"/>
-                            <newline/>
-                            <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                            <field name="analytic_account_id"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Dates"/>
+                                <field name="date" select="1"/>
+                                <field name="date_maturity"/>
+                                <field name="date_created"/>
+                            </group>
 
-                            <separator colspan="4" string="State"/>
-                            <field name="journal_id"/>
-                            <field name="period_id"/>
-                            <field name="reconcile_id"/>
-                            <field name="reconcile_partial_id"/>
-                            <field name="state"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Taxes"/>
+                                <field name="tax_code_id"/>
+                                <field name="tax_amount"/>
+                                <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+                            </group>
+
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Currency"/>
+                                <field name="currency_id"/>
+                                <field name="amount_currency"/>
+                            </group>
+
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Reconciliation"/>
+                                <field name="reconcile_id"/>
+                                <field name="reconcile_partial_id"/>
+                            </group>
+
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="States"/>
+                                <field name="state"/>
+                                <field name="blocked"/>
+                            </group>
+
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Analytic"/>
+                                <field name="analytic_account_id"/>
+                            </group>
+                            <separator string="Narration" colspan="4"/>
+                            <field name="narration" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Analytic Lines">
                             <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
@@ -922,7 +981,6 @@
             </field>
         </record>
 
-
         <record id="view_move_line_form2" model="ir.ui.view">
             <field name="name">account.move.line.form2</field>
             <field name="model">account.move.line</field>
@@ -930,7 +988,7 @@
             <field eval="9" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Account Entry Line">
-                    <notebook>
+                    <notebook colspan="4">
                         <page string="Information">
                             <separator colspan="4" string="General Information"/>
                             <field name="name" select="1"/>
@@ -970,6 +1028,19 @@
             </field>
         </record>
 
+        <record id="account_move_line_graph" model="ir.ui.view">
+            <field name="name">account.move.line.graph</field>
+            <field name="model">account.move.line</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="account_id"/>
+                    <field name="debit" operator="+"/>
+                    <field name="credit" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">Entry Lines</field>
             <field name="model">account.move.line</field>
@@ -978,19 +1049,41 @@
                 <search string="Search Entry Lines">
                     <group col='10' colspan='4'>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Entry Lines"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
                         <separator orientation="vertical"/>
+                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
+                        <filter icon="terp-stock_symbol-selection" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Entry Lines"/>
+                        <separator orientation="vertical"/>
+                        <filter
+                            icon="terp-stock_symbol-selection"
+                            string="Unreconciled"
+                            domain="[('reconcile_id','=',False), ('account_id.type','in',['receivable', 'payable'])]" help="Unreconciled Journal Items"
+                            name="unreconciled"/>
+                        <separator orientation="vertical"/>
+                        <field name="move_id" select="1" string="Number (Move)"/>
                         <field name="date" select='1'/>
                         <field name="account_id" select='1'/>
                         <field name="partner_id" select='1'>
                             <filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-partner" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
                         </field>
-                        <field name="balance" string="Debit/Credit" select='1'/>
                     </group>
                     <newline/>
                     <group col="10" colspan="4">
                         <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self or 0, 'normal_view':False}"/>
-                        <field name="period_id" widget="selection" context="{'period_id':self}"/>
+                        <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                        <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Extended options...">
+                        <field name="ref" select="1" string="Reference"/>
+                        <field name="name" select="1"/>
+                        <field name="narration" select="1"/>
+
+                        <field name="balance" string="Debit/Credit" select='1'/>
                     </group>
                 </search>
             </field>
@@ -1001,7 +1094,6 @@
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
         </record>
 
@@ -1016,28 +1108,55 @@
             <field name="search_view_id" ref="view_account_move_line_filter"/>
         </record>
 
+        <record id="action_move_line_select" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
+            <field name="domain">[('account_id', 'child_of', active_id)]</field>
+        </record>
+
+        <record id="ir_account_move_line_select" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">account.account</field>
+            <field name="name">Open Journal Items</field>
+            <field eval="'ir.actions.act_window,%d'%action_move_line_select" name="value"/>
+            <field eval="True" name="object"/>
+        </record>
         <!--
     Account.Entry Edition
     -->
 
+        <record id="account_move_graph" model="ir.ui.view">
+            <field name="name">account.move.graph</field>
+            <field name="model">account.move</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="period_id"/>
+                    <field name="amount" operator="+"/>
+                </graph>
+            </field>
+         </record>
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Account Entry">
+                <tree colors="blue:state in ('draft');black:state in ('posted')" string="Account Entry">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="ref"/>
                     <field name="journal_id"/>
                     <field name="period_id"/>
-                    <field name="type" invisible=" not context.get('set_visible',True)"/>
                     <field name="partner_id"/>
                     <field name="line_id"/>
                     <field name="to_check" groups="base.group_extended"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
-                    <button name="button_validate" states="draft" string="Validate" type="object" icon="terp-camera_test"/>
+                    <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
                 </tree>
             </field>
         </record>
@@ -1049,40 +1168,90 @@
                 <form string="Journal Entries">
                     <group colspan="4" col="6">
                         <field name="name" select="1" readonly="True"/>
+                        <field name="ref" select="1"/>
+                        <field name="to_check" groups="base.group_extended"/>
                         <field name="journal_id" select="1"/>
                         <field name="period_id"/>
-                        <field name="type"/>
-                        <field name="ref" select="1"/>
                         <field name="date" select="1"/>
+                        <field name="company_id" required="1" groups="base.group_multi_company"/>
+                        <field name="partner_id" invisible="1" select="1"/>
+                        <field name="amount" invisible="1" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Entries Lines">
-                            <field colspan="4" height="200" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
+                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
                                 <form string="Account Entry Line">
-                                    <separator colspan="4" string="General Information"/>
-                                    <field name="name" select="1"/>
-                                    <field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
+                                    <group col="6" colspan="4">
+                                        <field name="name" select="1"/>
+                                        <field name="ref"/>
+                                        <field name="partner_id" select="1" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
 
-                                    <field name="debit" select="1"/>
-                                    <field name="credit" select="1"/>
-                                    <field name="date" select="1"/>
+                                        <field name="journal_id"/>
+                                        <field name="period_id"/>
+                                        <field name="company_id" required="1" groups="base.group_multi_company"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Information">
+                                            <group col="2" colspan="2">
+                                                <separator colspan="2" string="Amount"/>
+                                                <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                                <field name="debit"/>
+                                                <field name="credit"/>
+                                                <field name="quantity"/>
+                                            </group>
 
-                                    <separator colspan="4" string="Optional Information"/>
-                                    <field name="currency_id"/>
-                                    <field name="amount_currency"/>
-                                    <field name="quantity" select="1"/>
-                                    <newline/>
-                                    <field name="date_maturity"/>
-                                    <field name="date_created"/>
+                                            <group col="2" colspan="2">
+                                                <separator colspan="2" string="Accounting Documents"/>
+                                                <field name="invoice"/>
+                                                <field name="move_id" required="False"/>
+                                                <field name="statement_id"/>
+                                            </group>
 
-                                    <separator colspan="4" string="State"/>
-                                    <field name="reconcile_id"/>
-                                    <field name="reconcile_partial_id"/>
-                                    <field name="statement_id"/>
-                                    <field name="state"/>
+                                            <group col="2" colspan="2">
+                                                <separator colspan="2" string="Dates"/>
+                                                <field name="date" select="1"/>
+                                                <field name="date_maturity"/>
+                                                <field name="date_created"/>
+                                            </group>
+
+                                            <group col="2" colspan="2">
+                                                <separator colspan="2" string="Taxes"/>
+                                                <field name="tax_code_id"/>
+                                                <field name="tax_amount"/>
+                                                <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+                                            </group>
+
+                                            <group col="2" colspan="2">
+                                                <separator colspan="2" string="Currency"/>
+                                                <field name="currency_id"/>
+                                                <field name="amount_currency"/>
+                                            </group>
+
+                                            <group col="2" colspan="2">
+                                                <separator colspan="2" string="Reconciliation"/>
+                                                <field name="reconcile_id"/>
+                                                <field name="reconcile_partial_id"/>
+                                            </group>
+
+                                            <group col="2" colspan="2">
+                                                <separator colspan="2" string="States"/>
+                                                <field name="state"/>
+                                                <field name="blocked"/>
+                                            </group>
+
+                                            <group col="2" colspan="2">
+                                                <separator colspan="2" string="Analytic"/>
+                                                <field name="analytic_account_id"/>
+                                            </group>
+                                            <separator string="Narration" colspan="4"/>
+                                            <field name="narration" colspan="4" nolabel="1"/>
+                                        </page>
+                                        <page string="Analytic Lines">
+                                            <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
+                                        </page>
+                                    </notebook>
                                 </form>
-                                <tree editable="top" string="Account Entry Line">
+                                <tree colors="blue:state in ('draft');black:state in ('posted')" editable="top" string="Account Entry Line">
                                     <field name="ref"/>
                                     <field name="invoice"/>
                                     <field name="name"/>
@@ -1102,19 +1271,12 @@
                                 </tree>
                             </field>
                             <separator colspan="4" string="Narration"/>
-                            <field name="narration" colspan="4" nolabel="1"/>
-                            <field name="state" select="1"/>
-                            <group col="2" colspan="2">
-                                <button name="button_validate" states="draft" string="Validate" type="object" icon="terp-camera_test"/>
-                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="terp-gtk-stop"/>
+                            <field name="narration" colspan="4" nolabel="1" height="50"/>
+                            <group col="4" colspan="4">
+                                <field name="state" select="1"/>
+                                <button name="button_validate" states="draft" string="Approve" type="object" icon="terp-camera_test"/>
+                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
                             </group>
-                        </page>
-                        <page string="Other Information">
-                            <field name="company_id" required="1" groups="base.group_multi_company"/>
-                            <field name="date" select="1" groups="base.group_extended"/>
-                            <field name="to_check" groups="base.group_extended"/>
-                            <field name="partner_id" invisible="1" select="1"/>
-                            <field name="amount" invisible="1" select="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -1131,11 +1293,18 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Entries"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Entries"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="To Review"/>
-                        <field name="date" select='1'/>
-                        <field name="name" select='1'/>
-                        <field name="journal_id" select='1'/>
+                        <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('to_check','=',True)]" groups="base.group_extended" help="To Review"/>
+                        <separator orientation="vertical"/>
+                        <field name="ref" select="1"/>
+                        <field name="name" select="1"/>
                         <field name="partner_id" select='1'/>
+                        <field name="date" select='1'/>
+                        <field name="narration" select="1"/>
+                    </group>
+                    <newline/>
+                    <group col='8' colspan='4'>
+                        <field name="journal_id" widget="selection" select='1'/>
+                        <field name="period_id" select='1'/>
                     </group>
                     <newline/>
                     <group col="10" colspan="4">
@@ -1145,19 +1314,20 @@
                     <group expand="0" string="Group By..." colspan="12" col="10">
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type', 'set_visible':True}"/>
                         <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+
+                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-
-       <record id="action_move_journal_line" model="ir.actions.act_window">
+        <record id="action_move_journal_line" model="ir.actions.act_window">
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
@@ -1185,21 +1355,21 @@
             context="{'move_id':active_id}"
             res_model="account.move.line"
             src_model="account.move"/>
-        <record id="action_move_to_review" model="ir.actions.act_window">
-            <field name="name">Journal Entries</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.move</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_move_tree"/>
-            <field name="search_view_id" ref="view_account_move_filter"/>
-            <field name="domain">[('to_check','=',True), ('state','=','draft')]</field>
-        </record>
 
-        <menuitem
-            action="action_move_to_review"
-            id="menu_action_move_to_review"
-            parent="periodical_processing_journal_entries_validation"
-        />
+<!--        <record id="action_move_to_review" model="ir.actions.act_window">-->
+<!--            <field name="name">Journal Entries</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">account.move</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_id" ref="view_move_tree"/>-->
+<!--            <field name="search_view_id" ref="view_account_move_filter"/>-->
+<!--            <field name="domain">[('to_check','=',True), ('state','=','draft')]</field>-->
+<!--        </record>-->
+<!--        <menuitem-->
+<!--            action="action_move_to_review"-->
+<!--            id="menu_action_move_to_review"-->
+<!--            parent="periodical_processing_journal_entries_validation"-->
+<!--        />-->
 
 <!--        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_entries" sequence="40"/>-->
 <!--        <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>-->
@@ -1215,30 +1385,29 @@
 
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>-->
 
-        <record id="action_account_moves_sale" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_line_tree"/>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[('journal_id.type', 'in', ['sale', 'purchase_refund'])]</field>
-        </record>
+<!--        <record id="action_account_moves_sale" model="ir.actions.act_window">-->
+<!--            <field name="name">Journal Items</field>-->
+<!--            <field name="res_model">account.move.line</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form,graph</field>-->
+<!--            <field name="view_id" ref="view_move_line_tree"/>-->
+<!--            <field name="search_view_id" ref="view_account_move_line_filter"/>-->
+<!--            <field name="domain">[('journal_id.type', 'in', ['sale', 'purchase_refund'])]</field>-->
+<!--        </record>-->
 
-        <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
+<!--        <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>-->
 
-        <record id="action_account_moves_purchase" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_line_tree"/>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[('journal_id.type', 'in', ['purchase', 'sale_refund'])]</field>
-            <field name="context">{'journal_id':1}</field>
-        </record>
+<!--        <record id="action_account_moves_purchase" model="ir.actions.act_window">-->
+<!--            <field name="name">Journal Items</field>-->
+<!--            <field name="res_model">account.move.line</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form,graph</field>-->
+<!--            <field name="view_id" ref="view_move_line_tree"/>-->
+<!--            <field name="search_view_id" ref="view_account_move_line_filter"/>-->
+<!--            <field name="domain">[('journal_id.type', 'in', ['purchase', 'sale_refund'])]</field>-->
+<!--        </record>-->
 
-        <menuitem action="action_account_moves_purchase" id="menu_eaction_account_moves_purchase" parent="menu_finance_payables"/>
+<!--        <menuitem action="action_account_moves_purchase" id="menu_eaction_account_moves_purchase" parent="menu_finance_payables"/>-->
 
         <record id="action_move_line_search" model="ir.actions.act_window">
             <field name="name">Entry Lines</field>
@@ -1331,7 +1500,7 @@
                         <field name="balance_end"/>
                         <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
                         <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -1353,15 +1522,16 @@
   <!--        <wizard id="action_account_bank_reconcile_tree" menu="False" model="account.move.line" name="account.move.bank.reconcile" string="Bank reconciliation"/> -->
     <!--     <menuitem action="action_account_bank_reconcile_tree" id="menu_action_account_bank_reconcile_check_tree" parent="account.next_id_30" type="wizard"/>   -->
 
-<!--  bank reconsilation  -->
-        <menuitem action="action_account_bank_reconcile_tree"
-            id="menu_action_account_bank_reconcile_check_tree"
-            parent="periodical_processing_reconciliation" groups="group_account_user" />
+<!--  bank reconciliation  -->
+<!--        <menuitem action="action_account_bank_reconcile_tree"-->
+<!--            id="menu_action_account_bank_reconcile_check_tree"-->
+<!--            parent="periodical_processing_reconciliation" groups="group_account_user" />-->
 
         <act_window
-            context="{'search_default_next_partner':1}"
+            context="{'search_default_next_partner':1,'view_mode':True}"
             id="action_account_manual_reconcile" name="Entry Lines"
             res_model="account.move.line"
+            view_id="view_move_line_tree"/>
             />
 
         <menuitem
@@ -1401,7 +1571,7 @@
             <field name="model">account.journal.period</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Journals">
+                <tree colors="blue:state in ('draft');gray:state in ('done');black:state in ('printed')" string="Journals">
                     <field icon="icon" name="fiscalyear_id"/>
                     <field name="period_id"/>
                     <field name="journal_id"/>
@@ -1414,8 +1584,9 @@
             <field name="name">Journals</field>
             <field name="res_model">account.journal.period</field>
             <field name="view_type">tree</field>
+            <field name="help">You can look up individual account entries by searching for useful information. To search for account entries, open a journal, then select a record line.</field>
         </record>
-        <menuitem action="action_account_journal_period_tree" id="menu_action_account_journal_period_tree" parent="account.menu_finance_generic_reporting" sequence="2"/>
+<!--        <menuitem action="action_account_journal_period_tree" id="menu_action_account_journal_period_tree" parent="account.menu_finance_generic_reporting" sequence="2"/>-->
 
 
         <!--
@@ -1493,12 +1664,12 @@
             </field>
         </record>
         <record id="action_model_form" model="ir.actions.act_window">
-            <field name="name">Define Recurring</field>
+            <field name="name">Recurring Models</field>
             <field name="res_model">account.model</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_model_form" id="menu_action_model_form" parent="account.menu_configuration_misc"/>
+        <menuitem action="action_model_form" id="menu_action_model_form" sequence="5" parent="account.menu_configuration_misc" groups="base.group_extended"/>
 
         <!--
             # Payment Terms
@@ -1615,7 +1786,7 @@
             <field name="model">account.subscription</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Entry Subscription">
+                <tree colors="blue:state in ('draft');gray:state in ('done');black:state in ('running')" string="Entry Subscription">
                     <field name="ref"/>
                     <field name="name"/>
                     <field name="date_start"/>
@@ -1628,39 +1799,46 @@
             <field name="model">account.subscription</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Entry Subscription">
-                    <field name="name" select="1"/>
-                    <field name="ref" select="1"/>
-
-                    <separator colspan="4" string="Subscription Periods"/>
-                    <field name="date_start" select="1"/>
-                    <field name="period_total"/>
-
-                    <field name="period_nbr"/>
-                    <field name="period_type"/>
-                    <field name="model_id"/>
+                <form string="Recurring">
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="model_id"/>
+                        <field name="ref" select="1"/>
+                    </group>
                     <group col="2" colspan="2">
-                        <button name="compute" states="draft,running" string="Compute" type="object" icon="terp-stock_format-scientific"/>
-                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
+                        <separator colspan="4" string="Starts on"/>
+                        <field name="date_start" select="1"/>
+                        <field name="period_total"/>
+
+                    </group>
+
+                    <group col="2" colspan="2">
+                        <separator colspan="4" string="Valid Up to"/>
+                        <field name="period_nbr"/>
+                        <field name="period_type"/>
+                    </group>
+
+                    <group col="2" colspan="2">
                     </group>
                     <separator colspan="4" string="Subscription Lines"/>
                     <field colspan="4" name="lines_id" widget="one2many_list" nolabel="1"/>
 
-                    <separator colspan="4" string="State"/>
-                    <field name="state"/>
-                    <group col="1" colspan="2">
+                    <group col="6" colspan="4">
+                        <field name="state"/>
                         <button name="state_draft" states="done" string="Set to Draft" type="object"  icon="gtk-convert" />
+                        <button name="compute" states="draft" string="Compute" type="object" icon="terp-stock_format-scientific"/>
+                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                     </group>
                 </form>
             </field>
         </record>
         <record id="action_subscription_form" model="ir.actions.act_window">
-            <field name="name">Subscription Entries</field>
+            <field name="name">Recurring Lines</field>
             <field name="res_model">account.subscription</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem action="action_subscription_form" id="menu_action_subscription_form" parent="account.menu_finance_recurrent_entries"/>-->
+        <menuitem name="Define Recurring Entries" action="action_subscription_form" id="menu_action_subscription_form" sequence="1" parent="account.menu_finance_recurrent_entries"/>
 
         <record id="action_subscription_form_running" model="ir.actions.act_window">
             <field name="name">Running Subscriptions</field>
@@ -1717,7 +1895,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line">
+                <tree colors="blue:state in ('draft');black:state in ('valid')" string="Account Entry Line">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="statement_id" string="St."/>
@@ -1741,7 +1919,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tax_tree"/>
-            <field name="domain">[('tax_code_id','=',active_id),('state','&lt;&gt;','draft')]</field>
+            <field name="domain">[('tax_code_id','child_of',active_id),('state','&lt;&gt;','draft')]</field>
         </record>
         <record id="ir_open_tax_move_line" model="ir.values">
             <field name="key2">tree_but_open</field>
@@ -1758,11 +1936,11 @@
 
         <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_bank_statement" name="Bank statements" res_model="account.bank.statement" src_model="account.journal"/>
 
-        <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_move_line" name="Entry lines" res_model="account.move.line" src_model="account.journal"/>
+        <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_move_line" name="Journal Items" res_model="account.move.line" src_model="account.journal"/>
 
-        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_reconcile_id':False}" domain="[('partner_id', '=', active_id),('reconcile_id','=',False),('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 
-        <act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All Account Entries" res_model="account.move.line" src_model="res.partner"/>
+        <act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>
@@ -1907,6 +2085,7 @@
                     <field name="property_account_income_categ"/>
                     <field name="property_account_expense"/>
                     <field name="property_account_income"/>
+                    <field name="property_reserve_and_surplus_account"/>
                     </group>
                 </form>
             </field>
@@ -2248,42 +2427,24 @@
             id="menu_action_account_fiscal_position_form_template"
             parent="account_template_folder" sequence="20"/>
 
-        <record id="action_account_moves_all" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_line_tree"/>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>
-        </record>
-
-        <menuitem
-            action="action_account_moves_all"
-            icon="STOCK_JUSTIFY_FILL"
-            id="menu_eaction_account_moves_all"
-            parent="account.menu_finance_entries"
-            sequence="4"
-        />
-
         <!-- Cash Statement -->
-        <record id="view_bank_statement_tree" model="ir.ui.view">
+        <record id="view_cash_statement_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end);black:state in ('open');blue:state in ('draft')" string="Statement">
-                    <field name="date"/>
+                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end);black:state in ('open')" string="Statement">
                     <field name="name"/>
-                    <field name="journal_id"/>
+                    <field name="date"/>
                     <field name="period_id"/>
+                    <field name="journal_id"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
                     <field name="balance_end"/>
-                        <field name="user_id" select="1"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
-                    <button type="object" string="Confirm" name="button_confirm_cash" states="open" icon="terp-gtk-go-back-rtl"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
+                    <button type="object" string="Confirm" name="button_confirm_bank" states="open" icon="terp-gtk-go-back-rtl"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
@@ -2332,7 +2493,7 @@
                         </page>
                         <page string="CashBox">
                             <group col="2" colspan="2" expand="1">
-                                <field name="starting_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','=','draft')]}">
+                                <field name="starting_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','draft')]}">
                                     <tree string = "Opening Balance" editable="bottom">
                                         <field name="pieces"/>
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
@@ -2346,7 +2507,7 @@
                                 </field>
                             </group>
                             <group col="2" colspan="2" expand="1">
-                                <field name="ending_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','=','draft')]}">
+                                <field name="ending_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','!=','open')]}">
                                     <tree string = "Closing Balance" editable="bottom">
                                         <field name="pieces"/>
                                         <field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
@@ -2367,7 +2528,7 @@
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Dates" colspan="4"/>
-                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date)"/>
                             <field name="closing_date" select="1" attrs="{'readonly':[('state','=','confirm')]}"/>
                         </group>
                         <group col="2" colspan="2">
@@ -2383,33 +2544,52 @@
                     </group>
                     <group col="8" colspan="4">
                         <field name="state" colspan="4"/>
-                        <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-check" type="object"/>
+                        <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-dialog-close" type="object"/>
                         <button name="button_open" states="draft" string="Open CashBox" icon="terp-document-new" type="object"/>
                         <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>
         </record>
+        <record id="account_cash_statement_graph" model="ir.ui.view">
+            <field name="name">account.bank.statement.graph</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Account Statistics" type="bar">
+                    <field name="date"/>
+                    <field name="balance_start" operator="+"/>
+                    <field name="balance_end" operator="+"/>
+                </graph>
+            </field>
+         </record>
         <record id="action_view_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Cash Register</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_bank_statement_tree"/>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_cash_statement_tree"/>
             <field name="search_view_id" ref="view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+            <field name="context">{'journal_type':'cash'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_bank_statement_tree"/>
+            <field name="view_id" ref="view_cash_statement_tree"/>
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement2_all">
             <field name="sequence" eval="1"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_view_bank_statement_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement3_all">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="account_cash_statement_graph"/>
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
         <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"/>

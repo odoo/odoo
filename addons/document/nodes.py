@@ -19,17 +19,14 @@
 #
 ##############################################################################
 
-# import base64
-# import StringIO
-from osv import osv, fields
-from osv.orm import except_orm
 # import urlparse
 import pooler
 from tools.safe_eval import safe_eval
 
 import errno
-import os
+# import os
 import time
+import logging
 
 from StringIO import StringIO
 
@@ -43,6 +40,22 @@ from StringIO import StringIO
 #       file: objct = ir.attachement
 #   root: if we are at the first directory of a ressource
 #
+
+logger = logging.getLogger('doc2.nodes')
+
+def _str2time(cre):
+    """ Convert a string with time representation (from db) into time (float)
+    
+        Note: a place to fix if datetime is used in db.
+    """
+    if not cre:
+        return time.time()
+    frac = 0.0
+    if isinstance(cre, basestring) and '.' in cre:
+        fdot = cre.find('.')
+        frac = float(cre[fdot:])
+        cre = cre[:fdot]
+    return time.mktime(time.strptime(cre,'%Y-%m-%d %H:%M:%S')) + frac
 
 def get_node_context(cr, uid, context):
     return node_context(cr, uid, context)
@@ -157,6 +170,8 @@ class node_class(object):
         Nodes have attributes which contain usual file properties
         """
     our_type = 'baseclass'
+    DAV_PROPS = None
+    DAV_M_NS = None
 
     def __init__(self, path, parent, context):
         assert isinstance(context,node_context)
@@ -253,24 +268,21 @@ class node_class(object):
             see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
         return self._get_ttag(cr) + ':' + self._get_wtag(cr)
 
-    def _get_wtag(self,cr):
+    def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
-        if self.write_date:
-            wtime = time.mktime(time.strptime(self.write_date,'%Y-%m-%d %H:%M:%S'))
-        else: wtime = time.time()
-        return str(wtime)
+        return str(_str2time(self.write_date))
 
     def _get_ttag(self,cr):
         """ Get a unique tag for this type/id of object.
             Must be overriden, so that each node is uniquely identified.
         """
         print "node_class.get_ttag()",self
-        raise RuntimeError("get_etag stub()")
+        raise NotImplementedError("get_etag stub()")
 
     def get_dav_props(self, cr):
         """ If this class has special behaviour for GroupDAV etc, export
         its capabilities """
-        return {}
+        return self.DAV_PROPS or {}
 
     def match_dav_eprop(self, cr, match, ns, prop):
         res = self.get_dav_eprop(cr, ns, prop)
@@ -279,7 +291,35 @@ class node_class(object):
         return False
 
     def get_dav_eprop(self, cr, ns, prop):
+        if not self.DAV_M_NS:
+            return None
+        
+        if self.DAV_M_NS.has_key(ns):
+            prefix = self.DAV_M_NS[ns]
+        else:
+            logger.debug('No namespace: %s ("%s")',ns, prop)
+            return None
+
+        mname = prefix + "_" + prop.replace('-','_')
+
+        if not hasattr(self, mname):
+            return None
+
+        try:
+            m = getattr(self, mname)
+            r = m(cr)
+            return r
+        except AttributeError:
+            logger.debug('Property %s not supported' % prop, exc_info=True)
         return None
+
+    def get_dav_resourcetype(self, cr):
+        """ Get the DAV resource type.
+        
+            Is here because some nodes may exhibit special behaviour, like
+            CalDAV/GroupDAV collections
+        """
+        raise NotImplementedError
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
         """ Move this node to a new parent directory.
@@ -327,6 +367,7 @@ class node_class(object):
         raise NotImplementedError(repr(self))
 
     def get_domain(self, cr, filters):
+        # TODO Document
         return []
 
     def check_perms(self, perms):
@@ -421,6 +462,9 @@ class node_database(node_class):
 
     def _get_ttag(self,cr):
         return 'db-%s' % cr.dbname
+
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
 
 def mkdosname(company_name, default='noname'):
     """ convert a string to a dos-like name"""
@@ -573,19 +617,6 @@ class node_dir(node_database):
             fnode.set_data(cr, data, fil)
         return fnode
 
-    def get_etag(self, cr):
-        """ Get a tag, unique per object + modification.
-
-            see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
-        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
-
-    def _get_wtag(self, cr):
-        """ Return the modification time as a unique, compact string """
-        if self.write_date:
-            wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
-        else: wtime = time.time()
-        return str(wtime)
-
     def _get_ttag(self,cr):
         return 'dir-%d' % self.dir_id
 
@@ -615,8 +646,6 @@ class node_dir(node_database):
                 raise IOError(errno.EPERM, "Cannot move the root directory!")
             self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
             assert self.parent
-        
-        # TODO: test if parent is writable.
 
         if self.parent != ndir_node:
             logger.debug('Cannot move dir %r from %r to %r', self, self.parent, ndir_node)
@@ -624,6 +653,8 @@ class node_dir(node_database):
 
         ret = {}
         if new_name and (new_name != dbro.name):
+            if ndir_node.child(cr, new_name):
+                raise IOError(errno.EEXIST, "Destination path already exists")
             ret['name'] = new_name
 
         del dbro
@@ -757,6 +788,9 @@ class node_res_dir(node_class):
     def _get_ttag(self,cr):
         return 'rdir-%d' % self.dir_id
 
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
+
 class node_res_obj(node_class):
     """ A special sibling to node_dir, which does only contain dynamically
         created folders foreach resource in the foreign model.
@@ -867,9 +901,8 @@ class node_res_obj(node_class):
 
     def get_dav_eprop(self, cr, ns, prop):
         if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-            print "Who asked for %s:%s?" % (ns, prop)
+            logger.warning("Who asked for %s:%s?" % (ns, prop))
             return None
-        res = {}
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -1013,6 +1046,9 @@ class node_res_obj(node_class):
     def _get_ttag(self,cr):
         return 'rodir-%d-%d' % (self.dir_id, self.res_id)
 
+    def get_dav_resourcetype(self, cr):
+        return ('collection', 'DAV:')
+
 class node_file(node_class):
     our_type = 'file'
     def __init__(self, path, parent, context, fil):
@@ -1146,6 +1182,9 @@ class node_file(node_class):
 
     def _get_ttag(self,cr):
         return 'file-%d' % self.file_id
+
+    def get_dav_resourcetype(self, cr):
+        return ''
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
         if ndir_node.context != self.context:
@@ -1292,6 +1331,8 @@ class node_content(node_class):
     def _get_ttag(self,cr):
         return 'cnt-%d%s' % (self.cnt_id,(self.act_id and ('-' + str(self.act_id))) or '')
 
+    def get_dav_resourcetype(self, cr):
+        return ''
 
 class nodefd_content(StringIO, node_descriptor):
     """ A descriptor to content nodes
@@ -1331,11 +1372,11 @@ class nodefd_content(StringIO, node_descriptor):
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()
                 cntobj = par.context._dirobj.pool.get('document.directory.content')
-                cntobj.process_write(cr, uid, parent, data, ctx)
+                cntobj.process_write(cr, uid, par, data, par.context.context)
             elif self.mode == 'a':
                 raise NotImplementedError
             cr.commit()
-        except Exception, e:
+        except Exception:
             logging.getLogger('document.content').exception('Cannot update db content #%d for close:', par.cnt_id)
             raise
         finally:

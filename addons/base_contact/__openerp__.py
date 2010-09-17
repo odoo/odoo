@@ -38,11 +38,12 @@
 
     Pay attention that this module converts the existing addresses into "addresses + contacts". It means that some fields of the addresses will be missing (like the contact name), since these are supposed to be defined in an other object.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base','process'],
     'init_xml': [],
     'update_xml': [
+        'security/base_contact_security.xml',
         'security/ir.model.access.csv',
         'base_contact_view.xml',
         'base_contact_installer_view.xml', 

@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-20 09:47+0000\n"
+"PO-Revision-Date: 2010-08-03 09:23+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -203,7 +203,9 @@ msgid ""
 msgstr "确认你向谁委派这任务完成的估计时间"
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "备注"
@@ -219,7 +221,8 @@ msgid "Analysis"
 msgstr "分析"
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -243,12 +246,14 @@ msgid ""
 msgstr "页眉页脚的自动变量.使用同一个符号."
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "已取消"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "邮件头"
 
@@ -312,7 +317,8 @@ msgid "Extra Info"
 msgstr "额外信息"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr "业务伙伴"
 
@@ -390,7 +396,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "计算:花费的时间 + 剩余的时间"
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "类型"
 
@@ -434,7 +441,8 @@ msgid "Planned Time"
 msgstr "已计划的时间"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "任务工作"
@@ -485,17 +493,20 @@ msgid "Template"
 msgstr "模板"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "设置"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "项目"
 
@@ -547,17 +558,20 @@ msgstr "无效的视图结构xml文件"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "项目管理"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "花费的时间"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "任务"
 
@@ -645,7 +659,8 @@ msgstr "销售订单明细触发的发票"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "草稿"
 
@@ -660,8 +675,10 @@ msgid "Project Manager"
 msgstr "项目管理"
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "未决"
@@ -684,7 +701,8 @@ msgid "Project Time Unit"
 msgstr "项目时间单位"
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr "项目名称"
 
@@ -723,8 +741,7 @@ msgstr "任务编辑"
 msgid ""
 "Computed as: Total Time - Estimated Time. It gives the difference of the "
 "time estimated by the project manager and the real time to close the task."
-msgstr ""
-"计算:总时间 - 估计时间.它提供给项目经理时间估计和任务实际的关闭时间之间的差距"
+msgstr "计算:总时间 - 估计时间.它提供给项目经理时间估计和任务实际的关闭时间之间的差距"
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
@@ -757,9 +774,7 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
-msgstr ""
-"这将设置项目和任务的计量单位如果你使用链接的时间表不要忘记设置你员工的计量单"
-"位"
+msgstr "这将设置项目和任务的计量单位如果你使用链接的时间表不要忘记设置你员工的计量单位"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
@@ -857,13 +872,13 @@ msgid ""
 "Link this project to an analytic account if you need financial management on "
 "projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
-msgstr ""
-"如果你需要项目的财务管理链接到这项目的辅助核算项目行,它能让你在链接的项目的有"
-"预算、计划、成本和收益分析、项目的时间表等."
+msgstr "如果你需要项目的财务管理链接到这项目的辅助核算项目行,它能让你在链接的项目的有预算、计划、成本和收益分析、项目的时间表等."
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "完成"
@@ -872,7 +887,8 @@ msgstr "完成"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -1048,7 +1064,8 @@ msgid "Template of Projects"
 msgstr "项目模板"
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "序列"
 
@@ -1110,7 +1127,8 @@ msgid "Delegate your task to the other user"
 msgstr "委派你的任务给其它用户"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "邮件页脚"
 
@@ -1164,7 +1182,8 @@ msgid "My Planning"
 msgstr "我的计划"
 
 #. module: project
-#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "我的发票科目"
 

@@ -29,7 +29,7 @@
     Indicators
     Add a dashboards for accountant that include  Indicators reporting.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],

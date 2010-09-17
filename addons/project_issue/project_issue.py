@@ -23,7 +23,6 @@ import base64
 import os
 import re
 import time
-import mx.DateTime
 from datetime import datetime, timedelta
 import binascii
 import collections
@@ -101,8 +100,8 @@ class project_issue(osv.osv, crm.crm_case):
                         date_until = issue.date_open
                         #Calculating no. of working hours to open the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                                mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
-                                mx.DateTime.strptime(issue.date_open, '%Y-%m-%d %H:%M:%S'))
+                                 datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
+                                 datetime.strptime(issue.date_open, '%Y-%m-%d %H:%M:%S'))
                 elif field in ['working_hours_close','day_close']:
                     if issue.date_closed:
                         date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
@@ -111,8 +110,8 @@ class project_issue(osv.osv, crm.crm_case):
                         ans = date_close - date_create
                         #Calculating no. of working hours to close the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                                mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
-                                mx.DateTime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
+                                datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
+                                datetime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
                 if ans:
                     resource_id = False
                     if issue.user_id:
@@ -122,9 +121,9 @@ class project_issue(osv.osv, crm.crm_case):
                     duration = float(ans.days)
                     if issue.project_id and issue.project_id.resource_calendar_id:
                         duration = float(ans.days) * 24
-                        new_dates = cal_obj.interval_min_get(cr, uid, issue.project_id.resource_calendar_id.id, mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'), duration, resource=resource_id)
+                        new_dates = cal_obj.interval_min_get(cr, uid, issue.project_id.resource_calendar_id.id, datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'), duration, resource=resource_id)
                         no_days = []
-                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
+                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
                             if in_time.date not in no_days:
                                 no_days.append(in_time.date)
@@ -159,9 +158,7 @@ class project_issue(osv.osv, crm.crm_case):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
-        'email_cc': fields.char('Watchers Emails', size=256, help="These people\
- will receive a copy of the future" \
-" communication between partner and users by email"),
+        'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True),
         # Project Issue fields
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -178,18 +175,16 @@ class project_issue(osv.osv, crm.crm_case):
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
-        'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'assigned_to': fields.many2one('res.users', 'Assigned to'),
+        'assigned_to': fields.many2one('res.users', 'Assigned to', help='This is the current user to whom the related task have been assigned'),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
                                 method=True, multi='working_days_close', type="float", store=True),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
     }
@@ -301,6 +296,8 @@ class project_issue(osv.osv, crm.crm_case):
                 data['project_id'] = case.project_id.project_escalation_id.id
                 if case.project_id.project_escalation_id.user_id:
                     data['user_id'] = case.project_id.project_escalation_id.user_id.id
+                if case.task_id:
+                    self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
@@ -407,8 +404,21 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
     _columns = {
-        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+        'resource_calendar_id' : fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'reply_to' : fields.char('Reply-To Email Address', size=256)
     }
+    
+    def _check_escalation(self, cr, uid, ids):
+         project_obj = self.browse(cr, uid, ids[0])
+         if project_obj.project_escalation_id:
+             if project_obj.project_escalation_id.id == project_obj.id:
+                 return False
+         return True
+
+    _constraints = [
+        (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
+    ]
 project()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

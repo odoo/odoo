@@ -2,7 +2,7 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      <frame id="first" x1="57.0" y1="57.0" width="480" height="728"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -104,7 +104,7 @@
     <para style="P3">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="72.0,295.0,47.0,68.0" style="Table3">
+    <blockTable colWidths="72.0,294.0,46.0,68.0" style="Table3">
       <tr>
         <td>
           <para style="P6">Expanse To</para>
@@ -130,7 +130,7 @@
           <para style="P6">Date</para>
         </td>
         <td>
-          <para style="P12">[[o.date]]</para>
+          <para style="P12">[[formatLang(time.strftime('%Y-%m-%d'), date = True)]]</para>
         </td>
       </tr>
     </blockTable>
@@ -177,22 +177,22 @@
             <para style="P8">[[ l.employee_id.name ]]</para>
           </td>
           <td>
-            <para style="P10">[[l.basic]]</para>
+            <para style="P10">[[formatLang(l.basic)]]</para>
           </td>
           <td>
-            <para style="P10">[[l.other_pay]]</para>
+            <para style="P10">[[formatLang(l.other_pay)]]</para>
           </td>
           <td>
-            <para style="P10">[[l.allounce]]</para>
+            <para style="P10">[[formatLang(l.allounce)]]</para>
           </td>
           <td>
-            <para style="P10">[[l.grows]]</para>
+            <para style="P10">[[formatLang(l.grows)]]</para>
           </td>
           <td>
-            <para style="P10">[[l.deduction]]</para>
+            <para style="P10">[[formatLang(l.deduction)]]</para>
           </td>
           <td>
-            <para style="P10">[[l.net]]</para>
+            <para style="P10">[[formatLang(l.net)]]</para>
           </td>
         </tr>
       </blockTable>
@@ -230,7 +230,7 @@
         <font color="white"> </font>
       </para>
     </section>
-    <blockTable colWidths="241.0,241.0" style="Table5">
+    <blockTable colWidths="240.0,240.0" style="Table5">
       <tr>
         <td>
           <para style="P6">For [[company.name]],</para>

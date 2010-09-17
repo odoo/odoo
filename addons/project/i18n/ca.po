@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-31 12:43+0000\n"
+"PO-Revision-Date: 2010-08-03 09:14+0000\n"
 "Last-Translator: Albert Cervera i Areny - http://www.NaN-tic.com <albert@nan-"
 "tic.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:52+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -213,7 +213,9 @@ msgstr ""
 "el qual delegueu aquesta tasca."
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "Notes"
@@ -229,7 +231,8 @@ msgid "Analysis"
 msgstr "Anàlisi"
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -255,12 +258,14 @@ msgstr ""
 "mateixa notació."
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "Cancel·lat"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "Capçalera correu"
 
@@ -327,7 +332,8 @@ msgid "Extra Info"
 msgstr "Informació extra"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr "Empresa"
 
@@ -407,7 +413,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Calculat com: Temps dedicat + Temps restant."
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "Tipus"
 
@@ -451,7 +458,8 @@ msgid "Planned Time"
 msgstr "Temps estimat"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "Treball de tasca"
@@ -502,17 +510,20 @@ msgid "Template"
 msgstr "Plantilla"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Configuració"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "Data d'inici"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "Projectes"
 
@@ -564,17 +575,20 @@ msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "Projectes"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Temps dedicat"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "Tasques"
 
@@ -664,7 +678,8 @@ msgstr "Activa factures des de línies de comandes de venda"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "Esborrany"
 
@@ -679,8 +694,10 @@ msgid "Project Manager"
 msgstr "Responsable de projecte"
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "Pendent"
@@ -705,7 +722,8 @@ msgid "Project Time Unit"
 msgstr "Unitat de temp projecte"
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr "Nom del projecte"
 
@@ -897,8 +915,10 @@ msgstr ""
 "els projectes, etc."
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "Realitzat"
@@ -907,7 +927,8 @@ msgstr "Realitzat"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -984,7 +1005,8 @@ msgstr "Tanca silenciosament"
 #. module: project
 #: help:project.task.delegate,init,prefix:0
 msgid "New title of your own task to validate the work done."
-msgstr "Nou títol de la vostra pròpia tasca per validar el treball realitzat."
+msgstr ""
+"Nou títol de la vostra pròpia tasca per validar el treball realitzat."
 
 #. module: project
 #: field:project.task,progress:0
@@ -1089,7 +1111,8 @@ msgid "Template of Projects"
 msgstr "Plantilla de projectes"
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "Seqüència"
 
@@ -1153,7 +1176,8 @@ msgid "Delegate your task to the other user"
 msgstr "Delegueu la vostra tasca a un altre usuari"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "Peu correu"
 
@@ -1207,7 +1231,8 @@ msgid "My Planning"
 msgstr "La meva planificació"
 
 #. module: project
-#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "Els meus comptes a facturar"
 

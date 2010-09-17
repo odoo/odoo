@@ -23,12 +23,12 @@
 {
     "name" : "Manufacturing Resource Planning",
     "version" : "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
-    This is the base module to manage the manufacturing process in Open ERP.
+    This is the base module to manage the manufacturing process in OpenERP.
 
     Features:
     * Make to Stock / Make to Order (by line)
@@ -72,7 +72,6 @@
         'wizard/mrp_change_standard_price_view.xml',
 #        'wizard/mrp_track_prod_view.xml',
         'mrp_view.xml',
-        'mrp_wizard.xml',
         'mrp_report.xml',
         'company_view.xml',
         'process/stockable_product_process.xml',

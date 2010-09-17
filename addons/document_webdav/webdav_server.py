@@ -32,12 +32,13 @@ import tools
 from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
-from service.websrv_lib import HTTPDir,FixSendError
+from service.websrv_lib import HTTPDir, FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
 from string import atoi,split
 from DAV.errors import *
+# from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 
 def OpenDAVConfig(**kw):
     class OpenDAV:
@@ -53,9 +54,14 @@ def OpenDAVConfig(**kw):
     return Config()
 
 
-class DAVHandler(FixSendError,DAVRequestHandler):
+class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
     protocol_version = 'HTTP/1.1'
+    _HTTP_OPTIONS= { 'DAV' : ['1',],
+                    'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
+                            'PROPFIND', 'PROPPATCH', 'OPTIONS', 'MKCOL',
+                            'DELETE', 'TRACE', 'REPORT', ]
+                    }
 
     def get_userinfo(self,user,pw):
         return False
@@ -99,6 +105,21 @@ class DAVHandler(FixSendError,DAVRequestHandler):
     def log_error(self, format, *args):
         netsvc.Logger().notifyChannel('xmlrpc', netsvc.LOG_WARNING, format % args)
 
+    def _prep_OPTIONS(self, opts):
+        ret = opts
+        dc=self.IFACE_CLASS
+        uri=urlparse.urljoin(self.get_baseuri(dc), self.path)
+        uri=urllib.unquote(uri)
+        try:
+            #location = dc.put(uri,body,ct)
+            ret = dc.prep_http_options(uri, opts)
+        except DAV_Error, (ec,dd):
+            pass
+        except Exception,e:
+            self.log_error("Error at options: %s", str(e))
+            raise
+        return ret
+
     def send_response(self, code, message=None):
         # the BufferingHttpServer will send Connection: close , while
         # the BaseHTTPRequestHandler will only accept int code.
@@ -110,6 +131,22 @@ class DAVHandler(FixSendError,DAVRequestHandler):
             self.close_connection = 1
         DAVRequestHandler.send_header(self, key, value)
 
+    def send_body(self, DATA, code = None, msg = None, desc = None, ctype='application/octet-stream', headers=None):
+        if headers and 'Connection' in headers:
+            pass
+        elif self.request_version in ('HTTP/1.0', 'HTTP/0.9'):
+            pass
+        elif self.close_connection == 1: # close header already sent
+            pass
+        else:
+            if headers is None:
+                headers = {}
+            if self.headers.get('Connection',False) == 'Keep-Alive':
+                headers['Connection'] = 'keep-alive'
+
+        DAVRequestHandler.send_body(self, DATA, code=code, msg=msg, desc=desc,
+                    ctype=ctype, headers=headers)
+
     def do_PUT(self):
         dc=self.IFACE_CLASS
         uri=urlparse.urljoin(self.get_baseuri(dc), self.path)
@@ -120,6 +157,8 @@ class DAVHandler(FixSendError,DAVRequestHandler):
             etag = None
 
             for match in self.headers['If-Match'].split(','):
+                if match.startswith('"') and match.endswith('"'):
+                    match = match[1:-1]
                 if match == '*':
                     if dc.exists(uri):
                         test = True
@@ -129,6 +168,7 @@ class DAVHandler(FixSendError,DAVRequestHandler):
                         test = True
                         break
             if not test:
+                self._get_body()
                 self.send_status(412)
                 return
 
@@ -146,6 +186,7 @@ class DAVHandler(FixSendError,DAVRequestHandler):
                         test = False
                         break
             if not test:
+                self._get_body()
                 self.send_status(412)
                 return
 
@@ -158,10 +199,7 @@ class DAVHandler(FixSendError,DAVRequestHandler):
             self._flush()
 
         # read the body
-        body=None
-        if self.headers.has_key("Content-Length"):
-            l=self.headers['Content-Length']
-            body=self.rfile.read(atoi(l))
+        body=self._get_body()
 
         # locked resources are not allowed to be overwritten
         if self._l_isLocked(uri):
@@ -176,16 +214,30 @@ class DAVHandler(FixSendError,DAVRequestHandler):
             return self.send_status(ec)
 
         headers = {}
+        etag = None
+        if location and isinstance(location, tuple):
+            etag = location[1]
+            location = location[0]
+            # note that we have allowed for > 2 elems
         if location:
             headers['Location'] = location
-
-        try:
-            etag = dc.get_prop(location or uri, "DAV:", "getetag")
-            headers['ETag'] = etag
-        except:
-            pass
+        else:
+            try:
+                if not etag:
+                    etag = dc.get_prop(location or uri, "DAV:", "getetag")
+                if etag:
+                    headers['ETag'] = str(etag)
+            except Exception:
+                pass
 
         self.send_body(None, '201', 'Created', '', headers=headers)
+
+    def _get_body(self):
+        body = None
+        if self.headers.has_key("Content-Length"):
+            l=self.headers['Content-Length']
+            body=self.rfile.read(atoi(l))
+        return body
 
     def do_DELETE(self):
         try:

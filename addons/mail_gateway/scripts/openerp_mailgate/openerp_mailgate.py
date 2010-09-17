@@ -64,15 +64,15 @@ if __name__ == '__main__':
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')
     group = optparse.OptionGroup(parser, "Note",
         "This program parse a mail from standard input and communicate "
-        "with the Open ERP server for case management in the CRM module.")
+        "with the OpenERP server for case management in the CRM module.")
     parser.add_option_group(group)
-    parser.add_option("-u", "--user", dest="userid", help="ID of the user in Open ERP", default=1, type='int')
-    parser.add_option("-p", "--password", dest="password", help="Password of the user in Open ERP", default='admin')
+    parser.add_option("-u", "--user", dest="userid", help="ID of the user in OpenERP", default=1, type='int')
+    parser.add_option("-p", "--password", dest="password", help="Password of the user in OpenERP", default='admin')
     parser.add_option("-o", "--model", dest="model", help="Name or ID of crm model", default="crm.lead")
     parser.add_option("-m", "--default", dest="default", help="Default eMail in case of any trouble.", default=None)
     parser.add_option("-d", "--dbname", dest="dbname", help="Database name (default: terp)", default='terp')
-    parser.add_option("--host", dest="host", help="Hostname of the Open ERP Server", default="localhost")
-    parser.add_option("--port", dest="port", help="Port of the Open ERP Server", default="8069")
+    parser.add_option("--host", dest="host", help="Hostname of the OpenERP Server", default="localhost")
+    parser.add_option("--port", dest="port", help="Port of the OpenERP Server", default="8069")
 
     (options, args) = parser.parse_args()
 

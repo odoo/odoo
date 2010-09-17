@@ -2,26 +2,30 @@
 <openerp>
     <data>
 
-        <menuitem id="base.menu_crm_config_sales" name="Sales"
-            parent="base.menu_base_config" sequence="1"/>
+        <!--menuitem id="base.menu_crm_config_sales" name="Sales"
+            parent="base.menu_base_config" sequence="1"/-->
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_system,base.group_extended,base.group_sale_manager,base.group_sale_salesman"/>
 
-        <menuitem id="menu_crm_config_lead" name="Leads &amp; Opportunities"
-            parent="base.menu_crm_config_sales" sequence="0" groups="base.group_extended"/>
+        <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
+            parent="base.menu_base_config" sequence="1" groups="base.group_extended,base.group_system"/>
 
-        <menuitem id="menu_crm_config_meeting" name="Meeting"
-            parent="base.menu_base_config" sequence="4"/>
+        <menuitem id="base.menu_sale_config_sales" name="Sales"
+            parent="base.menu_base_config" sequence="0" groups="base.group_system,base.group_extended"/>
+
+        <!--menuitem id="menu_crm_config_meeting" name="Meeting"
+            parent="base.menu_base_config" sequence="4"/-->
 
         <menuitem id="menu_crm_config_phonecall" name="Phone Call"
-            parent="base.menu_base_config" sequence="5" groups="base.group_extended"/>
+            parent="base.menu_base_config" sequence="5" groups="base.group_extended,base.group_system"/>
 
         <menuitem id="base.next_id_64" name="Reporting"
             parent="base.menu_base_partner" sequence="11" />
 
-        <menuitem action="crm_custom_create_menu_action"
+        <!--menuitem action="crm_custom_create_menu_action"
             id="crm_case_create_custom_menu"
             parent="base.menu_crm_config_sales"
             groups="base.group_extended"
-            name="Create Menu for Custom Cases" />
+            name="Create Menu for Custom Cases" /-->
 
 
         <!-- Case Sections Form View -->
@@ -87,11 +91,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
-        
+
         <menuitem action="crm_case_section_act"
             id="menu_crm_case_section_act" sequence="4"
-            parent="menu_crm_config_lead" />
-            
+            parent="base.menu_sale_config_sales" />
+
 
         <!-- CRM Stage Tree View -->
 
@@ -169,19 +173,6 @@
             </field>
         </record>
 
-        <!-- Case Categories Action -->
-
-        <record id="crm_case_categ-act" model="ir.actions.act_window">
-            <field name="name">Categories</field>
-            <field name="res_model">crm.case.categ</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_case_categ_tree-view"/>
-        </record>
-        
-         <menuitem action="crm_case_categ-act"
-            id="menu_crm_case_categ-act" name="Categories"
-            parent="menu_crm_config_lead" sequence="1"/>
-
         <!-- Resource Type of case Tree View -->
 
         <record model="ir.ui.view" id="crm_case_resource_type_tree">
@@ -227,26 +218,6 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
-        </record>
-
-        <!-- Cases Tree View  -->
-
-        <record id="crm_case_log_tree-view" model="ir.ui.view">
-            <field name="name">crm.case.log.tree</field>
-            <field name="model">crm.case.log</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Case logs">
-                    <field name="date"/>
-                    <field name="name"/>
-                    <field name="user_id"/>
-                    <field name="section_id"/>
-                    <!--
-                    <field name="som"/>
-                    <field name="canal_id"/>
-                    -->
-                </tree>
-            </field>
         </record>
 
         <!-- Segmentation line Tree View  -->
@@ -354,7 +325,7 @@
         </record>
 
         <record id="crm_segmentation_tree-act" model="ir.actions.act_window">
-            <field name="name">Segmentation</field>
+            <field name="name">Partners Segmentation</field>
             <field name="res_model">crm.segmentation</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -362,8 +333,8 @@
 
        <menuitem action="crm_segmentation_tree-act"
             id="menu_crm_segmentation-act"
-            groups="base.group_extended" sequence="3"
-            parent="base.menu_config_address_book" />
+            groups="base.group_extended,base.group_system" sequence="2"
+            parent="base.menu_base_action_rule" />
 
         <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
             <field name="name">view.users.form.crm.modif.inherited1</field>
@@ -374,7 +345,8 @@
                 <page string="Current Activity" position="inside">
                     <field name="context_section_id" completion="1"
                         widget="selection"
-                        context="{'user_prefence':True}" />
+                        context="{'user_prefence':True}"
+                        readonly="0"/>
                 </page>
             </field>
         </record>
@@ -435,8 +407,8 @@
                     </field>
                 </field>
         </record>
-        
-        
+
+
         <!-- Custom Case Sections -->
         <record id="crm_case_section_custom_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.custom.form</field>
@@ -482,9 +454,9 @@
                 </tree>
             </field>
         </record>
-        
+
         <!-- Custom crm case-->
-        
+
         <record id="crm_case_custom_tree_view" model="ir.ui.view">
             <field name="name">Custom Cases - Tree</field>
             <field name="model">crm.case.custom</field>
@@ -563,67 +535,62 @@
                             <field name="active" select="2"/>
                             <separator colspan="4" string="References"/>
                             <field colspan="4" name="ref"/>
-                            <field colspan="4" name="log_ids" nolabel="1">
-                                <tree string="Logs">
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </tree>
-                                <form string="Logs">
-                                    <separator string="Action Information" colspan="4"/>
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </form>
-                            </field>
                         </page>
                         <page string="Emails" groups="base.group_extended">
                            <group colspan="4">
-                               <field colspan="4" name="email_cc" string="CC" widget="char" size="512"/>
+                               <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
                            </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
-                                <form string="Communication history">
-                                    <group col="4" colspan="4">
-                                        <field name="email_from"/>
-                                        <field name="date"/>
-                                        <field name="email_to" widget="char" size="512"/>
-                                        <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Details">
-                                            <field name="description" colspan="4" nolabel="1"/>
-                                        </page>
-                                        <page string="Attachments">
-                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                        </page>
-                                    </notebook>
-                                    <button colspan="4"
-                                    string="Reply"
-                                    name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
-                                    icon="gtk-undo" type="action" />
-                                </form>
-                                <tree string="Communication history">
-                                    <field name="date"/>
-                                    <field name="email_from" />
-                                    <field name="email_to"/>
-                                    <field name="description"/>
-                                </tree>
-                            </field>
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+		                        <tree string="Communication history">
+		                            <field name="display_text" string="History Information"/>
+		                            <button
+		                                string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
+		                                name="%(crm.action_crm_send_mail)d"
+		                                context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
+		                                icon="terp-mail-replied" type="action" />
+		                        </tree>
+		                        <form string="Communication history">
+		                            <group col="4" colspan="4">
+		                                <field name="email_from"/>
+		                                <field name="date"/>
+		                                <field name="email_to" widget="char" size="512"/>
+		                                <field name="email_cc" widget="char" size="512"/>
+		                                <field name="name" colspan="4" widget="char" size="512"/>
+		                                <field name="history" invisible="1"/>
+		                            </group>
+		                            <notebook colspan="4">
+		                                <page string="Details">
+		                                    <group attrs="{'invisible': [('history', '!=', True)]}">
+		                                        <field name="description" colspan="4" nolabel="1" height="250"/>
+		                                        <button colspan="4"
+		                                            string="Reply"
+		                                            name="%(crm.action_crm_send_mail)d"
+		                                            context="{'mail':'reply', 'model': 'crm.case.custom', 'include_original' : True}"
+		                                            icon="terp-mail-replied" type="action" />
+		                                    </group>
+		                                    <group attrs="{'invisible': [('history', '=', True)]}">
+                                                <field name="display_text" colspan="4" nolabel="1" height="250"/>
+                                            </group>
+		                                </page>
+		                                <page string="Attachments">
+		                                    <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+		                                </page>
+		                            </notebook>
+		                        </form>
+		                    </field>
                             <button colspan="2" string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.case.custom'}"
-                                icon="gtk-go-forward" type="action" />
+                                icon="terp-mail-message-new" type="action" />
                             <button colspan="2" string="Forward to Partner"
                                 name="%(crm_lead_forward_to_partner_act)d"
-                                icon="gtk-go-forward" type="action" />
+                                icon="terp-mail-forward" type="action" />
                          </page>
                     </notebook>
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="crm_case_custom_calendar_view">
             <field name="name">Custom Cases - Calendar</field>
             <field name="model">crm.case.custom</field>
@@ -637,7 +604,7 @@
                 </calendar>
             </field>
         </record>
-      
+
       <!-- Custom Cases Search View -->
 
     <record id="crm_case_custom_search_view" model="ir.ui.view">

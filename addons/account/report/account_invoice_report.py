@@ -31,10 +31,10 @@ class account_invoice_report(osv.osv):
         'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+        'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
-        'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
         'uom_name': fields.char('Default UoM', size=128, readonly=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
@@ -43,13 +43,13 @@ class account_invoice_report(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
-        'price_total':fields.float('Total Price', readonly=True),
-        'price_average':fields.float('Average Price', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
+        'price_total': fields.float('Total Without Tax', readonly=True),
+        'price_total_tax': fields.float('Total With Tax', readonly=True),
+        'price_average': fields.float('Average Price', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
-        'reconciled':fields.integer('# reconciled lines', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -68,9 +68,9 @@ class account_invoice_report(osv.osv):
         'address_contact_id': fields.many2one('res.partner.address', 'Contact Address Name', readonly=True),
         'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
-        'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
-        'residual':fields.float('Total Residual', readonly=True),
-        'delay_to_pay':fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
+        'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
+        'residual': fields.float('Total Residual', readonly=True),
+        'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -84,7 +84,6 @@ class account_invoice_report(osv.osv):
                     to_char(ai.date_invoice, 'YYYY-MM-DD') as day,
                     ail.product_id,
                     ai.partner_id as partner_id,
-                    ai.reconciled::integer,
                     ai.payment_term as payment_term,
                     ai.period_id as period_id,
                     u.name as uom_name,
@@ -101,7 +100,7 @@ class account_invoice_report(osv.osv):
                     ai.address_contact_id as address_contact_id,
                     ai.address_invoice_id as address_invoice_id,
                     ai.account_id as account_id,
-                    ai.partner_bank as partner_bank,
+                    ai.partner_bank_id as partner_bank_id,
                     sum(case when ai.type in ('out_refund','in_invoice') then
                          ail.quantity * u.factor * -1
                         else
@@ -112,6 +111,11 @@ class account_invoice_report(osv.osv):
                         else
                          ail.quantity*ail.price_unit
                         end) as price_total,
+                    sum(case when ai.type in ('out_refund','in_invoice') then
+                         ai.amount_total * -1
+                        else
+                         ai.amount_total
+                         end) as price_total_tax,
                     sum(ail.quantity*ail.price_unit)/sum(ail.quantity*u.factor)*count(ail.product_id)::decimal(16,2) as price_average,
                     sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
                         from account_move_line as aml
@@ -136,7 +140,6 @@ class account_invoice_report(osv.osv):
                     to_char(ai.date_invoice, 'MM'),
                     to_char(ai.date_invoice, 'YYYY-MM-DD'),
                     ai.partner_id,
-                    ai.reconciled,
                     ai.payment_term,
                     ai.period_id,
                     u.name,
@@ -152,8 +155,12 @@ class account_invoice_report(osv.osv):
                     ai.address_contact_id,
                     ai.address_invoice_id,
                     ai.account_id,
-                    ai.partner_bank,
-                    ai.residual
+                    ai.partner_bank_id,
+                    ai.residual,
+                    ai.amount_total
             )
         """)
+
 account_invoice_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

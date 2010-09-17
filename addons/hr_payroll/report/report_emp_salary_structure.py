@@ -42,7 +42,7 @@ class salary_structure_report(report_sxw.rml_parse):
     def get_contract(self,emp):
         curr_date = "'"+time.strftime("%Y-%m-%d")+"'"
         sql_req= '''
-            SELECT c.id as id, c.wage as wage, function as function
+            SELECT c.id as id, c.wage as wage, struct_id as struct
             FROM hr_contract c
               LEFT JOIN hr_employee emp on (c.employee_id=emp.id)
               LEFT JOIN hr_contract_wage_type cwt on (cwt.id = c.wage_type_id)

@@ -170,7 +170,7 @@
           <para style="P12">Dated :</para>
         </td>
         <td>
-          <para style="P13">[[ time.strftime('%d %B,%Y', time.strptime(voucher.date , '%Y-%m-%d')) or '' ]]</para>
+          <para style="P13">[[ formatLang(voucher.date, date=True) or '' ]]</para>
         </td>
       </tr>
       <tr>

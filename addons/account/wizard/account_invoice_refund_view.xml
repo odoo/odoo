@@ -2,34 +2,41 @@
 <openerp>
     <data>
 
-    	<record id="view_account_invoice_refund" model="ir.ui.view">
+        <record id="view_account_invoice_refund" model="ir.ui.view">
             <field name="name">account.invoice.refund.form</field>
             <field name="model">account.invoice.refund</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Credit Note">
-                	<separator string="This wizard is used to refund the invoice" colspan="4"/>
-                	<group colspan="4" >
-                    	 <label string="Are you sure you want to refund this invoice ?" colspan="2"/>
-                    	 <newline/>
-                    	 <field name="date"/>
-                    	 <field name="period"/>
-                    	 <field name="description"/>
+                <form string="Refund">
+                    <separator string="This wizard is used to refund the invoice" colspan="4"/>
+                    <group colspan="4" >
+                         <label string="Are you sure you want to refund this invoice ?" colspan="2"/>
+                         <newline/>
+                         <field name="description"/>
+                         <field name="date"/>
+                         <field name="period"/>
+                         <field name="journal_id" />
                     </group>
-                       	<separator colspan="4"/>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4" fill="1">
+                        <label align="0.0" width="300" string="Refund Invoice: creates a refund invoice"/>
+                        <label align="0.0" width="500" colspan="4" string="Cancel Invoice: creates a reverse accounting entries to cancel the invoice"/>
+                        <label align="0.0" width="550" colspan="4" string="Modify Invoice: creates a refund invoice, and new copy of the same invoice ready for editing"/>
+                    </group>
+                    <separator colspan="4"/>
                     <group colspan="4" col="6">
-                       	<label string ="" colspan="2"/>
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="gtk-redo" string="Refund Invoice" name="invoice_refund" type="object"/>
-                    	<button icon="gtk-ok" string="Cancel Invoice" name="invoice_cancel" type="object"/>
-                    	<button icon="gtk-undo" string="Modify Invoice" name="invoice_modify" type="object"/>
+                        <label string ="" colspan="2"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-redo" string="Refund Invoice" name="invoice_refund" type="object"/>
+                        <button icon="gtk-ok" string="Cancel Invoice" name="invoice_cancel" type="object"/>
+                        <button icon="gtk-undo" string="Modify Invoice" name="invoice_modify" type="object"/>
                    </group>
                </form>
             </field>
-    	</record>
+        </record>
 
         <record id="action_account_invoice_refund" model="ir.actions.act_window">
-            <field name="name">Credit Note</field>
+            <field name="name">Refund</field>
             <field name="res_model">account.invoice.refund</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

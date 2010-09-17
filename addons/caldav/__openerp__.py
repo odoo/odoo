@@ -43,7 +43,7 @@
         DATABASE_NAME: Name of database on which OpenERP Calendar is created
         CALENDAR_NAME: Name of calendar to access
 """, 
-    "author" : "Tiny", 
+    "author" : "OpenERP SA", 
     'category': 'Generic Modules/Others', 
     'website': 'http://www.openerp.com', 
     "init_xml" : ["caldav_data.xml"], 

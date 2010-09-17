@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-06-04 09:30+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) <jesteve@zikzakmedia."
-"com>\n"
+"PO-Revision-Date: 2010-08-03 08:33+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:07+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -72,7 +72,8 @@ msgid "Steps To Deliver a Sale Order"
 msgstr "Passos per enviar una comanda de venda"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,qtty:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,qtty:0
+#: rml:sale.order:0
 msgid "Quantity"
 msgstr "Quantitat"
 
@@ -82,7 +83,8 @@ msgid "You invoice has been successfully created !"
 msgstr "La vostra factura s'ha creat correctament!"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Automatic Declaration"
 msgstr "Declaració automàtica"
 
@@ -106,7 +108,8 @@ msgstr "Excepció de factura"
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this invoice"
-msgstr "Aquesta és la llista d'albarans que s'han generat per aquesta factura"
+msgstr ""
+"Aquesta és la llista d'albarans que s'han generat per aquesta factura"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -159,7 +162,9 @@ msgid "Manual Designation"
 msgstr "Designació manual"
 
 #. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
 msgstr "Notes"
@@ -170,7 +175,8 @@ msgid "Invoice after delivery"
 msgstr "Factura després de l'enviament"
 
 #. module: sale
-#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Impostos"
 
@@ -185,7 +191,8 @@ msgid "Shipping Policy"
 msgstr "Política de facturació"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
 msgstr ""
 
@@ -230,7 +237,8 @@ msgid "Procurement is created after confirmation of sale order."
 msgstr "El proveïment es creat després de confirmar una comanda de venda."
 
 #. module: sale
-#: field:sale.order,project_id:0 field:sale.shop,project_id:0
+#: field:sale.order,project_id:0
+#: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Compte analític"
 
@@ -321,7 +329,8 @@ msgid "Invoice Based on Sales Orders"
 msgstr "Factura basada en comandes de venda"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
 msgid "Sale Shop"
 msgstr "Tenda de vendes"
 
@@ -336,7 +345,8 @@ msgid "Order N°"
 msgstr "Comanda Nº"
 
 #. module: sale
-#: field:sale.order,order_line:0 view:sale.order.line:0
+#: field:sale.order,order_line:0
+#: view:sale.order.line:0
 msgid "Order Lines"
 msgstr "Línies de la comanda"
 
@@ -346,7 +356,8 @@ msgid "Disc.(%)"
 msgstr "Desc.(%)"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Línies de factura"
@@ -443,13 +454,15 @@ msgid "Order Reference"
 msgstr "Referència comanda"
 
 #. module: sale
-#: selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
 #: selection:sale.order.line,state:0
 msgid "Done"
 msgstr "Realitzada"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0 field:sale.shop,pricelist_id:0
+#: field:sale.order,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Tarifa"
 
@@ -620,7 +633,8 @@ msgid "Taxes :"
 msgstr "Impostos :"
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Facturat"
 
@@ -775,7 +789,8 @@ msgid "Direct Delivery"
 msgstr "Enviament directe"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Propietats"
@@ -808,7 +823,8 @@ msgstr "Calcula"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
 msgid "Shop"
 msgstr "Tenda"
 
@@ -859,7 +875,8 @@ msgid "Delivery Order Only"
 msgstr "Només ordre d'enviament"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Sales order lines"
 msgstr "Línies de la comanda de venda"
 
@@ -874,7 +891,8 @@ msgid "Sales"
 msgstr "Vendes"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Qty"
 msgstr "Qtat"
 
@@ -889,7 +907,8 @@ msgid "Other data"
 msgstr "Altres dades"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,amount:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,amount:0
+#: rml:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Preu un."
@@ -915,7 +934,8 @@ msgstr "Factura"
 #: model:process.transition.action,name:sale.process_transition_action_cancel1
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: wizard_button:sale.advance_payment_inv,init,end:0
-#: view:sale.config.picking_policy:0 view:sale.order.line:0
+#: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
 #: wizard_button:sale.order.line.make_invoice,init,end:0
 #: wizard_button:sale.order.make_invoice,init,end:0
 msgid "Cancel"
@@ -938,7 +958,8 @@ msgstr ""
 "la data 'Data de la comanda'."
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "UoM"
 msgstr "UdM"
 
@@ -1053,7 +1074,8 @@ msgid "Ordering Contact"
 msgstr "Contacte que fa la comanda"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order.line,name:0
+#: rml:sale.order:0
+#: field:sale.order.line,name:0
 msgid "Description"
 msgstr "Descripció"
 
@@ -1110,7 +1132,8 @@ msgid ""
 msgstr "El nom i adreça del contacte que demana la comanda o pressupost."
 
 #. module: sale
-#: field:sale.order,partner_id:0 field:sale.order.line,order_partner_id:0
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Client"
 
@@ -1122,7 +1145,8 @@ msgstr "Tarifes de compra"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
 msgstr "Comanda de venda"
@@ -1149,7 +1173,8 @@ msgid "Total amount"
 msgstr "Import total"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order,date_order:0
+#: rml:sale.order:0
+#: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Data ordenada"
 
@@ -1238,7 +1263,8 @@ msgstr ""
 "(línia per línia per exemple)."
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "States"
 msgstr "Estats"
 
@@ -1258,7 +1284,8 @@ msgid "Error: Invalid ean code"
 msgstr "Error: Codi EAN erroni"
 
 #. module: sale
-#: field:sale.order,picked_rate:0 field:sale.order,shipped:0
+#: field:sale.order,picked_rate:0
+#: field:sale.order,shipped:0
 msgid "Picked"
 msgstr "Enviada"
 

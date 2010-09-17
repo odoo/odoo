@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-07-08 08:56+0000\n"
+"PO-Revision-Date: 2010-08-15 12:30+0000\n"
 "Last-Translator: eLBati - albatos.com <lorenzo.battistini@albatos.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-09 03:56+0000\n"
+"X-Launchpad-Export-Date: 2010-08-16 06:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -353,7 +353,7 @@ msgstr "Delta di Debito"
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
 msgid "Tax"
-msgstr "Tassa"
+msgstr "Imposte"
 
 #. module: account
 #: rml:account.general.journal:0
@@ -3283,7 +3283,7 @@ msgstr "Riconcilia registrazioni"
 #. module: account
 #: wizard_view:account.wizard_paid_open,init:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr ""
+msgstr "(Bisogna annullare la riconciliazione per aprire la fattura)"
 
 #. module: account
 #: view:account.invoice:0
@@ -3776,7 +3776,7 @@ msgstr ""
 #. module: account
 #: selection:account.account.type,close_method:0
 msgid "Unreconciled"
-msgstr ""
+msgstr "Non riconciliate"
 
 #. module: account
 #: field:account.account,note:0
@@ -5213,7 +5213,7 @@ msgstr ""
 #: field:account.invoice,payment_ids:0
 #: selection:account.vat.declaration,init,based_on:0
 msgid "Payments"
-msgstr ""
+msgstr "Pagamenti"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
@@ -5342,7 +5342,7 @@ msgstr ""
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Optional Information"
-msgstr ""
+msgstr "Informazioni aggiuntive"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -5501,7 +5501,7 @@ msgstr ""
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "General Information"
-msgstr ""
+msgstr "Informazioni Generali"
 
 #. module: account
 #: help:populate_statement_from_inv,init,journal_id:0
@@ -6290,3 +6290,92 @@ msgstr ""
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
 msgstr ""
+
+#~ msgid "account.config.wizard"
+#~ msgstr "account.config.wizard"
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Errore di Integrità!"
+
+#, python-format
+#~ msgid ""
+#~ "Specified Journal does not have any account move entries in draft state for "
+#~ "this period"
+#~ msgstr ""
+#~ "Il Giornale specificato non ha nessun movimento in stato di bozza per questo "
+#~ "periodo"
+
+#, python-format
+#~ msgid "You have to provide an account for the write off entry !"
+#~ msgstr "Occorre inserire un conto per la scrittura della registrazione"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Attenzione !"
+
+#, python-format
+#~ msgid "You can not delete posted movement: \"%s\"!"
+#~ msgstr "Non è possibile cancellare il movimento registrato \"%s\"!"
+
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "Nessun Giornale analitico presente!"
+
+#, python-format
+#~ msgid "You can not use this general account in this journal !"
+#~ msgstr "Non è possibile utilizzare questo conto generale in questo giornale!"
+
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr "Non si può aggiungere/modificare registrazioni in un giornale chiuso"
+
+#, python-format
+#~ msgid ""
+#~ "You can not do this modification on a reconciled entry ! Please note that "
+#~ "you can just change some non important fields !"
+#~ msgstr ""
+#~ "Non si può fare questa modifica su una registrazione riconcigliata! Per "
+#~ "cortesia, osservare che si possono modificare solo campi non importanti!"
+
+#, python-format
+#~ msgid "You must first select a partner !"
+#~ msgstr "Bisogna prima selezionare un partner!"
+
+#, python-format
+#~ msgid "Free Reference"
+#~ msgstr "Riferimenti vari"
+
+#, python-format
+#~ msgid "Entries are not of the same account or already reconciled ! "
+#~ msgstr "Registrazioni non nello stesso conto, oppure già riconciliate! "
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Azione non valida !"
+
+#, python-format
+#~ msgid "Some entries are already reconciled !"
+#~ msgstr "Alcune registrazioni sono già riconciliate !"
+
+#, python-format
+#~ msgid "The account entries lines are not in valid state."
+#~ msgstr "Queste registrazioni contabili non sono in uno stato valido."
+
+#, python-format
+#~ msgid "Sales Journal"
+#~ msgstr "Giornale Vendite"
+
+#, python-format
+#~ msgid "You can not modify/delete a journal with entries for this period !"
+#~ msgstr ""
+#~ "Non puoi modificare/cancellare un giornale con registrazioni per questo "
+#~ "periodo !"
+
+#, python-format
+#~ msgid "Entries: "
+#~ msgstr "Registrazioni: "
+
+#, python-format
+#~ msgid "Entry is already reconciled"
+#~ msgstr "La registrazione è già stata riconciliata"

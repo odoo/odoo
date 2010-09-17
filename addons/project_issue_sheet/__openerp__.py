@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Add the Timesheet support for Issue Management in Project Management',
     'version': '1.0',
@@ -28,7 +27,7 @@
     'description': """ 
                     This module adds the Timesheet support for the Issues/Bugs Management in Project
                 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
         'project_issue',
@@ -44,4 +43,5 @@
     'installable': True,
     'active': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

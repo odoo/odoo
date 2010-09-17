@@ -16,7 +16,7 @@
                 <field name="period_id"/>
                 <group colspan="4" col="6">
                     <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button icon="terp-camera_test" string="Validate" name="validate_move" type="object"/>
+                    <button icon="terp-camera_test" string="Approve" name="validate_move" type="object"/>
                </group>
                </form>
             </field>
@@ -27,8 +27,9 @@
             <field name="res_model">validate.account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-           <field name="view_id" ref="validate_account_move_view"/>
-           <field name="target">new</field>
+            <field name="view_id" ref="validate_account_move_view"/>
+            <field name="target">new</field>
+            <field name="help">The process of ledger is the process of transferring debit and credit amounts from a journal of original entry to a ledger book.</field>
         </record>
 
         <menuitem
@@ -38,7 +39,7 @@
             id="menu_validate_account_moves"
            />
 
-<!--Account Move lines-->
+        <!--Account Move lines-->
         <record id="validate_account_move_line_view" model="ir.ui.view">
             <field name="name">Validate Ledger Postings</field>
             <field name="model">validate.account.move.lines</field>
@@ -47,7 +48,7 @@
               <form string="Validate Moves">
               <separator string="Validate Ledger Postings" colspan="4"/>
                   <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                <button name="validate_move_lines" string="Validate" type="object" icon="gtk-go-forward" default_focus="1"/>
+                <button name="validate_move_lines" string="Approve" type="object" icon="gtk-go-forward" default_focus="1"/>
             </form>
             </field>
         </record>

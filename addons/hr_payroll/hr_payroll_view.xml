@@ -3,10 +3,9 @@
     <data>
         <!-- Root Menus -->
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll"/>
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
-        <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll"/>
+        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_system"/>
+        <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
-        
         <!-- Passport Views    -->
         <record id="hr_passport_form" model="ir.ui.view">
             <field name="name">hr.passport.form</field>
@@ -63,7 +62,6 @@
             <field name="arch" type="xml">
                 <search string="Search Passport">
                     <group col="8" colspan="4">
-                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="employee_id"/>
                         <field name="country_id"/>
@@ -78,7 +76,7 @@
                     </group>
                 </search>
             </field>
-        </record>           
+        </record>
         <record id="action_hr_passport_tree" model="ir.actions.act_window">
             <field name="name">All Passports</field>
             <field name="res_model">hr.passport</field>
@@ -88,12 +86,12 @@
         </record>
         <menuitem id="passport_configure" parent="hr.menu_hr_configuration" name="Passport"/>
         <menuitem
-            id="menu_action_hr_passport_tree" 
-            action="action_hr_passport_tree" 
-            parent="passport_configure" 
+            id="menu_action_hr_passport_tree"
+            action="action_hr_passport_tree"
+            parent="passport_configure"
         />
         <!-- End Passport Views -->
-        
+
         <!-- Employee View -->
         <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
@@ -209,7 +207,7 @@
                 </notebook>
             </field>
         </record>
-        
+
         <record id="view_employee_passport_form" model="ir.ui.view">
             <field name="name">hr.employee.passport.form</field>
             <field name="model">hr.employee</field>
@@ -222,7 +220,7 @@
             </field>
         </record>
         <!-- End Employee View -->
-        
+
         <!-- Contract View -->
         <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
@@ -275,7 +273,7 @@
         </record>
         <menuitem action="hr_contract.action_hr_contract" id="hr_menu_contract" parent="payroll_configure" name="Contracts" sequence="4"/>
         <!-- End Contract View-->
-        
+
         <!-- Salary structure -->
         <record id="view_hr_employee_grade_tree" model="ir.ui.view">
             <field name="name">hr.payroll.structure.tree</field>
@@ -311,20 +309,20 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_view_hr_employee_grade_form" model="ir.actions.act_window">
             <field name="name">Salary Structure</field>
             <field name="res_model">hr.payroll.structure</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_employee_grade_tree"/>
         </record>
-        <menuitem 
-            id="menu_hr_employee_function" 
-            action="action_view_hr_employee_grade_form" 
-            parent="payroll_configure" 
+        <menuitem
+            id="menu_hr_employee_function"
+            action="action_view_hr_employee_grade_form"
+            parent="payroll_configure"
         />
         <!-- End Salary structure -->
-        
+
         <!-- Holiday Status -->
         <record model="ir.ui.view" id="view_holiday_status_form1">
             <field name="name">hr.holidays.status.inherit</field>
@@ -349,7 +347,7 @@
             </field>
         </record>
         <!-- End Holiday Status -->
-        
+
         <!-- Payslip Line -->
         <record id="view_hr_payslip_line_tree" model="ir.ui.view">
             <field name="name">hr.payslip.line.tree</field>
@@ -424,18 +422,20 @@
             <field name="model">hr.payslip</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Payslip">
+                <tree colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payslip">
                     <field name="number"/>
                     <field name="employee_id"/>
+                    <field name="register_id" invisible="1"/>
                     <field name="name"/>
                     <field name="date"/>
                     <field name="grows"/>
                     <field name="net"/>
                     <field name="state"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_hr_payslip_form" model="ir.ui.view">
             <field name="name">hr.payslip.form</field>
             <field name="model">hr.payslip</field>
@@ -466,21 +466,21 @@
                                     <field name="analytic_account_id"/>
                                 </tree>
                             </field>
-                            
+
                             <group col="6" colspan="4">
                                 <separator string="Computation Overview" colspan="6"/>
                                 <field name="working_days"/>
                                 <field name="holiday_days"/>
                                 <field name="worked_days"/>
-                                
+
                                 <field name="basic_before_leaves"/>
                                 <field name="leaves"/>
                                 <field name="basic"/>
-                                
+
                                 <field name="allounce"/>
                                 <field name="deduction"/>
                                 <field name="other_pay"/>
-                                
+
                                 <field name="grows"/>
                                 <field name="net"/>
                                 <field name="total_pay"/>
@@ -505,7 +505,7 @@
                         <button string="Compute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" states="new"/>
                         <button string="Recompute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" type="object" states="draft"/>
                         <button string="Verify Sheet" icon="terp-camera_test" name="verify_sheet" states="draft"/>
-                        <button string="Validate Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
+                        <button string="Approve Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
                         <button string="Pay Salary" icon="terp-dolar_ok!" name="process_sheet" states="confirm"/>
                         <button string="Cancel" icon="terp-dialog-close" name="cancel_sheet" states="draft,hr_check,confirm"/>
                         <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="set_to_draft" states="cancel"/>
@@ -531,14 +531,14 @@
                     </group>
                     <newline/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
-                        <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'register_id':self}"/>
-                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'employee_id':self}"/>
-                        <filter string="Periods" name="period_id" icon="terp-go-month" context="{'period_id':self}"/>
-                        <filter string="Staes" name="state" icon="terp-stock_effects-object-colorize" context="{'state':self}"/>
+                        <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'group_by':'register_id'}"/>
+                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'group_by':'employee_id'}"/>
+                        <filter string="Companies" name="company_id" icon="terp-go-month" context="{'group_by':'company_id'}"/>
+                        <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
-        </record>   
+        </record>
         <record id="action_view_hr_payslip_form" model="ir.actions.act_window">
             <field name="name">Employee Payslip</field>
             <field name="res_model">hr.payslip</field>
@@ -547,9 +547,9 @@
             <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
-        
-        
-        
+
+
+
         <!-- Payment Heads -->
         <record id="hr_allounce_deduction_categoty_form" model="ir.ui.view">
             <field name="name">hr.allounce.deduction.categoty.form</field>
@@ -608,7 +608,7 @@
                     <filter icon="terp-check" string="Deduction" domain="[('type','=','deduction')]"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
-                   	<field name="code" select="1"/>
+                     <field name="code" select="1"/>
                     <field name="type"/>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
@@ -618,7 +618,7 @@
                </search>
             </field>
         </record>
-        
+
         <record id="hr_allounce_deduction_tree" model="ir.actions.act_window">
             <field name="name">Salary Heads</field>
             <field name="res_model">hr.allounce.deduction.categoty</field>
@@ -626,13 +626,13 @@
             <field name="view_id" ref="hr_allounce_deduction_categoty_tree"/>
            <field name="search_view_id" ref="view_allounce_deduction_categoty_filter"/>
         </record>
-        <menuitem 
-            id="menu_hr_allounce_deduction_tree" 
-            action="hr_allounce_deduction_tree" 
-            parent="payroll_configure" 
+        <menuitem
+            id="menu_hr_allounce_deduction_tree"
+            action="hr_allounce_deduction_tree"
+            parent="payroll_configure"
         />
         <!-- End Payment Heads -->
-        
+
         <!-- Company Contribution -->
         <record id="hr_company_contribution_form" model="ir.ui.view">
             <field name="name">company.contribution.form</field>
@@ -694,11 +694,11 @@
             </field>
         </record>
 
-		<record id="view_hr_company_contribution_filter" model="ir.ui.view">
+    <record id="view_hr_company_contribution_filter" model="ir.ui.view">
             <field name="name">company.contribution.select</field>
              <field name="model">company.contribution</field>
             <field name="type">search</field>
-          	 <field name="arch" type="xml">
+             <field name="arch" type="xml">
                 <search string="Search Company Contribution">
                     <group col="8" colspan="4">
                         <filter icon="terp-document-new" string="Fixed Amount" domain="[('amount_type','=','fix')]" help="Draft Slip"/>
@@ -716,21 +716,21 @@
                     </group>
                 </search>
             </field>
-        </record>        
+        </record>
         <record id="action_hr_company_contribution_tree" model="ir.actions.act_window">
             <field name="name">Company Contributions</field>
             <field name="res_model">company.contribution</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_company_contribution_tree"/>
-           	<field name="search_view_id" ref="view_hr_company_contribution_filter"/>
+             <field name="search_view_id" ref="view_hr_company_contribution_filter"/>
         </record>
-        <menuitem 
-            id="menu_hr_company_contribution_tree" 
-            action="action_hr_company_contribution_tree" 
-            parent="payroll_configure" 
+        <menuitem
+            id="menu_hr_company_contribution_tree"
+            action="action_hr_company_contribution_tree"
+            parent="payroll_configure"
         />
         <!-- End Company Contribution -->
-        
+
         <!-- Contract Form-->
 <!--        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">-->
 <!--            <field name="name">hr.contract.view.form</field>-->
@@ -776,7 +776,7 @@
 <!--            id="hr_menu_contract" -->
 <!--            parent="payroll_configure"-->
 <!--        />-->
-        
+
         <record id="view_hr_bank_advice_tree" model="ir.ui.view">
             <field name="name">hr.payroll.advice.tree</field>
             <field name="model">hr.payroll.advice</field>
@@ -790,7 +790,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_hr_bank_advice_form" model="ir.ui.view">
             <field name="name">hr.payroll.advice.form</field>
             <field name="model">hr.payroll.advice</field>
@@ -816,10 +816,13 @@
                                     <field name="flag"/>
                                 </tree>
                             </field>
-                            <field name="company_id"/>
-                            <field name="chaque_nos"/>
                         </page>
                         <page string="Letter Content">
+                            <group colspan="4" col="6">
+                              <field name="company_id" on_change="onchange_company_id(company_id)"/>
+                              <field name="chaque_nos"/>
+                              <field name="bank"/>
+                            </group>
                             <separator colspan="4" string="Letter Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
@@ -840,18 +843,18 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_hr_bank_advice_tree"/>
         </record>
-        <menuitem 
-            action="action_view_hr_bank_advice_tree" 
-            id="hr_menu_payment_advice" 
+        <menuitem
+            action="action_view_hr_bank_advice_tree"
+            id="hr_menu_payment_advice"
             parent="menu_hr_root_payroll"
         />
-        
+
         <record id="view_hr_payroll_register_tree" model="ir.ui.view">
             <field name="name">hr.payroll.register.tree</field>
             <field name="model">hr.payroll.register</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Payroll Register">
+                <tree  colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payroll Register">
                     <field name="number"/>
                     <field name="name"/>
                     <field name="date"/>
@@ -878,7 +881,7 @@
                     <notebook colspan="4">
                         <page string="Payslips">
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Payslip">
+                                <tree colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payslip">
                                     <field name="number"/>
                                     <field name="employee_id"/>
                                     <field name="name"/>
@@ -921,12 +924,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem 
-            action="action_view_hr_payroll_register_form" 
-            id="hr_menu_payroll_register" 
+        <menuitem
+            action="action_view_hr_payroll_register_form"
+            id="hr_menu_payroll_register"
             parent="menu_hr_root_payroll"
         />
-        
+
         <!--
         Contribution Register
         -->
@@ -961,10 +964,10 @@
                                 <tree string="Register Lines" editable="top">
                                     <field name="code"/>
                                     <field name="employee_id"/>
-                                    <field name="period_id"/>    
+                                    <field name="period_id"/>
                                     <field name="emp_deduction"/>
-                                    <field name="comp_deduction"/>    
-                                    <field name="total"/>                        
+                                    <field name="comp_deduction"/>
+                                    <field name="total"/>
                                 </tree>
                              </field>
                          </page>
@@ -993,9 +996,9 @@
             <field name="view_id" ref="hr_contibution_register_tree"/>
         </record>
         <menuitem
-            id="menu_action_hr_contibution_register_form" 
-            action="action_contibution_register_form" 
-            parent="payroll_configure" 
+            id="menu_action_hr_contibution_register_form"
+            action="action_contibution_register_form"
+            parent="payroll_configure"
         />
         <record id="hr_contibution_register_line_form" model="ir.ui.view">
             <field name="name">hr.contibution.register.line.form</field>
@@ -1005,15 +1008,15 @@
                 <form string="Contribution">
                       <field name="name"/>
                       <field name="code"/>
-                      <field name="employee_id"/>    
-                      <field name="period_id"/>    
+                      <field name="employee_id"/>
+                      <field name="period_id"/>
                       <field name="emp_deduction"/>
-                      <field name="comp_deduction"/>    
-                      <field name="total"/>                    
+                      <field name="comp_deduction"/>
+                      <field name="total"/>
                 </form>
             </field>
         </record>
-        
+
         <record id="hr_payslip_line_condition_tree" model="ir.ui.view">
             <field name="name">hr.payslip.line.condition.tree</field>
             <field name="model">hr.payslip.line.condition</field>
@@ -1022,7 +1025,7 @@
                 <form string="Condition">
                     <field name="name"/>
                     <field name="date_start"/>
-                    <field name="date_end"/>    
+                    <field name="date_end"/>
                     <field name="state"/>
                 </form>
             </field>

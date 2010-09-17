@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-18 05:50+0000\n"
-"Last-Translator: Jay  (Open ERP) <jvo@tinyerp.com>\n"
+"PO-Revision-Date: 2010-08-15 14:21+0000\n"
+"Last-Translator: Jay (OpenERP) <jvo@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:08+0000\n"
+"X-Launchpad-Export-Date: 2010-08-16 06:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -69,7 +69,8 @@ msgid "Steps To Deliver a Sale Order"
 msgstr "Стадії Доставки Замовлення на Продаж"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,qtty:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,qtty:0
+#: rml:sale.order:0
 msgid "Quantity"
 msgstr "Кількість"
 
@@ -79,7 +80,8 @@ msgid "You invoice has been successfully created !"
 msgstr "Ваш Інвойс успішно створено !"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Automatic Declaration"
 msgstr "Автоматичнй опис"
 
@@ -156,7 +158,9 @@ msgid "Manual Designation"
 msgstr "Ручне позначення"
 
 #. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
 msgstr "Примітки"
@@ -167,7 +171,8 @@ msgid "Invoice after delivery"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Податки"
 
@@ -182,7 +187,8 @@ msgid "Shipping Policy"
 msgstr "Політика постачання"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
 msgstr ""
 
@@ -227,7 +233,8 @@ msgid "Procurement is created after confirmation of sale order."
 msgstr "Забезпечення створюється після підтвердження замовлення на продаж."
 
 #. module: sale
-#: field:sale.order,project_id:0 field:sale.shop,project_id:0
+#: field:sale.order,project_id:0
+#: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Аналітичний рахунок"
 
@@ -318,7 +325,8 @@ msgid "Invoice Based on Sales Orders"
 msgstr ""
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
 msgid "Sale Shop"
 msgstr "Відділ продажу"
 
@@ -333,7 +341,8 @@ msgid "Order N°"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,order_line:0 view:sale.order.line:0
+#: field:sale.order,order_line:0
+#: view:sale.order.line:0
 msgid "Order Lines"
 msgstr "Рядки заявки"
 
@@ -343,7 +352,8 @@ msgid "Disc.(%)"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Рядки інвойса"
@@ -436,13 +446,15 @@ msgid "Order Reference"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
 #: selection:sale.order.line,state:0
 msgid "Done"
 msgstr "Виконано"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0 field:sale.shop,pricelist_id:0
+#: field:sale.order,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Прейскурант"
 
@@ -611,7 +623,8 @@ msgid "Taxes :"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Заінвойсовано"
 
@@ -762,7 +775,8 @@ msgid "Direct Delivery"
 msgstr "Пряма Доставка"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Властивості"
@@ -792,7 +806,8 @@ msgstr "Розрахувати"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
 msgid "Shop"
 msgstr "Торгова точка"
 
@@ -843,7 +858,8 @@ msgid "Delivery Order Only"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Sales order lines"
 msgstr "Рядки Замовлення на продаж"
 
@@ -858,7 +874,8 @@ msgid "Sales"
 msgstr "Продажі"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Qty"
 msgstr "К-сть"
 
@@ -873,7 +890,8 @@ msgid "Other data"
 msgstr "Інші дані"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,amount:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,amount:0
+#: rml:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Ціна за од."
@@ -899,7 +917,8 @@ msgstr "Інвойс"
 #: model:process.transition.action,name:sale.process_transition_action_cancel1
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: wizard_button:sale.advance_payment_inv,init,end:0
-#: view:sale.config.picking_policy:0 view:sale.order.line:0
+#: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
 #: wizard_button:sale.order.line.make_invoice,init,end:0
 #: wizard_button:sale.order.make_invoice,init,end:0
 msgid "Cancel"
@@ -916,7 +935,8 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "UoM"
 msgstr "ОВ"
 
@@ -1028,7 +1048,8 @@ msgid "Ordering Contact"
 msgstr "Контакти замовника"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order.line,name:0
+#: rml:sale.order:0
+#: field:sale.order.line,name:0
 msgid "Description"
 msgstr "Опис"
 
@@ -1085,7 +1106,8 @@ msgid ""
 msgstr "Назва та адреса контакту, які вимагає заявка чи пропозиція"
 
 #. module: sale
-#: field:sale.order,partner_id:0 field:sale.order.line,order_partner_id:0
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Клієнт"
 
@@ -1097,7 +1119,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
 msgstr "Заявка на продаж"
@@ -1124,7 +1147,8 @@ msgid "Total amount"
 msgstr "Загальна сума"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order,date_order:0
+#: rml:sale.order:0
+#: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Дата заявки"
 
@@ -1208,7 +1232,8 @@ msgstr ""
 "можуть бути оформлені інвойси декілька разів (наприклад, на рядок)."
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "States"
 msgstr "Стани"
 
@@ -1228,7 +1253,8 @@ msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,picked_rate:0 field:sale.order,shipped:0
+#: field:sale.order,picked_rate:0
+#: field:sale.order,shipped:0
 msgid "Picked"
 msgstr "Відвантажено"
 
@@ -1443,7 +1469,7 @@ msgstr ""
 #: selection:report.sale.order.category,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Manual in progress"
-msgstr ""
+msgstr "В обробці вручну"
 
 #. module: sale
 #: field:report.turnover.per.month,turnover:0
@@ -1455,7 +1481,7 @@ msgstr ""
 #: selection:report.sale.order.category,state:0
 #: selection:report.sale.order.product,state:0
 msgid "In progress"
-msgstr ""
+msgstr "В обробці"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_category_tree
@@ -1498,6 +1524,7 @@ msgstr ""
 msgid "Sales by State"
 msgstr ""
 
+#, python-format
 #~ msgid "Invalid action !"
 #~ msgstr "Невірна дія !"
 

@@ -25,7 +25,7 @@
     'category': 'Generic Modules/Others',
     'description': """This module provides a wiki FAQ Template
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['wiki'],
     'init_xml': [],

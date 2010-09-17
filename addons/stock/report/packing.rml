@@ -152,11 +152,11 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">[[ picking.sale_id and picking.sale_id.partner_shipping_id and 'Shipping Address :' or removeParentNode('para') ]] </para>
-          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
+          <para style="terp_tblheader_Details">[[ 'sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and 'Shipping Address :' or removeParentNode('para') ]] </para>
+          <para style="terp_default_9">[[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]] </para>
+          <para style="terp_default_9">[[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ ('sale_id' in picking._columns.keys() and picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -204,7 +204,7 @@
           <para style="terp_default_Centre_8">[[ picking.origin ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
+          <para style="terp_default_Centre_8">[[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ ('sale_id' in picking._columns.keys() and picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>
@@ -276,12 +276,11 @@
         <font color="white"> </font>
       </para>
     </section>
-    <para style="terp_default_5cm_Above_Space">[[ (move_lines.state == 'done' or move_lines.state == 'confirmed') and removeParentNode('para') ]]</para>
-    <para style="terp_default_Bold_9">Non Assigned Products: [[ ( move_lines.state == 'assigned' or move_lines.state == 'done' or move_lines.state == 'confirmed' ) and removeParentNode('para') ]]</para>
-    <para style="terp_default_1cm_above_space">[[ (move_lines.state == 'done' or move_lines.state == 'confirmed') and removeParentNode('para') ]]</para>
-    <section>
-      <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state != 'assigned' )],'move_lines') ]]</para>
+	
+	<para style="terp_default_Bold_9">[[ ([line for line in picking.move_lines if (line.state == 'draft' )])  and 'Non Assigned Products:' or removeParentNode('para') ]]</para>
+	 <section>
       <blockTable colWidths="197.0,68.0,61.0,57,46.0,26.0,74.0" style="Move_Line_Content_Other_State">
+      <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state != 'assigned' )],'move_lines') ]]</para>
         <tr>
           <td>
             <para style="terp_default_9">[ [[ move_lines.product_id.default_code ]] ] [[ move_lines.product_id.name ]] [[ move_lines.product_id.variants or '']]</para>

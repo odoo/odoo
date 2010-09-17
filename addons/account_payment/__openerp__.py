@@ -23,7 +23,7 @@
 {
     "name": "Payment Management",
     "version": "1.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "category": "Generic Modules/Payment",
     "depends": ["account"],
     "init_xml": [],
@@ -32,7 +32,7 @@
     * a more efficient way to manage invoice payment.
     * a basic mechanism to easily plug various automated payment.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [

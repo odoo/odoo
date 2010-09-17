@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,6 +24,7 @@ from osv import osv
 from tools import config
 
 import base64
+import addons
 
 class thunderbird_installer(osv.osv_memory):
     _name = 'thunderbird.installer'
@@ -31,9 +32,9 @@ class thunderbird_installer(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context={}):
         data = super(thunderbird_installer, self).default_get(cr, uid, fields, context)
-        pdf_file = open(config['addons_path'] + "/thunderbird/doc/Installation Guide to OpenERP Thunderbid Plug-in.pdf", 'r')
+        pdf_file = open(addons.get_module_resource('thunderbird','doc', 'Installation Guide to OpenERP Thunderbid Plug-in.pdf'),'rb')
         data['pdf_file'] = base64.encodestring(pdf_file.read())
-        file = open(config['addons_path'] + "/thunderbird/plugin/tiny_plugin-2.0.xpi", 'r')
+        file = open(addons.get_module_resource('thunderbird','plugin', 'openerp_plugin.xpi'),'rb')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
 
@@ -48,9 +49,23 @@ class thunderbird_installer(osv.osv_memory):
 
     _defaults = {
         'thunderbird' : True,
-        'name' : 'tiny_plugin-2.0.xpi',
+        'name' : 'openerp_plugin.xpi',
         'pdf_name' : 'Installation Guide to OpenERP Thunderbid Plug-in.pdf',
-        'description' : """ * Save the Thunderbird plug­in. \n * Follows the following step to install Thunderbird plug­in. \n -> 1.From Menu Bar of Thunderbird, open Tools ­> Add ons. \n -> 2. Click on install button and a browser window appears. \n -> 3. Select the plug-in(.xpi file) and click Ok. \n -> 4. Software installation window appears and within a short time “Install Now” button will be enabled  -> 5. Click "Install Now". \n -> 6. Restart Thunderbird."""
-        }
+        'description' : """* Save the Thunderbird plug­in.
+* Follows the following step to install Thunderbird plug­in.
+    1. From Menu Bar of Thunderbird, open Tools ­> Add ons.
+    2. Click on install button and a browser window appears.
+    3. Select the plug-in(.xpi file) and click Ok.
+    4. Software installation window appears and within a short time “Install Now” button will be enabled.
+    5. Click "Install Now".
+    6. Restart Thunderbird.
+* Follow the steps to configure OpenERP in Thunderbird. 
+    1. Go to Tools > OpenERP Synchronization. 
+    2. Check  data (configured by default).
+    3. Click "Connect". 
+    4. A message appears with state of your connection.
+    5. If your connection failed, check if your database is open, and check your data.
+    6. If you have a good connection, you can start to archive mail in OpenERP. """
+    }
 
 thunderbird_installer()

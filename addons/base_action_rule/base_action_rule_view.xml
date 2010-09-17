@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="menu_base_action_rule" name="Action Rule"
-            groups="base.group_extended"
-            parent="base.menu_base_config" sequence="0" />
+        <menuitem id="base.menu_base_action_rule" name="Automated Actions"
+            groups="base.group_extended,base.group_system"
+            parent="base.menu_base_config" sequence="3" />
 
         <!--
             Action Rule Form View
@@ -14,10 +14,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Rule">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
+                    <field name="name"/>
+                    <field name="model_id" select="1" on_change="onchange_model_id(model_id)"/>
+                    <field name="filter_id" />
                     <field name="sequence"/>
-                    <field name="filter_id"/>
+                    <field name="active"/>
                     <notebook colspan="4">
                         <page string="Conditions">
                             <group col="2" colspan="2" name="model">
@@ -104,7 +105,7 @@
 <!-- Action Rule Action -->
 
            <record id="base_action_rule_act" model="ir.actions.act_window">
-            <field name="name">Action Rules</field>
+            <field name="name">Automated Actions</field>
             <field name="res_model">base.action.rule</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -112,7 +113,7 @@
         </record>
 
            <menuitem id="menu_base_action_rule_form"
-               parent="menu_base_action_rule" action="base_action_rule_act" />
+               parent="base.menu_base_action_rule" action="base_action_rule_act" sequence="1"/>
 
 
     </data>

@@ -79,7 +79,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 })
                 create_ids.append(line_id)
                 inv = {
-                    'name': sale.name,
+                    'name': sale.client_order_ref or sale.name,
                     'origin': sale.name,
                     'type': 'out_invoice',
                     'reference': False,

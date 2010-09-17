@@ -58,7 +58,7 @@
                             <field name="user_id" />
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By...">
+                    <group expand="0" string="Group By...">
                         <filter string="User" name="group_user_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
@@ -72,7 +72,7 @@
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." groups="base.group_extended">
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                         <field name="general_account_id"/>
                         <field name="product_id"/>
                         <field name="journal_id"/>

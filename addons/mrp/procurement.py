@@ -55,7 +55,7 @@ class procurement_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         res = procurement_obj.make_mo(cr, uid, ids, context=context)
         res = res.values()
-        return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
+        return len(res) and res[0] or 0
     
     def make_mo(self, cr, uid, ids, context={}):
         """ Make Manufacturing(production) order from procurement

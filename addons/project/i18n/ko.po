@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 13:40+0000\n"
+"PO-Revision-Date: 2010-08-03 09:18+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:52+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -73,8 +73,7 @@ msgstr "진행"
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr ""
-"총 남은 시간은 과제를 담당한 이에 의해 주기적으로 재 측정될 수 있습니다."
+msgstr "총 남은 시간은 과제를 담당한 이에 의해 주기적으로 재 측정될 수 있습니다."
 
 #. module: project
 #: field:project.project,child_id:0
@@ -107,9 +106,7 @@ msgstr "위임된 과제들"
 msgid ""
 "Header added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
-msgstr ""
-"한 과제가 마감되었을 때 고객에게 전송될 주의 메시지를 위한 이메일의 서두에 추"
-"가될 헤더"
+msgstr "한 과제가 마감되었을 때 고객에게 전송될 주의 메시지를 위한 이메일의 서두에 추가될 헤더"
 
 #. module: project
 #: field:project.task,priority:0
@@ -205,12 +202,12 @@ msgstr "과제"
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task."
-msgstr ""
-"귀하가 이 과제를 위임한 사용자에 의해 수행된 작업을 검증하는데 필요한 추정 시"
-"간"
+msgstr "귀하가 이 과제를 위임한 사용자에 의해 수행된 작업을 검증하는데 필요한 추정 시간"
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "노트"
@@ -226,7 +223,8 @@ msgid "Analysis"
 msgstr "분석"
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -250,12 +248,14 @@ msgid ""
 msgstr "Header와 Footer를 위한 자동 변수. 동일한 노테이션을 사용하십시오."
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "취소됨"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "메일 헤더"
 
@@ -284,9 +284,7 @@ msgstr "완료된 작업량으로 계산됨"
 msgid ""
 "If you check this, the user will have a popup when closing a task that "
 "propose a message to send by email to the customer."
-msgstr ""
-"체크하면, 사용자가 과제를 마감할 때, 고객에게 보낼 이메일 메시지 팝업창이 표"
-"시됩니다."
+msgstr "체크하면, 사용자가 과제를 마감할 때, 고객에게 보낼 이메일 메시지 팝업창이 표시됩니다."
 
 #. module: project
 #: help:project.task.delegate,init,new_task_description:0
@@ -321,7 +319,8 @@ msgid "Extra Info"
 msgstr "기타 정보"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr "파트너"
 
@@ -399,7 +398,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "계산: 소요 시간 + 남은 시간"
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "유형"
 
@@ -443,7 +443,8 @@ msgid "Planned Time"
 msgstr "계획된 시간"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "과제 작업"
@@ -494,17 +495,20 @@ msgid "Template"
 msgstr "템플릿"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "구성"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "시작 날짜"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "프로젝트"
 
@@ -556,17 +560,20 @@ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "프로젝트 관리"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "소요된 시간"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "과제들"
 
@@ -654,7 +661,8 @@ msgstr "판매 주문 라인으로부터 인보이스 트리거"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "초안"
 
@@ -669,8 +677,10 @@ msgid "Project Manager"
 msgstr "프로젝트 매니저"
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "보류"
@@ -685,9 +695,7 @@ msgstr "상태"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed."
-msgstr ""
-"귀하 자신의 과제의 새 상태. 보류된 과제는 위임된 과제가 마감될 때 자동적으로 "
-"다시 오픈합니다."
+msgstr "귀하 자신의 과제의 새 상태. 보류된 과제는 위임된 과제가 마감될 때 자동적으로 다시 오픈합니다."
 
 #. module: project
 #: field:res.company,project_time_mode:0
@@ -695,7 +703,8 @@ msgid "Project Time Unit"
 msgstr "프로젝트 시간 단위"
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr "프로젝트 이름"
 
@@ -734,9 +743,7 @@ msgstr "과제 edition"
 msgid ""
 "Computed as: Total Time - Estimated Time. It gives the difference of the "
 "time estimated by the project manager and the real time to close the task."
-msgstr ""
-"계산: 총 시간 - 추정 시간. 프로젝트 매니저에 의해 추정된 시간과 실제 과제 수"
-"행 시간 간의 차이."
+msgstr "계산: 총 시간 - 추정 시간. 프로젝트 매니저에 의해 추정된 시간과 실제 과제 수행 시간 간의 차이."
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
@@ -771,8 +778,8 @@ msgid ""
 "don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "프로젝트와 과제에서 사용되는 UoM을 설정합니다. \n"
-"프로젝트에 연결된 타임시트를 이용한다면 (project_timesheet module), 직원들을 "
-"위한 적절한 UoM 설정을 잊지 마십시오."
+"프로젝트에 연결된 타임시트를 이용한다면 (project_timesheet module), 직원들을 위한 적절한 UoM 설정을 잊지 "
+"마십시오."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
@@ -814,9 +821,7 @@ msgstr "할당 대상"
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr ""
-"과제를 수행하는데 필요한 추정 시간이며, 주로, 해당 과제가 초안 상태일 때 프로"
-"젝트 매니저에 의해 설정됩니다."
+msgstr "과제를 수행하는데 필요한 추정 시간이며, 주로, 해당 과제가 초안 상태일 때 프로젝트 매니저에 의해 설정됩니다."
 
 #. module: project
 #: help:project.project,effective_hours:0
@@ -828,9 +833,7 @@ msgstr "이 프로젝트에 관련된 모든 과제의 소요 시간 합계"
 msgid ""
 "If you have [?] in the project name, it means there are no analytic account "
 "linked to this project."
-msgstr ""
-"프로젝트 이름에 [?]가 포함되면, 이 프로젝트에는 분석 계정이 연결되어 있지 않"
-"음을 의미합니다."
+msgstr "프로젝트 이름에 [?]가 포함되면, 이 프로젝트에는 분석 계정이 연결되어 있지 않음을 의미합니다."
 
 #. module: project
 #: help:project.project,planned_hours:0
@@ -875,12 +878,14 @@ msgid ""
 "projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
-"프로젝트에 대한 재무 관리가 필요하면 이 프로젝트를 분석 계정에 링크하십시오. "
-"예산, 계획, 원가 및 수입 분석, 프로젝트 타임시트 등을 수행할 수 있습니다."
+"프로젝트에 대한 재무 관리가 필요하면 이 프로젝트를 분석 계정에 링크하십시오. 예산, 계획, 원가 및 수입 분석, 프로젝트 타임시트 등을 "
+"수행할 수 있습니다."
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "완료"
@@ -889,7 +894,8 @@ msgstr "완료"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -1009,8 +1015,7 @@ msgstr "진행 중"
 msgid ""
 "If you have [?] in the name, it means there are no analytic account linked "
 "to project."
-msgstr ""
-"이름에 [?]이 포함되면, 프로젝트와 분석 계정이 링크되지 않음을 의미합니다."
+msgstr "이름에 [?]이 포함되면, 프로젝트와 분석 계정이 링크되지 않음을 의미합니다."
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task
@@ -1027,9 +1032,7 @@ msgstr "프로젝트 과제"
 msgid ""
 "If you check this field, the project manager will receive a request each "
 "time a task is completed by his team."
-msgstr ""
-"이 필드를 체크하면, 프로젝트 매니저는 팀 내에서 과제가 완료될 때마다 요청을 "
-"받게 됩니다."
+msgstr "이 필드를 체크하면, 프로젝트 매니저는 팀 내에서 과제가 완료될 때마다 요청을 받게 됩니다."
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_feature
@@ -1068,7 +1071,8 @@ msgid "Template of Projects"
 msgstr "프로젝트 템플릿"
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "시퀀스"
 
@@ -1130,7 +1134,8 @@ msgid "Delegate your task to the other user"
 msgstr "다른 사용자에게 귀하의 과제를 위임"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "메일 Footer"
 
@@ -1236,18 +1241,200 @@ msgstr "내 사용자 파이프라인"
 msgid "My Timesheet"
 msgstr "내 타임시트"
 
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_tree_month
+#: model:ir.ui.menu,name:project.menu_project_task_tree_month
+msgid "Tasks finished by project (this month)"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+msgid "Tasks Closed by Project and User"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree_month
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree_month
+msgid "Tasks finished by project and user (this month)"
+msgstr ""
+
+#. module: project
+#: field:report.project.task,hours_effective:0
+#: field:report.project.task.user,hours_effective:0
+msgid "Effective Hours"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr ""
+
+#. module: project
+#: field:report.project.task,task_closed:0
+#: field:report.project.task.user,task_closed:0
+msgid "Task Closed"
+msgstr ""
+
+#. module: project
+#: view:report.project.task:0
+msgid "Tasks by Project"
+msgstr ""
+
+#. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,user_id:0
+msgid "User"
+msgstr ""
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Tasks by Project and User"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.next_id_63
+msgid "This Month"
+msgstr ""
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Tasks by projects and users"
+msgstr ""
+
+#. module: project
+#: field:report.project.task,closing_days:0
+#: field:report.project.task.user,closing_days:0
+msgid "Avg Closing Delay"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task
+#: view:report.project.task:0
+msgid "Tasks by project"
+msgstr ""
+
+#. module: project
+#: field:report.project.task,hours_delay:0
+#: field:report.project.task.user,hours_delay:0
+msgid "Avg. Plan.-Eff."
+msgstr ""
+
+#. module: project
+#: field:report.project.task,name:0 field:report.project.task.user,name:0
+msgid "Month"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_tree
+#: model:ir.ui.menu,name:project.menu_project_task_tree
+msgid "Tasks Closed by Project"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+#: view:report.task.user.pipeline.open:0
+msgid "Tasks by User"
+msgstr ""
+
+#. module: project
+#: selection:report.task.user.pipeline.open,task_state:0
+msgid "No Task"
+msgstr ""
+
+#. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
+msgid "Report on tasks by user for projects"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project.menu_timesheet_task_user
+msgid "Timesheet / Task Hours Per Month"
+msgstr ""
+
+#. module: project
+#: field:report.task.user.pipeline.open,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.next_id_57
+msgid "Reporting"
+msgstr ""
+
+#. module: project
+#: model:ir.module.module,description:project.module_meta_information
+msgid ""
+"Gives statistics on tasks by user on projects to check the pipeline of users."
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_closed_task_board
+msgid "Task Closed Within Past 15 Days"
+msgstr ""
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_hrs:0
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr ""
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_nbr:0
+msgid "Task Number"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr ""
+
+#. module: project
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr ""
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_progress:0
+msgid "Task Progress"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_report_closed_task
+msgid "Closed Task Report"
+msgstr ""
+
+#. module: project
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr ""
+
+#. module: project
+#: view:report.closed.task:0
+msgid "Closed Tasks"
+msgstr ""
+
+#, python-format
 #~ msgid "Operation Not Permitted !"
 #~ msgstr "오퍼레이션이 허용되지 않음!"
 
+#, python-format
 #~ msgid "CHECK: "
 #~ msgstr "체크: "
 
+#, python-format
 #~ msgid ""
 #~ "Couldn't send mail because the contact for this task (%s) has no email "
 #~ "address!"
-#~ msgstr ""
-#~ "이 과제 접촉자 (%s)의 이메일 주소가 없으므로, 메일을 보낼 수 없습니다!"
+#~ msgstr "이 과제 접촉자 (%s)의 이메일 주소가 없으므로, 메일을 보낼 수 없습니다!"
 
+#, python-format
 #~ msgid ""
 #~ "A new project has been created !\n"
 #~ "We suggest you to close this one and work on this new project."
@@ -1255,24 +1442,31 @@ msgstr "내 타임시트"
 #~ "새 프로젝트가 만들어졌습니다 !\n"
 #~ "이것을 닫고 새 프로젝트에서 작업하십시오."
 
+#, python-format
 #~ msgid "Operation Done"
 #~ msgstr "오퍼레이션 완료"
 
+#, python-format
 #~ msgid "Task '%s' set in progress"
 #~ msgstr "진행 중인 과제 '%s'"
 
+#, python-format
 #~ msgid "Task '%s' cancelled"
 #~ msgstr "과제 '%s' 취소됨"
 
+#, python-format
 #~ msgid "Couldn't send mail because your email address is not configured!"
 #~ msgstr "이메일 주소가 구성되어 있지 않으므로, 메일을 보낼 수 없습니다."
 
+#, python-format
 #~ msgid "Error"
 #~ msgstr "에러"
 
+#, python-format
 #~ msgid ""
 #~ "You can not delete a project with tasks. I suggest you to deactivate it."
 #~ msgstr "과제가 있는 프로젝트를 삭제할 수는 없습니다. 비활성화는 가능합니다."
 
+#, python-format
 #~ msgid "Task '%s' closed"
 #~ msgstr "과제 '%s' 완료됨"

@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 19:19+0000\n"
+"PO-Revision-Date: 2010-08-03 09:15+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:52+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -210,7 +210,9 @@ msgstr ""
 "valideerimiseks."
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "Märkmed"
@@ -226,7 +228,8 @@ msgid "Analysis"
 msgstr "Analüütiline"
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -251,12 +254,14 @@ msgstr ""
 "Automaatsed muutujad päistele ja jalustele. Kasuta täpselt sama kirjaviisi."
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "Tühistatud"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "Kirja päis"
 
@@ -322,7 +327,8 @@ msgid "Extra Info"
 msgstr "Täiendav info"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr "Partner"
 
@@ -403,7 +409,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Arvutuskäik: kulutatud aeg + järelejäänud aeg"
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "Tüüp"
 
@@ -447,7 +454,8 @@ msgid "Planned Time"
 msgstr "Planeeritud aeg"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "Ülesande töö"
@@ -498,17 +506,20 @@ msgid "Template"
 msgstr "Mall"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Seadistus"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "Alguskuupäev"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "Projektid"
 
@@ -560,17 +571,20 @@ msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "Projektihaldus"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Kulutatud aeg"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "Ülesanded"
 
@@ -658,7 +672,8 @@ msgstr "Käivita arved müügikorralduse ridadest"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "Mustand"
 
@@ -673,8 +688,10 @@ msgid "Project Manager"
 msgstr "Projektihaldur"
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "Lahtine"
@@ -699,7 +716,8 @@ msgid "Project Time Unit"
 msgstr "Projekti ajaühik"
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr "Projekti nimi"
 
@@ -884,8 +902,10 @@ msgstr ""
 "kulude ja tulude ananlüüsiga, tööajalehtedega jms."
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "Valmis"
@@ -894,7 +914,8 @@ msgstr "Valmis"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -1075,7 +1096,8 @@ msgid "Template of Projects"
 msgstr "Projektide mallid"
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "Jada"
 
@@ -1139,7 +1161,8 @@ msgid "Delegate your task to the other user"
 msgstr "Volita oma ülesanne teisele kasutajale."
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "Kirja jalus"
 
@@ -1193,7 +1216,8 @@ msgid "My Planning"
 msgstr "Minu planeerimine"
 
 #. module: project
-#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "Minu kontod arveldada"
 

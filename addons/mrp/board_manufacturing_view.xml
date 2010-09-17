@@ -35,13 +35,16 @@
             <field name="view_id" ref="board_mrp_manager_form"/>
         </record>
 
-        <menuitem icon="terp-graph" id="menus_dash_mrp" name="Dashboard"
+        <menuitem id="menus_dash_mrp" name="Dashboard"
             parent="next_id_77" sequence="0"/>
         <menuitem
             action="open_board_manufacturing"
             icon="terp-graph"
             id="menu_board_manufacturing"
             parent="menus_dash_mrp"
-            sequence="1" groups="mrp.group_mrp_manager"/>
+            sequence="1" groups="mrp.group_mrp_manager,mrp.group_mrp_user"/>
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
+            groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"
+            action="open_board_manufacturing"/>
     </data>
 </openerp>

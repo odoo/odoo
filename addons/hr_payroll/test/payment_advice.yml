@@ -2,7 +2,7 @@
   I test the 'Payment Advice' in order to check the hr_payroll in OpenERP
 -
   I create a new employee “Richie”
-- 
+-
   !record {model: hr.employee, id: hr_employee_richie0}:
     address_home_id: base.res_partner_address_1
     address_id: base.res_partner_address_9
@@ -27,8 +27,8 @@
     salary_account: account.a_recv
     vehicle_distance: 0.0
 -
-  Then I create a new payment advice record  
--  
+  I create a new payment advice record
+-
   !record {model: hr.payroll.advice, id: hr_payroll_advice_advice0}:
     account_id: account.cash
     line_ids:
@@ -38,15 +38,15 @@
         flag: C
         name: Axis Bank
     name: advice1
-- 
-  In order to confirm a sheet I click on "Confirm Sheet" button
-- 
+-
+  I confirmed the sheet by click on "Confirm Sheet" button.
+-
   !python {model: hr.payroll.advice}: |
     self.confirm_sheet(cr, uid, [ref("hr_payroll_advice_advice0")], {"lang": "en_US",
       "active_model": "ir.ui.menu", "active_ids": [ref("hr_payroll.hr_menu_payment_advice")],
       "tz": False, "active_id": ref("hr_payroll.hr_menu_payment_advice")})
 -
- I check that a state has transferred from draft to confirm
+ I check that a state is "Confirm"
 -
   !python {model: hr.payroll.advice}: |
     from tools.translate import _

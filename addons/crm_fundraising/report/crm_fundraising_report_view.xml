@@ -9,7 +9,7 @@
             <field name="model">crm.fundraising.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Fundraising">
+            	<tree colors="blue:state in ('draft');black:state in ('open','pending');gray:state in ('done','cancel') " string="Fundraising">
 	              	<field name="name" invisible="1"/>
 					<field name="month" invisible="1"/>
 					<field name="section_id" invisible="1"/>
@@ -153,12 +153,12 @@
 
                   </group>
                    <newline/>
-                   <group  expand="0" string="Extended options..." groups="base.group_extended">
+                   <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                          <filter icon="terp-dialog-close"
                     		string="Done"
                     		domain="[('state','=','done')]"/>
 
-                    	<filter icon="terp-gtk-stop"
+                    	<filter icon="gtk-cancel"
                     		string="Cancel"
                     		domain="[('state','=','cancel')]"/>
 
@@ -181,10 +181,10 @@
             <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_fundraising_tree"/>
             <field name="search_view_id" ref="view_report_crm_fundraising_filter"/>
+            <field name="help">With Fund Raising get at a glance a view to your fund raising campaigns with the estimated revenue, average probability and delay to close.</field>
         </record>
 
-
-           <record model="ir.actions.act_window.view" id="action_report_crm_fundrising_tree">
+        <record model="ir.actions.act_window.view" id="action_report_crm_fundrising_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_report_crm_fundraising_tree"/>
@@ -198,9 +198,9 @@
             <field name="act_window_id" ref="action_report_crm_fundraising"/>
         </record>
 
-        <menuitem name="Fundraising"
+        <menuitem name="Fundraising Analysis"
             action="action_report_crm_fundraising"
-            groups="base.group_extended"
+            groups="base.group_extended,base.group_sale_manager"
             id="menu_report_crm_fundraising_tree" parent="base.next_id_64" sequence="20"/>
 
     </data>

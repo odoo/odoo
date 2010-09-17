@@ -29,7 +29,7 @@ Especially useful for b2c businesses.
 
 This module implement the modification on the invoice form.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],

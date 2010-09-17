@@ -33,6 +33,12 @@
   !assert {model: account.invoice, id: account_invoice_customer0}:
     - state == 'proforma2'
 -
+  I check that there is no move attached to the invoice
+-
+  !python {model: account.invoice}: |
+    acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
+    assert acc_id.move_id, "Move not created"
+-
   I create invoice by clicking on Create button
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_customer0}
@@ -41,6 +47,13 @@
 -
   !assert {model: account.invoice, id: account_invoice_customer0}:
     - state == 'open'
+    
+-
+  I check that now there is a move attached to the invoice
+-
+  !python {model: account.invoice}: |
+    acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
+    assert acc_id.move_id, "Move created"
 -
   I create a record for partial payment of 1000 EUR.
 -

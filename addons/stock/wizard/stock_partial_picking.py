@@ -18,11 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import netsvc
-import pooler
 import time
 
 class stock_partial_picking(osv.osv_memory):
@@ -48,6 +46,8 @@ class stock_partial_picking(osv.osv_memory):
                     self._columns['move%s_product_qty'%(m.id)] = fields.float("Quantity")
                 if 'move%s_product_uom'%(m.id) not in self._columns:
                     self._columns['move%s_product_uom'%(m.id)] = fields.many2one('product.uom',string="Product UOM")
+                if 'move%s_prodlot_id'%(m.id) not in self._columns:
+                    self._columns['move%s_prodlot_id'%(m.id)] = fields.many2one('stock.production.lot', string="Lot")
 
                 if (m.product_id.cost_method == 'average'):
                     if 'move%s_product_price'%(m.id) not in self._columns:
@@ -62,8 +62,9 @@ class stock_partial_picking(osv.osv_memory):
         picking_ids = context.get('active_ids', False)
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
-                    	<field name="date" />
-                    	<separator colspan="4"/>
+                        <group colspan="4" col="4">
+                    	<field name="date"/>
+                        </group>
                         <separator colspan="4" string="Move Detail"/>
                         """
         _moves_fields = result['fields']
@@ -91,6 +92,12 @@ class stock_partial_picking(osv.osv_memory):
                                     'relation': 'product.uom',
                                     'required' : True,
                                     'readonly' : True,
+                                    },
+                        'move%s_prodlot_id'%(m.id): {
+                                    'string': _('Production Lot'),
+                                    'type': 'many2one',
+                                    'relation': 'stock.production.lot',
+                                    'readonly': True,
                                     }
                     })
 
@@ -99,7 +106,8 @@ class stock_partial_picking(osv.osv_memory):
                         <field name="move%s_product_id" nolabel="1"/>
                         <field name="move%s_product_qty" string="Qty" />
                         <field name="move%s_product_uom" nolabel="1" />
-                    """%(m.id, m.id, m.id)
+                        <field name="move%s_prodlot_id" />
+                    """%(m.id, m.id, m.id, m.id)
                     if (m.product_id.cost_method == 'average'):
                         _moves_fields.update({
                             'move%s_product_price'%(m.id) : {
@@ -161,16 +169,18 @@ class stock_partial_picking(osv.osv_memory):
                     res['move%s_product_qty'%(m.id)] = m.product_qty
                 if 'move%s_product_uom'%(m.id) in fields:
                     res['move%s_product_uom'%(m.id)] = m.product_uom.id
+                if 'move%s_prodlot_id'%(m.id) in fields:
+                    res['move%s_prodlot_id'%(m.id)] = m.prodlot_id.id
 
                 if (m.product_id.cost_method == 'average'):
                     currency = False
                     price = 0
-                    if (pick.type == 'in'):
+                    if (pick.type == 'in') and 'purchase_id' in pick._columns.keys():
                         if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
                             price = m.purchase_line_id.price_unit
                         if hasattr(pick, 'purchase_id') and pick.purchase_id:
                             currency = pick.purchase_id.pricelist_id.currency_id.id
-                    if (pick.type == 'out'):
+                    if (pick.type == 'out') and 'sale_id' in pick._columns.keys():
                         if hasattr(m, 'sale_line_id') and m.sale_line_id:
                             price = m.sale_line_id.price_unit
                         if hasattr(pick, 'sale_id') and pick.sale_id:
@@ -203,7 +213,8 @@ class stock_partial_picking(osv.osv_memory):
                 partial_datas['move%s'%(m.id)] = {
                     'product_id' : getattr(partial, 'move%s_product_id'%(m.id)).id,
                     'product_qty' : getattr(partial, 'move%s_product_qty'%(m.id)),
-                    'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id
+                    'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id,
+                    'prodlot_id' : getattr(partial, 'move%s_prodlot_id'%(m.id)).id
                 }
 
                 if (m.product_id.cost_method == 'average'):
@@ -217,15 +228,5 @@ class stock_partial_picking(osv.osv_memory):
 stock_partial_picking()
 
 
-
-#_moves_arch_end = '''<?xml version="1.0"?>
-#<form string="Picking result">
-#    <label string="The picking has been successfully made !" colspan="4"/>
-#    <field name="back_order_notification" colspan="4" nolabel="1"/>
-#</form>'''
-
-#_moves_fields_end = {
-#    'back_order_notification': {'string':'Back Order' ,'type':'text', 'readonly':True}
-#                     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

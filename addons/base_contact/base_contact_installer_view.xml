@@ -23,14 +23,18 @@
                         <attribute name='string'></attribute>
                     </xpath>
                     <xpath expr="//button[@string='Install Modules']" position="attributes">
-                        <attribute name="string">Migrate</attribute>
+                        <attribute name="string">Configure</attribute>
                     </xpath>
                     <group colspan="8">
                         <group colspan="2" col="2">
                             <label string="Due to changes in Address and Partner's relation, some of the details from address are needed to migrated into contact information." colspan="4"/>
                             <label string="Otherwise these details will not be visible from address/contact."  colspan="4"/>
                             <label string="Do you want to migrate your Address data in Contact Data?" colspan="4" />
-                            <field name="migrate" string="Yes/No" />
+                            <group colspan="6">
+                                <label string="Migrate:" colspan="1"/>
+                                <field name="migrate" string="Yes" colspan="1"/>
+                                <field name="nomigrate" string="No" colspan="1"/>
+                            </group>
                         </group>
                     </group>
                 </data>

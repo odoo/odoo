@@ -36,7 +36,7 @@ It supports different kind of members:
 It is integrated with sales and accounting to allow you to automatically
 invoice and send propositions for membership renewal.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['base', 'product', 'account', 'process'],
     'init_xml': ['membership_data.xml'],
     'update_xml': [

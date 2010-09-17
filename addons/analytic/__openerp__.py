@@ -23,7 +23,7 @@
 {
     "name" : "Analytic Account",
     "version": "1.1",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
     "depends" : ["base", "decimal_precision"],

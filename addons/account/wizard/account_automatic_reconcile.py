@@ -29,15 +29,15 @@ class account_automatic_reconcile(osv.osv_memory):
     _description = 'Automatic Reconcile'
 
     _columns = {
-        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Account to reconcile', domain = [('reconcile','=',1)], \
+        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Accounts to Reconcile', domain = [('reconcile','=',1)], \
                                         help = 'If no account is specified, the reconciliation will be made using every accounts that can be reconcilied'),
         'writeoff_acc_id': fields.many2one('account.account', 'Account'),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'period_id': fields.many2one('account.period', 'Period'),
         'max_amount': fields.float('Maximum write-off amount'),
         'power': fields.selection([(p, str(p)) for p in range(2, 10)], 'Power', required=True, help='Number of partial amounts that can be combined to find a balance point can be chosen as the power of the automatic reconciliation'),
-        'date1': fields.date('Start of period', required=True),
-        'date2': fields.date('End of period', required=True),
+        'date1': fields.date('Starting Date', required=True),
+        'date2': fields.date('Ending Date', required=True),
         'reconciled': fields.integer('Reconciled transactions', readonly=True),
         'unreconciled': fields.integer('Not reconciled transactions', readonly=True),
         'allow_write_off': fields.boolean('Allow write off')
@@ -54,6 +54,7 @@ class account_automatic_reconcile(osv.osv_memory):
         'date2': time.strftime('%Y-%m-%d'),
         'reconciled': _get_reconciled,
         'unreconciled': _get_unreconciled,
+        'power':2
     }
 
     #TODO: cleanup and comment this code... For now, it is awfulllll
@@ -241,6 +242,7 @@ class account_automatic_reconcile(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': context,
+            'nodestroy':True,
         }
 
 account_automatic_reconcile()

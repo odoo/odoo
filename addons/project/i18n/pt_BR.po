@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-04-27 11:00+0000\n"
-"Last-Translator: Luiz Fernando M.França <Unknown>\n"
+"PO-Revision-Date: 2010-08-03 09:20+0000\n"
+"Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -212,7 +212,9 @@ msgstr ""
 "foi delegada esta tarefa."
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "Observações"
@@ -228,7 +230,8 @@ msgid "Analysis"
 msgstr "Análise"
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -254,12 +257,14 @@ msgstr ""
 "notação."
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "Cabeçalho de Correspondência"
 
@@ -325,7 +330,8 @@ msgid "Extra Info"
 msgstr "Informações Adicionais"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr "Parceiro"
 
@@ -406,7 +412,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Computado como: Tempo Gasto + Tempo Restante"
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "Tipo"
 
@@ -450,7 +457,8 @@ msgid "Planned Time"
 msgstr "Tempo Planejado"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "Tarefas realizadas"
@@ -501,17 +509,20 @@ msgid "Template"
 msgstr "Modelo"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Configuração"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "Data de Início"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "Projetos"
 
@@ -563,17 +574,20 @@ msgstr "Invalido XML para Arquitetura da View"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "Gerência de Projeto"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Tempo Gasto"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "Tarefas"
 
@@ -662,7 +676,8 @@ msgstr "Disparar faturas a partir os itens da ordem de venda"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "Rascunho"
 
@@ -677,8 +692,10 @@ msgid "Project Manager"
 msgstr "Gerente do Projeto"
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "Pendente"
@@ -703,7 +720,8 @@ msgid "Project Time Unit"
 msgstr "Unidade de Tempo do Projeto"
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr "Nome do Projeto"
 
@@ -830,7 +848,8 @@ msgstr ""
 #. module: project
 #: help:project.project,effective_hours:0
 msgid "Sum of spent hours of all tasks related to this project."
-msgstr "Soma das horas gastas em todas as tarefas relacionadas a este projeto"
+msgstr ""
+"Soma das horas gastas em todas as tarefas relacionadas a este projeto"
 
 #. module: project
 #: help:project.task,project_id:0
@@ -844,7 +863,8 @@ msgstr ""
 #. module: project
 #: help:project.project,planned_hours:0
 msgid "Sum of planned hours of all tasks related to this project."
-msgstr "Soma das horas planejadas para as tarefas relacionadas a este projeto"
+msgstr ""
+"Soma das horas planejadas para as tarefas relacionadas a este projeto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
@@ -889,8 +909,10 @@ msgstr ""
 "planilha de tempo em projetos, etc."
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "Concluído"
@@ -899,7 +921,8 @@ msgstr "Concluído"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -1081,7 +1104,8 @@ msgid "Template of Projects"
 msgstr "Modelo de Projetos"
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "Seqüência"
 
@@ -1145,7 +1169,8 @@ msgid "Delegate your task to the other user"
 msgstr "Delegar sua tarefa para outro usuário"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "Rodapé de Correspondëncia"
 
@@ -1199,7 +1224,8 @@ msgid "My Planning"
 msgstr ""
 
 #. module: project
-#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr ""
 
@@ -1250,95 +1276,95 @@ msgstr ""
 msgid "My Timesheet"
 msgstr ""
 
-#. project.
+#. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_tree_month
 #: model:ir.ui.menu,name:project.menu_project_task_tree_month
 msgid "Tasks finished by project (this month)"
 msgstr ""
 
-#. project.
+#. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
 #: model:ir.ui.menu,name:project.menu_project_task_user_tree
 msgid "Tasks Closed by Project and User"
 msgstr ""
 
-#. project.
+#. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree_month
 #: model:ir.ui.menu,name:project.menu_project_task_user_tree_month
 msgid "Tasks finished by project and user (this month)"
 msgstr ""
 
-#. project.
+#. module: project
 #: field:report.project.task,hours_effective:0
 #: field:report.project.task.user,hours_effective:0
 msgid "Effective Hours"
 msgstr ""
 
-#. project.
+#. module: project
 #: model:ir.model,name:project.model_report_project_task_user
 msgid "Tasks by user and project"
 msgstr ""
 
-#. project.
+#. module: project
 #: field:report.project.task,task_closed:0
 #: field:report.project.task.user,task_closed:0
 msgid "Task Closed"
 msgstr ""
 
-#. project.
+#. module: project
 #: view:report.project.task:0
 msgid "Tasks by Project"
 msgstr ""
 
-#. project.
+#. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
 msgid "Sales Management - Reporting"
 msgstr ""
 
-#. project.
+#. module: project
 #: field:report.project.task.user,user_id:0
 msgid "User"
 msgstr ""
 
-#. project.
+#. module: project
 #: view:report.project.task.user:0
 msgid "Tasks by Project and User"
 msgstr ""
 
-#. project.
+#. module: project
 #: model:ir.ui.menu,name:project.next_id_63
 msgid "This Month"
 msgstr "Este mes"
 
-#. project.
+#. module: project
 #: view:report.project.task.user:0
 msgid "Tasks by projects and users"
 msgstr ""
 
-#. project.
+#. module: project
 #: field:report.project.task,closing_days:0
 #: field:report.project.task.user,closing_days:0
 msgid "Avg Closing Delay"
 msgstr ""
 
-#. project.
+#. module: project
 #: model:ir.model,name:project.model_report_project_task
 #: view:report.project.task:0
 msgid "Tasks by project"
 msgstr ""
 
-#. project.
+#. module: project
 #: field:report.project.task,hours_delay:0
 #: field:report.project.task.user,hours_delay:0
 msgid "Avg. Plan.-Eff."
 msgstr ""
 
-#. project.
+#. module: project
 #: field:report.project.task,name:0 field:report.project.task.user,name:0
 msgid "Month"
 msgstr ""
 
-#. project.
+#. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_tree
 #: model:ir.ui.menu,name:project.menu_project_task_tree
 msgid "Tasks Closed by Project"

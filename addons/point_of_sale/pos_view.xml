@@ -3,7 +3,7 @@
     <data>
         <menuitem name="Point of Sale" id="menu_point_root" sequence="21"
             icon="terp-partner"
-            groups="group_pos_manager,group_pos_user"/>
+            groups="group_pos_manager,group_pos_user,base.group_system"/>
 
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
@@ -12,9 +12,9 @@
             <field name="arch" type="xml">
                 <form string="Sales Order POS">
                     <group col="6" colspan="4">
-                        <field name="user_salesman_id" />
+                        <!--field name="user_salesman_id" />
                         <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
-                        <field name="contract_number" groups="base.group_extended"/>
+                        <field name="contract_number" groups="base.group_extended"/> -->
 
                     </group>
                      <notebook colspan="4">
@@ -22,19 +22,20 @@
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
-                                    <field name="qty" />
-                                    <field name="qty_rfd" groups="base.group_extended"/>
-                                    <field name="discount" on_change="onchange_discount(discount,price_unit)" />
-                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
+                                    <field name="qty" on_change="onchange_qty(discount, qty, price_unit)"/>
+                                    <!--<field name="qty" on_change="onchange_qty(qty,price_unit)"/>-->
+                                    <!--field name="qty_rfd" groups="base.group_extended"/-->
+                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
                                     <field name="price_unit" readonly="1"/>
-                                    <field name="notice"/>
-                                    <field name="serial_number"/>
+                                    <field name="discount" on_change="onchange_discount(discount,price_unit)" />
+                                    <field name="notice" on_change="onchange_dis(qty,price_subtotal_incl,discount)"/>
+                                    <!--field name="serial_number"/-->
                                     <field name="price_subtotal" />
-                                    <field name="price_subtotal_incl"/>
+                                    <field name="price_subtotal_incl" sum="Subtotal"/>
                                 </tree>
                                 <form string="Order lines" >
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
-                                    <field name="qty" />
+                                    <field name="qty"/>
                                     <field name="qty_rfd" groups="base.group_extended"/>
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
@@ -47,24 +48,24 @@
                             <group colspan="4" col="7">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="%(action_pos_discount)d" string="D_iscount" icon="gtk-execute" type="action" states="draft"/>
-                                <button name="dummy_button" string="Compute" icon="gtk-execute" type="object" />
+                                <!--button name="%(action_pos_discount)d" string="D_iscount" type="action" states="draft"/>
+                                <button name="dummy_button" string="Compute" type="object" /-->
                             </group>
 
-                            <group colspan="4" col="9" groups="base.group_extended">
-                            <separator colspan="4" string="Validation of the Sale"/>
-                                <newline/>
-                                <field name="state_2" />
-                                <button name="button_validate"
-                                        string="Accept"
-                                        type="object"
-                                     icon="gtk-ok"
-                                    states="paid, draft"
-                                        attrs="{'invisible':[('state_2','=','accepted')]}"/>
-                              </group>
+<!--                            <group colspan="4" col="9" groups="base.group_extended">-->
+<!--                            <separator colspan="4" string="Validation of the Sale"/>-->
+<!--                                <newline/>-->
+<!--                                <field name="state_2" />-->
+<!--                                <button name="button_validate"-->
+<!--                                        string="Accept"-->
+<!--                                        type="object"-->
+<!--                                     icon="gtk-ok"-->
+<!--                                    states="paid, draft"-->
+<!--                                        attrs="{'invisible':[('state_2','=','accepted')]}"/>-->
+<!--                              </group>-->
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
-                                <field name="state"/>
+                                <field name="state" />
                                 <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" />
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
@@ -76,28 +77,30 @@
                         <page string="Order and Payment">
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Order Information" colspan="4"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="shop_id" widget="selection"  />
                                 <field name="name"/>
-                                <field name="user_id" />
-                                <field name="sale_manager" />
+                                <field name="shop_id" widget="selection"/>
+                                <field name="user_salesman_id" />
+                                <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="price_type" />
+                                <field name="user_id" string="Salesman" groups="base.group_extended"/>
+                                <!--field name="sale_manager" /-->
                             </group>
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Dates" colspan="4"/>
                                 <field name="date_order"/>
                                 <field name="date_validation" />
                                 <field name="date_payment" groups="base.group_extended"/>
-                                <field name="type_rec"  colspan="4"/>
+<!--                                <field name="type_rec" colspan="4"/>-->
                             </group>
                             <group colspan="4">
-                                <separator string="Invoicing" colspan="4"/>
-                                <field name="sale_journal" domain="[('type','=','sale'),('company_id','=',company_id)]"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]"/>
-                                <field name="invoice_id"/>
-                                <group colspan="2" col="4">
-                                    <button name="invoice" icon="gtk-execute" string="Create _Invoice" states="paid"/>
-                                </group>
+<!--                                <separator string="Invoicing" colspan="4"/>-->
+                                <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)" invisible="1"/>
+                                <field name="sale_journal" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
+<!--                                <field name="invoice_id"/>-->
+<!--                                <group colspan="2" col="4">-->
+<!--                                    <button name="invoice" icon="gtk-execute" string="Create _Invoice" states="paid"/>-->
+<!--                                </group>-->
                             </group>
 
                             <field name="statement_ids" colspan="4" nolabel="1">
@@ -172,9 +175,9 @@
             </field>
         </record>
 
-        <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
-        <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
-        <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="29" />
+        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
+        <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user,base.group_system"/>
+        <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
         <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2" name="Products"/>
 
@@ -186,7 +189,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">['|',('state_2','=','to_verify'),('state','=','advance')]</field>
+            <field name="domain">['|',('state','=','advance')]</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_pos_order_filter"/>
 
@@ -199,12 +202,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">[('state','!=', 'invoiced')]</field>
+            <field name="domain">[('state','not in', ('invoiced','done')),('invoice_id','=',False)]</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_pos_order_filter"/>
 
         </record>
-        <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="4" />
+        <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="5" />
         <menuitem name="Sales to Invoice" action="action_pos_order_tobinvoiced" id="menu_point_of_sale_tobinvoiced" parent="menu_point_of_sale_invoicing"/>
         <record model="ir.actions.act_window" id="action_pos_order_accepted">
             <field name="name">Accepted Sales</field>
@@ -743,7 +746,7 @@
         </record>
 
         <menuitem name="Configuration" parent="menu_point_root"
-            id="menu_point_config_product" sequence="6"/>
+            id="menu_point_config_product" sequence="25" groups="base.group_system"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
             <field name="name">Products</field>
@@ -768,7 +771,8 @@
         <menuitem name="Products for Input Operations"
                     parent="menu_point_config_product"
                     action="action_product_input"
-                    id="products_for_input_operations"/>
+                    id="products_for_input_operations"
+                    groups="base.group_system"/>
 
         <record model="ir.actions.act_window" id="action_product_output">
             <field name="name">Products</field>
@@ -793,18 +797,19 @@
         <menuitem name="Products for Output Operations"
                     parent="menu_point_config_product"
                     action="action_product_output"
-                    id="products_for_output_operations"/>
+                    id="products_for_output_operations"
+                    groups="base.group_system"/>
 
-        <menuitem name="Register Management" parent="menu_point_root"
-            id="menu_point_config" sequence="3"/>
+<!--        <menuitem name="Register Management" parent="menu_point_root"-->
+<!--            id="menu_point_config" sequence="4"/>-->
         <menuitem
-            name="Input Operations" parent="menu_point_config"
+            name="Input Operations" parent="menu_point_of_sale"
             string="Refloat"
             action="action_box_entries"
-            id="menu_wizard_enter_jrnl" sequence="3" />
+            id="menu_wizard_enter_jrnl" sequence="2" />
 
         <menuitem
-            name="Output Operations" parent="menu_point_config"
+            name="Output Operations" parent="menu_point_of_sale"
             string="Refloat"
             action="action_box_out"
             id="menu_wizard_enter_jrnl2" sequence="3" />
@@ -860,13 +865,13 @@
         </record>
 
         <!--  Miscelleanous Operations/Reporting -->
-        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="30"/>
-        <menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
+        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20" groups="group_pos_manager,base.group_system"/>
+<!--         <menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
         <menuitem name="Sales" parent="menu_point_rep" id="menu_point_report_sale" sequence="1" />
 
-        <menuitem name="Details Of Operations" parent="menu_point_report_sale" id="menu_details_of_oper" sequence="1" groups="base.group_extended"/>
+        <menuitem name="Details Of Operations" parent="menu_point_report_sale" id="menu_details_of_oper" sequence="1" groups="base.group_extended,group_pos_manager,base.group_system"/>
         <menuitem name="All Sales" parent="menu_details_of_oper"
-                        id="menu_action_all_sales_tree3" action="action_pos_order_tree3" sequence="1"  groups="base.group_extended"/>
+                        id="menu_action_all_sales_tree3" action="action_pos_order_tree3" sequence="1"  groups="base.group_extended,base.group_system,group_pos_manager"/>
         <menuitem name="Sales of the day" parent="menu_action_all_sales_tree3"
                         id="menu_action_sale_of_day_tree2" action="action_trans_pos_tree_today"/>
         <menuitem name="Accepted Sales" parent="menu_action_all_sales_tree3"
@@ -894,6 +899,7 @@
 
         <menuitem name="Sales by User Monthly Margin" parent="menu_sales_report"
                  action="action_report_sales_by_margin_pos_month" id="menu_report_sales_by_user_pos_month_margin_tree"/>
+-->
         <!-- Invoice -->
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
@@ -904,7 +910,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('origin','like','POS')]</field>
         </record>
-        <menuitem name="All Invoices" parent="menu_details_of_oper"
+<!--        <menuitem name="All Invoices" parent="menu_details_of_oper"
                  action="action_pos_invoice" id="menu_pos_invoice_tree"/>
 
         <menuitem name="Payments and Sales" parent="menu_point_report_sale"
@@ -921,11 +927,11 @@
 
         <menuitem icon="STOCK_PRINT" action="action_report_pos_sale_user"
                 id="menu_pos_sales_user" parent="menu_trans_pos_tree" sequence="3" groups="base.group_extended" />
-
+-->
 
         <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
-                id="menu_pos_payment_report_date" parent="menu_trans_pos_tree" sequence="5" groups="base.group_extended"/>
-
+                id="menu_pos_payment_report_date" parent="menu_point_rep" sequence="8" groups="base.group_extended"/>
+<!--
         <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
                 id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
         <menuitem icon="STOCK_PRINT" action="action_pos_sales_user_today"
@@ -938,9 +944,9 @@
                 id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
         <menuitem icon="STOCK_PRINT" action="action_report_pos_sales_user_today_current_user"
                 id="menu_pos_sales_user_today_current_user" parent="menu_cashboxes_by_day"  sequence="7"/>
-
+-->
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
-                id="menu_pos_details" parent="menu_cashboxes_by_day"  />
+                id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
 
     </data>

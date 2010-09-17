@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -287,18 +286,18 @@ class pos_order(osv.osv):
         'date_validation': fields.function(_get_date_payment, method=True, string='Validation Date', type='date',  store=True),
         'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date',  store=True),
         'date_validity': fields.date('Validity Date', required=True),
-        'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
-        'user_salesman_id': fields.many2one('res.users', 'Salesman', required=True),
+        'user_id': fields.many2one('res.users', 'Connected Salesman'),
+        'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
-        'amount_paid': fields.function(_amount_all, 'Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_return': fields.function(_amount_all, 'Returned', method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
         'price_type': fields.selection([
             ('tax_excluded','Tax excluded')
         ], 'Price method', required=True),
-        'statement_ids': fields.one2many('account.bank.statement.line','pos_statement_id','Payments'),
+        'statement_ids': fields.one2many('account.bank.statement.line','pos_statement_id','Payments',states={'draft': [('readonly', False)]},readonly=True),
         'payments': fields.one2many('pos.payment', 'order_id', 'Order Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one( 'res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
@@ -311,8 +310,7 @@ class pos_order(osv.osv):
         'pickings': fields.one2many('stock.picking', 'pos_order', 'Picking', readonly=True),
         'picking_id': fields.many2one('stock.picking', 'Last Output Picking', readonly=True),
         'first_name': fields.char('First Name', size=64),
-        'state_2': fields.function(_get_v,type='selection',selection=[('to_verify', 'To Verify'), ('accepted', 'Accepted'),
-            ('refused', 'Refused')], string='State', readonly=True, method=True, store=True),
+#        'state_2': fields.function(_get_v,type='selection',selection=[('to_verify', 'To Verify'), ('accepted', 'Accepted'),('refused', 'Refused')], string='State', readonly=True, method=True, store=True),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
         'sale_journal': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True, ),
@@ -355,7 +353,7 @@ class pos_order(osv.osv):
         'sale_manager': lambda self, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'price_type': lambda *a: 'tax_excluded',
-        'state_2': lambda *a: 'to_verify',
+#        'state_2': lambda *a: 'to_verify',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_validity': lambda *a: (DateTime.now() + DateTime.RelativeDateTime(months=+6)).strftime('%Y-%m-%d'),
@@ -558,26 +556,26 @@ class pos_order(osv.osv):
             raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
         return True
 
-    def button_validate(self, cr, uid, ids, *args):
-
-        """ Check the access for the sale order  and update the date_validation
-        @return: True
-        """
-        res_obj = self.pool.get('res.company')
-        try:
-            part_company=res_obj.browse(cr,uid,uid) and res_obj.browse(cr,uid,uid).parent_id and res_obj.browse(cr,uid,uid).parent_id.id or None
-        except Exception, e:
-            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
-        if part_company:
-            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
-        for order in self.browse(cr, uid, ids):
-            if not order.date_validation:
-                cr.execute("select max(date) from account_bank_statement_line where pos_statement_id=%d"%(order.id))
-                val=cr.fetchone()
-                val=val and val[0] or None
-                if val:
-                    cr.execute("Update pos_order set date_validation='%s', state_2 ='%s' where id = %d"%(val, 'accepted', order.id))
-        return True
+#    def button_validate(self, cr, uid, ids, *args):
+#
+#        """ Check the access for the sale order  and update the date_validation
+#        @return: True
+#        """
+#        res_obj = self.pool.get('res.company')
+#        try:
+#            part_company=res_obj.browse(cr,uid,uid) and res_obj.browse(cr,uid,uid).parent_id and res_obj.browse######(cr,uid,uid).parent_id.id or None
+#        except Exception, e:
+#            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
+#        if part_company:
+#            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
+#        for order in self.browse(cr, uid, ids):
+#            if not order.date_validation:
+#                cr.execute("select max(date) from account_bank_statement_line where pos_statement_id=%d"%(order.id))
+#                val=cr.fetchone()
+#                val=val and val[0] or None
+#                if val:
+#                   cr.execute("Update pos_order set date_validation='%s', state_2 ='%s' where id = %d"%(val, 'accepted', order.id))
+#        return True
 
 
     def cancel_order(self, cr, uid, ids, context=None):
@@ -603,8 +601,8 @@ class pos_order(osv.osv):
         if not order.num_sale and data['num_sale']:
             self.write(cr,uid,order_id,{'num_sale': data['num_sale']})
         ids_new=[]
-        if order.invoice_wanted and not order.partner_id:
-            raise osv.except_osv(_('Error'), _('Cannot create invoice without a partner.'))
+#        if order.invoice_wanted and not order.partner_id:
+#            raise osv.except_osv(_('Error'), _('Cannot create invoice without a partner.'))
         args = {
             'amount': data['amount'],
             }
@@ -705,7 +703,7 @@ class pos_order(osv.osv):
         product_obj= self.pool.get('product.product')
         inv_ids = []
 
-        for order in self.browse(cr, uid, ids, context):
+        for order in self.pool.get('pos.order').browse(cr, uid, ids, context):
             curr_c = order.user_salesman_id.company_id
             if order.invoice_id:
                 inv_ids.append(order.invoice_id.id)
@@ -1072,8 +1070,8 @@ class pos_order_line(osv.osv):
             else:
                 res[line.id]=line.price_unit*line.qty
             res[line.id] = res[line.id] + tax_amount
-
         return res
+
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
 
@@ -1107,7 +1105,8 @@ class pos_order_line(osv.osv):
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
         price = self.price_by_product(cr, uid, ids, pricelist, product_id, qty, partner_id)
         self.write(cr,uid,ids,{'price_unit':price})
-        return {'value': {'price_unit': price}, 'qty': 1}
+        pos_stot = (price * qty)
+        return {'value': {'price_unit': price,'price_subtotal_incl': pos_stot}}
 
     def onchange_subtotal(self, cr, uid, ids, discount, price, pricelist,qty,partner_id, product_id,*a):
         prod_obj = self.pool.get('product.product')
@@ -1120,6 +1119,11 @@ class pos_order_line(osv.osv):
             disc=100-(price/price_f*100)
             return {'value':{'discount':disc, 'price_unit':price_f}}
         return {}
+
+    def onchange_dis(self, cr, uid,ids,  qty, price_subtotal_incl, discount,*a):
+        price_sub = price_subtotal_incl
+        sub_total_discount = price_sub-(price_subtotal_incl*(discount*0.01))
+        return {'value': {'price_subtotal_incl':sub_total_discount}}    
 
     def onchange_ded(self, cr, uid,ids, val_ded,price_u,*a):
         pos_order = self.pool.get('pos.order.line')
@@ -1149,7 +1153,14 @@ class pos_order_line(osv.osv):
             else:
                 return {'value': {'notice':'Minimum Discount','price_ded':price*discount*0.01 or 0.0  }}
         else :
-            return {'value': {'notice':'No Discount', 'price_ded':price*discount*0.01 or 0.0 }}
+            return {'value': {'notice':'No Discount', 'price_ded':price*discount*0.01 or 0.0}}
+        
+    def onchange_qty(self, cr, uid, ids, discount, qty, price, context=None):
+        subtotal = qty * price
+        if discount:
+            subtotal = subtotal - (subtotal * discount / 100)
+        return {'value': {'price_subtotal_incl': subtotal}}
+    
     _columns = {
         'name': fields.char('Line Description', size=512),
         'company_id':fields.many2one('res.company', 'Company', required=True),
@@ -1175,6 +1186,17 @@ class pos_order_line(osv.osv):
         'notice': lambda *a: 'No Discount',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         }
+
+#    def _check_qty(self, cr, uid, ids):
+#        lines = self.browse(cr, uid, ids)
+#        for line in lines:
+#            if line.qty <= 0:
+#                return False
+#        return True
+
+#    _constraints = [
+#        (_check_qty, 'Order quantity cannot be negative or zero !', ['qty']),
+#    ]
 
     def create(self, cr, user, vals, context={}):
         if vals.get('product_id'):

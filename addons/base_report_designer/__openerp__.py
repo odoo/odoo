@@ -25,15 +25,15 @@
     'version': '0.1',
     'category': 'Generic Modules/Base',
     'description': """
-This module is used along with openerp OpenOffice plugin.
+This module is used along with OpenERP OpenOffice plugin.
 You have to first install the plugin which is available at
 http://www.openerp.com
 
-This module adds wizards to import/export .SXW report that
+This module adds wizards to Import/Export .sxw report that
 you can modify in OpenOffice.Once you have modified it you can
 upload the report using the same wizard.
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': ['base_report_data.xml'],

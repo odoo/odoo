@@ -23,7 +23,6 @@ from osv import fields, osv
 import pooler
 
 class stock_production_lot(osv.osv):
-    _name = 'stock.production.lot'
     _inherit = 'stock.production.lot'
 
     def _get_date(dtype):
@@ -51,7 +50,7 @@ class stock_production_lot(osv.osv):
             help='The date the lot starts deteriorating without becoming dangerous.'),
         'removal_date': fields.datetime('Removal Date',
             help='The date the lot should be removed.'),
-        'alert_date': fields.datetime('Alert Date'),
+        'alert_date': fields.datetime('Alert Date', help="The date signifying an alert to notify about the production lot."),
     }
     # Assign dates according to products data
     def create(self, cr, uid, vals, context=None):
@@ -76,15 +75,14 @@ stock_production_lot()
 
 class product_product(osv.osv):
     _inherit = 'product.product'
-    _name = 'product.product'
     _columns = {
-        'life_time': fields.integer('Product lifetime',
+        'life_time': fields.integer('Product Life Time',
             help='The number of days before a production lot may become dangerous and should not be consumed.'),
-        'use_time': fields.integer('Product usetime',
+        'use_time': fields.integer('Product Use Time',
             help='The number of days before a production lot starts deteriorating without becoming dangerous.'),
-        'removal_time': fields.integer('Product removal time',
+        'removal_time': fields.integer('Product Removal Time',
             help='The number of days before a production lot should be removed.'),
-        'alert_time': fields.integer('Product alert time'),
+        'alert_time': fields.integer('Product Alert Time', help="The number of days after which, needs an alert to notify about the production lot."),
     }
 product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

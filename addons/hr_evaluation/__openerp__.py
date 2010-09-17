@@ -22,7 +22,7 @@
 {
     "name" : "Human Resources Evaluation",
     "version": "0.1",
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "category": "Generic Modules/Human Resources",
     "website": "http://www.openerp.com",
     "depends": ["hr",'hr_recruitment','survey'],

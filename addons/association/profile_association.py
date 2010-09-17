@@ -29,7 +29,7 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
     _columns = {
         'hr_expense':fields.boolean('Expenses Tracking', help="Tracks the personal expenses process, from the employee expense encoding, to the reimbursement of the employee up to the reinvoicing to the final customer."),
         'project':fields.boolean('Project Management'),
-        'event_project':fields.boolean('Organization and management of events', help="This module allows you to create retro planning for managing your events."),
+        'event_project':fields.boolean('Organization and management of Events', help="This module allows you to create retro planning for managing your events."),
         'project_gtd':fields.boolean('Getting Things Done',
             help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
         'wiki': fields.boolean('Wiki', 

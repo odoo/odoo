@@ -3,18 +3,26 @@
 <data noupdate="0">
 
     <record id="group_stock_manager" model="res.groups">
-        <field name="name">Inventory / Manager</field>
+        <field name="name">Warehouse / Manager</field>
     </record>
     <record id="group_stock_user" model="res.groups">
-        <field name="name">Inventory / Worker</field>
+        <field name="name">Warehouse / User</field>
     </record>
 
     <record model='ir.ui.menu' id='menu_stock_root'>
-        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user')])]"/>
+        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user'),ref('base.group_system')])]"/>
     </record>
 
-    <record model='ir.ui.menu' id='menu_stock_configuration'>
-        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager')])]"/>
+    <record model='ir.ui.menu' id='menu_action_location_tree'>
+        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user'),ref('base.group_system')])]"/>
+    </record>
+
+    <record model='ir.ui.menu' id='menu_action_tracking_form'>
+        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user'),ref('base.group_system')])]"/>
+    </record>
+
+    <record model='ir.ui.menu' id='menu_action_production_lot_form'>
+        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user'),ref('base.group_system')])]"/>
     </record>
 
 <!-- multi -->

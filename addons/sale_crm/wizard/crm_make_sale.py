@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
+import time
+
 from osv import fields, osv
 from tools.translate import _
-from mx.DateTime import now
-import time
 import decimal_precision as dp
 
 class crm_make_sale(osv.osv_memory):
@@ -42,13 +42,24 @@ class crm_make_sale(osv.osv_memory):
         """
         if not context:
             context = {}
-
+        lead_obj = self.pool.get('crm.lead')
         active_id = context and context.get('active_id', False) or False
         if not active_id:
             return False
-        lead_obj = self.pool.get('crm.lead')
         lead = lead_obj.read(cr, uid, active_id, ['partner_id'])
-        return  lead['partner_id']
+        return lead['partner_id']
+
+    def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
+        if context.get('active_ids', False) and context['active_ids']:
+            oppr = self.pool.get('crm.lead').browse(cr, uid, context['active_ids'])
+            for line in oppr:
+                if not line.section_id:
+                    raise osv.except_osv(_('Warning !'), _(' Sales Team is not specified.'))
+        return super(crm_make_sale, self).view_init(cr, uid, fields_list, context=context)
+
+
 
     def makeOrder(self, cr, uid, ids, context=None):
         """
@@ -100,7 +111,7 @@ class crm_make_sale(osv.osv_memory):
                     raise osv.except_osv(_('Data Insufficient!'),_('Customer has no addresses defined!'))
 
                 vals = {
-                    'origin': 'Opportunity:%s' % str(case.id),
+                    'origin': 'Opportunity: %s' % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
                     'shop_id': make.shop_id.id,
                     'partner_id': partner_id,
@@ -108,8 +119,7 @@ class crm_make_sale(osv.osv_memory):
                     'partner_invoice_id': partner_addr['invoice'],
                     'partner_order_id': partner_addr['contact'],
                     'partner_shipping_id': partner_addr['delivery'],
-                    'order_policy': 'manual',
-                    'date_order': now(),
+                    'date_order': time.strftime('%Y-%m-%d'),
                     'fiscal_position': fpos,
                 }
 
@@ -121,14 +131,21 @@ class crm_make_sale(osv.osv_memory):
                     vals['project_id'] = make.analytic_account.id
                 new_id = sale_obj.create(cr, uid, vals)
                 for line in make.sale_order_line:
-                    value = sale_line_obj.product_id_change(cr, uid, [], pricelist,
-                            line.product_id.id, qty=1, partner_id=partner_id, fiscal_position=fpos)['value']
-                    value['product_id'] =line.product_id.id
+                    value = {}
                     value['order_id'] = new_id
-                    value['tax_id'] = [(6,0,line['tax_id'])]
+                    value['name'] = line.name
+                    value['delay'] = line.delay
+                    value['product_id'] =line.product_id and line.product_id.id or False
+                    value['price_unit'] = line.price_unit
+                    value['tax_id'] = line.tax_id and [(6,0,map(lambda x: x.id,line.tax_id))] or False
+                    value['type'] = line.type
                     value['product_uom_qty']=line.product_uom_qty
-                    value['discount']=line.discount
                     value['product_uom']=line.product_uom.id
+                    value['product_uos_qty']=line.product_uos_qty
+                    value['product_uos']=line.product_uos and line.product_uos.id or False
+                    value['product_packaging'] = line.product_packaging and line.product_packaging.id or False
+                    value['discount']=line.discount
+                    value['notes']=line.notes
                     sale_line_obj.create(cr, uid, value)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
@@ -149,7 +166,6 @@ class crm_make_sale(osv.osv_memory):
                     'view_id': False,
                     'type': 'ir.actions.act_window',
                     'res_id': new_ids and new_ids[0]
-
                 }
             else:
                 value = {
@@ -163,156 +179,56 @@ class crm_make_sale(osv.osv_memory):
                     }
             return value
 
+    def _get_shop_id(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        cmpny_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        shop = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', cmpny_id)])
+        return shop and shop[0] or False
+
     _columns = {
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
-        'partner_id': fields.many2one('res.partner', 'Customer', required=True, help='Use this partner if there is no partner on the Opportunity'),
-        'sale_order_line': fields.one2many('sale.order.make.line', 'order_line', 'Product Line', readonly=True, states={'draft': [('readonly', False)]}),
+        'partner_id': fields.many2one('res.partner', 'Customer', required=True),
+        'sale_order_line': fields.one2many('sale.order.make.line', 'opportunity_order_id', 'Product Line'),
         'analytic_account': fields.many2one('account.analytic.account', 'Analytic Account'),
         'close': fields.boolean('Close Case', help='Check this to close the case after having created the sale order.'),
     }
     _defaults = {
+         'shop_id': _get_shop_id,
          'partner_id': _selectPartner,
          'close': 1
     }
-
 crm_make_sale()
 
 class sale_order_make_line(osv.osv_memory):
 
-
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+    def product_id_change(self, cr, uid, ids, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
+            lang=False, update_tax=True, packaging=False, flag=False):
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sale form !\nPlease set one customer before choosing a product.'))
-        warning = {}
-        product_uom_obj = self.pool.get('product.uom')
-        partner_obj = self.pool.get('res.partner')
-        product_obj = self.pool.get('product.product')
-        if partner_id:
-            lang = partner_obj.browse(cr, uid, partner_id).lang
-        context = {'lang': lang, 'partner_id': partner_id}
-
-        if not product:
-            return {'value': {'th_weight': 0, 'product_packaging': False,
-                'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                   'product_uos': []}}
-
-        if not date_order:
-            date_order = time.strftime('%Y-%m-%d')
-
-        result = {}
-        product_obj = product_obj.browse(cr, uid, product, context=context)
-        if not packaging and product_obj.packaging:
-            packaging = product_obj.packaging[0].id
-            result['product_packaging'] = packaging
-
-        if packaging:
-            default_uom = product_obj.uom_id and product_obj.uom_id.id
-            pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context=context)
-            q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
-#            qty = qty - qty % q + q
-            if qty and (q and not (qty % q) == 0):
-                ean = pack.ean
-                qty_pack = pack.qty
-                type_ul = pack.ul
-                warn_msg = _("You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: ") % (qty)
-                warn_msg = warn_msg + "\n\n" + _("EAN: ") + str(ean) + _(" Quantity: ") + str(qty_pack) + _(" Type of ul: ") + str(type_ul.name)
-                warning = {
-                    'title': _('Picking Information !'),
-                    'message': warn_msg
-                    }
-            result['product_uom_qty'] = qty
-
-        uom2 = False
-        if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                uom = False
-
-        if uos:
-            if product_obj.uos_id:
-                uos2 = product_uom_obj.browse(cr, uid, uos)
-                if product_obj.uos_id.category_id.id != uos2.category_id.id:
-                    uos = False
-            else:
-                uos = False
-        if product_obj.description_sale:
-            result['notes'] = product_obj.description_sale
-        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
-        if update_tax: #The quantity only have changed
-            result['delay'] = (product_obj.sale_delay or 0.0)
-            partner = partner_obj.browse(cr, uid, partner_id)
-            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
-            result.update({'type': product_obj.procure_method})
-
-        if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
-        domain = {}
-        if (not uom) and (not uos):
-            result['product_uom'] = product_obj.uom_id.id
-            if product_obj.uos_id:
-                result['product_uos'] = product_obj.uos_id.id
-                result['product_uos_qty'] = qty * product_obj.uos_coeff
-                uos_category_id = product_obj.uos_id.category_id.id
-            else:
-                result['product_uos'] = False
-                result['product_uos_qty'] = qty
-                uos_category_id = False
-            domain = {'product_uom':
-                        [('category_id', '=', product_obj.uom_id.category_id.id)],
-                        'product_uos':
-                        [('category_id', '=', uos_category_id)]}
-
-        elif uos and not uom: # only happens if uom is False
-            result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
-            result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
-        elif uom: # whether uos is set or not
-            default_uom = product_obj.uom_id and product_obj.uom_id.id
-            q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
-            if product_obj.uos_id:
-                result['product_uos'] = product_obj.uos_id.id
-                result['product_uos_qty'] = qty * product_obj.uos_coeff
-            else:
-                result['product_uos'] = False
-                result['product_uos_qty'] = qty
-
-        if not uom2:
-            uom2 = product_obj.uom_id
-        return {'value': result, 'domain': domain, 'warning': warning}
-
-    def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False):
-        res = self.product_id_change(cursor, user, ids, pricelist, product,
-                qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
-                partner_id=partner_id, lang=lang, update_tax=update_tax,
-                date_order=date_order)
-        if 'product_uom' in res['value']:
-            del res['value']['product_uom']
-        if not uom:
-            res['value']['price_unit'] = 0.0
-        return res
+        date_order = time.strftime('%Y-%m-%d')
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
+        fiscal_position = part.property_account_position and part.property_account_position.id or False
+        return self.pool.get('sale.order.line').product_id_change(cr, uid, ids, pricelist, product, qty, uom, qty_uos, uos, name, partner_id, lang, update_tax, date_order, packaging, fiscal_position, flag)
 
     _name = 'sale.order.make.line'
-    _description = 'Sale Order Line'
+    _description = 'Opportunity Sale Order Line'
     _columns = {
-        'order_line': fields.many2one('crm.make.sale', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, ),
-        'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, ),
-        'name': fields.char('Description', size=256, required=True, select=True, readonly=True, ),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
-        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer", readonly=True, ),
+        'opportunity_order_id': fields.many2one('crm.make.sale', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, ),
+        'name': fields.char('Description', size=256, required=True, select=True, ),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer"),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
-        'procurement_id': fields.many2one('procurement.order', 'Procurement'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, ),
-        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_uom': fields.many2one('product.uom', 'Unit of Measure ', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_uos_qty': fields.float('Quantity (UoS)', readonly=True, states={'draft':[('readonly',False)]}),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price')),
+        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes'),
+        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True),
+        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True, ),
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure ', required=True, ),
+        'product_uos_qty': fields.float('Quantity (UoS)'),
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
-        'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft':[('readonly',False)]}),
+        'discount': fields.float('Discount (%)', digits=(16, 2)),
         'notes': fields.text('Notes'),
     }
     _order = 'sequence, id'
@@ -327,4 +243,4 @@ class sale_order_make_line(osv.osv_memory):
 
 sale_order_make_line()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:>>>>>>> MERGE-SOURCE

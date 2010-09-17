@@ -18,16 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import base64
 
 from osv import osv, fields
-from osv.orm import except_orm
-import urlparse
 
 import netsvc
-import os
+# import os
 import nodes
-import StringIO
+# import StringIO
 
 class document_directory_content_type(osv.osv):
     _name = 'document.directory.content.type'
@@ -83,7 +80,7 @@ class document_directory_content(osv.osv):
         tname = ''
         if content.include_name:
             content_name = node.displayname or ''
-            obj = node.context._dirobj.pool.get(model)
+            # obj = node.context._dirobj.pool.get(model)
             if content_name:
                 tname = (content.prefix or '') + content_name + (content.suffix or '') + (content.extension or '')
         else:

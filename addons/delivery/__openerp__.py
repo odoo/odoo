@@ -26,17 +26,17 @@
     'category': 'Generic Modules/Sales & Purchases',
     'description': """Allows you to add delivery methods in sale orders and picking.
      You can define your own carrier and delivery grids for prices.
-     When creating invoices from picking, Open ERP is able to add and compute the shipping line.
+     When creating invoices from picking, OpenERP is able to add and compute the shipping line.
 
      """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['sale', 'purchase', 'stock'],
     'init_xml': ['delivery_data.xml'],
     'update_xml': [
         'security/ir.model.access.csv',
         'wizard/delivery_sale_order_view.xml',
         'delivery_report.xml',
-        'delivery_view.xml',        
+        'delivery_view.xml',
         'partner_view.xml'
     ],
     'demo_xml': ['delivery_demo.xml'],

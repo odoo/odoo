@@ -18,27 +18,24 @@
                     <field name="name"/>
                     <field name="membership_date_from"/>
                     <field name="membership_date_to"/>
-                    <field name="lst_price"/>
+                    <field name="list_price" string="Membership Fee"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.ui.view" id="membership_products_form">
-            <field name="name">Membership products</field>
+            <field name="name">Memberships</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Membership products">
-                    <field name="default_code"/>
                     <field name="name"/>
-                    <field name="membership_date_from" required="1"/>
-                    <field name="membership_date_to" required="1"/>
-                    <field name="list_price"/>
+                    <field name="default_code"/>
                     <field name="type"/>
                     <field name="categ_id"/>
-                    <field name="membership" colspan="1"/>
-                    <field name="active" colspan="1"/>
-                    <newline/>
+                    <field name="membership_date_from" required="1"/>
+                    <field name="membership_date_to" required="1"/>
+                    <field name="list_price" string="Membership Fee"/>
                     <separator colspan="4" string="Customer Taxes:"/>
                     <field name="taxes_id" colspan="4" nolabel="1"/>
                 </form>
@@ -62,7 +59,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_membership_products">
-            <field name="name">Membership Products</field>
+            <field name="name">Memberships</field>
             <field name="res_model">product.product</field>
             <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
             <field name="context">{'membership':True, 'type':'service'}</field>
@@ -82,16 +79,14 @@
             <field name="act_window_id" ref="action_membership_products"/>
         </record>
 
-        <menuitem name="Membership" id="menu_membership" icon="terp-crm" sequence="25"/>
-        <menuitem name="Members" parent="menu_membership"
-            id="menu_member"
-            sequence="1"/>
-        <menuitem name="Configuration" parent="menu_membership"
-            id="menu_conf"
-            sequence="3"/>
-        <menuitem name="Membership products" parent="menu_conf"
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
+        <menuitem name="Membership" id="menu_membership" sequence="0" parent="base.menu_association"/>
+        <menuitem name="Memberships" parent="menu_membership"
             id="menu_membership_products"
-            action="action_membership_products"/>
+            action="action_membership_products" sequence="1"/>
+
+
+
 
 
 
@@ -152,7 +147,6 @@
         <record model="ir.actions.act_window" id="action_membership_members">
             <field name="name">Members</field>
             <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state','&lt;&gt;','none'),('membership_state','&lt;&gt;','canceled'),('membership_state','&lt;&gt;','old'),('membership_state','&lt;&gt;','waiting')]</field>
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
             <field name="context">{"search_default_old": 1}</field>
         </record>
@@ -170,7 +164,7 @@
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
 
-        <menuitem name="Members" parent="menu_member" id="menu_members" sequence="2" action="action_membership_members"/>
+        <menuitem name="Members" parent="menu_membership" id="menu_members" sequence="2" action="action_membership_members"/>
 
         <!-- PARTNERS -->
 <!--
@@ -182,17 +176,7 @@
             />
  -->
 
-        <record id="view_res_partner_member_form2" model="ir.ui.view">
-            <field name="name">res.partner.form2</field>
-            <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <field name="supplier" position="after">
-                        <field name="member"/>
-               </field>
-            </field>
-        </record>
+
 
         <record model="ir.ui.view" id="view_partner_tree">
             <field name="name">res.partner.tree.form.inherit</field>
@@ -213,36 +197,43 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Membership">
-                        <field name="membership_state"/>
-                        <field name="membership_amount"/>
-                        <field name="associate_member"/>
-                        <field name="free_member"/>
-                        <field name="membership_start"/>
-                        <field name="membership_stop"/>
-                        <field name="membership_cancel"/>
-                        <field name="member_lines" nolabel="1" colspan="4">
-                            <tree string="Membership">
-                                <field name="date_from"/>
-                                <field name="date_to"/>
+                        <group colspan="2" col="2">
+                            <group colspan="4" col="3">
+                            <field name="free_member"/>
+                            <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" icon="gtk-apply"/>
+                            <field colspan="4" name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')], 'readonly':[('free_member','=',True)]}"/>
+                            <field colspan="4" name="membership_state"/>
+                            </group>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="membership_start"/>
+                            <field name="membership_stop"/>
+                            <field name="membership_cancel"/>
+                        </group>
+                        <field name="member_lines" nolabel="1" colspan="4" readonly="1">
+                            <tree string="Memberships">
+                                <field name="date"/>
+                                <field name="membership_id"/>
+                                <field name="member_price"/>
+                                <field name="account_invoice_id"/>
                                 <field name="state"/>
                             </tree>
-                            <form string="Membership">
-                                <field name="date_from"/>
-                                <field name="date_to"/>
-                                <field name="account_invoice_line"/>
-                                <field name="state"/>
+                            <form string="Memberships">
+                                <field name="date"/>
+                                <field name="member_price"/>
+                                <field name="membership_id"/>
+                                <field name="account_invoice_id"/>
+                                <field name="state" colspan="4"/>
                             </form>
                         </field>
+
                     </page>
                 </notebook>
             </field>
         </record>
 
         <!-- MEMBERSHIP/REPORTING -->
-        <menuitem name="Reporting" parent="menu_membership"
-            sequence="2"
-            id="menu_reporting"/>
-
+        <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
 
 <!-- View for product.product object inherited from product module................ -->
         <record model="ir.ui.view" id="view_product_form_inherit1">

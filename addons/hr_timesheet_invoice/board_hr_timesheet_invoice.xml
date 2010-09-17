@@ -2,8 +2,6 @@
 <openerp>
     <data>
 
-
-
         <act_window domain="[('state','&lt;&gt;','close'),('partner_id','&lt;&gt;',False),('to_invoice', '&lt;&gt;', False)]" id="act_my_account" name="Accounts to invoice" res_model="account.analytic.account" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <record id="action_account_analytic_line_to_invoice" model="ir.actions.act_window">
@@ -16,26 +14,26 @@
         <record id="board_hr_timesheet_invoice_form" model="ir.ui.view">
             <field name="name">board.hr.timesheet.invoice</field>
             <field name="model">board.board</field>
- 			<field name="type">form</field>            
-			<field name="inherit_id" ref="account.board_account_form"/>              
+             <field name="type">form</field>
+            <field name="inherit_id" ref="account.board_account_form"/>
             <field name="arch" type="xml">
-	      		<xpath expr="/form/hpaned/child1/action[@string='Draft Customer Invoices']" position="before">     
-					<action colspan="4" height="160" name="%(hr_timesheet_invoice.action_analytic_account_tree)d" string="Analytic accounts to close" width="510"/>
-					<action colspan="4" height="160" name="%(act_my_account)d" string="Accounts to invoice" width="510"/>
-				</xpath>  
+                <xpath expr="/form/hpaned/child1/action[@string='Draft Customer Invoices']" position="before">
+                    <action colspan="4" height="160" name="%(hr_timesheet_invoice.action_analytic_account_tree)d" string="Analytic accounts to close" width="510"/>
+                    <action colspan="4" height="160" name="%(act_my_account)d" string="Accounts to invoice" width="510"/>
+                </xpath>
             </field>
         </record>
-        
-		<!-- Need to merge in above view -->
-		<record id="board_hr_timesheet_invoice_report_form1" model="ir.ui.view">
+
+        <!-- Need to merge in above view -->
+        <record id="board_hr_timesheet_invoice_report_form1" model="ir.ui.view">
             <field name="name">board.hr.timesheet.invoice</field>
             <field name="model">board.board</field>
- 			<field name="type">form</field>            
-			<field name="inherit_id" ref="account.board_account_form"/>              
+             <field name="type">form</field>
+            <field name="inherit_id" ref="account.board_account_form"/>
             <field name="arch" type="xml">
-	      		<xpath expr="/form/hpaned/child2/action[@string='Aged receivables']" position="before">          
-				<action colspan="4" height="220" name="%(action_account_analytic_line_to_invoice)d" string="Costs to invoice"/>
-				</xpath>  
+                  <xpath expr="/form/hpaned/child2/action[@string='Aged income']" position="after">
+                <action colspan="4" height="220" name="%(action_account_analytic_line_to_invoice)d" string="Costs to invoice"/>
+                </xpath>
             </field>
         </record>
     </data>

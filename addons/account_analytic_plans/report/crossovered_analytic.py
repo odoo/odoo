@@ -70,8 +70,8 @@ class crossovered_analytic(report_sxw.rml_parse):
         line_pool = self.pool.get('account.analytic.line')
 
         self.dict_acc_ref = {}
-        if form['journal_ids'][0][2]:
-            journal = " in (" + ','.join(map(lambda x: str(x), form['journal_ids'][0][2])) + ")"
+        if form['journal_ids']:
+            journal = " in (" + ','.join(map(lambda x: str(x), form['journal_ids'])) + ")"
         else:
             journal = 'is not null'
 
@@ -114,8 +114,8 @@ class crossovered_analytic(report_sxw.rml_parse):
         if not ids:
             ids = self.ids
 
-        if form['journal_ids'][0][2]:
-            journal=" in (" + ','.join(map(lambda x: str(x), form['journal_ids'][0][2])) + ")"
+        if form['journal_ids']:
+            journal=" in (" + ','.join(map(lambda x: str(x), form['journal_ids'])) + ")"
         else:
             journal= 'is not null'
 

@@ -30,8 +30,9 @@
 		<!-- Projects -->
         <record id="project_project_9" model="project.project">
             <field name="warn_manager">1</field>
-            <field name="name">Open ERP Integration</field>
-            <field name="manager" ref="base.user_root"/>
+            <field name="name">OpenERP Integration</field>
+            <field name="parent_id" ref="all_projects_account"/>
+            <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge')])]" name="type_ids"/>
         </record>
         <record id="project_project_21" model="project.project">
@@ -39,21 +40,20 @@
             <field name="priority">10</field>
             <field name="parent_id" ref="project_project_9"/>
             <field name="name">Study + Prototype</field>
-            <field name="manager" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development')])]" name="type_ids"/>
         </record>
         <record id="project_project_22" model="project.project">
             <field name="priority">20</field>
             <field name="parent_id" ref="project_project_9"/>
             <field name="name">Specific Developments</field>
-            <field name="manager" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'), ref('project_tt_development')])]" name="type_ids"/>
         </record>
         <record id="project_project_23" model="project.project">
             <field name="priority">30</field>
             <field name="parent_id" ref="project_project_9"/>
             <field name="name">Install, data import, configuration</field>
-            <field name="manager" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_development')])]" name="type_ids"/>
         </record>
 
@@ -100,7 +100,6 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Internal testing + Software Install</field>
-            <field name="date_deadline">2008-06-06</field>
         </record>
         <record id="project_task_188" model="project.task">
             <field name="sequence">17</field>
@@ -214,7 +213,6 @@
             <field name="project_id" ref="project_project_23"/>
             <field name="state">open</field>
             <field name="name">In house training</field>
-            <field name="date_deadline">2007-06-06</field>
         </record>
         <record id="project_task_202" model="project.task">
             <field name="sequence">50</field>
@@ -257,7 +255,6 @@
             <field name="name">Latest in house tests</field>
         </record>
         <record id="project_message_1" model="project.message">
-			<field name="date">2010-05-27</field>
 			<field name="project_id" ref="project.project_project_23"/>
 			<field name="user_id" ref="base.user_root"/>
 			<field name="description">Follow the procedure of Configuration wizard.

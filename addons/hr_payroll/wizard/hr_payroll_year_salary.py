@@ -33,7 +33,9 @@ class hr_payroll_year_salary(osv.osv_memory):
        }
 
    def _get_fiscalyear(self, cr, uid, ids, context=None):
-        fiscal_ids=self.pool.get('account.fiscalyear').search(cr,uid,[],context=context)
+        if context is None:
+            context = {}
+        fiscal_ids=self.pool.get('account.fiscalyear').search(cr, uid, [], context=context)
         if fiscal_ids:
             return fiscal_ids[0]
         return False
@@ -52,7 +54,8 @@ class hr_payroll_year_salary(osv.osv_memory):
          @param context: A standard dictionary
          @return : return report
         """
-
+        if context is None:
+            context = {}
         datas = {'ids': context.get('active_ids', [])}
 
         res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id','salary_on'], context=context)
@@ -62,7 +65,6 @@ class hr_payroll_year_salary(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'year.salary',
             'datas': datas,
-            'nodestroy':True,
        }
 
 hr_payroll_year_salary()

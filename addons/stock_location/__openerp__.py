@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -36,7 +36,7 @@ This module may be useful for different purposes:
    - Supplier Return
 * Manage products to be rent.
     """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['procurement','stock'],
     'init_xml': [],
     'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'mrp_pull_workflow.xml'],
@@ -48,5 +48,4 @@ This module may be useful for different purposes:
     'active': False,
     'certificate': '0046505115101',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

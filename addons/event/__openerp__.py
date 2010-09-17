@@ -24,7 +24,7 @@
     'name': 'Event',
     'version': '0.1',
     'category': 'Generic Modules/Association',
-    'description': """Organization and management of events.
+    'description': """Oraganization and management of Event.
 
     This module allow you
         * to manage your events and their registrations
@@ -32,24 +32,22 @@
         * ...
     A dashboard for associations that includes:
     * Registration by Events (graph)
-    * Next Events (list)
-    * Unpaid Invoices (list)
     Note that:
     - You can define new types of events in
                 Events / Configuration / Types of Events
     - You can access predefined reports about number of registration per event or per event category in:
                 Events / Reporting
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['crm', 'base_contact', 'account'],
-    'init_xml': ['event_data.xml'],
+    'init_xml': [],
     'update_xml': [
-        'wizard/event_confirm_registration_view.xml',
-        'event_view.xml',
-        'report/report_event_registration_view.xml',
-        'event_sequence.xml',
         'security/event_security.xml',
         'security/ir.model.access.csv',
+        'wizard/event_confirm_registration_view.xml',
+        'wizard/event_confirm_view.xml',
+        'event_view.xml',
+        'report/report_event_registration_view.xml',
         'wizard/event_make_invoice_view.xml',
         'wizard/partner_event_registration_view.xml',
         'board_association_view.xml',

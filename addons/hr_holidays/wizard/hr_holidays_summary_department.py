@@ -39,7 +39,9 @@ class hr_holidays_summary_dept(osv.osv_memory):
         }
 
     def print_report(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, [])[0]
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids, [], context=context)[0]
         if not data['depts']:
             raise osv.except_osv(_('Error'), _('You have to select at least 1 Department. And try again'))
         datas = {
@@ -51,7 +53,6 @@ class hr_holidays_summary_dept(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'holidays.summary',
             'datas': datas,
-            'nodestroy': True,
             }
 
 hr_holidays_summary_dept()

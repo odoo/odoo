@@ -28,7 +28,7 @@
     New Futures in Meeting:        
         *  Share meeting with other calendar clients like sunbird         
 """, 
-    'author': 'Tiny', 
+    'author': 'OpenERP SA', 
     'website': 'http://www.openerp.com', 
     'depends': ['caldav', 'crm'
                     ], 

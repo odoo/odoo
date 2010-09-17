@@ -31,11 +31,8 @@ class email_template_engines(osv.osv):
     _name = "email_template.engines"
     _description = "Email Template Engine"
 
-#    def __init__(self):
-#        print "Started Engine"
-
     def check(self):
-        print "Start self check"
+        pass
         
     def strip_html(self,text):
         #Removes HTML, Have to check if still relevent
@@ -71,7 +68,6 @@ class email_template_engines(osv.osv):
         #message: the complete text including placeholders
         #templateid: the template id of the template
         #context: TODO
-        #print cr,uid,id,message,templateid,context
         if message:
             logger = netsvc.Logger()
             def merge(match):
@@ -79,14 +75,11 @@ class email_template_engines(osv.osv):
                 obj_pool = self.pool.get(template.object_name.model)
                 obj = obj_pool.browse(cr, uid, id, context)
                 exp = str(match.group()[2:-2]).strip()
-                #print "level 1:",exp
                 exp_spl = exp.split('/')
-                #print "level 2:",exp_spl
                 try:
                     result = eval(exp_spl[0], {'object':obj,})
                 except:
                     result = "Rendering Error"
-                #print "result:",result
                 try:
                     if result in (None, False):
                         if len(exp_spl)>1:

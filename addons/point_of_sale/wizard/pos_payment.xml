@@ -12,16 +12,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Add payment :">
-				<group colspan="4" >
-				    <field name="amount" />
+				<group colspan="4" width="600" height="200">
 				    <field name="journal"/>
+				    <field name="amount" />
 				    <field name="payment_date" />
-				    <field name="payment_name" />
+				    <!--field name="payment_name" /-->
 				    <field name="invoice_wanted" />
 				    <field name="num_sale" />
 				    <field name="is_acc" />
-				    <group attrs="{'readonly':[('is_acc','=',False)]}" colspan="4" col="2">
+				    <group attrs="{'invisible':[('is_acc','=',False)]}" colspan="4" col="2">
 				    	<field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]"/>
+				    </group>
+				    <newline/>
+				    <group attrs="{'invisible':[('invoice_wanted','=',False)]}" colspan="4">
+				    	<field name="partner_id" attrs="{'required':[('invoice_wanted', '=', True)]}"  colspan="2"/>
+				    	<field name="pricelist_id" attrs="{'required':[('invoice_wanted', '=', True)]}" colspan="2"/>
 				    </group>
 				    <newline/>
 				    <group col="2" colspan="4">

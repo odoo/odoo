@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-06-14 13:39+0000\n"
-"Last-Translator: Marcel van der Boom (HS-Development BV) <marcel@hsdev.com>\n"
+"PO-Revision-Date: 2010-08-07 05:47+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:53+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -44,7 +44,7 @@ msgstr "terp-account"
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
@@ -284,7 +284,7 @@ msgstr "Order (bron)"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr ""
+msgstr "Eindtotaal:"
 
 #. module: stock
 #: view:stock.location:0
@@ -683,7 +683,7 @@ msgstr "Relatie locaties"
 #: help:stock.move,tracking_id:0
 msgid ""
 "Tracking lot is the code that will be put on the logistical unit/pallet"
-msgstr ""
+msgstr "Lotnummer is de identificatie voor de logistieke eenheid/pallet"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -879,7 +879,7 @@ msgstr "Alle voorraadbewegingen"
 #. module: stock
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave!"
 
 #. module: stock
 #: field:res.partner,property_stock_supplier:0
@@ -1046,7 +1046,7 @@ msgstr "Annuleer"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Split in production lots"
-msgstr "Splits in productie-eenheden"
+msgstr "Splits in productie-lots"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory
@@ -1230,7 +1230,7 @@ msgstr "STOCK_STOP"
 #. module: stock
 #: wizard_view:stock.move.track,init:0
 msgid "Tracking a move"
-msgstr "Volg een voorraadbeweging"
+msgstr "Tracking van een transactie"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1274,7 +1274,7 @@ msgstr "Transactieregels"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Value"
-msgstr ""
+msgstr "Waarde"
 
 #. module: stock
 #: field:stock.picking,type:0
@@ -1370,7 +1370,7 @@ msgstr "Factuurstatus"
 #. module: stock
 #: rml:lot.location:0
 msgid "Units"
-msgstr ""
+msgstr "Maateenh"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1415,7 +1415,7 @@ msgstr "Vaste locatie"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: stock
 #: field:stock.picking,min_date:0
@@ -1503,7 +1503,7 @@ msgstr "STOCK_SORT_DESCENDING"
 #: model:ir.actions.act_window,name:stock.action_tracking_form
 #: model:ir.ui.menu,name:stock.menu_action_tracking_form
 msgid "Tracking Lots"
-msgstr "Traceer eenheden"
+msgstr "Traceer lots"
 
 #. module: stock
 #: wizard_button:inventory.merge,init,merge:0
@@ -1639,7 +1639,7 @@ msgstr "STOCK_ZOOM_OUT"
 #. module: stock
 #: wizard_field:stock.move.track,init,tracking_prefix:0
 msgid "Tracking prefix"
-msgstr "Volgkengetal"
+msgstr "Traceer voorloper"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -2258,6 +2258,8 @@ msgid ""
 "Scheduled date for the movement of the products or real date if the move is "
 "done."
 msgstr ""
+"Geplande datum voor een verplaatsing van het product of de werkelijke datum "
+"als de verplaatsing reeds heeft plaatsgevonden."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2400,6 +2402,58 @@ msgstr "Fysieke locaties"
 #~ msgid "Stock Management"
 #~ msgstr "Voorraadbeheer"
 
+#, python-format
+#~ msgid "You cannot delete any record!"
+#~ msgstr "U kunt dit record niet verwijderen!"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Gebruikersfout"
+
+#, python-format
+#~ msgid "You can only delete draft moves."
+#~ msgstr "Er kunnen alleen concept-wijzigingen worden verwijderd."
+
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Factuur status"
+
+#, python-format
+#~ msgid "Delivered Qty"
+#~ msgstr "Geleverd aantal"
+
+#, python-format
+#~ msgid "Merging is only allowed on draft inventories."
+#~ msgstr "Samenvoegen is alleen toegestaan vanaf concept-facturen"
+
+#, python-format
+#~ msgid "Please select at least two inventories."
+#~ msgstr "Selecteer tenminste twee inventarisaties"
+
+#, python-format
+#~ msgid "You can not remove a lot line !"
+#~ msgstr "Een eenheidsregel kan niet worden verwijderd!"
+
+#, python-format
+#~ msgid "Provide the quantities of the returned products."
+#~ msgstr "Geeft de aantallen van de geretourneerde producten."
+
+#, python-format
+#~ msgid "Received Qty"
+#~ msgstr "Ontvangen aantal"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Fout"
+
+#, python-format
+#~ msgid "Products: "
+#~ msgstr "Producten: "
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Fout!"
+
 #~ msgid ""
 #~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
 #~ "structured stock locations.\n"
@@ -2428,3 +2482,68 @@ msgstr "Fysieke locaties"
 #~ "* Rapid detection of mistakes through double entry system\n"
 #~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
 #~ "    "
+
+#, python-format
+#~ msgid "No production sequence defined"
+#~ msgstr "Geen productievolgorde gedefinieerd"
+
+#, python-format
+#~ msgid "Error, no partner !"
+#~ msgstr "Fout, geen relatie!"
+
+#, python-format
+#~ msgid ""
+#~ "Please put a partner on the picking list if you want to generate invoice."
+#~ msgstr "Selecteer een relatie op een factuur aan te maken."
+
+#, python-format
+#~ msgid "Return lines"
+#~ msgstr "Retour regels"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Fout!"
+
+#, python-format
+#~ msgid "Unplanned Qty"
+#~ msgstr "Niet geplande aantal"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "te factureren"
+
+#, python-format
+#~ msgid "Produced Qty"
+#~ msgstr "Geproduceerd aantal"
+
+#, python-format
+#~ msgid "No product in this location."
+#~ msgstr "Geen producten op deze locatie"
+
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "Factuur is niet gegenereerd"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Waarschuwing"
+
+#, python-format
+#~ msgid "Message !"
+#~ msgstr "Bericht !"
+
+#, python-format
+#~ msgid "Invoice is already created."
+#~ msgstr "Factuur is reeds gegenereerd"
+
+#, python-format
+#~ msgid "Please select one and only one inventory !"
+#~ msgstr "Selecteer één voorraad locatie"
+
+#, python-format
+#~ msgid "P&L Qty"
+#~ msgstr "Winst&Verlies hoeveelheid"
+
+#, python-format
+#~ msgid "Invoice cannot be created from Packing."
+#~ msgstr "Factuur kan niet worden gegenereerd vanuit Pick-order"

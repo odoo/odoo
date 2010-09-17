@@ -34,9 +34,6 @@ from tools.translate import _
 # capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
 # unit_per_cycle : how many units are produced for one cycle
-#
-# TODO: Work Center may be recursive ?
-#
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -64,7 +61,7 @@ class mrp_production_workcenter_line(osv.osv):
         """
         res = {}
         for op in self.browse(cr, uid, ids, context=context):
-            res[op.id]= False
+            res[op.id] = False
             if op.date_planned:
                 d = DateTime.strptime(op.date_planned,'%Y-%m-%d %H:%M:%S')
                 i = self.pool.get('resource.calendar').interval_get(cr, uid, op.workcenter_id.calendar_id.id or False, d, op.hour or 0.0)
@@ -136,13 +133,14 @@ class mrp_production_workcenter_line(osv.osv):
 
     def write(self, cr, uid, ids, vals, context={}, update=True):
         result = super(mrp_production_workcenter_line, self).write(cr, uid, ids, vals, context=context)
+        prod_obj = self.pool.get('mrp.production')
         if vals.get('date_planned', False) and update:
             pids = {}
             pids2 = {}
             for prod in self.browse(cr, uid, ids, context=context):
                 if prod.production_id.workcenter_lines:
                     dstart = min(vals['date_planned'], prod.production_id.workcenter_lines[0]['date_planned'])
-                    self.pool.get('mrp.production').write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context, mini=False)
+                    prod_obj.write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context, mini=False)
         return result
 
     def action_draft(self, cr, uid, ids):
@@ -222,9 +220,8 @@ class mrp_production(osv.osv):
         @return: Super method
         """
         obj = self.browse(cr, uid, ids)[0]
+        wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
-            tmp = self.pool.get('mrp.production.workcenter.line').action_done(cr, uid, [workcenter_line.id])
-            wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
         return super(mrp_production,self).action_production_end(cr, uid, ids)
     
@@ -233,10 +230,8 @@ class mrp_production(osv.osv):
         @return: True 
         """        
         obj = self.browse(cr, uid, ids)[0]
-        workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
+        wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
-            workcenter_line_obj.action_start_working(cr, uid, [workcenter_line.id])
-            wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
         return super(mrp_production,self).action_in_production(cr, uid, ids)
     
@@ -245,9 +240,8 @@ class mrp_production(osv.osv):
         @return: Super method
         """
         obj = self.browse(cr, uid, ids)[0]
+        wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
-            tmp = self.pool.get('mrp.production.workcenter.line').action_cancel(cr, uid, [workcenter_line.id])
-            wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_cancel', cr)
         return super(mrp_production,self).action_cancel(cr,uid,ids)
 

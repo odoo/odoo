@@ -33,8 +33,10 @@ class hr_holidays_status(osv.osv):
     _description = "Leave Type"
 
     def get_days_cat(self, cr, uid, ids, category_id, return_false, context=None):
+        if context is None:
+            context = {}
         res = {}
-        for record in self.browse(cr, uid, ids, context):
+        for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = {}
             max_leaves = leaves_taken = 0
             if not return_false:
@@ -50,6 +52,8 @@ class hr_holidays_status(osv.osv):
         return res
 
     def get_days(self, cr, uid, ids, employee_id, return_false, context=None):
+        if context is None:
+            context = {}
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = {}
@@ -67,16 +71,18 @@ class hr_holidays_status(osv.osv):
         return res
 
     def _user_left_days(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
         return_false = False
         employee_id = False
         res = {}
-        
+
         if context and context.has_key('employee_id'):
             if not context['employee_id']:
                 return_false = True
             employee_id = context['employee_id']
         else:
-            employee_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
+            employee_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
             if employee_ids:
                 employee_id = employee_ids[0]
             else:
@@ -84,7 +90,7 @@ class hr_holidays_status(osv.osv):
         if employee_id:
             res = self.get_days(cr, uid, ids, employee_id, return_false, context=context)
         else:
-            res = dict.fromkeys(ids, {name: 0})
+            res = dict.fromkeys(ids, {'leaves_taken': 0, 'remaining_leaves': 0, 'max_leaves': 0})
         return res
 
     # To do: we can add remaining_leaves_category field to display remaining leaves for particular type
@@ -92,7 +98,7 @@ class hr_holidays_status(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Category', domain="[('object_id.model', '=', 'crm.meeting')]", help='If you link this type of leave with a category in the CRM, it will synchronize each leave asked with a case in this category, to display it in the company shared calendar for example.'),
         'color_name': fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
-        'limit': fields.boolean('Allow to Override Limit', help='If you thick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
+        'limit': fields.boolean('Allow to Override Limit', help='If you tick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
         'max_leaves': fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
         'leaves_taken': fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
@@ -112,7 +118,9 @@ class hr_holidays(osv.osv):
     _order = "type desc, date_from asc"
 
     def _employee_get(obj, cr, uid, context=None):
-        ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)])
+        if context is None:
+            context = {}
+        ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if ids:
             return ids[0]
         return False
@@ -152,13 +160,17 @@ class hr_holidays(osv.osv):
 
     def _create_resource_leave(self, cr, uid, vals, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
+        if context is None:
+            context = {}
         obj_res_leave = self.pool.get('resource.calendar.leaves')
-        return obj_res_leave.create(cr, uid, vals)
+        return obj_res_leave.create(cr, uid, vals, context=context)
 
     def _remove_resouce_leave(self, cr, uid, ids, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays cancel/removed'''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
-        leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)])
+        if context is None:
+            context = {}
+        leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)], context=context)
         return obj_res_leave.unlink(cr, uid, leave_ids)
 
     def create(self, cr, uid, vals, context=None):
@@ -231,6 +243,8 @@ class hr_holidays(osv.osv):
     _constraints = [(_check_date, 'Start date should not be larger than end date!\nNumber of Days should be greater than 1!', ['number_of_days_temp'])]
 
     def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         self._update_user_holidays(cr, uid, ids)
         self._remove_resouce_leave(cr, uid, ids, context=context)
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
@@ -252,9 +266,11 @@ class hr_holidays(osv.osv):
         return self.onchange_date_from(cr, uid, ids, date_to, date_from)
 
     def onchange_sec_id(self, cr, uid, ids, status, context=None):
+        if context is None:
+            context = {}
         warning = {}
         if status:
-            brows_obj = self.pool.get('hr.holidays.status').browse(cr, uid, [status])[0]
+            brows_obj = self.pool.get('hr.holidays.status').browse(cr, uid, [status], context=context)[0]
             if brows_obj.categ_id and brows_obj.categ_id.section_id and not brows_obj.categ_id.section_id.allow_unlink:
                 warning = {
                     'title': "Warning for ",
@@ -311,7 +327,7 @@ class hr_holidays(osv.osv):
                      }
                 self._create_resource_leave(cr, uid, vals)
             elif record.holiday_type == 'category' and record.type == 'remove':
-                emp_ids = obj_emp.search(cr, uid, [('category_id', '=', record.category_id.id)])
+                emp_ids = obj_emp.search(cr, uid, [('category_ids', '=', record.category_id.id)])
                 for emp in obj_emp.browse(cr, uid, emp_ids):
                     vals = {
                        'name': record.name,
@@ -369,6 +385,9 @@ class hr_holidays(osv.osv):
         return True
 
     def check_holidays(self, cr, uid, ids):
+        holi_status_obj = self.pool.get('hr.holidays.status')
+        emp_obj = self.pool.get('hr.employee')
+        meeting_obj = self.pool.get('crm.meeting')
         for record in self.browse(cr, uid, ids):
             if not record.number_of_days:
                 raise osv.except_osv(_('Warning!'), _('Wrong leave definition.'))
@@ -376,14 +395,14 @@ class hr_holidays(osv.osv):
                 leave_asked = record.number_of_days
                 if leave_asked < 0.00:
                     if not record.holiday_status_id.limit:
-                        leaves_rest = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
+                        leaves_rest = holi_status_obj.get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                         if leaves_rest < -(leave_asked):
                             raise osv.except_osv(_('Warning!'),_('You Cannot Validate leaves while available leaves are less than asked leaves.'))
             elif record.holiday_type == 'category' and record.category_id:
                 leave_asked = record.number_of_days
                 if leave_asked < 0.00:
                     if not record.holiday_status_id.limit:
-                        leaves_rest = self.pool.get('hr.holidays.status').get_days_cat(cr, uid, [record.holiday_status_id.id], record.category_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
+                        leaves_rest = holi_status_obj.get_days_cat(cr, uid, [record.holiday_status_id.id], record.category_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                         if leaves_rest < -(leave_asked):
                             raise osv.except_osv(_('Warning!'),_('You Cannot Validate leaves while available leaves are less than asked leaves.'))
             else:# This condition will never meet!!
@@ -401,10 +420,10 @@ class hr_holidays(osv.osv):
                     'allocation_type': record.allocation_type,
                     'parent_id': record.id,
                 }
-                employee_ids = self.pool.get('hr.employee').search(cr, uid, [])
+                employee_ids = emp_obj.search(cr, uid, [])
                 for employee in employee_ids:
                     vals['employee_id'] = employee
-                    user_id = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
+                    user_id = emp_obj.search(cr, uid, [('user_id','=',uid)])
                     if user_id:
                         vals['user_id'] = user_id[0]
                     holiday_ids.append(self.create(cr, uid, vals, context=None))
@@ -435,7 +454,7 @@ class hr_holidays(osv.osv):
                     'user_id' : record.user_id.id,
                     'date' : record.date_from,
                 }
-                case_id = self.pool.get('crm.meeting').create(cr, uid, vals)
+                case_id = meeting_obj.create(cr, uid, vals)
                 self.write(cr, uid, ids, {'case_id': case_id})
 
         return True

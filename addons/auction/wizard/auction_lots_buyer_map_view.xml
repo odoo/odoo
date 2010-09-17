@@ -10,15 +10,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 				<form string="Buyer Map" >
+				    <separator string="Map " colspan="4"/>
 				    <field name="ach_login" colspan="4"/>
 				    <newline/>
 				    <field name="ach_uid" colspan="4"/>
 				    <separator colspan="4"/>
 				    <group col="4" colspan="4">
-				    	<button icon='gtk-cancel' special="cancel"
-                			string="Exit" />
+				        
+				    	<button icon='gtk-close' special="cancel"
+                			string="Close" />
                 		<button name="buyer_map_set" string="Update"
-                			colspan="2" type="object" icon="gtk-go-forward" />
+                			 type="object" icon="gtk-go-forward" />
 				    </group>
 				</form>
 			</field>

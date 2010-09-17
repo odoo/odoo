@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-02-13 12:16+0000\n"
-"Last-Translator: Oktay Altunergil <Unknown>\n"
+"PO-Revision-Date: 2010-08-15 09:57+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 03:56+0000\n"
+"X-Launchpad-Export-Date: 2010-08-16 06:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -88,12 +88,14 @@ msgid "Stockable Stock"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.procurement,origin:0 field:mrp.production,origin:0
+#: field:mrp.procurement,origin:0
+#: field:mrp.production,origin:0
 msgid "Origin"
 msgstr "Menşei"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_configuration view:res.company:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_configuration
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Ayarlar"
 
@@ -168,7 +170,8 @@ msgstr "Otomatik Satınalmalar"
 
 #. module: mrp
 #: wizard_field:change_production_qty,confirm,product_qty:0
-#: field:mrp.bom,product_qty:0 field:mrp.production,product_qty:0
+#: field:mrp.bom,product_qty:0
+#: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "Ürün Mik."
@@ -254,7 +257,8 @@ msgid "Internal Ref."
 msgstr "Dahili Ref."
 
 #. module: mrp
-#: view:mrp.procurement:0 field:mrp.procurement,state:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,state:0
 #: field:mrp.production,state:0
 msgid "Status"
 msgstr "Durum"
@@ -294,19 +298,22 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_action view:mrp.production:0
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
+#: view:mrp.production:0
 msgid "Production Orders"
 msgstr "Üretim Emirleri"
 
 #. module: mrp
-#: rml:bom.structure:0 field:mrp.procurement,product_qty:0
+#: rml:bom.structure:0
+#: field:mrp.procurement,product_qty:0
 #: rml:mrp.production.order:0
 #: wizard_field:product.product.procurement,init,qty:0
 msgid "Quantity"
 msgstr "Miktar"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Not urgent"
 msgstr "Acil Değil"
 
@@ -352,7 +359,8 @@ msgid "Scheduled Date"
 msgstr "Planlanan Tarih"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Urgent"
 msgstr "Acil"
 
@@ -459,7 +467,8 @@ msgid "Stockable Product Stock"
 msgstr "Stoklanabilir Ürün Stoğ"
 
 #. module: mrp
-#: field:mrp.bom,product_uos:0 field:mrp.production.product.line,product_uos:0
+#: field:mrp.bom,product_uos:0
+#: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
 msgstr "Stok 2.Birim"
 
@@ -579,8 +588,10 @@ msgid "Waiting"
 msgstr "Bekliyor"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_routing field:mrp.bom,routing_id:0
-#: field:mrp.production,routing_id:0 view:mrp.routing:0
+#: model:ir.model,name:mrp.model_mrp_routing
+#: field:mrp.bom,routing_id:0
+#: field:mrp.production,routing_id:0
+#: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
 msgstr "Rota"
@@ -653,7 +664,8 @@ msgid "Production orders"
 msgstr "Üretim Emirleri"
 
 #. module: mrp
-#: field:mrp.bom,child_complete_ids:0 field:mrp.bom,child_ids:0
+#: field:mrp.bom,child_complete_ids:0
+#: field:mrp.bom,child_ids:0
 msgid "BoM Hyerarchy"
 msgstr ""
 
@@ -679,7 +691,8 @@ msgid "Security Days"
 msgstr "Emniyet Günü"
 
 #. module: mrp
-#: view:mrp.production:0 field:mrp.production,cycle_total:0
+#: view:mrp.production:0
+#: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
 msgstr "Toplam Çevrim"
 
@@ -737,7 +750,9 @@ msgid "Production done"
 msgstr "Üretim Tamamlandı"
 
 #. module: mrp
-#: rml:bom.structure:0 field:mrp.bom,code:0 field:mrp.routing,code:0
+#: rml:bom.structure:0
+#: field:mrp.bom,code:0
+#: field:mrp.routing,code:0
 #: field:mrp.workcenter,code:0
 msgid "Code"
 msgstr "Kodu"
@@ -749,7 +764,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0
+#: field:mrp.property.group,name:0
 msgid "Property Group"
 msgstr "Özellik Grubu"
 
@@ -764,12 +780,14 @@ msgid "References"
 msgstr "Referanslar"
 
 #. module: mrp
-#: wizard_button:change_production_qty,confirm,end:0 view:mrp.procurement:0
+#: wizard_button:change_production_qty,confirm,end:0
+#: view:mrp.procurement:0
 #: selection:mrp.procurement,state:0
 #: wizard_button:mrp.procurement.compute,init,end:0
 #: wizard_button:mrp.procurement.compute.all,init,end:0
 #: wizard_button:mrp.procurement.orderpoint.compute,init,end:0
-#: view:mrp.production:0 wizard_button:mrp.workcenter.load,init,end:0
+#: view:mrp.production:0
+#: wizard_button:mrp.workcenter.load,init,end:0
 #: wizard_button:product.product.procurement,init,end:0
 #: wizard_button:product_price,init,end:0
 msgid "Cancel"
@@ -851,10 +869,14 @@ msgid "Nbr of cycle"
 msgstr "Çevrim Sayısı"
 
 #. module: mrp
-#: field:mrp.bom,name:0 field:mrp.procurement,name:0
-#: rml:mrp.production.order:0 field:mrp.production.product.line,name:0
-#: field:mrp.property,name:0 field:mrp.routing,name:0
-#: field:mrp.routing.workcenter,name:0 field:stock.warehouse.orderpoint,name:0
+#: field:mrp.bom,name:0
+#: field:mrp.procurement,name:0
+#: rml:mrp.production.order:0
+#: field:mrp.production.product.line,name:0
+#: field:mrp.property,name:0
+#: field:mrp.routing,name:0
+#: field:mrp.routing.workcenter,name:0
+#: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
 msgstr "Adı"
 
@@ -964,7 +986,8 @@ msgid "Notes"
 msgstr "Notlar"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:0
+#: model:ir.model,name:mrp.model_mrp_bom
+#: view:mrp.bom:0
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
 msgstr "Ürün Ağacı"
@@ -1025,7 +1048,8 @@ msgid "Sale Ref"
 msgstr "Satış Ref."
 
 #. module: mrp
-#: field:mrp.procurement,priority:0 field:mrp.production,priority:0
+#: field:mrp.procurement,priority:0
+#: field:mrp.production,priority:0
 #: rml:mrp.production.order:0
 msgid "Priority"
 msgstr "Öncelik"
@@ -1054,7 +1078,8 @@ msgstr "Araç"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
-msgid "Location where the system will look for products used in raw materials."
+msgid ""
+"Location where the system will look for products used in raw materials."
 msgstr ""
 
 #. module: mrp
@@ -1089,7 +1114,8 @@ msgid "Max Quantity"
 msgstr "Max Miktar"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_procurement view:mrp.procurement:0
+#: model:ir.model,name:mrp.model_mrp_procurement
+#: view:mrp.procurement:0
 msgid "Procurement"
 msgstr "Satınalma"
 
@@ -1139,7 +1165,8 @@ msgid "Procurement for raw materials."
 msgstr "Hammaddeler için Satınalma"
 
 #. module: mrp
-#: view:mrp.procurement:0 field:mrp.procurement,note:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,note:0
 #: rml:mrp.production.order:0
 msgid "Note"
 msgstr "Not"
@@ -1165,8 +1192,10 @@ msgid "Define a routing to describe the manufacturing steps."
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,active:0 field:mrp.routing,active:0
-#: field:mrp.workcenter,active:0 field:stock.warehouse.orderpoint,active:0
+#: field:mrp.bom,active:0
+#: field:mrp.routing,active:0
+#: field:mrp.workcenter,active:0
+#: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr "Aktif"
 
@@ -1179,18 +1208,23 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action_prop
-#: view:mrp.bom:0 field:mrp.bom,property_ids:0 view:mrp.procurement:0
-#: field:mrp.procurement,property_ids:0 view:mrp.property:0
+#: view:mrp.bom:0
+#: field:mrp.bom,property_ids:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,property_ids:0
+#: view:mrp.property:0
 msgid "Properties"
 msgstr "Özellikler"
 
 #. module: mrp
-#: field:mrp.procurement,date_planned:0 field:mrp.production,date_planned:0
+#: field:mrp.procurement,date_planned:0
+#: field:mrp.production,date_planned:0
 msgid "Scheduled date"
 msgstr "Planlanan Tarih"
 
 #. module: mrp
-#: view:mrp.procurement:0 view:mrp.production:0
+#: view:mrp.procurement:0
+#: view:mrp.production:0
 msgid "Extra Information"
 msgstr "Extra Bilgi"
 
@@ -1238,7 +1272,8 @@ msgid "Change Product Qty."
 msgstr "Ürün Miktarını Değiştir"
 
 #. module: mrp
-#: selection:mrp.procurement,state:0 selection:mrp.production,state:0
+#: selection:mrp.procurement,state:0
+#: selection:mrp.production,state:0
 msgid "Done"
 msgstr "Bitti"
 
@@ -1284,15 +1319,18 @@ msgid "Capacity per Cycle"
 msgstr "Bant Kapasitesi"
 
 #. module: mrp
-#: field:mrp.bom,product_id:0 field:mrp.procurement,product_id:0
-#: field:mrp.production,product_id:0 rml:mrp.production.order:0
+#: field:mrp.bom,product_id:0
+#: field:mrp.procurement,product_id:0
+#: field:mrp.production,product_id:0
+#: rml:mrp.production.order:0
 #: field:mrp.production.product.line,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
 msgstr "Ürün"
 
 #. module: mrp
-#: view:mrp.production:0 field:mrp.production,hour_total:0
+#: view:mrp.production:0
+#: field:mrp.production,hour_total:0
 msgid "Total Hours"
 msgstr "Toplam Saat"
 
@@ -1307,7 +1345,8 @@ msgid "Product BoM Structure"
 msgstr "Ürün BOM Yapısı"
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0 field:mrp.production,product_uom:0
+#: field:mrp.bom,product_uom:0
+#: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
@@ -1331,12 +1370,14 @@ msgid "Product type is Stockable and procure method is make to stock"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
+#: help:mrp.bom,date_start:0
+#: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
 msgstr ""
 
 #. module: mrp
-#: field:mrp.procurement,product_uos:0 field:mrp.production,product_uos:0
+#: field:mrp.procurement,product_uos:0
+#: field:mrp.production,product_uos:0
 msgid "Product UoS"
 msgstr "Stok 2.Birim"
 
@@ -1348,12 +1389,14 @@ msgstr "Birim"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: field:mrp.production.workcenter.line,workcenter_id:0
-#: field:mrp.routing.workcenter,workcenter_id:0 view:mrp.workcenter:0
+#: field:mrp.routing.workcenter,workcenter_id:0
+#: view:mrp.workcenter:0
 msgid "Workcenter"
 msgstr "İş Merkezi"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Very Urgent"
 msgstr "Çok Acil"
 
@@ -1391,7 +1434,8 @@ msgid "Stockable Order Request"
 msgstr "Stoklanabilir Sipairş Talebi"
 
 #. module: mrp
-#: view:mrp.production:0 view:mrp.production.product.line:0
+#: view:mrp.production:0
+#: view:mrp.production.product.line:0
 msgid "Scheduled Products"
 msgstr "Planlanan Ürünler"
 
@@ -1417,7 +1461,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
-#: view:mrp.production:0 rml:mrp.production.order:0
+#: view:mrp.production:0
+#: rml:mrp.production.order:0
 msgid "Work Orders"
 msgstr "İş Emirleri"
 
@@ -1648,7 +1693,8 @@ msgid "plus"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0 field:mrp.procurement,bom_id:0
+#: field:mrp.bom.revision,bom_id:0
+#: field:mrp.procurement,bom_id:0
 msgid "BoM"
 msgstr ""
 
@@ -1691,7 +1737,8 @@ msgid "last indice"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,revision_ids:0 view:mrp.bom.revision:0
+#: field:mrp.bom,revision_ids:0
+#: view:mrp.bom.revision:0
 msgid "BoM Revisions"
 msgstr "BoM Revizyonları"
 
@@ -1701,12 +1748,14 @@ msgid "Retry"
 msgstr "Tekrar Dene"
 
 #. module: mrp
-#: selection:mrp.procurement,state:0 selection:mrp.production,state:0
+#: selection:mrp.procurement,state:0
+#: selection:mrp.production,state:0
 msgid "Draft"
 msgstr "Taslak"
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0 selection:mrp.production,priority:0
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
 msgid "Normal"
 msgstr "Normal"
 
@@ -1760,8 +1809,11 @@ msgid "from stock"
 msgstr "Stoktan"
 
 #. module: mrp
-#: view:mrp.bom:0 view:mrp.property:0 view:mrp.property.group:0
-#: view:mrp.routing:0 view:mrp.routing.workcenter:0
+#: view:mrp.bom:0
+#: view:mrp.property:0
+#: view:mrp.property.group:0
+#: view:mrp.routing:0
+#: view:mrp.routing.workcenter:0
 msgid "General Information"
 msgstr "Genel Bilgiler"
 
@@ -1814,10 +1866,14 @@ msgid "Change Product Qty"
 msgstr "Ürün Miktarını Değiştir"
 
 #. module: mrp
-#: field:mrp.bom.revision,description:0 view:mrp.property:0
-#: field:mrp.property,description:0 field:mrp.property.group,description:0
-#: view:mrp.routing:0 field:mrp.routing,note:0
-#: field:mrp.routing.workcenter,note:0 view:mrp.workcenter:0
+#: field:mrp.bom.revision,description:0
+#: view:mrp.property:0
+#: field:mrp.property,description:0
+#: field:mrp.property.group,description:0
+#: view:mrp.routing:0
+#: field:mrp.routing,note:0
+#: field:mrp.routing.workcenter,note:0
+#: view:mrp.workcenter:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "Açıklama"
@@ -1875,7 +1931,8 @@ msgid "On Stock"
 msgstr "Stokta"
 
 #. module: mrp
-#: field:mrp.bom,sequence:0 rml:mrp.production.order:0
+#: field:mrp.bom,sequence:0
+#: rml:mrp.production.order:0
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0
 msgid "Sequence"
@@ -1934,3 +1991,8 @@ msgstr "Haftalık Stok Değer Farkları"
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
 msgstr "Stok Değer Farkı"
+
+#. module: mrp
+#: view:board.board:0
+msgid "Next production orders"
+msgstr ""

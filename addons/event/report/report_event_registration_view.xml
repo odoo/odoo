@@ -7,7 +7,7 @@
             <field name="model">report.event.registration</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Event on Registration">
+                <tree colors="blue:state in ('draft');black:state in ('confirm','approved');gray:state in('done','cancel')" string="Event on Registration">
                     <field name="date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="speaker_id" invisible="1"/>
@@ -124,7 +124,7 @@
        </record>
 
         <!--<menuitem parent="menu_report_event" action="action_event_registration" id="menu_report_event_registration"/>-->
-        <menuitem parent="menu_report_event" action="action_report_event_registration" id="menu_report_event_registration" />
+        <menuitem parent="base.menu_report_association" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="base.group_system,base.group_marketing_manager"/>
 
     <!-- end...  -->
     </data>

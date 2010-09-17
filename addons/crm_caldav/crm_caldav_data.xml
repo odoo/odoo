@@ -32,7 +32,7 @@
         <record model="basic.calendar.fields" id="map_event_0">
             <field name="name" ref="caldav.field_event_organizer"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','organizer_id'),('model_id.model','=','calendar.event')]" />
+	        <field name="field_id" search="[('name','=','organizer'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 

@@ -20,14 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-from tools.misc import UpdateableStr, UpdateableDict
 from tools.translate import _
-import netsvc
-import pooler
-import time
-import wizard
-
 
 class stock_fill_inventory(osv.osv_memory):
     _name = "stock.fill.inventory"

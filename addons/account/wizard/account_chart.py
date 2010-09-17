@@ -33,7 +33,7 @@ class account_chart(osv.osv_memory):
                                     help = 'Keep empty for all open fiscal years'),
        'target_move': fields.selection([('all', 'All Entries'),
                                         ('posted', 'All Posted Entries')], 'Target Moves', required = True),
-              }
+    }
 
     def _get_fiscalyear(self, cr, uid, context=None):
         """Return default Fiscalyear value"""

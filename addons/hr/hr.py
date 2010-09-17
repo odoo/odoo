@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import os
 
 from osv import fields, osv
@@ -78,13 +79,25 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'Open'),('old', 'Old'),('recruit', 'In Recruitement')], 'State', required=True),
+        'state': fields.selection([('open', 'Open'),('old', 'Old'),('recruit', 'In Recruitement')], 'State', readonly=True, required=True),
     }
     _defaults = {
         'expected_employees': 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
         'state': 'open'
     }
+
+    def job_old(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'old'})
+        return True
+
+    def job_recruitement(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'recruit'})
+        return True
+
+    def job_open(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'open'})
+        return True
 
 hr_job()
 
@@ -102,18 +115,18 @@ class hr_employee(osv.osv):
         'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
         'bank_account': fields.char('Bank Account', size=64),
         'partner_id': fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', readonly=True),
-        'department_id':fields.many2one('hr.department','Department'),
+        'department_id':fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
         'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone', readonly=True),
         'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail', readonly=True),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
-        'parent_id': fields.many2one('hr.employee', 'Manager', select=True),
-        'category_id': fields.many2one('hr.employee.category', 'Category'),
+        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True),
+        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel','category_id','emp_id','Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
-        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade'),
-        'coach_id': fields.many2one('res.users', 'Coach'),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
+        'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo')
     }
@@ -131,17 +144,34 @@ class hr_employee(osv.osv):
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee where id IN %s',(tuple(ids),))
+            cr.execute('SELECT DISTINCT parent_id FROM hr_employee WHERE id IN %s AND parent_id!=id',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
         return True
 
+    def _check_department_id(self, cr, uid, ids, context=None):
+        for emp in self.browse(cr, uid, ids, context=context):
+            if emp.department_id.manager_id and emp.id == emp.department_id.manager_id.id:
+                return False
+        return True
+
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
+        (_check_department_id, 'Error ! You cannot select a department for which the employee is the manager.', ['department_id']),
     ]
 
 hr_employee()
+
+class hr_department(osv.osv):
+    _description = "Department"
+    _inherit = 'hr.department'
+    _columns = {
+        'manager_id': fields.many2one('hr.employee', 'Manager'),
+        'member_ids': fields.one2many('hr.employee', 'department_id', 'Members'),
+    }
+
+hr_department()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

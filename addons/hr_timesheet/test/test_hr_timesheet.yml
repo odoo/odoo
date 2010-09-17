@@ -1,9 +1,9 @@
-- |
-  In order to test hr_timesheet Module in OpenERP, I make "Sign In or Sign Out for Project" to encode and
-  track  time spent on the different projects.
+-
+  In order to test hr_timesheet Module in OpenERP, I make "Sign In/Sign Out for Project" to encode and
+  track time spent on the different projects.
 
-- |
-  Now, I  create a new employee “Mark Johnson” to test Timesheet.
+-
+  I  create a new employee “Mark Johnson” to test Timesheet.
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
     address_home_id: base.res_partner_address_1
@@ -13,24 +13,24 @@
     name: Mark Johnson
     user_id: base.user_root
 
-- |
-  I create new user "user1" which is assigned to employee.
+-
+  I create new user "user1".
 -
   !record {model: res.users, id: res_users_user0}:
     company_id: base.main_company
     context_lang: en_US
     groups_id:
-      - hr.group_hr_user
-      - hr_attendance.group_hr_attendance
+      - base.group_hr_user
+      - base.group_hr_attendance
       - base.group_user
       - base.group_extended
-      - hr.group_hr_manager
+      - base.group_hr_manager
     login: user1
     name: user1
     password: user1
 
-- |
-  I create another employee "Francline" as "user1".
+-
+  I create another new employee "Francline" as "user1".
 -
   !record {model: hr.employee, id: hr_employee_fracline1}:
     address_home_id: base.res_partner_address_8
@@ -38,16 +38,16 @@
     parent_id: 'hr_employee_employee0'
     user_id: 'res_users_user0'
 
-- |
-  Given that I have Timesheet journal for employee.
+-
+  I create Timesheet journal for employee.
 -
   !record {model: account.analytic.journal, id: analytic_journal}:
     code: TS
     name: Timesheet Journal
     type: general
 
-- |
-  Given that I have product for "Consultancy - Senior Developer".
+-
+  I create a product as "Consultancy - Senior Developer".
 -
   !record {model: product.product, id: product_consultant}:
     categ_id: product.product_category_10
@@ -62,42 +62,41 @@
     uom_id: product.uom_hour
     uom_po_id: product.uom_hour
 
-- |
-  I assing product and journal to  "Mark Johnson"
+-
+  I assigned product and journal to  "Mark Johnson"
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
     product_id: product_consultant
     journal_id: analytic_journal
-- |
-  And also assing product and journal to "francline" employee.
+-
+  I assigned product and journal to "Francline".
 -
   !record {model: hr.employee, id: hr_employee_fracline1}:
     product_id: product_consultant
     journal_id: analytic_journal
-- |
-  Now , When I  came in office , I create Attendances and perform "Sign In" action with proper reason.
+-
+  I create attendance and perform "Sign In" action with proper reason.
 -
   !record {model: hr.attendance, id: hr_attendance_0}:
     action: sign_in
     employee_id: 'hr_employee_fracline1'
     name: '2010-05-26 10:08:08'
 
-- |
-  When I left office , I create attendance and perform "Sign Out".
+-
+  I create attendance and perform "Sign Out" action.
 -
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr_employee_fracline1'
     name: '2010-05-26 15:10:55'
 
-
-- |
-  I start by "Sign In/Sign Out by Project" wizard and click on "Sign In/Sign Out" button of this wizard.
+-
+  On "Sign In/Sign Out by Project" wizard i click on "Sign In/Sign Out" button of this wizard.
 -
   !python {model: hr.sign.in.project}: |
     uid = ref('res_users_user0')
     self.check_state(cr, uid, [ref("hr_employee_fracline1")], {"active_ids": [ref("hr_timesheet.menu_hr_timesheet_sign_in")]})
-- |
+-
   I select start date and Perform start work on project.
 -
   !python {model: hr.sign.in.project}: |
@@ -105,8 +104,8 @@
       new_id = self.create(cr, uid, {'emp_id': 'hr_employee_fracline1', 'name': 'Francline', 'server_date': '2010-06-08 19:50:54', 'state': 'absent'})
       self.sign_in_result(cr, uid, [new_id], context)
 
-- |
-  My work is done and I want to stop work.for that I click on  "Sign In/Sign Out" button of "Sign In/Sign Out by Project" wizard.
+-
+  To stop work I click on "Sign In/Sign Out" button of "Sign In/Sign Out by Project" wizard.
   Which check state in hr attendace form for user.
 -
   !python {model: hr.sign.in.project}: |
@@ -115,11 +114,9 @@
        self.check_state(cr, uid, ids, {"active_ids": [ref("hr_timesheet.menu_hr_timesheet_sign_in")]
              })
 
-- |
-  This will Open "hr sign out project" form. I select analytical project2 development account.
-- 
-  For that I Creating a analytic account.
-- 
+-
+  I Create an analytic account "Project2".
+-
   !record {model: account.analytic.account, id: account_analytic_account_project0}:
     company_id: base.main_company
     name: Project2
@@ -127,8 +124,8 @@
     quantity_max: 0.0
     state: open
 
-- |
-  My work for this project is over and I stop work by click on "Stop Work" button of this wizard.
+-
+  My work for this project is over and I stop working by clicking on "Stop Work" button of this wizard.
 -
   !python {model: hr.sign.out.project}: |
        import time

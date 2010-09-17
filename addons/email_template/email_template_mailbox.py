@@ -37,7 +37,7 @@ class email_template_mailbox(osv.osv):
     
     def run_mail_scheduler(self, cursor, user, context=None):
         """
-        This method is called by Open ERP Scheduler
+        This method is called by OpenERP Scheduler
         to periodically send emails
         """
         try:

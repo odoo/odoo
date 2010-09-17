@@ -27,7 +27,7 @@ class project_issue(osv.osv):
     _description = 'project issue'
     _columns = {
         'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
-        'analytic_account_id': fields.related('project_id', 'category_id', string='Analytic Account')
+        'analytic_account_id': fields.related('project_id', 'analytic_account_id', type='many2one', relation='account.analytic.account',string='Analytic Account')
     }
     
 project_issue()

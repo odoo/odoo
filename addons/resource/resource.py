@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import mx.DateTime
+from datetime import datetime, timedelta
 import time
 import math
 
@@ -31,7 +31,7 @@ class resource_calendar(osv.osv):
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
         'company_id' : fields.many2one('res.company', 'Company', required=False),
-        'week_id' : fields.one2many('resource.calendar.week', 'calendar_id', 'Working Time'),
+        'attendance_ids' : fields.one2many('resource.calendar.attendance', 'calendar_id', 'Working Time'),
         'manager' : fields.many2one('res.users', 'Workgroup manager'),
     }
     _defaults = {
@@ -46,17 +46,18 @@ class resource_calendar(osv.osv):
         res_leaves = resource_cal_leaves.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
         
         for leave in res_leaves:
-            dtf = mx.DateTime.strptime(leave['date_from'], '%Y-%m-%d %H:%M:%S')
-            dtt = mx.DateTime.strptime(leave['date_to'], '%Y-%m-%d %H:%M:%S')
+            dtf = datetime.strptime(leave['date_from'], '%Y-%m-%d %H:%M:%S')
+            dtt = datetime.strptime(leave['date_to'], '%Y-%m-%d %H:%M:%S')
             no = dtt - dtf
-            [dt_leave.append((dtf + mx.DateTime.RelativeDateTime(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
+            [dt_leave.append((dtf + timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
             dt_leave.sort()
         
         return dt_leave
     
     def interval_min_get(self, cr, uid, id, dt_from, hours, resource=False):
         if not id:
-            return [(dt_from - mx.DateTime.RelativeDateTime(hours=int(hours)*3), dt_from)]
+            td = int(hours)*3
+            return [(dt_from - timedelta(hours=td), dt_from)]
         dt_leave = self._get_leaves(cr, uid, id, resource)
         dt_leave.reverse()
         todo = hours
@@ -65,7 +66,7 @@ class resource_calendar(osv.osv):
         maxrecur = 100
         current_hour = dt_from.hour
         while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from desc", (dt_from.day_of_week,id))
+            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from desc", (dt_from.weekday(),id))
             for (hour_from,hour_to) in cr.fetchall():
                 leave_flag  = False
                 if (hour_from<current_hour) and (todo>0):
@@ -75,17 +76,17 @@ class resource_calendar(osv.osv):
                     dt_check = dt_from.strftime('%Y-%m-%d')
                     for leave in dt_leave:
                         if dt_check == leave:
-                            dt_check = mx.DateTime.strptime(dt_check,"%Y-%m-%d") - mx.DateTime.RelativeDateTime(days=1)
+                            dt_check = datetime.strptime(dt_check, '%Y-%m-%d') + timedelta(days=1)
                             leave_flag = True
                     if leave_flag:
                         break
                     else:
-                        d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_from)), int((hour_from%1) * 60))
-                        d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
+                        d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_from)), int((hour_from%1) * 60))
+                        d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
                         result.append((d1, d2))
                         current_hour = hour_from
                         todo -= (m-hour_from)
-            dt_from -= mx.DateTime.RelativeDateTime(days=1)
+            dt_from -= timedelta(days=1)
             current_hour = 24
             maxrecur -= 1
         result.reverse()
@@ -93,7 +94,8 @@ class resource_calendar(osv.osv):
 
     def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
         if not id:
-            return [(dt_from,dt_from + mx.DateTime.RelativeDateTime(hours=int(hours)*3))]
+            td = int(hours)*3
+            return [(dt_from, dt_from + timedelta(hours=td))]
         dt_leave = self._get_leaves(cr, uid, id, resource)
         todo = hours
         cycle = 0
@@ -101,7 +103,7 @@ class resource_calendar(osv.osv):
         maxrecur = 100
         current_hour = dt_from.hour
         while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
+            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.weekday(),id))
             for (hour_from,hour_to) in cr.fetchall():
                 leave_flag  = False
                 if (hour_to>current_hour) and (todo>0):
@@ -111,17 +113,17 @@ class resource_calendar(osv.osv):
                     dt_check = dt_from.strftime('%Y-%m-%d')
                     for leave in dt_leave:
                         if dt_check == leave:
-                            dt_check = mx.DateTime.strptime(dt_check, "%Y-%m-%d") + mx.DateTime.RelativeDateTime(days=1)
+                            dt_check = datetime.strptime(dt_check, '%Y-%m-%d') + timedelta(days=1)
                             leave_flag = True
                     if leave_flag:
                         break
                     else:
-                        d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
-                        d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
+                        d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
+                        d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
                         result.append((d1, d2))
                         current_hour = hour_to
                         todo -= (hour_to - m)
-            dt_from += mx.DateTime.RelativeDateTime(days=1)
+            dt_from += timedelta(days=1)
             current_hour = 0
             maxrecur -= 1
         return result
@@ -136,7 +138,7 @@ class resource_calendar(osv.osv):
         current_hour = dt_from.hour
 
         while (dt_from <= dt_to):
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
+            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.weekday(),id))
             der =  cr.fetchall()
             for (hour_from,hour_to) in der:
                 if hours != 0.0:#For first time of the loop only,hours will be 0
@@ -146,31 +148,31 @@ class resource_calendar(osv.osv):
                     dt_check = dt_from.strftime('%Y-%m-%d')
                     for leave in dt_leave:
                         if dt_check == leave:
-                            dt_check = mx.DateTime.strptime(dt_check, "%Y-%m-%d") + mx.DateTime.RelativeDateTime(days=1)
+                            dt_check = datetime.strptime(dt_check, "%Y-%m-%d") + timedelta(days=1)
                             leave_flag = True
                     
                     if leave_flag:
                         break
                     else:
                         d1 = dt_from
-                        d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
+                        d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
                         
                         if hours != 0.0:#For first time of the loop only,hours will be 0
-                            d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(current_hour)), int((current_hour%1) * 60))
+                            d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(current_hour)), int((current_hour%1) * 60))
                             
                         if dt_from.day == dt_to.day:
                             if hour_from <= dt_to.hour <= hour_to:
                                 d2 = dt_to
                         dt_from = d2
                         hours += (d2-d1).seconds
-            dt_from = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(current_hour)), int((current_hour%1) * 60)) + mx.DateTime.RelativeDateTime(days=1)     
+            dt_from = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(current_hour)), int((current_hour%1) * 60)) + timedelta(days=1)
             current_hour = 0.0
         return (hours/3600)
     
 resource_calendar()
 
-class resource_calendar_week(osv.osv):
-    _name = "resource.calendar.week"
+class resource_calendar_attendance(osv.osv):
+    _name = "resource.calendar.attendance"
     _description = "Work Detail"
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
@@ -181,7 +183,7 @@ class resource_calendar_week(osv.osv):
         'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
     }
     _order = 'dayofweek, hour_from'
-resource_calendar_week()
+resource_calendar_attendance()
 
 class resource_resource(osv.osv):
     _name = "resource.resource"

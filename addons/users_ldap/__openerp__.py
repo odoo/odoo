@@ -22,7 +22,7 @@
     "name" : "Authenticate users with ldap server",
     "version" : "0.1",
     "depends" : ["base"],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "description": """Adds support for authentication by ldap server""",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Others",

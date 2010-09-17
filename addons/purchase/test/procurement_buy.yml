@@ -12,16 +12,20 @@
     procure_method: make_to_order
     supply_method: buy
     type: product
+    seller_delay: '1'
+    standard_price: 100.0
+    supply_method: buy
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-    valuation: manual_periodic
     volume: 0.0
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
+    seller_delay: '1'
     seller_ids:
       - delay: 1
         name: base.res_partner_asus
+        min_qty: 2.0
         qty: 5.0
 -  
   I create  procurement order.

@@ -35,14 +35,14 @@ class crm_phonecall(osv.osv, crm_case):
     _inherit = ['mailgate.thread']
     _columns = {
         # From crm.case
+        'id': fields.integer('ID'),
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False), 
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1), 
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'), 
+                        select=True, help='Sales team to which Case belongs to.'), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
@@ -83,8 +83,7 @@ class crm_phonecall(osv.osv, crm_case):
         'date_closed': fields.datetime('Closed', readonly=True), 
         'date': fields.datetime('Date'), 
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {

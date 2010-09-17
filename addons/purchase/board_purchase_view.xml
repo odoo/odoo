@@ -5,7 +5,6 @@
         <menuitem
             id="menu_purchase_deshboard"
             name="Dashboard"
-            icon="terp-graph"
             parent="base.next_id_73" sequence="0"/>
 
         <record id="purchase_draft" model="ir.actions.act_window">
@@ -62,6 +61,7 @@
             id="menu_board_purchase"
             parent="menu_purchase_deshboard"
             sequence="4"/>
+        <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3" groups="base.group_system,group_purchase_manager,group_purchase_user,base.group_extended" action="open_board_purchase"/>
 
     </data>
 </openerp>

@@ -41,19 +41,19 @@
         Accounting/Reporting/Follow-Ups/All receivable entries
 
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
         'wizard/account_followup_print_view.xml',
-        'account_followup_report.xml',
+        'report/account_followup_report.xml',
         'account_followup_view.xml',
         'account_followup_data.xml'
     ],
     'demo_xml': ['account_followup_demo.xml'],
-    'test': ['test/account_followup.yml'], 
+    'test': ['test/account_followup.yml'],
     'installable': True,
     'active': False,
     'certificate': '0072481076453',

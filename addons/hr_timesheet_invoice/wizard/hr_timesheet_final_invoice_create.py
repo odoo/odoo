@@ -46,17 +46,21 @@ class final_invoice_create(osv.osv_memory):
         analytic_account_obj = self.pool.get('account.analytic.account')
         res_partner_obj = self.pool.get('res.partner')
         account_payment_term_obj = self.pool.get('account.payment.term')
+        invoice_obj = self.pool.get('account.invoice')
+        product_obj = self.pool.get('product.product')
+        fiscal_pos_obj = self.pool.get('account.fiscal.position')
+        invoice_line_obj = self.pool.get('account.invoice.line')
         invoices = []
 
         if context is None:
             context = {}
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
+        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
 
-        data = self.read(cr, uid, ids, [], context)[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         account_ids = 'active_ids' in context and context['active_ids'] or []
 
-        for account in analytic_account_obj.browse(cr, uid, account_ids, context):
+        for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
             partner = account.partner_id
             amount_total=0.0
             if (not partner) or not (account.pricelist_id):
@@ -77,15 +81,15 @@ class final_invoice_create(osv.osv_memory):
             curr_invoice = {
                 'name': time.strftime('%D')+' - '+account.name,
                 'partner_id': account.partner_id.id,
-                'address_contact_id': self.pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['contact'])['contact'],
-                'address_invoice_id': self.pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['invoice'])['invoice'],
+                'address_contact_id': res_partner_obj.address_get(cr, uid, [account.partner_id.id], adr_pref=['contact'])['contact'],
+                'address_invoice_id': res_partner_obj.address_get(cr, uid, [account.partner_id.id], adr_pref=['invoice'])['invoice'],
                 'payment_term': partner.property_payment_term.id or False,
                 'account_id': partner.property_account_receivable.id,
                 'currency_id': account.pricelist_id.currency_id.id,
                 'date_due': date_due,
                 'fiscal_position': account.partner_id.property_account_position.id
             }
-            last_invoice = self.pool.get('account.invoice').create(cr, uid, curr_invoice)
+            last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context)
             invoices.append(last_invoice)
 
             context2=context.copy()
@@ -116,14 +120,14 @@ class final_invoice_create(osv.osv_memory):
                     line.product_uom_id,
                     move_line.ref""", (account.id,))
             for product_id, amount, account_id, product_uom_id, ref in cr.fetchall():
-                product = self.pool.get('product.product').browse(cr, uid, product_id, context2)
+                product = product_obj.browse(cr, uid, product_id, context2)
 
                 if product:
                     taxes = product.taxes_id
                 else:
                     taxes = []
 
-                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 curr_line = {
                     'price_unit': -amount,
                     'quantity': 1.0,
@@ -136,14 +140,13 @@ class final_invoice_create(osv.osv_memory):
                     'account_id': account_id,
                     'account_analytic_id': account.id
                 }
-                self.pool.get('account.invoice.line').create(cr, uid, curr_line)
+                invoice_line_obj.create(cr, uid, curr_line, context=context)
 
             if not data['balance_product']:
                 raise osv.except_osv(_('Balance product needed'), _('Please fill a Balance product in the wizard'))
-            product = self.pool.get('product.product').browse(cr, uid, data['balance_product'], context2)
-
+            product = product_obj.browse(cr, uid, data['balance_product'], context2)
             taxes = product.taxes_id
-            tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+            tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
             account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
             curr_line = {
                 'price_unit': account.amount_max - amount_total,
@@ -157,9 +160,9 @@ class final_invoice_create(osv.osv_memory):
                 'account_id': account_id,
                 'account_analytic_id': account.id
             }
-            self.pool.get('account.invoice.line').create(cr, uid, curr_line)
+            invoice_line_obj.create(cr, uid, curr_line, context=context)
             if account.amount_max < amount_total:
-                self.pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund',})
+                invoice_obj.write(cr, uid, [last_invoice], {'type': 'out_refund',}, context=context)
             cr.execute('update account_analytic_line set invoice_id=%s where invoice_id is null and account_id=%s', (last_invoice, account.id))
 
         return {

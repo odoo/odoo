@@ -1,0 +1,1 @@
+python addin.py --unregister

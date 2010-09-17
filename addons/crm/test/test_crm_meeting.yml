@@ -55,8 +55,8 @@
   I will search for one of the recurrent event and count the number of meeting.
 -
   !python {model: crm.meeting}: |
-     ids = self.search(cr, uid, [('date', '>=', '2010-05-21 00:00:00'), ('date', '<=', '2010-04-21 00:00:00')] )
-     assert len(ids) == 9      
+     ids = self.search(cr, uid, [('date', '>=', '2010-04-21 00:00:00'), ('date', '<=', '2010-05-21 00:00:00')] )
+     assert len(ids) == 10      
 
 - |
   Now If I want to edit meetings information for all occurence I click on "Edit All" button.
@@ -81,11 +81,6 @@
     partner_id: base.res_partner_9
     user_ids:
       - base.user_demo
-- |
-  If I set Send mail boolean as True I can see that an email is send to 
-    specified email address with proper meeting information.
--
-  #This is not working for send mail boolean as True.
 -
   I click on "Invite" button of "Invite attendee" wizard.    
 -

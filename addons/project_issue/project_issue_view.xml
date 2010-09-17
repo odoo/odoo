@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-       <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2"/>
+       <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2" groups="base.group_system"/>
 
         <record id="project_issue_categ_action" model="ir.actions.act_window">
             <field name="name">Issue Categories</field>
@@ -73,39 +73,51 @@
                         </page>
                         <page string="Emails" groups="base.group_extended">
                             <group colspan="4">
-                            <field colspan="4" name="email_cc" string="CC"/>
+                            <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                                <tree string="Communication history">
+                                    <field name="display_text" string="History Information"/>
+                                    <button
+                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
+                                        name="%(crm.action_crm_send_mail)d"
+                                        context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
+                                        icon="terp-mail-replied" type="action" />
+                                </tree>
                                 <form string="Communication history">
-                                    <group col="6" colspan="4">
-                                    <field name="date"/>
-                                    <field name="email_to"/>
-                                    <field name="email_from"/>
+                                    <group col="4" colspan="4">
+                                        <field name="email_from"/>
+                                        <field name="date"/>
+                                        <field name="email_to" widget="char" size="512"/>
+                                        <field name="email_cc" widget="char" size="512"/>
+                                        <field name="name" colspan="4" widget="char" size="512"/>
+                                        <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <field name="description" colspan="4" nolabel="1"/>
+                                            <group attrs="{'invisible': [('history', '!=', True)]}">
+                                                <field name="description" colspan="4" nolabel="1" height="250"/>
+                                                <button colspan="4"
+                                                    string="Reply"
+                                                    name="%(crm.action_crm_send_mail)d"
+                                                    context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
+                                                    icon="terp-mail-replied" type="action" />
+                                            </group>
+                                            <group attrs="{'invisible': [('history', '=', True)]}">
+                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                            </group>
                                         </page>
                                         <page string="Attachments">
                                             <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                         </page>
                                     </notebook>
-                                    <button colspan="4" string="Reply to Last Email" name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
-                                    icon="gtk-undo" type="action" />
                                 </form>
-                                <tree string="Communication history">
-                                    <field name="date"/>
-                                    <field name="email_from" />
-                                    <field name="email_to"/>
-                                    <field name="description"/>
-                                </tree>
-                           </field>
+                            </field>
                            <separator colspan="4"/>
                            <button colspan="4" string="Send New Email"
                                name="%(crm.action_crm_send_mail)d"
                                context="{'mail':'new', 'model': 'project.issue'}"
-                               icon="gtk-go-forward" type="action" />
+                               icon="terp-mail-message-new" type="action" />
                         </page>
                            <page string="History" groups="base.group_extended">
                             <group col="2" colspan="2">
@@ -127,19 +139,6 @@
                             <field name="id"/>
                             <field name="active"/>
                             </group>
-                            <field name="log_ids" nolabel="1" colspan="4">
-                                <tree string="Logs">
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </tree>
-                                <form string="Logs">
-                                    <separator string="Action Information" colspan="4"/>
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </form>
-                            </field>
                         </page>
                     </notebook>
                 </form>
@@ -293,5 +292,23 @@
             </field>
         </record>
 
+	# ------------------------------------------------------
+    # Project
+    # ------------------------------------------------------
+
+        <record id="view_project_form_inherited" model="ir.ui.view">
+            <field name="name">project.project.form.inherited</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <field name="priority" position="before">
+                    <field name="resource_calendar_id"/>
+                    <field name="project_escalation_id"/>
+                    <field name="reply_to"/>
+                </field>
+            </field>
+       </record>
+       
     </data>
 </openerp>

@@ -55,13 +55,15 @@ class report_membership(osv.osv):
                                     ('done', 'Old Member'),
                                    ('open', 'Invoiced Member'),
                                     ('free', 'Free Member'), ('paid', 'Paid Member')], 'State'),
-        'partner_id': fields.many2one('res.partner', 'Members', readonly=True, select=3) 
+        'partner_id': fields.many2one('res.partner', 'Members', readonly=True, select=3),
+        'membership_id': fields.many2one('product.product', 'Membership', readonly=True, select=3) 
                 
 
 }
 
     def init(self, cr):
         '''Create the view'''
+        tools.drop_view_if_exists(cr, 'report_membership')
         cr.execute("""
     CREATE OR REPLACE VIEW report_membership AS (
         SELECT
@@ -78,6 +80,7 @@ class report_membership(osv.osv):
         month,
         create_date,
         partner_id,
+        membership_id,
         state,
         currency
         
@@ -105,7 +108,8 @@ class report_membership(osv.osv):
             ai.partner_id AS partner_id,
             ai.currency_id AS currency,
             ai.state as state,
-            MIN(ml.id) AS id
+            MIN(ml.id) AS id,
+            ml.membership_id AS membership_id
             FROM membership_membership_line ml
             JOIN (account_invoice_line ail
                 LEFT JOIN account_invoice ai
@@ -114,8 +118,8 @@ class report_membership(osv.osv):
             JOIN res_partner p
             ON (ml.partner = p.id)
             GROUP BY TO_CHAR(ml.date_from, 'YYYY'),  TO_CHAR(ml.date_from, 'MM'), TO_CHAR(ml.date_from, 'YYYY-MM-DD'), ai.state, ai.partner_id,
-            ai.currency_id, ml.id) AS foo
-        GROUP BY year, month, create_date, currency, partner_id, state)
+            ai.currency_id, ml.id, ml.membership_id) AS foo
+        GROUP BY year, month, create_date, currency, partner_id, membership_id, state)
                 """)
         
 report_membership()

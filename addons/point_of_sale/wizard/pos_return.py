@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -33,10 +32,6 @@ class pos_return(osv.osv_memory):
     _name = 'pos.return'
     _description = 'Point of sale return'
 
-    _columns = {
-                
-    }
-    
     def default_get(self, cr, uid, fields, context=None):
         """ 
              To get default values for the object.
@@ -175,55 +170,53 @@ class pos_return(osv.osv_memory):
         #Todo :Need to clean the code
         if active_id:
             picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[active_id]), ('state', '=', 'done')])
-            data=self.read(cr,uid,ids)[0]
+            data = self.read(cr, uid, ids)[0]
             clone_list = []
-            date_cur=time.strftime('%Y-%m-%d')
+            date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
                 val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
                 cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
-                res=cr.fetchone()
-                location_id=res and res[0] or None
+                res = cr.fetchone()
+                location_id = res and res[0] or None
                 stock_dest_id = val.id
-                                    
-                new_picking=picking_obj.copy(cr, uid, order_id.picking_id.id, {'name':'%s (return)' % order_id.name,
-                                                                                    'move_lines':[], 'state':'draft', 'type':'in',
-                                                                                    'type':'in',
-                                                                                    'date':date_cur})
-                new_order=order_obj.copy(cr, uid, order_id.id, {'name': 'Refund %s'%order_id.name,
+                new_picking = picking_obj.copy(cr, uid, order_id.picking_id.id, {'name':'%s (return)' % order_id.name,
+                                                                               'move_lines': [], 
+                                                                               'state':'draft', 
+                                                                               'type': 'in',
+                                                                               'address_id': order_id.partner_id.id,   
+                                                                               'date': date_cur })
+                new_order = order_obj.copy(cr, uid, order_id.id, {'name': 'Refund %s'%order_id.name,
                                                               'lines':[],
                                                               'statement_ids':[],
                                                               'picking_id':[]})
                 for line in order_id.lines:
-                    if line.id  :
+                    if line.id:
                         try:
-                            qty= data['return%s' %line.id]
+                            qty = data['return%s' %line.id]
                         except :
-                            qty= line.qty
-                        new_move=stock_move_obj.create(cr, uid,{
+                            qty = line.qty
+                        new_move = stock_move_obj.create(cr, uid,{
                             'product_qty': qty ,
                             'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
-                            'picking_id':new_picking,
-                            'product_uom':line.product_id.uom_id.id,
-                            'location_id':location_id,
-                            'product_id':line.product_id.id,
-                            'location_dest_id':stock_dest_id,
-                            'name':'%s (return)' %order_id.name,
-                            'date':date_cur,
-                            'date_planned':date_cur,})
-                        line_obj.copy(cr,uid,line.id,{'qty':-qty  ,
-                                                    'order_id': new_order,
-                        })
-                order_obj.write(cr,uid, active_id, {'state':'done'})
-                order_obj.write(cr,uid, new_order, {'state':'done'})
+                            'picking_id': new_picking,
+                            'product_uom': line.product_id.uom_id.id,
+                            'location_id': location_id,
+                            'product_id': line.product_id.id,
+                            'location_dest_id': stock_dest_id,
+                            'name': '%s (return)' %order_id.name,
+                            'date': date_cur,
+                            'date_planned': date_cur,})
+                        line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                order_obj.write(cr,uid, [active_id,new_order], {'state': 'done'})
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
             act = {
                 'domain': "[('id', 'in', ["+str(new_order)+"])]",
                 'name': 'Refunded Orders',
                 'view_type': 'form',
-                'view_mode': 'form,tree',
+                'view_mode': 'tree,form',
                 'res_model': 'pos.order',
                 'auto_refresh':0,
                 'res_id':new_order,
@@ -234,6 +227,7 @@ class pos_return(osv.osv_memory):
         return act
     
 pos_return()
+
 class add_product(osv.osv_memory):
     _inherit = 'pos.add.product'  
     def select_product(self, cr, uid, ids, context):
@@ -323,7 +317,7 @@ class add_product(osv.osv_memory):
         invoice_obj=self.pool.get('account.invoice')
         picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', active_ids), ('state', '=', 'done')])
         clone_list = []
-        date_cur=time.strftime('%Y-%m-%d')
+        date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
         uom_obj = self.pool.get('product.uom')
         return_boj=self.pool.get('pos.return')
         return_id=return_boj.search(cr,uid,[])

@@ -23,7 +23,7 @@
 {
     "name" : "Procurements",
     "version" : "1.0",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
     "depends" : ["base","process", "product", "stock"],
@@ -38,8 +38,8 @@
         'wizard/make_procurement_view.xml',
         'wizard/mrp_procurement_view.xml',
         'wizard/orderpoint_procurement_view.xml',
-        'procurement_view.xml',
         'wizard/schedulers_all_view.xml',
+        'procurement_view.xml',
         'procurement_workflow.xml',
         'process/procurement_process.xml',
         "company_view.xml",

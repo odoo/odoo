@@ -13,8 +13,8 @@
         <field name="context">{'object_id':'crm.meeting'}</field>
     </record>
 
-     <menuitem action="crm_meeting_categ_action" name="Categories"
-        id="menu_crm_case_meeting-act" parent="menu_crm_config_meeting" />
+     <menuitem action="crm_meeting_categ_action" name="Categories of Meeting"
+        id="menu_crm_case_meeting-act" parent="base.menu_calendar_configuration" sequence="1"/>
 
     <!-- CRM Meetings Form View -->
 
@@ -107,7 +107,7 @@
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Assignment"/>
                             <field name="user_id" />
-                            <field name="organizer_id" groups="base.group_extended"/>
+                            <field name="organizer" groups="base.group_extended"/>
                             <field name="section_id" widget="selection"
                                 groups="base.group_extended"/>
                         </group><group col="2" colspan="2">
@@ -298,7 +298,7 @@
                            <field name="section_id" select="1" widget="selection">
                                <filter icon="terp-personal+"
                                    domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                                   help="My Sale Team" />
+                                   help="My Sales Team(s)" />
                            </field>
                            <field name="user_id" select="1"/>
                        </group>

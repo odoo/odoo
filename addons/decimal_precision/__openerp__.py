@@ -27,7 +27,7 @@ of usage: accounting, sales, purchases, ...
 
 The decimal precision is configured per company.
 """,
-    "author": "Tiny",
+    "author": "OpenERP SA",
     "version": "0.1",
     "depends": ["base"],
     "category" : "Generic Modules/Others",

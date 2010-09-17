@@ -79,41 +79,10 @@
                     <group col="6" colspan="4">
                         <field name="thread" select="1" colspan="3"/>
                     </group>
-                    <separator string="Logs" colspan="4"/>
-                    <field name="log_ids" nolabel="1" colspan="4" domain="[('history', '=', True)]">
-                        <tree string="Mailgateway Logs">
-                            <field name="name" select="1" />
-                            <field name="date" />
-                        </tree>
-                        <form string="Mailgate Logs">
-                            <field name="name"  widget="char" size="512"/>
-                            <field name="date" />
-                            <field name="user_id" />
-                            <field name="message_id" />
-                            <notebook colspan="4">
-                                <page string="Email Details">
-                                    <group col="4" colspan="4">
-                                        <separator string="Email Details" colspan="4"/>
-                                        <field name="email_from" />
-                                        <field name="email_to" widget="char" size="512"/>
-                                        <field name="email_cc" widget="char" size="512"/>
-                                        <field name="email_bcc" widget="char" size="512"/>
-                                   </group>
-                                   <separator string="Description" colspan="4"/>
-                                    <field name="description" nolabel="1" colspan="4" />
-                                </page>
-                                <page string="Attachments">
-                                    <separator string="Attachments" colspan="4"/>
-                                    <field name="attachment_ids" nolabel="1" colspan="4" />
-                                </page>
-                            </notebook>
-                        </form>
-                    </field>
                     <separator string="History" colspan="4"/>
-                    <field name="message_ids" nolabel="1" colspan="4" domain="[('history', '=', True)]">
+                    <field name="message_ids" nolabel="1" colspan="4" mode="tree,form">
                         <tree string="Mailgateway History">
-                            <field name="name" select="1" />
-                            <field name="date" />
+                            <field name="display_text" />
                         </tree>
                         <form string="Mailgate History">
                             <field name="name" widget="char" size="512"/>
@@ -208,9 +177,9 @@
             <field name="act_window_id" ref="action_view_mailgate_thread"/>
         </record>
 
-        <menuitem id="base.menu_base_config_mail" name="Mail" parent="base.menu_base_config" sequence="10"/>
+        <menuitem id="base.menu_base_config_mail" name="Mail" parent="base.menu_base_config" sequence="4"/>
         <menuitem id="menu_mailgate_message" name="Emails" action="action_view_mailgate_message"
-           parent="base.menu_base_config_mail" sequence="5"/>
+           parent="base.menu_base_config_mail" sequence="5" groups="base.group_system"/>
 
         <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
             id="act_res_partner_emails" name="Emails"

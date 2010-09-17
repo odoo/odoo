@@ -55,7 +55,7 @@ class report_project_task_user(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'State', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True, groups="base.group_multi_company"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'type': fields.many2one('project.task.type', 'Stage', readonly=True),
+        'type_id': fields.many2one('project.task.type', 'Stage', readonly=True),
     }
     _order = 'name desc, project_id'
 
@@ -83,7 +83,7 @@ class report_project_task_user(osv.osv):
                     t.name as name,
                     t.company_id,
                     t.partner_id,
-                    t.type,
+                    t.type_id,
                     remaining_hours as remaining_hours,
                     total_hours as total_hours,
                     t.delay_hours as hours_delay,
@@ -119,38 +119,42 @@ class report_project_task_user(osv.osv):
                     name,
                     t.company_id,
                     t.partner_id,
-                    t.type
+                    t.type_id
 
         """)
 
 report_project_task_user()
 
 #This class is generated for project deshboard purpose
-class project_vs_remaining_hours(osv.osv):
-    _name = "project.vs.remaining.hours"
-    _description = " Project vs Remaining hours"
+class project_vs_hours(osv.osv):
+    _name = "project.vs.hours"
+    _description = " Project vs  hours"
     _auto = False
     _columns = {
         'project': fields.char('Project', size=128, required=True),
         'remaining_hours': fields.float('Remaining Hours', readonly=True),
+        'planned_hours': fields.float('Planned Hours', readonly=True),
+        'total_hours': fields.float('Total Hours', readonly=True),
         'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'State', required=True, readonly=True)
     }
     _order = 'project desc'
 
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'project_vs_remaining_hours')
+        tools.sql.drop_view_if_exists(cr, 'project_vs_hours')
         cr.execute("""
-            CREATE or REPLACE view project_vs_remaining_hours as (
+            CREATE or REPLACE view project_vs_hours as (
                 select
                       min(pt.id) as id,
                       aaa.user_id as uid,
                       aaa.name as project,
                       aaa.state,
-                      sum(pt.remaining_hours) as remaining_hours
+                      sum(pt.remaining_hours) as remaining_hours,
+                      sum(pt.planned_hours) as planned_hours,
+                      sum(pt.total_hours) as total_hours
                  FROM project_project as pp,
                        account_analytic_account as aaa,
                        project_task as pt
-                 WHERE aaa.id=pp.category_id and pt.project_id=pp.id and pp.category_id=aaa.id
+                 WHERE aaa.id=pp.analytic_account_id and pt.project_id=pp.id and pp.analytic_account_id=aaa.id
                  GROUP BY aaa.user_id,aaa.state,aaa.name
                  UNION All
                  SELECT
@@ -158,17 +162,19 @@ class project_vs_remaining_hours(osv.osv):
                       pur.uid as uid,
                       aaa.name as project,
                       aaa.state,
-                      sum(pt.remaining_hours) as remaining_hours
+                      sum(pt.remaining_hours) as remaining_hours,
+                      sum(pt.planned_hours) as planned_hours,
+                      sum(pt.total_hours) as total_hours
                  FROM project_project as pp,
                       project_user_rel as pur,
                       account_analytic_account as aaa,
                       project_task as pt
-                 WHERE pur.project_id=pp.id and pt.project_id=pp.id and pp.category_id=aaa.id
+                 WHERE pur.project_id=pp.id and pt.project_id=pp.id and pp.analytic_account_id=aaa.id AND pur.uid != aaa.user_id
                  GROUP BY pur.uid,aaa.state,aaa.name
             )
         """)
 
-project_vs_remaining_hours()
+project_vs_hours()
 
 class task_by_days(osv.osv):
     _name = "task.by.days"

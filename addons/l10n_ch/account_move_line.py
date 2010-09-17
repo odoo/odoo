@@ -57,8 +57,8 @@ class AccountMoveLine(osv.osv):
         bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type,
                 context=context)
         for line in self.browse(cr, uid, ids, context=context):
-            if line.invoice and line.invoice.partner_bank:
-                line2bank[line.id] = line.invoice.partner_bank.id
+            if line.invoice and line.invoice.partner_bank_id:
+                line2bank[line.id] = line.invoice.partner_bank_id.id
             elif line.partner_id:
                 for bank in line.partner_id.bank_ids:
                     if bank.state in bank_type:

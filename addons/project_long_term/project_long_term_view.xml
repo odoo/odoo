@@ -8,6 +8,20 @@
     # Project Resource Allocation
     # ------------------------------------------------------
 
+        <record id="view_project_resource_allocation_gantt" model="ir.ui.view">
+            <field name="name">project.resource.allocation.gantt</field>
+            <field name="model">project.resource.allocation</field>
+            <field name="type">gantt</field>
+            <field name="arch" type="xml">
+              <gantt color="phase_id" date_start="phase_id_date_start" date_stop="phase_id_date_end" string="R.A." mode="year">
+               <level object="project.resource" link="resource_id" domain="[]">
+                   <field name="useability"/>
+                </level>
+              </gantt>
+            </field>
+        </record>
+
+
         <record id="view_project_resource_allocation_form" model="ir.ui.view">
             <field name="name">project.resource.allocation.form</field>
             <field name="model">project.resource.allocation</field>
@@ -58,8 +72,8 @@
             <field name="name">Resource Allocations</field>
             <field name="res_model">project.resource.allocation</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-             <field name="context">{'search_default_resource': 1} </field>
+            <field name="view_mode">gantt,tree,form</field>
+             <field name="context">{}</field>
             <!--<field name="search_view_id" ref="view_project_phase_search"/>-->
         </record>
 
@@ -113,6 +127,7 @@
                                     <field name="name"/>
                                     <field name="user_id"/>
                                     <field name="planned_hours" widget="float_time"/>
+                                    <field name="project_id" invisible="1"/>
                                   </tree>
                                   <form string="Project's Tasks">
                                       <notebook colspan="4">
@@ -174,9 +189,6 @@
                     <field name="project_id" on_change="onchange_project(project_id)"/>
                     <field name="responsible_id"/>
                     <field name="date_start"/>
-                    <!--<field name="date_end"/>
-                    <field name="duration"/>
-                    <field name="product_uom"/>-->
                     <field name="state"/>
                 </tree>
             </field>
@@ -243,8 +255,9 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
-             <field name="context">{'search_default_responsible_id':uid}</field>
+            <field name="context">{'search_default_responsible_id':uid}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
+            <field name="help">You can subdivide your larger projects into several phases. For each phase, you can define your resources allocation (humans or engine), describe de differend task and link your phase with previous and next one, add constraints date and scheduling. A gantt view of your project phase is also available from this menu. Gantt view is a graphically draw of the project plan; it includes any task dependencies by visually adjusting task durations and priorities, and by linking tasks to each other.</field>            
         </record>
 
         <record id="act_project_phase_list" model="ir.actions.act_window">
@@ -300,7 +313,7 @@
     # ------------------------------------------------------
 
         <menuitem action="act_project_phase"
-            groups="base.group_extended"
+            groups="base.group_extended,project.group_project_user,project.group_project_manager,base.group_system"
             id="menu_project_phase" parent="base.menu_project_long_term" sequence="1"/>
 
         <menuitem id="menu_resouce_allocation" action="act_resouce_allocation"
@@ -308,10 +321,10 @@
 
         <!--<menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>-->
         <menuitem id="menu_pm_resources_project1"
-            groups="base.group_extended"
+            groups="base.group_extended,base.group_system"
             name="Resources" parent="project.menu_definitions" sequence="3"/>
 
-        <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_project_long_term" sequence="4"/>
+        <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_project_long_term" sequence="4" groups="project.group_project_user,project.group_project_manager,base.group_system"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="project.menu_project_management" sequence="4"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_resources_project1" sequence="1"/>

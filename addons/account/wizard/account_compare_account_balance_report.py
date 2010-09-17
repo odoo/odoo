@@ -32,7 +32,7 @@ class account_compare_account_balance_report(osv.osv_memory):
     _description = 'Account Balance Report'
     _columns = {
         'fiscalyear': fields.many2many('account.fiscalyear', 'account_fiscalyear_rel','account_id','fiscalyear_id','Fiscal year', help='Keep empty for all open fiscal year'),
-        'select_account': fields.many2one('account.account','Select Reference Account(for  % comparision)',help='Keep empty for comparision to its parent'),
+        'select_account': fields.many2one('account.account','Select Reference Account(for  % comparision)',help='Keep empty for comparison to its parent'),
         'account_choice': fields.selection([('all','All accounts'),
                                             ('bal_zero','With balance is not equal to 0'),
                                             ('moves','With movements')],'Show Accounts'),
@@ -74,14 +74,12 @@ class account_compare_account_balance_report(osv.osv_memory):
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.account.balance.landscape',
                     'datas': data,
-                    'nodestroy':True,
                     }
             else:
                 return {
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.balance.account.balance',
                     'datas': data,
-                    'nodestroy':True,
                     }
         if data['form']['format_perc']==1:
             if len(data['form']['fiscalyear'])<=2:
@@ -90,14 +88,12 @@ class account_compare_account_balance_report(osv.osv_memory):
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.account.balance.landscape',
                     'datas': data,
-                    'nodestroy':True,
                     }
                 else:
                     return {
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.balance.account.balance',
                     'datas': data,
-                    'nodestroy':True,
                     }
             else:
                 if len(data['form']['fiscalyear'])==3:
@@ -106,7 +102,6 @@ class account_compare_account_balance_report(osv.osv_memory):
                             'type': 'ir.actions.report.xml',
                             'report_name': 'account.account.balance.landscape',
                             'datas': data,
-                            'nodestroy':True,
                             }
                     else:
                         raise osv.except_osv(_('Warning !'), _('You might have done following mistakes. Please correct them and try again. \n 1. You have selected more than 3 years in any case. \n 2. You have not selected  Percentage option, but you have selected more than 2 years. \n You can select maximum 3 years. Please check again. \n 3. You have selected Percentage option with more than 2 years, but you have not selected landscape format. You have to select Landscape option. Please Check it.'))
@@ -119,7 +114,6 @@ class account_compare_account_balance_report(osv.osv_memory):
                             'type': 'ir.actions.report.xml',
                             'report_name': 'account.account.balance.landscape',
                             'datas': data,
-                            'nodestroy':True,
                             }
                 else:
                         raise osv.except_osv(_('Warning !'), _('You might have done following mistakes. Please correct them and try again. \n 1. You have selected more than 3 years in any case. \n 2. You have not selected  Percentage option, but you have selected more than 2 years. \n You can select maximum 3 years. Please check again. \n 3. You have selected Percentage option with more than 2 years, but you have not selected landscape format. You have to select Landscape option. Please Check it.'))
@@ -129,14 +123,12 @@ class account_compare_account_balance_report(osv.osv_memory):
                             'type': 'ir.actions.report.xml',
                             'report_name': 'account.account.balance.landscape',
                             'datas': data,
-                            'nodestroy':True,
                             }
                 else:
                     return {
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.balance.account.balance',
                     'datas': data,
-                    'nodestroy':True,
                     }
 account_compare_account_balance_report()
 

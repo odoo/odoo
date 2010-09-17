@@ -1,6 +1,6 @@
 <openerp>
   <data>
-  
+
     <record id="view_project_installer" model="ir.ui.view">
       <field name="name">project.installer.view</field>
       <field name="model">project.installer</field>
@@ -9,7 +9,7 @@
       <field name="arch" type="xml">
       	<data>
           <form position="attributes">
-            <attribute name="string">Project Modules Installation</attribute>
+            <attribute name="string">Project Modules Configuration</attribute>
           </form>
           <separator string="title" position="attributes">
             <attribute name="string">Project Management</attribute>
@@ -18,7 +18,7 @@
           	  <attribute name='string'></attribute>
      		</xpath>
           <xpath expr="//label[@string='description']" position="attributes">
-          	<attribute name="string">Various OpenERP applications are available to bring your project management to the next levels of control and flexibility.</attribute>
+          	<attribute name="string">Various OpenERP applications are available to manage your projects with different level of control and flexibility.</attribute>
           </xpath>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
           	<attribute name="string">Configure</attribute>
@@ -65,6 +65,6 @@
   				</xpath>
   			</field>
 	</record>
-	
+
   </data>
 </openerp>

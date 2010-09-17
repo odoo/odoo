@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import fields, osv
@@ -26,18 +27,31 @@ import netsvc
 
 class account_invoice_refund(osv.osv_memory):
 
-    """Refunds invoice."""
+    """Refunds invoice"""
 
     _name = "account.invoice.refund"
     _description = "Invoice Refund"
     _columns = {
        'date': fields.date('Operation date', help='This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!'),
        'period': fields.many2one('account.period', 'Force period'),
+       'journal_id': fields.many2one('account.journal', 'Journal'),
        'description': fields.char('Description', size=128, required=True),
     }
+
+    def _get_journal(self, cr, uid, context=None):
+        obj_journal = self.pool.get('account.journal')
+        if context is None:
+            context = {}
+        journal = obj_journal.search(cr, uid, [('type', '=', 'sale_refund')])
+        if context.get('type', False):
+            if context['type'] == 'in_invoice':
+                journal = obj_journal.search(cr, uid, [('type', '=', 'purchase_refund')])
+        return journal and journal[0] or False
+
     _defaults = {
         'date': time.strftime('%Y-%m-%d'),
-                }
+        'journal_id': _get_journal
+    }
 
     def compute_refund(self, cr, uid, ids, mode='refund', context=None):
         """
@@ -70,6 +84,8 @@ class account_invoice_refund(osv.osv_memory):
                 else:
                     period = inv.period_id and inv.period_id.id or False
 
+                journal_id = form.get('journal_id', False)
+
                 if form['date'] :
                     date = form['date']
                     if not form['period'] :
@@ -99,7 +115,7 @@ class account_invoice_refund(osv.osv_memory):
                     raise osv.except_osv(_('Data Insufficient !'), \
                                             _('No Period found on Invoice!'))
 
-                refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description)
+                refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id)
                 refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
                 inv_obj.write(cr, uid, [refund.id], {'date_due': date,
                                                 'check_total': inv.check_total})
@@ -123,7 +139,7 @@ class account_invoice_refund(osv.osv_memory):
                     for account in to_reconcile_ids :
                         account_m_line_obj.reconcile(cr, uid, to_reconcile_ids[account],
                                         writeoff_period_id=period,
-                                        writeoff_journal_id=inv.journal_id.id,
+                                        writeoff_journal_id = inv.journal_id.id,
                                         writeoff_acc_id=inv.account_id.id
                                         )
                     if mode == 'modify':
@@ -179,13 +195,13 @@ class account_invoice_refund(osv.osv_memory):
             result['res_id'] = created_inv
             return result
 
-    def invoice_refund(self, cr, uid, ids, context={}):
+    def invoice_refund(self, cr, uid, ids, context=None):
         return self.compute_refund(cr, uid, ids, 'refund', context=context)
 
-    def invoice_cancel(self, cr, uid, ids, context={}):
+    def invoice_cancel(self, cr, uid, ids, context=None):
         return self.compute_refund(cr, uid, ids, 'cancel', context=context)
 
-    def invoice_modify(self, cr, uid, ids, context={}):
+    def invoice_modify(self, cr, uid, ids, context=None):
         return self.compute_refund(cr, uid, ids, 'modify', context=context)
 
 account_invoice_refund()

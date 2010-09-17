@@ -26,7 +26,8 @@ class change_standard_price(osv.osv_memory):
     _description = "Change Standard Price"
     
     _columns = {
-        'change_parent_price': fields.boolean('Change Parent Price'),
+        'change_parent_price': fields.boolean('Change Parent Price', help="This will change the price of parent products also "
+                                              "according to the BoM structure specified for the product."),
     }
     
     
@@ -46,3 +47,5 @@ class change_standard_price(osv.osv_memory):
         return super(change_standard_price, self).change_price(cr, uid, ids, context=context)
     
 change_standard_price()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

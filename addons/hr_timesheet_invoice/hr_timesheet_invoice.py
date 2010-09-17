@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -39,13 +39,16 @@ hr_timesheet_invoice_factor()
 
 
 class account_analytic_account(osv.osv):
-    def _invoiced_calc(self, cr, uid, ids, name, arg, context={}):
+    def _invoiced_calc(self, cr, uid, ids, name, arg, context=None):
+        obj_invoice = self.pool.get('account.invoice')
+        if context is None:
+            context = {}
         res = {}
-        for account in self.browse(cr, uid, ids):
+        for account in self.browse(cr, uid, ids, context=context):
             invoiced = {}
             cr.execute('select distinct(l.invoice_id) from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id) where account_id=%s', (account.id,))
             invoice_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-            for invoice in self.pool.get('account.invoice').browse(cr, uid, invoice_ids, context):
+            for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
                 res.setdefault(account.id, 0.0)
                 res[account.id] += invoice.amount_untaxed
         for id in ids:
@@ -73,20 +76,24 @@ account_analytic_account()
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),                
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing'),
     }
 
     def unlink(self, cursor, user, ids, context=None):
+        if context is None:
+            context = {}
         return super(account_analytic_line,self).unlink(cursor, user, ids,
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        self._check_inv(cr, uid, ids,vals)
+        if context is None:
+            context = {}
+        self._check_inv(cr, uid, ids, vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
                 context=context)
 
-    def _check_inv(self, cr, uid, ids,vals):
+    def _check_inv(self, cr, uid, ids, vals):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
@@ -98,12 +105,14 @@ class account_analytic_line(osv.osv):
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
+        if context is None:
+            context = {}
         if default is None:
             default = {}
         default = default.copy()
         default.update({'invoice_id': False})
         return super(account_analytic_line, self).copy(cursor, user, obj_id,
-                default, context)
+                default, context=context)
 
 account_analytic_line()
 
@@ -126,12 +135,14 @@ class hr_analytic_timesheet(osv.osv):
         return res
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
+        if context is None:
+            context = {}
         if default is None:
             default = {}
         default = default.copy()
         default.update({'invoice_id': False})
         return super(hr_analytic_timesheet, self).copy(cursor, user, obj_id,
-                default, context)
+                default, context=context)
 
 hr_analytic_timesheet()
 
@@ -143,9 +154,10 @@ class account_invoice(osv.osv):
 
         inv = self.browse(cr, uid, [id])[0]
         if inv.type == 'in_invoice':
+            obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:
                 if il['account_analytic_id']:
-                    to_invoice = self.pool.get('account.analytic.account').read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
+                    to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
                     if to_invoice:
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
         return iml

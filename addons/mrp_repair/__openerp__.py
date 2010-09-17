@@ -33,7 +33,7 @@
            * Repair quotation report
            * Notes for the technician and for the final customer           
 """,
-    'author': 'Tiny',
+    'author': 'OpenERP SA',
     'depends': ['mrp', 'sale', 'account'],
     'update_xml': [
         'security/ir.model.access.csv',

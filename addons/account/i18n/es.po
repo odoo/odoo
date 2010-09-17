@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-06-29 22:11+0000\n"
-"Last-Translator: Borja López Soilán (Pexego) <borjals@pexego.es>\n"
+"PO-Revision-Date: 2010-08-02 18:23+0000\n"
+"Last-Translator: Albert Cervera i Areny - http://www.NaN-tic.com <albert@nan-"
+"tic.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-01 03:45+0000\n"
+"X-Launchpad-Export-Date: 2010-08-12 03:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -55,7 +56,7 @@ msgstr "Activo"
 #. module: account
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo inválido en la definición de acción."
+msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #. module: account
 #: help:account.journal,currency:0
@@ -218,7 +219,7 @@ msgstr "Código para calcular (si tipo=código)"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr "Línea del asiento contable"
+msgstr "Apunte"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
@@ -1018,7 +1019,7 @@ msgstr "Contabilidad financiera"
 #. module: account
 #: rml:account.invoice:0
 msgid "Net Total:"
-msgstr "Total neto:"
+msgstr "Base:"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -2094,7 +2095,7 @@ msgstr "Gasto"
 #. module: account
 #: field:account.journal,invoice_sequence_id:0
 msgid "Invoice Sequence"
-msgstr "factura de secuencia"
+msgstr "Secuencia de facturas"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,init:0
@@ -2109,7 +2110,7 @@ msgstr "Proceso de factura de cliente"
 #. module: account
 #: rml:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr "Comentario situacion fiscal"
+msgstr "Observación posición fiscal :"
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
@@ -2470,7 +2471,7 @@ msgstr "Fecha final"
 #: model:ir.actions.act_window,name:account.action_move_line_tree1
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
-msgstr "Líneas de asiento"
+msgstr "Apuntes"
 
 #. module: account
 #: view:account.tax:0
@@ -2780,7 +2781,7 @@ msgstr "_Aceptar"
 #. module: account
 #: field:account.invoice,amount_untaxed:0
 msgid "Untaxed"
-msgstr "Sin impuestos"
+msgstr "Base"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_analytic_account_inverted_balance
@@ -3005,7 +3006,7 @@ msgstr "Conciliación de asientos de órdenes de pago."
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.model,name:account.model_account_move_line
 msgid "Entry lines"
-msgstr "Líneas de asiento"
+msgstr "Apuntes"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,init:0
@@ -4146,8 +4147,8 @@ msgid ""
 "You can check this box to mark the entry line as a litigation with the "
 "associated partner"
 msgstr ""
-"Marque esta opción para señalar la línea de asiento en desacuerdo con la "
-"empresa asociada"
+"Marque esta opción para señalar el apunte en desacuerdo con la empresa "
+"asociada"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -4285,7 +4286,7 @@ msgid ""
 "date for the payment of this entry line."
 msgstr ""
 "Este campo es usado en asientos a pagar y a cobrar. Puede definir la fecha "
-"límite de pago para esta línea de asiento."
+"límite de pago para este apunte."
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -5391,7 +5392,7 @@ msgstr "PRO-FORMA"
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
 msgid "Partial Entry lines"
-msgstr "Líneas de asiento parcial"
+msgstr "Apuntes de conciliación parcial"
 
 #. module: account
 #: help:account.move.line,statement_id:0
@@ -6435,5 +6436,324 @@ msgstr "A cobrar anteriores"
 msgid "Untaxed Amount"
 msgstr "Base imponible"
 
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "¡Error de integridad!"
+
+#, python-format
+#~ msgid "You have to provide an account for the write off entry !"
+#~ msgstr "¡Debe indicar una cuenta para el asiento de ajuste!"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "¡Atención!"
+
+#, python-format
+#~ msgid "You can not delete posted movement: \"%s\"!"
+#~ msgstr "¡No puede eliminar el movimiento fijado: \"%s\"!"
+
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "¡No diario analítico!"
+
+#, python-format
+#~ msgid "Bank Journal "
+#~ msgstr "Diario bancario "
+
+#, python-format
+#~ msgid "You can not use this general account in this journal !"
+#~ msgstr "¡No puede usar esta cuenta general en este diario!"
+
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr "No puede añadir/modificar asientos en un diario cerrado."
+
+#, python-format
+#~ msgid ""
+#~ "You can not do this modification on a reconciled entry ! Please note that "
+#~ "you can just change some non important fields !"
+#~ msgstr ""
+#~ "﻿¡No puede hacer esta modificación en un asiento conciliado! ¡Observe que "
+#~ "sólo puede cambiar algunos campos no importantes!"
+
+#, python-format
+#~ msgid "You must first select a partner !"
+#~ msgstr "¡Primero debe seleccionar una empresa!"
+
+#, python-format
+#~ msgid "The opening journal must not have any entry in the new fiscal year !"
+#~ msgstr ""
+#~ "¡El diario de apertura no debe tener ningún asiento en el nuevo ejercicio "
+#~ "fiscal!"
+
 #~ msgid "account.config.wizard"
 #~ msgstr "account.config.asistente"
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "El balance previsto (%.2f) es diferente del calculado. (%.2f)"
+
+#, python-format
+#~ msgid ""
+#~ "You can not do this modification on a confirmed entry ! Please note that you "
+#~ "can just change some non important fields !"
+#~ msgstr ""
+#~ "¡No puede hacer esta modificación en un asiento confirmado! ¡Observe que "
+#~ "sólo puede cambiar algunos campos no importantes!"
+
+#, python-format
+#~ msgid "Purchase Journal"
+#~ msgstr "Diario de compras"
+
+#, python-format
+#~ msgid "Free Reference"
+#~ msgstr "Referencia libre"
+
+#, python-format
+#~ msgid "No Partner Defined !"
+#~ msgstr "¡No se ha definido empresa!"
+
+#, python-format
+#~ msgid "Entries are not of the same account or already reconciled ! "
+#~ msgstr "¡Asientos no son de la misma cuenta o ya están conciliados! "
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "¡Acción no válida!"
+
+#, python-format
+#~ msgid "No sequence defined in the journal !"
+#~ msgstr "¡No se ha definido una secuencia en el diario!"
+
+#, python-format
+#~ msgid "Your journal must have a default credit and debit account."
+#~ msgstr "El diario debe tener una cuenta haber y debe por defecto."
+
+#, python-format
+#~ msgid "The journal must have default credit and debit account"
+#~ msgstr "El diario debe tener una cuenta haber y debe por defecto."
+
+#, python-format
+#~ msgid "Some entries are already reconciled !"
+#~ msgstr "¡Algunos asientos ya están conciliados!"
+
+#, python-format
+#~ msgid "No Analytic Journal !"
+#~ msgstr "¡No diario analítico!"
+
+#, python-format
+#~ msgid "Already Reconciled"
+#~ msgstr "Ya conciliado"
+
+#, python-format
+#~ msgid "The account entries lines are not in valid state."
+#~ msgstr "Las líneas de los asientos contables no están en estado válido."
+
+#, python-format
+#~ msgid "Unable to reconcile entry \"%s\": %.2f"
+#~ msgstr "No es posible conciliar el asiento \"%s\": %.2f"
+
+#, python-format
+#~ msgid "Please set an analytic journal on this financial journal !"
+#~ msgstr "¡Por favor indique un diario analítico en este diario financiero!"
+
+#, python-format
+#~ msgid "EXJ"
+#~ msgstr "GASTO"
+
+#, python-format
+#~ msgid "Sales Journal"
+#~ msgstr "Diario de ventas"
+
+#, python-format
+#~ msgid "BNK"
+#~ msgstr "BANCO"
+
+#, python-format
+#~ msgid "Entries: "
+#~ msgstr "Asientos: "
+
+#, python-format
+#~ msgid "Couldn't create move between different companies"
+#~ msgstr "No se ha podido crear movimiento entre diferentes compañías"
+
+#, python-format
+#~ msgid "Entry \"%s\" is not valid !"
+#~ msgstr "¡El asiento \"%s\" no es válido!"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "¡Error!"
+
+#, python-format
+#~ msgid "SAJ"
+#~ msgstr "VENTA"
+
+#, python-format
+#~ msgid "The journal must have centralised counterpart"
+#~ msgstr "﻿El diario debe tener un homólogo centralizado"
+
+#, python-format
+#~ msgid "Bad total !"
+#~ msgstr "¡Total erróneo!"
+
+#, python-format
+#~ msgid "End of Fiscal Year Entry"
+#~ msgstr "Asiento fin de ejercicio fiscal"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Error de usuario"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Aviso"
+
+#, python-format
+#~ msgid "Please verify that an account is defined in the journal."
+#~ msgstr "Compruebe que se ha definido una cuenta en el diario."
+
+#, python-format
+#~ msgid "You can not use an inactive account!"
+#~ msgstr "¡No puede utilizar una cuenta inactiva!"
+
+#, python-format
+#~ msgid "Entry is already reconciled"
+#~ msgstr "El asiento ya está conciliado"
+
+#, python-format
+#~ msgid ""
+#~ "Selected Move lines does not have any account move enties in draft state"
+#~ msgstr ""
+#~ "Ha seleccionado apuntes que no tienen ningún asiento contable en estado "
+#~ "borrador"
+
+#, python-format
+#~ msgid "Standard Encoding"
+#~ msgstr "Codificación estándar"
+
+#, python-format
+#~ msgid "Bad account!"
+#~ msgstr "¡Cuenta incorrecta!"
+
+#, python-format
+#~ msgid "Closing of fiscal year cancelled, please check the box !"
+#~ msgstr "¡Cierre del ejercicio fiscal cancelado, por favor marque la caja!"
+
+#, python-format
+#~ msgid "Bad account !"
+#~ msgstr "¡Cuenta incorrecta!"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Error"
+
+#, python-format
+#~ msgid "Taxes missing !"
+#~ msgstr "¡Faltan impuestos!"
+
+#, python-format
+#~ msgid "No piece number !"
+#~ msgstr "¡Ningún trozo de número!"
+
+#, python-format
+#~ msgid "Closing of states cancelled, please check the box !"
+#~ msgstr "¡Cierre de estados cancelado, por favor marque la caja!"
+
+#, python-format
+#~ msgid "You have to define an analytic journal on the '%s' journal!"
+#~ msgstr "¡Debe definir un diario analítico en el diario '%s'!"
+
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "No hay datos disponibles"
+
+#, python-format
+#~ msgid "You must select accounts to reconcile"
+#~ msgstr "Debe seleccionar las cuentas a conciliar"
+
+#, python-format
+#~ msgid "Cannot delete invoice(s) that are already opened or paid !"
+#~ msgstr "¡No se puede eliminar factura(s) que ya estan abiertas o pagadas!"
+
+#, python-format
+#~ msgid "Unable to change tax !"
+#~ msgstr "¡No ha sido posible cambiar el impuesto!"
+
+#, python-format
+#~ msgid "Invoice is already reconciled"
+#~ msgstr "La factura ya está conciliada"
+
+#, python-format
+#~ msgid "Date to must be set between %s and %s"
+#~ msgstr "La fecha debe estar entre %s y %s"
+
+#, python-format
+#~ msgid "No records found for your selection!"
+#~ msgstr "¡No se han encontrado registros en su selección!"
+
+#, python-format
+#~ msgid "Data Insufficient !"
+#~ msgstr "¡Datos insuficientes!"
+
+#, python-format
+#~ msgid "Date not in a defined fiscal year"
+#~ msgstr "La fecha no está en un ejercicio fiscal definido"
+
+#, python-format
+#~ msgid "Can not pay draft/proforma/cancel invoice."
+#~ msgstr "No se puede pagar una factura borrador/proforma/cancelada."
+
+#, python-format
+#~ msgid "You must define an analytic journal of type '%s' !"
+#~ msgstr "¡Debe definir un diario analítico de tipo '%s'!"
+
+#, python-format
+#~ msgid "No journal for ending writing has been defined for the fiscal year"
+#~ msgstr ""
+#~ "No se ha definido un diario para el asiento de cierre para el ejercicio "
+#~ "fiscal"
+
+#, python-format
+#~ msgid "Can not %s draft/proforma/cancel invoice."
+#~ msgstr "No se puede %s factura borrador/proforma/cancelada."
+
+#, python-format
+#~ msgid "Cannot create invoice move on centralised journal"
+#~ msgstr "No se puede crear asiento factura en el diario centralizado"
+
+#, python-format
+#~ msgid ""
+#~ "The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+#~ "defined !"
+#~ msgstr ""
+#~ "¡El plazo de pago de los proveedores no tiene líneas de plazo de pago "
+#~ "(Cálculo) definidas!"
+
+#, python-format
+#~ msgid "You can not change the tax, you should remove and recreate lines !"
+#~ msgstr ""
+#~ "¡No se puede cambiar el impuesto, debe eliminar y recrear las líneas!"
+
+#, python-format
+#~ msgid "Global taxes defined, but are not in invoice lines !"
+#~ msgstr ""
+#~ "¡Impuestos globales definidos, pero no están en líneas de la factura!"
+
+#, python-format
+#~ msgid "No Period found on Invoice!"
+#~ msgstr "No se encontro un período en la factura"
+
+#, python-format
+#~ msgid "No period found !"
+#~ msgstr "¡No se ha encontrado período!"
+
+#, python-format
+#~ msgid "Unable to find a valid period !"
+#~ msgstr "¡No ha sido posible encontrar un período válido!"
+
+#, python-format
+#~ msgid "You must enter a period length that cannot be 0 or below !"
+#~ msgstr ""
+#~ "¡Debe introducir una duración del período que no puede ser 0 o inferior!"

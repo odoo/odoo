@@ -25,6 +25,7 @@
 
 import sale
 import stock
+import sale_installer
 import product
 import wizard
 import report

@@ -76,7 +76,30 @@
 	            <field name="model">olap.parameters.config.wizard</field>
 	            <field name="type">form</field>
 	            <field name="arch" type="xml">
-	                <form string="Parameters Configure">
+                <form string="Business Intelligence Server Configuration">
+                   <group colspan="4" col="8">
+                       <group colspan="3" width="220" height="250">
+                           <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
+                           <newline/>
+                           <label align="0.0" string="This wizard will automatically configure the web client for Business Intelligence." width="200" colspan="2"/>
+                       </group>
+                       <!--separator string="" orientation="vertical" colspan="1" rowspan="12"/-->
+                       <group colspan="4">
+                           <separator string=" Business Intelligence Web Client" colspan="4"/>
+                           <field name="host_name" colspan="4"/>
+                           <field name="host_port" colspan="4"/>
+                       </group>
+                       <group colspan="8" col="8">
+                       <separator string="" colspan="8"/>
+                           <group colspan="4" width="220">
+                               <field name="progress" widget="progressbar" nolabel="1" colspan="2"/>
+                          </group>
+                           <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
+                          <button name="action_config" string="Configure" icon='gtk-ok' type="object"/>
+                       </group>
+                   </group>
+               </form>
+	                <!--form string="Parameters Configure">
 	                    <separator string="BI Web Client." colspan="4"/>
 	                    <label string="This wizard will automatically configure the web client for BI." align="0.0" colspan="4"/>
 	                    <field name="host_name" colspan="4"/>
@@ -87,7 +110,7 @@
 	                        <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
 	                        <button name="action_config" string="Configure" icon='gtk-ok' type="object"/>
 	                    </group>
-	                </form>
+	                </form-->
 	            </field>
 	        </record>
 	

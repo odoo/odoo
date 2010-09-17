@@ -5,6 +5,7 @@
             <field name="name">Auction manager</field>
         </record>
 
+
         <record model="ir.ui.view" id="board_auction_manager_form1">
             <field name="name">board.auction.manager.form</field>
             <field name="model">board.board</field>
@@ -13,8 +14,6 @@
                 <form string="Auction manager ">
                     <hpaned position="100">
                         <child1>
-
-
                             <action
                                 string="Latest objects"
                                 name="%(auction.action_report_latest_objects_manager_tree)d"
@@ -54,7 +53,6 @@
                                 string="Objects by day"
                                 name="%(auction.action_report_auction_object_date_tree)d"
                                 view_mode="graph,tree" colspan="4" />
-
                         </child2>
                     </hpaned>
                 </form>

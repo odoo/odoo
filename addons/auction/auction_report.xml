@@ -3,7 +3,7 @@
 	<data>
 		<!--<delete model="ir.actions.report.xml" search="[('model','like','auction.')]"/>-->
 
-		<report string="Listing Huissiers"
+    <report string="Bailiffs Listing"
 		model="auction.lots"
 		name="flagey.huissier"
 		xsl="auction/report/huissier.xsl"
@@ -12,8 +12,7 @@
 		multi="1"
 		/>
 
-
-		<report string="Artists Biography"
+    <report string="Artists Biography"
 		 model="auction.artists"
 		 name="report.auction.artists"
 		 xml="auction/report/artists.xml"
@@ -29,14 +28,14 @@
 		 id="art_auction"
 		 multi="1"/>
 -->
-		<report string="Bids phones"
+    <report string="Bids phones"
 		 model="auction.lots"
 		 name="bids.lots"
 		 rml="auction/report/bids_lots.rml"
 		 id="bid_phone"
 		 multi="1"/>
 
-		<report string="Bids"
+    <report string="Bids"
 		 model="auction.bid"
 		 name="auction.bids"
 		 rml="auction/report/auction_bids.rml"
@@ -45,7 +44,7 @@
 
 
 	<report
-		string="Code barres du lot"
+		string="Barcode batch"
 		model="auction.lots"
 		name="auction.code_bar_lot"
 		rml="auction/report/report_lot_bar_code.rml"
@@ -53,7 +52,7 @@
 		id="v_report_barcode_lot"/>
 
 
-		<report string="Seller Labels"
+	<report string="Seller Labels"
 		 model="auction.lots"
 		 name="auction.seller_labels"
 		 auto="False"
@@ -89,8 +88,7 @@
 		multi="1"/>
 
 
-
-		<report string="Lots List - Landscape"
+	<report string="Lots List - Landscape"
 		 model="auction.lots"
 		 name="report.auction.lots.list.landscape"
 		 xml="auction/report/lots_list_landscape.xml"
@@ -98,16 +96,13 @@
 		id="lot_list_inv"
 		  multi="1"/>
 
-
     <report string="Lots List Inventory"
-		 model="auction.lots"
-		 name="lots.list.inventory"
-		 rml="auction/report/lots_list_inventory.rml"
-		 multi="1"/>
+         model="auction.lots"
+         name="lots.list.inventory"
+         rml="auction/report/lots_list_inventory.rml"
+         multi="1"/>
 
-
-
-<report string="Lots List"
+    <report string="Lots List"
 	   	model="auction.lots"
 		name="report.auction.lots.list"
 		xml="auction/report/lots_list.xml"
@@ -135,16 +130,17 @@
 		  auto="False"
 		  multi="1"/>-->
 
-		<report string="Buyer Form"
+	<report string="Buyer Form"
 		id="buyer_form_id"
 		model="auction.lots"
 		name="report.auction.ach_bordereau"
 		xml="auction/report/ach_bordereau.xml"
 		xsl="auction/report/ach_bordereau.xsl"
 		multi="0"
+		header= "True"
 		/>
 
-		<report string="Deposits"
+	<report string="Deposits"
 		id="id_deposit"
 		model="auction.deposit"
 		name="report.auction.deposit"
@@ -158,7 +154,7 @@
 			name="auction.cat_flagy"
 			xsl="'auction/report/catalog2.xsl"/>-->
 
-		<report string="Seller Form"
+	<report string="Seller Form"
 		id="seller_lots_3"
 		model="auction.lots"
 		name="report.auction.vnd_bordereau"
@@ -166,7 +162,7 @@
 		xsl="auction/report/vnd_bordereau.xsl"
 		multi="1"/>
 
-		<report string="Seller List"
+	<report string="Seller List"
 		model="auction.lots"
 		multi="1"
 		id="seller_form_id"
@@ -175,7 +171,7 @@
 		xsl="auction/report/seller_list.xsl"/>
 
 
-		<report string="Buyer List"
+	<report string="Buyer List"
 		model="auction.lots"
 		name="buyer.list"
 		id="buy_id_list"
@@ -193,7 +189,7 @@
 		 id="v_seller_list"
 		  multi="1"/>
 -->
-		<report string="Bids per lot (phone)"
+	<report string="Bids per lot (phone)"
 		 model="auction.lots"
 		 name="bids.phones.details"
 		 rml="auction/report/bids_phones_details.rml"
@@ -208,19 +204,20 @@
 		 xsl="auction/report/lots_bids_phone.xsl"
 		 multi="1"/>-->
 
-		<report string="Auction's results"
-			model="auction.lots"
-			name="auction.result"
-		  	rml="auction/report/auction_result.rml"
-			multi="1"/>
+<!-- temp -->
 
-		<report string="Results with buyer"
-			model="auction.lots"
-			name="report.auction.buyer.result"
-			rml="auction/report/auction_buyer_result.rml"
-			multi="1"
-			id="res_w_buyer"/>
+	<report string="Auction's results"
+		model="auction.lots"
+		name="auction.result"
+	  	rml="auction/report/auction_result.rml"
+		multi="1"/>
 
+	<report string="Results with buyer"
+		model="auction.lots"
+		name="report.auction.buyer.result"
+		rml="auction/report/auction_buyer_result.rml"
+		multi="1"
+		id="res_w_buyer"/>
 
 		<!--	<wizard
 			id="auction_catalog_flagy"
@@ -228,8 +225,6 @@
 			model="auction.lots"
 			name="auction.catalog.flagey"
 			keyword="client_print_multi"/>-->
-
-
 
 		</data>
 </openerp>

@@ -124,7 +124,7 @@
             <field eval="&quot;&quot;&quot;Draft invoices are validated. &quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_supplierinvoiceinvoice0"/>
             <field model="process.node" name="source_node_id" ref="process_node_supplierdraftinvoices0"/>
-            <field eval="[(6,0,[ref('account.t5')])]" name="transition_ids"/>
+            <field eval="[(6,0,[ref('account.pro2_to_open')])]" name="transition_ids"/>
         </record>
     
         <record id="process_transition_suppliervalidentries0" model="process.transition">

@@ -64,10 +64,13 @@ class procurement_order(osv.osv):
             # Creating a project for task.Project is created from Procurement.
             project_obj = self.pool.get('project.project')
             proj_name = tools.ustr(so_ref)
-            product_project_id =procurement.product_id.project_id and procurement.product_id.project_id.id or False
+            product_project = procurement.product_id.project_id or False
             proj_exist_id = project_obj.search(cr, uid, [('name', '=', proj_name)], context=context)
-            if  not proj_exist_id:
-                project_id = project_obj.create(cr, uid, {'name': proj_name, 'partner_id': partner_id,'parent_id':product_project_id})
+            if not proj_exist_id:
+                parent_project = False 
+                if product_project:
+                    parent_project = product_project.analytic_account_id.id
+                project_id = project_obj.create(cr, uid, {'name': proj_name, 'partner_id': partner_id, 'parent_id': parent_project})
             else:
                 project_id = proj_exist_id[0]
 
@@ -83,7 +86,7 @@ class procurement_order(osv.osv):
                 name_task = (procurement.origin, proc_name or '')
             else:
                 name_task = (procurement.product_id.name or procurement.origin, procurement.name or '')
-            planned_hours= procurement.product_id.sale_delay +procurement.product_id. produce_delay   
+            planned_hours= procurement.product_id.sale_delay + procurement.product_id. produce_delay   
             task_id = self.pool.get('project.task').create(cr, uid, {
                 'name': '%s:%s' % name_task,
                 'date_deadline': procurement.date_planned,

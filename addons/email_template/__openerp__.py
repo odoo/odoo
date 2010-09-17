@@ -21,7 +21,7 @@
 ##############################################################################
 
 {
-    "name" : "Email Template for Open ERP",
+    "name" : "Email Template for OpenERP",
     "version" : "0.7 RC",
     "author" : "Sharoon Thomas, Openlabs",
     "website" : "http://openerp.com",

@@ -61,7 +61,7 @@
         name="Storage Media"
         action="action_document_storage_form"
         id="menu_document_storage_media"
-        groups="base.group_extended"
+        groups="base.group_extended,base.group_system"
         parent="menu_document_management_configuration"/>
 
     <record model="ir.ui.view" id="view_document_directory_form">
@@ -302,7 +302,7 @@
                     <filter string="Partner" icon="terp-personal" domain="[]"
                        context="{'group_by':'partner_id'}"  groups="base.group_extended"/>
                     <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
-                    <filter string="Type"  domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
+                    <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
                     <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 </group>
@@ -334,6 +334,7 @@
         <field name="res_model">ir.attachment</field>
         <field name="name">Document</field>
         <field name="view_type">form</field>
+        <field name="search_view_id" ref="view_attach_filter"/>
     </record>
     <menuitem name="Documents" id="menu_document_doc" parent="knowledge.menu_document" sequence="0"/>
     <menuitem

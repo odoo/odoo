@@ -1,34 +1,55 @@
 - |
-  In order to test the 'event' module in OpenERP, we create a new event.
-
+  In order to test the "Event Organisation" in Association system.
 - |
-  Given that I have product "Ticket for Concert".
+  I want to organize one conference event on "OpenERP Business".
+- |
+  I'm creating new product "Ticket for Conference" to specify registration Cost of conference.
 -
   !record {model: product.product, id: product_product_ticketforconcert0}:
     categ_id: product.cat1
-    cost_method: standard
     list_price: 68.0
-    mes_type: fixed
-    name: Ticket for Concert
-    procure_method: make_to_stock
-    standard_price: 15.0
-    supply_method: buy
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
-    volume: 0.0
-    warranty: 0.0
-    weight: 0.0
-    weight_net: 0.0
-
+    name: Ticket for Conference
 - |
-  Given that I have also Event type "Conference".
+  I'm creating Event type "Conference".
 -
   !record {model: event.type, id: event_type_conference0}:
-     name: Conference
+     name: Conferences
 - |
-  I create partner "Mark Johnson" and and I provide an address to this
-   new customer, as well as an email "info@mycustomer.com".
+  I'm creating one Event "Conference on OpenERP Business" which will be started beetween 1 and 10 in this month.
+-
+  !record {model: event.event, id: event_event_conference0}:
+    date_begin: 2010-08-01
+    date_end: 2010-08-10
+    name: Conference on OpenERP Business.
+    product_id: 'product_product_ticketforconcert0'
+    type: 'event_type_conference0'
+    reply_to: 'info@customer.com'
+- |
+  Check that the new conference event is "Draft" or not.
+-
+  !assert {model: event.event, id: event_event_conference0}:
+     - state == 'draft', "Event should be in draft by default when first time created"
+- |
+  Need Minimun 10 Registrations to confirm/start this Conference Event and does not allowed more than 100 Registrations.
+- |
+  So I set Minimun and Maximun Registrations limit.
+-
+  !python {model: event.event}: |
+    self.write(cr, uid, [ref('event_event_conference0')], {'register_max': 100, 'register_min': 10})
+- |
+  I'm doing to confirm that conference event.
+-
+  !python {model: event.event}: |
+    self.button_confirm(cr, uid, [ref("event_event_conference0")])
+- |
+  But this conference event need minimum 10 Confirmed Registrations. so Check that Event is not "confirmed".
+-
+  !assert {model: event.event, id: event_event_conference0}:
+     - state != 'confirm', "Event should not confirmed if minimum registrations does not reached"
+- |
+  "Mark Johnson" want to subscribe/join into "Conference on OpenERP Business" with 10 tickets.
+- |
+  I'm creating new partner "Mark Johnson" with him email "info@mycustomer.com".
 -
   !record {model: res.partner, id: res_partner_markjohnson0}:
     address:
@@ -44,175 +65,108 @@
         type: default
         zip: '1000'
         email: 'info@mycustomer.com'
-    credit_limit: 0.0
-    lang: en_US
     name: Mark Johnson
-    property_account_payable: account.a_pay
-    property_account_receivable: account.a_recv
 
 - |
-  we create it with a "Conference on OpenERP Offshore Business" event and provide "Beginning date", "Ending Date" and  "Product" as Concert Ticket.
--
-  !record {model: event.event, id: event_event_conference0}:
-    code: C/004
-    date_begin: '2010-06-07 13:39:00'
-    date_end: '2010-06-10 13:39:00'
-    name: Conference on OpenERP Offshore Business.
-    product_id: 'product_product_ticketforconcert0'
-    register_max: 0.0
-    register_min: 0.0
-    state: draft
-    type: 'event_type_conference0'
-    reply_to: 'info@customer.com'
-
-- |
-  we  set the limit of registrations to this event using "Minimum Registrations"  2 and "Maximum Registrations" 10.
--
-  !python {model: event.event}: |
-    self.write(cr, uid, [ref('event_event_conference0')], {'register_max': 10, 'register_min': 2})
-
-- |
-  We Check that the event is in "Draft" state.
--
-  !assert {model: event.event, id: event_event_conference0}:
-     - state == 'draft'
-
-- |
-  Then we confirm it press on "Confirm Event" button.
--
-  !python {model: event.event}: |
-    self.button_confirm(cr, uid, [ref("event_event_conference0")], {"active_ids": [ref("event.menu_event_event")]})
-
-- |
-  Check that Event is "confirmed" or not.
--
-  !assert {model: event.event, id: event_event_conference0}:
-     - state == 'confirm'
-
-- |
-  person "Mark Johnson" want to  confirm their registrations. for that
-  I create New Registration for "Conference on OpenERP Offshore Business.
+  I'm creating Registration for "Mark Johnson" on "Conference on OpenERP Business" with 10 tickets.
 -
   !record {model: event.registration, id: event_registration_registrationjacot0}:
-    badge_name: Jacot
-    badge_partner: Mark Johnson
     contact_id: base_contact.res_partner_contact_jacot0
-    date_deadline: '2010-06-07 13:39:00'
     event_id: event.event_event_conference0
-    event_product: Ticket for Concert
-    name: 'Registration: Jacot'
-    partner_id: 'res_partner_markjohnson0'
-    partner_invoice_id: 'res_partner_markjohnson0'
+    partner_id: event.res_partner_markjohnson0
+    partner_invoice_id: event.res_partner_markjohnson0
+    event_product: Ticket for Conference
     unit_price: 68.0
+    nb_register: 10
 - |
-  I check that "Number of registration" is less than "Maximum registration" defined in "Conference on OpenERP Offshore Business" event.
-  if not then  confirmation will fail because its greater  then the Maximum registration.
--
-  !python {model: event.event}: |
-     from tools.translate import _
-     obj_register = self.pool.get('event.registration')
-     event_id1 = self.browse(cr, uid, ref('event_event_conference0'))
-     register_ids = obj_register.search(cr, uid, [('event_id', '=', event_id1.id)])
-     register_id = obj_register.browse(cr, uid, register_ids)[0]
-     assert register_id.nb_register <= event_id1.register_max, _('NO. of Registration for this event is More than Maximum Registration Defined !')
-
-
-- |
-  And Confirm that Registration by click on "Confirm Registration" button of Registraion form.
+  I'm doing to Open that Registration.
 -
   !python {model: event.registration}: |
-    self.check_confirm(cr, uid, [ref("event_registration_registrationjacot0")], {"active_ids": [ref("event.menu_action_registration")]})
-
+    self.check_confirm(cr, uid, [ref("event_registration_registrationjacot0")])
 - |
-  one other Person "Zen" also want to confirm their Registraions. so
-  They create New registraion for This event.
--
-  !record {model: event.registration, id: event_registration_registrationzen0}:
-    badge_name: Zen
-    badge_partner: China Export
-    contact_id: base_contact.res_partner_contact_zen0
-    date_deadline: '2010-06-07 13:39:00'
-    event_id: event.event_event_conference0
-    event_product: Ticket for Concert
-    name: 'Registration: Zen'
-    partner_id: base.res_partner_3
-    partner_invoice_id: base.res_partner_3
-    unit_price: 68.0
-
-- |
-  And Confirm that Registration by click on "Confirm Registration" button of Registraion form.
--
-  !python {model: event.registration}: |
-    self.check_confirm(cr, uid, [ref("event_registration_registrationzen0")], {"active_ids": [ref("event.menu_action_registration")]})
-
-- |
-  Third person create New Registration for "Conference on OpenERP Offshore Business" event.
--
-  !record {model: event.registration, id: event_registration_registrationpassot0}:
-    badge_name: Passot
-    badge_partner: Mediapole SPRL
-    contact_id: base_contact.res_partner_contact_passot0
-    date_deadline: '2010-06-07 13:39:00'
-    email_from: info@mediapole.net
-    event_id: 'event_event_conference0'
-    event_product: Ticket for Concert
-    name: 'Registration: Passot'
-    partner_id: base.res_partner_8
-    partner_invoice_id: base.res_partner_8
-    unit_price: 68.0
-- |
-  This person cannot Confirm their registration.so I check that state is "Unconfirmed".
--
-  !assert {model: event.registration, id: event_registration_registrationpassot0}:
-     - state == 'draft'
-
-- |
-  I Check that  the total number of confirmed is 2 and  unconfirmed registrations 1.
--
-  !python {model: event.event}: |
-     from tools.translate import _
-     obj_event = self.browse(cr, uid, ref('event_event_conference0'))
-     assert  obj_event.register_current == 2, "Number of Confirmed Registration for this event is %s"%(obj_event.register_current)
-     assert obj_event.register_prospect == 1, "Number of Unconfirmed  Registration for this event is %s" %(obj_event.register_prospect)
-- |
-  This event is finished by click on "Event Done" button of this event form.
--
-  !python {model: event.event}: |
-    self.button_done(cr, uid, [ref("event.event_event_conference0")], {"active_ids": [ref("event.menu_event_event")] })
-- |
-  We can create invoice if the registration is in "Open" state otherwise it gives the warning to the user.
-  so I check that Registration is in "Open" state before click on "Make Invoices."
+  Check that Registration is in "Open" or not."
 -
   !assert {model: event.registration, id: event_registration_registrationjacot0}:
-     - state == 'open'
-- |
-  Now, I will invoice the participant who have address using "Make Invoices".Create invoice will be linked to Invoice Field available on Payments tab of registrations.
+     - state == 'open', "Registration should be open here."
 
--
-  !record {model: event.make.invoice, id: event_make_invoice_0}:
-    {}
 - |
-  I click on "Done" button of this "Make Invoices" wizard.
+  I'm again try to confirm that conference event.
 -
-  !python {model: event.make.invoice}: |
-    self.make_invoice(cr, uid, [ref("event_make_invoice_0")], {"active_ids": [ref("event_registration_registrationzen0")]})
+  !python {model: event.event}: |
+    self.button_confirm(cr, uid, [ref("event_event_conference0")])
+
 - |
-  I check  that Invoice for this partner is created or not.
+  Now Minimun requirement of Registration is fullfil. so Check that Event is "confirmed" or not.
+-
+  !assert {model: event.event, id: event_event_conference0}:
+     - state == 'confirm', "Event should be confirmed here."
+
+- |
+  I'm creating invoice of Registration of "Mark Johnson" on "Conference on OpenERP Business".
 -
   !python {model: event.registration}: |
-     obj_event_reg = self.pool.get('event.registration')
-     obj_lines = self.pool.get('account.invoice.line')
-     inv_obj = self.pool.get('account.invoice')
-     data_event_reg = obj_event_reg.browse(cr, uid, [ref('event_registration_registrationzen0')], context=context)[0]
-     invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', data_event_reg.partner_invoice_id.id)])
+    self.action_invoice_create(cr, uid, [ref("event_registration_registrationjacot0")])
 
-     if invoice_ids:
-        invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
-        line_ids = obj_lines.search(cr, uid, [('product_id', '=', data_event_reg.event_id.product_id.id), ('invoice_id', '=', invoice_id.id), ('price_unit', '=', data_event_reg.unit_price)])
-        line_id = obj_lines.browse(cr, uid, line_ids)[0]
-        assert line_id.product_id == data_event_reg.event_id.product_id
-        assert data_event_reg.partner_id == invoice_id.partner_id
-        assert invoice_id.address_invoice_id == data_event_reg.partner_address_id=======
-     from tools.translate import _
-     data_event_reg = self.browse(cr, uid, ref('event_registration_registrationzen0'), context=context)
-     assert data_event_reg.invoice_id, _("Invoices has not been generated for this partner")
+- |
+  Check Invoice of Registration of "Mark Johnson" is created or not.
+-
+  !assert {model: event.registration, id: event_registration_registrationjacot0}:
+     - invoice_id != False, "Invoice should be generated"
+
+- |
+  Check Registration of "Mark Johnson" is closed or not after invoice generated.
+-
+  !assert {model: event.registration, id: event_registration_registrationjacot0}:
+     - state != 'done',  "Registration should be closed after invoice generated"
+
+- |
+  Now "Mark Johnson" want to another registration on "Conference on OpenERP Business" with 120 tickets.
+- |
+  I'm creating new registration for "Mark Johnson" with 100 tickets.
+-
+  !record {model: event.registration, id: event_registration_registrationzen0}:
+    event_id: event.event_event_conference0
+    partner_id: event.res_partner_markjohnson0
+    partner_invoice_id: event.res_partner_markjohnson0
+    event_product: Ticket for Conference
+    unit_price: 68.0
+    nb_register: 100
+
+- |
+  I'm doing to open "Mark Johnson" registration.
+-
+  !python {model: event.registration}: |
+    self.check_confirm(cr, uid, [ref("event_registration_registrationzen0")])
+
+- |
+  But conference event do not allowed  more than 100 Registrations. so Check that registration is not "open".
+-
+  !assert {model: event.registration, id: event_registration_registrationzen0}:
+     - state == 'draft', "Registration should be in draft by default."
+- |
+  Now I'm modify number of tickets of "Mark Johnson"'s registration with 90 tickets.
+-
+  !python {model: event.registration}: |
+    self.write(cr, uid, [ref("event_registration_registrationzen0")], {'nb_register': 90})
+- |
+  I'm again try to open "Mark Johnson" registration.
+-
+  !python {model: event.registration}: |
+    self.check_confirm(cr, uid, [ref("event_registration_registrationzen0")])
+
+- |
+  Check that registration "open" or not.
+-
+  !assert {model: event.registration, id: event_registration_registrationzen0}:
+     - state == 'open', "Registration should be open here."
+- |
+  I'm closing "Conference on OpenERP Business" Conference event
+-
+  !python {model: event.event}: |
+    self.button_done(cr, uid, [ref("event_event_conference0")])
+- |
+  Check that conference "close" or not.
+-
+  !assert {model: event.event, id: event_event_conference0}:
+     - state == 'done', "Registration should be Closed here."
+

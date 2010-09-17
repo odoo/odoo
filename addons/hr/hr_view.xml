@@ -4,10 +4,9 @@
 
         <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
-        <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="group_hr_manager"    sequence="50" />
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration"       groups="group_hr_manager" sequence="1" />
-        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees"
-            sequence="1"/>
+        <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_system" sequence="50"/>
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
+        <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" groups="base.group_system" name="Employees" sequence="1" />
 
         <!--
         ==========
@@ -60,13 +59,12 @@
                             </group>
                             <group col="2" colspan="2">
                             <separator string="Position" colspan="2"/>
-                            <field name="job_id" widget="selection"/>
+                            <field name="job_id" widget="selection" domain="[('state','!=','old')]"/>
                             <field name="department_id" widget="selection"/>
-                            <field name="category_id" />
-                            <!--<separator string="Managers" colspan="2"/>
-                            <field name="parent_id" />
-                            <field name="coach_id" />-->
                             </group>
+                        </page>
+                        <page string="Categories">
+                            <field name="category_ids" nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" nolabel="1" name="notes"/>
@@ -102,7 +100,9 @@
                 <search string="Employees">
                     <filter icon="terp-personal-" domain="[('active','=',False)]" string="Unactive" groups="base.group_extended"/>
                     <field name="name"/>
-                    <field name="department_id" widget="selection"/>
+                    <field name="department_id" widget="selection">
+                    <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" help="My Departments Employee"/>
+                    </field>
                     <field name="job_id" widget="selection"/>
                     <field name="parent_id"/>
                     <newline />
@@ -123,7 +123,7 @@
             <field name="view_type">tree</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_employee_tree"/>
-            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="domain">[('parent_id','=',False),('user_id','=',uid)]</field>
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
 
@@ -308,7 +308,7 @@
             <field eval="True" name="object"/>
         </record>
 
-        <menuitem action="open_view_categ_tree" groups="base.group_extended"
+        <menuitem action="open_view_categ_tree" groups="base.group_extended,base.group_system"
             id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
@@ -337,7 +337,12 @@
                             <field name="employee_ids" colspan='4' nolabel="1"  mode="tree,form"/>
                         </page>
                     </notebook>
-                    <field name="state"/>
+                    <group col="6" colspan="4">
+	                    <field name="state"/>
+	                    <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
+		            <button name="job_open" string="Open" states="old,recruit" type="object" icon="terp-camera_test"/>
+                            <button name="job_old" string="Old" states="open,recruit" type="object" icon="gtk-cancel"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -385,7 +390,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root"/>
+        <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_manager,base.group_system"/>
         <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="action_hr_job" sequence="2"/>
 
     </data>

@@ -27,7 +27,7 @@ from datetime import datetime
 class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
 
-    def export_cal(self, cr, uid, ids, context={}):
+    def export_cal(self, cr, uid, ids, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -35,14 +35,16 @@ class crm_meeting(osv.osv):
             @param ids: List of CRM Meeting’s IDs
             @param context: A standard dictionary for contextual values
         """
-
+        if not context:
+            context = {}
         ids = map(lambda x: base_calendar.base_calendar_id2real_id(x), ids)
-        event_data = self.read(cr, uid, ids)
+        event_data = self.read(cr, uid, ids, context=context)
         event_obj = self.pool.get('basic.calendar.event')
-        ical = event_obj.export_cal(cr, uid, event_data, context={'model': self._name})
+        context.update({'model': self._name})
+        ical = event_obj.export_cal(cr, uid, event_data, context=context)
         return ical.serialize()
 
-    def import_cal(self, cr, uid, data, data_id=None, context={}):
+    def import_cal(self, cr, uid, data, data_id=None, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -51,12 +53,13 @@ class crm_meeting(osv.osv):
             @param data_id: calendar's Id
             @param context: A standard dictionary for contextual values
         """
-
+        if not context:
+            context = {}
         event_obj = self.pool.get('basic.calendar.event')
         vals = event_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
 
-    def check_import(self, cr, uid, vals, context={}):
+    def check_import(self, cr, uid, vals, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -64,6 +67,8 @@ class crm_meeting(osv.osv):
             @param vals: Get Values
             @param context: A standard dictionary for contextual values
         """
+        if not context:
+            context = {}
         ids = []
         model_obj = self.pool.get(context.get('model'))
         recur_pool = {}
@@ -96,8 +101,8 @@ class crm_meeting(osv.osv):
                         event_id = model_obj.create(cr, uid, val)
                         recur_pool[u_id] = event_id
                         ids.append(event_id)
-        except Exception, e:
-            raise osv.except_osv(('Error !'), (str(e)))
+        except Exception:
+            raise
         return ids
     
 crm_meeting()

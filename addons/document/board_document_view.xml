@@ -56,8 +56,7 @@
             id="menu_reports_document"
             parent="menu_reporting"
             sequence="0"
-            icon="terp-graph"
-            groups="document.group_document_manager"/>
+            groups="base.group_system"/>
 
 
          <menuitem
@@ -66,6 +65,9 @@
             sequence="1"
             id="menu_reports_document_manager"
             icon="terp-graph"/>
+
+         <menuitem name="Knowledge" icon="terp-stock" id="knowledge.menu_document"
+            sequence="19" groups="base.group_system,base.group_document_user" action="open_board_document_manager"/>
 
         <record model="ir.ui.view" id="board_document_manager_form1">
             <field name="name">board.document.manager.form1</field>

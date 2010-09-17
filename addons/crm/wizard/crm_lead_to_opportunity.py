@@ -79,6 +79,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 'probability': this.probability,
                 'name': this.name, 
                 'partner_id': this.partner_id.id, 
+                'user_id': (this.partner_id.user_id and this.partner_id.user_id.id) or (lead.user_id and lead.user_id.id), 
                 'type': 'opportunity'
             }
             lead_obj.write(cr, uid, lead.id, vals, context=context)
@@ -126,9 +127,9 @@ class crm_lead2opportunity(osv.osv_memory):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
-            if lead.state != 'open':
+            if lead.state not in ('open', 'pending'):
                 raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' state before converting to Opportunity.'))
+\'Open\' or \'Pending\' state before converting to Opportunity.'))
         return False
 
     def default_get(self, cr, uid, fields, context=None):
@@ -221,7 +222,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         res = mod_obj.read(cr, uid, result, ['res_id'])
         value = {}
         data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')
         view_id = False
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
@@ -231,7 +232,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             'name': _('Create Opportunity'), 
             'view_type': 'form', 
             'view_mode': 'form,tree', 
-            'res_model': 'crm.lead2opportunity', 
+            'res_model': 'crm.lead2opportunity.action', 
             'view_id': False, 
             'context': context, 
             'views': [(view_id, 'form')], 
@@ -289,12 +290,75 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
-            if lead.state != 'open':
+            if lead.state not in ('open', 'pending'):
                 raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' state before converting to Opportunity.'))
+\'Open\' or \'Pending\' state before converting to Opportunity.'))
         return False
 
 crm_lead2opportunity_partner()
 
+class crm_lead2opportunity_action(osv.osv_memory):
+    '''
+    Merge with Existing Opportunity or Convert to Opportunity
+    '''
+    _name = 'crm.lead2opportunity.action'
+    _description = 'Convert/Merge Opportunity'
+    
+    _columns = {
+        'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
+        
+    }
+
+    _defaults = {
+        'name': 'convert',
+        }
+
+    def do_action(self, cr, uid, ids, context=None):
+        """
+        This function opens form according to selected Action
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Lead to Opportunity IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Opportunity form
+        """
+        value = {}
+        data_obj = self.pool.get('ir.model.data')
+        view_id = False
+        for this in self.browse(cr, uid, ids, context=context):
+            if this.name == 'convert':
+                data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
+                if data_id:
+                    view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+                value = {
+                        'name': _('Create Opportunity'), 
+                        'view_type': 'form', 
+                        'view_mode': 'form,tree', 
+                        'res_model': 'crm.lead2opportunity', 
+                        'view_id': False, 
+                        'context': context, 
+                        'views': [(view_id, 'form')], 
+                        'type': 'ir.actions.act_window', 
+                        'target': 'new', 
+                    }
+            elif this.name == 'merge':
+                data_id = data_obj._get_id(cr, uid, 'crm', 'merge_opportunity_form')
+                if data_id:
+                    view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+                value = {
+                        'name': _('Merge with Existing Opportunity'), 
+                        'view_type': 'form', 
+                        'view_mode': 'form,tree', 
+                        'res_model': 'crm.merge.opportunity', 
+                        'view_id': False, 
+                        'context': context, 
+                        'views': [(view_id, 'form')], 
+                        'type': 'ir.actions.act_window', 
+                        'target': 'new', 
+                    }
+        return value
+
+crm_lead2opportunity_action()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

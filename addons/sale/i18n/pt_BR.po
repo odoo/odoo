@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-09 13:04+0000\n"
-"Last-Translator: Renato Lima - http://www.akretion.com <renatonlima@gmail."
-"com>\n"
+"PO-Revision-Date: 2010-08-15 09:34+0000\n"
+"Last-Translator: Renato Lima - http://www.akretion.com "
+"<renatonlima@gmail.com>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:08+0000\n"
+"X-Launchpad-Export-Date: 2010-08-16 06:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -46,7 +46,7 @@ msgstr ""
 #. module: sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação"
+msgstr "Nome do modelo inválido na definição da ação."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -73,7 +73,8 @@ msgid "Steps To Deliver a Sale Order"
 msgstr "Passos para Entregar uma Ordem de Venda"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,qtty:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,qtty:0
+#: rml:sale.order:0
 msgid "Quantity"
 msgstr "Quantidade"
 
@@ -83,7 +84,8 @@ msgid "You invoice has been successfully created !"
 msgstr "Sua fatura foi criada com sucesso !"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Automatic Declaration"
 msgstr "Declaração Automática"
 
@@ -150,15 +152,17 @@ msgstr "Cancelar Pedido"
 #. module: sale
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
-msgstr ""
+msgstr "Movimentação de Estoque"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Manual Designation"
-msgstr ""
+msgstr "Designação Manual"
 
 #. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
 msgstr "Notas"
@@ -169,7 +173,8 @@ msgid "Invoice after delivery"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Impostos"
 
@@ -184,14 +189,15 @@ msgid "Shipping Policy"
 msgstr "Política de Embarque"
 
 #. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelada"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "Pendência no Embarque"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -206,7 +212,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
-msgstr "Endereço da Fatura"
+msgstr "Endereço Faturamento"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
@@ -214,7 +220,7 @@ msgid "Outgoing Products"
 msgstr ""
 
 #. module: sale
-#: view:report.sale.order.created:0
+#: view:sale.order:0
 msgid "Reference"
 msgstr "Referência"
 
@@ -229,9 +235,10 @@ msgid "Procurement is created after confirmation of sale order."
 msgstr ""
 
 #. module: sale
-#: field:sale.order,project_id:0 field:sale.shop,project_id:0
+#: field:sale.order,project_id:0
+#: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Projeto"
+msgstr "Centro de Custo"
 
 #. module: sale
 #: rml:sale.order:0
@@ -246,12 +253,12 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Info. Extra"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: sale
 #: field:sale.order.line,price_net:0
@@ -267,7 +274,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Quantidade (UdS)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -281,7 +288,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmada"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -302,48 +309,51 @@ msgstr ""
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
-msgstr "Endereço de Embarque"
+msgstr "Endereço Entrega"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Shipped Quantities"
-msgstr ""
+msgstr "Quantidades Enbarcada"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr ""
+msgstr "Notas Fiscais Baseadas em Ordens de Vendas"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
 msgid "Sale Shop"
-msgstr ""
+msgstr "Estabelecimento de Venda"
 
 #. module: sale
 #: field:sale.shop,warehouse_id:0
 msgid "Warehouse"
-msgstr "Armazém Disponível"
+msgstr "Estoque Disponível"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Order N°"
-msgstr ""
+msgstr "Ordem N°"
 
 #. module: sale
-#: field:sale.order,order_line:0 view:sale.order.line:0
+#: field:sale.order,order_line:0
+#: view:sale.order.line:0
 msgid "Order Lines"
 msgstr "Linhas de Pedido"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Desc. (%)"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Linhas da Nota Fiscal"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
@@ -353,7 +363,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Total de Mercadorias"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
@@ -371,7 +381,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Shipping address :"
-msgstr ""
+msgstr "Endereço de Embarque :"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -383,7 +393,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr ""
+msgstr "Entrega Completa"
 
 #. module: sale
 #: view:sale.order:0
@@ -393,19 +403,19 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr ""
+msgstr "Quantidade (UdM)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree1
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr ""
+msgstr "Linhas da Ordem de Venda"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
-msgstr ""
+msgstr "Quantidades Pedidas"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
@@ -420,7 +430,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: sale
 #: view:sale.order:0
@@ -428,18 +438,20 @@ msgid "Confirm Order"
 msgstr "Confirmar Pedido"
 
 #. module: sale
-#: field:report.sale.order.created,name:0
+#: field:sale.order,name:0
 msgid "Order Reference"
-msgstr "Ordem de Referência"
+msgstr "Referência da Ordem"
 
 #. module: sale
-#: selection:sale.order,state:0 view:sale.order.line:0
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
 #: selection:sale.order.line,state:0
 msgid "Done"
-msgstr ""
+msgstr "Concluído"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0 field:sale.shop,pricelist_id:0
+#: field:sale.order,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Lista de Preços"
 
@@ -456,7 +468,7 @@ msgstr ""
 #. module: sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -483,13 +495,13 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Sales orders"
-msgstr ""
+msgstr "Ordens de Venda"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
 #: field:sale.order.line,procurement_id:0
 msgid "Procurement"
-msgstr ""
+msgstr "Aquisição"
 
 #. module: sale
 #: view:sale.shop:0
@@ -511,18 +523,18 @@ msgstr ""
 #: wizard_field:sale.order.line.make_invoice,init,grouped:0
 #: wizard_field:sale.order.make_invoice,init,grouped:0
 msgid "Group the invoices"
-msgstr ""
+msgstr "Agrupar Notas Fiscais"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 #: model:ir.ui.menu,name:sale.menu_action_order_tree5
 msgid "All Quotations"
-msgstr ""
+msgstr "Todas Cotações"
 
 #. module: sale
 #: field:sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Desconto (%)"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -549,7 +561,7 @@ msgstr ""
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "Invoices"
-msgstr ""
+msgstr "Notas Fiscais"
 
 #. module: sale
 #: view:sale.order:0
@@ -569,7 +581,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
-msgstr ""
+msgstr "Politica Padrão de Embarque"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -580,7 +592,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:sale.module_meta_information
 #: model:ir.ui.menu,name:sale.menu_sale_root
 msgid "Sales Management"
-msgstr ""
+msgstr "Vendas"
 
 #. module: sale
 #: field:sale.order.line,order_id:0
@@ -595,7 +607,7 @@ msgstr "Refazer Fatura"
 #. module: sale
 #: field:sale.order,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "Representate"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
@@ -609,12 +621,13 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Impostos :"
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Faturado"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
@@ -624,7 +637,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,state:0
 msgid "Order State"
-msgstr "Estado do Pedido"
+msgstr "Status"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -679,12 +692,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr ""
+msgstr "em ordem"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Rascunho"
 
 #. module: sale
 #: field:sale.order,invoiced:0
@@ -699,7 +712,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Shipping & Manual Invoice"
-msgstr ""
+msgstr "Embarque & Fatutamento Manual"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
@@ -715,7 +728,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Quantidade Não Taxada"
+msgstr "Total de Mercadorias"
 
 #. module: sale
 #: field:sale.order.line,state:0
@@ -735,7 +748,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Our Salesman"
-msgstr ""
+msgstr "Nosso Representante"
 
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,init,create:0
@@ -751,23 +764,24 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_order_form
 #: model:ir.ui.menu,name:sale.menu_sale_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "Ordens de Venda"
 
 #. module: sale
 #: field:product.product,pricelist_sale:0
 msgid "Sale Pricelists"
-msgstr ""
+msgstr "Lista de Preço para Vendas"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "Direct Delivery"
-msgstr ""
+msgstr "Entrega Direta"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
-msgstr ""
+msgstr "Propriedades"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
@@ -790,13 +804,14 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Compute"
-msgstr "Computar"
+msgstr "Calcular"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "Estabelecimento"
 
 #. module: sale
 #: rml:sale.order:0
@@ -807,7 +822,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_order_tree4
 #: model:ir.ui.menu,name:sale.menu_action_order_tree4
 msgid "Sales Order in Progress"
-msgstr ""
+msgstr "Ordem de Venda em Processamento"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
@@ -817,7 +832,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "History"
-msgstr ""
+msgstr "Histórico"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -837,7 +852,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Sua Referência"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -845,24 +860,26 @@ msgid "Delivery Order Only"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Sales order lines"
-msgstr ""
+msgstr "Linhas da Ordem de Venda"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequência"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.next_id_88
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Sales"
 msgstr "Vendas"
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "Qty"
-msgstr ""
+msgstr "Qtd"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -875,20 +892,21 @@ msgid "Other data"
 msgstr ""
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,amount:0 rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,amount:0
+#: rml:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Preço Unitário"
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Posição Fiscal"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Invoice address :"
-msgstr ""
+msgstr "Endereço de Faturamento :"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
@@ -901,11 +919,12 @@ msgstr ""
 #: model:process.transition.action,name:sale.process_transition_action_cancel1
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: wizard_button:sale.advance_payment_inv,init,end:0
-#: view:sale.config.picking_policy:0 view:sale.order.line:0
+#: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
 #: wizard_button:sale.order.line.make_invoice,init,end:0
 #: wizard_button:sale.order.make_invoice,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: sale
 #: help:sale.order,state:0
@@ -918,9 +937,10 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "UoM"
-msgstr ""
+msgstr "UdM"
 
 #. module: sale
 #: field:sale.order.line,number_packages:0
@@ -935,9 +955,9 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: selection:report.sale.order.created,state:0
+#: selection:sale.order,state:0
 msgid "In Progress"
-msgstr "Em Andamento"
+msgstr "Em Progresso"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,init:0
@@ -949,8 +969,6 @@ msgstr ""
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -965,18 +983,18 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Pendência"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "Linhas da Ordem de Venda"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.order:0
 msgid "Create Invoice"
-msgstr "Criar Fatura"
+msgstr "Criar Nota Fiscal"
 
 #. module: sale
 #: wizard_view:sale.order.line.make_invoice,init:0
@@ -997,7 +1015,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Sales order"
-msgstr ""
+msgstr "Ordem de Venda"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
@@ -1012,7 +1030,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr "Incoterm"
+msgstr "Forma de Entrega"
 
 #. module: sale
 #: wizard_field:sale.advance_payment_inv,init,product_id:0
@@ -1028,17 +1046,18 @@ msgstr ""
 #. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
-msgstr ""
+msgstr "Contato Comercial"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order.line,name:0
+#: rml:sale.order:0
+#: field:sale.order.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Price"
-msgstr ""
+msgstr "Preço"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1048,22 +1067,22 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Cotação / Ordem"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel."
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Quotation N°"
-msgstr ""
+msgstr "Cotação N°"
 
 #. module: sale
 #: field:stock.move,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Linhas da Ordem de Venda"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
@@ -1088,32 +1107,34 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: field:report.sale.order.created,partner_id:0
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Cliente"
 
 #. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
-msgstr ""
+msgstr "Lista de Preço de Compras"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Ordem de Venda"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
-msgstr ""
+msgstr "Faturar em"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
@@ -1124,22 +1145,23 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Total amount"
-msgstr ""
+msgstr "Total Geral"
 
 #. module: sale
-#: rml:sale.order:0 field:sale.order,date_order:0
+#: rml:sale.order:0
+#: field:sale.order,date_order:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "Data da Ordem"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "UdS Produto"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "Manual em Progresso"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
@@ -1158,17 +1180,17 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sale Order"
-msgstr ""
+msgstr "Configurar Politica de Separação para Ordem de Venda"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_order0
 msgid "Order"
-msgstr ""
+msgstr "Ordem"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Payment Terms"
-msgstr ""
+msgstr "Forma de Pagamento"
 
 #. module: sale
 #: view:sale.order:0
@@ -1188,17 +1210,17 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Nome do Estabelecimento"
 
 #. module: sale
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Forma de Pagamento"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Payment Before Delivery"
-msgstr ""
+msgstr "Pagamento Antes da Entrega"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1209,14 +1231,15 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0
+#: view:sale.order:0
+#: view:sale.order.line:0
 msgid "States"
-msgstr ""
+msgstr "Status"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Peso"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
@@ -1229,9 +1252,10 @@ msgid "Error: Invalid ean code"
 msgstr "Error: código EAN invalido"
 
 #. module: sale
-#: field:sale.order,picked_rate:0 field:sale.order,shipped:0
+#: field:sale.order,picked_rate:0
+#: field:sale.order,shipped:0
 msgid "Picked"
-msgstr ""
+msgstr "Separado"
 
 #. module: sale
 #: view:sale.shop:0
@@ -1241,12 +1265,12 @@ msgstr "Contas"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr ""
+msgstr "Notas Fiscais Baseadas nas Entregas"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Movimentações de Estoque"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1268,7 +1292,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sale Dashboard"
-msgstr ""
+msgstr "Dashboard de Venda"
 
 #. module: sale
 #: view:board.board:0
@@ -1304,7 +1328,7 @@ msgstr ""
 #: field:report.sale.order.category,price_average:0
 #: field:report.sale.order.product,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Preço Médio"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_order_created
@@ -1348,7 +1372,7 @@ msgstr "Todos os meses"
 #: field:report.sale.order.category,price_total:0
 #: field:report.sale.order.product,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Preço Total"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_order_category
@@ -1444,7 +1468,7 @@ msgstr ""
 #: selection:report.sale.order.category,state:0
 #: selection:report.sale.order.product,state:0
 msgid "Manual in progress"
-msgstr ""
+msgstr "Manual em andamento"
 
 #. module: sale
 #: field:report.turnover.per.month,turnover:0
@@ -1456,7 +1480,7 @@ msgstr "Retorno Total"
 #: selection:report.sale.order.category,state:0
 #: selection:report.sale.order.product,state:0
 msgid "In progress"
-msgstr ""
+msgstr "Em progresso"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_category_tree
@@ -1475,13 +1499,13 @@ msgstr ""
 #: field:report.sale.order.product,name:0
 #: field:report.turnover.per.month,name:0
 msgid "Month"
-msgstr ""
+msgstr "Mês"
 
 #. module: sale
 #: field:report.sale.order.category,count:0
 #: field:report.sale.order.product,count:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# de Linhas"
 
 #. module: sale
 #: field:report.sale.order.created,create_date:0

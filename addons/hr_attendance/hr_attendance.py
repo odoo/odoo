@@ -34,10 +34,13 @@ class hr_action_reason(osv.osv):
     _defaults = {
         'action_type': 'sign_in',
     }
+
 hr_action_reason()
 
 def _employee_get(obj, cr, uid, context=None):
-    ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)])
+    if context is None:
+        context = {}
+    ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
     if ids:
         return ids[0]
     return False
@@ -47,6 +50,8 @@ class hr_attendance(osv.osv):
     _description = "Attendance"
 
     def _day_compute(self, cr, uid, ids, fieldnames, args, context=None):
+        if context is None:
+            context = {}
         res = dict.fromkeys(ids, '')
         for obj in self.browse(cr, uid, ids, context=context):
             res[obj.id] = time.strftime('%Y-%m-%d', time.strptime(obj.name, '%Y-%m-%d %H:%M:%S'))
@@ -55,12 +60,12 @@ class hr_attendance(osv.osv):
     _columns = {
         'name': fields.datetime('Date', required=True, select=1),
         'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
-        'action_desc': fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
+        'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
         'day': fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
     }
     _defaults = {
-        'name': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'name': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), #Don't remove the lambda, if you remove it then the current time will not change
         'employee_id': _employee_get,
     }
 
@@ -82,6 +87,7 @@ class hr_attendance(osv.osv):
 
     _constraints = [(_altern_si_so, 'Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
     _order = 'name desc'
+
 hr_attendance()
 
 class hr_employee(osv.osv):
@@ -89,6 +95,8 @@ class hr_employee(osv.osv):
     _description = "Employee"
 
     def _state(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
         result = {}
         for id in ids:
             result[id] = 'absent'
@@ -112,13 +120,19 @@ class hr_employee(osv.osv):
      }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):
+        if context is None:
+            context = {}
         cr.execute('select max(name) from hr_attendance where employee_id=%s', (emp_id,))
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 
     def attendance_action_change(self, cr, uid, ids, type='action', context=None, dt=False, *args):
+        obj_attendance = self.pool.get('hr.attendance')
+        if context is None:
+            context = {}
         id = False
         warning_sign = 'sign'
+        res = {}
 
         #Special case when button calls this method :type=context
         if isinstance(type, dict):
@@ -127,20 +141,17 @@ class hr_employee(osv.osv):
             warning_sign = "Sign In"
         elif type == 'sign_out':
             warning_sign = "Sign Out"
-
         for emp in self.read(cr, uid, ids, ['id'], context=context):
             if not self._action_check(cr, uid, emp['id'], dt, context):
                 raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
 
             res = {'action': type, 'employee_id': emp['id']}
-
             if dt:
                 res['name'] = dt
-            id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
+            id = obj_attendance.create(cr, uid, res, context=context)
 
         if type != 'action':
             return id
-
         return True
 
 hr_employee()

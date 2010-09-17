@@ -63,7 +63,7 @@ class document_directory_ics_fields(osv.osv):
     _name = 'document.directory.ics.fields'
     _description = 'Document Directory ICS Fields'
     _columns = {
-        'field_id': fields.many2one('ir.model.fields', 'Open ERP Field'),
+        'field_id': fields.many2one('ir.model.fields', 'OpenERP Field'),
         'name': fields.selection(map(lambda x: (x, x), ICS_TAGS.keys()), 'ICS Value', required=True),
         'content_id': fields.many2one('document.directory.content', 'Content',\
                              required=True, ondelete='cascade'),

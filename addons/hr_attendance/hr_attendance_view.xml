@@ -39,6 +39,7 @@
                     <field name="employee_id"/>
                     <field name="name"/>
                     <field name="action"/>
+                    <field name="day" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -73,10 +74,8 @@
             <field name="search_view_id" ref="view_hr_attendance_filter" />
         </record>
 
-        <!--<menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root"
-            groups="group_hr_attendance"/>-->
         <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="3"/>
-        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_time_tracking"       groups="hr.group_hr_manager" sequence="3"/>
+        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_time_tracking" groups="base.group_hr_manager,base.group_hr_user,base.group_hr_attendance,base.group_system" sequence="3"/>
 
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
@@ -111,7 +110,7 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem sequence="9" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
+        <menuitem sequence="9" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves" />
         <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_config"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">
@@ -121,11 +120,12 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <field name="coach_id" position="after">
-                  <group col="7" colspan="4">
+                    <group colspan="2">
+                        <button name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}"/>
+                        <button name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}"/>
+                    </group>
                     <field name="state"/>
-                    <button name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}"/>
-                    <button name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}"/>
-                  </group>
+                    <newline/>
                 </field>
             </field>
         </record>

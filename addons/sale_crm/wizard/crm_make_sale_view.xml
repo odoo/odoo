@@ -21,25 +21,19 @@
                                     <notebook>
                                         <page string="Order Line">
                                             <field colspan="4"
-                                                context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
+                                                context="partner_id=parent.partner_id,shop=parent.shop_id"
                                                 name="product_id"
-                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, parent.date_order, product_packaging, parent.fiscal_position, False)"
+                                                on_change="product_id_change(product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, product_packaging, False)"
                                                 />
-                                            <field
-                                                context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
-                                                name="product_uom_qty"
-                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, True)"
-                                                />
-                                                <field groups="product.group_uos" name="product_uos_qty"/>
-                                            <field name="product_uom"
-                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
+                                               <field name="product_uom_qty"/>
+                                               <field name="product_uom"/>
+                                            <group colspan="2" groups="product.group_uos">
+                                               <field name="product_uos_qty"/>
+                                               <field name="product_uos" nolabel="1"/></group>
                                             <field
                                                 name="product_packaging"
-                                                context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
-                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, False)"
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
-
                                             <field colspan="4" name="name"/>
                                             <field name="price_unit"/>
                                             <field name="discount"/>
@@ -48,6 +42,9 @@
                                             <newline/>
                                             <separator colspan="5" string="Taxes"/>
                                             <field colspan="4" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        </page>
+                                        <page string="Notes">
+                                            <field colspan="4" name="notes" nolabel="1"/>
                                         </page>
                                     </notebook>
                                 </form>
@@ -61,20 +58,20 @@
                             </field>
                             <newline/>
 
-				
+
                 <separator colspan="4"/>
                 <group col="4" colspan="4">
                     <label string="" colspan="2"/>
                     <button special="cancel" string="_Close" icon="gtk-cancel"/>
-                    <button name="makeOrder" string="_Ok" type="object" icon='gtk-ok'/>
+                    <button name="makeOrder" string="_Create" type="object" icon='gtk-ok'/>
                 </group>
                 </group>
             </form>
           </field>
        </record>
-       
+
        <!-- crm make sale's  action -->
-       
+
        <record id="action_crm_make_sale" model="ir.actions.act_window">
           <field name="name">Make Quotation</field>
           <field name="type">ir.actions.act_window</field>
@@ -83,6 +80,6 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
        </record>
-       
+
    </data>
 </openerp>

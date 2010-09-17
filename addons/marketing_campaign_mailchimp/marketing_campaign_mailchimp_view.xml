@@ -18,7 +18,7 @@
                 <group colspan="2" attrs="{'invisible':[('type','!=','mailchimp')]}">
                     <field name="mailchimp_account_id" attrs="{'required':[('type','=','mailchimp')]}" domain="[('state','=','approved')]" on_change="onchange_mailchimp(mailchimp_account_id)"/>
                     <field name="mailchimp_list" attrs="{'required':[('type','=','mailchimp')]}" on_change="onchange_mailchimp_list(mailchimp_account_id,mailchimp_list)"/>
-                </group>                
+                </group>
             </xpath>
         </field>
     </record>
@@ -38,7 +38,7 @@
         <field name="model">mailchimp.account</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="All Accounts">
+            <tree colors="blue:state in ('draft');black:state in ('approved');gray:state in ('cancelled')" string="All Accounts">
                 <field name="name"/>
                 <field name="username" />
                 <field name="data_center"/>

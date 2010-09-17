@@ -20,16 +20,14 @@
 ##############################################################################
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 import netsvc
 from osv import fields, osv
 from tools import config
 from tools.translate import _
-
 import decimal_precision as dp
-
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -47,7 +45,7 @@ sale_shop()
 
 def _incoterm_get(self, cr, uid, context=None):
     if context is None:
-            context = {}
+        context = {}
     cr.execute('select code, code||\', \'||name from stock_incoterms where active')
     return cr.fetchall()
 
@@ -147,7 +145,6 @@ class sale_order(osv.osv):
             for invoice in sale.invoice_ids:
                 if invoice.state not in ('draft', 'cancel'):
                     tot += invoice.amount_untaxed
-
             if tot:
                 res[sale.id] = min(100.0, tot * 100.0 / (sale.amount_untaxed or 1.00))
             else:
@@ -211,7 +208,6 @@ class sale_order(osv.osv):
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source document', size=64, help="Reference of the document that generated this sale order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
-
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
@@ -221,7 +217,7 @@ class sale_order(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
+            ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
         'date_order': fields.date('Ordered Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'create_date': fields.date('Creation Date', readonly=True, help="Date on which sale order is created"),
         'date_confirm': fields.date('Confirmation Date', readonly=True, help="Date on which sale order is confirmed"),
@@ -283,7 +279,7 @@ class sale_order(osv.osv):
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
         'picking_policy': 'direct',
         'date_order': time.strftime('%Y-%m-%d'),
         'order_policy': 'manual',
@@ -473,7 +469,9 @@ class sale_order(osv.osv):
         for o in self.browse(cr, uid, ids):
             lines = []
             for line in o.order_line:
-                if (line.state in states) and not line.invoiced:
+                if line.invoiced:
+                    raise osv.except_osv(_('Error !'), _('The Sale Order already has some lines invoiced. You should continue the billing process by line.'))
+                elif (line.state in states):
                     lines.append(line.id)
             created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
             if created_lines:
@@ -559,13 +557,12 @@ class sale_order(osv.osv):
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
+            message = _('Sale order') + " '" + sale.name + _(" is cancelled")
+            self.log(cr, uid, sale.id, message)
         self.write(cr, uid, ids, {'state': 'cancel'})
-        message = _('Sale order') + " '" + sale.name + "' "+ _("created on")+" '" +sale.create_date + _(" is cancelled")
-        self.log(cr, uid, id, message)
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        product=[]
         product_obj = self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
@@ -573,11 +570,8 @@ class sale_order(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            for line in o.order_line:
-                product.append(line.product_id.default_code)
-        params = ', '.join(map(lambda x : str(x),product))
-        message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
-        self.log(cr, uid, id, message)
+            message = _('Quotation') + " '" + o.name + "' "+ _("is converted to Sale order")
+            self.log(cr, uid, o.id, message)
         return True
 
     def procurement_lines_get(self, cr, uid, ids, *args):
@@ -636,7 +630,8 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 proc_id = False
                 date_planned = datetime.now() + relativedelta(days=line.delay or 0.0)
-                date_planned = (date_planned - relativedelta(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+                date_planned = (date_planned - timedelta(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+
                 if line.state == 'done':
                     continue
                 move_id = False
@@ -657,7 +652,6 @@ class sale_order(osv.osv):
                             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
                             'company_id': order.company_id.id,
                         })
-
                     move_id = self.pool.get('stock.move').create(cr, uid, {
                         'name': line.name[:64],
                         'picking_id': picking_id,
@@ -709,6 +703,7 @@ class sale_order(osv.osv):
             for proc_id in proc_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
@@ -719,7 +714,6 @@ class sale_order(osv.osv):
                             val['state'] = 'manual'
                             break
             self.write(cr, uid, [order.id], val)
-
         return True
 
     def action_ship_end(self, cr, uid, ids, context=None):
@@ -830,11 +824,11 @@ class sale_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight', readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
-                help=' * The \'Draft\' state is set automatically when sale order in draft state. \
-                    \n* The \'Confirmed\' state is set automatically when sale order in confirm state. \
-                    \n* The \'Exception\' state is set automatically when sale order is set as exception. \
-                    \n* The \'Done\' state is set automatically when sale order is set as done. \
-                    \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
+                help='* The \'Draft\' state is set when the related sale order in draft state. \
+                    \n* The \'Confirmed\' state is set when the related sale order is confirmed. \
+                    \n* The \'Exception\' state is set when the related sale order is set as exception. \
+                    \n* The \'Done\' state is set when the sale order line has been picked. \
+                    \n* The \'Cancelled\' state is set when a user cancel the sale order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -924,7 +918,6 @@ class sale_order_line(osv.osv):
                 })
                 cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
                 self.write(cr, uid, [line.id], {'invoiced': True})
-
                 sales[line.order_id.id] = True
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -939,10 +932,11 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
-#            if line.order_id.picking_ids:
-#                raise osv.except_osv(
-#                        _('Could not cancel sale order line!'),
-#                        _('You must first cancel stock move attached to this sale order line.'))
+            for move_line in line.move_ids:
+                if move_line.state != 'cancel':
+                    raise osv.except_osv(
+                            _('Could not cancel sale order line!'),
+                            _('You must first cancel stock moves attached to this sale order line.'))
         message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
         self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})
@@ -950,9 +944,6 @@ class sale_order_line(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Sale order line') + " '" + name + "' "+ _("is confirmed")
-            self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def button_done(self, cr, uid, ids, context=None):
@@ -962,8 +953,6 @@ class sale_order_line(osv.osv):
         res = self.write(cr, uid, ids, {'state': 'done'})
         for line in self.browse(cr, uid, ids, context=context):
             wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
-        message = _('Sale order line') + " '" + line.name + "' "+_("is done")
-        self.log(cr, uid, id, message)
         return res
 
     def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):
@@ -1177,7 +1166,7 @@ class sale_config_picking_policy(osv.osv_memory):
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
         ], 'Steps To Deliver a Sale Order', required=True,
-           help="By default, Open ERP is able to manage complex routing and paths "\
+           help="By default, OpenERP is able to manage complex routing and paths "\
            "of products in your warehouse and partner locations. This will configure "\
            "the most common and simple methods to deliver products to the customer "\
            "in one or two operations by the worker.")
@@ -1195,7 +1184,6 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
                 group_id = md._get_id(cr, uid, 'base', 'group_no_one')
@@ -1203,10 +1191,10 @@ class sale_config_picking_policy(osv.osv_memory):
                 menu_id = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
                 menu_id = md.browse(cr, uid, menu_id, context=context).res_id
                 self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id': [(6, 0, [group_id])]})
-
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
                 location_id = md.browse(cr, uid, location_id, context=context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
+
 sale_config_picking_policy()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -52,6 +52,7 @@
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
         <field name="context">{"search_default_user_id":uid}</field>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
+        <field name="help">The calendar of meetings is shared between sales teams and fully integrated with the others applications like the employee holidays. You can also synchronize meetings with your mobile phone using the caldav interface.</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet">
@@ -85,7 +86,7 @@
 <!-- ALL MEETINGS -->
 
     <menuitem name="Meetings" id="menu_meeting_sale"
-        parent="base.menu_base_partner" sequence="3" />
+        parent="base.menu_base_partner" sequence="3"/>
 
     <menuitem name="Meetings" id="menu_crm_case_categ_meet"
         action="crm_case_categ_meet" parent="menu_meeting_sale"
@@ -105,13 +106,13 @@
          <field name="view_mode">tree,form</field>
          <field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />
         <field name="domain">[('ref','like','crm.meeting,')]</field>
-         <field name="context">{"search_default_user_id":uid}</field>
+         <field name="context">{"search_default_toreview":1, "search_default_user_id":uid}</field>
      </record>
 
     <menuitem id="menu_attendee_invitations"
             name="Meeting Invitations" parent="crm.menu_meeting_sale"
             sequence="10" action="action_view_attendee_form"
-            groups="base.group_extended" />
+            groups="base.group_extended,base.group_sale_salesman,base.group_sale_manager" />
 
 </data>
 </openerp>

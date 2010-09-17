@@ -88,7 +88,7 @@ class payment_order_create(osv.osv_memory):
                 'date': date_to_pay,
                 'currency': line.invoice and line.invoice.currency_id.id or False,
                 }, context=context)
-        return {'nodestroy':True,}
+        return {}
 
     def search_entries(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('payment.order')

@@ -41,9 +41,30 @@ class mailgate_thread(osv.osv):
     _description = 'Mailgateway Thread'
 
     _columns = {
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', readonly=True),
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Overrides orm copy method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: Id of mailgate thread
+        @param default: Dictionary of default values for copy.
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        default.update({
+                    'message_ids': [],
+                    'date_closed': False,
+                    'date_open': False
+                })
+        return super(mailgate_thread, self).copy(cr, uid, id, default, context=context)
 
     def message_new(self, cr, uid, msg, context):
         raise Exception, _('Method is not implemented')
@@ -84,7 +105,7 @@ class mailgate_thread(osv.osv):
         @param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
         @param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To addresses if any
         @param email_date: Email Date string if different from now, in server Timezone
-        @param details: Description, Ddtails of case history if any
+        @param details: Description, Details of case history if any
         @param atach: Attachment sent in email
         @param context: A standard dictionary for contextual values"""
         if context is None:
@@ -119,7 +140,7 @@ class mailgate_thread(osv.osv):
                         param = ", ".join(param)
 
                 data = {
-                    'name': subject or 'History',
+                    'name': subject or _('History'),
                     'history': True,
                     'user_id': uid,
                     'model' : case._name,
@@ -141,31 +162,58 @@ class mailgate_thread(osv.osv):
         return True
 mailgate_thread()
 
+def format_date_tz(date, tz=None):
+    if not date:
+        return 'n/a'
+    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
+    return tools.server_to_local_timestamp(date, format, format, tz)
+
 class mailgate_message(osv.osv):
     '''
     Mailgateway Message
     '''
+    def _get_display_text(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        tz = context.get('tz')
+        result = {}
+        for message in self.browse(cr, uid, ids, context=context):
+            msg_txt = ''
+            if message.history:
+                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
+                if message.description:
+                    msg_txt += '\n\t'.join(message.description.split('\n')[:3]) + '...'
+            else:
+                msg_txt = (message.user_id.name or '/') + _('  on ') + format_date_tz(message.date, tz) + ':\n\t'
+                if message.name == _('Opportunity'):
+                    msg_txt += _("Converted to Opportunity")
+                else:
+                    msg_txt += _("Changed Status to: ") + message.name
+            result[message.id] = msg_txt
+        return result
+
     _name = 'mailgate.message'
     _description = 'Mailgateway Message'
-    _order = 'id desc'
+    _order = 'date desc'
     _columns = {
-        'name':fields.text('Subject'),
-        'model': fields.char('Object Name', size=128, select=1),
-        'res_id': fields.integer('Resource ID', select=1),
+        'name':fields.text('Subject', readonly=True),
+        'model': fields.char('Object Name', size=128, select=1, readonly=True),
+        'res_id': fields.integer('Resource ID', select=1, readonly=True),
         'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'date': fields.datetime('Date'),
-        'history': fields.boolean('Is History?'),
+        'date': fields.datetime('Date', readonly=True),
+        'history': fields.boolean('Is History?', readonly=True),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'message': fields.text('Description'),
-        'email_from': fields.char('From', size=128, help="Email From"),
-        'email_to': fields.char('To', help="Email Recipients", size=256),
-        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
-        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
+        'message': fields.text('Description', readonly=True),
+        'email_from': fields.char('From', size=128, help="Email From", readonly=True),
+        'email_to': fields.char('To', help="Email Recipients", size=256, readonly=True),
+        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256, readonly=True),
+        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256, readonly=True),
         'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
         'references': fields.text('References', readonly=True, help="References emails."),
-        'description': fields.text('Description'),
+        'description': fields.text('Description', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
+        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
     }
 
     def init(self, cr):
@@ -209,7 +257,7 @@ class mailgate_tool(osv.osv_memory):
         for res_id in res_ids:
             msg_data = {
                         'name': msg.get('subject', 'No subject'),
-                        'date': msg.get('date') ,
+                        'date': msg.get('date'),
                         'description': msg.get('body', msg.get('from')),
                         'history': True,
                         'res_model': model,
@@ -217,7 +265,7 @@ class mailgate_tool(osv.osv_memory):
                         'email_from': msg.get('from'),
                         'email_to': msg.get('to'),
                         'message_id': msg.get('message-id'),
-                        'references': msg.get('references'),
+                        'references': msg.get('references') or msg.get('in-reply-to'),
                         'res_id': res_id,
                         'user_id': uid,
                         'attachment_ids': [(6, 0, attach)]
@@ -352,6 +400,9 @@ class mailgate_tool(osv.osv_memory):
         if 'References' in fields:
             msg['references'] = msg_txt.get('References')
 
+        if 'In-Reply-To' in fields:
+            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
+
         if 'X-Priority' in fields:
             msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0]
 
@@ -397,12 +448,12 @@ class mailgate_tool(osv.osv_memory):
         res_ids = []
         attachment_ids = []
         new_res_id = False
-        if msg.get('references'):
-            references = msg.get('references')
+        if msg.get('references') or msg.get('in-reply-to'):
+            references = msg.get('references') or msg.get('in-reply-to')
             if '\r\n' in references:
-                references = msg.get('references').split('\r\n')
+                references = references.split('\r\n')
             else:
-                references = msg.get('references').split(' ')
+                references = references.split(' ')
             for ref in references:
                 ref = ref.strip()
                 res_id = tools.misc.reference_re.search(ref)
@@ -435,7 +486,7 @@ class mailgate_tool(osv.osv_memory):
                             email_from = msg.get('from'),
                             email_cc = msg.get('cc'),
                             message_id = msg.get('message-id'),
-                            references = msg.get('references', False),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments.items(),
                             context = context)
         else:
@@ -456,7 +507,7 @@ class mailgate_tool(osv.osv_memory):
             'partner_id': False
         }
         from_email = self.to_email(from_email)[0]
-        address_ids = address_pool.search(cr, uid, [('email', '=', from_email)])
+        address_ids = address_pool.search(cr, uid, [('email', 'like', from_email)])
         if address_ids:
             address = address_pool.browse(cr, uid, address_ids[0])
             res['partner_address_id'] = address_ids[0]
