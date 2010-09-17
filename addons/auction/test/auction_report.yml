@@ -99,3 +99,12 @@
     (data, format) = netsvc.LocalService('report.buyer.list').create(cr, uid, [ref('auction.auction_deposit_10_lot_1'),ref('auction.auction_deposit_10_lot_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'action_auction_buyer_list_report.'+format), 'wb+').write(data)
+        
+-
+  In order to test the PDF reports defined on a auction, we will print a Auction Flagey Hussier report
+- 
+  !python {model: auction.lots}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.flagey.huissier').create(cr, uid, [ref('auction.auction_deposit_3_lot_1'),ref('auction.auction_deposit_10_lot_2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'action_flagey_hussier_report.'+format), 'wb+').write(data)
