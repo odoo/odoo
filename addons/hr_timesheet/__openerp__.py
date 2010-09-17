@@ -51,7 +51,7 @@ to set up a management by affair.
     ],
     'demo_xml': ['hr_timesheet_demo.xml'],
     'test': ['test/test_hr_timesheet.yml',
-             'test/hr_timesheet_invoice_report.yml',
+             'test/hr_timesheet_report.yml',
              ],
     'installable': True,
     'active': False,

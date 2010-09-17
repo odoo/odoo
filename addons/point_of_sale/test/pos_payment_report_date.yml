@@ -1,8 +1,0 @@
--
-  In order to test the PDF reports defined on a Point Of Sale, we will print a POS Sales Lines report
-- 
-  !python {model: ir.ui.menu}: |
-    import netsvc, tools, os, time
-    (data, format) = netsvc.LocalService('report.pos.payment.report.date').create(cr, uid, [1], {'model':'ir.ui.menu', 'form':{'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'), 'user_id': [ref('base.user_root')] }}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale- pos sales lines report'+format), 'wb+').write(data)

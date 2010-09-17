@@ -75,8 +75,7 @@ Main features :
     'demo_xml': ['pos_demo.xml','singer_statement_demo.xml','multi_company_stock_data.xml',],
     'test':['test/pos_test.yml',
             'test/pos_report.yml',
-            'test/pos_details.yml',
-            'test/pos_payment_report_date.yml'],
+    ],
     'installable': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
