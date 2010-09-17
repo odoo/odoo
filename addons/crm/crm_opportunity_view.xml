@@ -323,6 +323,20 @@
                                 help="Show Sales Team"/>
                         </field>
                         <newline/>
+                        <group  expand="0" string="Extended Filters..." groups="base.group_extended">
+                              <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                              <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                              <separator orientation="vertical"/>
+                              <field name="country_id" context="{'invisible_country': False}">
+                                  <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                              </field>
+                              <separator orientation="vertical"/>
+                              <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                              <newline/>
+                              <field name="create_date" string="Creation Date"/>
+                              <field name="date_closed"/>
+                        </group>
+                        <newline/>
                         <group expand="0" string="Group By..." colspan="16">
                             <filter string="Stage" icon="terp-stage" domain="[]"
                                 context="{'group_by':'stage_id'}" />
@@ -344,20 +358,6 @@
                                 icon="terp-go-month"
                                 help="Expected Closing" domain="[]"
                                 context="{'group_by':'date_deadline'}" />
-                        </group>
-                        <newline/>
-                        <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                              <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                              <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                              <separator orientation="vertical"/>
-                              <field name="country_id" context="{'invisible_country': False}">
-                                  <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
-                              </field>
-                              <separator orientation="vertical"/>
-                              <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                              <newline/>
-                              <field name="create_date" string="Creation Date"/>
-                              <field name="date_closed"/>
                         </group>
                     </search>
                 </field>
