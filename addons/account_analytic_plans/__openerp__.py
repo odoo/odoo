@@ -66,7 +66,7 @@ of distribution models.
         'wizard/account_crossovered_analytic_view.xml'
     ],
     'demo_xml'  : [],
-    'test' : ['account_analytic_plans/test/acount_analytic_plans_report.yml'],
+    'test' : ['test/acount_analytic_plans_report.yml'],
     'installable': True,
     'active'    : False,
     'certificate': '0036417675373',
