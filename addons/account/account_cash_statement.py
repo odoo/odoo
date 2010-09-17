@@ -267,7 +267,7 @@ class account_cash_statement(osv.osv):
         super(account_cash_statement, self).write(cr, uid, ids, vals)
         res = self._get_starting_balance(cr, uid, ids)
         for rs in res:
-            super(account_cash_statement, self).write(cr, uid, rs, res.get(rs))
+            super(account_cash_statement, self).write(cr, uid, [rs], res.get(rs))
         return True
 
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context={}):

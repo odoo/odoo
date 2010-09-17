@@ -179,7 +179,7 @@ class mailgate_message(osv.osv):
 
     _columns = {
         'server_id': fields.many2one('email.server', "Mail Server", readonly=True, select=True),
-        'type':fields.selection([
+        'server_type':fields.selection([
             ('pop', 'POP Server'),
             ('imap', 'IMAP Server'),
         ], 'Server Type', select=True, readonly=True),
