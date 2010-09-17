@@ -212,9 +212,7 @@ class tax_report(rml_parse.rml_parse):
 			result_accounts.append(account_elem)
 			ind+=1
 
-
 		return result_accounts
-
 
 report_sxw.report_sxw('report.account.vat.declaration', 'account.tax.code',
 	'addons/account/report/tax_report.rml', parser=tax_report, header="internal")

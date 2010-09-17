@@ -8,14 +8,14 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Report Modules Configuration</attribute>
+            <attribute name="string">Reporting Tools Configuration</attribute>
           </form>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
                   <attribute name='string'></attribute>
           </xpath>
           <separator string="title" position="attributes">
             <attribute name="string"
-                       >Reporting Tools</attribute>
+                       >Configure Reporting Tools</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
@@ -35,7 +35,7 @@
     </record>
 
     <record id="action_report_designer_installer" model="ir.actions.act_window">
-      <field name="name">Report Modules Installation</field>
+      <field name="name">Reporting Tools Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">report_designer.installer</field>
       <field name="view_id" ref="view_report_designer_installer"/>

@@ -86,7 +86,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         'FROM account_move_line l '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
                         'LEFT JOIN res_currency c on (l.currency_id=c.id)'
-                        'WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + ''
+                        'WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + ' '
                         'GROUP BY j.id, j.code, j.name, l.amount_currency,c.code, l.currency_id ',
                         (period_id, tuple(self.journal_ids)))
         return self.cr.dictfetchall()
