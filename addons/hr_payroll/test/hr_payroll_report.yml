@@ -1,5 +1,5 @@
 -
-  In order to test the PDF reports defined on a HR Employee Salary, we will print a HR Employee Salary
+  In order to test the PDF reports defined on HR Employee Salary, we will print HR Employee Salary
 - 
   !python {model: hr.employee}: |
     import netsvc, tools, os
@@ -8,7 +8,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-salary_report.'+format), 'wb+').write(data)
           
 -
-  In order to test the PDF reports defined on a HR Payslip, we will print a HR Payslip
+  In order to test the PDF reports defined on HR Payslip, we will print a HR Payslip
 - 
   !python {model: hr.payslip}: |
     import netsvc, tools, os
@@ -17,7 +17,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-payslip_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on a HR Employee Salary Details, we will print a HR Employee Salary Details
+  In order to test the PDF reports defined on HR Employee Salary Details, we will print HR Employee Salary Details
 -
   !python {model: hr.payslip}: |
     import netsvc, tools, os, time
@@ -26,7 +26,7 @@
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_salary_detai_report.'+format), 'wb+').write(data)
 -
- In order to test the PDF reports defined on a HR Employee Salary Details, we will print a HR Employee Salary Details
+ In order to test the PDF reports defined on HR Employee Salary Details, we will print HR Employee Salary Details
 -
   !python {model: hr.payslip}: |
     import netsvc, tools, os, time
