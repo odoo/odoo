@@ -454,20 +454,20 @@ class account_invoice(osv.osv):
 
     def onchange_journal_id(self, cr, uid, ids, journal_id, company_id):
         result = {}
-        if journal_id and company_id:
+        if journal_id:
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
+            if journal.currency:
+                result = {'value': {
+                    'currency_id': journal.currency.id
+                    }
+                }
+                return result
+        if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id)
-            journal_id = self.pool.get('account.journal').browse(cr, uid, journal_id)
-            if journal_id.currency:
-                result = {'value': {
-                    'currency_id': journal_id.currency.id
+            result = {'value': {
+                'currency_id': company.currency_id.id
                     }
                 }
-            else:
-                result = {'value': {
-                    'currency_id': company.currency_id.id
-                    }
-                }
-                
         return result
 
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
