@@ -362,7 +362,7 @@ class pos_order(osv.osv):
 
 
     def test_order_lines(self, cr, uid, order, context=None):
-        """ Test  order line is created or not for the order " 
+        """ Test order line is created or not for the order " 
         @param name: Names of fields.
         @return: True
         """

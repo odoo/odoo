@@ -91,7 +91,7 @@ class pos_open_statement(osv.osv_memory):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         return {
-            'domain': "[('state','=','open')]",
+            'domain': "[('state','=','open'),('user_id','=',"+ str(uid) +")]",
             'name': 'Open Statement',
             'view_type': 'form',
             'view_mode': 'tree,form',
