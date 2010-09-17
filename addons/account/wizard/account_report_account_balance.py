@@ -26,7 +26,7 @@ from osv import osv, fields
 class account_balance_report(osv.osv_memory):
     _inherit = "account.common.account.report"
     _name = 'account.balance.report'
-    _description = 'Account Balance Report'
+    _description = 'Trial Balance Report'
 
     _columns = {
        'target_move': fields.selection([('all', 'All Entries'),
