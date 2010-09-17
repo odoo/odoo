@@ -150,7 +150,7 @@
             <field name="arch" type="xml">
                 <form string="Supplier invoice">
                     <group col="8" colspan="4">
-                        <field domain="[('type', '=', 'purchase')]" name="journal_id" on_change="onchange_journal_id(journal_id)"/>
+                        <field domain="[('type', '=', 'purchase')]" name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <field name="number" readonly="1"/>
                         <field name="type" invisible="1"/>
                         <field name="currency_id" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
@@ -161,14 +161,14 @@
                         <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                         <newline/>
                         <field name="date_invoice"/>
-                        <field name="period_id" groups="account.group_account_user"/>
+                        <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
                         <group colspan="2" col="1" groups="account.group_account_user">
                             <label align="0.0" string="(keep empty to use the current period)"/>
                         </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                           <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="account.group_account_user"/>
+                           <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]" name="account_id" groups="account.group_account_user"/>
                             <field name="reference_type" nolabel="1" size="0"/>
                             <field name="reference" nolabel="1"/>
                             <field name="date_due"/>
@@ -221,7 +221,6 @@
                         </page>
                         <page string="Other Info">
                             <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
-
                             <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             <newline/>
                             <field name="payment_term" widget="selection"/>
@@ -260,7 +259,7 @@
             <field name="arch" type="xml">
                 <form string="Invoice">
                     <group colspan="4" col="8">
-                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id)"/>
+                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                     <field name="number"/>
                     <field name="type" invisible="1"/>
                     <field name="currency_id" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
@@ -271,14 +270,14 @@
                     <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                     <newline/>
                     <field name="date_invoice"/>
-                    <field name="period_id" groups="account.group_account_user"/>
+                    <field name="period_id" domain="[('state', '=', 'draft')]" groups="account.group_account_user" widget="selection"/>
                     <group colspan="2" col="1" groups="account.group_account_user">
                         <label align="0.0" string="(keep empty to use the current period)"/>
                     </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="account.group_account_user"/>
+                            <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
                             <field name="name"/>
                             <field name="payment_term" widget="selection"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
@@ -316,7 +315,7 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection"  groups="base.group_multi_company"/>
+                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             <newline/>
                             <field name="date_due"/>
                             <field name="user_id"/>
