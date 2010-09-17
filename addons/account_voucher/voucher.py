@@ -86,18 +86,12 @@ class account_voucher(osv.osv):
     def _get_currency(self, cr, uid, context):
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
-        if not journal_id:
-            ttype = context.get('type', 'bank')
-            res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
-            if not res:
-                return False
-            journal_id = res[0]
-        
-        journal = journal_pool.browse(cr, uid, journal_id)    
-        currency_id = journal.company_id.currency_id.id
-        if journal.currency:
-            currency_id = journal.currency.id
-        return 
+        if journal_id:
+            journal = journal_pool.browse(cr, uid, journal_id)
+            currency_id = journal.company_id.currency_id.id
+            if journal.currency:
+                currency_id = journal.currency.id
+        return False
     
     def _get_partner(self, cr, uid, context={}):
         return context.get('partner_id', False)
@@ -553,9 +547,6 @@ class account_voucher(osv.osv):
             if inv.move_id:
                 continue
 
-            if not inv.line_ids:
-                raise osv.except_osv(_('Error !'), _('You can not validate a voucher without lines !'))
-
             if inv.journal_id.sequence_id:
                 name = self.pool.get('ir.sequence').get_id(cr, uid, inv.journal_id.sequence_id.id)
             else:
@@ -743,8 +734,7 @@ class account_voucher_line(osv.osv):
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
         'amount_original': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Originial Amount', store=True),
         'amount_unreconciled': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Open Balance', store=True),
-        
-#        'amount_unreconciled': fields.related('move_line_id','amount_unreconciled', type='float', relation='account.move.line', string='Open Balance', store=True, readonly="1"),
+        'company_id': fields.related('voucher_id','company_id', relation='res.company', string='Company', store=True),
     }
     _defaults = {
         'name': lambda *a: ''
