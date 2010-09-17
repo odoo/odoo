@@ -1,9 +1,0 @@
--
-  In order to test the PDF reports defined on a hr attendance error, we will print a  hr attendance error
-- 
-  !python {model: hr.employee}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.hr.attendance.error').create(cr, uid, [], {'model': 'hr.employee', 'form': {'init_date': '2010-09-16', 'end_date': '2010-09-16', 'id': 1, 'emp_ids': [ref('hr.employee2')], 'max_delay': 120}}
-    , {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'hr_attendance-report.'+format), 'wb+').write(data)
