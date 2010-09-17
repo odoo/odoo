@@ -68,6 +68,24 @@ def _obj(pool, cr, uid, model_str, context=None):
     model = pool.get(model_str)
     return lambda x: model.browse(cr, uid, x, context=context)
 
+def _fix_multiple_roots(node):
+    """
+    Surround the children of the ``node`` element of an XML field with a
+    single root "data" element, to prevent having a document with multiple
+    roots once parsed separately.
+
+    XML nodes should have one root only, but we'd like to support
+    direct multiple roots in our partial documents (like inherited view architectures).
+    As a convention we'll surround multiple root with a container "data" element, to be
+    ignored later when parsing.
+    """
+
+    if len(node) > 1:
+        data_node = etree.Element("data")
+        for child in node:
+            data_node.append(child)
+        node.append(data_node)
+
 def _eval_xml(self, node, pool, cr, uid, idref, context=None):
     if context is None:
         context = {}
@@ -115,6 +133,7 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
                         if not id in idref:
                             idref[id]=self.id_get(cr, False, id)
                     return s % idref
+                _fix_multiple_roots(node)
                 return '<?xml version="1.0"?>\n'\
                     +_process("".join([etree.tostring(n, encoding='utf-8')
                                        for n in node]),

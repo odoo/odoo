@@ -65,12 +65,19 @@ class osv_pool(netsvc.Service):
                 for key in self._sql_error.keys():
                     if key in inst[0]:
                         self.abortResponse(1, _('Constraint Error'), 'warning', _(self._sql_error[key]))
-                if inst.pgcode == errorcodes.NOT_NULL_VIOLATION:
+                if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     self.logger.debug("IntegrityError", exc_info=True)
                     try:
-                        context = inst.pgerror.split('"public".')[1]
-                        model_name = table = context.split('"')[1]
+                        errortxt = inst.pgerror.replace('«','"').replace('»','"')
+                        if '"public".' in errortxt:
+                            context = errortxt.split('"public".')[1]
+                            model_name = table = context.split('"')[1]
+                        else:
+                            last_quote_end = errortxt.rfind('"')
+                            last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
+                            model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
+                            print "MODEL", last_quote_begin, last_quote_end, model_name
                         model = table.replace("_",".")
                         model_obj = self.get(model)
                         if model_obj:

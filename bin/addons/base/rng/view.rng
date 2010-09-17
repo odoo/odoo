@@ -397,6 +397,7 @@
                     <rng:ref name="button"/>
                     <rng:ref name="group"/>
                     <rng:ref name="graph"/>
+		    <rng:ref name="gallery"/>
                     <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
@@ -440,6 +441,7 @@
             <rng:optional><rng:attribute name="required"/></rng:optional>
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
             <rng:optional><rng:attribute name="view_mode"/></rng:optional>
+            <rng:optional><rng:attribute name="search_mode"/></rng:optional>
             <rng:optional><rng:attribute name="widget"/></rng:optional>
             <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:optional><rng:attribute name="states"/></rng:optional>
@@ -470,6 +472,7 @@
                     <rng:ref name="button"/>
                     <rng:ref name="group"/>
                     <rng:ref name="graph"/>
+		    <rng:ref name="gallery"/>
                     <rng:ref name="filter"/>
                     <rng:ref name="notebook"/>
                     <rng:ref name="html"/>
@@ -532,6 +535,18 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="gallery">
+        <rng:element name="gallery">
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:optional><rng:attribute name="width"/></rng:optional>
+            <rng:optional><rng:attribute name="height"/></rng:optional>
+            <rng:optional><rng:attribute name="col"/></rng:optional>
+            <rng:oneOrMore>
+                <rng:ref name="field"/>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="button">
         <rng:element name="button">
             <rng:ref name="overload"/>
@@ -561,6 +576,7 @@
                     <rng:ref name="graph" />
                     <rng:ref name="calendar" />
                     <rng:ref name="gantt" />
+                    <rng:ref name="gallery" />
                     <rng:ref name="xpath" />
                     <rng:ref name="page" />
                     <rng:ref name="separator"/>
@@ -629,6 +645,7 @@
             <rng:ref name="calendar" />
             <rng:ref name="data" />
             <rng:ref name="gantt" />
+            <rng:ref name="gallery" />
             <rng:ref name="xpath" />
             <rng:ref name="page" />
             <rng:ref name="separator"/>

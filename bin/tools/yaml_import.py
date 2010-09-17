@@ -70,14 +70,16 @@ def is_url(node):
 
 def is_eval(node):
     return isinstance(node, yaml_tag.Eval)
-    
+
 def is_ref(node):
     return isinstance(node, yaml_tag.Ref) \
         or _is_yaml_mapping(node, yaml_tag.Ref)
-    
+
 def is_ir_set(node):
     return _is_yaml_mapping(node, yaml_tag.IrSet)
 
+def is_string(node):
+    return isinstance(node, basestring)
 
 class TestReport(object):
     def __init__(self):
@@ -374,6 +376,14 @@ class YamlInterpreter(object):
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
+        elif column._type == "date" and is_string(expression):
+            # enforce ISO format for string date values, to be locale-agnostic during tests
+            time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)
+            value = expression
+        elif column._type == "datetime" and is_string(expression):
+            # enforce ISO format for string datetime values, to be locale-agnostic during tests
+            time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
+            value = expression
         else: # scalar field
             if is_eval(expression):
                 value = self.process_eval(expression)
