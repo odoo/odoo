@@ -51,7 +51,6 @@ class account_analytic_line(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
-
         if context.get('from_date',False):
             args.append(['date', '>=',context['from_date']])
 

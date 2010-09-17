@@ -131,7 +131,8 @@ class account_move_line(osv.osv):
                     'general_account_id': obj_line.account_id.id,
                     'journal_id': obj_line.journal_id.analytic_journal_id.id,
                     'ref': obj_line.ref,
-                    'move_id':obj_line.id
+                    'move_id':obj_line.id,
+                    'user_id': uid
                 }
                 new_id = self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
         return True
@@ -1181,6 +1182,7 @@ class account_move_line(osv.osv):
                         'general_account_id': vals.get('account_id', False),
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals.get('ref', False),
+                        'user_id': uid
                     })]
 
         result = super(osv.osv, self).create(cr, uid, vals, context)

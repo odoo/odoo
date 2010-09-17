@@ -321,7 +321,7 @@ class account_bank_statement(osv.osv):
 
                 move_line_id = account_move_line_obj.create(cr, uid, val , context=context)
                 torec.append(move_line_id)
-
+                
                 if move.analytic_account_id:
                     anal_val = {}
                     amt = (val['credit'] or  0.0) - (val['debit'] or 0.0)
