@@ -64,7 +64,7 @@ class _rml_styles(object,):
             for style in node.findall('paraStyle'):
                 sname = style.get('name')
                 self.styles[sname] = self._para_style_update(style)
-            
+
                 self.styles_obj[sname] = reportlab.lib.styles.ParagraphStyle(sname, self.default_style["Normal"], **self.styles[sname])
 
             for variable in node.findall('initialize'):
@@ -809,6 +809,8 @@ class _rml_template(object):
             if story_cnt > 0:
                 fis.append(platypus.PageBreak())
             fis += r.render(node_story)
+            # Reset Page Number with new story tag
+            fis.append(PageReset())
             story_cnt += 1
         if self.localcontext:
             fis.append(PageCount())
