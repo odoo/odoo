@@ -1259,13 +1259,5 @@ class account_move_line(osv.osv):
         return result
 account_move_line()
 
-
-class account_bank_statement_reconcile(osv.osv):
-    _inherit = "account.bank.statement.reconcile"
-    _columns = {
-        'line_ids': fields.many2many('account.move.line', 'account_bank_statement_line_rel', 'statement_id', 'line_id', 'Entries'),
-    }
-account_bank_statement_reconcile()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
