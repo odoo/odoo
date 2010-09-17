@@ -2314,7 +2314,7 @@ class orm(orm_template):
         :param tables: list of table._table names enclosed in double quotes as returned
                         by _where_calc()
         :param where_clause: current list of WHERE clause params
-        :return: (table, where_clause, qualified_field) where ``table`` and ``where_clause`` are the updated
+        :return: (tables, where_clause, qualified_field) where ``tables`` and ``where_clause`` are the updated
                  versions of the parameters, and ``qualified_field`` is the qualified name of ``field``
                  in the form ``table.field``, to be referenced in queries. 
         """
@@ -3926,7 +3926,7 @@ class orm(orm_template):
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
-            raise except_orm(_('AccessError'), _('Bad query.'))
+            raise except_orm(_('AccessError'), _('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
         return True
 
     def _apply_ir_rules(self, cr, uid, where_clause, where_clause_params, tables, mode='read', model_name=None, context=None):
@@ -3951,6 +3951,79 @@ class orm(orm_template):
                     tables.append(table)
             return True
         return False
+
+    def _generate_m2o_order_by(self, order_field, tables, where_clause):
+        """
+        Add possibly missing JOIN and generate the ORDER BY clause for m2o fields,
+        either native m2o fields or function/related fields that are stored, including
+        intermediate JOINs for inheritance if required.
+        """
+        if order_field not in self._columns and order_field in self._inherit_fields:
+            # also add missing joins for reaching the table containing the m2o field
+            tables, where_clause, qualified_field = self._inherits_join_calc(order_field, tables, where_clause)
+            order_field_column = self._inherit_fields[order_field][2]
+        else:
+            qualified_field = '"%s"."%s"' % (self._table, order_field)
+            order_field_column = self._columns[order_field]
+
+        assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
+        assert order_field_column._classic_write or getattr(order_field_column, 'store', False), "Many2one function/related fields must be stored to be used as ordering fields"
+
+        # figure out the applicable order_by for the m2o
+        dest_model = self.pool.get(order_field_column._obj)
+        m2o_order = dest_model._order
+        if not regex_order.match(m2o_order):
+            # _order is complex, can't use it here, so we default to _rec_name
+            m2o_order = dest_model._rec_name
+        else:
+            # extract the first field name, to be able to qualify it and add desc/asc
+            m2o_order = m2o_order.split(",",1)[0].strip().split(" ",1)[0]
+
+        # the perhaps missing join:
+        quoted_model_table = '"%s"' % dest_model._table
+        if quoted_model_table not in tables:
+            tables.append(quoted_model_table)
+            where_clause.append('%s = %s.id' % (qualified_field, quoted_model_table))
+
+        return ('%s.%s' % (quoted_model_table, m2o_order), tables, where_clause)
+
+
+    def _generate_order_by(self, order_spec, tables, where_clause):
+        """
+        Attempt to consruct an appropriate ORDER BY clause based on order_spec, which must be
+        a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
+
+        :raise" except_orm in case order_spec is malformed
+        """
+        order_by_clause = self._order
+        if order_spec:
+            order_by_elements = []
+            self._check_qorder(order_spec)
+            for order_part in order_spec.split(','):
+                order_split = order_part.strip().split(' ')
+                order_field = order_split[0].strip()
+                order_direction = order_split[1].strip() if len(order_split) == 2 else ''
+                if order_field in self._columns:
+                    order_column = self._columns[order_field]
+                    if order_column._classic_read:
+                        order_by_clause = '"%s"."%s"' % (self._table, order_field)
+                    elif order_column._type == 'many2one':
+                        order_by_clause, tables, where_clause = self._generate_m2o_order_by(order_field, tables, where_clause)
+                    else:
+                        continue # ignore non-readable or "non-joignable" fields
+                elif order_field in self._inherit_fields:
+                    parent_obj = self.pool.get(self._inherit_fields[order_field][0])
+                    order_column = parent_obj._columns[order_field]
+                    if order_column._classic_read:
+                        tables, where_clause, order_by_clause = self._inherits_join_calc(order_field, tables, where_clause)
+                    elif order_column._type == 'many2one':
+                        order_by_clause, tables, where_clause = self._generate_m2o_order_by(order_field, tables, where_clause)
+                    else:
+                        continue # ignore non-readable or "non-joignable" fields
+                order_by_elements.append("%s %s" % (order_by_clause, order_direction))
+            order_by_clause = ",".join(order_by_elements)
+
+        return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
 
     def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         """
@@ -3982,35 +4055,17 @@ class orm(orm_template):
                 tables = list(set(tables).union(set(previous_tables)))
 
         where = where_clause
-
-        order_by = self._order
-        if order:
-            self._check_qorder(order)
-            o = order.split(' ')[0]
-            if (o in self._columns):
-                # we can only do efficient sort if the fields is stored in database
-                if getattr(self._columns[o], '_classic_read'):
-                    order_by = order
-            elif (o in self._inherit_fields):
-                parent_obj = self.pool.get(self._inherit_fields[o][0])
-                if getattr(parent_obj._columns[o], '_classic_read'):
-                    # Allowing inherits'ed field for server side sorting, if they can be sorted by the dbms
-                    inherited_tables, inherit_join, order_by = self._inherits_join_calc(o, tables, where_clause)
-
+        order_by = self._generate_order_by(order, tables, where_clause)
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
-
-        if where:
-            where_str = " WHERE %s" % " AND ".join(where)
-        else:
-            where_str = ""
+        where_str = where and (" WHERE %s" % " AND ".join(where)) or ''
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +
                     ','.join(tables) + where_str + limit_str + offset_str, where_clause_params)
             res = cr.fetchall()
             return res[0][0]
-        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str +' order by '+order_by+limit_str+offset_str, where_clause_params)
+        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str + order_by + limit_str+offset_str, where_clause_params)
         res = cr.fetchall()
         return [x[0] for x in res]
 
