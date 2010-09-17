@@ -1,0 +1,19 @@
+-
+ In order to test the PDF reports defined on HR Attendance, we will print a report of HR Attendance By Month
+-
+  !python {model: hr.employee}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'hr.employee', 'form': {'month': time.gmtime()[1], 'year': time.gmtime()[0]}}
+    (data, format) = netsvc.LocalService('report.hr.attendance.bymonth').create(cr, uid, [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')], data_dict, {'active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_attendance-by_month_report.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on HR Attendance, we will print a report of HR Attendance Error
+- 
+  !python {model: hr.employee}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'hr.employee', 'form': {'init_date': time.strftime('%Y-01-01'), 'end_date':time.strftime('%Y-%m-%d'), 'emp_ids': [ref('hr.employee1')], 'max_delay': 120}}
+    (data, format) = netsvc.LocalService('report.hr.attendance.error').create(cr, uid, [ref('hr.employee1')], data_dict, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'hr_attendance-error_report.'+format), 'wb+').write(data)

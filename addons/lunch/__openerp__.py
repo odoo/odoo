@@ -49,9 +49,8 @@
         'report/report_lunch_order_view.xml',
     ],
     "demo_xml": ['lunch_demo.xml'],
-    "test": ['test/test_lunch.yml'],
+    "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],
     "installable": True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

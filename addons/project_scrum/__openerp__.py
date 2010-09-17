@@ -60,6 +60,7 @@
         "board_project_scrum_view.xml",
     ],
     'demo_xml': ['project_scrum_demo.xml'],
+    'test': ['test/project_scrum_report.yml'],
     'installable': True,
     'active': False,
 }
