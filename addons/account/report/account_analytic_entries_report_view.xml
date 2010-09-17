@@ -50,7 +50,7 @@
                     <separator orientation="vertical"/>
                     <field name="product_id" />
                     <field name="user_id" widget="selection">
-                    <filter icon="terp-gtk-jump-to-ltr" domain="[('user_id','=',uid)]" help="My Entries"/>
+                    <filter icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
                     </field>
                 </group>
                 <newline/>
@@ -90,7 +90,7 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Analytic Entries Analysis" type="bar">
-                 <field name="user_id"/>
+                <field name="user_id"/>
                 <field name="amount" operator="+"/>
                 <field name="unit_amount" operator="+"/>
                 <field name="amount_currency" operator="+"/>

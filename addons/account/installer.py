@@ -282,7 +282,7 @@ class account_installer(osv.osv_memory):
                     vals_bnk = {'name': val.acc_name or '',
                         'currency_id': val.currency_id.id or False,
                         'code': str(110400 + code_cnt),
-                        'type': 'other',
+                        'type': 'liquidity',
                         'user_type': type,
                         'parent_id':new_account,
                         'company_id': company_id.id }

@@ -315,7 +315,7 @@ class account_invoice(osv.osv):
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Mapping', readonly=True, states={'draft':[('readonly',False)]})
     }
     _defaults = {
         'type': _get_type,
@@ -1314,7 +1314,7 @@ class account_invoice_line(osv.osv):
                 # Parse the value_reference field to get the ID of the account.account record
                 account_id = int (my_value[0]["value_reference"].split(",")[1])
                 # Use the ID of the account.account record in the browse for the account.account record
-                app_acc_in = account_obj.browse(cr, uid, [account_id])[0]                
+                app_acc_in = account_obj.browse(cr, uid, [account_id])[0]
             if not exp_pro_id:
                 ex_acc = res.product_tmpl_id.property_account_expense
                 ex_acc_cate = res.categ_id.property_account_expense_categ
@@ -1486,7 +1486,7 @@ account_invoice_line()
 class account_invoice_tax(osv.osv):
     _name = "account.invoice.tax"
     _description = "Invoice Tax"
-    
+
     def _count_factor(self, cr, uid, ids, name, args, context=None):
         res = {}
         for invoice_tax in self.browse(cr, uid, ids, context=context):
@@ -1497,13 +1497,13 @@ class account_invoice_tax(osv.osv):
             if invoice_tax.amount <> 0.0:
                 factor_tax = invoice_tax.tax_amount / invoice_tax.amount
                 res[invoice_tax.id]['factor_tax'] = factor_tax
-                
+
             if invoice_tax.base <> 0.0:
                 factor_base = invoice_tax.base_amount / invoice_tax.base
                 res[invoice_tax.id]['factor_base'] = factor_base
-                
+
         return res
-    
+
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
         'name': fields.char('Tax Description', size=64, required=True),
