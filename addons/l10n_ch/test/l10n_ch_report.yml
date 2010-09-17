@@ -1,0 +1,17 @@
+-
+  In order to test the PDF reports defined on a l10n_ch, we will print a bvr_report
+-
+  !python {model: account.invoice}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.l10n_ch.bvr').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'l10ch-bvr_order.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a l10n_ch, we will print a bvr_invoice_report
+-
+  !python {model: account.invoice}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.l10n_ch.invoice.bvr').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'l10ch-bvr_invoice.'+format), 'wb+').write(data)
