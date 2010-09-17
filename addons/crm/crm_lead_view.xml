@@ -168,41 +168,36 @@
                     </group>
                  </page>
                  <page string="History" groups="base.group_extended">
-                   <group colspan="4">
-                       <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
-                   </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                        <tree string="Communication history">
+                    <group colspan="4">
+                        <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
+                    </group>
+                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" context="{'default_model': 'crm.lead', 'default_user_id': uid}" >
+                        <tree string="History">
                             <field name="display_text" string="History Information"/>
                             <field name="history" invisible="1"/>
-                            <button
-                                string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                name="%(crm.action_crm_send_mail)d"
-                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                                icon="terp-mail-replied" type="action" />
+                            <button string="Reply" attrs="{'invisible': [('history', '!=', True)]}" name="123" context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}" icon="terp-mail-replied" type="action"/>
                         </tree>
-                        <form string="Communication history">
-                            <group col="4" colspan="4">
-                                <field name="email_from"/>
-                                <field name="date"/>
-                                <field name="email_to" widget="char" size="512"/>
-                                <field name="email_cc" widget="char" size="512"/>
-                                <field name="name" colspan="4" widget="char" size="512"/>
-                                <field name="history" invisible="1"/>
-                            </group>
+                        <form string="History">
+                            <field name="history"/>
+                            <field name="name" colspan="4" widget="char" size="512" required="1"/>
+                            <field name="date" required="1"/>
+                            <field name="user_id"/>
+                            <field name="model" invisible="1"/>
                             <notebook colspan="4">
                                 <page string="Details">
-                                    <group attrs="{'invisible': [('history', '!=', True)]}">
-                                        <field name="description" colspan="4" nolabel="1" height="250"/>
-                                        <button colspan="4"
-                                            string="Reply"
-                                            name="%(crm.action_crm_send_mail)d"
-                                            context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                                            icon="terp-mail-replied" type="action" />
+                                    <group col="4" colspan="4" attrs="{'invisible': [('history', '!=', True)]}">
+                                        <field name="email_from" attrs="{'required': [('history', '=', True)]}"/>
+                                        <field name="email_to" widget="char" size="512"  attrs="{'required': [('history', '=', True)]}"/>
+                                        <field name="email_cc" widget="char" size="512"/>
                                     </group>
-                                    <group attrs="{'invisible': [('history', '=', True)]}">
-                                        <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                    <separator string="Description" colspan="4"/>
+                                     <group colspan="4" attrs="{'invisible': [('history', '!=', True)]}">
+                                        <field name="description" colspan="4" nolabel="1" attrs="{'required': [('history', '=', True)]}"/>
                                     </group>
+                                    <group colspan="4" attrs="{'invisible': [('history', '=', True)]}">
+                                        <field name="display_text" colspan="4" nolabel="1"/>
+                                    </group>
+                                    <button colspan="4" string="Reply" name="123" context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}" icon="terp-mail-replied" type="action"/>
                                 </page>
                                 <page string="Attachments">
                                     <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
