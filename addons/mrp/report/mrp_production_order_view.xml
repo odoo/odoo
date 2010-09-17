@@ -48,17 +48,17 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="6">
-	                    <filter icon="terp-go-year" string="  365 Days  "
-	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                    <filter icon="terp-go-year" string="This Year"
+	                    	    domain="[('year','=',time.strftime('%%Y'))]"
 	                    	    help="Production performed in last 365 Days"/>
-	                    <filter icon="terp-go-month" string="   30 Days   "
+	                    <filter icon="terp-go-month" string="This Month"
 	                    		name="month"
-	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                    		domain="[('month','=',time.strftime('%%m'))]"
 	                    		help="Production performed in last 30 days"/>
 		                <filter icon="terp-go-week"
-	                            string="    7 Days    "
+	                            string="Month -1"
 	                            separator="1"
-	                            domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                            domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Production during last 7 days"/>
                       <separator orientation="vertical"/>
                         <filter string="Current" icon="terp-check" domain="[('state','in',('open','draft'))]"/>
@@ -79,10 +79,12 @@
                     	<separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     	<separator orientation="vertical"/>
-                    	<filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
-                    	<separator orientation="vertical"/>
+                    	<filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    	<separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                    	<separator orientation="vertical"/>
                     	<filter string="Month" name="terp-go-month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    	<separator orientation="vertical"/>
                     	<filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                    </group>
                     <newline/>
