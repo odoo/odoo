@@ -1,8 +1,0 @@
--
-  In order to test the PDF reports defined on stock location, we will print a lot location report
-- 
-  !python {model: stock.location}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.lot.location').create(cr, uid, [ref('stock.stock_location_components')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'stock-stock_lot_location.'+format), 'wb+').write(data)
