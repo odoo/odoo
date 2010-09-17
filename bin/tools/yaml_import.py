@@ -374,6 +374,14 @@ class YamlInterpreter(object):
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
+        elif column._type == "date":
+            # enforce ISO format for date values, to be locale-agnostic during tests
+            time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)
+            value = expression
+        elif column._type == "datetime":
+            # enforce ISO format for datetime values, to be locale-agnostic during tests
+            time.strptime(expression, misc.DEFAULT_SERVER_DATETIME_FORMAT)
+            value = expression
         else: # scalar field
             if is_eval(expression):
                 value = self.process_eval(expression)
