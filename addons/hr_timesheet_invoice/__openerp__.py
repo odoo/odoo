@@ -47,7 +47,7 @@ reports, eso.""",
     ],
     'demo_xml': ['hr_timesheet_invoice_demo.xml',
                  ],
-    'test': ['test/test_hr_timesheet_invoice.yml'
+    'test': ['test/test_hr_timesheet_invoice.yml',
              'test/hr_timesheet_invoice_report.yml',
              ],             
     'installable': True,
