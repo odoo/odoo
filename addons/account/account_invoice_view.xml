@@ -150,7 +150,7 @@
             <field name="arch" type="xml">
                 <form string="Supplier invoice">
                     <group col="8" colspan="4">
-                        <field domain="[('type', '=', 'purchase')]" name="journal_id"/>
+                        <field domain="[('type', '=', 'purchase')]" name="journal_id" on_change="onchange_journal_id(journal_id, company_id)"/>
                         <field name="number" readonly="1"/>
                         <field name="type" invisible="1"/>
                         <field name="currency_id" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
@@ -260,7 +260,7 @@
             <field name="arch" type="xml">
                 <form string="Invoice">
                     <group colspan="4" col="8">
-                    <field name="journal_id" groups="base.group_user"/>
+                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id, company_id)"/>
                     <field name="number"/>
                     <field name="type" invisible="1"/>
                     <field name="currency_id" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
