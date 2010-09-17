@@ -104,6 +104,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         self.query = data['form'].get('query_line', '')
         self.init_query = data['form'].get('initial_bal_query', '')
         self.result_selection = data['form'].get('result_selection')
+        self.target_move = data['form'].get('target_move', 'all')
 
         if (self.result_selection == 'customer' ):
             self.ACCOUNT_TYPE = ('receivable',)
@@ -122,6 +123,10 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return super(partner_balance, self).set_context(objects, data, ids, report_type=report_type)
 
     def lines(self):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
         full_account = []
         result_tmp = 0.0
         self.cr.execute(
@@ -142,11 +147,13 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     ") AS enlitige " \
             "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
             "JOIN account_account ac ON (l.account_id = ac.id)" \
+            "JOIN account_move am ON (am.id = l.move_id)" \
             "WHERE ac.type IN %s " \
+            "AND am.state IN %s " \
             "AND " + self.query + "" \
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
             "ORDER BY l.account_id,p.name",
-            (self.ACCOUNT_TYPE,))
+            (self.ACCOUNT_TYPE, tuple(move_state)))
         res = self.cr.dictfetchall()
 
         #For include intial balance..
@@ -212,6 +219,10 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         else:
             full_account = [r for r in res]
 
+        for rec in full_account:
+            if not rec.get('name', False):
+                rec.update({'name': 'Unknown Partner'})
+                
         ## We will now compute Total
         subtotal_row = self._add_subtotal(full_account)
 #        if not self.initial_balance:
@@ -344,15 +355,21 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return completearray
 
     def _sum_debit(self):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
         if not self.ids:
             return 0.0
         temp_res = 0.0
         self.cr.execute(
                 "SELECT sum(debit) " \
                 "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s"  \
+                    "AND am.state IN %s" \
                     "AND " + self.query + "" ,
-                    (tuple(self.account_ids), ))
+                    (tuple(self.account_ids), tuple(move_state)))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
 #        if self.initial_balance:
 #            self.cr.execute(
@@ -365,15 +382,21 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return temp_res
 
     def _sum_credit(self):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
         if not self.ids:
             return 0.0
         temp_res = 0.0
         self.cr.execute(
                 "SELECT sum(credit) " \
                 "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s" \
+                    "AND am.state IN %s" \
                     "AND " + self.query + "" ,
-                    (tuple(self.account_ids),))
+                    (tuple(self.account_ids), tuple(move_state)))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
 #        if self.initial_balance:
 #            self.cr.execute(
@@ -386,16 +409,22 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return temp_res
 
     def _sum_litige(self):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
         if not self.ids:
             return 0.0
         temp_res = 0.0
         self.cr.execute(
                 "SELECT sum(debit-credit) " \
                 "FROM account_move_line AS l " \
+                "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s" \
+                    "AND am.state IN %s" \
                     "AND " + self.query + " " \
                     "AND l.blocked=TRUE ",
-                    (tuple(self.account_ids), ))
+                    (tuple(self.account_ids), tuple(move_state), ))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
 #        if self.initial_balance:
 #            self.cr.execute(
@@ -409,6 +438,10 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return temp_res
 
     def _sum_sdebit(self):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
         if not self.ids:
             return 0.0
         result_tmp = 0.0
@@ -419,10 +452,12 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                     "ELSE 0 " \
                 "END " \
             "FROM account_move_line AS l " \
+            "JOIN account_move am ON (am.id = l.move_id)" \
             "WHERE l.account_id IN %s" \
+                "AND am.state IN %s" \
                 "AND " + self.query + " " \
             "GROUP BY l.partner_id",
-            (tuple(self.account_ids),))
+            (tuple(self.account_ids), tuple(move_state),))
         a = self.cr.fetchone()[0]
 
         if self.cr.fetchone() != None:
@@ -432,6 +467,10 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return result_tmp
 
     def _sum_scredit(self):
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
         if not self.ids:
             return 0.0
         result_tmp = 0.0
@@ -443,9 +482,11 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 "END " \
             "FROM account_move_line AS l " \
             "WHERE l.account_id IN %s" \
+             "JOIN account_move am ON (am.id = l.move_id)" \
+             "AND am.state IN %s" \
             "AND " + self.query + " " \
             "GROUP BY l.partner_id",
-            (tuple(self.account_ids), ))
+            (tuple(self.account_ids), tuple(move_state), ))
         a = self.cr.fetchone()[0] or 0.0
         if self.cr.fetchone() != None:
             result_tmp = result_tmp + (a or 0.0)

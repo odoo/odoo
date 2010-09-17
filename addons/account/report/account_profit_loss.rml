@@ -185,9 +185,6 @@
   </stylesheet>
   <images/>
   <story>
-    <para style="terp_header_Centre">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
@@ -267,7 +264,7 @@
           </para>
         </td>
          <td>
-          <para style="terp_default_Right_9_Bold">[[ a.balance and formatLang(abs(a.balance)) or 0.0 ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9"><font>[[ a.level&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'}))  or removeParentNode('font') ]]</font><font>[[ formatLang(abs(a.balance)) ]] [[ company.currency_id.symbol ]]</font></para>
         </td>
       </tr>
     </blockTable>
@@ -280,7 +277,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit C.F.B.L.' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit C.F.B.L.' and  formatLang(abs(final_result()['balance'])) or 0.0 ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -290,7 +287,7 @@
           <para style="terp_default_Bold_9">Total:([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ sum_dr() and formatLang(abs(sum_dr())) or 0.0 ]] [[ company.currency_id.symbol ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) ]] [[ company.currency_id.symbol ]]</u></para>
         </td>
       </tr>
     </blockTable>
@@ -322,7 +319,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ a.balance and formatLang(abs(a.balance)) or 0.0 ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9"><font>[[ a.level&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'}))  or removeParentNode('font') ]]</font><font>[[ formatLang(abs(a.balance)) ]] [[ company.currency_id.symbol ]]</font></para>
         </td>
       </tr>
     </blockTable>
@@ -335,7 +332,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss C.F.B.L.' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(abs(final_result()['balance'])) or 0.0 ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -345,7 +342,7 @@
           <para style="terp_default_Bold_9">Total:([[ get_currency(data) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ sum_cr() and formatLang(abs(sum_cr())) or 0.0 ]] [[ company.currency_id.symbol ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_cr())) ]] [[ company.currency_id.symbol ]]</u></para>
         </td>
       </tr>
     </blockTable>

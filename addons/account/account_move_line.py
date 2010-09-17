@@ -1202,7 +1202,7 @@ class account_move_line(osv.osv):
                 tax_sign = 'tax_sign'
 
             tmp_cnt = 0
-            for tax in tax_obj.compute(cr, uid, [tax_id], total, 1.00):
+            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00).get('taxes'):
                 #create the base movement
                 if tmp_cnt == 0:
                     if tax[base_code]:

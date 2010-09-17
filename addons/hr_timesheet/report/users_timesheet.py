@@ -22,8 +22,10 @@
 import datetime
 from report.interface import report_rml
 from report.interface import toxml
-
+import time
+import pooler
 from tools.translate import _
+from report import report_sxw
 
 
 def lengthmonth(year, month):
@@ -95,13 +97,22 @@ class report_custom(report_rml):
         # Computing the xml
         #Without this, report don't show non-ascii characters (TO CHECK)
         date_xml = '\n'.join(date_xml)
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.holidays')
+        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
+        header_xml = '''
+        <header>
+        <date>%s</date>
+        <company>%s</company>
+        </header>
+        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
 
         xml='''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
         %s
+        %s
         </report>
-        ''' % (date_xml, emp_xml)
+        ''' % (header_xml,date_xml, emp_xml)
         return xml
 
 report_custom('report.hr.analytical.timesheet_users', 'hr.employee', '', 'addons/hr_timesheet/report/users_timesheet.xsl')

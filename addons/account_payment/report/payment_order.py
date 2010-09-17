@@ -32,6 +32,7 @@ class payment_order(report_sxw.rml_parse):
             'time': time,
             'get_invoice_name': self._get_invoice_name,
             'get_company_currency' : self._get_company_currency,
+            'get_company_currency_symbol': self._get_company_currency_symbol,         
             'get_amount_total_in_currency' : self._get_amount_total_in_currency,
             'get_amount_total' : self._get_amount_total,
             'get_account_name' : self._get_account_name,
@@ -69,8 +70,13 @@ class payment_order(report_sxw.rml_parse):
     def _get_company_currency(self):
         pool = pooler.get_pool(self.cr.dbname)
         user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
-        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.name or False
-    
+        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.code or False
+
+    def _get_company_currency_symbol(self):
+        pool = pooler.get_pool(self.cr.dbname)
+        user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
+        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.symbol or False
+
     def _get_account_name(self,bank_id):
         if bank_id:
             pool = pooler.get_pool(self.cr.dbname)
@@ -79,6 +85,6 @@ class payment_order(report_sxw.rml_parse):
                 return value_name[0][1]
         return False
 
-report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order, header="internal")
+report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order, header="external")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
