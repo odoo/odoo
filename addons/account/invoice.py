@@ -452,8 +452,7 @@ class account_invoice(osv.osv):
                         _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
 
-    def onchange_journal_id(self, cr, uid, ids, journal_id, company_id):
-        result = {}
+    def onchange_journal_id(self, cr, uid, ids, journal_id):
         if journal_id:
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
             if journal.currency:
@@ -462,12 +461,11 @@ class account_invoice(osv.osv):
                     }
                 }
                 return result
-        if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, company_id)
-            result = {'value': {
-                'currency_id': company.currency_id.id
-                    }
+        user_company = self.pool.get('res.users').browse(cr, uid, [uid])[0].company_id
+        result = {'value': {
+            'currency_id': user_company.currency_id.id
                 }
+            }
         return result
 
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
@@ -568,7 +566,6 @@ class account_invoice(osv.osv):
                 val['currency_id'] = False
             else:
                 val['currency_id'] = currency.id
-
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id)
             if company.currency_id.company_id and company.currency_id.company_id.id != company_id:
