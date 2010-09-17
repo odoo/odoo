@@ -44,7 +44,7 @@
         ],
     'demo_xml': ['hr_attendance_demo.xml'],
     'test': ['test/test_hr_attendance.yml',
-             'test/hr_attendance_error_report.yml'
+             'test/hr_attendance_report.yml'
              ],
     'installable': True,
     'active': False,
