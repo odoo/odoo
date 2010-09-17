@@ -54,6 +54,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
         self.query_get_clause = ''
+        self.target_move = data['form'].get('target_move', 'all')
         if (data['model'] == 'ir.ui.menu'):
             new_ids = data['form'].get('active_ids', [])
             self.query_get_clause = 'AND '
@@ -66,6 +67,46 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             self.period_ids, self.journal_ids = zip(*res)
         return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
 
+    def _sum_debit(self, period_id=False, journal_id=False):
+        if journal_id and isinstance(journal_id, int):
+            journal_id = [journal_id]
+        if period_id and isinstance(period_id, int):
+            period_id = [period_id]
+        if not journal_id:
+            journal_id = self.journal_ids
+        if not period_id:
+            period_id = self.period_ids
+        if not (period_id and journal_id):
+            return 0.0
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
+        self.cr.execute('SELECT SUM(debit) FROM account_move_line l , account_move am '
+                        'WHERE l.move_id=am.id AND am.state IN %s AND l.period_id IN %s AND l.journal_id IN %s ' + self.query_get_clause + ' ',
+                        (tuple(move_state), tuple(period_id), tuple(journal_id)))
+        return self.cr.fetchone()[0] or 0.0
+
+    def _sum_credit(self, period_id=False, journal_id=False):
+        if journal_id and isinstance(journal_id, int):
+            journal_id = [journal_id]
+        if period_id and isinstance(period_id, int):
+            period_id = [period_id]
+        if not journal_id:
+            journal_id = self.journal_ids
+        if not period_id:
+            period_id = self.period_ids
+        if not (period_id and journal_id):
+            return 0.0
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
+        self.cr.execute('SELECT SUM(l.credit) FROM account_move_line l, account_move am '
+                        'WHERE l.move_id=am.id AND am.state IN %s AND l.period_id IN %s AND l.journal_id IN %s '+ self.query_get_clause+'',
+                        (tuple(move_state), tuple(period_id), tuple(journal_id)))
+        return self.cr.fetchone()[0] or 0.0
+
     def lines(self, period_id, journal_id=False):
         if not journal_id:
             journal_id = self.journal_ids
@@ -74,7 +115,12 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         obj_mline = self.pool.get('account.move.line')
         self.cr.execute('update account_journal_period set state=%s where journal_id IN %s and period_id=%s and state=%s', ('printed', self.journal_ids, period_id, 'draft'))
         self.cr.commit()
-        self.cr.execute('SELECT id FROM account_move_line l WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + ' ORDER BY '+ self.sort_selection + '' ,(period_id, tuple(journal_id) ))
+        
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
+
+        self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY l.'+ self.sort_selection + '' ,(tuple(move_state), period_id, tuple(journal_id) ))
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)
 
