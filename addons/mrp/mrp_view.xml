@@ -777,12 +777,12 @@
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
 
-        <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
+        <record id="mrp_production_action_planning" model="ir.actions.act_window">
             <field name="name">Manufacturing Orders Planning</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">gantt,tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
             <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials or BoM) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, OpenERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
         </record>
