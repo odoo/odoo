@@ -270,7 +270,7 @@ class account_cash_statement(osv.osv):
             super(account_cash_statement, self).write(cr, uid, [rs], res.get(rs))
         return True
 
-    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context={}):
+    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
         """ Changes balance start and starting details if journal_id changes"
         @param statement_id: Changed statement_id
         @param journal_id: Changed journal_id
@@ -288,7 +288,7 @@ class account_cash_statement(osv.osv):
                 'balance_start': balance_start
             })
             return res
-        res = super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context)
+        res = super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context=context)
         return res
 
     def _equal_balance(self, cr, uid, ids, statement, context={}):
