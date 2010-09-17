@@ -71,7 +71,7 @@ class wiki_group(osv.osv):
             group_id = ids[0]
         if not group_id:
             return {}
-        value = {            
+        value = {
             'name': 'Wiki Page',
             'view_type': 'form',
             'view_mode': 'form,tree',
@@ -165,7 +165,7 @@ class wiki_wiki2(osv.osv):
             @param id: Give wiki page's ID """
 
         return super(Wiki, self).copy_data(cr, uid, id, {'wiki_id': False}, context)
-    
+
     def create_history(self, cr, uid, ids, vals, context=None):
         history_id = False
         history = self.pool.get('wiki.wiki.history')
@@ -179,13 +179,13 @@ class wiki_wiki2(osv.osv):
             }
             history_id = history.create(cr, uid, res)
         return history_id
-    
+
     def create(self, cr, uid, vals, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
 
-        id = super(Wiki, self).create(cr, uid, vals, context)
+        id = super(wiki_wiki2, self).create(cr, uid, vals, context)
         self.create_history(cr, uid, [id], vals, context)
         return id
 
@@ -194,7 +194,7 @@ class wiki_wiki2(osv.osv):
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
 
-        result = super(Wiki, self).write(cr, uid, ids, vals, context)
+        result = super(wiki_wiki2, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
 
