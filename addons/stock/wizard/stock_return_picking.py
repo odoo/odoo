@@ -73,7 +73,10 @@ class stock_return_picking(osv.osv_memory):
                 if 'return%s'%(m.id) not in self._columns:
                     self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
                 if 'invoice_state' not in self._columns:
-                    self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be Invoiced'), ('none', 'None')], string='Invoice State', required=True)    
+                    self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be Invoiced'), ('none', 'None')], string='Invoice State', required=True)
+                for rec in m.move_history_ids2:
+                    if rec.product_qty==m.product_qty:
+                        raise osv.except_osv(_('Warning !'), _("There is no product to return!"))
         return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
@@ -110,8 +113,8 @@ class stock_return_picking(osv.osv_memory):
                     arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
                     res['fields']['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True} 
                     res.setdefault('returns', []).append(m.id)
-                if not res.get('returns',False):
-                    raise osv.except_osv(_('Warning!'),_('There is no product to return!'))
+#            if not res.get('returns',False): Todo : It may be used 
+#                raise osv.except_osv(_('Warning!'),_('There is no product to return!'))
         
             arch_lst.append('<field name="invoice_state"/>\n<newline/>')
             if pick.invoice_state=='invoiced':
@@ -121,13 +124,13 @@ class stock_return_picking(osv.osv_memory):
             res['fields']['invoice_state']={'string':_('Invoice state'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To Be Invoiced')), ('none', _('None'))]}
             arch_lst.append('<group col="2" colspan="4">')
             arch_lst.append('<button icon="gtk-cancel" special="cancel" string="Cancel" />')
-            arch_lst.append('<button name="action_open_window" string="Return" colspan="1" type="object" icon="gtk-apply" />')
+            arch_lst.append('<button name="create_returns" string="Return" colspan="1" type="object" icon="gtk-apply" />')
             arch_lst.append('</group>')
             arch_lst.append('</form>')
             res['arch'] = '\n'.join(arch_lst)
         return res
 
-    def _create_returns(self, cr, uid, ids, context):
+    def create_returns(self, cr, uid, ids, context):
         """ 
          Creates return picking.
          @param self: The object pointer.
@@ -183,35 +186,21 @@ class stock_return_picking(osv.osv_memory):
     
         if set_invoice_state_to_none:
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'})
-    
         if new_picking:
             if new_picking:
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
             pick_obj.force_assign(cr, uid, [new_picking], context)
-        return new_picking
-    
-    def action_open_window(self, cr, uid, ids, context):
-        """ 
-         Opens return picking list.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param ids: List of ids selected 
-         @param context: A standard dictionary 
-         @return: A dictionary which of fields with values. 
-        """ 
-        res = self._create_returns(cr, uid, ids, context)
-        if not res:
-            return {}
-        return {
-            'domain': "[('id', 'in', ["+str(res)+"])]",
-            'name': 'Picking List',
-            'view_type':'form',
-            'view_mode':'tree,form',
-            'res_model':'stock.picking',
-            'view_id':False,
-            'type':'ir.actions.act_window',
-        }
+            return {
+                'domain': "[('id', 'in', ["+str(new_picking)+"])]",
+                'name': 'Picking List',
+                'view_type':'form',
+                'view_mode':'tree,form',
+                'res_model':'stock.picking',
+                'view_id':False,
+                'type':'ir.actions.act_window',
+                'context':context,
+            }            
+        return {}
     
 stock_return_picking()
 
