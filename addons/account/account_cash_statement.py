@@ -454,25 +454,25 @@ class account_cash_statement(osv.osv):
                 move_line_id = account_move_line_obj.create(cr, uid, val , context=context)
                 torec.append(move_line_id)
 
-                if move.analytic_account_id:
-                    anal_val = {}
-                    amt = (val['credit'] or  0.0) - (val['debit'] or 0.0)
-                    anal_val = {
-                        'name': val['name'],
-                        'ref': val['ref'],
-                        'date': val['date'],
-                        'amount': amt,
-                        'account_id': val['analytic_account_id'],
-                        'currency_id': val['currency_id'],
-                        'general_account_id': val['account_id'],
-                        'journal_id': st.journal_id.analytic_journal_id.id,
-                        'period_id': val['period_id'],
-                        'user_id': uid,
-                        'move_id': move_line_id
-                                }
-                    if val.get('amount_currency', False):
-                        anal_val['amount_currency'] = val['amount_currency']
-                    account_analytic_line_obj.create(cr, uid, anal_val, context=context)
+#                if move.analytic_account_id:
+#                    anal_val = {}
+#                    amt = (val['credit'] or  0.0) - (val['debit'] or 0.0)
+#                    anal_val = {
+#                        'name': val['name'],
+#                        'ref': val['ref'],
+#                        'date': val['date'],
+#                        'amount': amt,
+#                        'account_id': val['analytic_account_id'],
+#                        'currency_id': val['currency_id'],
+#                        'general_account_id': val['account_id'],
+#                        'journal_id': st.journal_id.analytic_journal_id.id,
+#                        'period_id': val['period_id'],
+#                        'user_id': uid,
+#                        'move_id': move_line_id
+#                                }
+#                    if val.get('amount_currency', False):
+#                        anal_val['amount_currency'] = val['amount_currency']
+#                    account_analytic_line_obj.create(cr, uid, anal_val, context=context)
 
                 if move.reconcile_id and move.reconcile_id.line_new_ids:
                     for newline in move.reconcile_id.line_new_ids:
