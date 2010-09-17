@@ -106,7 +106,7 @@ class crm_lead2opportunity(osv.osv_memory):
 
     _columns = {
         'name' : fields.char('Opportunity Summary', size=64, required=True, select=1), 
-        'probability': fields.float('Success Probability'), 
+        'probability': fields.float('Success Rate (%)'), 
         'planned_revenue': fields.float('Expected Revenue'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
     }
@@ -149,7 +149,7 @@ Leads Could not convert into Opportunity"))
         res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
         for lead in lead_obj.browse(cr, uid, data, context=context):
             if 'name' in fields:
-                res.update({'name': lead.name})
+                res.update({'name': lead.partner_name})
             if 'partner_id' in fields:
                 res.update({'partner_id': lead.partner_id.id or False})
         return res
