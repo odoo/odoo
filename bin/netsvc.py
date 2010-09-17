@@ -248,7 +248,9 @@ class Agent(object):
         current_thread = threading.currentThread()
         while True:
             while cls.__tasks and cls.__tasks[0][0] < time.time():
-                timestamp, dbname, function, args, kwargs = heapq.heappop(cls.__tasks)
+                task = heapq.heappop(cls.__tasks)
+                timestamp, dbname, function, args, kwargs = task
+                cls.__tasks_by_db[dbname].remove(task)
                 if not timestamp:
                     # null timestamp -> cancelled task
                     continue
