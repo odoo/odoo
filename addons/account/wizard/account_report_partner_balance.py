@@ -49,7 +49,7 @@ class account_partner_balance(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',
             'datas': data,
-                }
+    }
 
 account_partner_balance()
 

@@ -53,7 +53,7 @@ class account_partner_ledger(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger',
                 'datas': data,
-            }
+        }
         return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger_other',
