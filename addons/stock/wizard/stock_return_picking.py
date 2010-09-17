@@ -65,18 +65,15 @@ class stock_return_picking(osv.osv_memory):
          @return: New arch of view with new columns.
         """
         res = super(stock_return_picking, self).view_init(cr, uid, fields_list, context=context)
-        record_id = context and context.get('active_id', False) or False
+        record_id = context and context.get('active_id', False) 
         if record_id:
             pick_obj = self.pool.get('stock.picking')
-            try:
-                pick = pick_obj.browse(cr, uid, record_id)
-                for m in [line for line in pick.move_lines]:
-                    if 'return%s'%(m.id) not in self._columns:
-                        self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
-                    if 'invoice_state' not in self._columns:
-                        self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be Invoiced'), ('none', 'None')], string='Invoice State', required=True)    
-            except Exception, e:
-                return res
+            pick = pick_obj.browse(cr, uid, record_id)
+            for m in [line for line in pick.move_lines]:
+                if 'return%s'%(m.id) not in self._columns:
+                    self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
+                if 'invoice_state' not in self._columns:
+                    self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be Invoiced'), ('none', 'None')], string='Invoice State', required=True)    
         return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
