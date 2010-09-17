@@ -38,7 +38,7 @@
                     "security/ir.model.access.csv","purchase_requisition_sequence.xml"
     ],
     "active": False,
-    "test":['purchase_requisition_report.yml'],
+    "test":['test/purchase_requisition_report.yml'],
     "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
