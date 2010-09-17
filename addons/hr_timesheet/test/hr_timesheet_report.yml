@@ -1,0 +1,31 @@
+-
+ In order to test the PDF reports defined on a HR Timesheet User Report, we will print a  HR Timesheet User Report
+-
+  !python {model: hr.employee}: |
+    import netsvc, tools, os, time
+    import datetime
+    from mx.DateTime import *
+    start = datetime.date.fromtimestamp(time.mktime(time.strptime(time.strftime('%Y-%m-%d'), "%Y-%m-%d")))
+    start = DateTime(int(start.year), int(start.month), int(start.day))
+    month=start.month
+    year=start.year
+    data_dict = {'model': 'ir.ui.menu', 'form': {'month': month, 'year' : year, 'user_id' : ref('base.user_root') }}
+    (data, format) = netsvc.LocalService('report.hr.analytical.timesheet').create(cr, uid, [], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet-user_report.'+format), 'wb+').write(data)
+
+-
+ In order to test the PDF reports defined on a HR Timesheet Users Report, we will print a  HR Timesheet Users Report
+-
+  !python {model: hr.employee}: |
+    import netsvc, tools, os, time
+    import datetime
+    from mx.DateTime import *
+    start = datetime.date.fromtimestamp(time.mktime(time.strptime(time.strftime('%Y-%m-%d'), "%Y-%m-%d")))
+    start = DateTime(int(start.year), int(start.month), int(start.day))
+    month=start.month
+    year=start.year
+    data_dict = {'model': 'ir.ui.menu', 'form': {'month': month, 'year' : year, 'user_ids' : [ref('base.user_root')] }}
+    (data, format) = netsvc.LocalService('report.hr.analytical.timesheet_users').create(cr, uid, [], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet-users_report.'+format), 'wb+').write(data)

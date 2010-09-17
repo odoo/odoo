@@ -8,5 +8,13 @@
             <field name="manager_id" ref="base.user_root"/>
             <field name="member_ids" eval="[(6,0,[ref('base.user_demo')])]"/>
         </record>
+        <record id="project_plannning_1" model="report_account_analytic.planning">
+        	<field name="name">Project_Planning</field>
+            <field name="business_days">20</field>
+            <field name="date_from">2010-01-01'</field>
+            <field name="date_to">2010-12-31</field>
+            <field name="state">draft</field>
+            <field name="member_ids" ref="base.user_demo"/>
+        </record>
     </data>
 </openerp>

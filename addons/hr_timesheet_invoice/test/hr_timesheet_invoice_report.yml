@@ -1,0 +1,23 @@
+-
+  In order to test the PDF reports defined on a HR Timesheet Account Analytic Profit, we will print a  HR Timesheet Account Analytic Profit
+-
+  !python {model: account.analytic.line}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'ir.ui.menu', 'form': {'date_from': '2010-09-01', 'employee_ids': [[6, 0, [1, ref('hr.employee2')]]], 'journal_ids': [[6, 0, [1, 2, 3, 4]]], 'date_to': '2010-09-16'}}
+    (data, format) = netsvc.LocalService('report.account.analytic.profit').create(cr, uid, [], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet_invoice-account_analytic_profit_report.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a HR Cost Ledger, we will print a HR Cost Ledger
+-
+  !python {model: account.analytic.account}: |
+    import netsvc, tools, os, time
+    import datetime
+    from mx.DateTime import *
+    start = datetime.date.fromtimestamp(time.mktime(time.strptime(time.strftime('%Y-%m-%d'), "%Y-%m-%d")))
+    start = DateTime(int(start.year), int(start.month), int(start.day))
+    data_dict = {'model': 'ir.ui.menu', 'form': {'date1': start.strftime('%Y-%m-%d'), 'date2': start.strftime('%Y-%m-%d')}}
+    (data, format) = netsvc.LocalService('report.hr.timesheet.invoice.account.analytic.account.cost_ledger').create(cr, uid, [], data_dict, {'periods': []})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet_invoice-cost_ledger_report.'+format), 'wb+').write(data)    

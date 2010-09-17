@@ -59,7 +59,9 @@
 
     ],
     'demo_xml': ['auction_demo.xml','board_auction_demo.xml'],
-    'test': ['test/auction.yml'],
+    'test': ['test/auction.yml',
+             'test/auction_report.yml',
+             ],
 
     'installable': True,
     'active': False,
