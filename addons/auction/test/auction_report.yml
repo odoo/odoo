@@ -24,6 +24,7 @@
     (data, format) = netsvc.LocalService('report.lots.list').create(cr, uid, [ref('auction.auction_deposit_3_lot_1'),ref('auction.auction_deposit_3_lot_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'lots_list_report.'+format), 'wb+').write(data)
+        
 -
   In order to test the PDF reports defined on auction, we will print a lots inventory Report
 - 
@@ -32,6 +33,7 @@
     (data, format) = netsvc.LocalService('report.lots.list.inventory').create(cr, uid, [ref('auction.auction_deposit_4_lot_1'),ref('auction.auction_deposit_4_lot_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'lots_inventory_report.'+format), 'wb+').write(data)
+        
 -
   In order to test the PDF reports defined on auction, we will print a deposit seller Report
 - 
@@ -40,6 +42,7 @@
     (data, format) = netsvc.LocalService('report.deposit.seller').create(cr, uid, [ref('auction.auction_deposit_5_lot_1'),ref('auction.auction_deposit_5_lot_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'deposit_seller_report.'+format), 'wb+').write(data)
+
 -
   In order to test the PDF reports defined on auction, we will print a catalog
 -
@@ -48,6 +51,7 @@
     (data, format) = netsvc.LocalService('report.auction.cat_flagy').create(cr, uid, [ref('auction.auction_date_1'),ref('auction.auction_date_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'auction-catalog_list.'+format), 'wb+').write(data)
+
 -
   In order to test the PDF reports defined on auction, we will print buyer form report
 -
@@ -56,6 +60,7 @@
     (data, format) = netsvc.LocalService('report.buyer_form_report').create(cr, uid, [ref('auction.auction_deposit_6_lot_1'),ref('auction.auction_deposit_6_lot_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'auction-buyer_form.'+format), 'wb+').write(data)
+
 -
   In order to test the PDF reports defined on auction, we will print bids phones report
 -
@@ -64,6 +69,7 @@
     (data, format) = netsvc.LocalService('report.bids.phones.details').create(cr, uid, [ref('auction.auction_deposit_7_lot_1'),ref('auction.auction_deposit_7_lot_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'auction-bids_phones_details.'+format), 'wb+').write(data)
+
 -
   In order to test the PDF reports defined on a auction, we will print a Auction Total
 - 
@@ -71,7 +77,7 @@
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.auction.total.rml').create(cr, uid, [ref('auction.auction_deposit_8_lot_1'),ref('auction.auction_deposit_8_lot_2')], {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'action_total_report.'+format), 'wb+').write(data)
+        file(os.path.join(tools.config['test_report_directory'], 'auction-auction_total_report.'+format), 'wb+').write(data)
 
 -
   In order to test the PDF reports defined on a auction, we will print a Auction Result
@@ -80,7 +86,7 @@
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.auction.result').create(cr, uid, [ref('auction.auction_deposit_9_lot_1'),ref('auction.auction_deposit_9_lot_2')], {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'action_result_report.'+format), 'wb+').write(data)
+        file(os.path.join(tools.config['test_report_directory'], 'auction-auction_result_report.'+format), 'wb+').write(data)
 
 -
   In order to test the PDF reports defined on a auction, we will print a Auction Lot
@@ -89,8 +95,8 @@
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.bids.lots').create(cr, uid, [ref('auction.auction_deposit_10_lot_1'),ref('auction.auction_deposit_10_lot_2')], {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'action_lot_report.'+format), 'wb+').write(data)
-        
+        file(os.path.join(tools.config['test_report_directory'], 'auction-auction_lot_report.'+format), 'wb+').write(data)        
+
 -
   In order to test the PDF reports defined on a auction, we will print a Auction Buyer list report
 - 
@@ -98,8 +104,8 @@
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.buyer.list').create(cr, uid, [ref('auction.auction_deposit_10_lot_1'),ref('auction.auction_deposit_10_lot_2')], {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'action_auction_buyer_list_report.'+format), 'wb+').write(data)
-        
+        file(os.path.join(tools.config['test_report_directory'], 'auction-auction_buyer_list_report.'+format), 'wb+').write(data)        
+
 -
   In order to test the PDF reports defined on a auction, we will print a Auction Flagey Hussier report
 - 
@@ -107,4 +113,13 @@
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.flagey.huissier').create(cr, uid, [ref('auction.auction_deposit_3_lot_1'),ref('auction.auction_deposit_10_lot_2')], {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'action_flagey_hussier_report.'+format), 'wb+').write(data)
+        file(os.path.join(tools.config['test_report_directory'], 'auction-auction_flagey_hussier_report.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a auction, we will print Auction Seller Form report
+- 
+  !python {model: auction.lots}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.seller_form_report').create(cr, uid, [ref('auction.auction_deposit_3_lot_1'),ref('auction.auction_deposit_10_lot_2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'auction-auction_seller_form_report.'+format), 'wb+').write(data)
