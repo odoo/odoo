@@ -117,10 +117,10 @@
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-    	<lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="-1,-1"/>
-    	<lineStyle kind="LINEAFTER" colorName="#cccccc" start="0,0" stop="-1,-1"/>
-    	<lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="-1,-1"/>
-    	<lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="-1,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -177,85 +177,47 @@
     </para>
       <blockTable colWidths="120.0,100.0,140.0,90.0,90.0" style="Table2_header" >
       <tr>
-      	<td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
+        <td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
         <td><para style="terp_tblheader_General_Centre">Filter By <font>[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font></para></td>
-		<td><para style="terp_tblheader_General_Centre">Display Account</para></td>
+    <td><para style="terp_tblheader_General_Centre">Display Account</para></td>
         <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
-	<tr>
-	   <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
+  <tr>
+     <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or '' ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
-        	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
-				<tr>
-	               <td><para style="terp_tblheader_Details_Centre">Start Date</para></td>
-	        		<td><para style="terp_tblheader_Details_Centre">End Date</para></td>
-	        	</tr>
-	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
-	        	</tr>
-        	</blockTable>
-        	<blockTable colWidths="65.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
-				<tr>
-			        <td><para style="terp_tblheader_Details_Centre">Start Period</para></td>
-			        <td><para style="terp_tblheader_Details_Centre">End Period</para></td>
-	        	</tr>
-	        	<tr>
-			        <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
-			        <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
-	        	</tr>
-        	 </blockTable>
-        	</td>
-		<td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_movement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
-		<td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
-	</tr>
-	</blockTable>
-	    <para style="Standard">
+          <blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+        <tr>
+                 <td><para style="terp_tblheader_Details_Centre">Start Date</para></td>
+              <td><para style="terp_tblheader_Details_Centre">End Date</para></td>
+            </tr>
+            <tr>
+              <td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
+              <td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
+            </tr>
+          </blockTable>
+          <blockTable colWidths="65.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+        <tr>
+              <td><para style="terp_tblheader_Details_Centre">Start Period</para></td>
+              <td><para style="terp_tblheader_Details_Centre">End Period</para></td>
+            </tr>
+            <tr>
+              <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
+              <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
+            </tr>
+           </blockTable>
+          </td>
+    <td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_movement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
+    <td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
+  </tr>
+  </blockTable>
+      <para style="Standard">
       <font color="white"> </font>
     </para>
         <para style="Standard">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="100.0,326.0,113.0" style="Table_Account_Line_Title" repeatRows="1">
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Code</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9">Liabilities</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Total Amount([[ get_currency(data) ]])</para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines_another('liability'), 'a') ]]</font>[[ a['code'] ]]<font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]] </font></para>
-        </td>
-        <td>
-          <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font></para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font')  ]]</font><font>[[ formatLang(abs(a['balance'])) ]] [[ company.currency_id.symbol ]]</font></para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="426.0,113.0" style="Table_Net_Profit_Loss">
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Balance:([[ get_currency(data) ]])</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) ]] [[ company.currency_id.symbol ]]</u></para>
-        </td>
-      </tr>
-    </blockTable>
-    <condPageBreak height="20cm"/>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
@@ -290,6 +252,44 @@
         </td>
         <td>
           <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_cr())) ]] [[ company.currency_id.symbol ]]</u></para>
+        </td>
+      </tr>
+    </blockTable>
+    <condPageBreak height="20cm"/>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="100.0,326.0,113.0" style="Table_Account_Line_Title" repeatRows="1">
+      <tr>
+        <td>
+          <para style="terp_default_Bold_9">Code</para>
+        </td>
+        <td>
+          <para style="terp_default_Bold_9">Liabilities</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Total Amount([[ get_currency(data) ]])</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines_another('liability'), 'a') ]]</font>[[ a['code'] ]]<font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]] </font></para>
+        </td>
+        <td>
+          <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font></para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font')  ]]</font><font>[[ formatLang(abs(a['balance'])) ]] [[ company.currency_id.symbol ]]</font></para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="426.0,113.0" style="Table_Net_Profit_Loss">
+      <tr>
+        <td>
+          <para style="terp_default_Bold_9">Balance:([[ get_currency(data) ]])</para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) ]] [[ company.currency_id.symbol ]]</u></para>
         </td>
       </tr>
     </blockTable>
