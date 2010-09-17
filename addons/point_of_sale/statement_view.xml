@@ -107,6 +107,18 @@
             <field name="act_window_id" ref="action_new_bank_statement_tree"/>
         </record>
 
+        <record id="view_cash_statement_pos_tree" model="ir.ui.view">
+            <field name="name">account.bank.statement.tree</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_cash_statement_tree"/>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+                    <field name="user_id"/>
+                </field>
+            </field>
+        </record>
+
         <record id="action_new_bank_statement_all_tree" model="ir.actions.act_window">
             <field name="name">Registers</field>
             <field name="type">ir.actions.act_window</field>
@@ -119,7 +131,7 @@
         <record model="ir.actions.act_window.view" id="act_cash_statement_all_register1">
             <field name="sequence" eval="0"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="account.view_cash_statement_tree"/>
+            <field name="view_id" ref="view_cash_statement_pos_tree"/>
             <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement_all_register">
