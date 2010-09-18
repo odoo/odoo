@@ -389,6 +389,8 @@ class task(osv.osv):
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
+        if not default.get('name', False):
+            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
@@ -397,7 +399,7 @@ class task(osv.osv):
              if task['date_start'] > task['date_end']:
                  return False
         return True
-    
+
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -453,15 +455,15 @@ class task(osv.osv):
     }
 
     _order = "sequence, priority, date_start, id"
-    
+
     def _check_recursion(self, cr, uid, ids):
         obj_task = self.browse(cr, uid, ids[0])
         parent_ids = [x.id for x in obj_task.parent_ids]
         children_ids = [x.id for x in obj_task.child_ids]
-        
+
         if (obj_task.id in children_ids) or (obj_task.id in parent_ids):
             return False
-        
+
         while(ids):
             cr.execute('SELECT DISTINCT task_id '\
                        'FROM project_task_parent_rel '\
@@ -535,7 +537,7 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
-                
+
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
                     reopen = True

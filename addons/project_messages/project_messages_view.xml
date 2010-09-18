@@ -38,7 +38,6 @@
                 <form string="Messages">
                 	<group attrs="{'readonly':[('from_id', '!=', uid)]}">
                         <field name="project_id" select="1" domain="[('user_id','=',uid)]"/>
-                        <newline/>
                         <field name="from_id" select="1"/>
                         <field name="to_id" select="1"/>
                         <newline/>
@@ -72,13 +71,14 @@
                			<field name="project_id"/>
                         <field name="from_id"/>
                         <field name="to_id"/>
+                        <field name="message"/>
                		</group>
                		<newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
-                    	<filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Message To" icon="terp-personal" domain="[]" context="{'group_by':'to_id'}"/>
                         <filter string="Message From" icon="terp-personal" domain="[]" context="{'group_by':'from_id'}"/>
+                        <separator orientation="vertical"/>
+                    	<filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
                     </group>
                </search>
            </field>
