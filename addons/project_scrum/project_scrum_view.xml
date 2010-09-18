@@ -113,10 +113,10 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state" select="1" readonly="1"/>
-                        <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera-test"/>
+                        <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                        <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
+                        <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                         <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
                         <button type="object" string="Cancel" name="button_cancel" states="open,pending" icon="gtk-stop"/>
                     </group>
@@ -208,9 +208,9 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-execute"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                    <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
                 </tree>
             </field>
@@ -228,7 +228,7 @@
                     <notebook colspan="4">
                         <page string="Sprint Info">
                             <group colspan="2" col="2">
-                                <separator string="Owners" colspan="2"/>
+                                <separator string="Responsible" colspan="2"/>
                                 <field name="product_owner_id"/>
                                 <field name="scrum_master_id"/>
                             </group>
@@ -256,9 +256,9 @@
                     </notebook>
                     <group col="6" colspan="4">
                         <field name="state" readonly="1"/>
-                        <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                        <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-                        <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
+                        <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                         <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
                     </group>
                 </form>
@@ -274,8 +274,8 @@
                     <group col="10" colspan="4">
                         <filter name="terp-check" icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Sprints"/>
                         <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
+                        <filter icon="gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Sprints"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id"/>
@@ -284,14 +284,14 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
-                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Managers" icon="terp-personal" domain="[]"  context="{'group_by':'scrum_master_id'}"/>
                         <filter string="Product owner" icon="terp-personal" domain="[]" context="{'group_by':'product_owner_id'}"/>
+                        <filter string="Managers" icon="terp-personal" domain="[]"  context="{'group_by':'scrum_master_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Start Date" icon="terp_go_month" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Sprint Month"/>
                     </group>
                 </search>
             </field>
@@ -335,6 +335,7 @@
                     <group colspan="4" col="6">
                         <field name="date"/>
                         <field name="sprint_id" domain="[('state', '=', 'open')]"/>
+                        <field name="responsible_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">

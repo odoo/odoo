@@ -38,6 +38,7 @@
                 <form string="Messages">
                 	<group attrs="{'readonly':[('from_id', '!=', uid)]}">
                         <field name="project_id" select="1" domain="[('user_id','=',uid)]"/>
+                        <newline/>
                         <field name="from_id" select="1"/>
                         <field name="to_id" select="1"/>
                         <newline/>
