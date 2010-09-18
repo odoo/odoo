@@ -132,6 +132,7 @@ class ExportService(object):
 LOG_NOTSET = 'notset'
 LOG_DEBUG_SQL = 'debug_sql'
 LOG_DEBUG_RPC = 'debug_rpc'
+LOG_DEBUG_RPC_ANSWER = 'debug_rpc_answer'
 LOG_DEBUG = 'debug'
 LOG_TEST = 'test'
 LOG_INFO = 'info'
@@ -139,9 +140,11 @@ LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
+logging.DEBUG_RPC_ANSWER = logging.DEBUG - 4
+logging.addLevelName(logging.DEBUG_RPC_ANSWER, 'DEBUG_RPC_ANSWER')
 logging.DEBUG_RPC = logging.DEBUG - 2
 logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
-logging.DEBUG_SQL = logging.DEBUG_RPC - 2
+logging.DEBUG_SQL = logging.DEBUG_RPC - 3
 logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
 
 logging.TEST = logging.INFO - 5
@@ -157,6 +160,7 @@ COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
     logging.DEBUG_SQL: (WHITE, MAGENTA),
     logging.DEBUG_RPC: (BLUE, WHITE),
+    logging.DEBUG_RPC_ANSWER: (BLUE, WHITE),
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
     logging.TEST: (WHITE, BLUE),
@@ -420,11 +424,11 @@ class OpenERPDispatcherException(Exception):
         self.traceback = traceback
 
 class OpenERPDispatcher:
-    def log(self, title, msg):
+    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=2):
         logger = logging.getLogger(title)
-        if logger.isEnabledFor(logging.DEBUG_RPC):
-            for line in pformat(msg).split('\n'):
-                logger.log(logging.DEBUG_RPC, line)
+        if logger.isEnabledFor(channel):
+            for line in pformat(msg, depth=depth).split('\n'):
+                logger.log(channel, line)
 
     def dispatch(self, service_name, method, params):
         try:
@@ -433,10 +437,8 @@ class OpenERPDispatcher:
             self.log('params', params)
             auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
-            self.log('result', result)
-            # We shouldn't marshall None,
-            if result == None:
-                result = False
+            logger = logging.getLogger('result')
+            self.log('result', result, channel=logging.DEBUG_RPC_ANSWER, depth=(logger.isEnabledFor(logging.DEBUG_SQL) and 1 or None))
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
