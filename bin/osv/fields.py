@@ -881,19 +881,17 @@ class serialized(_column):
         super(serialized, self).__init__(string=string, **args)
 
 
+# TODO: review completly this class for speed improvement
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
-        from orm import browse_record
         prop = obj.pool.get('ir.property')
         domain = prop._get_domain_default(cr, uid, prop_name, obj._name, context)
         ids = prop.search(cr, uid, domain, order='company_id', context=context)
         if not ids:
             return False
-
-        default_value = prop.get_by_id(cr, uid, ids, context=context)
-        if isinstance(default_value, browse_record):
-            return default_value.id
+        prop_rec = prop.browse(cr, uid, ids[0], context=context)
+        default_value = prop.get_by_record(cr, uid, prop_rec, context=context)
         return default_value or False
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
@@ -938,24 +936,24 @@ class property(function):
 
 
     def _fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
-        from orm import browse_record
+        #from orm import browse_record
         properties = obj.pool.get('ir.property')
+
+        domain = properties._get_domain(cr, uid, prop_name, obj._name, context) or []
+        domain += [('res_id','in', [obj._name + ',' + str(oid) for oid in  ids])]
+        nids = properties.search(cr, uid, domain, context=context)
 
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
-        nids = self._get_by_id(obj, cr, uid, prop_name, ids, context)
+        #nids = self._get_by_id(obj, cr, uid, prop_name, ids, context)
 
         res = {}
         for id in ids:
             res[id] = default_val
-        for prop in properties.browse(cr, uid, nids):
-            value = prop.get_by_id(context=context)
-            if isinstance(value, browse_record):
-                if not value.exists():
-                    cr.execute('DELETE FROM ir_property WHERE id=%s', (prop.id,))
-                    continue
-                value = value.id
+        for prop in properties.browse(cr, uid, nids, context=context):
+            value = properties.get_by_record(cr, uid, prop, context=context)
             res[prop.res_id.id] = value or False
+
         return res
 
 
