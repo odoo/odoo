@@ -45,7 +45,7 @@ account_move_line()
 
 class account_voucher(osv.osv):
     def _get_type(self, cr, uid, ids, context={}):
-        return context.get('type')
+        return context.get('type', False)
         
     def _get_period(self, cr, uid, context={}):
         if context.get('period_id', False):
@@ -101,7 +101,8 @@ class account_voucher(osv.osv):
     
     def _get_narration(self, cr, uid, context={}):
         return context.get('narration', False)
-        
+       
+ 
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "date desc, id desc"
@@ -308,7 +309,7 @@ class account_voucher(osv.osv):
             tr_type = 'receipt'
 
         default['value']['account_id'] = account_id
-        default['value']['type'] = tr_type
+        default['value']['type'] = ttype or tr_type
         
         vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context)
         default['value'].update(vals.get('value'))
@@ -810,3 +811,44 @@ class account_voucher_line(osv.osv):
         })
         return values
 account_voucher_line()
+
+class account_bank_statement(osv.osv):
+    _inherit = 'account.bank.statement'
+
+    def create_move_from_st_line(self, cr, uid, st_line, company_currency_id, next_number, context=None):
+        #TODO: test me please
+        if st_line.voucher_id:
+            return self.pool.get('account.voucher').proforma_voucher(cr, uid, [st_line.voucher_id.id])
+        return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line, company_currency_id, next_number, context=context)
+
+account_bank_statement()
+
+class account_bank_statement_line(osv.osv):
+    _inherit = 'account.bank.statement.line'
+
+    def _amount_reconciled(self, cursor, user, ids, name, args, context=None):
+        if not ids:
+            return {}
+        res_currency_obj = self.pool.get('res.currency')
+        res = {}
+        company_currency_id = False
+
+        for line in self.browse(cursor, user, ids, context=context):
+            if not company_currency_id:
+                company_currency_id = line.company_id.id
+            if line.voucher_id:
+                res[line.id] = res_currency_obj.compute(cursor, user,
+                        company_currency_id, line.statement_id.currency.id,
+                        line.voucher_id.amount, context=context)
+            else:
+                res[line.id] = 0.0
+        return res
+
+    _columns = {
+        'amount_reconciled': fields.function(_amount_reconciled,
+            string='Amount reconciled', method=True, type='float'),
+        'voucher_id': fields.many2one('account.voucher', 'Payment'),
+
+    }
+
+account_bank_statement_line()
