@@ -40,13 +40,13 @@ class pos_payment_report_user(report_sxw.rml_parse):
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
                          "and po.state in ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date " \
-                         "and po.user_id IN %s",(tuple(ids), )
-        self.cr.execute (sql)
+                         "and po.user_id IN %s"
+        self.cr.execute (sql, (tuple(ids), ))
         data=self.cr.dictfetchall()
         return data
-    def __pos_payment_user__total__(self,form):
+    def __pos_payment_user__total__(self, form):
         res=[]
-        ids = form['user_id'][0][-1]
+        ids = form['user_id']
         self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) " \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \

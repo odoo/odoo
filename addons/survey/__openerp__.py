@@ -47,6 +47,7 @@
     'demo_xml': ['survey_demo.xml'],
     'test': [
         'test/survey00.yml',
+        'test/survey_report.yml',
     ],
     'installable': True,
     'active': False,

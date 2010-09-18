@@ -48,8 +48,9 @@ Credits: Sistheo Zeekom CrysaLEAD
         "security/ir.model.access.csv",
         "wizard/fr_report_bilan_view.xml",
         "wizard/fr_report_compute_resultant_view.xml",
-        
+
     ],
+    "test": ['test/l10n_fr_report.yml'],
     "demo_xml" : [],
     "certificate" : "00435321693876313629",
     "active": False,

@@ -40,6 +40,7 @@
         "sale_layout_view.xml",
         "sale_layout_report.xml",
     ],
+    "test" : ['test/sale_layout_report.yml'],
     "active": False,
     "installable": True
 }
