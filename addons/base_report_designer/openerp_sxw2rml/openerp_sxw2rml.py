@@ -22,17 +22,11 @@
 ##############################################################################
 #!/usr/bin/python
 """
-Tiny SXW2RML - The OpenERP's report engine
+OpenERP SXW2RML - The OpenERP's report engine
 
-Tiny SXW2RMLis part of the Tiny report project.
-Tiny Report is a module that allows you to render high quality PDF document
+OpenERP SXW2RML is part of the OpenERP Report Project.
+OpenERP Report is a module that allows you to render high quality PDF document
 from an OpenOffice template (.sxw) and any relationnal database.
-
-The whole source code is distributed under the terms of the
-GNU Public Licence.
-
-(c) 2005 pyopenoffice.py Martin Simon (http://www.bezirksreiter.de)
-(c) 2005-TODAY, Fabien Pinckaers - Tiny sprl
 """
 __version__ = '0.9'
 
@@ -341,8 +335,8 @@ def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
 if __name__ == "__main__":
     import optparse
     parser = optparse.OptionParser(
-        version="Tiny Report v%s" % __version__,
-        usage = 'tiny_sxw2rml.py [options] file.sxw')
+        version="OpenERP Report v%s" % __version__,
+        usage = 'openerp_sxw2rml.py [options] file.sxw')
     parser.add_option("-v", "--verbose", default=False, dest="verbose", help="enable basic debugging")
     parser.add_option("-o", "--output", dest="output", default='.', help="directory of image output")
     (opt, args) = parser.parse_args()
