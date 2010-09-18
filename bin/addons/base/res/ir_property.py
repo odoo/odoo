@@ -147,7 +147,7 @@ class ir_property(osv.osv):
         elif record.type == 'binary':
             return record.value_binary
         elif record.type == 'many2one':
-            return record.value_reference.id
+            return record.value_reference
         elif record.type == 'datetime':
             return record.value_datetime
         elif record.type == 'date':

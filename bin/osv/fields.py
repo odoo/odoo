@@ -895,7 +895,7 @@ class property(function):
         for prop_rec in prop.browse(cr, uid, ids, context=context):
             if prop_rec.fields_id.name in default_value:
                 continue
-            default_value[prop_rec.fields_id.name] = prop.get_by_record(cr, uid, prop_rec, context=context)
+            default_value[prop_rec.fields_id.name] = prop.get_by_record(cr, uid, prop_rec, context=context) or False
         return default_value
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
@@ -910,6 +910,7 @@ class property(function):
             return []
 
 
+    # TODO: to rewrite more clean
     def _fnct_write(self, obj, cr, uid, id, prop_name, id_val, obj_dest, context=None):
         if context is None:
             context = {}
@@ -950,9 +951,24 @@ class property(function):
         for id in ids:
             res[id] = default_val.copy()
 
-        for prop in properties.browse(cr, uid, nids, context=context):
+        replaces = {}
+        brs = properties.browse(cr, uid, nids, context=context)
+        for prop in brs:
             value = properties.get_by_record(cr, uid, prop, context=context)
             res[prop.res_id.id][prop.fields_id.name] = value or False
+            if value:
+                replaces.setdefault(value._name, {})
+                replaces[value._name][value.id] = True
+
+        for rep in replaces:
+            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, replaces[rep].keys(), context=context))
+
+        for prop in brs:
+            if prop.type == 'many2one':
+                for id in ids:
+                    if res[id][prop.fields_id.name]:
+                        res[id][prop.fields_id.name] = replaces[res[id][prop.fields_id.name]._name].get(res[id][prop.fields_id.name], False)
+
         return res
 
 
