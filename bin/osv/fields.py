@@ -885,14 +885,18 @@ class serialized(_column):
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
+        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[prop_name]
+
+    def _get_defaults(self, obj, cr, uid, prop_name, context=None):
         prop = obj.pool.get('ir.property')
-        domain = prop._get_domain_default(cr, uid, prop_name, obj._name, context)
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name), ('res_id','=',False)]
         ids = prop.search(cr, uid, domain, order='company_id', context=context)
-        if not ids:
-            return False
-        prop_rec = prop.browse(cr, uid, ids[0], context=context)
-        default_value = prop.get_by_record(cr, uid, prop_rec, context=context)
-        return default_value or False
+        default_value = {}.fromkeys(prop_name, False)
+        for prop_rec in prop.browse(cr, uid, ids, context=context):
+            if prop_rec.fields_id.name in default_value:
+                continue
+            default_value[prop_rec.fields_id.name] = prop.get_by_record(cr, uid, prop_rec, context=context)
+        return default_value
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
@@ -936,24 +940,19 @@ class property(function):
 
 
     def _fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
-        #from orm import browse_record
         properties = obj.pool.get('ir.property')
-
-        domain = properties._get_domain(cr, uid, prop_name, obj._name, context) or []
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
         domain += [('res_id','in', [obj._name + ',' + str(oid) for oid in  ids])]
         nids = properties.search(cr, uid, domain, context=context)
-
-        default_val = self._get_default(obj, cr, uid, prop_name, context)
-
-        #nids = self._get_by_id(obj, cr, uid, prop_name, ids, context)
+        default_val = self._get_defaults(obj, cr, uid, prop_name, context)
 
         res = {}
         for id in ids:
-            res[id] = default_val
+            res[id] = default_val.copy()
+
         for prop in properties.browse(cr, uid, nids, context=context):
             value = properties.get_by_record(cr, uid, prop, context=context)
-            res[prop.res_id.id] = value or False
-
+            res[prop.res_id.id][prop.fields_id.name] = value or False
         return res
 
 
@@ -970,7 +969,7 @@ class property(function):
         # TODO remove obj_prop parameter (use many2one type)
         self.field_id = {}
         function.__init__(self, self._fnct_read, False, self._fnct_write,
-                          obj_prop, **args)
+                          obj_prop, multi='properties', **args)
 
     def restart(self):
         self.field_id = {}

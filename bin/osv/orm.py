@@ -2993,19 +2993,20 @@ class orm(orm_template):
                     column = self._inherit_fields[key][2]
                 else:
                     continue
-                if v and column._type == 'reference':
-                    model_name, ref_id = v.split(',', 1)
-                    model = self.pool.get(model_name)
-                    if not model:
-                        reset = True
-                    else:
-                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
-                        reset = not cr.fetchone()[0]
-                    if reset:
-                        if column._classic_write:
-                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
-                            cr.execute(query, (r['id'],))
-                        r[key] = False
+# TODO: removed this, it's too slow
+#                if v and column._type == 'reference':
+#                    model_name, ref_id = v.split(',', 1)
+#                    model = self.pool.get(model_name)
+#                    if not model:
+#                        reset = True
+#                    else:
+#                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
+#                        reset = not cr.fetchone()[0]
+#                    if reset:
+#                        if column._classic_write:
+#                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
+#                            cr.execute(query, (r['id'],))
+#                        r[key] = False
 
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
