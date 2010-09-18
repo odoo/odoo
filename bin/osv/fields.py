@@ -303,6 +303,7 @@ class many2one(_column):
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+        print 'INIT get'
         if not context:
             context = {}
         if not values:
@@ -330,6 +331,7 @@ class many2one(_column):
                 res[r] = (res[r], names[res[r]])
             else:
                 res[r] = False
+        print 'END get'
         return res
 
     def set(self, cr, obj_src, id, field, values, user=None, context=None):
