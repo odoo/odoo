@@ -816,7 +816,6 @@ class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
     def create_move_from_st_line(self, cr, uid, st_line, company_currency_id, next_number, context=None):
-        #TODO: test me please
         if st_line.voucher_id:
             return self.pool.get('account.voucher').proforma_voucher(cr, uid, [st_line.voucher_id.id])
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line, company_currency_id, next_number, context=context)
