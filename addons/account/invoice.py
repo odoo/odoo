@@ -452,7 +452,7 @@ class account_invoice(osv.osv):
                         _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
 
-    def onchange_journal_id(self, cr, uid, ids, journal_id):
+    def onchange_journal_id(self, cr, uid, ids, journal_id=False):
         result = {}
         if journal_id:
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)

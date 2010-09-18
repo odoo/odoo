@@ -2680,6 +2680,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['type'] = 'sale'
         vals_journal['code'] = _('SAJ')
         vals_journal['sequence_id'] = seq_id_sale
+        vals_journal['company_id'] =  company_id
 
         if obj_multi.chart_template_id.property_account_receivable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
@@ -2693,6 +2694,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['code'] = _('EXJ')
         vals_journal['sequence_id'] = seq_id_purchase
         vals_journal['view_id'] = view_id
+        vals_journal['company_id'] =  company_id
 
         if obj_multi.chart_template_id.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
@@ -2744,6 +2746,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
             vals_journal['type'] = 'cash'
+            vals_journal['company_id'] =  company_id
+            
             if line.currency_id:
                 vals_journal['view_id'] = view_id_cur
                 vals_journal['currency'] = line.currency_id.id

@@ -54,14 +54,14 @@ class account_chart(osv.osv_memory):
 
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear_id=False, context=None):
         res = {}
-        res['value'] = {'period_from': False, 'period_to': False}
+        res['value'] = {}
         if fiscalyear_id:
             start_period = end_period = False
             cr.execute('''
-                SELECT * FROM (SELECT p.id 
-                               FROM account_period p 
-                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id) 
-                               WHERE f.id = %s 
+                SELECT * FROM (SELECT p.id
+                               FROM account_period p
+                               LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
+                               WHERE f.id = %s
                                ORDER BY p.date_start ASC
                                LIMIT 1) AS period_start
                 UNION
