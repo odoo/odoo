@@ -167,7 +167,7 @@ class idea_idea(osv.osv):
         'state': fields.selection([('draft', 'Draft'),
             ('open', 'Opened'),
             ('close', 'Accepted'),
-            ('cancel', 'Cancelled')],
+            ('cancel', 'Refused')],
             'State', readonly=True,
             help='When the Idea is created the state is \'Draft\'.\n It is \
             opened by the user, the state is \'Opened\'.\

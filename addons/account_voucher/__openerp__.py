@@ -46,11 +46,12 @@
         "voucher_payment_receipt_view.xml",
         "voucher_sales_purchase_view.xml",
         "voucher_wizard.xml",
+        "security/account_voucher_security.xml"
     ],
     "test" : [
 #         "test/account_voucher.yml",
-          "test/sales_receipt.yml",
-          "test/sales_payment.yml",
+#          "test/sales_receipt.yml",
+#          "test/sales_payment.yml",
     ],
     'certificate': '0037580727101',
     "active": False,

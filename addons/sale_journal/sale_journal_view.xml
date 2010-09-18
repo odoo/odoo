@@ -12,11 +12,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invoice Type">
+                    <group colspan="4" col="6">
                     <field name="name" select="1"/>
-                    <field name="active" select="1"/>
                     <field name="invoicing_method" select="1"/>
-                    <newline/>
-                    <field name="note" colspan="4"/>
+                    <field name="active" select="1"/>
+                    </group>
+                     <notebook>
+                        <page string="Notes">
+                            <field name="note" colspan="2" nolabel="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -80,9 +85,9 @@
                     </notebook>
                     <field name="state"/>
                         <group col="6" colspan="2">
-                            <button name="button_open" string="Open Journal" states="draft" type="object" icon="gtk-open"/>
-                            <button string="Confirm Sales" name="button_sale_confirm" states="open" type="object" icon="gtk-execute"/>
-                            <button name="button_close" string="Close Journal" states="confirm,open" type="object" icon="gtk-close"/>
+                            <button name="button_open" string="Open Journal" states="draft" type="object" icon="terp-check"/>
+                            <button string="Confirm Sales" name="button_sale_confirm" states="open" type="object" icon="terp-camera_test"/>
+                            <button name="button_close" string="Close Journal" states="confirm,open" type="object" icon="terp-dialog-close"/>
                             <button name="button_draft" string="Set to Draft" states="cancel" type="object" icon="gtk-convert"/>
                             <button string="Cancel Sales" name="button_sale_cancel" states="close,draft,open,confirm" type="object" icon="gtk-cancel"/>
                         </group>
@@ -117,10 +122,10 @@
                 <search string="Sales by Journal">
                     <group col="8" colspan="4">
 						<filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Sales Journal which are in draft state"/>
-                        <filter icon="gtk-open" string="Open" domain="[('state','=','open')]" help="Open Sales Journal"/>
+                        <filter icon="terp-check" string="Open" domain="[('state','=','open')]" help="Open Sales Journal"/>
+                        <filter icon="terp-camera_test" string="Confirm" domain="[('state','=','confirm')]" help="Confirmed Sales Journal"/>
                         <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Sales Journal which are cancelled"/>
-                        <filter icon="terp-check" string="Confirm" domain="[('state','=','confirm')]" help="Confirmed Sales Journal"/>
-                        <filter icon="terp-camera_test" string="Close" domain="[('state','=','done')]" help="Sales Journal which are closed"/>
+                        <filter icon="terp-dialog-close" string="Close" domain="[('state','=','done')]" help="Sales Journal which are closed"/>
                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="code"/>
@@ -142,7 +147,7 @@
         </record>
 
 
-        <menuitem id="menu_definition_journal" name="Sales Journals" parent="menu_sale_journal_config"  action="action_definition_journal" sequence="70" />
+        <menuitem id="menu_definition_journal" name="Sales Journals" parent="menu_sale_journal_config"  action="action_definition_journal" sequence="70"/>
 
     <!-- Inherit sales order form view -->
 
@@ -394,10 +399,10 @@
                     </notebook>
                     <field name="state"/>
                         <group col="6" colspan="2">
-                            <button name="button_open" string="Open Journal" states="draft" type="object" icon="gtk-open"/>
-                            <button string="Confirm Picking" name="button_picking_confirm" states="open" type="object" icon="gtk-execute"/>
+                            <button name="button_open" string="Open Journal" states="draft" type="object" icon="terp-check"/>
+                            <button string="Confirm Picking" name="button_picking_confirm" states="open" type="object" icon="terp-camera_test"/>
                             <button name="button_reset" string="Set to Draft" states="cancel" type="object" icon="gtk-convert"/>
-                            <button name="button_close" string="Close Journal" states="confirm,open" type="object" icon="gtk-close"/>
+                            <button name="button_close" string="Close Journal" states="confirm,open" type="object" icon="terp-dialog-close"/>
                             <button string="Cancel Picking" name="button_picking_cancel" states="close,draft,open,confirm" type="object" icon="gtk-cancel"/>
                         </group>
                 </form>
@@ -429,9 +434,9 @@
                 <search string="Picking Journals">
                     <group col="8" colspan="4">
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Picking Journals which are in draft state"/>
-					   	<filter icon="gtk-open" string="Open" domain="[('state','=','open')]" help="Open Picking Journals"/>
+					   	<filter icon="terp-check" string="Open" domain="[('state','=','open')]" help="Open Picking Journals"/>
 					   	<filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Picking Journals which are cancelled"/>
-					   	<filter icon="terp-camera_test" string="Close" domain="[('state','=','done')]" help="Picking Journals which are closed"/>
+					   	<filter icon="terp-dialog-close" string="Close" domain="[('state','=','done')]" help="Picking Journals which are closed"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="code"/>

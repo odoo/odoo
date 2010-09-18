@@ -168,7 +168,7 @@
                                     <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                                 </group>
                                 <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                                    <tree string="Communication history">
+                                    <tree string="History">
                                         <field name="display_text" string="History Information"/>
                                         <button
                                             string="Reply"
@@ -176,7 +176,7 @@
                                             context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
                                             icon="terp-mail-replied" type="action" attrs="{'invisible': [('history', '!=', True)]}" />
                                     </tree>
-                                    <form string="Communication history">
+                                    <form string="History">
                                         <group col="4" colspan="4">
                                             <field name="email_from"/>
                                             <field name="date"/>

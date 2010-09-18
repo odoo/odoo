@@ -98,7 +98,7 @@ class crm_make_sale(osv.osv_memory):
                     partner_id = case.partner_id.id
                     fpos = case.partner_id.property_account_position and case.partner_id.property_account_position.id or False
                     partner_addr = partner_obj.address_get(cr, uid, [case.partner_id.id],
-                            ['invoice', 'delivery', 'contact'])
+                            ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner_obj.browse(cr, uid, case.partner_id.id,
                             context).property_product_pricelist.id
                 else:
@@ -198,7 +198,6 @@ class crm_make_sale(osv.osv_memory):
     _defaults = {
          'shop_id': _get_shop_id,
          'partner_id': _selectPartner,
-         'close': 1
     }
 
 crm_make_sale()
