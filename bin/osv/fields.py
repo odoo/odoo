@@ -303,11 +303,9 @@ class many2one(_column):
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        print 'INIT get'
-        if not context:
-            context = {}
-        if not values:
-            values = {}
+        context = context or {}
+        values = values or {}
+
         res = {}
         for r in values:
             res[r['id']] = r[name]
@@ -316,22 +314,30 @@ class many2one(_column):
         obj = obj.pool.get(self._obj)
 
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
-        from orm import except_orm
-        names = {}
-        for record in list(set(filter(None, res.values()))):
-            try:
-                record_name = dict(obj.name_get(cr, user, [record], context))
-            except except_orm:
-                record_name = {}
-                record_name[record] = '// Access Denied //'
-            names.update(record_name)
-
-        for r in res.keys():
-            if res[r] and res[r] in names:
-                res[r] = (res[r], names[res[r]])
+        records = dict(obj.name_get(cr, 1, list(set(filter(None, res.values()))), context=context))
+        for id in res:
+            if id in records:
+                res[id] = (id, records[id])
             else:
-                res[r] = False
-        print 'END get'
+                res[id] = False
+
+        #from orm import except_orm
+        #names = {}
+        #print 'INIT get'
+        #for record in :
+        #    try:
+        #        record_name = dict(obj.name_get(cr, user, [record], context))
+        #    except except_orm:
+        #        record_name = {}
+        #        record_name[record] = '// Access Denied //'
+        #    names.update(record_name)
+
+        #for r in res.keys():
+        #    if res[r] and res[r] in names:
+        #        res[r] = (res[r], names[res[r]])
+        #    else:
+        #        res[r] = False
+        #print 'END get'
         return res
 
     def set(self, cr, obj_src, id, field, values, user=None, context=None):
