@@ -882,7 +882,7 @@ class property(function):
     def _get_defaults(self, obj, cr, uid, prop_name, context=None):
         prop = obj.pool.get('ir.property')
         domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name), ('res_id','=',False)]
-        ids = prop.search(cr, uid, domain, order='company_id', context=context)
+        ids = prop.search(cr, uid, domain, context=context)
         replaces = {}
         default_value = {}.fromkeys(prop_name, False)
         for prop_rec in prop.browse(cr, uid, ids, context=context):
