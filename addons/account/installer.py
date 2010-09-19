@@ -211,7 +211,7 @@ class account_installer(osv.osv_memory):
             vals={
                 'name': (obj_acc_root.id == account_template.id) and company_id.name or account_template.name,
                 #'sign': account_template.sign,
-                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                #'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
                 'type': account_template.type,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
@@ -225,6 +225,19 @@ class account_installer(osv.osv_memory):
             new_account = obj_acc.create(cr, uid, vals)
             acc_template_ref[account_template.id] = new_account
             if account_template.name == 'Bank Current Account':
+                b_vals={
+                    'name': 'Bank Accounts',
+                    'code': '110500',
+                    'type': 'view',
+                    'user_type': account_template.parent_id.user_type and account_template.user_type.id or False,
+                    'shortcut': account_template.shortcut,
+                    'note': account_template.note,
+                    'parent_id': account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False,
+                    'tax_ids': [(6,0,tax_ids)],
+                    'company_id': company_id.id,
+                }
+                bank_account = obj_acc.create(cr, uid, b_vals)
+                
                 view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal View')])[0] #why fixed name here?
                 view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #Why Fixed name here?
                 ref_acc_bank = obj_multi.bank_account_view_id
@@ -281,10 +294,10 @@ class account_installer(osv.osv_memory):
 
                     vals_bnk = {'name': val.acc_name or '',
                         'currency_id': val.currency_id.id or False,
-                        'code': str(110400 + code_cnt),
+                        'code': str(110500 + code_cnt),
                         'type': 'liquidity',
                         'user_type': type,
-                        'parent_id':new_account,
+                        'parent_id':bank_account,
                         'company_id': company_id.id }
                     child_bnk_acc = obj_acc.create(cr, uid, vals_bnk)
                     vals_seq_child = {

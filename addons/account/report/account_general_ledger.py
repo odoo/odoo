@@ -43,6 +43,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         self.init_query = data['form']['initial_bal_query']
         self.init_balance = data['form']['initial_balance']
         self.display_account = data['form']['display_account']
+        self.target_move = data['form'].get('target_move', 'all')
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
@@ -78,14 +79,14 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         self.context = context
 
     def _sum_currency_amount_account(self, account):
-        self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
-                "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s" %(account.id, self.query))
+        self.cr.execute('SELECT sum(l.amount_currency) AS tot_currency \
+                FROM account_move_line l \
+                WHERE l.account_id = %s AND %s' %(account.id, self.query))
         sum_currency = self.cr.fetchone()[0] or 0.0
         if self.init_balance:
-            self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
-                            "FROM account_move_line l "\
-                            "WHERE l.account_id = %s AND %s "%(account.id, self.init_query))
+            self.cr.execute('SELECT sum(l.amount_currency) AS tot_currency \
+                            FROM account_move_line l \
+                            WHERE l.account_id = %s AND %s '%(account.id, self.init_query))
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
 
@@ -117,13 +118,23 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
 
     def lines(self, account):
         """ Return all the account_move_line of account with their account code counterparts """
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted', '']
         # First compute all counterpart strings for every move_id where this account appear.
         # Currently, the counterpart info is used only in landscape mode
         sql = """
             SELECT m1.move_id,
-            array_to_string(ARRAY(SELECT DISTINCT a.code FROM account_move_line m2 LEFT JOIN account_account a ON (m2.account_id=a.id) WHERE m2.move_id = m1.move_id AND m2.account_id<>%%s), ', ') AS counterpart
-            FROM (SELECT move_id FROM account_move_line l WHERE %s AND l.account_id = %%s GROUP BY move_id) m1
-        """ % self.query
+                array_to_string(ARRAY(SELECT DISTINCT a.code
+                                          FROM account_move_line m2
+                                          LEFT JOIN account_account a ON (m2.account_id=a.id)
+                                          WHERE m2.move_id = m1.move_id
+                                          AND m2.account_id<>%%s), ', ') AS counterpart
+                FROM (SELECT move_id
+                        FROM account_move_line l
+                        LEFT JOIN account_move am ON (am.id = l.move_id)
+                        WHERE am.state IN %s and %s AND l.account_id = %%s GROUP BY move_id) m1
+        """% (tuple(move_state), self.query)
         self.cr.execute(sql, (account.id, account.id))
         counterpart_res = self.cr.dictfetchall()
         counterpart_accounts = {}
@@ -143,13 +154,13 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,
             p.name AS partner_name
             FROM account_move_line l
-            LEFT JOIN account_move m on (l.move_id=m.id)
+            JOIN account_move m on (l.move_id=m.id)
             LEFT JOIN res_currency c on (l.currency_id=c.id)
             LEFT JOIN res_partner p on (l.partner_id=p.id)
             LEFT JOIN account_invoice i on (m.id =i.move_id)
             JOIN account_journal j on (l.journal_id=j.id)
-            WHERE %s AND l.account_id = %%s ORDER by %s
-        """ % (self.query, sql_sort)
+            WHERE %s AND m.state IN %s AND l.account_id = %%s ORDER by %s
+        """ %(self.query, tuple(move_state), sql_sort)
         self.cr.execute(sql, (account.id,))
         res_lines = self.cr.dictfetchall()
         res_init = []
@@ -167,8 +178,8 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
                 LEFT JOIN res_partner p on (l.partner_id=p.id)
                 LEFT JOIN account_invoice i on (m.id =i.move_id)
                 JOIN account_journal j on (l.journal_id=j.id)
-                WHERE %s AND l.account_id = %%s
-            """ %(self.init_query)
+                WHERE %s AND m.state IN %s AND l.account_id = %%s
+            """ %(self.init_query, tuple(move_state))
 
             self.cr.execute(sql, (account.id,))
             res_init = self.cr.dictfetchall()
@@ -192,40 +203,73 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         return res
 
     def _sum_debit_account(self, account):
-        self.cr.execute("SELECT sum(debit) "\
-                "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s "%(account.id, self.query))
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted','']
+        self.cr.execute('SELECT sum(debit) \
+                FROM account_move_line l \
+                JOIN account_move am ON (am.id = l.move_id) \
+                WHERE (l.account_id = %s) \
+                AND (am.state IN %s) \
+                AND '+ self.query +' '
+                ,(account.id, tuple(move_state)))
         sum_debit = self.cr.fetchone()[0] or 0.0
         if self.init_balance:
-            self.cr.execute("SELECT sum(debit) "\
-                    "FROM account_move_line l "\
-                    "WHERE l.account_id = %s AND %s "%(account.id, self.init_query))
+            self.cr.execute('SELECT sum(debit) \
+                    FROM account_move_line l \
+                    JOIN account_move am ON (am.id = l.move_id) \
+                    WHERE (l.account_id = %s) \
+                    AND (am.state IN %s) \
+                    AND '+ self.init_query +' '
+                    ,(account.id, tuple(move_state)))
             # Add initial balance to the result
             sum_debit += self.cr.fetchone()[0] or 0.0
         return sum_debit
 
     def _sum_credit_account(self, account):
-        self.cr.execute("SELECT sum(credit) "\
-                "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s "%(account.id, self.query))
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted','']
+        self.cr.execute('SELECT sum(credit) \
+                FROM account_move_line l \
+                JOIN account_move am ON (am.id = l.move_id) \
+                WHERE (l.account_id = %s) \
+                AND (am.state IN %s) \
+                AND '+ self.query +' '
+                ,(account.id, tuple(move_state)))
         sum_credit = self.cr.fetchone()[0] or 0.0
         if self.init_balance:
-            self.cr.execute("SELECT sum(credit) "\
-                    "FROM account_move_line l "\
-                    "WHERE l.account_id = %s AND %s "%(account.id, self.init_query))
+            self.cr.execute('SELECT sum(credit) \
+                    FROM account_move_line l \
+                    JOIN account_move am ON (am.id = l.move_id) \
+                    WHERE (l.account_id = %s) \
+                    AND (am.state IN %s) \
+                    AND '+ self.init_query +' '
+                    ,(account.id, tuple(move_state)))
             # Add initial balance to the result
             sum_credit += self.cr.fetchone()[0] or 0.0
         return sum_credit
 
     def _sum_balance_account(self, account):
-        self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_balance "\
-                "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s"%(account.id, self.query))
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted','']
+        self.cr.execute('SELECT (sum(debit) - sum(credit)) as tot_balance \
+                FROM account_move_line l \
+                JOIN account_move am ON (am.id = l.move_id) \
+                WHERE (l.account_id = %s) \
+                AND (am.state IN %s) \
+                AND '+ self.query +' '
+                ,(account.id, tuple(move_state)))
         sum_balance = self.cr.fetchone()[0] or 0.0
         if self.init_balance:
-            self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_balance "\
-                    "FROM account_move_line l "\
-                    "WHERE l.account_id = %s AND %s "%(account.id, self.init_query))
+            self.cr.execute('SELECT (sum(debit) - sum(credit)) as tot_balance \
+                    FROM account_move_line l \
+                    JOIN account_move am ON (am.id = l.move_id) \
+                    WHERE (l.account_id = %s) \
+                    AND (am.state IN %s) \
+                    AND '+ self.init_query +' '
+                    ,(account.id, tuple(move_state)))
             # Add initial balance to the result
             sum_balance += self.cr.fetchone()[0] or 0.0
         return sum_balance
