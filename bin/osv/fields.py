@@ -877,24 +877,30 @@ class serialized(_column):
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
-        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[prop_name]
+        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[0][prop_name]
 
     def _get_defaults(self, obj, cr, uid, prop_name, context=None):
         prop = obj.pool.get('ir.property')
         domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name), ('res_id','=',False)]
         ids = prop.search(cr, uid, domain, order='company_id', context=context)
+        replaces = {}
         default_value = {}.fromkeys(prop_name, False)
         for prop_rec in prop.browse(cr, uid, ids, context=context):
-            if prop_rec.fields_id.name in default_value:
+            if default_value.get(prop_rec.fields_id.name, False):
                 continue
-            default_value[prop_rec.fields_id.name] = prop.get_by_record(cr, uid, prop_rec, context=context) or False
-        return default_value
+            value = prop.get_by_record(cr, uid, prop_rec, context=context) or False
+            default_value[prop_rec.fields_id.name] = value
+            if value and (prop_rec.type == 'many2one'):
+                replaces.setdefault(value._name, {})
+                replaces[value._name][value.id] = True
+        return default_value, replaces
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
 
-        domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
+        #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
         if domain is not None:
             domain = [('res_id', 'in', vids)] + domain
             return prop.search(cr, uid, domain, context=context)
@@ -907,7 +913,7 @@ class property(function):
         if context is None:
             context = {}
 
-        nids = self._get_by_id(obj, cr, uid, prop_name, [id], context)
+        nids = self._get_by_id(obj, cr, uid, [prop_name], [id], context)
         if nids:
             cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids),))
 
@@ -928,7 +934,7 @@ class property(function):
                 'company_id': cid,
                 'fields_id': def_id,
                 'type': self._type,
-                }, context=context)
+            }, context=context)
         return False
 
 
@@ -937,29 +943,27 @@ class property(function):
         domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
         domain += [('res_id','in', [obj._name + ',' + str(oid) for oid in  ids])]
         nids = properties.search(cr, uid, domain, context=context)
-        default_val = self._get_defaults(obj, cr, uid, prop_name, context)
+        default_val,replaces = self._get_defaults(obj, cr, uid, prop_name, context)
 
         res = {}
         for id in ids:
             res[id] = default_val.copy()
 
-        replaces = {}
         brs = properties.browse(cr, uid, nids, context=context)
         for prop in brs:
             value = properties.get_by_record(cr, uid, prop, context=context)
             res[prop.res_id.id][prop.fields_id.name] = value or False
-            if value:
+            if value and (prop.type == 'many2one'):
                 replaces.setdefault(value._name, {})
                 replaces[value._name][value.id] = True
 
         for rep in replaces:
             replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, replaces[rep].keys(), context=context))
 
-        for prop in brs:
-            if prop.type == 'many2one':
-                for id in ids:
-                    if res[id][prop.fields_id.name]:
-                        res[id][prop.fields_id.name] = replaces[res[id][prop.fields_id.name]._name].get(res[id][prop.fields_id.name], False)
+        for prop in prop_name:
+            for id in ids:
+                if res[id][prop] and hasattr(res[id][prop], '_name'):
+                    res[id][prop] = (res[id][prop].id , replaces[res[id][prop]._name].get(res[id][prop].id, False))
 
         return res
 

@@ -161,7 +161,8 @@ class ir_property(osv.osv):
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
             nid = self.search(cr, uid, domain, context=context)
-            record = self.browse(cr, uid, nid, context=context)
+            if not nid: return False
+            record = self.browse(cr, uid, nid[0], context=context)
             return self.get_by_record(cr, uid, record, context=context)
         return False
 
