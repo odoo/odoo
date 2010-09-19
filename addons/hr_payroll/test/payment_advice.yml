@@ -52,3 +52,12 @@
     from tools.translate import _
     advice_id=self.browse(cr, uid, ref("hr_payroll_advice_advice0"))
     assert(advice_id.state == 'confirm'), _('State not changed!')
+
+-
+  Print Payroll Advice
+- 
+  !python {model: hr.payroll.advice}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.payroll.advice').create(cr, uid, [ref('hr_payroll_advice_advice0')], {}, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-payroll-advice.'+format), 'wb+').write(data)
