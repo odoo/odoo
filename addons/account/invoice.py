@@ -390,8 +390,6 @@ class account_invoice(osv.osv):
             invoice_addr_id = res['invoice']
             p = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if company_id:
-                print p
-                print p.property_account_receivable, p.property_account_receivable.company_id, p.property_account_payable, p.property_account_payable.company_id
                 if p.property_account_receivable.company_id.id != company_id and p.property_account_payable.company_id.id != company_id:
                     property_obj = self.pool.get('ir.property')
                     rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
@@ -597,13 +595,11 @@ class account_invoice(osv.osv):
     # return the ids of the move lines which has the same account than the invoice
     # whose id is in ids
     def move_line_id_payment_get(self, cr, uid, ids, *args):
-        print '** la'
         if not ids: return []
         result = self.move_line_id_payment_gets(cr, uid, ids, *args)
         return result.get(ids[0], [])
 
     def move_line_id_payment_gets(self, cr, uid, ids, *args):
-        print '** ICI'
         res = {}
         if not ids: return res
         cr.execute('SELECT i.id, l.id '\
