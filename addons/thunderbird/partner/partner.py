@@ -166,12 +166,13 @@ class thunderbird_partner(osv.osv_memory):
             msg_new = dictcreate.get('message')
             ref = ref_id.split(',')
             model = ref[0]
-            model_obj = self.pool.get(model)
-            model_data = model_obj.search(cr, uid,[('name', 'ilike', ref[1])])
-            if model_data:
-                res_id = int(model_data[0])
-                server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
-                res_ids.append(res_id)
+            res_id = int(ref[1])
+            if message_id:
+                msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
+                if msg_ids and len(msg_ids):
+                    continue
+            server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
+            res_ids.append(res_id)
         return len(res_ids)
 
     def process_email(self, cr, uid, vals):
