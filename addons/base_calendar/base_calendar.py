@@ -484,8 +484,12 @@ property or property parameter."),
             res_obj = att.ref
             sub = res_obj.name
             att_infos = []
-            other_invitaion_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
-            for att2 in self.browse(cr, uid, other_invitaion_ids):
+            if res_obj:
+                other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])a
+            else:
+                other_invitation_ids = []
+
+            for att2 in self.browse(cr, uid, other_invitation_ids):
                 att_infos.append(((att2.user_id and att2.user_id.name) or \
                              (att2.partner_id and att2.partner_id.name) or \
                                 att2.email) + ' - Status: ' + att2.state.title())
