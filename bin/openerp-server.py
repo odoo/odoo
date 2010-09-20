@@ -208,7 +208,6 @@ def dumpstacks(signum, _):
     logger.notifyChannel("dumpstacks", netsvc.LOG_INFO, "\n".join(code))
 
 if os.name == 'posix':
-    signal.signal(signal.SIGUSR1, dumpstacks)
     signal.signal(signal.SIGQUIT, dumpstacks)
 
 if tools.config['pidfile']:
