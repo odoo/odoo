@@ -65,12 +65,14 @@
         <record id="employee2" model="hr.employee">
             <field name="name">Quentin Paolino</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="category_ids" eval="[(6, 0, [ref('category_jr_exec'),ref('category_managers')])]"/>
         </record>
 
         <record id="employee3" model="hr.employee">
             <field name="name">Antoine Philippe</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="category_ids" eval="[(6, 0, [ref('category_trainee')])]"/>
         </record>
 

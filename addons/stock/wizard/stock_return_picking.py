@@ -75,7 +75,7 @@ class stock_return_picking(osv.osv_memory):
                         self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
                     if 'invoice_state' not in self._columns:
                         self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be Invoiced'), ('none', 'None')], string='Invoice State', required=True)    
-            except Exception, e:
+            except Exception:
                 return res
         return res
     
@@ -117,10 +117,6 @@ class stock_return_picking(osv.osv_memory):
                     raise osv.except_osv(_('Warning!'),_('There is no product to return!'))
         
             arch_lst.append('<field name="invoice_state"/>\n<newline/>')
-            if pick.invoice_state=='invoiced':
-                new_invoice_state='2binvoiced'
-            else:
-                new_invoice_state=pick.invoice_state
             res['fields']['invoice_state']={'string':_('Invoice state'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To Be Invoiced')), ('none', _('None'))]}
             arch_lst.append('<group col="2" colspan="4">')
             arch_lst.append('<button icon="gtk-cancel" special="cancel" string="Cancel" />')
