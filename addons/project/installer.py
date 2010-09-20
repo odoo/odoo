@@ -31,13 +31,11 @@ class project_installer(osv.osv_memory):
         'Long Term Planning',
             help="Enables long-term projects tracking, including "
                  "multiple-phase projects and resource allocation handling."),
-        'project_wiki': fields.boolean('Specifications in a Wiki',
-            help=""),
         'hr_timesheet_sheet': fields.boolean('Timesheets',
             help="Tracks and helps employees encode and validate timesheets "
-                 "and attendance."),
+                 "and attendances."),
         'hr_timesheet_invoice': fields.boolean('Invoice Based on Hours',
-            help="Helps generate invoice based on human resources "
+            help="Helps generate invoices based on human resources "
                  "costs and general expenses."),
         'account_budget': fields.boolean('Budgets',
             help="Helps accountants manage analytic and crossover budgets."),
@@ -51,8 +49,7 @@ class project_installer(osv.osv_memory):
             help="Implements and tracks the concepts and task types defined "
                  "in the SCRUM methodology."),
         'project_gtd': fields.boolean('Getting Things Done',
-            help="Embeds the 'Getting Things Done concepts' into OpenERP's "
-                 "project management."),
+            help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
         }
 
     _defaults={

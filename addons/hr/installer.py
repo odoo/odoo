@@ -35,7 +35,7 @@ class hr_installer(osv.osv_memory):
             help="Helps you manage and streamline your recruitment process."),
         'hr_timesheet_sheet':fields.boolean('Timesheets',
             help="Tracks and helps employees encode and validate timesheets "
-                 "and attendance."),
+                 "and attendances."),
         'hr_contract': fields.boolean("Employee's Contracts",
             help="Extends employee profiles to help manage their contracts."),
         'hr_evaluation': fields.boolean('Periodic Evaluations',
