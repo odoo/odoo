@@ -69,10 +69,12 @@
                     <field name="description" />
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                          <filter string="Owner" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                         <filter string="Message" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
-                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                         <separator orientation="vertical"/>
+                         <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
+                         <separator orientation="vertical"/>
+                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
@@ -189,13 +191,13 @@
             view_id="view_mailgate_message_tree"
             />
 
-        <act_window
+        <!-- <act_window
         id="act_res_partner_open_email" name="Open Documents"
         res_model="ir.attachment"
         src_model="mailgate.message"
-         key2="client_action_multi"/>
+         key2="client_action_multi"/> -->
 
-      <menuitem name="Mail" id="menu_base_config_mail"
+      <menuitem name="Emails" id="menu_base_config_mail"
         parent="base.menu_base_partner" sequence="5" />
 
     <menuitem name="Emails" id="menu_mailgate_message"
