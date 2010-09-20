@@ -50,14 +50,14 @@ class email_server_tools(osv.osv_memory):
 
     def parse_message(self, message):
         #TOCHECK: put this function in mailgateway module
+        if isinstance(message, unicode):
+            message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('message-id', False)
         msg = {}
-        msg_txt = email.message_from_string(message)
         fields = msg_txt.keys()
         msg['id'] = message_id
         msg['message-id'] = message_id
-
         if 'Subject' in fields:
             msg['subject'] = self._decode_header(msg_txt.get('Subject'))
 
@@ -156,12 +156,12 @@ class thunderbird_partner(osv.osv_memory):
         server_tools_pool = self.pool.get('email.server.tools')
         message_id = msg.get('message-id', False)
         msg_pool = self.pool.get('mailgate.message')
-        msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
+        msg_ids = []
         res = {}
         res_ids = []
-        if msg_ids and len(msg_ids):
-                return 0
-
+        if message_id:
+            msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
+        if msg_ids and len(msg_ids): return 0
         for ref_id in ref_ids:
             msg_new = dictcreate.get('message')
             ref = ref_id.split(',')
