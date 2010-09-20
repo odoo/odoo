@@ -30,7 +30,7 @@ import tools
 import binascii
 class email_server_tools(osv.osv_memory):
     _inherit = "email.server.tools"
-    def history_message(self, cr, uid, model, res_id, message):
+    def history_message(self, cr, uid, model, res_id, message, context=None):
         #@param message: string of mail which is read from EML File
         attachment_pool = self.pool.get('ir.attachment')
         msg = self.parse_message(message)
@@ -49,7 +49,7 @@ class email_server_tools(osv.osv_memory):
         return self.history(cr, uid, model, res_id, msg, att_ids)
 
     def parse_message(self, message):
-        #TOCHECK: put this function in mailgateway
+        #TOCHECK: put this function in mailgateway module
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('message-id', False)
         msg = {}
@@ -152,67 +152,78 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         ref_ids = str(dictcreate.get('ref_ids')).split(';')
         msg = dictcreate.get('message')
+        msg = self.pool.get('email.server.tools').parse_message(msg)
         server_tools_pool = self.pool.get('email.server.tools')
+        message_id = msg.get('message-id', False)
+        msg_pool = self.pool.get('mailgate.message')
+        msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
+        res = {}
+        res_ids = []
+        if msg_ids and len(msg_ids):
+                return 0
+
         for ref_id in ref_ids:
+            msg_new = dictcreate.get('message')
             ref = ref_id.split(',')
             model = ref[0]
-            res_id = int(ref[1])
-            server_tools_pool.history_message(cr, uid, model, res_id, msg)
-        return True
+            model_obj = self.pool.get(model)
+            model_data = model_obj.search(cr, uid,[('name', 'ilike', ref[1])])
+            if model_data:
+                res_id = int(model_data[0])
+                server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
+                res_ids.append(res_id)
+        return len(res_ids)
 
-    def process_email(self,cr,uid,vals):
+    def process_email(self, cr, uid, vals):
         dictcreate = dict(vals)
         model = str(dictcreate.get('model'))
         message = dictcreate.get('message')
         return self.pool.get('email.server.tools').process_email(cr, uid, model, message, attach=True, context=None)
 
-    def search_contact(self, cr, user, vals):
-        address_obj = self.pool.get('res.partner.address')
-        partner = address_obj.search(cr, user,[('email','=',vals)])
+    def search_contact(self, cr, user, email):
+        address_pool = self.pool.get('res.partner.address')
+        address_ids = address_pool.search(cr, user, [('email','=',email)])
         res = {}
-        res1 = {}
 
-        if not partner:
-            res1 = {
-                'email': '',
-                    }
-            return res1.items()
-
-        if partner:
-            partner=partner[0]
-            data = address_obj.read(cr,user, partner)
+        if not address_ids:
             res = {
-                'partner_name': data['partner_id'] and data['partner_id'][1] or '',
-                'contactname': data['name'] or '',
-                'street': data['street'] or '',
-                'street2': data['street2'] or '',
-                'zip': data['zip'] or '',
-                'city': data['city'] or '',
-                'country': data['country_id'] and data['country_id'][1] or '',
-                'state': data['state_id'] and data['state_id'][1] or '',
-                'email': data['email'] or '',
-                'phone': data['phone'] or '',
-                'mobile': data['mobile'] or '',
-                'fax': data['fax'] or '',
-                'res_id': str(partner),
+                'email': '',
+            }
+        else:
+            address_id = address_ids[0]
+            address = address_pool.browse(cr, user, address_id)
+            res = {
+                'partner_name': address.partner_id and address.partner_id.name or '',
+                'contactname': address.name,
+                'street': address.street or '',
+                'street2': address.street2 or '',
+                'zip': address.zip or '',
+                'city': address.city or '',
+                'country': address.country_id and address.country_id.name or '',
+                'state': address.state_id and address.state_id.name or '',
+                'email': address.email or '',
+                'phone': address.phone or '',
+                'mobile': address.mobile or '',
+                'fax': address.fax or '',
+                'partner_id': address.partner_id and str(address.partner_id.id) or '',
+                'res_id': str(address.id),
             }
         return res.items()
 
-    def update_contact(self,cr,user,vals):
+    def update_contact(self, cr, user, vals):
         dictcreate = dict(vals)
         res_id = dictcreate.get('res_id',False)
-        result={}
-
-        if not (dictcreate.get('partner_id')):
+        result = {}
+        address_pool = self.pool.get('res.partner.address')
+        if not (dictcreate.get('partner_id')): # TOCHECK: It should be check res_id or not
             dictcreate.update({'partner_id': False})
-            create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
+            create_id = address_pool.create(cr, user, dictcreate)
             return create_id
 
         if res_id:
-            address_obj = self.pool.get('res.partner.address')
-            address_data = address_obj.read(cr, user, int(res_id), [])
+            address_data = address_pool.read(cr, user, int(res_id), [])
             result = {
-               'partner_id': address_data['partner_id'] and address_data['partner_id'][0] or False,
+               'partner_id': address_data['partner_id'] and address_data['partner_id'][0] or False, #TOFIX: parter_id should take from address_data
                'country_id': dictcreate['country_id'] and int(dictcreate['country_id'][0]) or False,
                'state_id': dictcreate['state_id'] and int(dictcreate['state_id'][0]) or False,
                'name': dictcreate['name'],
@@ -225,7 +236,7 @@ class thunderbird_partner(osv.osv_memory):
                'mobile': dictcreate['mobile'],
                'email': dictcreate['email'],
             }
-        address_obj.write(cr, user,int(res_id),result )
+        address_pool.write(cr, user, int(res_id), result )
         return True
 
     def create_partner(self,cr,user,vals):
