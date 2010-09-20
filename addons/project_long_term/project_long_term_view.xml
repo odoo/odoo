@@ -30,7 +30,7 @@
                 <form string="Project Resource Allocation">
                     <field name="resource_id" select="1"/>
                     <field name="phase_id"/>
-                    <field name="useability"/>
+                    <field name="useability" string="Availability"/>
                 </form>
             </field>
         </record>
@@ -90,16 +90,21 @@
             <field name="arch" type="xml">
                 <form string="Project Phase">
                     <group colspan="6" col="6">
-                        <field name="name" select="1"/>
-                        <field name="project_id" on_change="onchange_project(project_id)"/>
-                        <field name="responsible_id"/>
+	                    <group colspan="2" col="2">
+	                        <field name="name" select="1"/>
+	                        <field name="date_start"/>
+	                        <field name="date_end"/>
+	                    </group>
+	                    <group colspan="2" col="2">
+	                       <field name="project_id" on_change="onchange_project(project_id)" />
+	                       <field name="duration" />
+	                    </group>
+	                    <group colspan="2" col="2">
+	                       <field name="responsible_id"/>
+	                       <newline/>
+	                       <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]" colspan="2"/>
                     </group>
-                    <group colspan="6" col="6">
-                        <field name="duration" />
-                        <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                    </group>
+					</group>
                     <notebook colspan="4">
                         <page string="Resource Allocation">
                             <field colspan="4" name="resource_ids" nolabel="1">
@@ -116,9 +121,9 @@
                             <group col="12" colspan="4">
                                 <field name="state" select="1"/>
                                 <button string="Draft" name="set_draft" states="open" icon="gtk-indent"/>
-                                <button string="Start Phase" name="set_open" states="pending,draft" icon="gtk-execute"/>
-                                <button string="Done" name="set_done" states="pending,open" icon="gtk-apply"/>
                                 <button string="Pending" name="set_pending" states="open" icon="gtk-media-pause"/>
+                                <button string="Done" name="set_done" states="pending,open" icon="terp-dialog-close"/>
+                                <button string="Start Phase" name="set_open" states="pending,draft" icon="gtk-execute"/>
                                 <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                             </group>
                         </page>

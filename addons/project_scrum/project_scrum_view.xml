@@ -527,10 +527,10 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']/filter[@string='End Date']" position="after">
+                <xpath expr="/search/group[@string='Group By...']/filter[@string='Project']" position="after">
+                	<separator orientation="vertical"/>
                     <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
                     <filter string="Backlog" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'product_backlog_id'}"/>
-                    <separator orientation="vertical"/>
                 </xpath>
             </field>
         </record>

@@ -21,8 +21,8 @@
                         <field name="name" string="Project Name" select="1"/>
                         <field name="parent_id" string="Parent Project"/>
                         <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                        <field name="date_start" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                        <field name="date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
+                        <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
+                        <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="progress_rate" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
@@ -44,11 +44,13 @@
                             </group>
                             <newline/>
                             <group col="9" colspan="8">
+                            	<separator colspan="8"/>
+                            	<newline/>
                                 <field name="state" select="1" readonly="1"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
                                 <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
-                                <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
+                                <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
                                 <button
@@ -110,7 +112,7 @@
                    <newline />
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
                         <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Partner" name="Partner"  icon="terp-personal" domain = "[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}" help="Parent Project"/>
                          <separator orientation="vertical"/>
                         <filter string="Parent" name="Parent"  icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
                     </group>
@@ -239,7 +241,7 @@
                                 <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
                                 <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
                                 <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
-                                <button name="%(action_project_task_close)d" states="pending,open" string="Done" type="action" icon="gtk-apply"/>
+                                <button name="%(action_project_task_close)d" states="pending,open" string="Done" type="action" icon="terp-dialog-close"/>
                                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -276,7 +278,7 @@
                             <field name="partner_id"/>
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
-                                <field name="type_id" widget="selection" readonly="1"/>
+                                <field name="type_id" widget="selection"/>
                                 <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                                 <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                             </group>
@@ -302,6 +304,7 @@
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
                     <field name="remaining_hours" widget="float_time" sum="Remaining Hours" invisible="context.get('set_visible',False)"/>
                     <field name="date_deadline" invisible="context.get('set_visible',False)"/>
+                    <field name="type_id" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
                         states="draft,open,pending"
                         string="Change Stage"
@@ -309,7 +312,6 @@
                         icon="gtk-go-forward"
                         groups="base.group_extended"
                         help="Change Type"/>
-                    <field name="type_id" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <field name="date_start" invisible="1"/>
                     <field name="date_end" invisible="1"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
@@ -369,7 +371,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft, Open and Pending Tasks" icon="terp-check" default="1"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft, In Progress and Pending Tasks" icon="terp-check" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
@@ -397,9 +399,10 @@
                         <filter string="Stages" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
+                        <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
                         <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
-                        <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
                     </group>
                 </search>
             </field>
@@ -414,10 +417,7 @@
             <field name="view_id" ref="view_task_tree2"/>
             <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, "search_default_current": 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="help">In OpenERP, a project is made of a set of activities (or tasks) for completion.A list view allows the manager to quickly check for task status and make it evolve, delegate task, etc. A search tool allows a multi-criteria sort of activities.
-
-Issues like bugs in a system, client complain, materials breakdown are collected here.A list view allows the manager to quickly check for them, assign them, make their status evolved.
-</field>
+            <field name="help">In OpenERP, a project is made of a set of activities (or tasks) for completion. A list view allows the manager to quickly check for task status and make it evolve, delegate task, etc. A search tool allows a multi-criteria sort of activities.</field>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="2"/>
 
