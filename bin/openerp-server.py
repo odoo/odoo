@@ -165,9 +165,6 @@ if tools.config['netrpc']:
                          "starting NET-RPC service, port %d" % (netport,))
 
 LST_SIGNALS = ['SIGINT', 'SIGTERM']
-if os.name == 'posix':
-    LST_SIGNALS.extend(['SIGQUIT'])
-
 
 SIGNALS = dict(
     [(getattr(signal, sign), sign) for sign in LST_SIGNALS]
@@ -210,7 +207,9 @@ def dumpstacks(signum, _):
 
     logger.notifyChannel("dumpstacks", netsvc.LOG_INFO, "\n".join(code))
 
-signal.signal(signal.SIGUSR1, dumpstacks)
+if os.name == 'posix':
+    signal.signal(signal.SIGUSR1, dumpstacks)
+    signal.signal(signal.SIGQUIT, dumpstacks)
 
 if tools.config['pidfile']:
     fd = open(tools.config['pidfile'], 'w')
