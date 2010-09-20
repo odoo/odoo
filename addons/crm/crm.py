@@ -654,7 +654,7 @@ class crm_case_stage(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model', 'Object Name'),
-        'probability': fields.float('Probability (%)', required=True),
+        'probability': fields.float('Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success"),
         'on_change': fields.boolean('Change Probability Automatically', \
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements')
