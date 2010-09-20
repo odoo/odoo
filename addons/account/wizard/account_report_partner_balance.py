@@ -33,25 +33,23 @@ class account_partner_balance(osv.osv_memory):
 #                                    ,help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
         'display_partner': fields.selection([('non-zero_balance', 'With balance is not equal to 0'), ('all', 'All Partners')]
                                     ,'Display Partners'),
-        'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
-                }
+    }
+
     _defaults = {
 #        'initial_balance': True,
         'display_partner': 'non-zero_balance',
-        'target_move': 'all'
-                }
+    }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['display_partner', 'target_move'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['display_partner'])[0])
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',
             'datas': data,
-                }
+    }
 
 account_partner_balance()
 

@@ -94,6 +94,9 @@ TODO :
         "account_journal_view.xml",
         "security/ir.model.access.csv",
     ],
+    'test' : [
+        'test/l10n_ch_report.yml',
+    ],
     "active": False,
     "installable": True,
 }

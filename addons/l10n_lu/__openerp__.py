@@ -41,6 +41,7 @@ This module installs:
         'account.tax.template.csv',
         'wizard/print_vat_view.xml'
     ],
+    'test': ['test/l10n_lu_report.yml'],
     'demo_xml': ['account.report.report.csv'],
     'installable': True,
     'active': False,

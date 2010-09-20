@@ -1,0 +1,24 @@
+-
+  In order to test the PDF reports defined on a Survey, we will print Survey Analysis Report
+- 
+  !python {model: survey}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.survey.analysis').create(cr, uid, [ref('survey.survey_partner_feedback')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'survey-survey_analysis_report.'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on a Survey, we will print Survey Browse Response Report
+- 
+  !python {model: survey}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.survey.browse.response').create(cr, uid, [ref('survey.survey_partner_feedback')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'survey-survey_browse_response_report.'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on a Survey, we will print Survey Form Report
+- 
+  !python {model: survey}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.survey.form').create(cr, uid, [ref('survey.survey_partner_feedback')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'survey-survey_form_report.'+format), 'wb+').write(data)

@@ -37,14 +37,11 @@ class account_aged_trial_balance(osv.osv_memory):
         'direction_selection': fields.selection([('past','Past'),
                                                  ('future','Future')],
                                                  'Analysis Direction', required=True),
-        'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
     }
     _defaults = {
         'period_length': 30,
         'date_from' : time.strftime('%Y-%m-%d'),
         'direction_selection': 'past',
-        'target_move': 'all',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -64,7 +61,7 @@ class account_aged_trial_balance(osv.osv_memory):
             context = {}
 
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection', 'target_move'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['period_length', 'direction_selection'])[0])
 
         period_length = data['form']['period_length']
         if period_length<=0:
@@ -81,7 +78,7 @@ class account_aged_trial_balance(osv.osv_memory):
                     'name': (i!=0 and (str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length)) or ('+'+str(4 * period_length))),
                     'stop': start.strftime('%Y-%m-%d'),
                     'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
-                    }
+                }
                 start = stop - RelativeDateTime(days=1)
         else:
             for i in range(5):
@@ -90,7 +87,7 @@ class account_aged_trial_balance(osv.osv_memory):
                     'name' : (i!=4 and str((i) * period_length)+'-' + str((i+1) * period_length) or ('+'+str(4 * period_length))),
                     'start': start.strftime('%Y-%m-%d'),
                     'stop': (i!=4 and stop.strftime('%Y-%m-%d') or False),
-                    }
+                }
                 start = stop + RelativeDateTime(days=1)
         data['form'].update(res)
 
@@ -98,7 +95,7 @@ class account_aged_trial_balance(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.aged_trial_balance',
             'datas': data
-                }
+        }
 
 account_aged_trial_balance()
 

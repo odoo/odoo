@@ -1,6 +1,5 @@
 -
   I test the 'Payroll Register' in order to check the hr_payroll in OpenERP
--
   I create a new employee “Keith”
 -
   !record {model: hr.employee, id: hr_employee_keith0}:
@@ -61,3 +60,12 @@
     from tools.translate import _
     reg_brw=self.browse(cr, uid, ref("hr_payroll_register_payroll0"))
     assert(reg_brw.state == 'hr_check'), _('State not changed!')
+
+-
+  Print HR Payroll Register
+-
+  !python {model: hr.payroll.register}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.hr.payroll.register.sheet').create(cr, uid, [ref('hr_payroll_register_payroll0')], {}, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-register_report.'+format), 'wb+').write(data)

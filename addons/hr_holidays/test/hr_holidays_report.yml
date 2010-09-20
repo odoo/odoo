@@ -1,0 +1,14 @@
+-
+ In order to test the PDF reports defined on a HR Holidays, we will print HR Holidays
+-
+  !python {model: hr.holidays}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'ir.ui.menu', 'form': {'date_from': time.strftime('%Y-%m-01'), 'depts' : [ref('hr.dep_sales')],'holiday_type' : 'Validated' }}
+    (data, format) = netsvc.LocalService('report.holidays.summary').create(cr, uid, [], data_dict, {'active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_holidays-dept_summary_report.'+format), 'wb+').write(data)
+    
+    data_dict = {'model': 'hr.employee', 'form': {'date_from': time.strftime('%Y-%m-01'), 'depts' : [ref('hr.dep_sales')],'holiday_type' : 'Validated','emp':[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')] }}
+    (data, format) = netsvc.LocalService('report.holidays.summary').create(cr, uid, [], data_dict, {'active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_holidays-employee_summary_report.'+format), 'wb+').write(data)
