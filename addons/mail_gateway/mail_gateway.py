@@ -122,6 +122,10 @@ class mailgate_thread(osv.osv):
         obj = self.pool.get('mailgate.message')
 
         for case in cases:
+            attachments = []
+            for att in attach:
+                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
+
             partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
             if not partner_id and case._name == 'res.partner':
                 partner_id = case.id
@@ -132,13 +136,12 @@ class mailgate_thread(osv.osv):
                 'partner_id': partner_id,
                 'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'message_id': message_id,
+                'message_id': message_id, 
+                'description': details or (hasattr(case, 'description') and case.description or False), 
+                'attachment_ids': [(6, 0, attachments)]
             }
-            attachments = []
-            if history:
-                for att in attach:
-                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
 
+            if history:
                 for param in (email, email_cc, email_bcc):
                     if isinstance(param, list):
                         param = ", ".join(param)

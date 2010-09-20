@@ -65,13 +65,12 @@ class base_setup_installer(osv.osv_memory):
                  "automatic picking lists generation and more."),
         'marketing':fields.boolean('Marketing',
             help="Helps you manage your marketing campaigns step by step."),
-        'profile_tools':fields.boolean('Miscellaneous Tools',
+        'profile_tools':fields.boolean('Extra Tools',
             help="Lets you install various interesting but non-essential tools "
                 "like Survey, Lunch and Ideas box."),
         'report_designer':fields.boolean('Advanced Reporting',
             help="Lets you install various tools to simplify and enhance "
                  "OpenERP's report creation."),
-        'thunderbird' :fields.boolean('Thunderbird'),
         # Vertical modules
         'product_expiry':fields.boolean('Food Industry',
             help="Installs a preselected set of OpenERP applications "
@@ -107,11 +106,13 @@ class base_setup_installer(osv.osv_memory):
             return ['account_voucher']
         return None
 
-    def onchange_moduleselection(self, cr, uid, ids, *args):
+    def onchange_moduleselection(self, cr, uid, ids, *args, **kargs):
+        value = {}
+        # Calculate progress
         closed, total = self.get_current_progress(cr, uid)
-
         progress = round(100. * closed / (total + len(filter(None, args))))
+        value.update({'progress':progress})
         if progress < 10.:
             progress = 10.
-        return {'value':{'progress':progress}}
+        return {'value':value}
 base_setup_installer()

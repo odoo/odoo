@@ -1,14 +1,14 @@
 -
-  In order to test the PDF reports defined on HR Employee Salary, we will print HR Employee Salary
+  In order to test the PDF reports defined on HR Payroll, we will print Employees' Salary Structure
 - 
   !python {model: hr.employee}: |
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.salary.structure').create(cr, uid, [ref('hr_payroll.hr_employee_bonamy0')], {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-salary_report.'+format), 'wb+').write(data)
-          
+        file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-salary_structure.'+format), 'wb+').write(data)
+
 -
-  In order to test the PDF reports defined on HR Payslip, we will print a HR Payslip
+  Print HR Payslip
 - 
   !python {model: hr.payslip}: |
     import netsvc, tools, os
@@ -17,20 +17,23 @@
         file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-payslip_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on HR Employee Salary Details, we will print HR Employee Salary Details
+  Print HR Employee Salary Details
 -
   !python {model: hr.payslip}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'ir.ui.menu', 'form': {'fiscalyear_id': ref('account.data_fiscalyear'), 'employee_ids': [ref('hr.employee2')]}}
-    (data, format) = netsvc.LocalService('report.employees.salary').create(cr, uid, [], data_dict, {'periods': []})
+    emp_ids = [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]
+    data_dict = {'model': 'ir.ui.menu', 'form': {'fiscalyear_id': ref('account.data_fiscalyear'), 'employee_ids': emp_ids, 'ids':emp_ids }}
+    (data, format) = netsvc.LocalService('report.employees.salary').create(cr, uid, [], data_dict, {'active_ids': emp_ids})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_salary_detai_report.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_salary_detail_report.'+format), 'wb+').write(data)
 -
- In order to test the PDF reports defined on HR Employee Salary Details, we will print HR Employee Salary Details
+  Print HR Employee Salary Details Annual basis
 -
   !python {model: hr.payslip}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'ir.ui.menu', 'form': {'fiscalyear_id': ref('account.data_fiscalyear'), 'salary_on': 'current_month', 'employee_ids': [ref('hr.employee2')]}}
-    (data, format) = netsvc.LocalService('report.year.salary').create(cr, uid, [], data_dict, {'periods': []})
+    emp_ids = [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]
+    data_dict = {'model': 'hr.payslip', 'form': {'fiscalyear_id': ref('account.data_fiscalyear'), 'salary_on': 'current_month', 'employee_ids': emp_ids, 'ids':emp_ids}}
+    (data, format) = netsvc.LocalService('report.year.salary').create(cr, uid, [], data_dict,{'active_ids': emp_ids} )
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_yearly_salary_detai_report.'+format), 'wb+').write(data)
+       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_yearly_salary_detail_report.'+format), 'wb+').write(data)
+

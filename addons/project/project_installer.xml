@@ -9,10 +9,10 @@
       <field name="arch" type="xml">
           <data>
           <form position="attributes">
-            <attribute name="string">Project Modules Configuration</attribute>
+            <attribute name="string">Project Application Configuration</attribute>
           </form>
           <separator string="title" position="attributes">
-            <attribute name="string">Project Management</attribute>
+            <attribute name="string">Configure Your Project Management Application</attribute>
           </separator>
            <xpath expr='//separator[@string="vsep"]' position='attributes'>
                 <attribute name='string'></attribute>
@@ -40,7 +40,7 @@
     </record>
 
     <record id="action_project_installer" model="ir.actions.act_window">
-      <field name="name">Project Modules Installation</field>
+      <field name="name">Project Application Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">project.installer</field>
       <field name="view_id" ref="view_project_installer"/>

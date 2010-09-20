@@ -186,13 +186,13 @@
             <para style="terp_default_Right_9">[[ formatLang(l.qty) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]][[o.pricelist_id.currency_id. symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.discount) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal) ]][[o.pricelist_id.currency_id. symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -223,7 +223,7 @@
           <para style="terp_default_9">Net Total </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_total) ]] [[o.pricelist_id.currency_id.code ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_total) ]] [[o.pricelist_id.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -251,7 +251,7 @@
           <para style="terp_default_9">Taxes</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[o.pricelist_id.currency_id.code ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax) ]] [[o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -279,7 +279,7 @@
           <para style="terp_default_9">Total</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_total + o.amount_tax) ]] [[o.pricelist_id.currency_id.code ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_total + o.amount_tax) ]] [[o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
     </blockTable>

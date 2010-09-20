@@ -61,5 +61,14 @@
             <field name="notice">Discount Applied</field>
         </record>
 		
+		<record id="account_bank_statement_st0" model="account.bank.statement">
+			<field name="name">St. 05/19</field>
+            <field name="balance_end_real">0.0</field>
+            <field name="date">2010-05-19</field>
+            <field name="journal_id" ref="account.bank_journal"/>
+            <field name="period_id" ref="account.period_5"/>
+            <field name="state">draft</field>
+        </record>
+		
     </data>
 </openerp>

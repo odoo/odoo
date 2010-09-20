@@ -128,10 +128,6 @@ class pos_order(osv.osv):
             cr.execute(" SELECT max(l.date) from account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o where i.move_id=m.id and l.move_id=m.id and l.reconcile_id=r.id and o.id=%d and o.invoice_id=i.id"%(order.id))
             val=cr.fetchone()
             val= val and val[0] or None
-            if not val:
-                cr.execute("select max(date) from account_bank_statement_line l, account_bank_statement_reconcile s where l.pos_statement_id=%d and l.reconcile_id=s.id"%(order.id))
-                val=cr.fetchone()
-                val=val and val[0] or None
             if val:
                 res[order.id]=val
         return res
