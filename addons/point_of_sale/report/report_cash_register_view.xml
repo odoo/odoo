@@ -27,10 +27,10 @@
 	        <field name="arch" type="xml">
 	            <search string="Point of Sale Cash Register Analysis">
 	                <group>
-	                    <filter icon="terp-go-year" string="  This Year  "
+	                    <filter icon="terp-go-year" string="Year"
 	                        domain="[('year','=',time.strftime('%%Y'))]"
 	                        help="Cash Analysis created during this year"/>
-	                    <filter icon="terp-go-month" string="   This Month   "
+	                    <filter icon="terp-go-month" string="Month"
 	                        domain="[('month','=',time.strftime('%%m'))]"
 	                        help="Cash Analysis created in current month"/>
 	                    <filter icon="terp-go-month"
