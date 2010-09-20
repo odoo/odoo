@@ -85,7 +85,7 @@
                        <field name="group_id"  widget="selection" />
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By" colspan="4" col="20">
+                   <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter string="Property Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                </search>
@@ -190,7 +190,7 @@
 	                    <field name="resource_type"/>
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By" colspan="4" col="20" groups="base.group_extended">
+                   <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
                         <filter string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
@@ -375,7 +375,7 @@
                          <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By" colspan="4" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
                         <separator orientation="vertical"/>
@@ -644,12 +644,12 @@
                             <group col="9" colspan="4">
                                 <field name="state"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="terp-stock_format-scientific"/>
-                                <button name="button_confirm" states="draft" string="Co_nfirm Production" icon="gtk-apply"/>
-                                <button name="button_produce" states="ready" string="S_tart Production" icon="terp-gtk-jump-to-ltr"/>
-                                <button name="%(act_mrp_product_produce)d" states="in_production" string="Pro_duce" icon="gtk-ok" type="action"/>
-                                <button name="force_production" states="confirmed,picking_except" string="Force _Reservation" type="object" icon="gtk-jump-to"/>
-                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="_Cancel" icon="gtk-stop"/>
-                                <button name="button_recreate" states="picking_except" string="Recreate P_icking" icon="terp-document-new"/>
+                                <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
+                                <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
+                                <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
+                                <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
+                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
+                                <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="terp-document-new"/>
                             </group>
                         </page>
                         <page string="Finished Products">
@@ -751,7 +751,7 @@
                        <field name="origin"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By" colspan="10" col="8">
+                    <group expand="0" string="Group By..." colspan="10" col="8">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>

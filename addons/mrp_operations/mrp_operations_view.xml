@@ -32,12 +32,12 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
            <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
-                <button name="button_draft" string="Set _Draft" states="cancel" icon="gtk-convert"/>
-                <button name="button_start_working" string="S_tart" states="draft" icon="terp-gtk-jump-to-ltr"/>
-                <button name="button_resume" string="_Resume" states="pause" icon="gtk-media-pause"/>
-                <button name="button_cancel" string="_Cancel" states="draft,startworking" icon="gtk-stop"/>
-                <button name="button_pause" string="P_ause" states="startworking" icon="gtk-media-pause"/>
-                <button name="button_done" string="F_inished" states="startworking" icon="terp-dialog-close"/>
+                <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
+                <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
+                <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
+                <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop"/>
+                <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close"/>
                 <field name="state"/>
            </xpath>
         </field>
@@ -114,12 +114,12 @@
                     <separator string="" colspan="4"/>
                     <group colspan="8" col="8">
                         <field name="state"/>
-                        <button name="button_draft" string="Set _Draft" states="cancel" icon="gtk-convert"/>
-                        <button name="button_start_working" string="S_tart" states="draft" icon="terp-gtk-jump-to-ltr"/>
-                        <button name="button_resume" string="_Resume" states="pause" icon="gtk-media-pause"/>
-                        <button name="button_cancel" string="_Cancel" states="draft,startworking" icon="gtk-stop"/>
-                        <button name="button_pause" string="P_ause" states="startworking" icon="gtk-media-pause"/>
-                        <button name="button_done" string="F_inished" states="startworking" icon="terp-dialog-close"/>
+                        <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
+                        <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
+                        <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
+                        <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop"/>
+                        <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                        <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close"/>
                     </group>
                 </page>
                 </notebook>
@@ -153,7 +153,7 @@
 	                		<field name="date_planned" widget="date"/>
 	                	</group>
                 	<newline/>
-                    <group expand="0" string="Group By" colspan="10" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
                         <filter string="Workcenter" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
                         <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>                      
                         <separator orientation="vertical"/>                   

@@ -98,17 +98,17 @@
                         <separator string="" colspan="4"/>
                         <group col="13" colspan="4">
                             <field name="state"/>
-                            <button name="repair_confirm" states="draft" string="Co_nfirm Repair" icon="terp-camera_test"/>
-                            <button name="repair_ready" states="confirmed" string="Start _Repair" icon="terp-gtk-jump-to-ltr"/>
-                            <button name="action_repair_start" states="ready" string="Start _Repair" icon="terp-gtk-jump-to-ltr"/>
-                            <button name="action_repair_end" states="under_repair" string="_End Repair" icon="terp-dialog-close"/>
-                            <button name="invoice_recreate" states="invoice_except" string="_Recreate Invoice" icon="terp-dolar"/>
-                            <button name="invoice_corrected" states="invoice_except" string="_Invoice Corrected" icon="terp-emblem-important"/>
-                            <button name="action_invoice_create" states="2binvoiced" string="Make _Invoice" icon="terp-dolar"/>
-                            <button name="%(action_cancel_repair)d" states="invoice_except" string="_Cancel Repair" type="action" icon="gtk-stop"/>
-                            <button name="action_cancel_draft" states="cancel" string="Set to _Draft" type="object" icon="gtk-convert"/>
-                            <button name="cancel" states="draft" string="_Cancel Repair" icon="gtk-stop"/>
-                            <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="_Cancel Repair" type="action" icon="gtk-stop"/>
+                            <button name="repair_confirm" states="draft" string="Confirm Repair" icon="terp-camera_test"/>
+                            <button name="repair_ready" states="confirmed" string="Start Repair" icon="terp-gtk-jump-to-ltr"/>
+                            <button name="action_repair_start" states="ready" string="Start Repair" icon="terp-gtk-jump-to-ltr"/>
+                            <button name="action_repair_end" states="under_repair" string="End Repair" icon="terp-dialog-close"/>
+                            <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="terp-dolar"/>
+                            <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="terp-emblem-important"/>
+                            <button name="action_invoice_create" states="2binvoiced" string="Make Invoice" icon="terp-dolar"/>
+                            <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action" icon="gtk-stop"/>
+                            <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                            <button name="cancel" states="draft" string="Cancel Repair" icon="gtk-stop"/>
+                            <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action" icon="gtk-stop"/>
                         </group>
                     </page>
                     <page string="Invoicing">
@@ -190,7 +190,7 @@
 	                    <field name="state" />
               	</group>
               	<newline/>
-                  <group expand="0" string="Group By" colspan="10" col="8" groups="base.group_extended">
+                  <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
                       <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                       <separator orientation="vertical"/>
                       <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
