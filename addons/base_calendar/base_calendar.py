@@ -485,7 +485,7 @@ property or property parameter."),
             sub = res_obj.name
             att_infos = []
             if res_obj:
-                other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])a
+                other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
             else:
                 other_invitation_ids = []
 
