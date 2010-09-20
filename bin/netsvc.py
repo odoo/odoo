@@ -258,6 +258,7 @@ class Agent(object):
                 cls._logger.notifyChannel('timers', LOG_DEBUG, "Run %s.%s(*%r, **%r)" % (function.im_class.__name__, function.func_name, args, kwargs))
                 delattr(current_thread, 'dbname')
                 threading.Thread(target=function, args=args, kwargs=kwargs).start()
+                time.sleep(1)
             time.sleep(60)
 
 threading.Thread(target=Agent.runner).start()
