@@ -75,16 +75,21 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="priority">26</field>
             <field name="arch" type="xml">
-     		      <xpath expr="/form/notebook/page/group[@name='properties']" position="before"> 
-     				<group  groups="base.group_extended">
-	                	<separator string="Stock Input/Output Account" colspan="2"/>
-	                	 <newline/>
-	                	<field name="valuation"/>
-	                    <field name="property_stock_account_output"  attrs="{'readonly':[('valuation', '!=', 'real_time')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
-	                    <field name="property_stock_account_input"  attrs="{'readonly':[('valuation', '!=', 'real_time')]}"  domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                <xpath expr="/form/notebook/page/group[@name='properties']" position="before">
+                    <group groups="base.group_extended">
+                        <separator string="Inventory Valuation" colspan="4"/>
+                        <group colspan="2" col="2">
+                            <field name="valuation"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="property_stock_account_input" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                            <field name="property_stock_account_output" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                        </group>
                     </group>
                     <newline/>
-                    </xpath>
+                </xpath>
             </field>
         </record>
 
