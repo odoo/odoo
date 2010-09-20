@@ -284,6 +284,7 @@ survey_request()
 class hr_evaluation_interview(osv.osv):
     _name = 'hr.evaluation.interview'
     _inherits = {'survey.request': 'request_id'}
+    _rec_name = 'request_id'
     _description = 'Evaluation Interview'
     _columns = {
         'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
@@ -293,7 +294,19 @@ class hr_evaluation_interview(osv.osv):
     _defaults = {
         'is_evaluation': True,
     }
-
+    
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not len(ids):
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            name = record.request_id.survey_id.title
+            res.append((record['id'], name))
+        return res
+    
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
