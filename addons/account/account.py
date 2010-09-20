@@ -686,6 +686,27 @@ class account_journal(osv.osv):
             vals.update({'sequence_id' : self.create_sequence(cr, uid, vals, context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
+    def name_get(self, cr, user, ids, context={}):
+        """
+        Returns a list of tupples containing id, name.
+        result format : {[(id, name), (id, name), ...]}
+        
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param ids: list of ids for which name should be read
+        @param context: context arguments, like lang, time zone
+        
+        @return: Returns a list of tupples containing id, name
+        """
+        result = self.browse(cr, user, ids, context)
+        res = []
+        for rs in result:
+            name = rs.name 
+            if rs.currency:
+                name = "%s (%s)" % (rs.name, rs.currency.name)
+            res += [(rs.id, name)]
+        return res
+    
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
@@ -2659,6 +2680,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['type'] = 'sale'
         vals_journal['code'] = _('SAJ')
         vals_journal['sequence_id'] = seq_id_sale
+        vals_journal['company_id'] =  company_id
 
         if obj_multi.chart_template_id.property_account_receivable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
@@ -2672,6 +2694,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['code'] = _('EXJ')
         vals_journal['sequence_id'] = seq_id_purchase
         vals_journal['view_id'] = view_id
+        vals_journal['company_id'] =  company_id
 
         if obj_multi.chart_template_id.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
@@ -2723,6 +2746,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
             vals_journal['type'] = 'cash'
+            vals_journal['company_id'] =  company_id
+            
             if line.currency_id:
                 vals_journal['view_id'] = view_id_cur
                 vals_journal['currency'] = line.currency_id.id

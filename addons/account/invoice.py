@@ -138,16 +138,17 @@ class account_invoice(osv.osv):
 
         return res
 
+    # Give Journal Items related to the payment reconciled to this invoice
+    # Return ids of partial and total payments related to the selected invoices
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for id in ids:
-            move_lines = self.move_line_id_payment_get(cr, uid, [id])
-            if not move_lines:
-                res[id] = []
-                continue
+        for invoice in self.browse(cr, uid, ids, context=context):
+            id = invoice.id
             res[id] = []
-            data_lines = self.pool.get('account.move.line').browse(cr, uid, move_lines)
-            partial_ids = []# Keeps the track of ids where partial payments are done with payment terms
+            if not invoice.move_id:
+                continue
+            data_lines = invoice.move_id.line_id
+            partial_ids = []
             for line in data_lines:
                 ids_line = []
                 if line.reconcile_id:
@@ -174,17 +175,17 @@ class account_invoice(osv.osv):
     def _compute_lines(self, cr, uid, ids, name, args, context=None):
         result = {}
         for invoice in self.browse(cr, uid, ids, context):
-            moves = self.move_line_id_payment_get(cr, uid, [invoice.id])
             src = []
             lines = []
-            for m in self.pool.get('account.move.line').browse(cr, uid, moves, context):
-                temp_lines = []#Added temp list to avoid duplicate records
-                if m.reconcile_id:
-                    temp_lines = map(lambda x: x.id, m.reconcile_id.line_id)
-                elif m.reconcile_partial_id:
-                    temp_lines = map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
-                lines += [x for x in temp_lines if x not in lines]
-                src.append(m.id)
+            if invoice.move_id:
+                for m in invoice.move_id.line_id:
+                    temp_lines = []
+                    if m.reconcile_id:
+                        temp_lines = map(lambda x: x.id, m.reconcile_id.line_id)
+                    elif m.reconcile_partial_id:
+                        temp_lines = map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                    lines += [x for x in temp_lines if x not in lines]
+                    src.append(m.id)
 
             lines = filter(lambda x: x not in src, lines)
             result[invoice.id] = lines
@@ -452,6 +453,17 @@ class account_invoice(osv.osv):
                         _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
 
+    def onchange_journal_id(self, cr, uid, ids, journal_id=False):
+        result = {}
+        if journal_id:
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
+            currency_id = journal.currency and journal.currency.id or journal.company_id.currency_id.id
+            result = {'value': {
+                    'currency_id': currency_id,
+                    }
+                }
+        return result
+
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
         if not payment_term_id:
             return {}
@@ -550,7 +562,6 @@ class account_invoice(osv.osv):
                 val['currency_id'] = False
             else:
                 val['currency_id'] = currency.id
-
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id)
             if company.currency_id.company_id and company.currency_id.company_id.id != company_id:
@@ -584,15 +595,22 @@ class account_invoice(osv.osv):
     # return the ids of the move lines which has the same account than the invoice
     # whose id is in ids
     def move_line_id_payment_get(self, cr, uid, ids, *args):
-        res = []
+        if not ids: return []
+        result = self.move_line_id_payment_gets(cr, uid, ids, *args)
+        return result.get(ids[0], [])
+
+    def move_line_id_payment_gets(self, cr, uid, ids, *args):
+        res = {}
         if not ids: return res
-        cr.execute('SELECT l.id '\
+        cr.execute('SELECT i.id, l.id '\
                    'FROM account_move_line l '\
                    'LEFT JOIN account_invoice i ON (i.move_id=l.move_id) '\
                    'WHERE i.id IN %s '\
                    'AND l.account_id=i.account_id',
                    (tuple(ids),))
-        res = map(itemgetter(0), cr.fetchall())
+        for r in cr.fetchall():
+            res.setdefault(r[0], [])
+            res[r[0]].append( r[1] )
         return res
 
     def copy(self, cr, uid, id, default={}, context=None):
