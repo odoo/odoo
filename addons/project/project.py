@@ -27,7 +27,6 @@ from tools.translate import _
 from osv import fields, osv
 from tools import email_send as email
 
-from operator import itemgetter
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -466,7 +465,7 @@ class task(osv.osv):
             cr.execute('SELECT DISTINCT task_id '\
                        'FROM project_task_parent_rel '\
                        'WHERE parent_id IN %s', (tuple(ids),))
-            child_ids = map(itemgetter(0), cr.fetchall())
+            child_ids = map(lambda x: x[0], cr.fetchall())
             c_ids = child_ids
             if (list(set(parent_ids).intersection(set(c_ids)))) or (obj_task.id in c_ids):
                 return False
