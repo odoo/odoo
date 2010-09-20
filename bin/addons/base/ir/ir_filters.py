@@ -36,6 +36,20 @@ class ir_filters(osv.osv):
         act_ids = self.search(cr,uid,[('model_id','=',model),('user_id','=',uid)])
         my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
         return my_acts
+    
+    def create_or_replace(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        is_filter_exist = False
+        for filter in self.get_filters(cr, uid, vals['model_id']):
+            if filter['name'].lower() == vals['name'].lower():
+                is_filter_exist = filter['id']
+                break
+        if is_filter_exist:
+             return super(ir_filters, self).write(cr, uid, is_filter_exist, vals, context)
+        else:
+             return super(ir_filters, self).create(cr, uid, vals, context)
+
 
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True, required=True),
