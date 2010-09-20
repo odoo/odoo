@@ -122,7 +122,7 @@
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
-                                    <field name="account_id"
+                                    <field name="account_id" 
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
                                           domain="[('type','=','liquidity')]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
@@ -159,7 +159,7 @@
                 </form>
             </field>
         </record>
-
+        
         <!-- Sales Voucher -->
         <record id="action_sale_receipt" model="ir.actions.act_window">
             <field name="name">Sales Receipt</field>
@@ -284,8 +284,8 @@
             <field name="act_window_id" ref="action_purchase_receipt"/>
         </record>
 
-        <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL"
-        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
-
+        <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL" 
+        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>        
+        
     </data>
 </openerp>

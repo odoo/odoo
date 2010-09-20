@@ -37,12 +37,20 @@ class pos_payment_report_date(report_sxw.rml_parse):
         dt1 = form['date_start'] + ' 00:00:00'
         dt2 = form['date_end'] + ' 23:59:59'
         data={}
-        self.cr.execute ("select pt.name,pol.qty,pol.discount,pol.price_unit, " \
-                         "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
-                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
-                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
-                         "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id IN %s " \
-                         ,(dt1,dt2,tuple(form['user_id'])))
+        if form['user_id']:
+            self.cr.execute ("select pt.name,pol.qty,pol.discount,pol.price_unit, " \
+                             "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
+                             "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
+                             "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
+                             "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id IN %s " \
+                             ,(dt1,dt2,tuple(form['user_id'])))
+        else:
+            self.cr.execute ("select pt.name,pol.qty,pol.discount,pol.price_unit, " \
+                             "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
+                             "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
+                             "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
+                             "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s" \
+                             ,(dt1,dt2))
         data=self.cr.dictfetchall()
         return data
 
@@ -50,11 +58,18 @@ class pos_payment_report_date(report_sxw.rml_parse):
         dt1 = form['date_start'] + ' 00:00:00'
         dt2 = form['date_end'] + ' 23:59:59'
         res=[]
-        self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) " \
-                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
-                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
-                         "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id IN %s " \
-                         ,(dt1,dt2,tuple(form['user_id'])))
+        if form['user_id']:
+            self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) " \
+                             "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
+                             "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
+                             "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id IN %s " \
+                             ,(dt1,dt2,tuple(form['user_id'])))
+        else:
+            self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) " \
+                             "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
+                             "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
+                             "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s" \
+                             ,(dt1,dt2))
         res=self.cr.fetchone()[0] or 0.0
         return res
 

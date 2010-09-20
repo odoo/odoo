@@ -118,7 +118,7 @@
             </field>
         </record>
 
-                <record model="ir.ui.view" id="view_mailgate_thread_tree">
+        <record model="ir.ui.view" id="view_mailgate_thread_tree">
             <field name="name">mailgate.thread.tree</field>
             <field name="model">mailgate.thread</field>
             <field name="type">tree</field>
@@ -191,11 +191,7 @@
             view_id="view_mailgate_message_tree"
             />
 
-        <!-- <act_window
-        id="act_res_partner_open_email" name="Open Documents"
-        res_model="ir.attachment"
-        src_model="mailgate.message"
-         key2="client_action_multi"/> -->
+        
 
       <menuitem name="Emails" id="menu_base_config_mail"
         parent="base.menu_base_partner" sequence="5" />
