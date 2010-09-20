@@ -143,13 +143,13 @@ class crm_lead2partner(osv.osv_memory):
             for lead in lead_obj.browse(cr, uid, rec_ids):
                 if data.action == 'create':
                     partner_id = partner_obj.create(cr, uid, {
-                        'name': lead.partner_name or lead.name,
+                        'name': lead.partner_name or lead.contact_name or lead.name,
                         'user_id': lead.user_id.id,
                         'comment': lead.description,
                     })
                     contact_id = contact_obj.create(cr, uid, {
                         'partner_id': partner_id,
-                        'name': lead.name,
+                        'name': lead.contact_name,
                         'phone': lead.phone,
                         'mobile': lead.mobile,
                         'email': lead.email_from,

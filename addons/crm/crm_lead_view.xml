@@ -55,7 +55,7 @@
         <field name="arch" type="xml">
             <form string="Leads Form">
                 <group colspan="4" col="7">
-                    <field name="name" required="1" string="Contact Name"/>
+                    <field name="name" required="1" string="Subject"/>
                     <field name="priority"/>
                     <field name="categ_id"
                         widget="selection"
@@ -83,9 +83,12 @@
                 </group>
                 <notebook colspan="4">
                 <page string="Lead">
+                    <group colspan="4" col="2">
+                        <field name="partner_name" string="Partner Name" />
+                    </group>
                     <group colspan="2" col="4">
                         <separator string="Contact" colspan="4" col="4"/>
-                        <field name="partner_name" string="Partner Name" colspan="4"/>
+                        <field name="contact_name" colspan="4"/>
                         <newline/>
                         <field domain="[('domain', '=', 'contact')]" name="title"/>
                         <field name="function" />
@@ -232,8 +235,8 @@
             <tree string="Leads"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                 <field name="date_deadline" invisible="1"/>
                 <field name="create_date"/>
-                <field name="name" string="Contact Name"/>
-                <field name="partner_name"/>
+                <field name="name" string="Subject"/>
+                <field name="contact_name"/>
                 <field name="country_id" invisible="context.get('invisible_country', True)" />
                 <field name="email_from"/>
                 <field name="phone"/>
@@ -313,7 +316,7 @@
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
                 />
                 <separator orientation="vertical"/>
-                <field name="name"/>
+                <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
                 <field name="user_id">
