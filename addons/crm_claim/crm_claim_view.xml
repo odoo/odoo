@@ -57,7 +57,7 @@
             <field name="model">crm.claim</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Claims" colors="blue:state=='pending';black:state=='open';gray:state in ('close', 'cancel')">
+                <tree string="Claims" colors="blue:state=='pending';black:state=='open';gray:state in ('close', 'cancel');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
@@ -330,6 +330,7 @@
             context="{'default_partner_id': active_id}"
             id="act_claim_partner"
             name="Report a Claim"
+            view_mode="form,tree"
             res_model="crm.claim"
             src_model="res.partner"/>
 
@@ -339,6 +340,7 @@
             context="{'default_partner_address_id': active_id}"
             id="act_claim_partner_address"
             name="Report a Claim"
+            view_mode="form,tree"
             res_model="crm.claim"
             src_model="res.partner.address"/>
 

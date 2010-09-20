@@ -71,10 +71,8 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'ref': fields.reference('Reference', selection=crm._links_get, size=128), 
             'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128), 
             'canal_id': fields.many2one('res.partner.canal', 'Channel', \
-                        help="The channels represent the different communication "\
-                        "modes available with the customer." \
-                       " With each commercial opportunity, you can indicate\
-                     the canall which is this opportunity source."), 
+                        help="The channels represent the different communication \
+ modes available with the customer."), 
             'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\

@@ -105,7 +105,7 @@ class crm_lead2opportunity(osv.osv_memory):
         return value
 
     _columns = {
-        'name' : fields.char('Opportunity Summary', size=64, required=True, select=1), 
+        'name' : fields.char('Opportunity', size=64, required=True, select=1), 
         'probability': fields.float('Success Rate (%)'), 
         'planned_revenue': fields.float('Expected Revenue'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 

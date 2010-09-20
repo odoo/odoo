@@ -63,7 +63,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Funds Tree"
-                    colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                    colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="name" string="Fund Description" />
                     <field name="categ_id" />
                     <field name="type_id" string="Payment Mode" />
