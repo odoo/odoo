@@ -128,6 +128,7 @@ class project(osv.osv):
                 project_id''',(tuple(all_projects),))
         progress = dict(map(lambda x: (x[0], (x[1], x[2], x[3])), cr.fetchall()))
 
+        user_uom, def_uom = self._get_user_and_default_uom_ids(cr, uid)
         for project in self.browse(cr, uid, par_child_projects.keys(), context=context):
             s = [0.0, 0.0, 0.0]
             tocompute = par_child_projects[project.id]
@@ -137,7 +138,6 @@ class project(osv.osv):
                     s[i] += progress.get(p, (0.0, 0.0, 0.0))[i]
 
             uom_obj = self.pool.get('product.uom')
-            user_uom, def_uom = self._get_user_and_default_uom_ids(cr, uid)
             if user_uom != def_uom:
                 s[0] = uom_obj._compute_qty(cr, uid, user_uom, s[0], def_uom)
                 s[1] = uom_obj._compute_qty(cr, uid, user_uom, s[1], def_uom)
