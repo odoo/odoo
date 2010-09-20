@@ -36,7 +36,6 @@ class stock_partial_move(osv.osv_memory):
         move_obj = self.pool.get('stock.move')
         if not context:
             context={}
-        moveids = []
         for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
             if m.state in ('done', 'cancel'):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delivery products  which are already delivered !'))
@@ -63,7 +62,7 @@ class stock_partial_move(osv.osv_memory):
         move_ids = move_obj.search(cr, uid, [('id','in',move_ids)])
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
-                    	<field name="date"  colspan="2"/>
+                        <field name="date" colspan="2"/>
                         <separator colspan="4" string="Move Detail"/>
                         """
         _moves_fields = result['fields']
@@ -147,7 +146,6 @@ class stock_partial_move(osv.osv_memory):
         move_obj = self.pool.get('stock.move')
         if not context:
             context={}
-        moveids = address_delivery = address_default = []
         if 'date' in fields:
             res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         move_ids = context.get('active_ids', [])
@@ -203,7 +201,6 @@ class stock_partial_move(osv.osv_memory):
         @return: A dictionary which of fields with values.
         """
 
-        rec_id = context and context.get('active_id', False)
         move_obj = self.pool.get('stock.move')
         move_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context)
@@ -224,7 +221,7 @@ class stock_partial_move(osv.osv_memory):
                     'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                     'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id
                 })
-        res = move_obj.do_partial(cr, uid, move_ids, partial_datas, context=context)
+        move_obj.do_partial(cr, uid, move_ids, partial_datas, context=context)
         return {}
 
 stock_partial_move()

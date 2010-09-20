@@ -43,28 +43,29 @@ class pos_close_statement(osv.osv_memory):
         cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
         j_ids = map(lambda x1: x1[0], cr.fetchall())
         journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)])
-
+        ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', journal_ids)])
         for journal in journal_obj.browse(cr, uid, journal_ids):
-            ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             if not ids:
-                raise osv.except_osv(_('Message'), _('Journals are already closed'))
+                raise osv.except_osv(_('Message'), _('Registers are already closed.'))
             else:
-                list_statement.append(ids[0])
                 if not journal.check_dtls:
                     statement_obj.button_confirm_cash(cr, uid, ids, context)
 
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
         id3 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
+        result = data_obj._get_id(cr, uid, 'point_of_sale', 'view_pos_confirm_cash_statement_filter')
+        search_id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {
-            'domain': "[('id','in'," + str(list_statement) + ")]",
+            'domain': "[('id','in'," + str(ids) + ")]",
             'name': 'Close Statements',
             'view_type': 'form',
             'view_mode': 'tree,form',
+            'search_view_id': search_id['res_id'],
             'res_model': 'account.bank.statement',
             'views': [(id2, 'tree'),(id3, 'form')],
             'type': 'ir.actions.act_window'

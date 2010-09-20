@@ -109,7 +109,7 @@ class mrp_repair(osv.osv):
             ('invoice_except','Invoice Exception'),
             ('done','Done'),
             ('cancel','Cancel')
-            ], 'Repair State', readonly=True,
+            ], 'State', readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' state is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' state is used to start to repairing, user can start repairing only after repair order is confirmed. \
