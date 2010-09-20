@@ -64,6 +64,8 @@ def data_files():
             files.append((root, [join(root, name) for name in names]))
         for root, _, names in os.walk('doc'):
             files.append((root, [join(root, name) for name in names]))
+        for root, _, names in os.walk('pixmaps'):
+            files.append((root, [join(root, name) for name in names]))
         files.append(('.', [join('bin', 'import_xml.rng'),
                             join('bin', 'server.pkey'),
                             join('bin', 'server.cert')]))
