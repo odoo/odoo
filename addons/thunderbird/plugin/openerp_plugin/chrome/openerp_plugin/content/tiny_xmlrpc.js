@@ -1220,7 +1220,7 @@ var listSearchCheckboxHandler = {
 					listcell.setAttribute("height",12);
 					listcell.setAttribute("label",arrFinalList[i][j][1]); //stores the name ofthe record
 		  			listItem.appendChild(listcell);
-		  			listItem.value = arrFinalList[i][j][1]; //stores the name of the record
+		  			listItem.value = arrFinalList[i][j][0]; //stores the id of the record
 		  			listItem.label = arr1[i]; // stores the value of the object   
 					cmbSearchList.appendChild(listItem);
 		  		}
@@ -1399,13 +1399,13 @@ var listArchiveHandler = {
         }
         else if (createId<0)
         {
-            alert("sorry Mail is not Archived to" +" " + ":" + " "+ list_documents.value);
+            alert("sorry Mail is not Archived");
         
         }
     
     else if (createId>=1)
         {
-            alert("Mail Archived Successfully to" +" " + ":" + " "+ list_documents.value);
+            alert("Mail Archived Successfully");
         }
     window.close();
 
@@ -1491,6 +1491,24 @@ function upload_archivemail()
     
 }
 
+var listArchiveDocumentHandler = {
+	onResult: function(client, context, result) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
+        var popup = document.getElementById("section").selectedItem; 
+        alert("Document Created Successfully For " +" " + ":" + " "+ popup.label);
+		window.close();
+
+	},
+	onFault: function (client, ctxt, fault) {
+
+	},
+
+	onError: function (client, ctxt, status, errorMsg) {
+
+	}
+}
+
 function create_archivemail(){
 	var popup = document.getElementById("section").selectedItem; 
     // a <menupopup> element
@@ -1517,10 +1535,10 @@ function create_archivemail(){
 		var a = ['model', 'message'];
 		var b = [object, eml_string];
 		var arrofarr = dictcontact(a,b);
-		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Document Created Successfully For " +" " + ":" + " "+ popup.label);
+		xmlRpcClient.asyncCall(listArchiveDocumentHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
+        //alert("Document Created Successfully For " +" " + ":" + " "+ popup.label);
 		}
-    	window.close();
+    	//window.close();
 	}
 	else
 	{
