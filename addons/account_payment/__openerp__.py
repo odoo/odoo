@@ -47,8 +47,11 @@
         'account_invoice_view.xml',
         'account_payment_report.xml',
     ],
-    'demo_xml': [],
-    'test': ['test/account_payment.yml'],
+    'demo_xml': ['account_payment_demo.xml'],
+    'test': [
+             'test/account_payment.yml'
+             'test/account_payment_report.yml'
+    ],
     'installable': True,
     'active': False,
     'certificate': '0061703998541',

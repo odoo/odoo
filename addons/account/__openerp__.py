@@ -134,6 +134,7 @@ module named account_voucher.
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',
+        'test/account_report.yml',
     ],
     'installable': True,
     'active': False,
