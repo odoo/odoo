@@ -141,7 +141,7 @@ options = {
                  "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
                  "pydot", "asyncore","asynchat", "reportlab", "vobject",
                  "HTMLParser", "select", "mako", "poplib",
-                 "imaplib", "smtplib", "email", "yaml","pywebdav",
+                 "imaplib", "smtplib", "email", "yaml", "DAV",
                  ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
