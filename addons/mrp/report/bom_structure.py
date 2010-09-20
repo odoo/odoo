@@ -40,6 +40,7 @@ class bom_structure(report_sxw.rml_parse):
                 res = {}
                 res['name'] = l.name
                 res['pname'] = l.product_id.name
+                res['pcode'] = l.product_id.default_code
                 res['pqty'] = l.product_qty
                 res['uname'] = l.product_uom.name
                 res['code'] = l.code
