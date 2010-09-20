@@ -158,6 +158,7 @@ class thunderbird_partner(osv.osv_memory):
         msg_pool = self.pool.get('mailgate.message')
         msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
         res = {}
+        res_ids = []
         if msg_ids and len(msg_ids):
                 return 0
 
@@ -170,7 +171,8 @@ class thunderbird_partner(osv.osv_memory):
             if model_data:
                 res_id = int(model_data[0])
                 server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
-        return True
+                res_ids.append(res_id)
+        return len(res_ids)
 
     def process_email(self, cr, uid, vals):
         dictcreate = dict(vals)

@@ -1392,7 +1392,22 @@ var listArchiveHandler = {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
         list_documents = document.getElementById('listSearchBox')
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
-        alert("Mail is Already Archived Successfully.")
+        createId = parseInt(createId);
+        if(createId==0)
+        {
+            alert("Mail is Already Archived Successfully.");
+        }
+        else if (createId<0)
+        {
+            alert("sorry Mail is not Archived to" +" " + ":" + " "+ list_documents.value);
+        
+        }
+    
+    else if (createId>=1)
+        {
+            alert("Mail Archived Successfully to" +" " + ":" + " "+ list_documents.value);
+        }
+    window.close();
 
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1471,8 +1486,8 @@ function upload_archivemail()
     var arrofarr = dictcontact(a,b);
 
     xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-    alert("Mail Archived Successfully to" +" " + ":" + " "+ list_documents.value);
-	window.close();
+   // alert("Mail Archived Successfully to" +" " + ":" + " "+ list_documents.value);
+	//window.close();
     
 }
 
