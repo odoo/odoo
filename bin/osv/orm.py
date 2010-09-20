@@ -1541,6 +1541,14 @@ class orm_template(object):
                 else:
                     for n in node.getiterator(node2.tag):
                         res = True
+                        if node2.tag == 'field':
+                            # only compare field names, a field can be only once in a given view
+                            # at a given level (and for multilevel expressions, we should use xpath
+                            # inheritance spec anyway)
+                            if node2.get('name') == n.get('name'):
+                                return n
+                            else:
+                                continue
                         for attr in node2.attrib:
                             if attr == 'position':
                                 continue
