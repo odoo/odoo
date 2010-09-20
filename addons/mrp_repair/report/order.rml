@@ -175,7 +175,7 @@
           <para style="P3">
             <font color="white"> </font>
           </para>
-          <para style="P13">Invoice address</para>
+          <para style="P13">Invoice address :</para>
           <para style="P3">[[ o.partner_id and o.partner_id.property_payment_term.name ]]</para>
           <para style="P3">[[ o.partner_invoice_id.street ]]</para>
           <para style="P3">[[ o.partner_invoice_id.street2 or removeParentNode('para') ]]</para>
@@ -189,12 +189,12 @@
           </para>
         </td>
         <td>
-          <para style="P3">[[ o.partner_id.name ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default')['street'] ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default')['street2'] or removeParentNode('para') ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default')['zip'] ]][[ o.partner_id and adr_get(o.partner_id, 'default')['city'] ]]</para>
-          <para style="P3">[[ (o.partner_id and adr_get(o.partner_id, 'default')['state_id'] and adr_get(o.partner_id, 'default')['state_id'][1]) or removeParentNode('para') ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default')['country_id'] and adr_get(o.partner_id, 'default')['country_id'][1] ]]</para>
+          <para style="P3">[[ o.partner_id.name or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default').get('street','') or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default').get('street2','') or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default').get('zip','') or removeParentNode('para') ]][[ o.partner_id and adr_get(o.partner_id, 'default').get('city','') or removeParentNode('para') ]]</para>
+          <para style="P3">[[ (o.partner_id and adr_get(o.partner_id, 'default').get('state_id','') and adr_get(o.partner_id, 'default').get('state_id',[])[1]) or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default').get('country_id','') and adr_get(o.partner_id, 'default').get('country_id',[])[1] or removeParentNode('para') ]]</para>
           <para style="P3">
             <font color="white"> </font>
           </para>

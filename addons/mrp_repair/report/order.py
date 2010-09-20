@@ -48,7 +48,7 @@ class order(report_sxw.rml_parse):
             res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
             addresses = res_partner.address_get(self.cr, self.uid, [partner.id], [type])
             adr_id = addresses and addresses[type] or False
-            return adr_id and res_partner_address.read(self.cr, self.uid, [adr_id])[0] or False
+            return adr_id and res_partner_address.read(self.cr, self.uid, [adr_id])[0] or {}
 
 report_sxw.report_sxw('report.repair.order','mrp.repair','addons/mrp_repair/report/order.rml',parser=order)
 
