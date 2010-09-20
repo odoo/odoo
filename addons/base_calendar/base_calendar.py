@@ -398,10 +398,13 @@ property or property parameter."),
         """
         res = None
         def ics_datetime(idate, short=False):
-            if short:
-                return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
+            if idate:
+                if short:
+                    return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
+                else:
+                    return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
             else:
-                return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
+                return False
         try:
             # FIXME: why isn't this in CalDAV?
             import vobject
@@ -482,39 +485,37 @@ property or property parameter."),
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
             res_obj = att.ref
-            sub = res_obj.name
-            att_infos = []
             if res_obj:
+                att_infos = []
+                sub = res_obj.name
                 other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
-            else:
-                other_invitation_ids = []
 
-            for att2 in self.browse(cr, uid, other_invitation_ids):
-                att_infos.append(((att2.user_id and att2.user_id.name) or \
-                             (att2.partner_id and att2.partner_id.name) or \
-                                att2.email) + ' - Status: ' + att2.state.title())
-            body_vals = {'name': res_obj.name,
-                        'start_date': res_obj.date,
-                        'end_date': res_obj.date_deadline or False,
-                        'description': res_obj.description or '-',
-                        'location': res_obj.location or '-',
-                        'attendees': '<br>'.join(att_infos),
-                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
-                        'sign': sign,
-                        'company': company
-            }
-            body = html_invitation % body_vals
-            if mail_to and email_from:
-                attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                tools.email_send(
-                    email_from,
-                    mail_to,
-                    sub,
-                    body,
-                    attach=attach and [('invitation.ics', attach)] or None,
-                    subtype='html',
-                    reply_to=email_from
-                )
+                for att2 in self.browse(cr, uid, other_invitation_ids):
+                    att_infos.append(((att2.user_id and att2.user_id.name) or \
+                                 (att2.partner_id and att2.partner_id.name) or \
+                                    att2.email) + ' - Status: ' + att2.state.title())
+                body_vals = {'name': res_obj.name,
+                            'start_date': res_obj.date,
+                            'end_date': res_obj.date_deadline or False,
+                            'description': res_obj.description or '-',
+                            'location': res_obj.location or '-',
+                            'attendees': '<br>'.join(att_infos),
+                            'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
+                            'sign': sign,
+                            'company': company
+                }
+                body = html_invitation % body_vals
+                if mail_to and email_from:
+                    attach = self.get_ics_file(cr, uid, res_obj, context=context)
+                    tools.email_send(
+                        email_from,
+                        mail_to,
+                        sub,
+                        body,
+                        attach=attach and [('invitation.ics', attach)] or None,
+                        subtype='html',
+                        reply_to=email_from
+                    )
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
