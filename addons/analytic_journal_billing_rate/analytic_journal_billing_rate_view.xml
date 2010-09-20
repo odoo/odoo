@@ -35,7 +35,6 @@
             <field name="inherit_id" ref="hr_timesheet_invoice.account_analytic_account_form_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='to_invoice']" position="after">
-                    <!--<field name="to_invoice" string="Default Invoicing Percentage"/>-->
                     <field name="journal_rate_ids" colspan="4"/>
                 </xpath>
             </field>

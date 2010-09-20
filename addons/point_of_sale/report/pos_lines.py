@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,9 +29,9 @@ class pos_lines(report_sxw.rml_parse):
         super(pos_lines, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'total_quantity': self.__total_quantity__,
-                'taxes':self.__taxes__,
+            'time': time,
+            'total_quantity': self.__total_quantity__,
+            'taxes':self.__taxes__,
 
         })
 
@@ -52,7 +52,7 @@ class pos_lines(report_sxw.rml_parse):
         return res
 
 
-report_sxw.report_sxw('report.pos.lines', 'pos.order', 'addons/point_of_sale/report/pos_lines.rml', parser=pos_lines)
+report_sxw.report_sxw('report.pos.lines', 'pos.order', 'addons/point_of_sale/report/pos_lines.rml', parser=pos_lines,header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -23,20 +23,6 @@ import time
 from osv import osv, fields
 import netsvc
 
-class payment_type(osv.osv):
-    _name= 'payment.type'
-    _description= 'Payment Type'
-    _columns= {
-        'name': fields.char('Name', size=64, required=True, help='Payment Type'),
-        'code': fields.char('Code', size=64, required=True, help='Specifies the Code for Payment Type'),
-        'suitable_bank_types': fields.many2many('res.partner.bank.type',
-            'bank_type_payment_type_rel',
-            'pay_type_id', 'bank_type_id',
-            'Suitable bank types')
-            }
-
-payment_type()
-
 class payment_mode(osv.osv):
     _name= 'payment.mode'
     _description= 'Payment Mode'
@@ -46,7 +32,10 @@ class payment_mode(osv.osv):
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
             domain=[('type', '=', 'cash')], help='Cash Journal for the Payment Mode'),
-        'type': fields.many2one('payment.type', 'Payment type', required=True, help='Select the Payment Type for the Payment Mode.'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+    }
+    _defaults = {
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
 
     def suitable_bank_types(self, cr, uid, payment_code=None, context={}):
@@ -54,11 +43,9 @@ class payment_mode(osv.osv):
         for the given payment type code"""
         if not payment_code:
             return []
-        cr.execute(""" select t.code
-            from res_partner_bank_type t
-            join bank_type_payment_type_rel r on (r.bank_type_id = t.id)
-            join payment_type pt on (r.pay_type_id = pt.id)
-            join payment_mode pm on (pm.type = pt.id)
+        cr.execute(""" select pb.state
+            from res_partner_bank pb
+            join payment_mode pm on (pm.bank_id = pb.id)
             where pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
 
@@ -87,7 +74,7 @@ class payment_order(osv.osv):
         return res
 
     _columns = {
-        'date_planned': fields.date('Scheduled date if fixed', states={'done':[('readonly',True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
+        'date_scheduled': fields.date('Scheduled date if fixed', states={'done':[('readonly',True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
         'reference': fields.char('Reference', size=128, required=1, states={'done':[('readonly',True)]}),
         'mode': fields.many2one('payment.mode','Payment mode', select=True, required=1, states={'done':[('readonly',True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
@@ -104,7 +91,7 @@ class payment_order(osv.osv):
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Preferred date", change_default=True, required=True, states={'done':[('readonly',True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
+            ], "Preferred date", change_default=True, required=True, states={'done':[('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
         'date_created': fields.date('Creation date', readonly=True),
         'date_done': fields.date('Execution date', readonly=True),
     }
@@ -137,6 +124,37 @@ class payment_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'payment.order', id, 'done', cr)
         return True
+
+    def copy(self, cr, uid, id, default={}, context=None):
+        default.update({
+            'state':'draft',
+            'line_ids': [],
+            'reference': self.pool.get('ir.sequence').get(cr, uid, 'payment.order')
+        })
+        return super(payment_order, self).copy(cr, uid, id, default, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        payment_line_obj = self.pool.get('payment.line')
+        payment_line_ids = []
+        if (vals.get('date_prefered', False) == 'fixed' and not vals.get('date_scheduled', False)) or vals.get('date_scheduled', False):
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_ids.append(line.id)
+            payment_line_obj.write(cr, uid, payment_line_ids, {'date':vals.get('date_scheduled', False)}, context=context)
+        elif vals.get('date_prefered', False) == 'due':
+            vals.update({'date_scheduled':False})
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_obj.write(cr, uid, [line.id], {'date':line.ml_maturity_date}, context=context)
+        elif vals.get('date_prefered', False) == 'now':
+            vals.update({'date_scheduled':False})
+            for order in self.browse(cr, uid, ids, context=context):
+                for line in order.line_ids:
+                    payment_line_ids.append(line.id)
+            payment_line_obj.write(cr, uid, payment_line_ids, {'date': False}, context=context)
+        return super(payment_order, self).write(cr, uid, ids, vals, context=context)
 
 payment_order()
 
@@ -243,19 +261,6 @@ class payment_line(osv.osv):
                     line.amount_currency, context=ctx)
         return res
 
-    def _value_date(self, cursor, user, ids, name, args, context=None):
-        if not ids:
-            return {}
-        res = {}
-        for line in self.browse(cursor, user, ids, context=context):
-            if line.order_id.date_prefered == 'fixed':
-                res[line.id] = line.order_id.date_planned
-            elif line.order_id.date_prefered == 'due':
-                res[line.id] = line.due_date or time.strftime('%Y-%m-%d')
-            else:
-                res[line.id] = time.strftime('%Y-%m-%d')
-        return res
-
     def _get_currency(self, cr, uid, context):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         if user.company_id:
@@ -308,13 +313,14 @@ class payment_line(osv.osv):
             help='Payment amount in the company currency'),
         'ml_date_created': fields.function(_get_ml_created_date, string="Effective Date",
             method=True, type='date', help="Invoice Effective Date"),
-        'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='date', string='Maturity Date'),
+        'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='date', string='Due Date'),
         'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='many2one', relation='account.invoice', string='Invoice Ref.'),
         'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text", help='Address of the Main Partner'),
         'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text", help='Address of the Ordering Customer.'),
         'date': fields.date('Payment Date', help="If no payment date is specified, the bank will treat this payment line directly"),
         'create_date': fields.datetime('Created' , readonly=True),
-        'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True)
+        'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True),
+        'bank_statement_line_id': fields.many2one('account.bank.statement.line', 'Bank statement line')
     }
     _defaults = {
         'name': lambda obj, cursor, user, context: obj.pool.get('ir.sequence'
@@ -327,7 +333,7 @@ class payment_line(osv.osv):
         ('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
     ]
 
-    def onchange_move_line(self, cr, uid, ids, move_line_id, payment_type, date_prefered, date_planned, currency=False, company_currency=False, context=None):
+    def onchange_move_line(self, cr, uid, ids, move_line_id, payment_type, date_prefered, date_scheduled, currency=False, company_currency=False, context=None):
         data={}
 
         data['amount_currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=data['amount']=False
@@ -362,8 +368,7 @@ class payment_line(osv.osv):
             elif date_prefered == 'due':
                 data['date'] = line.date_maturity
             elif date_prefered == 'fixed':
-                data['date'] = date_planned
-
+                data['date'] = date_scheduled
         return {'value': data}
 
     def onchange_amount(self, cr, uid, ids, amount, currency, cmpny_currency, context=None):
@@ -407,7 +412,6 @@ class payment_line(osv.osv):
                     if bank.state in bank_type:
                         data['bank_id'] = bank.id
                         break
-
         return {'value': data}
 
     def fields_get(self, cr, uid, fields=None, context=None):

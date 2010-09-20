@@ -29,7 +29,6 @@
         <record id="user_type_tiers" model="account.account.type">
             <field name="name">Tiers</field>
             <field name="code">tiers</field>
-            <!-- <field name="report_type">?</field> -->
             <field name="close_method">balance</field>
         </record>
         <record id="user_type_tiers_receiv" model="account.account.type">
@@ -47,13 +46,11 @@
         <record id="user_type_tax" model="account.account.type">
             <field name="name">Tax</field>
             <field name="code">tax</field>
-            <!-- <field name="report_type">?</field> -->
             <field name="close_method">unreconciled</field>
         </record>
         <record id="user_type_financiers" model="account.account.type">
             <field name="name">Financier</field>
             <field name="code">financier</field>
-            <!-- <field name="report_type">?</field> -->
             <field name="close_method">balance</field>
         </record>
         <record id="user_type_charge" model="account.account.type">
@@ -7082,7 +7079,7 @@
             <field name="ref_base_code_id" ref="vat_code_a48"/>
             <field name="type_tax_use">sale</field>
         </record>
-        <record id="vat_IO_S" model="account.tax.template">
+        <record id="vat_IO_abc" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">TVA 0% ABC Intracommunautaire</field>
             <field name="description">V-INTRA-ABC 0</field>

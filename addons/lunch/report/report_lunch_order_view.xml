@@ -42,7 +42,7 @@
                 <newline/>
                 <group expand="0" string="Group By..." colspan="10" col="12">
                     <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Box" icon="terp-accessories-archiver+" context="{'group_by':'box_name'}"/>
+                    <filter string="Box" icon="terp-dolar" context="{'group_by':'box_name'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
@@ -62,8 +62,8 @@
         <field name="context">{'search_default_month':1,'search_default_User':1}</field>
     </record>
 
-    <menuitem name="Lunch Order Analysis" parent="menu_lunch_reporting_order"
-              id="menu_lunch_order_analysis" action="action_report_lunch_order_all"  sequence="1" />
+<!--    <menuitem name="Lunch Order Analysis" parent="menu_lunch_reporting_order"-->
+<!--              id="menu_lunch_order_analysis" action="action_report_lunch_order_all"  sequence="1" />-->
 
 	</data>
 </openerp>

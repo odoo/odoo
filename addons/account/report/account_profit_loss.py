@@ -63,12 +63,12 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
     def sum_dr(self):
         if self.res_pl['type'] == 'Net Profit C.F.B.L.':
             self.result_sum_dr += self.res_pl['balance']
-        return self.result_sum_dr or 0.0
+        return self.result_sum_dr
 
     def sum_cr(self):
         if self.res_pl['type'] == 'Net Loss C.F.B.L.':
             self.result_sum_cr += self.res_pl['balance']
-        return self.result_sum_cr or 0.0
+        return self.result_sum_cr
 
     def get_data(self, data):
         cr, uid = self.cr, self.uid
@@ -170,7 +170,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         return self.result.get(group, [])
 
 report_sxw.report_sxw('report.pl.account.horizontal', 'account.account',
-    'addons/account/report/account_profit_horizontal.rml',parser=report_pl_account_horizontal, header='internal')
+    'addons/account/report/account_profit_horizontal.rml',parser=report_pl_account_horizontal, header='internal landscape')
 
 report_sxw.report_sxw('report.pl.account', 'account.account',
     'addons/account/report/account_profit_loss.rml',parser=report_pl_account_horizontal, header='internal')

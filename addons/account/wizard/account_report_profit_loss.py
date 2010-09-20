@@ -32,12 +32,12 @@ class account_pl_report(osv.osv_memory):
     _description = "Account Profit And Loss Report"
     _columns = {
         'display_type': fields.boolean("Landscape Mode"),
-                }
+    }
 
     _defaults = {
         'display_type': True,
         'journal_ids': [],
-                }
+    }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')
@@ -60,13 +60,13 @@ class account_pl_report(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'pl.account.horizontal',
                 'datas': data,
-                    }
+            }
         else:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'pl.account',
                 'datas': data,
-                    }
+            }
 
 account_pl_report()
 

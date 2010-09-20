@@ -27,7 +27,7 @@ class stock_partial_picking(osv.osv_memory):
     _name = "stock.partial.picking"
     _description = "Partial Picking"
     _columns = {
-            'date': fields.datetime('Date', required=True),
+        'date': fields.datetime('Date', required=True),
      }
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -75,30 +75,30 @@ class stock_partial_picking(osv.osv_memory):
                         continue
                     _moves_fields.update({
                         'move%s_product_id'%(m.id)  : {
-                                    'string': _('Product'),
-                                    'type' : 'many2one',
-                                    'relation': 'product.product',
-                                    'required' : True,
-                                    'readonly' : True,
-                                    },
+                            'string': _('Product'),
+                            'type' : 'many2one',
+                            'relation': 'product.product',
+                            'required' : True,
+                            'readonly' : True,
+                        },
                         'move%s_product_qty'%(m.id) : {
-                                    'string': _('Quantity'),
-                                    'type' : 'float',
-                                    'required': True,
-                                    },
+                            'string': _('Quantity'),
+                            'type' : 'float',
+                            'required': True,
+                        },
                         'move%s_product_uom'%(m.id) : {
-                                    'string': _('Product UOM'),
-                                    'type' : 'many2one',
-                                    'relation': 'product.uom',
-                                    'required' : True,
-                                    'readonly' : True,
-                                    },
+                            'string': _('Product UOM'),
+                            'type' : 'many2one',
+                            'relation': 'product.uom',
+                            'required' : True,
+                            'readonly' : True,
+                        },
                         'move%s_prodlot_id'%(m.id): {
-                                    'string': _('Production Lot'),
-                                    'type': 'many2one',
-                                    'relation': 'stock.production.lot',
-                                    'readonly': True,
-                                    }
+                            'string': _('Production Lot'),
+                            'type': 'many2one',
+                            'relation': 'stock.production.lot',
+                            'readonly': True,
+                        }
                     })
 
                     _moves_arch_lst += """
@@ -111,15 +111,15 @@ class stock_partial_picking(osv.osv_memory):
                     if (m.product_id.cost_method == 'average'):
                         _moves_fields.update({
                             'move%s_product_price'%(m.id) : {
-                                    'string': _('Price'),
-                                    'type' : 'float',
-                                    },
+                                'string': _('Price'),
+                                'type' : 'float',
+                            },
                             'move%s_product_currency'%(m.id): {
-                                    'string': _('Currency'),
-                                    'type' : 'float',
-                                    'type' : 'many2one',
-                                    'relation': 'res.currency',
-                                    }
+                                'string': _('Currency'),
+                                'type' : 'float',
+                                'type' : 'many2one',
+                                'relation': 'res.currency',
+                            }
                         })
                         _moves_arch_lst += """
                             <field name="move%s_product_price" />

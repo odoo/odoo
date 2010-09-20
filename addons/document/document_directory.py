@@ -110,7 +110,7 @@ class document_directory(osv.osv):
         ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!'),
         ('dir_parented', 'check(parent_id IS NOT NULL OR storage_id IS NOT NULL)', 'Directory must have a parent or a storage')
     ]
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         res = []
         if not self.search(cr,uid,[('id','in',ids)]):
             ids = []
@@ -154,7 +154,6 @@ class document_directory(osv.osv):
 
     def __init__(self, *args, **kwargs):
         super(document_directory, self).__init__(*args, **kwargs)
-        #self._cache = {}
 
     def onchange_content_id(self, cr, uid, ids, ressource_type_id):
         return {}

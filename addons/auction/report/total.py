@@ -38,13 +38,8 @@ class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, datas, context={}):
         service = netsvc.LocalService("object_proxy")
 
-#       start_time = time.clock()
-
-#           lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['obj_price','ach_pay_id','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
         lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
         auction = service.execute(cr.dbname, uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
-
-#       mid_time = time.clock()
 
         unsold = comm = emp = paid = unpaid = 0
         est1 = est2 = adj = 0
@@ -83,24 +78,12 @@ class report_custom(report_rml):
             buyer[l['ach_login']]=1
             seller[l['bord_vnd_id']]=1
 
-#       mid_time2 = time.clock()
-
-#       costs = service.execute(cr.dbname,uid, 'auction.lots', 'compute_buyer_costs', paid_ids)
-#       for cost in costs:
-#           paid += cost['amount']
-#
-#       costs = service.execute(cr.dbname,uid, 'auction.lots', 'compute_buyer_costs', unpaid_ids)
-#       for cost in costs:
-#           unpaid += cost['amount']
-
-#       mid_time3 = time.clock()
 
         debit = adj
         costs = service.execute(cr.dbname, uid, 'auction.lots', 'compute_seller_costs', ids)
         for cost in costs:
             debit += cost['amount']
 
-#       mid_time4 = time.clock()
 
         xml = '''<?xml version="1.0" encoding="ISO-8859-1"?>
 <report>
@@ -130,8 +113,6 @@ class report_custom(report_rml):
     </seller>
 </report>''' % (time.strftime('%d/%m/%Y'), toxml(auction['name']), auction['auction1'], len(lots), est1, est2, unsold, adj, len(buyer), len(paid_ids), comm, emp, unpaid, paid, len(seller), debit)
 
-#       file('/tmp/terp.xml','wb+').write(xml)
-#       end_time = time.clock()
         return self.post_process_xml_data(cr, uid, xml, context)
 
 report_custom('report.auction.total', 'auction.lots', '', 'addons/auction/report/total.xsl')

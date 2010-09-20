@@ -33,18 +33,18 @@ class pos_return(osv.osv_memory):
     _description = 'Point of sale return'
 
     def default_get(self, cr, uid, fields, context=None):
-        """ 
+        """
              To get default values for the object.
-            
+
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
-        """ 
+             @param fields: List of fields for which we want default values
+             @param context: A standard dictionary
+
+             @return: A dictionary which of fields with values.
+
+        """
 
         res = super(pos_return, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('pos.order')
@@ -54,44 +54,44 @@ class pos_return(osv.osv_memory):
         for order in order_obj.browse(cr, uid, active_ids):
             for line in order.lines:
                 if 'return%s'%(line.id) in fields:
-                    res['return%s'%(line.id)] = line.qty        
+                    res['return%s'%(line.id)] = line.qty
         return res
-                   
+
     def view_init(self, cr, uid, fields_list, context=None):
-        """ 
+        """
          Creates view dynamically and adding fields at runtime.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param context: A standard dictionary 
+         @param context: A standard dictionary
          @return: New arch of view with new columns.
-        """         
+        """
         res = super(pos_return, self).view_init(cr, uid, fields_list, context=context)
-        order_obj=self.pool.get('pos.order')           
+        order_obj=self.pool.get('pos.order')
         if not context:
-            context={}       
-        
-        active_ids=context.get('active_ids')            
-        for order in order_obj.browse(cr, uid, active_ids):            
-            for line in order.lines:    
+            context={}
+
+        active_ids=context.get('active_ids')
+        for order in order_obj.browse(cr, uid, active_ids):
+            for line in order.lines:
                 if 'return%s'%(line.id) not in self._columns:
                     self._columns['return%s'%(line.id)] = fields.float("Quantity")
-                             
-        return res   
+
+        return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
 
-        """ 
+        """
              Changes the view dynamically
-        
+
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             
+             @param context: A standard dictionary
+
              @return: New arch of view.
-        
-        """        
+
+        """
         result = super(pos_return, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
         if not context:
             context={}
@@ -104,25 +104,25 @@ class pos_return(osv.osv_memory):
             _moves_arch_lst="""<?xml version="1.0"?>
                             <form string="Return lines">
                             <label string="Quantities you enter, match to products that will return to the stock." colspan="4"/>"""
-            _line_fields = result['fields']                
+            _line_fields = result['fields']
             order=order_obj.browse(cr, uid, active_id)
-            for line in order.lines:    
-                quantity=line.qty    
+            for line in order.lines:
+                quantity=line.qty
                 _line_fields.update({
-                                         'return%s'%(line.id) : {
-                                        'string': line.product_id.name,
-                                        'type' : 'float',
-                                        'required': True,  
-                                        'default':quantity
-                                        },                                    
-                            })
+                    'return%s'%(line.id) : {
+                        'string': line.product_id.name,
+                        'type' : 'float',
+                        'required': True,
+                        'default':quantity
+                    },
+                })
                 _moves_arch_lst += """
                         <field name="return%s"/>
-                         <newline/>      
+                         <newline/>
                 """%(line.id)
-                                
+
             _moves_arch_lst+="""
-                    <newline/>      
+                    <newline/>
                     <separator colspan="4"/>
                    <button icon='gtk-cancel' special="cancel"
                                string="Cancel" />
@@ -130,36 +130,36 @@ class pos_return(osv.osv_memory):
                        string="Return goods and Exchange" type="object"/>
                                    <button icon='gtk-ok' name="create_returns2"
                         string="Return without Refund" type="object"/>
-                </form>"""    
-                             
+                </form>"""
+
             result['arch'] = _moves_arch_lst
-            result['fields'] = _line_fields   
-        return result    
-       
-       
+            result['fields'] = _line_fields
+        return result
+
+
     def  create_returns(self, cr, uid, data, context):
-        """ 
+        """
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             
+             @param context: A standard dictionary
+
              @return: Return the add product form again for adding more product
-        
+
         """
         return {
-                'name': _('Add Product'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'pos.add.product',
-                'view_id': False,
-                'target':'new',
-                'views': False,
-                'context': context,
-                'type': 'ir.actions.act_window',
+            'name': _('Add Product'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.add.product',
+            'view_id': False,
+            'target':'new',
+            'views': False,
+            'context': context,
+            'type': 'ir.actions.act_window',
         }
     def create_returns2(self, cr, uid, ids, context):
-        active_id = context.get('active_id', False)        
+        active_id = context.get('active_id', False)
         order_obj =self.pool.get('pos.order')
         line_obj = self.pool.get('pos.order.line')
         picking_obj = self.pool.get('stock.picking')
@@ -182,10 +182,10 @@ class pos_return(osv.osv_memory):
                 location_id = res and res[0] or None
                 stock_dest_id = val.id
                 new_picking = picking_obj.copy(cr, uid, order_id.picking_id.id, {'name':'%s (return)' % order_id.name,
-                                                                               'move_lines': [], 
-                                                                               'state':'draft', 
+                                                                               'move_lines': [],
+                                                                               'state':'draft',
                                                                                'type': 'in',
-                                                                               'address_id': order_id.partner_id.id,   
+                                                                               'address_id': order_id.partner_id.id,
                                                                                'date': date_cur })
                 new_order = order_obj.copy(cr, uid, order_id.id, {'name': 'Refund %s'%order_id.name,
                                                               'lines':[],
@@ -197,7 +197,7 @@ class pos_return(osv.osv_memory):
                             qty = data['return%s' %line.id]
                         except :
                             qty = line.qty
-                        new_move = stock_move_obj.create(cr, uid,{
+                        new_move = stock_move_obj.create(cr, uid, {
                             'product_qty': qty ,
                             'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
                             'picking_id': new_picking,
@@ -207,7 +207,8 @@ class pos_return(osv.osv_memory):
                             'location_dest_id': stock_dest_id,
                             'name': '%s (return)' %order_id.name,
                             'date': date_cur,
-                            'date_planned': date_cur,})
+                            'date_planned': date_cur
+                        })
                         line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
                 order_obj.write(cr,uid, [active_id,new_order], {'state': 'done'})
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
@@ -225,25 +226,25 @@ class pos_return(osv.osv_memory):
                 'type': 'ir.actions.act_window'
             }
         return act
-    
+
 pos_return()
 
 class add_product(osv.osv_memory):
-    _inherit = 'pos.add.product'  
+    _inherit = 'pos.add.product'
     def select_product(self, cr, uid, ids, context):
-        """ 
-             To get the product and quantity and add in order .            
+        """
+             To get the product and quantity and add in order .
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
+             @param context: A standard dictionary
              @return : Retrun the add product form again for adding more product
-        """               
-    
+        """
+
         active_id=context.get('active_id', False)
         data =  self.read(cr, uid, ids)
         data = data and data[0] or False
-        if active_id:               
+        if active_id:
             order_obj = self.pool.get('pos.order')
             lines_obj = self.pool.get('pos.order.line')
             picking_obj = self.pool.get('stock.picking')
@@ -259,7 +260,7 @@ class add_product(osv.osv_memory):
             wf_service = netsvc.LocalService("workflow")
             return_boj=self.pool.get('pos.return')
             order_obj.add_product(cr, uid, active_id, data['product_id'], data['quantity'], context=context)
-              
+
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prod=data['product_id']
                 qty=data['quantity']
@@ -269,15 +270,16 @@ class add_product(osv.osv_memory):
                 res=cr.fetchone()
                 location_id=res and res[0] or None
                 stock_dest_id = val.id
-        
+
                 prod_id=prod_obj.browse(cr, uid, prod)
-                new_picking=picking_obj.create(cr, uid,{
-                                        'name':'%s (Added)' %order_id.name,
-                                        'move_lines':[],
-                                        'state':'draft',
-                                        'type':'out',
-                                        'date':date_cur,   })
-                new_move=stock_move_obj.create(cr, uid,{
+                new_picking=picking_obj.create(cr, uid, {
+                                'name':'%s (Added)' %order_id.name,
+                                'move_lines':[],
+                                'state':'draft',
+                                'type':'out',
+                                'date':date_cur
+                            })
+                new_move=stock_move_obj.create(cr, uid, {
                                 'product_qty': qty,
                                 'product_uos_qty': uom_obj._compute_qty(cr, uid, prod_id.uom_id.id, qty, prod_id.uom_id.id),
                                 'picking_id':new_picking,
@@ -287,33 +289,34 @@ class add_product(osv.osv_memory):
                                 'location_dest_id':stock_dest_id,
                                 'name':'%s (return)' %order_id.name,
                                 'date':date_cur,
-                                'date_planned':date_cur,})
-        
+                                'date_planned':date_cur
+                            })
+
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
                 order_obj.write(cr,uid,active_id,{'picking_id':new_picking})
-                
-             
-        return {            
-                'name': _('Add Product'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'pos.add.product',
-                'view_id': False,
-                'target':'new',
-                'context':context,
-                'views': False,
-                'type': 'ir.actions.act_window',
-                }
-    
+
+
+        return {
+            'name': _('Add Product'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.add.product',
+            'view_id': False,
+            'target':'new',
+            'context':context,
+            'views': False,
+            'type': 'ir.actions.act_window',
+        }
+
     def close_action(self, cr, uid, ids, context):
-        active_ids=context.get('active_ids', False)         
+        active_ids=context.get('active_ids', False)
         order_obj = self.pool.get('pos.order')
         lines_obj = self.pool.get('pos.order.line')
         picking_obj = self.pool.get('stock.picking')
         stock_move_obj = self.pool.get('stock.move')
         move_obj = self.pool.get('stock.move')
-        property_obj= self.pool.get("ir.property")   
+        property_obj= self.pool.get("ir.property")
         invoice_obj=self.pool.get('account.invoice')
         picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', active_ids), ('state', '=', 'done')])
         clone_list = []
@@ -330,19 +333,20 @@ class add_product(osv.osv_memory):
             res=cr.fetchone()
             location_id=res and res[0] or None
             stock_dest_id = val.id
-    
+
             order_obj.write(cr,uid,[order_id.id],{'type_rec':'Exchange'})
             if order_id.invoice_id:
                 invoice_obj.refund(cr, uid, [order_id.invoice_id.id], time.strftime('%Y-%m-%d'), False, order_id.name)
-            new_picking=picking_obj.create(cr, uid,{
-                                    'name':'%s (return)' %order_id.name,
-                                    'move_lines':[], 'state':'draft',
-                                    'type':'in',
-                                    'date':date_cur})
+            new_picking=picking_obj.create(cr, uid, {
+                            'name':'%s (return)' %order_id.name,
+                            'move_lines':[], 'state':'draft',
+                            'type':'in',
+                            'date':date_cur
+                        })
             for line in order_id.lines:
                 key=('return%s') %line.id
                 if line.id  and  data.has_key(key):
-                    new_move=stock_move_obj.create(cr, uid,{
+                    new_move=stock_move_obj.create(cr, uid, {
                         'product_qty': data['return%s' %line.id ],
                         'product_uos_qty': uom_obj._compute_qty(cr, uid, data['return%s' %line.id], line.product_id.uom_id.id),
                         'picking_id':new_picking,
@@ -352,29 +356,30 @@ class add_product(osv.osv_memory):
                         'location_dest_id':stock_dest_id,
                         'name':'%s (return)' %order_id.name,
                         'date':date_cur,
-                        'date_planned':date_cur,})
-                    lines_obj.write(cr,uid,[line.id],{'qty_rfd':(line.qty or 0.0) + data['return%s' %line.id],
-                                                    'qty':line.qty-(data['return%s' %line.id] or 0.0)
+                        'date_planned':date_cur
                     })
+                    lines_obj.write(cr,uid,[line.id], {
+                                'qty_rfd':(line.qty or 0.0) + data['return%s' %line.id],
+                                'qty':line.qty-(data['return%s' %line.id] or 0.0)
+                            })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)
-        obj=order_obj.browse(cr,uid, active_ids[0]) 
-        context.update({'return':'return'})   
-        
+        obj=order_obj.browse(cr,uid, active_ids[0])
+        context.update({'return':'return'})
+
         if obj.amount_total != obj.amount_paid:
             return {
-            'name': _('Make Payment'),
-            'context ':context,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'pos.make.payment',
-            'view_id': False,
-            'target': 'new',
-            'views': False,
-            'type': 'ir.actions.act_window',
-            
+                'name': _('Make Payment'),
+                'context ':context,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'pos.make.payment',
+                'view_id': False,
+                'target': 'new',
+                'views': False,
+                'type': 'ir.actions.act_window',
             }
-        return True                    
-                 
-add_product()        
+        return True
+
+add_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

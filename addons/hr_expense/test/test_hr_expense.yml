@@ -93,15 +93,4 @@
 -
   !python {model: hr.expense.expense}: |
     exp = self.browse(cr, uid, [ref('hr_expense_expense_september0')])[0]
-    invoice_obj = self.pool.get('account.invoice')
-    invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', exp.employee_id.address_id.partner_id.id)])
-    invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
-
-    for invoice in invoice_id.invoice_line:
-      product = invoice.product_id.id
-
-    for line  in exp.line_ids:
-      product_exp = line.product_id.id
-    assert product == product_exp
-    assert exp.id == invoice_id.id
-
+    assert exp.invoice_id, "Invoice should be created"

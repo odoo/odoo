@@ -41,7 +41,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    
+    user_id: project_long_term.res_users_userdeveloper0
     
 - 
   Create the phase task 'Develop GUI for Modules Configuration'
@@ -53,7 +53,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-        
+    user_id: project_long_term.res_users_userdeveloper0
 - 
   Create the phase task 'Develop GUI for OpenERP Synchronisation'
 - 
@@ -64,8 +64,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    
-    
+    user_id: project_long_term.res_users_userdeveloper0
 - 
   Create the phase task 'Develop required Menus'
 - 
@@ -76,16 +75,19 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    
+    user_id: project_long_term.res_users_userdesign0
     
 - 
   Schedule phase tasks
 - 
   !python {model: project.schedule.tasks}: |
-     self.compute_date(cr, uid, {"lang": "en_US",
-      "active_model": "project.phase", "active_ids": [ref("project_phase_phase0")],
-      "tz": False, "record_id": 138, "project_id": ref("project_project_project0"), "active_id": ref("project_phase_phase0"),
-      })
+      res = self.compute_date(cr, uid, {"lang": "en_US", "tz": False,
+            "active_id": ref("project_phase_phase0"),
+            # rest may be obsolete:
+            # "active_model": "project.phase", "active_ids": [ref("project_phase_phase0")],
+            # "record_id": 138, "project_id": ref("project_project_project0"), 
+            })
+      print res
 
 -
   Check if tasks scheduled, check that either of task's start_date, end_date and user_id is not null
@@ -93,5 +95,6 @@
   !python {model: project.phase}: |
      phase=self.browse(cr, uid, [ref("project_phase_phase0")])[0]
      for task in phase.task_ids:
-     	if (not task.user_id) or (not task.date_start) or (not task.date_end):
-     	   raise AssertionError("Phase Tasks not scheduled")
+        if (not task.user_id) or (not task.date_start) or (not task.date_end):
+           raise AssertionError("Phase Tasks not scheduled: %d uid=%r start=%r end=%r" % \
+                    (task.id, task.user_id, task.date_start, task.date_end))

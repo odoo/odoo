@@ -27,6 +27,7 @@ from operator import itemgetter
 from traceback import format_exception
 from sys import exc_info
 from tools.safe_eval import safe_eval as eval
+import re
 
 from osv import fields, osv
 import netsvc
@@ -90,7 +91,7 @@ class marketing_campaign(osv.osv):
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
-                                            help="The generated workitems will be linked to the partner related to the record. If the record is the partner itself left this field empty."),
+                                            help="The generated workitems will be linked to the partner related to the record. If the record is the partner itself leave this field empty."),
         'mode': fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
                                 ('manual', 'With Manual Confirmation'),
@@ -107,9 +108,9 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    'State',),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
-        'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for the campaign (used for campaign analysis), see also variable cost on activities"),
+        'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting."),
     }
-    
+
     _defaults = {
         'state': lambda *a: 'draft',
         'mode': lambda *a: 'test',
@@ -133,13 +134,13 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
             if activity.type != 'email':
                 continue
-            if not activity.email_template_id.enforce_from_account:
-                raise osv.except_osv(_("Error"), _("The campaign cannot be started: an email account is missing in the email activity '%s'")%activity.name)
-            if activity.email_template_id.enforce_from_account.state != 'approved':
-                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is not approved in the email activity '%s'")%activity.name)
+            if not activity.email_template_id.from_account:
+                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is missing in email activity '%s'")%activity.name)
+            if activity.email_template_id.from_account.state != 'approved':
+                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is not approved in email activity '%s'")%activity.name)
 
         if not has_start and not has_signal_without_from:
-            raise osv.except_osv(_("Error"), _("The campaign hasn't any starting activity nor any activity with a signal and no previous activity."))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity (or any activity with a signal and no previous activity)"))
 
         return self.write(cr, uid, ids, {'state': 'running'})
 
@@ -202,38 +203,75 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             return record
         return None
 
+    # prevent duplication until the server properly duplicates several levels of nested o2m
+    def copy(self, cr, uid, id, default=None, context=None):
+        raise osv.except_osv("Operation not supported", "Sorry, campaign duplication is not supported at the moment.")
+
 marketing_campaign()
 
 class marketing_campaign_segment(osv.osv):
     _name = "marketing.campaign.segment"
     _description = "Campaign Segment"
 
+    def _get_next_sync(self, cr, uid, ids, fn, args, context=None):
+        # next auto sync date is same for all segments
+        sync_job = self.pool.get('ir.model.data').get_object(cr, uid, 'marketing_campaign', 'ir_cron_marketing_campaign_every_day', context=context)
+        next_sync = sync_job and sync_job.nextcall or False
+        return dict.fromkeys(ids, next_sync)
+
     _columns = {
         'name': fields.char('Name', size=64,required=True),
-        'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
-             required=True, select=1),
-        'object_id': fields.related('campaign_id','object_id',
-                                      type='many2one', relation='ir.model',
-                                      string='Object'),
-        'ir_filter_id': fields.many2one('ir.filters', 'Filter', help=""),
-        'sync_last_date': fields.datetime('Latest Synchronization'),
-        'sync_mode': fields.selection([('create_date', 'If record created after last sync'),
-                                      ('write_date', 'If record modified after last sync (no duplicates)')],
-                                      'Workitem creation mode',
-                                      help="Determines when new workitems should be created for records matching a segment."),
+        'campaign_id': fields.many2one('marketing.campaign', 'Campaign', required=True, select=1, ondelete="cascade"),
+        'object_id': fields.related('campaign_id','object_id', type='many2one', relation='ir.model', string='Resource'),
+        'ir_filter_id': fields.many2one('ir.filters', 'Filter', ondelete="restrict",
+                            help="Filter to select the matching resource records that belong to this segment. New filters can be created and saved using the advanced search on the list view of the Resource. If no filter is set, all records are selected without filtering. The synchronization mode may also add a criterion to the filter."),
+        'sync_last_date': fields.datetime('Last Synchronization', help="Date on which this segment was synchronized last time (automatically or manually)"),
+        'sync_mode': fields.selection([('create_date', 'Only records created after last sync'),
+                                      ('write_date', 'Only records modified after last sync (no duplicates)'),
+                                      ('all', 'All records (no duplicates)')],
+                                      'Synchronization mode',
+                                      help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign."),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled')],
                                    'State',),
-        'date_run': fields.datetime('Launching Date'),
-        'date_done': fields.datetime('End Date'),
+        'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
+        'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
+        'date_next_sync': fields.function(_get_next_sync, method=True, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
     }
 
     _defaults = {
         'state': lambda *a: 'draft',
         'sync_mode': lambda *a: 'create_date',
     }
+
+    def _check_model(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.ir_filter_id:
+                return True
+            if obj.campaign_id.object_id.model != obj.ir_filter_id.model_id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_model, _('Model of filter must be same as resource model of Campaign '), ['ir_filter_id,campaign_id']),
+    ]
+
+    def onchange_campaign_id(self, cr, uid, ids, campaign_id):
+        res = {'domain':{'ir_filter_id':[]}}
+        campaign_pool = self.pool.get('marketing.campaign')
+        if campaign_id:
+            campaign = campaign_pool.browse(cr, uid, campaign_id)
+            model_name = self.pool.get('ir.model').read(cr, uid, [campaign.object_id.id], ['model'])
+            if model_name:
+                mod_name = model_name[0]['model']
+                res['domain'] = {'ir_filter_id': [('model_id', '=', mod_name)]}
+        else:
+            res['value'] = {'ir_filter_id': False}
+        return res
 
     def state_running_set(self, cr, uid, ids, *args):
         segment = self.browse(cr, uid, ids[0])
@@ -269,13 +307,16 @@ class marketing_campaign_segment(osv.osv):
         action_date = time.strftime('%Y-%m-%d %H:%M:%S')
         campaigns = set()
         for segment in self.browse(cr, uid, segment_ids, context=context):
+            if segment.campaign_id.state != 'running':
+                continue
+            
             campaigns.add(segment.campaign_id.id)
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
                   uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)], context=context)
 
             model_obj = self.pool.get(segment.object_id.model)
             criteria = []
-            if segment.sync_last_date:
+            if segment.sync_last_date and segment.sync_mode != 'all':
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
             if segment.ir_filter_id:
                 criteria += eval(segment.ir_filter_id.domain)
@@ -284,7 +325,7 @@ class marketing_campaign_segment(osv.osv):
             # XXX TODO: rewrite this loop more efficiently without doing 1 search per record!
             for o_ids in model_obj.browse(cr, uid, object_ids, context=context):
                 # avoid duplicated workitem for the same resource
-                if segment.sync_mode == 'write_date':
+                if segment.sync_mode in ('write_date','all'):
                     wi_ids = Workitems.search(cr, uid, [('res_id','=',o_ids.id),('segment_id','=',segment.id)], context=context)
                     if wi_ids:
                         continue
@@ -316,8 +357,8 @@ class marketing_campaign_activity(osv.osv):
 
     _action_types = [
         ('email', 'E-mail'),
-        ('paper', 'Paper'),
-        ('action', 'Action'),
+        ('report', 'Report'),
+        ('action', 'Custom Action'),
         # TODO implement the subcampaigns.
         # TODO implement the subcampaign out. disallow out transitions from
         # subcampaign activities ?
@@ -332,30 +373,37 @@ class marketing_campaign_activity(osv.osv):
                                       type='many2one', relation='ir.model',
                                       string='Object', readonly=True),
         'start': fields.boolean('Start', help= "This activity is launched when the campaign starts.", select=True),
-        'condition': fields.char('Condition', size=256, required=True,
-                                 help="Python condition to know if the activity can be executed, otherwise it will be deleted or cancelled."),
+        'condition': fields.text('Condition', size=256, required=True,
+                                 help="Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled."
+                                 "The expression may use the following [browsable] variables:\n"
+                                 "   - activity: the campaign activity\n"
+                                 "   - workitem: the campaign workitem\n" 
+                                 "   - resource: the resource object this campaign item represents\n"
+                                 "   - transitions: list of campaign transitions outgoing from this activity\n"
+                                 "...- re: Python regular expression module"),
         'type': fields.selection(_action_types, 'Type', required=True,
-                                  help="Describe type of action to be performed on the Activity.Eg : Send email,Send paper.."),
-        'email_template_id': fields.many2one('email.template','Email Template'),
-        'report_id': fields.many2one('ir.actions.report.xml', 'Reports', ),
+                                  help="""The type of action to execute when an item enters this activity, such as:
+   - Email: send an email using a predefined email template
+   - Report: print an existing Report defined on the resource item and save it into a specific directory
+   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record
+  """),
+        'email_template_id': fields.many2one('email.template', "Email Template", help='The e-mail to send when this activity is activated'),
+        'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
         'report_directory_id': fields.many2one('document.directory','Directory',
-                                help="Folder is used to store the generated reports"),
+                                help="This folder is used to store the generated reports"),
         'server_action_id': fields.many2one('ir.actions.server', string='Action',
-                                help= "Describes the action name.\n"
-                                "eg:On which object which action to be taken on basis of which condition"),
+                                help= "The action to perform when this activity is activated"),
         'to_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_from_id',
                                             'Next Activities'),
         'from_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_to_id',
                                             'Previous Activities'),
-        #'subcampaign_id': fields.many2one('marketing.campaign', 'Sub-Campaign',
-        #                                  domain="[('object_id', '=', object_id)]"),
-        'variable_cost': fields.float('Variable Cost'),
-        'revenue': fields.float('Revenue'),
+        'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section"),
+        'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section"),
         'signal': fields.char('Signal', size=128,
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
-        'keep_if_condition_not_met': fields.boolean('Keep as cancelled when condition not met',
+        'keep_if_condition_not_met': fields.boolean("Don't delete workitems",
                                                     help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")
     }
 
@@ -378,18 +426,18 @@ class marketing_campaign_activity(osv.osv):
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
 
-    def _process_wi_paper(self, cr, uid, activity, workitem, context=None):
+    def _process_wi_report(self, cr, uid, activity, workitem, context=None):
         service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
         (report_data, format) = service.create(cr, uid, [], {}, {})
         attach_vals = {
-                'name': '%s_%s_%s'%(activity.report_id.report_name,
-                                    activity.name,workitem.partner_id.name),
-                'datas_fname': '%s.%s'%(activity.report_id.report_name,
-                                            activity.report_id.report_type),
-                'parent_id': activity.report_directory_id.id,
-                'datas': base64.encodestring(report_data),
-                'file_type': format
-                }
+            'name': '%s_%s_%s'%(activity.report_id.report_name,
+                                activity.name,workitem.partner_id.name),
+            'datas_fname': '%s.%s'%(activity.report_id.report_name,
+                                        activity.report_id.report_type),
+            'parent_id': activity.report_directory_id.id,
+            'datas': base64.encodestring(report_data),
+            'file_type': format
+        }
         self.pool.get('ir.attachment').create(cr, uid, attach_vals)
         return True
 
@@ -430,9 +478,10 @@ class marketing_campaign_transition(osv.osv):
     _name = "marketing.campaign.transition"
     _description = "Campaign Transition"
 
-    _interval_units = [('hours', 'Hour(s)'), ('days', 'Day(s)'),
-                       ('months', 'Month(s)'), ('years','Year(s)')]
-
+    _interval_units = [
+        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
+        ('months', 'Month(s)'), ('years','Year(s)')
+    ]
 
     def _get_name(self, cr, uid, ids, fn, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -452,7 +501,7 @@ class marketing_campaign_transition(osv.osv):
         transition = self.browse(cr, uid, ids[0], context)
         if transition.trigger != 'time':
             raise ValueError('Delta is only relevant for timed transiton')
-        return relativedelta(**{transition.interval_type: transition.interval_nbr})
+        return relativedelta(**{str(transition.interval_type): transition.interval_nbr})
 
 
     _columns = {
@@ -460,10 +509,10 @@ class marketing_campaign_transition(osv.osv):
                                 type='char', size=128),
         'activity_from_id': fields.many2one('marketing.campaign.activity',
                                             'Previous Activity', select=1,
-                                            required=True),
+                                            required=True, ondelete="cascade"),
         'activity_to_id': fields.many2one('marketing.campaign.activity',
                                           'Next Activity',
-                                          required=True),
+                                          required=True, ondelete="cascade"),
         'interval_nbr': fields.integer('Interval Value', required=True),
         'interval_type': fields.selection(_interval_units, 'Interval Unit',
                                           required=True),
@@ -481,7 +530,18 @@ class marketing_campaign_transition(osv.osv):
         'interval_type': 'days',
         'trigger': 'time',
     }
+    def _check_campaign(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.activity_from_id.campaign_id != obj.activity_to_id.campaign_id:
+                return False
+        return True
 
+    _constraints = [
+            (_check_campaign, _('The To/From Activity of transition must be of the same Campaign '), ['activity_from_id,activity_to_id']),
+        ]
+ 
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
@@ -504,23 +564,50 @@ class marketing_campaign_workitem(osv.osv):
                 res[wi.id] = ng[0][1]
         return res
 
+    def _resource_search(self, cr, uid, obj, name, args, domain=None, context=None):
+        """Returns id of workitem whose resource_name matches  with the given name"""
+        if context is None:
+            context = {}
+        if not len(args):
+            return []
+
+        condition = []
+        final_ids = []
+
+        cr.execute("""select w.id, w.res_id, m.model  \
+                                from marketing_campaign_workitem w \
+                                    left join marketing_campaign_activity a on (a.id=w.activity_id)\
+                                    left join marketing_campaign c on (c.id=a.campaign_id)\
+                                    left join ir_model m on (m.id=c.object_id)
+                                    """)
+        res = cr.fetchall()
+        for id, res_id, model in res:
+            model_pool = self.pool.get(model)
+            for arg in args:
+                if arg[1] == 'ilike':
+                    condition.append((model_pool._rec_name, 'ilike', arg[2]))
+            res_ids = model_pool.search(cr, uid, condition, context=context)
+            if res_id in res_ids:
+                final_ids.append(id)
+        return [('id', 'in', final_ids)]
+
     _columns = {
-        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment'),
+        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment', readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity','Activity',
-             required=True),
+             required=True, readonly=True),
         'campaign_id': fields.related('activity_id', 'campaign_id',
-             type='many2one', relation='marketing.campaign', string='Campaign', readonly=True),
+             type='many2one', relation='marketing.campaign', string='Campaign', readonly=True, store=True),
         'object_id': fields.related('activity_id', 'campaign_id', 'object_id',
-             type='many2one', relation='ir.model', string='Object', select=1),
-        'res_id': fields.integer('Resource ID', select=1, readonly=1),
-        'res_name': fields.function(_res_name_get, method=True, string='Resource Name', type="char", size=64),
-        'date': fields.datetime('Execution Date', help='If date is not set, this workitem have to be run manually'),
-        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
+             type='many2one', relation='ir.model', string='Resource', select=1, readonly=True, store=True),
+        'res_id': fields.integer('Resource ID', select=1, readonly=True),
+        'res_name': fields.function(_res_name_get, method=True, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
+        'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
         'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')], 'State'),
+                                   ('cancelled', 'Cancelled')], 'State', readonly=True),
 
-        'error_msg' : fields.text('Error Message')
+        'error_msg' : fields.text('Error Message', readonly=True)
     }
     _defaults = {
         'state': lambda *a: 'todo',
@@ -551,7 +638,9 @@ class marketing_campaign_workitem(osv.osv):
             'activity': activity,
             'workitem': workitem,
             'object': object_id,
-            'transition': activity.to_ids
+            'resource': object_id, 
+            'transitions': activity.to_ids,
+            're': re,
         }
         try:
             condition = activity.condition
@@ -576,14 +665,17 @@ class marketing_campaign_workitem(osv.osv):
 
             if result:
                 # process _chain
+                workitem = workitem.browse(context)[0] # reload
+                date = datetime.strptime(workitem.date, DT_FMT)
+
                 for transition in activity.to_ids:
                     if transition.trigger == 'cosmetic':
                         continue
                     launch_date = False
                     if transition.trigger == 'auto':
-                        launch_date = datetime.now()
+                        launch_date = date
                     elif transition.trigger == 'time':
-                        launch_date = datetime.now() + transition._delta()
+                        launch_date = date + transition._delta()
 
                     if launch_date:
                         launch_date = launch_date.strftime(DT_FMT)
@@ -597,18 +689,19 @@ class marketing_campaign_workitem(osv.osv):
                     }
                     wi_id = self.create(cr, uid, values, context=context)
 
-                    # Now, depending of the trigger and the campaign mode 
-                    # we know if must run the newly created workitem.
+                    # Now, depending on the trigger and the campaign mode
+                    # we know whether we must run the newly created workitem.
                     #
                     # rows = transition trigger \ colums = campaign mode
                     #
                     #           test    test_realtime     manual      normal (active)
                     # time       Y            N             N           N
                     # cosmetic   N            N             N           N
-                    # auto       Y            Y             Y           Y
-                    # 
+                    # auto       Y            Y             N           Y
+                    #
 
-                    run = transition.trigger == 'auto' \
+                    run = (transition.trigger == 'auto' \
+                            and campaign_mode != 'manual') \
                           or (transition.trigger == 'time' \
                               and campaign_mode == 'test')
                     if run:
@@ -670,9 +763,11 @@ class marketing_campaign_workitem(osv.osv):
                                  wi_obj.res_id)
             }
 
-        elif wi_obj.activity_id.type == 'paper':
-            datas = {'ids': [wi_obj.res_id],
-                     'model': wi_obj.object_id.model}
+        elif wi_obj.activity_id.type == 'report':
+            datas = {
+                'ids': [wi_obj.res_id],
+                'model': wi_obj.object_id.model
+            }
             res = {
                 'type' : 'ir.actions.report.xml',
                 'report_name': wi_obj.activity_id.report_id.report_name,
@@ -689,9 +784,9 @@ class email_template(osv.osv):
     _defaults = {
         'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
-    
+
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
-     
+
 email_template()
 
 class report_xml(osv.osv):

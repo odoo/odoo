@@ -75,9 +75,9 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
         return (False, None)
 
 def openobjectid2uid(cr, uidval, oomodel):
-    """ Open Object Id To UId
+    """ Gives the value of UID for VEVENT
         @param cr: the current row, from the database cursor,
-        @param uidval: Get USerId vale
+        @param uidval: Id value of the Event
         @oomodel: Open Object ModelName """
 
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
@@ -91,7 +91,7 @@ def mailto2str(arg):
         args = [arg,]
     else:
         args = arg
-    
+
     for ard in args:
         rstr = ard.get('name','')
         if ard.get('company',False):
@@ -108,12 +108,12 @@ def str2mailto(emailstr, multi=False):
     """
     # TODO: move to tools or sth.
     mege = re.compile(r'([^\(\<]+) *(\((.*?)\))? *(\< ?(.*?) ?\>)? ?(\((.*?)\))? *$')
-    
+
     mailz= [emailstr,]
     retz = []
     if multi:
         mailz = emailstr.split(',')
-    
+
     for mas in mailz:
         m = mege.match(mas.strip())
         if not m:
@@ -121,17 +121,17 @@ def str2mailto(emailstr, multi=False):
             # retz.append({ 'name': mas.strip() })
             # continue
             raise ValueError("Invalid email address %r" % mas)
-        rd = {  'name': m.group(1).strip(), 
+        rd = {  'name': m.group(1).strip(),
                 'email': m.group(5), }
         if m.group(2):
             rd['company'] = m.group(3).strip()
         elif m.group(6):
             rd['company'] = m.group(7).strip()
-        
+
         if rd['name'].startswith('"') and rd['name'].endswith('"'):
             rd['name'] = rd['name'][1:-1]
         retz.append(rd)
-        
+
     if multi:
         return retz
     else:
@@ -186,6 +186,8 @@ def map_data(cr, uid, obj, context=None):
             if field_type == 'selection':
                 if not map_val:
                     continue
+                if type(map_val) == list and len(map_val): #TOFIX: why need to check this
+                    map_val = map_val[0]
                 mapping = obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
                     map_val = mapping.get(map_val.lower(), False)
@@ -230,8 +232,6 @@ def map_data(cr, uid, obj, context=None):
 class CalDAV(object):
     __attribute__ = {}
 
-
-
     def ical_set(self, name, value, type):
         """ set calendar Attribute
          @param self: The object pointer,
@@ -274,9 +274,15 @@ class CalDAV(object):
                 self.__attribute__[name][type] = None
         return True
 
-    def format_date_tz(self, date, tz=None):
+    def format_date_tz(self, src_date, tz=None):
+        """ This function converts date into specifice timezone value
+        @param src_date: Date to be converted (datetime.datetime)
+        @return: Converted datetime.datetime object for the date
+        """
         format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-        return tools.server_to_local_timestamp(date, format, format, tz)
+        date_str = src_date.strftime('%Y-%m-%d %H:%M:%S')
+        res_date = tools.server_to_local_timestamp(date_str, format, format, tz)
+        return datetime.strptime(res_date, "%Y-%m-%d %H:%M:%S")
 
     def parse_ics(self, cr, uid, child, cal_children=None, context=None):
         """ parse calendaring and scheduling information
@@ -288,13 +294,13 @@ class CalDAV(object):
         att_data = []
         exdates = []
         _server_tzinfo = pytz.timezone(tools.get_server_timezone())
-        
+
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
                 dmail = { 'name': cal_data.params.get('CN', ['',])[0],
-                            'email': cal_data.value.replace('MAILTO:',''),
+                            'email': cal_data.value.lower().replace('mailto:',''),
                             # TODO: company? 
-                            }
+                }
                 self.ical_set(cal_data.name.lower(), mailto2str(dmail), 'value')
                 continue
             if cal_data.name.lower() == 'attendee':
@@ -322,11 +328,9 @@ class CalDAV(object):
                 continue
             if cal_data.name.lower() in self.__attribute__:
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
-                    # since we do convert, do we also need to save the original tzid?
-                    # self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
-                    
-                    date_local = cal_data.value.astimezone(_server_tzinfo)
-                    self.ical_set(cal_data.name.lower(), date_local, 'value')
+                    self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
+                    date_utc = cal_data.value.astimezone(pytz.utc)
+                    self.ical_set(cal_data.name.lower(), date_utc, 'value')
                     continue
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self, context=context)
@@ -356,6 +360,8 @@ class CalDAV(object):
                         if not model:
                             continue
                         uidval = openobjectid2uid(cr, data[map_field], model)
+                        #Computation for getting events with the same UID (RFC4791 Section4.1)
+                        #START
                         model_obj = self.pool.get(model)
                         r_ids = []
                         if model_obj._columns.get('recurrent_uid', None):
@@ -363,8 +369,13 @@ class CalDAV(object):
                                            % (model_obj._table, data[map_field]))
                             r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids:
-                            rcal = self.export_cal(cr, uid, r_ids, 'vevent', context=context)
+                            r_datas = model_obj.read(cr, uid, r_ids, context=context)
+                            rcal = CalDAV.export_cal(self, cr, uid, r_datas, 'vevent', context=context)
+                            for revents in rcal.contents.get('vevent', []):
+                                ical.contents['vevent'].append(revents)
+                        #END
                         if data.get('recurrent_uid', None):
+                            # Change the UID value in case of modified event from any recurrent event 
                             uidval = openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval
                     elif field == 'attendee' and data[map_field]:
@@ -386,15 +397,20 @@ class CalDAV(object):
                             ical = tz_obj.export_cal(cr, uid, None, \
                                          data[map_field], ical, context=context)
                             timezones.append(data[map_field])
+                        if vevent.contents.get('recurrence-id'):
+                            # Convert recurrence-id field value accroding to timezone value
+                            recurid_val = vevent.contents.get('recurrence-id')[0].value
+                            vevent.contents.get('recurrence-id')[0].params['TZID'] = [tzval.title()]
+                            vevent.contents.get('recurrence-id')[0].value =  self.format_date_tz(recurid_val, tzval.title())
                         if exfield:
+                            # Set exdates according to timezone value
+                            # This is the case when timezone mapping comes after the exdate mapping
+                            # and we have exdate value available 
                             exfield.params['TZID'] = [tzval.title()]
                             exdates_updated = []
                             for exdate in exdates:
-                                date1 = (datetime.strptime(exdate, "%Y%m%dT%H%M%S")).strftime('%Y-%m-%d %H:%M:%S')
-                                dest_date = self.format_date_tz(date1, tzval.title())
-                                ex_date = (datetime.strptime(dest_date, "%Y-%m-%d %H:%M:%S")).strftime('%Y%m%dT%H%M%S')
-                                exdates_updated.append(ex_date)
-                            exfield.value = map(parser.parse, exdates_updated)
+                                exdates_updated.append(self.format_date_tz(parser.parse(exdate), tzval.title()))
+                            exfield.value = exdates_updated
                     elif field == 'organizer' and data[map_field]:
                         organizer = str2mailto(data[map_field])
                         event_org = vevent.add('organizer')
@@ -407,23 +423,22 @@ class CalDAV(object):
                                 exfield = vevent.add(field)
                                 exdates = (data[map_field]).split(',')
                                 if tzval:
+                                    # Set exdates according to timezone value
+                                    # This is the case when timezone mapping comes before the exdate mapping
+                                    # and we have timezone value available 
                                     exfield.params['TZID'] = [tzval.title()]
                                     exdates_updated = []
                                     for exdate in exdates:
-                                        date1 = (datetime.strptime(exdate, "%Y%m%dT%H%M%S")).strftime('%Y-%m-%d %H:%M:%S')
-                                        dest_date = self.format_date_tz(date1, tzval.title())
-                                        ex_date = (datetime.strptime(dest_date, "%Y-%m-%d %H:%M:%S")).strftime('%Y%m%dT%H%M%S')
-                                        exdates_updated.append(ex_date)
-                                    exdates = exdates_updated
-                                exfield.value = map(parser.parse, exdates)
+                                        exdates_updated.append(self.format_date_tz(parser.parse(exdate), tzval.title()))
+                                    exfield.value = exdates_updated
                             else:
                                 vevent.add(field).value = tools.ustr(data[map_field])
                         elif map_type in ('datetime', 'date') and data[map_field]:
                             dtfield = vevent.add(field)
                             if tzval:
-                                dest_date = self.format_date_tz(data[map_field], tzval.title())
+                                # Export the date according to the event timezone value
                                 dtfield.params['TZID'] = [tzval.title()]
-                                dtfield.value = parser.parse(dest_date)
+                                dtfield.value = self.format_date_tz(parser.parse(data[map_field]), tzval.title())
                             else:
                                 dtfield.value = parser.parse(data[map_field])
                         elif map_type == "timedelta":
@@ -456,9 +471,16 @@ class CalDAV(object):
         recur_pool = {}
         try:
             for val in vals:
-                exists, r_id = uid2openobjectid(cr, val['id'], context.get('model'), \
+                # Compute value of duration
+                if 'date_deadline' in val and 'duration' not in val:
+                    start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
+                    end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
+                    diff = end - start
+                    val['duration'] = (diff.seconds/float(86400) + diff.days) * 24
+                exists, r_id = calendar.uid2openobjectid(cr, val['id'], context.get('model'), \
                                                                  val.get('recurrent_id'))
-                if val.has_key('create_date'): val.pop('create_date')
+                if val.has_key('create_date'):
+                    val.pop('create_date')
                 u_id = val.get('id', None)
                 val.pop('id')
                 if exists and r_id:
@@ -474,6 +496,11 @@ class CalDAV(object):
                         revent_id = model_obj.create(cr, uid, val)
                         ids.append(revent_id)
                     else:
+                        __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
+                        wematch = __rege.match(u_id.encode('utf8'))
+                        if wematch:
+                            model, recur_id, dbname = wematch.groups()
+                            val.update({'recurrent_uid': recur_id})
                         event_id = model_obj.create(cr, uid, val)
                         recur_pool[u_id] = event_id
                         ids.append(event_id)
@@ -489,7 +516,6 @@ class CalDAV(object):
             @param datas: Get Data's for caldav
             @param context: A standard dictionary for contextual values
         """
-
         try:
             self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
             ical = vobject.iCalendar()
@@ -571,9 +597,12 @@ class Calendar(CalDAV, osv.osv):
                 if ctx_res_id:
                     line_domain += [('id','=',ctx_res_id)]
                 mod_obj = self.pool.get(line.object_id.model)
-                data_ids = mod_obj.search(cr, uid, line_domain, context=context)
+                data_ids = mod_obj.search(cr, uid, line_domain, order="id", context=context)
                 for data in mod_obj.browse(cr, uid, data_ids, context):
                     ctx = parent and parent.context or None
+                    if hasattr(data, 'recurrent_uid') and data.recurrent_uid:
+                        # Skip for event which is child of other event
+                        continue
                     node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)
                     res.append(node)
         return res
@@ -582,7 +611,6 @@ class Calendar(CalDAV, osv.osv):
         """ Export Calendar
             @param ids: List of calendar’s IDs
             @param vobj: the type of object to export
-            
             @return the ical data.
         """
         if not context:
@@ -617,7 +645,6 @@ class Calendar(CalDAV, osv.osv):
             @param data_id: Get Data’s ID or False
             @param context: A standard dictionary for contextual values
         """
-
         if not context:
             context = {}
         vals = []
@@ -654,6 +681,7 @@ class Calendar(CalDAV, osv.osv):
             r = self.check_import(cr, uid, vals, context=context)
             res.extend(r)
         return res
+
 Calendar()
 
 

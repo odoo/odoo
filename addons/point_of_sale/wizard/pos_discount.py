@@ -35,18 +35,18 @@ class pos_discount(osv.osv_memory):
         'discount': lambda *a: 5,
     }
 
-        
+
     def view_init(self, cr, uid, fields_list, context=None):
-        """ 
+        """
          Creates view dynamically and adding fields at runtime.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param context: A standard dictionary 
+         @param context: A standard dictionary
          @return: New arch of view with new columns.
-        """        
+        """
         res = super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
-        record_id = context and context.get('active_id', False) or False        
+        record_id = context and context.get('active_id', False) or False
         order = self.pool.get('pos.order').browse(cr, uid, record_id)
         if not order.lines:
                 raise osv.except_osv('Error!','No Order Lines ')
@@ -68,7 +68,7 @@ class pos_discount(osv.osv_memory):
 
         order_ref = self.pool.get('pos.order')
         order_line_ref = self.pool.get('pos.order.line')
-            
+
         for order in order_ref.browse(cr, uid, record_id, context=context):
 
             for line in order.lines:
@@ -100,29 +100,6 @@ class pos_discount(osv.osv_memory):
 
                 order_line_ref.write(cr, uid, [line.id], res_new, context=context)
         return {}
-
-#    def check_discount(self, cr, uid, record_id, discount, context):
-#        """
-#         Check the discount of define by company  .
-#         @param self: The object pointer.
-#         @param cr: A database cursor
-#         @param uid: ID of the user currently logged in
-#         @param record_id:Current Order id
-#         @param discount:Select Discount
-#         @param context: A standard dictionary
-#         @return : retrun  to apply and used the company discount base on condition
-#        """
-
-#        order_ref = self.pool.get('pos.order')
-#
-#        for order in order_ref.browse(cr, uid, record_id, context=context):
-#            company_disc = order.company_id.company_discount
-#            for line in order.lines :
-#                prod_disc = discount
-#                if prod_disc <= company_disc :
-#                   return 'apply_discount'
-#                else :
-#                    return 'disc_discount'
 
 pos_discount()
 

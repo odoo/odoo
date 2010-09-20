@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import time
@@ -28,10 +28,10 @@ class pos_payment_report_date(report_sxw.rml_parse):
         super(pos_payment_report_date, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'pos_payment_date': self.__pos_payment_date__,
-                'pos_payment_date_total':self.__pos_payment_date__total__,
-                })
+            'time': time,
+            'pos_payment_date': self.__pos_payment_date__,
+            'pos_payment_date_total':self.__pos_payment_date__total__,
+        })
 
     def __pos_payment_date__(self,form):
         dt1 = form['date_start'] + ' 00:00:00'
@@ -59,7 +59,7 @@ class pos_payment_report_date(report_sxw.rml_parse):
         return res
 
 
-report_sxw.report_sxw('report.pos.payment.report.date', 'pos.order', 'addons/point_of_sale/report/pos_payment_report_date.rml', parser=pos_payment_report_date)
+report_sxw.report_sxw('report.pos.payment.report.date', 'pos.order', 'addons/point_of_sale/report/pos_payment_report_date.rml', parser=pos_payment_report_date,header='internal')
 
 
 

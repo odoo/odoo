@@ -21,6 +21,7 @@
 
 import tools
 from osv import fields,osv
+import decimal_precision as dp
 
 class account_entries_report(osv.osv):
     _name = "account.entries.report"
@@ -39,6 +40,8 @@ class account_entries_report(osv.osv):
         'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'date': fields.date('Date', size=128, readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
@@ -47,10 +50,8 @@ class account_entries_report(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State', readonly=True,
-                                  help='When new account move is created the state will be \'Draft\'. When all the payments are done it will be in \'Posted\' state.'),
-        'state_2': fields.selection([('draft','Draft'), ('valid','Valid')], 'State of Move Line', readonly=True,
-                                  help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
+        'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'State', readonly=True),
+        'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
         'reconcile_id': fields.many2one('account.move.reconcile', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
@@ -59,9 +60,10 @@ class account_entries_report(osv.osv):
         'type': fields.selection([
             ('receivable', 'Receivable'),
             ('payable', 'Payable'),
+            ('cash', 'Cash'),
             ('view', 'View'),
             ('consolidation', 'Consolidation'),
-            ('other', 'Others'),
+            ('other', 'Regular'),
             ('closed', 'Closed'),
         ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
             "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
@@ -69,6 +71,7 @@ class account_entries_report(osv.osv):
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
+
     _order = 'date desc'
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
@@ -116,8 +119,8 @@ class account_entries_report(osv.osv):
                 l.date_maturity as date_maturity,
                 l.date_created as date_created,
                 am.ref as ref,
-                am.state as state,
-                l.state as state_2,
+                am.state as move_state,
+                l.state as move_line_state,
                 l.reconcile_id as reconcile_id,
                 to_char(am.date, 'YYYY') as year,
                 to_char(am.date, 'MM') as month,
@@ -134,6 +137,8 @@ class account_entries_report(osv.osv):
                 a.user_type as user_type,
                 1 as nbr,
                 l.quantity as quantity,
+                l.currency_id as currency_id,
+                l.amount_currency as amount_currency,
                 l.debit as debit,
                 l.credit as credit,
                 l.debit-l.credit as balance

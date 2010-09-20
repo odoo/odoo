@@ -122,7 +122,6 @@ class report_aged_receivable(osv.osv):
         """ This view will be used in dashboard
         The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
-#        ranges = _get_ranges(cr) # Gets the ranges for the x axis of the graph (name column values)
         pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         today = time.strftime('%Y-%m-%d')
         fy_id = pool_obj_fy.find(cr, uid, exception=False)

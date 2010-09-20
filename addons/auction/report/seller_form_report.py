@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,20 +29,12 @@ class seller_form_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(seller_form_report, self).__init__(cr, uid, name, context=context)
         lot=self.pool.get('auction.lots').browse(cr, uid, uid)
-        #address=lot.bord_vnd_id.address_get(self.cr,self.uid,[partner.id])
-    #   partner=lot.bord_vnd_id.partner_id
-    #   address=partner.address and partner.address[0] or ""
-    #   street = address and address.street or ""
-
-
 
         self.localcontext.update({
             'time': time,
             'sum_taxes': self.sum_taxes,
             'sellerinfo' : self.seller_info,
             'grand_total' : self.grand_seller_total,
-    #       'street':street,
-    #       'address':address,
 })
 
 
@@ -69,7 +61,6 @@ class seller_form_report(report_sxw.rml_parse):
             else:
                 lots = partner.get('lots')
                 lots.append(object)
-#       buyer_ids=self.pool.get(auction.lots).read(cr,uid,lot)
         return ret_dict.values()
     def grand_seller_total(self,o):
         grand_total = 0

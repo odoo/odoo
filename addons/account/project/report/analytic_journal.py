@@ -57,7 +57,7 @@ class account_analytic_journal(report_sxw.rml_parse):
         res = self.cr.dictfetchone()
         return res['sum'] or 0
 
-report_sxw.report_sxw('report.account.analytic.journal', 'account.analytic.journal', 'addons/account/project/report/analytic_journal.rml',parser=account_analytic_journal,header=False)
+report_sxw.report_sxw('report.account.analytic.journal', 'account.analytic.journal', 'addons/account/project/report/analytic_journal.rml',parser=account_analytic_journal,header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

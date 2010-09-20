@@ -142,7 +142,7 @@ class stock_move_scrap(osv.osv_memory):
         return res
 
     def move_scrap(self, cr, uid, ids, context={}):
-        """ To move scraped products
+        """ To move scrapped products
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
@@ -191,10 +191,10 @@ class split_in_production_lot(osv.osv_memory):
     _columns = {
         'qty': fields.integer('Quantity'),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM'),
-        'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number'),
-        'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Lots Existing Numbers'),
-        'use_exist' : fields.boolean('Existing Lot'),
+        'product_uom': fields.many2one('product.uom', 'UoM'),
+        'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Production Lots'),
+        'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Production Lots'),
+        'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
      }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -261,7 +261,7 @@ class split_in_production_lot(osv.osv_memory):
                             'name': line.name,
                             'product_id': move.product_id.id},
                         context=context)
-                    print 'write', current_move, {'prodlot_id': prodlot_id, 'state':move.state}
+                    
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state})
 
                     update_val = {}

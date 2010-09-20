@@ -71,15 +71,6 @@ class account_partner_reconcile_process(osv.osv_memory):
         self.pool.get('res.partner').write(cr, uid, partner_id, {'last_reconciliation_date': time.strftime('%Y-%m-%d')}, context)
         #TODO: we have to find a way to update the context of the current tab (we could open a new tab with the context but it's not really handy)
         #TODO: remove that comments when the client side dev is done
-        #context.update({'partner_id': self.browse(cr, uid, ids, context)[0].next_partner_id})
-        #return {'context': context,
-        #        'target': 'opener',
-        #        'name': 'reconciliation process',
-        #        'view_type': 'form',
-        #        'view_mode': 'tree,form',
-        #        'res_model': 'account.move.line',
-        #        'type': 'ir.actions.act_window'
-        #}
         return {}
 
     _columns = {

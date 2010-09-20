@@ -185,6 +185,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
             <field name="search_view_id" ref="view_wiki_filter"/>
+            <field name="help">Wiki Pages  allows you to share ideas and questions with your coworkers. You can create a new document that can be link to one or several applications (CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. There is a basic wiki editing for text format.</field>
         </record>
 
         <menuitem parent="knowledge.menu_document2"
@@ -231,7 +232,7 @@
                     <field name="wiki_id" select="1" colspan="4"/>
                     <field name="summary" select="1" colspan="4"/>
                     <field name="text_area" select="1" colspan="4" nolabel="1" widget="text_wiki"/>
-                    <field name="create_date" select="1"/>
+                    <field name="create_date" select="1" readonly="1"/>
                     <field name="minor_edit" select="1" groups="base.group_extended"/>
                 </form>
             </field>

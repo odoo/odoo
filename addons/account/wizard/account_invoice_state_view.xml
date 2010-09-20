@@ -12,7 +12,7 @@
                         <button icon="gtk-cancel" special="cancel" string="Close"/>
                         <button icon="terp-camera_test" string="Confirm Invoices" name="invoice_confirm" type="object" default_focus="1"/>
                    </group>
-               </form>
+            </form>
             </field>
         </record>
 
@@ -21,19 +21,9 @@
             <field name="res_model">account.invoice.confirm</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-           <field name="view_id" ref="account_invoice_confirm_view"/>
-           <field name="target">new</field>
+            <field name="view_id" ref="account_invoice_confirm_view"/>
+            <field name="target">new</field>
         </record>
-
-<!--        <record model="ir.values" id="action_account_invoice_confirm_values">-->
-<!--            <field name="model_id" ref="account.model_account_invoice" />-->
-<!--            <field name="object" eval="1" />-->
-<!--            <field name="name">Confirm Draft Invoices</field>-->
-<!--            <field name="key2">client_action_multi</field>-->
-<!--            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_invoice_confirm'))" />-->
-<!--            <field name="key">action</field>-->
-<!--            <field name="model">account.invoice</field>-->
-<!--        </record>-->
 
         <record id="account_invoice_cancel_view" model="ir.ui.view">
             <field name="name">account.invoice.cancel.form</field>
@@ -46,7 +36,7 @@
                         <button icon="terp-dialog-close" special="cancel" string="Close"/>
                         <button icon="gtk-cancel" string="Cancel Invoices" name="invoice_cancel" type="object" default_focus="1"/>
                    </group>
-               </form>
+            </form>
             </field>
         </record>
 
@@ -55,19 +45,9 @@
             <field name="res_model">account.invoice.cancel</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-           <field name="view_id" ref="account_invoice_cancel_view"/>
-           <field name="target">new</field>
+            <field name="view_id" ref="account_invoice_cancel_view"/>
+            <field name="target">new</field>
         </record>
-
-<!--        <record model="ir.values" id="action_account_invoice_cancel_values">-->
-<!--            <field name="model_id" ref="account.model_account_invoice" />-->
-<!--            <field name="object" eval="1" />-->
-<!--            <field name="name">Cancel Selected Invoices</field>-->
-<!--            <field name="key2">client_action_multi</field>-->
-<!--            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_invoice_cancel'))" />-->
-<!--            <field name="key">action</field>-->
-<!--            <field name="model">account.invoice</field>-->
-<!--        </record>-->
 
     </data>
 </openerp>

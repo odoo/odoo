@@ -1,6 +1,20 @@
-/**
-* Global instance stored here
-*/
+/************************************************************
+*    OpenERP, Open Source Management Solution
+*    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Affero General Public License as
+*    published by the Free Software Foundation, either version 3 of the
+*    License, or (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the GNU Affero General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+***************************************************************/
 
 var xmlRpcClient;
 
@@ -151,7 +165,7 @@ var rpc= {
 function handler_function( result ) {
 	if ( rpc.onfault( result ) ) { alert( result[0] + "\n" + result[1] ); return; }
 	else{
-		alert("got result>>>>"+result)	
+		alert("got result"+result)	
 	}
 }
 
@@ -971,8 +985,13 @@ var listSearchContactHandler = {
 
            if(strlSearchResult=="email" && strlSearchResultValue!=''){
                  setSenderEmail(strlSearchResultValue);
-                 var t = getSenderEmail();} 
+                 var t = getSenderEmail();
+                 window.open("chrome://openerp_plugin/content/address.xul", "", "chrome, resizable=yes");} 
     
+            if(strlSearchResult=="email" && strlSearchResultValue==''){
+                alert("Contact is not available.");
+            } 
+
             if(strlSearchResult=="res_id"){
                  setResourceId(strlSearchResultValue);
                  var t = getResourceId();}
@@ -1000,11 +1019,11 @@ var listSearchContactdetailHandler = {
             var strlSearchResultValue = strlResult.QueryElementAt(1, Components.interfaces.nsISupportsCString);
             if(strlSearchResult=="email" && strlSearchResultValue=='')
             {
-                alert("Contact is not Available")
+                alert("Contact is not Available.")
                 document.getElementById("txtemail").value = sendername;
             } 
             if(strlSearchResult=="partner_name"){
-                 document.getElementById("txtname").value =strlSearchResultValue;}
+                 document.getElementById("txtselectpartner").value =strlSearchResultValue;}
 
             if(strlSearchResult=="contactname"){
                  document.getElementById("txtcontactname").value =strlSearchResultValue;}
@@ -1029,7 +1048,7 @@ var listSearchContactdetailHandler = {
                  document.getElementById("txtmobile").value =strlSearchResultValue;}
 
             if(strlSearchResult=="email"&& strlSearchResultValue!=''){
-                document.getElementById("txtemail").value =strlSearchResultValue;}
+                 document.getElementById("txtemail").value =strlSearchResultValue;}
 
             if(strlSearchResult=="res_id"){
                  setResourceId(strlSearchResultValue);
@@ -1066,7 +1085,7 @@ function searchContactdetail()
 	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strmethod.data = 'search_contact';
 	var strname = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strname.data =document.getElementById("txtemail").value;
+	strname.data = document.getElementById("txtemail").value;
 	xmlRpcClient.asyncCall(listSearchContactdetailHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strname ],6);
 }
 
@@ -1079,7 +1098,7 @@ var listSearchCheckboxHandler = {
 		var count = arrMethodList.Count();
 		var close=0;
 		if(count == 0  && popup_display != "no"){
-			alert("No records Found");
+			alert("No Records Found");
 			return false;
 		}
 		else if(count ==2 )
@@ -1124,10 +1143,10 @@ var listSearchCheckboxHandler = {
 				arrDataPair[0] = er_val[0].QueryElementAt(j, Components.interfaces.nsISupportsCString)
 				arrSearchList1[j]=arrDataPair;
 			}
-			alert( arrSearchList1 + "  model not exists")
+			alert( arrSearchList1 + "  Model not exists")
 			if (close == 1)
 			{
-				alert("No records Found");
+				alert("No Records Found");
 				return false;
 			}
 		}
@@ -1197,7 +1216,7 @@ function searchCheckbox()
 {
 	var checkboxlist = getnamesearch();
 	if(checkboxlist.length == 0){
-		alert("Select One or More Document");
+		alert("Please Select One or More Document");
 		return false;
 	}
 	var branchobj = getPref();
@@ -1245,7 +1264,7 @@ function searchContact()
 	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strmethod.data = 'search_contact';
 	var strname = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-	strname.data =getSenderEmail();
+	strname.data = getSenderEmail();
   	
 	xmlRpcClient.asyncCall(listSearchContactHandler,cmbSearchList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strname ],6);
 }
@@ -1321,6 +1340,8 @@ function getPartnerList(){
 	strvalue.data = document.getElementById('txtselectpartner').value;
 	xmlRpcClient.asyncCall(listPartnerHandler,cmdPartnerList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
+
+
 //function to create the xmlrpc supported variables for xmlrpc request
 function dictcontact(a,b){
 	var temp = xmlRpcClient.createType(xmlRpcClient.ARRAY,{});
@@ -1387,34 +1408,39 @@ function upload_archivemail()
     list_documents = document.getElementById('listSearchBox')
     var context = []
     var cnt = list_documents.selectedCount
+    var ref_ids = "";
+    var branchobj = getPref();
+	setServerService('xmlrpc/object');
+	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
+	var xmlRpcClient = getXmlRpc();
+	var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strDbName.data = branchobj.getCharPref("serverdbname");
+	var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
+	struids.data = branchobj.getIntPref('userid');
+	var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strpass.data = branchobj.getCharPref("password");
+	var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strmethod.data = 'history_message';
+	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+	strobj.data = 'thunderbird.partner';
+	var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
+
 	for(i=0;i<cnt;i++)
 	{	
         var object = list_documents.getSelectedItem(i);
 		var eml_string = parse_eml();
-        var model = object.label;
-        var res_id = object.value;
-		var branchobj = getPref();
-		setServerService('xmlrpc/object');
-		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
-		var xmlRpcClient = getXmlRpc();
-		var strDbName = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strDbName.data = branchobj.getCharPref("serverdbname");
-		var struids = xmlRpcClient.createType(xmlRpcClient.INT,{});
-		struids.data = branchobj.getIntPref('userid');
-		var strpass = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strpass.data = branchobj.getCharPref("password");
-		var strmethod = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strmethod.data = 'history_message';
-		var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-		strobj.data = 'thunderbird.partner';
-		var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
-        var a = ['model', 'res_id','message'];
-	    var b = [model, res_id,eml_string];
-        var arrofarr = dictcontact(a,b)
-        xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Mail Archive Successfully");
-      }
-		window.close();
+        ref_ids += object.label;
+        ref_ids += ",";
+        ref_ids += object.value;
+        if (i < cnt-1){ref_ids += ";";}
+		
+    }
+    var a = ['ref_ids','message'];
+	var b = [ref_ids, eml_string];
+    var arrofarr = dictcontact(a,b);
+    xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
+    alert("Mail Archived Successfully.");
+	window.close();
     
 }
 
@@ -1444,7 +1470,7 @@ function create_archivemail(){
 		var b = [object, eml_string];
 		var arrofarr = dictcontact(a,b);
 		xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-        alert("Mail Archive Successfully");
+        alert("Document Created Successfully.");
 		}
     	window.close();
 	}
@@ -1508,7 +1534,7 @@ function createContact(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var a = ['partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
-	var b = [getPartnerId(),getSenderName(),document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
+	var b = [getPartnerId(),document.getElementById("txtname").value,document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listCreateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
@@ -1529,7 +1555,7 @@ function UpdateContact(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	var a = ['res_id','partner_id','name','street','street2','zip','city','country_id','state_id','phone','fax','mobile','email'];
-	var b = [getResourceId(),getPartnerName(),document.getElementById("txtcontactname").value,document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
+	var b = [getResourceId(),document.getElementById("txtselectpartner").value,document.getElementById("txtcontactname").value,document.getElementById("txtstreet").value,document.getElementById("txtstreet2").value,document.getElementById("txtzip").value, document.getElementById("txtcity").value,document.getElementById("country").value,document.getElementById("state").value,document.getElementById("txtoffice").value,document.getElementById("txtfax").value,document.getElementById("txtmobile").value,document.getElementById("txtemail").value];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listUpdateContactHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
@@ -1660,7 +1686,7 @@ var listLoginHandler = {
 		if(login.type == 12){
 			login = result.QueryInterface(Components.interfaces.nsISupportsPRInt32)
 			setUserId(login.data);
-			alert('Successful Login To OpenERP');
+			alert('Successfully Login To OpenERP.');
             window.close();
 		}
 		else{
@@ -1680,14 +1706,14 @@ var listLoginHandler = {
 function testConnection(){
 	if (getconnect_server() == "false")
 	{
-		alert("No Server Running..."+" "+getServer())
+		alert("Server is Not Running...Please check it!!"+" "+getServer())
 		return false;
 	}
 	if (getDBList()=="false")
 	{
 		if (document.getElementById('DBlist_text').value =='')
 		{
-			alert("You Must Enter Database Name");
+			alert("You Must Enter Database Name.");
 			return false;
 		}
 		setDbName(document.getElementById('DBlist_text').value);
@@ -1696,7 +1722,7 @@ function testConnection(){
 	{
 		if (document.getElementById('DBlist').value == 0 || document.getElementById('DBlist').value =="--select--")
 		{
-			alert("You Must Select Database Name");
+			alert("You Must Select Database Name.");
 			return false;
 		}
 		setDbName(document.getElementById('DBlist').value);
@@ -1732,7 +1758,7 @@ var listcreateLoginHandler = {
 			setUserId(login.data);
 		}
 		else{
-			alert("Login Failed");
+			alert("Login Failed.");
 		}
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1764,12 +1790,11 @@ var listCreatePartnerHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
-		
 		if(typeof(createId.data) == 'number' && createId!=0){
 			window.close();
 		}
 		if(createId == 0){
-			alert("Partner Already Exist");
+			alert("Partner Already Exist.");
 		}
 	},
 	onFault: function (client, ctxt, fault) {
@@ -1797,7 +1822,7 @@ function createPartner(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	if(document.getElementById('txtname').value ==''){
-		alert("You Must Enter Partner Name");
+		alert("You Must Enter Partner Name.");
 		return false;
 	}
 	var a = ['name'];
@@ -1811,7 +1836,7 @@ var listSearchDocumentHandler = {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var searchResult = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
 		if(searchResult.data == 0){
-			alert("Document Does Not Exist");
+			alert("Document Does Not Exist.");
 			return false;
 		}
 		var objvalue = getPref().getCharPref("listobject");
@@ -1824,7 +1849,7 @@ var listSearchDocumentHandler = {
 
 
 		if(objectcharpref.indexOf(document.getElementById("txtobject").value) != -1){
-			alert("Document already in List");
+			alert("Document already in List.");
 		}
 		else{
 			var	listItem = document.createElement("listitem");
@@ -1879,11 +1904,11 @@ function searchDocument(){
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
 	if(document.getElementById('txtobj').value =='' ){
-		alert("You Must Enter Document");
+		alert("You Must Enter Document.");
 		return false;
 	}
 	if(document.getElementById('txtobject').value =='' ){
-		alert("You Must Enter Document Name");
+		alert("You Must Enter Document Name.");
 		return false;
 	}
 	var a = ['model'];

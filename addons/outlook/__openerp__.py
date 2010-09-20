@@ -18,14 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+
 {
-    "name" : "Outlook Interface",
-    "version" : "1.0",
-    "author" : "OpenERP SA",
-    "website" : "http://www.openerp.com/",
-    "depends" : ["base", "mail_gateway"],
-    "category" : "Generic Modules/Outlook interface",
-    "description": '''
+    'name' : 'Outlook Interface',
+    'version' : '1.0',
+    'author' : 'OpenERP SA',
+    'website' : 'http://www.openerp.com/',
+    'depends' : ['base', 'mail_gateway'],
+    'category' : 'Generic Modules/Outlook interface',
+    'description': '''
       This module provide the Outlook plug-in. 
 
       Outlook plug-in allows you to select an object that you’d like to add
@@ -34,11 +36,11 @@
       mail in mailgate.messages with attachments.
 
       ''',
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [],
-    "active": False,
-    "installable": True
+    'init_xml' : [],
+    'demo_xml' : [],
+    'update_xml' : ['outlook_installer.xml'],
+    'active': False,
+    'installable': True
 
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -459,17 +459,16 @@ class mrp_production(osv.osv):
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))], readonly=True),
+        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),
         'move_created_ids': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))], readonly=True),
+        'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))]),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
-        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
-        'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
-
+        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder', store=True),
+        'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder', store=True),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -641,8 +640,8 @@ class mrp_production(osv.osv):
 
             message = ("Manufacturing Order '%s' for %s %s is Ready to produce.") % (
                                     name,
-                                    production.product_qty, 
-                                    production.product_id.name, 
+                                    production.product_qty,
+                                    production.product_id.name,
                                    )
             self.log(cr, uid, production_id, message)
         return True
@@ -686,26 +685,42 @@ class mrp_production(osv.osv):
         final_product_todo = []
 
         produced_qty = 0
+        if production_mode == 'consume_produce':
+            produced_qty = production_qty
+
         for produced_product in production.move_created_ids2:
-            if (produced_product.scraped) or (produced_product.product_id.id<>production.product_id.id):
+            if (produced_product.scrapped) or (produced_product.product_id.id<>production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
 
         if production_mode in ['consume','consume_produce']:
             consumed_products = {}
+            check = {}
+            scrapped = map(lambda x:x.scrapped,production.move_lines2).count(True)
+
             for consumed_product in production.move_lines2:
-                if consumed_product.scraped:
+                consumed = consumed_product.product_qty
+                if consumed_product.scrapped:
                     continue
                 if not consumed_products.get(consumed_product.product_id.id, False):
-                    consumed_products[consumed_product.product_id.id] = 0
-                consumed_products[consumed_product.product_id.id] -= consumed_product.product_qty
+                    consumed_products[consumed_product.product_id.id] = consumed_product.product_qty
+                    check[consumed_product.product_id.id] = 0
+                for f in production.product_lines:
+                    if f.product_id.id == consumed_product.product_id.id:
+                        if (len(production.move_lines2) - scrapped) > len(production.product_lines):
+                            check[consumed_product.product_id.id] += consumed_product.product_qty
+                            consumed = check[consumed_product.product_id.id]
+                        rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed
+                        consumed_products[consumed_product.product_id.id] = rest_consumed
+
             for raw_product in production.move_lines:
                 for f in production.product_lines:
-                    if f.product_id.id==raw_product.product_id.id:
+                    if f.product_id.id == raw_product.product_id.id:
                         consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
-                        rest_qty = production_qty * f.product_qty / production.product_qty - consumed_qty
-                        if rest_qty > 0:
-                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
+                        if consumed_qty == 0:
+                            consumed_qty = production_qty * f.product_qty / production.product_qty
+                        if consumed_qty > 0:
+                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, production.location_src_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -714,7 +729,7 @@ class mrp_production(osv.osv):
             stock_mov_obj.write(cr, uid, final_product_todo, vals)
             produced_products = {}
             for produced_product in production.move_created_ids2:
-                if produced_product.scraped:
+                if produced_product.scrapped:
                     continue
                 if not produced_products.get(produced_product.product_id.id, False):
                     produced_products[produced_product.product_id.id] = 0
@@ -911,14 +926,14 @@ class mrp_production(osv.osv):
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
             message = ("%s '%s' %s %s %s %s %s %s.") % (
-                                    _('Manufacturing Order'), 
+                                    _('Manufacturing Order'),
                                     production.name,
-                                    _('for'), 
-                                    production.product_qty, 
-                                    production.product_id.name, 
-                                    _('scheduled for date '), 
+                                    _('for'),
+                                    production.product_qty,
+                                    production.product_id.name,
+                                    _('scheduled for date '),
                                     datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
-                                    _('is waiting') 
+                                    _('is waiting')
                                    )
             self.log(cr, uid, production.id, message)
         return picking_id

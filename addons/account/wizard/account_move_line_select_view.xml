@@ -23,17 +23,9 @@
             <field name="res_model">account.move.line.select</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-           <field name="view_id" ref="account_move_line_select_button_view"/>
-           <field name="target">new</field>
+            <field name="view_id" ref="account_move_line_select_button_view"/>
+            <field name="target">new</field>
         </record>
-
-<!--        <record id="ir_account_move_line_select" model="ir.values">-->
-<!--            <field name="key2">tree_but_open</field>-->
-<!--            <field name="model">account.account</field>-->
-<!--            <field name="name">Open Account</field>-->
-<!--            <field eval="'ir.actions.act_window,%d'%action_account_move_line_select_button" name="value"/>-->
-<!--            <field eval="True" name="object"/>-->
-<!--        </record>-->
 
     </data>
 </openerp>

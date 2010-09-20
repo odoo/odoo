@@ -143,27 +143,21 @@
                             <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                         </group>
                    </page>
-                   <page string="Notes">
-                       <field name="description" nolabel="1" colspan="4"/>
-                   </page>
-<!--                <page string="History" groups="base.group_extended">
-                       <field name="id"/>
-                       <field name="active"/>
-                    </page>  -->
                    <page string="Emails" groups="base.group_extended">
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                        </group>
                        <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                            <tree string="Communication history">
+                            <tree string="History">
                                 <field name="display_text" string="History Information"/>
+                                <field name="history" invisible="1"/>
                                 <button
                                     string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
                                     name="%(crm.action_crm_send_mail)d"
                                     context="{'mail':'reply', 'model': 'hr.applicant', 'include_original' : True}"
                                     icon="terp-mail-replied" type="action" />
                             </tree>
-                            <form string="Communication history">
+                            <form string="History">
                                 <group col="4" colspan="4">
                                     <field name="email_from"/>
                                     <field name="date"/>
@@ -192,13 +186,17 @@
                                 </notebook>
                             </form>
                         </field>
-                       <button colspan="2" string="Send New Email"
+                         <button string="Add New Note"
+                                name="%(crm.action_crm_add_note)d"
+                                context="{'model': 'crm.lead' }"
+                                icon="terp-document-new" type="action" />
+                        <button string="Send New Email"
                            name="%(crm.action_crm_send_mail)d"
                            context="{'mail':'new', 'model': 'hr.applicant'}"
                            icon="terp-mail-message-new" type="action" />
-                       <button colspan="2" string="Forward"
-                           name="%(crm.crm_lead_forward_to_partner_act)d"
-                           icon="terp-mail-forward" type="action" />
+                 </page>
+                 <page string="Notes">
+                     <field name="description" nolabel="1" colspan="4"/>
                  </page>
                 </notebook>
             </form>
@@ -244,7 +242,7 @@
                    help="Pending Jobs"
                />
                <separator orientation="vertical"/>
-               <filter icon="terp-check" string="Next Actions"
+               <filter icon="terp-gtk-jump-to-ltr" string="Next Actions"
                     context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[]"
                     help="View Next Action and Date"/>
@@ -262,18 +260,18 @@
                </field>
                <newline/>
                 <group expand="0" string="Group By..." colspan="11" col="20">
-                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Degree" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'availability'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Appreciation" icon="terp-face-plain" domain="[]" context="{'group_by':'priority'}"/>
+                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
                 </group>
            </search>
         </field>

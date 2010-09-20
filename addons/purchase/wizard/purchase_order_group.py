@@ -50,14 +50,14 @@ class purchase_order_group(osv.osv_memory):
         allorders = order_obj.do_merge(cr, uid, context.get('active_ids',[]), context)
 
         return {
-        'domain': "[('id','in', [" + ','.join(map(str, allorders)) + "])]",
-        'name': 'Purchase Orders',
-        'view_type': 'form',
-        'view_mode': 'tree,form',
-        'res_model': 'purchase.order',
-        'view_id': False,
-        'type': 'ir.actions.act_window',
-        'search_view_id': id['res_id']
+            'domain': "[('id','in', [" + ','.join(map(str, allorders)) + "])]",
+            'name': 'Purchase Orders',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'purchase.order',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'search_view_id': id['res_id']
         }
 
 purchase_order_group()

@@ -58,5 +58,5 @@ report_sxw.report_sxw(
     'report.account.move.voucher',
     'account.move',
     'addons/account/report/voucher_print.rml',
-    parser=report_voucher_move,header=False
+    parser=report_voucher_move,header="external"
 )

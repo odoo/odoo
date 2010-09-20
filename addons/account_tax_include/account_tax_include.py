@@ -35,11 +35,11 @@ class account_invoice(osv.osv):
         'price_type': 'tax_excluded',
     }
 
-    def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
+    def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None):
         map_old_new = {}
         refund_ids = []
         for old_inv_id in ids:
-            new_id = super(account_invoice,self).refund(cr, uid, ids, date=date, period_id=period_id, description=description)
+            new_id = super(account_invoice,self).refund(cr, uid, ids, date=date, period_id=period_id, description=description, journal_id=journal_id)
             refund_ids += new_id
             map_old_new[old_inv_id] = new_id[0]
 
@@ -161,8 +161,6 @@ class account_invoice_line(osv.osv):
         # note: will call product_id_change_unit_price_inv with context...
 
         # Temporary trap, for bad context that came from koo:
-        # if isinstance(context, str):
-        #       print "str context:", context
 
         ctx = (context and context.copy()) or {}
         ctx.update({'price_type': ctx.get('price_type', 'tax_excluded')})

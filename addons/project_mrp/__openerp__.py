@@ -49,10 +49,7 @@ automatically created via sale orders.
     'website': 'http://www.openerp.com',
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
     'init_xml': [],
-    'update_xml': ['project_mrp_workflow.xml', 
-                   #'process/project_mrp_process.xml',
-                   'project_mrp_view.xml'
-                   ],
+    'update_xml': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml', 'project_mrp_view.xml'],
     'demo_xml': [],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,

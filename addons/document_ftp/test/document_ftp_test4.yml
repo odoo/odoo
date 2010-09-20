@@ -110,7 +110,7 @@
     I check at the server that the file is attached to Partner1
 -
     !assert {model: ir.attachment, id: , search: "[('name','=','pat1-dynamic.txt')]" }:
-      - parent_id.name == 'Partners of Test'
+      - parent_id.name == 'Documents'
       - res_model == 'res.partner'
       - res_id !=  False
 -

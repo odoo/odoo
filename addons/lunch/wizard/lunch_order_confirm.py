@@ -29,8 +29,8 @@ class lunch_order_confirm(osv.osv_memory):
     _description = "confirm Order"
 
     _columns = {
-                'confirm_cashbox':fields.many2one('lunch.cashbox', 'Name of box', required=True),
-                }
+        'confirm_cashbox':fields.many2one('lunch.cashbox', 'Name of box', required=True),
+    }
 
     def confirm(self, cr, uid, ids, context):
         """

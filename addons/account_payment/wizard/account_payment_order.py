@@ -66,7 +66,7 @@ class payment_order_create(osv.osv_memory):
         if not line_ids: return {}
 
         payment = order_obj.browse(cr, uid, context['active_id'], context=context)
-        t = payment.mode and payment.mode.type.id or None
+        t = None
         line2bank = line_obj.line2bank(cr, uid, line_ids, t, context)
 
         ## Finally populate the current payment with new lines:
@@ -77,7 +77,7 @@ class payment_order_create(osv.osv_memory):
             elif payment.date_prefered == 'due':
                 date_to_pay = line.date_maturity
             elif payment.date_prefered == 'fixed':
-                date_to_pay = payment.date_planned
+                date_to_pay = payment.date_scheduled
             payment_obj.create(cr, uid,{
                 'move_line_id': line.id,
                 'amount_currency': line.amount_to_pay,

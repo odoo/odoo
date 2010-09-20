@@ -49,16 +49,16 @@ class pos_box_out(osv.osv_memory):
         return res
 
     _columns = {
-                'name': fields.char('Description', size=32, required=True),
-                'journal_id': fields.selection(pos_box_entries.get_journal, "Register", required=True),
-                'product_id': fields.selection(_get_expense_product, "Operation", required=True),
-                'amount': fields.float('Amount', digits=(16, 2)),
-                'ref': fields.char('Ref', size=32),
+        'name': fields.char('Description', size=32, required=True),
+        'journal_id': fields.selection(pos_box_entries.get_journal, "Register", required=True),
+        'product_id': fields.selection(_get_expense_product, "Operation", required=True),
+        'amount': fields.float('Amount', digits=(16, 2)),
+        'ref': fields.char('Ref', size=32),
     }
     _defaults = {
-                 'journal_id': lambda *a: 1,
-                 'product_id': lambda *a: 1,
-                }
+         'journal_id': lambda *a: 1,
+         'product_id': lambda *a: 1,
+    }
     def get_out(self, cr, uid, ids, context):
 
         """
@@ -102,11 +102,12 @@ class pos_box_out(osv.osv_memory):
             if statement_id:
                 statement_id = statement_id[0]
             if not statement_id:
-                statement_id = statement_obj.create(cr, uid, {'date': time.strftime('%Y-%m-%d 00:00:00'),
-                                                'journal_id': data['journal_id'],
-                                                'company_id': curr_company,
-                                                'user_id': uid,
-                                                })
+                statement_id = statement_obj.create(cr, uid, {
+                                    'date': time.strftime('%Y-%m-%d 00:00:00'),
+                                    'journal_id': data['journal_id'],
+                                    'company_id': curr_company,
+                                    'user_id': uid,
+                                })
             args['statement_id'] = statement_id
             args['journal_id'] = data['journal_id']
             if acc_id:

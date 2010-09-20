@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -57,7 +57,6 @@
 # - COGS account type fixed
 #
 
-
 {
     'name': 'United Kingdom - minimal',
     'version': '1.1',
@@ -65,16 +64,17 @@
     'description': """This is the base module to manage the accounting chart for United Kingdom in OpenERP.""",
     'author': 'Seath Solutions Ltd',
     'website': 'http://www.seathsolutions.com',
-    'depends': ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
+    'depends': ['base_iban', 'base_vat', 'account_chart'],
     'init_xml': [],
     'update_xml': [
-        'account_types.xml',
-        'account_chart.xml',
-        'account_tax.xml',
+        'l10n_uk_types.xml',
+        'l10n_uk_chart.xml',
+        'l10n_uk_tax.xml',
         'l10n_uk_wizard.xml'
     ],
     'demo_xml': [],
     'installable': True,
+    'active': False,
     'certificate': '0064392144797',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

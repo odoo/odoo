@@ -29,26 +29,26 @@ class stock_ups(osv.osv_memory):
 
     def ups_save(self, cr, uid, ids, context = {}):
         return {
-                'name': False, 
-                'view_type': 'form', 
-                'view_mode': 'form', 
-                'res_model': 'stock.ups.final', 
-                'type': 'ir.actions.act_window', 
-                'target':'new',
+            'name': False,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.ups.final',
+            'type': 'ir.actions.act_window',
+            'target':'new',
         }
-        
+
     def ups_upload(self, cr, uid, ids, context = {}):
         return {
-                'name': False, 
-                'view_type': 'form', 
-                'view_mode': 'form', 
-                'res_model': 'stock.ups.upload', 
-                'type': 'ir.actions.act_window', 
-                'target':'new',
+            'name': False,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.ups.upload',
+            'type': 'ir.actions.act_window',
+            'target':'new',
         }
 
     _columns = {
-        'weight': fields.float('Lot weight', required=True), 
+        'weight': fields.float('Lot weight', required=True),
     }
 
     _defaults = {

@@ -34,7 +34,7 @@ from osv.orm import except_orm
 from tools.translate import _
 import tools
 
-class project_issue(osv.osv, crm.crm_case):
+class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"
@@ -314,7 +314,7 @@ class project_issue(osv.osv, crm.crm_case):
 
         mailgate_pool = self.pool.get('email.server.tools')
 
-        subject = msg.get('subject')
+        subject = msg.get('subject') or _('No Title')
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
@@ -332,6 +332,7 @@ class project_issue(osv.osv, crm.crm_case):
         res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
+        context.update({'state_to' : 'draft'})
         res = self.create(cr, uid, vals, context)
         message = _('An Issue created') + " '" + subject + "' " + _("from Mailgate.")
         self.log(cr, uid, res, message)

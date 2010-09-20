@@ -30,27 +30,31 @@ class stock_return_picking(osv.osv_memory):
     _description = 'Return Picking'
 
     def default_get(self, cr, uid, fields, context):
-        """ 
+        """
          To get default values for the object.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param fields: List of fields for which we want default values 
-         @param context: A standard dictionary 
-         @return: A dictionary which of fields with values. 
-        """ 
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+         @return: A dictionary with default values for all field in ``fields``
+        """
         res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')
         pick = pick_obj.browse(cr, uid, record_id)
-        for m in [line for line in pick.move_lines]:
-            res['return%s'%(m.id)] = m.product_qty
-            if pick.invoice_state=='invoiced':
-                res['invoice_state'] = '2binvoiced'
-            else:
-                res['invoice_state'] = 'none'
+        if pick:
+            if 'invoice_state' in fields:
+                if pick.invoice_state=='invoiced':
+                    res['invoice_state'] = '2binvoiced'
+                else:
+                    res['invoice_state'] = 'none'
+            for line in pick.move_lines:
+                return_id = 'return%s'%(line.id)
+                if return_id in fields:
+                    res[return_id] = line.product_qty
         return res
-    
+
     def view_init(self, cr, uid, fields_list, context=None):
         """ 
          Creates view dynamically and adding fields at runtime.
@@ -99,7 +103,7 @@ class stock_return_picking(osv.osv_memory):
             return_history = {}
             for m_line in pick.move_lines:
                 return_history[m_line.id] = 0
-                for rec in m_line.move_stock_return_history:
+                for rec in m_line.move_history_ids2:
                     return_history[m_line.id] += rec.product_qty
             res['fields'].clear()
             arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
@@ -165,7 +169,7 @@ class stock_return_picking(osv.osv_memory):
             new_qty = data['return%s' % move.id]
             returned_qty = move.product_qty
     
-            for rec in move.move_stock_return_history:
+            for rec in move.move_history_ids2:
                 returned_qty -= rec.product_qty
     
             if returned_qty != new_qty:
@@ -178,7 +182,7 @@ class stock_return_picking(osv.osv_memory):
                 'picking_id':new_picking, 'state':'draft',
                 'location_id':new_location, 'location_dest_id':move.location_id.id,
                 'date':date_cur, 'date_planned':date_cur,})
-            move_obj.write(cr, uid, [move.id], {'move_stock_return_history':[(4,new_move)]})
+            move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
     
         if set_invoice_state_to_none:
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'})

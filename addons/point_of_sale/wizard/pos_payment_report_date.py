@@ -43,19 +43,19 @@ class pos_payment_report_date(osv.osv_memory):
         datas['form'] = res
 
         return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'pos.payment.report.date',
-                'datas': datas,
+            'type': 'ir.actions.report.xml',
+            'report_name': 'pos.payment.report.date',
+            'datas': datas,
         }
 
     _columns = {
-            'date_start': fields.date('Start Date', required=True),
-            'date_end': fields.date('End Date', required=True),
-            'user_id': fields.many2many('res.users', 'res_user_sale', 'user_id', 'sale_id', 'Salesman')
+        'date_start': fields.date('Start Date', required=True),
+        'date_end': fields.date('End Date', required=True),
+        'user_id': fields.many2many('res.users', 'res_user_sale', 'user_id', 'sale_id', 'Salesman')
     }
     _defaults = {
-            'date_start': lambda *a: time.strftime('%Y-%m-%d'),
-            'date_end': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_end': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
 pos_payment_report_date()

@@ -544,7 +544,7 @@ class event_registration(osv.osv):
                 email_to = regestration.email_from
             if regestration.email_cc:
                 email_cc += [regestration.email_cc]
-            if not (email_to and email_cc):
+            if not (email_to or email_cc):
                 continue
             subject = ""
             body = ""

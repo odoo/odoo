@@ -37,7 +37,7 @@ class account_report_general_ledger(osv.osv_memory):
         'landscape': True,
         'amount_currency': True,
         'sortby': 'sort_date',
-        'initial_balance': True,
+        'initial_balance': False,
     }
 
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear=False, context=None):

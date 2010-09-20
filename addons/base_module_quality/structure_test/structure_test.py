@@ -50,7 +50,6 @@ This test checks if the module satisfy tiny structure
         f_list = []
         module_dict = {}
         module_dict['module'] = []
-#        count = 0
         final_score = 0.0
 
         if not module_name.islower():
@@ -67,7 +66,6 @@ This test checks if the module satisfy tiny structure
                 elif file_struct == 'process' and os.path.isdir(path):
                     module_dict[file_struct] = []
                 elif file_struct != 'i18n' and os.path.isdir(path):
-#                    self.counter += 1
                     self.run_test(cr, uid, path)
                 module_dict['module'].append(file_struct)
                 f_list.append(file_struct)

@@ -32,6 +32,7 @@
                         groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
                     <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+                    <newline/>
                     <field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="duration" widget="float_time"
@@ -50,7 +51,7 @@
                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                name="open_meeting" icon="gtk-edit"
                                type="object" />
-                           <button string="ExRule"
+                           <button string="Exclude range" groups="base.group_extended"
                                 help="Add Exception Rule"
                                 name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
                                 context="{'model' : 'crm.meeting'}"
@@ -58,10 +59,10 @@
                     </group>
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
-                    <separator string="Data for Custom Rule" colspan="8"/>
+                    <separator string="Custom Recurrency Rule" colspan="8"/>
                     <group col="8" colspan="4">
-                        <field name="freq" />
                         <field name="interval" />
+                        <field name="freq" />
                         <field name="count" />
                         <field name="end_date" />
                     </group>
@@ -160,6 +161,22 @@
                                 <field name="email" string="Mail TO"/>
                                 <field name="role" select="1" />
                                 <field name="state" />
+                                <button name="do_tentative"
+                                    states="needs-action,declined,accepted"
+                                    string="Uncertain" type="object"
+                                    icon="terp-crm" />
+                                <button name="do_accept" string="Accept"
+                                    states="needs-action,tentative,declined"
+                                    type="object" icon="gtk-apply" />
+                                <button name="do_decline" string="Decline"
+                                    states="needs-action,tentative,accepted"
+                                    type="object" icon="gtk-cancel" />
+                                <button
+                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                    string="Delegate" type="action"
+                                    icon="gtk-sort-descending"
+                                    states="needs-action,tentative,declined,accepted"
+                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                             </tree>
                             <form string="Invitation details">
                                 <notebook colspan="4">

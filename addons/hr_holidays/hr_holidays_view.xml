@@ -36,7 +36,7 @@
         </record>
 
         <!-- Holidays: Leave Request -->
-        
+
         <record id="view_holiday_new_calendar" model="ir.ui.view">
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
@@ -47,7 +47,7 @@
                 </calendar>
             </field>
         </record>
-    
+
         <record model="ir.ui.view" id="edit_holiday_new">
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
@@ -165,10 +165,6 @@
                 <form string="Leaves Management">
                     <field name="name" />
                     <field name="holiday_status_id" />
-<!--                    <field name="holiday_type"/>
-                    <field name="category_id" required="1"/>
--->                    <field name="employee_id"  />
-                    <!--<field name="department_id"/>-->
                     <field name="type"/>
                     <field name="date_from" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
                     <field name="date_to" on_change="onchange_date_to(date_from, date_to)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
@@ -237,23 +233,6 @@
         </record>
 
         <!-- My leave dashboard -->
-<!--        <record model="ir.ui.view" id="view_my_leave_board_form">
-            <field name="name">hr.holidays.per.user.form</field>
-            <field name="model">hr.holidays.per.user</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="My Leaves" >
-                    <field name="employee_id"/>
-                    <field name="user_id"/>
-                    <field name="holiday_status"/>
-                    <field name="max_leaves"/>
-                    <field name="leaves_taken" />
-                    <field name="remaining_leaves"/>
-                    <field name="notes" colspan="4"/>
-                </form>
-            </field>
-        </record>
--->
         <menuitem
             name="Holidays"
             parent="hr.menu_hr_root"
@@ -268,6 +247,7 @@
             <field name="domain">[('type','=','remove')]</field>
             <field name="context">{'search_default_user_id':uid}</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
+            <field name="help">Leaves requests can be recorded by employees and validated by their managers. Once a leave request is validated it appears automatically in the agenda of the employee. You can define several allowance types (paid holidays, sickness, etc) and manage allowances per type.</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_open_ask_holidays_tree">

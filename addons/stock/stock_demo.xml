@@ -37,7 +37,6 @@
         <record id="stock_location_14" model="stock.location">
             <field name="name">Shelf 2</field>
             <field name="location_id" ref="stock_location_13"/>
-           <!-- <field model="account.account" name="account_id" search="[('name','=','Merchandise Type B')]"/>-->
         </record>
         <record id="stock_location_15" model="stock.location">
             <field name="name">Sub Products</field>
@@ -225,7 +224,6 @@
         </record>
         <record id="stock_location_shop0" model="stock.location">
             <field model="res.partner.address" name="address_id" search="[('name','=','Fabien')]"/>
-            <field eval="&quot;&quot;&quot;fifo&quot;&quot;&quot;" name="allocation_method"/>
             <field name="location_id" ref="stock.stock_location_company"/>
             <field name="company_id" ref="res_company_shop0"/>
             <field eval="&quot;&quot;&quot;internal&quot;&quot;&quot;" name="usage"/>
@@ -242,30 +240,7 @@
             <field eval="1" name="active"/>
             <field eval="&quot;&quot;&quot;Shop 2&quot;&quot;&quot;" name="name"/>
         </record>
-        <!--<record id="res_users_shopuser0" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name','=','Menu')]"/>
-            <field eval="[(6,0,[ref('base.group_user'),ref('stock.group_stock_user')])]" name="groups_id"/>
-            <field model="res.partner.address" name="address_id" search="[('name','=','Fabien')]"/>
-            <field eval="[(6,0,[])]" name="roles_id"/>
-            <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;shop1&quot;&quot;&quot;" name="password"/>
-            <field eval="&quot;&quot;&quot;en_US&quot;&quot;&quot;" name="context_lang"/>
-            <field eval="&quot;&quot;&quot;Shop 1 User&quot;&quot;&quot;" name="name"/>
-            <field name="company_id" ref="res_company_shop0"/>
-            <field eval="&quot;&quot;&quot;shop1&quot;&quot;&quot;" name="login"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name','=','Menu')]"/>
-        </record>
-        <record id="res_users_shopuser1" model="res.users">
-            <field model="ir.actions.actions" name="menu_id" search="[('name','=','Menu')]"/>
-            <field eval="[(6,0,[ref('base.group_user'),ref('stock.group_stock_user')])]" name="groups_id"/>
-            <field model="res.partner.address" name="address_id" search="[('name','=','Eric')]"/>
-            <field eval="&quot;&quot;&quot;shop2&quot;&quot;&quot;" name="password"/>
-            <field eval="&quot;&quot;&quot;Shop 2 User&quot;&quot;&quot;" name="name"/>
-            <field name="company_id" ref="res_company_tinyshop0"/>
-            <field eval="&quot;&quot;&quot;shop2&quot;&quot;&quot;" name="login"/>
-            <field model="ir.actions.actions" name="action_id" search="[('name','=','Menu')]"/>
-        </record>
-        --><record id="stock_location_intermediatelocation0" model="stock.location">
+        <record id="stock_location_intermediatelocation0" model="stock.location">
             <field name="address_id" ref="base.main_address"/>
             <field name="location_id" ref="stock.stock_location_company"/>
             <field eval="&quot;&quot;&quot;procurement&quot;&quot;&quot;" name="usage"/>
@@ -288,12 +263,12 @@
             <field name="company_id" ref="res_company_tinyshop0"/>
             <field name="lot_input_id" ref="stock_location_shop1"/>
         </record>
- 		
+
  		<record forcecreate="True" id="property_stock_variation" model="ir.property">
             <field name="name">property_stock_variation</field>
             <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_variation')]"/>
 			<field eval="'account.account,'+str(ref('account.a_recv'))" model="account.account" name="value"/>
- 			<field name="company_id" ref="base.main_company"/>            
+ 			<field name="company_id" ref="base.main_company"/>
         </record>
 
     </data>

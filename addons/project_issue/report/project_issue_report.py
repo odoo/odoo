@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,7 +35,7 @@ class project_issue_report(osv.osv):
     _name = "project.issue.report"
     _auto = False
 
-    def _get_data(self, cr, uid, ids, field_name, arg, context=None):
+    def _get_data(self, cr, uid, ids, field_names, arg, context=None):
         if context is None:
             context = {}
         """ @param cr: the current row, from the database cursor,
@@ -46,40 +46,24 @@ class project_issue_report(osv.osv):
         res = {}
         avg_ans = 0.0
 
-        for case in self.browse(cr, uid, ids, context):
-            if field_name != 'avg_answers':
-                state = field_name[5:]
-                cr.execute("select count(*) from crm_lead where \
-                    section_id =%s and state='%s'"%(case.section_id.id, state))
-                state_cases = cr.fetchone()[0]
-                perc_state = (state_cases / float(case.nbr)) * 100
-
-                res[case.id] = perc_state
-            else:
-                model_name = self._name.split('report.')
-                if len(model_name) < 2:
-                    res[case.id] = 0.0
-                else:
-                    model_name = model_name[1]
-
-                    cr.execute("select count(*) from crm_case_log l, ir_model m \
-                         where l.model_id=m.id and m.model = '%s'" , model_name)
-                    logs = cr.fetchone()[0]
-
-                    avg_ans = logs / case.nbr
-                    res[case.id] = avg_ans
+        for report in self.browse(cr, uid, ids, context):
+            res[report.id]= {
+                'avg_answers': 0.0,
+                'perc_done' : 0.0,
+                'perc_cancel': 0.0
+            }
+            #TODO: Calculate
 
         return res
 
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'user_id2':fields.many2one('res.users', 'Assignee', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
-        'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
-        'perc_cancel': fields.function(_get_data, string='%Cancel', method=True, type="float"),
+        'avg_answers': fields.function(_get_data, group_operator='avg', string='Avg. Answers', multi='avg_answers', method=True, type="integer"),
+        'perc_done': fields.function(_get_data, group_operator='avg', string='%Done', multi='perc_done', method=True, type="float"),
+        'perc_cancel': fields.function(_get_data, group_operator='avg', string='%Cancel', multi='perc_cancel', method=True, type="float"),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -104,7 +88,6 @@ class project_issue_report(osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Version', domain="[('object_id.model', '=', 'project.issue')]"),
-    #    'user_id2losed': fields.date('Close Date', readonly=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),

@@ -13,7 +13,8 @@
         groups="base.group_extended"
         />
 
-    <act_window
+    <!-- TO CONFIRM: This is fine -->
+    <!-- act_window
             id="act_crm_phonecall_crm_meeting_new"
             name="Meetings"
             res_model="crm.meeting"
@@ -21,7 +22,7 @@
             view_mode="tree,form,calendar,"
             context="{'default_duration': 4.0, 'default_phonecall_id': active_id}"
             domain="[('phonecall_id', '=', active_id)]"
-            view_type="form"/>
+            view_type="form"/-->
 
 <!-- PHONE CALLS (menu)  -->
 
@@ -57,7 +58,7 @@
     </record>
 
     <menuitem name="Phone Calls" id="menu_crm_case_phone"
-        groups="base.group_extended,base.group_system"
+        groups="base.group_extended"
         parent="base.menu_base_partner" sequence="4" />
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0">

@@ -27,7 +27,7 @@ class account_open_closed_fiscalyear(osv.osv_memory):
     _columns = {
        'fyear_id': fields.many2one('account.fiscalyear', \
                                  'Fiscal Year to Open', required=True, help='Select Fiscal Year which you want to remove entries for its End of year entries journal'),
-              }
+    }
 
     def remove_entries(self, cr, uid, ids, context={}):
         data = self.read(cr, uid, ids, [])[0]

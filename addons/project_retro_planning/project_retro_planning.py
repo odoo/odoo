@@ -33,7 +33,12 @@ class project_project(osv.osv):
         if vals.get('date', False):
             data_project = self.browse(cr, uid, ids)
             for prj in data_project:
-                new_end_date = date(*time.strptime(vals['date'],'%Y-%m-%d')[:3])
+                if isinstance(vals['date'], datetime):
+                    new_end_date = vals['date'].date()
+                elif isinstance(vals['date'], date):
+                    new_end_date = vals['date']
+                else:
+                    new_end_date = date(*time.strptime(vals['date'],'%Y-%m-%d')[:3])
                 if prj.date:
                     old_end_date = date(*time.strptime(prj.date,'%Y-%m-%d')[:3])
                     for task in prj.tasks:

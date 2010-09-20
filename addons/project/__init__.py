@@ -22,7 +22,6 @@
 import project
 import company
 import installer
-import project_mailgate
 import report
 import wizard
 import res_partner

@@ -260,10 +260,8 @@
             res_model="stock.warehouse.orderpoint"
             src_model="procurement.order"/>
 
-		<menuitem id="base.menu_mrp_scheduler" name="Schedulers" parent="stock.menu_stock_root" groups="base.group_system" sequence="10"/>
+		<menuitem id="base.menu_mrp_scheduler" name="Schedulers" parent="stock.menu_stock_root" groups="base.group_system" sequence="3"/>
 		<menuitem action="action_compute_schedulers" id="base.mrp_Sched_all" parent="base.menu_mrp_scheduler" sequence="50" groups="base.group_system"/>
 		<menuitem action="procurement.procurement_action" id="base.menu_mrp_procurement_action" parent="stock.menu_stock_warehouse_mgmt" sequence="9" groups="base.group_system"/>		
-		
-
     </data>
 </openerp>

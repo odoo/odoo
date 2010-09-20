@@ -75,7 +75,7 @@ class account_analytic_balance(report_sxw.rml_parse):
                     sum(aal.amount) AS balance, sum(aal.unit_amount) AS quantity \
                 FROM account_analytic_line AS aal, account_account AS aa \
                 WHERE (aal.general_account_id=aa.id) \
-                    AND (aal.account_id IN aal.account_id IN %s)\
+                    AND (aal.account_id IN %s)\
                     AND (date>=%s) AND (date<=%s) AND aa.active \
                 GROUP BY aal.general_account_id, aa.name, aa.code, aal.code \
                 ORDER BY aal.code", (tuple(ids), date1, date2))
@@ -101,7 +101,7 @@ class account_analytic_balance(report_sxw.rml_parse):
             self.acc_data_dict[account_id] = ids
         else:
             ids = self.acc_data_dict[account_id]
-            
+
         query_params = (tuple(ids), date1, date2)
         if option == "credit" :
             self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
@@ -154,7 +154,7 @@ class account_analytic_balance(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.account.analytic.account.balance',
         'account.analytic.account', 'addons/account/project/report/analytic_balance.rml',
-        parser=account_analytic_balance, header=False)
+        parser=account_analytic_balance, header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

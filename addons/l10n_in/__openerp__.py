@@ -20,24 +20,23 @@
 ##############################################################################
 
 {
-    "name" : "Indian Chart of Account",
-    "version" : "1.0",
-    "description":"""
+    "name": "Indian Chart of Account",
+    "version": "1.0",
+    "description": """
     Indian Accounting : chart of Account
     """,
-    "author" : 'OpenERP SA & Axelor',
+    "author": 'OpenERP SA & Axelor',
     "category": "Localisation/Account Charts",
-    "depends" : [
+    "depends": [
         "account",
         "account_chart"
     ],
-    "demo_xml" : [],
-    "update_xml" : [
-        "account_chart.xml",
-        "account_wizard.xml",
+    "demo_xml": [],
+    "update_xml": [
+        "l10n_in_chart.xml",
+        "l10n_in_wizard.xml",
     ],
     "active": False,
     "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

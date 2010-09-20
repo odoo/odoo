@@ -30,7 +30,7 @@ class account_period_close(osv.osv_memory):
     _description = "period close"
     _columns = {
         'sure': fields.boolean('Check this box'),
-              }
+    }
 
     def data_save(self, cr, uid, ids, context=None):
         """

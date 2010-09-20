@@ -55,7 +55,6 @@
             <field name="name">refused</field>
             <field name="kind">function</field>
             <field name="action">expense_canceled()</field>
-<!--            <field name="flow_stop">True</field>-->
         </record>
 
         <record id="act_invoice" model="workflow.activity">
@@ -78,13 +77,6 @@
             <field name="signal">validate</field>
             <field name="role_id" ref="HR"/>
         </record>
-
-        <!--record model="workflow.transition" id="t3">
-			<field name="act_from" ref="act_accepted" />
-			<field name="act_to" ref="act_paid" />
-			<field name="signal">paid</field>
-			<field name="role_id" ref="HR"/>
-		</record-->
 
         <record id="t4" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>

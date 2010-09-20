@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 import netsvc
@@ -54,7 +55,7 @@ class account_automatic_reconcile(osv.osv_memory):
         'date2': time.strftime('%Y-%m-%d'),
         'reconciled': _get_reconciled,
         'unreconciled': _get_unreconciled,
-        'power':2
+        'power': 2
     }
 
     #TODO: cleanup and comment this code... For now, it is awfulllll
@@ -143,20 +144,21 @@ class account_automatic_reconcile(osv.osv_memory):
         form = self.read(cr, uid, ids, [])[0]
         max_amount = form.get('max_amount', 0.0)
         power = form['power']
+        allow_write_off = form['allow_write_off']
         reconciled = unreconciled = 0
         if not form['account_ids']:
             raise osv.except_osv(_('UserError'), _('You must select accounts to reconcile'))
         for account_id in form['account_ids']:
-            if not context.get('allow_write_off', False):
+            if not allow_write_off:
                 query = "SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
                 AND state <> 'draft' GROUP BY partner_id \
-                HAVING ABS(SUM(debit-credit)) <> %s AND count(*)>0"%(account_id, 0.0)
-#                query="SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
-#                AND state <> 'draft' GROUP BY partner_id AND debit = credi"%(account_id)
+                HAVING ABS(SUM(debit-credit)) = %s AND count(*)>0"%(account_id, 0.0)
+#                HAVING ABS(SUM(debit-credit)) <> %s AND count(*)>0"%(account_id, 0.0)
+#                HAVING count(*)>0"%(account_id,)
             else:
                 query = "SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
                 AND state <> 'draft' GROUP BY partner_id \
-                HAVING ABS(SUM(debit-credit)) <= %s AND count(*)>0"%(account_id, max_amount or 0.0)
+                HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0"%(account_id, max_amount or 0.0)
             # reconcile automatically all transactions from partners whose balance is 0
             cr.execute(query)
             partner_ids = [id for (id,) in cr.fetchall()]
@@ -172,10 +174,12 @@ class account_automatic_reconcile(osv.osv_memory):
                 line_ids = [id for (id,) in cr.fetchall()]
                 if len(line_ids):
                     reconciled += len(line_ids)
-                    if not context.get('allow_write_off', False):
-                        move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context={})
-                    else:
+                    if allow_write_off:
                         move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
+#                        move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context={})
+                    else:
+                        move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context={})
+#                        move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
 
                         # get the list of partners who have more than one unreconciled transaction
                         cr.execute(
@@ -242,7 +246,6 @@ class account_automatic_reconcile(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': context,
-            'nodestroy':True,
         }
 
 account_automatic_reconcile()

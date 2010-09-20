@@ -39,8 +39,6 @@ class analytic_account_budget_report(report_sxw.rml_parse):
 
         if not ids:
             ids = self.ids
-#        if not ids:
-#            return []
         if not done:
             done={}
 
@@ -68,7 +66,6 @@ class analytic_account_budget_report(report_sxw.rml_parse):
             d_from=form['date_from']
             d_to=form['date_to']
 
-#            bd_ids = ','.join([str(x) for x in budget_lines])
             self.cr.execute('select distinct(crossovered_budget_id) from crossovered_budget_lines where id =ANY(%s)',(b_line_ids,))
             budget_ids=self.cr.fetchall()
 
@@ -183,6 +180,6 @@ class analytic_account_budget_report(report_sxw.rml_parse):
 
         return result
 
-report_sxw.report_sxw('report.account.analytic.account.budget', 'account.analytic.account', 'addons/account_budget/report/analytic_account_budget_report.rml',parser=analytic_account_budget_report,header=False)
+report_sxw.report_sxw('report.account.analytic.account.budget', 'account.analytic.account', 'addons/account_budget/report/analytic_account_budget_report.rml',parser=analytic_account_budget_report,header='internal')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

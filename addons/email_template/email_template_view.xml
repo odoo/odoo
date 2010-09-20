@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <!-- Email Template PReview -->
+    
+        <!-- Email Template Preview -->
         <record model="ir.ui.view" id="email_template_preview_form">
             <field name="name">email_template.preview.form</field>
             <field name="model">email_template.preview</field>
@@ -16,7 +17,9 @@
                         <field name="to" />
                         <field name="cc" />
                         <field name="bcc" />
-                        <field name="subject" />
+                        <field name="reply_to" />
+                        <field name="message_id" attrs="{'invisible':[('message_id','=',False)]}" groups="base.group_extended"/>
+                        <field name="subject" colspan="8"/>
                     </group>
                     <group col="4" colspan="4">
                         <separator string= "Body(Text)" colspan="2"/>   
@@ -58,31 +61,33 @@
                         <page string="Mail Details">
                             <group col="2" colspan="2">
                                 <separator string="Addresses" colspan="2"/>
-                                <field name="from_email"/>
+                                <field name="from_account" required="1"/>
                                 <field name="def_to" required="1"/>
                                 <field name="def_cc"/>
                                 <field name="def_bcc"/>
+                                <field name="reply_to"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator string="Email Data" colspan="2"/>
-                                <field name="enforce_from_account" required= "1"/>
-                                <field name="def_subject" colspan="4" required="1" />
-                                <field name="use_sign" colspan="4" />
+                                <separator string="Options" colspan="2"/>
                                 <field name="lang" colspan="4" />
+                                <field name="use_sign" colspan="4" />
+                                <field name="track_campaign_item" colspan="4"/>
                             </group>
-                            <separator colspan="3" string="Standard Body" />
-                            <separator colspan="1" string="Expression Builder" />
-
-                            <notebook>
-                                <page string="Body (Text)">
-                                    <field name="def_body_text" colspan="4" nolabel="1" />
-                                </page>
-                                <page string="Body (Raw HTML)">
-                                    <field name="def_body_html" colspan="4" nolabel="1" />
-                                    <label string="Note: This is Raw HTML." colspan="4" />
-                                </page>
-                            </notebook>
-                            <group col="4">
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Email Content  " />
+                                <field name="def_subject" colspan="4" required="1" />
+                                <notebook>
+                                    <page string="Body (Text)">
+                                        <field name="def_body_text" colspan="4" nolabel="1" />
+                                    </page>
+                                    <page string="Body (Raw HTML)">
+                                        <field name="def_body_html" colspan="4" nolabel="1" />
+                                        <label string="Note: This is Raw HTML." colspan="4" />
+                                    </page>
+                                </notebook>
+                            </group>
+                            <group col="4" colspan="2">
+                                <separator colspan="4" string="Expression Builder" />
                                 <field name="template_language"
                                     on_change="onchange_null_value(model_object_field,sub_model_object_field,null_value,template_language,context)" />
                                 <notebook>
@@ -104,22 +109,35 @@
                                     </page>
                                 </notebook>
                                 <button name="%(wizard_email_template_preview)d" string="Preview Template"
-                                    type="action" colspan="4" target="new" />
+                                    type="action" colspan="4" target="new" icon="gtk-zoom-fit"/>
                             </group>
                         </page>
                         <page string="Advanced">
                             <group colspan="2" col="2">
-                                <separator string="Actions" colspan="2"/>
-                                <button name="create_action" string="Create Action" type="object" colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
-                                <field name="ref_ir_act_window"/>
-                                <field name="ref_ir_value"/>
-                                <button name="delete_action" string="Delete Action" type="object" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
+                                <group colspan="2" col="2">
+                                    <separator string="Actions" colspan="2"/>
+                                    <button name="create_action" string="Create Action" type="object" icon="gtk-execute"  colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
+                                    <field name="ref_ir_act_window"/>
+                                    <field name="ref_ir_value"/>
+                                    <button name="delete_action" string="Delete Action" type="object" icon="gtk-delete" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator string="Advanced Options" colspan="2"/>
+                                    <field name="message_id"/>
+                                </group>
                             </group>
                             <group colspan="2" col="2">
-                                <separator string="Attachments (Report to attach)" colspan="4"/>
-                                <field name="file_name" colspan="2" />
-                                <field name="report_template" colspan="2"
-                                    domain="[('model','=',model_int_name)]" />
+                                <separator string="Attachments" colspan="2"/>
+                                <notebook>
+                                    <page string="Existing files">
+                                        <field name="attachment_ids" colspan="4" nolabel="1" height="350"/>
+                                    </page>
+                                    <page string="Report">
+                                        <field name="report_template" colspan="4"
+                                            domain="[('model','=',model_int_name)]" />
+                                        <field name="file_name" colspan="4" />
+                                    </page>
+                                </notebook>
                             </group>
                         </page>
                     </notebook>
@@ -133,15 +151,17 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Email Templates">
-                    <field name="name" select="1" />
-                    <field name="object_name" required="1" select="1" />
-                    <field name="def_to" colspan="4" select="2" />
-                    <field name="def_cc" colspan="4" select="2" />
-                    <field name="def_bcc" colspan="4" select="2" />
-                    <field name="def_subject" colspan="4" select="2" />
-                    <field name="use_sign" colspan="4" select="2" />
-                    <field name="file_name" colspan="4" />
-                    <field name="enforce_from_account" />
+                    <field name="name"/>
+                    <field name="from_account"/>
+                    <field name="object_name"/>
+                    <field name="def_to"/>
+                    <field name="def_cc"/>
+                    <field name="def_bcc"/>
+                    <field name="def_subject"/>
+                    <field name="use_sign"/>
+                    <field name="file_name"/>
+                    <button name="%(wizard_email_template_preview)d" string="Preview Template"
+                            type="action" target="new" icon="gtk-zoom-fit"/>
                 </tree>
             </field>
         </record>
@@ -152,14 +172,21 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Templates">
-                    <separator orientation="vertical"/>
-                    <field name="name" select="1"/>
-                    <field name="object_name" select="1"/>
-                    <field name="def_to" select="1"/>
-                    <separator orientation="vertical"/>
-                    <field name="lang" select="1"/>
-                    <field name="def_subject" select="1"/>
-                    <field name="file_name" select="1"/>
+                    <group col="13" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="object_name" select="1"/>
+                        <field name="def_to" select="1"/>
+                        <separator orientation="vertical"/>
+                        <field name="lang" select="1"/>
+                        <field name="def_subject" select="1"/>
+                        <field name="file_name" select="1"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group by..." colspan="4" col="10">
+                        <filter string="Account" domain="[]" context="{'group_by':'from_account'}" icon="terp-personal"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Resource" domain="[]" context="{'group_by':'object_name'}" icon="terp-accessories-archiver"/>
+                    </group>
                </search>
            </field>
         </record>
@@ -173,9 +200,12 @@
             <field name="search_view_id" ref="view_email_template_search"/>
         </record>
 
-        <menuitem name="E-MAIL Templates" id="menu_email_template_all"
+        <menuitem name="Email Templates" id="menu_email_template_all"
             parent="menu_email_template_configuration" action="action_email_template_tree_all" />
 
+        <!-- Email Template menu in Tools -->
+        <menuitem name="Email Templates" id="menu_email_template_all_tools"
+            parent="menu_email_template_config_tools" action="action_email_template_tree_all" />
     </data>
 </openerp>
 

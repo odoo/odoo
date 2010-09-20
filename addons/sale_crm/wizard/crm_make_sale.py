@@ -98,7 +98,7 @@ class crm_make_sale(osv.osv_memory):
                     partner_id = case.partner_id.id
                     fpos = case.partner_id.property_account_position and case.partner_id.property_account_position.id or False
                     partner_addr = partner_obj.address_get(cr, uid, [case.partner_id.id],
-                            ['invoice', 'delivery', 'contact'])
+                            ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner_obj.browse(cr, uid, case.partner_id.id,
                             context).property_product_pricelist.id
                 else:
@@ -147,7 +147,9 @@ class crm_make_sale(osv.osv_memory):
                     value['discount']=line.discount
                     value['notes']=line.notes
                     sale_line_obj.create(cr, uid, value)
-                case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
+                stage_data = mod_obj._get_id(cr, uid, 'crm', 'stage_lead3')
+                stage_data = mod_obj.read(cr, uid, stage_data, ['res_id'])
+                case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id, 'stage_id': stage_data['res_id']})
                 new_ids.append(new_id)
                 message = _('Opportunity ') + " '" + case.name + "' "+ _("is converted to Sales Quotation.")
                 self.log(cr, uid, case.id, message)
@@ -176,7 +178,7 @@ class crm_make_sale(osv.osv_memory):
                     'view_id': False,
                     'type': 'ir.actions.act_window',
                     'res_id': new_ids
-                    }
+                }
             return value
 
     def _get_shop_id(self, cr, uid, ids, context=None):
@@ -196,7 +198,6 @@ class crm_make_sale(osv.osv_memory):
     _defaults = {
          'shop_id': _get_shop_id,
          'partner_id': _selectPartner,
-         'close': 1
     }
 crm_make_sale()
 
@@ -243,4 +244,4 @@ class sale_order_make_line(osv.osv_memory):
 
 sale_order_make_line()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:>>>>>>> MERGE-SOURCE
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

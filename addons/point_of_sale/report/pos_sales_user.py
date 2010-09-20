@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import time
@@ -28,10 +28,10 @@ class pos_sales_user(report_sxw.rml_parse):
         super(pos_sales_user, self).__init__(cr, uid, name, context)
         self.total = 0.0
         self.localcontext.update({
-                'time': time,
-                'get_data':self._get_data,
+            'time': time,
+            'get_data':self._get_data,
 
-                })
+        })
 
     def _get_data(self,form):
         dt1 = form['date_start'] + ' 00:00:00'
@@ -46,7 +46,7 @@ class pos_sales_user(report_sxw.rml_parse):
         data = self.cr.dictfetchall()
         return data
 
-report_sxw.report_sxw('report.pos.sales.user', 'pos.order', 'addons/point_of_sale/report/pos_sales_user.rml', parser=pos_sales_user)
+report_sxw.report_sxw('report.pos.sales.user', 'pos.order', 'addons/point_of_sale/report/pos_sales_user.rml', parser=pos_sales_user,header='internal')
 
 
 

@@ -49,7 +49,6 @@
             </field>
         </record>
 
-
         <record model="ir.ui.view" id="report_stock_lines_date_form">
             <field name="name">report.stock.lines.date.form</field>
             <field name="model">report.stock.lines.date</field>
@@ -63,7 +62,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_line_date">
-            <field name="name">Dates of Latest Inventories by Product</field>
+            <field name="name">Last Product Inventories</field>
             <field name="res_model">report.stock.lines.date</field>
             <field name="view_type">form</field>
              <field name="context">{'search_default_stockable':1}</field>
@@ -84,29 +83,6 @@
                 </graph>
             </field>
         </record>
-
-        <record id="view_location_tree_3" model="ir.ui.view">
-            <field name="name">stock.location.tree</field>
-            <field name="model">stock.location</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal';black:usage not in ('view','internal')">
-                    <field name="complete_name"/>
-                    <field name="usage"/>
-                    <field name="stock_real_value" />
-                    <field name="stock_virtual_value" />
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_location_tree_3" model="ir.actions.act_window">
-            <field name="name">Inventory Valuation</field>
-            <field name="res_model">stock.location</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="view_id" ref="view_location_tree_3"/>
-        </record>
-        <menuitem action="action_location_tree_3" id="menu_action_location_tree_3" parent="next_id_61" sequence="1"/>
 
     </data>
 </openerp>

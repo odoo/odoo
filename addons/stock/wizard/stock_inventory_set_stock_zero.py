@@ -25,31 +25,31 @@ from tools.translate import _
 class inventory_set_stock_zero(osv.osv_memory):
     _name = "stock.inventory.set.stock.zero"
     _description = "Set Stock to 0"
-    
+
     _columns = {
-            'location_id': fields.many2one('stock.location', 'Location', required=True), 
+        'location_id': fields.many2one('stock.location', 'Location', required=True),
     }
-    
+
     def do_merge(self, cr, uid, ids, context):
-        """ To set stock to Zero 
+        """ To set stock to Zero
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param ids: the ID or list of IDs if we want more than one 
-        @param context: A standard dictionary 
-        @return:  
-        """            
+        @param ids: the ID or list of IDs if we want more than one
+        @param context: A standard dictionary
+        @return:
+        """
         invent_obj = self.pool.get('stock.inventory')
         invent_line_obj = self.pool.get('stock.inventory.line')
         prod_obj =  self.pool.get('product.product')
-    
+
         if len(context['active_ids']) <> 1:
-            raise osv.except_osv(_('Warning'), 
+            raise osv.except_osv(_('Warning'),
                                        _('Please select one and only one inventory !'))
         for id in ids:
             datas = self.read(cr, uid, id)
             loc = str(datas['location_id'])
-        
+
             cr.execute('select distinct location_id,product_id \
                         from stock_inventory_line \
                         where inventory_id=%s', (context['active_id'],))
@@ -61,11 +61,11 @@ class inventory_set_stock_zero(osv.osv_memory):
                 if (loc, s[0]) not in inv:
                     p = prod_obj.browse(cr, uid, s[0])
                     invent_line_obj.create(cr, uid, {
-                        'inventory_id': context['active_id'], 
-                        'location_id': loc, 
-                        'product_id': s[0], 
-                        'product_uom': p.uom_id.id, 
-                        'product_qty': 0.0, 
+                        'inventory_id': context['active_id'],
+                        'location_id': loc,
+                        'product_id': s[0],
+                        'product_uom': p.uom_id.id,
+                        'product_qty': 0.0,
                         })
         return {}
 

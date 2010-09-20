@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Attendance Errors" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -95,7 +95,7 @@
     <blockTable colWidths="78.0,118.0,151.0,98.0,75.0" style="Table_employee_detail_header">
       <tr>
         <td>
-          <para style="terp_tblheader_Details_Centre">Operation</para>
+          <para style="terp_tblheader_Details">Operation</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Date Signed</para>
@@ -118,13 +118,13 @@
           <blockTable colWidths="62.0,123.0,154.0,100.0,75.0" style="Table_employee_detail_content">
             <tr>
               <td>
-                <para style="terp_default_Centre_9">[[ att['action']  ]]</para>
+                <para style="terp_default_9">[[ att['action']  ]]</para>
               </td>
               <td>
-                <para style="terp_default_Centre_9">[[  att['date']  ]]</para>
+                <para style="terp_default_Centre_9">[[  formatLang(att['date'],date_time=True)  ]]</para>
               </td>
               <td>
-                <para style="terp_default_Centre_9">[[ att['create_date'] ]]</para>
+                <para style="terp_default_Centre_9">[[ formatLang(att['create_date'],date_time=True) ]]</para>
               </td>
               <td>
                 <para style="terp_default_Centre_9">[[ att['delay']  ]]</para>

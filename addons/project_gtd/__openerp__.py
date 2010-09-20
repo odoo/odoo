@@ -49,8 +49,8 @@ performing those tasks.
     ],
     'demo_xml': ['project_gtd_demo.xml'],
     'test':[
-            'test/gtd_test.yml'
-            ],
+        'test/gtd_test.yml'
+    ],
     'installable': True,
     'active': False,
     'certificate': '0043525236301',

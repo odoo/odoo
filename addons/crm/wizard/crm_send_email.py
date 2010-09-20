@@ -28,6 +28,10 @@ import itertools
 import tools
 import re
 
+
+AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
+
+
 class crm_send_new_email_attachment(osv.osv_memory):
     _name = 'crm.send.mail.attachment'
 
@@ -51,7 +55,7 @@ class crm_send_new_email(osv.osv_memory):
         'email_cc' : fields.char('CC', size=512, help="These addresses will receive a copy of this email. To modify the permanent CC list, edit the global CC field of this case"),
         'subject': fields.char('Subject', size=512, required=True),
         'body': fields.text('Message Body', required=True),
-        'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
+        'state': fields.selection(AVAILABLE_STATES, string='Set New State To', required=True),
         'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
     }
 
@@ -104,7 +108,7 @@ class crm_send_new_email(osv.osv_memory):
                 res_id = hist.res_id
                 ref_id = hist.ref_id
                 case = case_pool.browse(cr, uid, res_id, context=context)
-            emails = [obj.email_to]
+            emails = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_to or '')
             email_cc = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_cc or '')
             emails = filter(None, emails)
             body = obj.body
@@ -238,7 +242,7 @@ class crm_send_new_email(osv.osv_memory):
                  res.update({'email_cc': email_cc})
             if 'reply_to' in fields:
                 if hasattr(case, 'section_id'):
-                    res.update({'reply_to': case.section_id.reply_to})
+                    res.update({'reply_to': case.section_id.reply_to or ''})
             if 'state' in fields:
                 res['state'] = u'pending'
         return res

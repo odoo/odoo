@@ -17,15 +17,13 @@
                             <field name="sequence"/>
                             <field name="type" select="1"/>
                             <newline/>
-                           <!-- <field name="style"/>
-                            <field name="color_font"/>
-                            <field name="color_back"/>-->
+                            <!-- <field name="color_font"/> #TOCHECK: why need it ?
+                            <field name="color_back"/> -->
                             <field name="badness_limit"/>
                             <field name="goodness_limit"/>
                             <field colspan="4" name="expression"/>
                             <field name="disp_tree"/>
                             <field name="disp_graph"/>
-                           <!-- <field colspan="4" name="expression_status"/>-->
                             <separator colspan="4" string="Legend of operators"/>
                             <label align="1.0" string="Account Debit:"/>
                             <label align="0.0" string="debit(['ACCOUNT_CODE',],fiscalyear)"/>
@@ -50,8 +48,6 @@
                                 <label align="1.0" string="= Badness Indicator Limit:"/>
                                 <label align="0.0" string="Bad"/>
                                 <newline/>
-                                <!--<label align="1.0" string="0:"/>
-                                <label align="0.0" string="Normal"/>-->
                                 <label align="1.0" string="= Goodness Indicator Limit:"/>
                                 <label align="0.0" string="Good"/>
                                 <newline/>

@@ -111,7 +111,6 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         uri=urlparse.urljoin(self.get_baseuri(dc), self.path)
         uri=urllib.unquote(uri)
         try:
-            #location = dc.put(uri,body,ct)
             ret = dc.prep_http_options(uri, opts)
         except DAV_Error, (ec,dd):
             pass

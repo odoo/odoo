@@ -26,8 +26,8 @@
             <field name="res_model">account.statement.from.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-               <field name="view_id" ref="view_account_statement_from_invoice"/>
-               <field name="target">new</field>
+            <field name="view_id" ref="view_account_statement_from_invoice"/>
+            <field name="target">new</field>
         </record>
 
         <record id="view_account_statement_from_invoice_lines" model="ir.ui.view">
@@ -41,7 +41,7 @@
                         <field height="300" width="700" name="line_ids" colspan="4" nolabel="1" domain="[('account_id.type','in',['receivable','payable']), ('reconcile_id','=',False), ('reconcile_partial_id','=',False)]"/>
                     </group>
                     <group colspan="4" col="6">
-                           <label string ="" colspan="2"/>
+                        <label string ="" colspan="2"/>
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-execute" string="Ok" name="populate_statement" type="object"/>
                    </group>
@@ -54,9 +54,9 @@
             <field name="res_model">account.statement.from.invoice.lines</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-               <field name="view_id" ref="view_account_statement_from_invoice_lines"/>
-               <field name="target">new</field>
-               <field name="context">{'statement_id': active_id}</field>
+            <field name="view_id" ref="view_account_statement_from_invoice_lines"/>
+            <field name="target">new</field>
+            <field name="context">{'statement_id': active_id}</field>
         </record>
     </data>
 </openerp>

@@ -29,7 +29,7 @@ class project_issue(osv.osv):
         'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
         'analytic_account_id': fields.related('project_id', 'analytic_account_id', type='many2one', relation='account.analytic.account',string='Analytic Account')
     }
-    
+
 project_issue()
 
 class account_analytic_line(osv.osv):
@@ -37,7 +37,7 @@ class account_analytic_line(osv.osv):
     _description = 'account analytic line'
     _columns = {
         'create_date' : fields.datetime('Create Date', readonly=True),
-                }
+    }
 
 account_analytic_line()
 

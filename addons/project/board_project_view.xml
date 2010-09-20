@@ -78,26 +78,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','Project')]</field>
         </record>
-
-        <!--Actions for deshboard -->
-
-        <record id="action_view_project_editable_messages_tree" model="ir.actions.act_window">
-            <field name="name">Messages</field>
-            <field name="res_model">project.message</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="project.view_project_message_tree"/>
-       </record>
-
-<!--        <record id="action_view_project_member_tree" model="ir.actions.act_window">
-            <field name="name">Project's Members</field>
-            <field name="res_model">resource.resource</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('resource_type','=','user')]</field>
-            <field name="view_id" ref="resource.resource_resource_tree"/>
-        </record>-->
-
         <record id="board_project_form" model="ir.ui.view">
             <field name="name">board.project.form</field>
             <field name="model">board.board</field>

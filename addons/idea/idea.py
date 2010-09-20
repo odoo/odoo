@@ -52,8 +52,7 @@ idea_category()
 class idea_idea(osv.osv):
     """ Idea """
     _name = 'idea.idea'
-    _rec_name = 'title'
-    _log_create=True
+    _rec_name = 'name'
 
     def _vote_avg_compute(self, cr, uid, ids, name, arg, context = None):
 
@@ -155,10 +154,11 @@ class idea_idea(osv.osv):
 
     _columns = {
         'user_id': fields.many2one('res.users', 'Creator', required=True, readonly=True),
-        'title': fields.char('Idea Summary', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Idea Summary', size=64, required=True, readonly=True, oldname='title', states={'draft':[('readonly',False)]}),
         'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft':[('readonly',False)]}),
         'comment_ids': fields.one2many('idea.comment', 'idea_id', 'Comments'),
         'created_date': fields.datetime('Creation date', readonly=True),
+        'open_date': fields.datetime('Open date', readonly=True, help="Date when an idea opened"),
         'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote'),
         'my_vote': fields.function(_vote_read, fnct_inv = _vote_save, string="My Vote", method=True, type="selection", selection=VoteValues),
         'vote_avg': fields.function(_vote_avg_compute, method=True, string="Average Score", type="float"),
@@ -168,7 +168,7 @@ class idea_idea(osv.osv):
         'state': fields.selection([('draft', 'Draft'),
             ('open', 'Opened'),
             ('close', 'Accepted'),
-            ('cancel', 'Cancelled')],
+            ('cancel', 'Refused')],
             'State', readonly=True,
             help='When the Idea is created the state is \'Draft\'.\n It is \
             opened by the user, the state is \'Opened\'.\
@@ -262,7 +262,7 @@ class idea_idea(osv.osv):
         return True
 
     def idea_open(self, cr, uid, ids):
-        self.write(cr, uid, ids, { 'state': 'open' })
+        self.write(cr, uid, ids, { 'state': 'open' ,'open_date': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def idea_close(self, cr, uid, ids):

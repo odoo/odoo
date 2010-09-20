@@ -63,11 +63,11 @@ class stock_inventory_merge(osv.osv_memory):
 
         for key, quantity in invent_lines.items():
             invent_line_obj.create(cr, uid, {
-                'inventory_id': new_invent,
-                'location_id': key[0],
-                'product_id': key[1],
-                'product_uom': key[2],
-                'product_qty': quantity,
+                    'inventory_id': new_invent,
+                    'location_id': key[0],
+                    'product_id': key[1],
+                    'product_uom': key[2],
+                    'product_qty': quantity,
                 })
 
         return {}

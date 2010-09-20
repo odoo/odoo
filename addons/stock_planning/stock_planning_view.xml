@@ -247,7 +247,6 @@
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom, product_id, active_uom, planned_outgoing, to_procure)"/>
-<!--                            <field name="state"/>    -->
                             <separator colspan ="2" string = "Forecasts"/>
                             <field name="warehouse_forecast"/>
                             <field name="company_forecast"/>
@@ -307,7 +306,7 @@
                         <filter string="Warehouse " icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                        <separator orientation="vertical"/>
-                    </group>                 
+                    </group>
               </search>
             </field>
         </record>

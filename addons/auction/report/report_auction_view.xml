@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
    <data>
-    
+
     <record model="ir.ui.view" id="view_report_auction_tree">
         <field name="name">Auction's Summary</field>
         <field name="model">report.auction</field>
@@ -29,7 +29,7 @@
             </tree>
         </field>
     </record>
-    
+
     <record id="view_report_auction_search" model="ir.ui.view">
         <field name="name">report.auction.search</field>
         <field name="model">report.auction</field>
@@ -55,7 +55,7 @@
                         domain="[('state','=','draft')]"/>
                     <filter icon="terp-dolar"
                         string="Sold"
-                        domain="[('state','=', 'sold')]"/>     
+                        domain="[('state','=', 'sold')]"/>
                     <separator orientation="vertical"/>
                     <field name="auction"/>
                     <field name="user_id" widget="selection">
@@ -89,7 +89,7 @@
             </search>
         </field>
     </record>
-    
+
     <record id="view_report_auction_graph" model="ir.ui.view">
          <field name="name">report.auction.graph</field>
          <field name="model">report.auction</field>
@@ -105,19 +105,17 @@
                 <field name="net_margin" operator="+"/>
              </graph>
          </field>
-    </record>    
-    
+    </record>
+
     <record model="ir.actions.act_window" id="action_report_auction">
         <field name="name">Auction Analysis</field>
         <field name="res_model">report.auction</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-<!--        <field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>-->
         <field name="search_view_id" ref="view_report_auction_search"/>
         <field name="context">{'search_default_month':1}</field>
     </record>
-    
-<!--    <menuitem name="Auction" id="auction_report_auction_menu" parent="auction.auction_report_menu"/>-->
+
     <menuitem name="Auction Analysis" action="action_report_auction" id="menu_report_auction" parent="auction.auction_report_menu"/>
 
 <!--end : creating buyer Reporting menu for the buyer by pmo-->

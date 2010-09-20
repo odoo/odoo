@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <document filename="HipHop.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Partner Balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
-
     </pageTemplate>
   </template>
   <stylesheet>
@@ -152,7 +151,7 @@
     <paraStyle name="P10" fontName="Helvetica" alignment="CENTER"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="8.0" leading="10"/>
     <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P12a" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P12a" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P12b" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P13" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Times-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -173,12 +172,6 @@
 
   <story>
 
-  <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-      <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
@@ -210,8 +203,8 @@
 	        		<td><para style="terp_tblheader_General_Centre">End Date</para></td>
 	        	</tr>
 	        	<tr>
-	        		<td><para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para></td>
-	        		<td><para style="terp_default_Centre_8">[[ get_end_date(data) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
         	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
@@ -234,38 +227,30 @@
       <font color="white"> </font>
     </para>
     <para style="P12a"></para>
-	 <blockTable colWidths="61.0,206.0,69.0,68.0,69.0,68.0" repeatRows="1" style="Table2">
+	 <blockTable colWidths="80.0,170.0,70.0,70.0,70.0,80.0" repeatRows="1" style="Table2">
       <tr>
         <td><para style="P12a">Code</para></td>
         <td><para style="P12a">(Account/Partner) Name</para></td>
-        <td><para style="P12b">Debit</para></td>
-        <td><para style="P12b">Credit</para></td>
-        <td><para style="P12b">Balance</para></td>
-        <td><para style="P12b">In dispute</para></td>
+        <td><para style="P12b">Debit<font size="8.0">([[ company.currency_id.code]])</font></para></td>
+        <td><para style="P12b">Credit<font size="8.0">([[ company.currency_id.code]])</font></para></td>
+        <td><para style="P12b">Balance<font size="8.0">([[ company.currency_id.code]])</font></para></td>
+        <td><para style="P12a">In dispute<font size="8.0">([[ company.currency_id.code]])</font></para></td>
       </tr>
       <tr>
-        <td><para style="P7">Grand total</para></td>
+        <td><para style="P7">Total<font size="8.0">([[ company.currency_id.code]]) :</font></para></td>
         <td><para style="P8"></para></td>
-        <td><para style="P8"><u>[[ formatLang(sum_debit()) ]]</u></para></td>
-        <td><para style="P8"><u>[[ formatLang(sum_credit()) ]]</u></para></td>
-        <td><para style="P8"><u>[[ formatLang((solde_debit()-solde_credit())) ]]</u></para></td>
-        <td><para style="P8"><u>[[ formatLang(sum_litige()) ]]</u></para></td>
-      </tr>
-      <tr>
-        <td><para style="P7">Balance</para></td>
-        <td><para style="P8"></para></td>
-        <td><para style="P8">[[ formatLang(solde_debit()) ]]</para></td>
-        <td><para style="P8">[[ formatLang(solde_credit()) ]]</para></td>
-        <td><para style="P8"></para></td>
-        <td><para style="P8"></para></td>
+        <td><para style="P8"><u>[[ formatLang(sum_debit()) ]] [[ company.currency_id.symbol ]]</u></para></td>
+        <td><para style="P8"><u>[[ formatLang(sum_credit()) ]] [[ company.currency_id.symbol ]]</u></para></td>
+        <td><para style="P8"><u>[[ formatLang((solde_debit()-solde_credit())) ]] [[ company.currency_id.symbol ]]</u></para></td>
+        <td><para style="P8"><u>[[ formatLang(sum_litige()) ]] [[ company.currency_id.symbol ]]</u></para></td>
       </tr>
       <tr>
         <td><para style="P3">[[ repeatIn(lines(), 'a') ]]<font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font><font>[[ a['ref'] ]] [[ a['type']==3 and a['code'] ]]</font></para></td>
         <td><para style="P3"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ a['name'] ]]</para></td>
-        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['debit']) ]]</para></td>
-        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['credit']) ]]</para></td>
-        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['balance']) ]]</para></td>
-        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['enlitige'] or 0.00) ]]</para></td>
+        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['debit']) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['credit']) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['balance']) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['enlitige'] or 0.0) ]] [[ company.currency_id.symbol ]]</para></td>
       </tr>
     </blockTable>
   </story>

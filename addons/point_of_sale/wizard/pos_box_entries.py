@@ -43,6 +43,7 @@ def get_journal(self, cr, uid, context):
     res_obj = [(r1['id'])for r1 in res_obj]
     res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context)
     res = [(r['journal_id']) for r in res]
+    res.insert(0, ('', ''))
     return res
 
 class pos_box_entries(osv.osv_memory):
@@ -71,16 +72,16 @@ class pos_box_entries(osv.osv_memory):
 
 
     _columns = {
-                'name': fields.char('Description', size=32, required=True),
-                'journal_id': fields.selection(get_journal, "Register", required=True),
-                'product_id': fields.selection(_get_income_product, "Operation", required=True),
-                'amount': fields.float('Amount', digits=(16, 2)),
-                'ref': fields.char('Ref', size=32),
+        'name': fields.char('Description', size=32, required=True),
+        'journal_id': fields.selection(get_journal, "Register", required=True),
+        'product_id': fields.selection(_get_income_product, "Operation", required=True),
+        'amount': fields.float('Amount', digits=(16, 2)),
+        'ref': fields.char('Ref', size=32),
     }
     _defaults = {
-                 'journal_id': lambda *a: 1,
-                 'product_id': lambda *a: 1,
-                }
+         'journal_id': lambda *a: 1,
+         'product_id': lambda *a: 1,
+    }
 
     def get_in(self, cr, uid, ids, context):
         """
@@ -109,11 +110,12 @@ class pos_box_entries(osv.osv_memory):
             if statement_id:
                 statement_id = statement_id[0]
             if not statement_id:
-                statement_id = statement_obj.create(cr, uid, {'date': time.strftime('%Y-%m-%d 00:00:00'),
-                                                            'journal_id': data['journal_id'],
-                                                            'company_id': curr_company,
-                                                            'user_id': uid,
-                                                           })
+                statement_id = statement_obj.create(cr, uid, {
+                                    'date': time.strftime('%Y-%m-%d 00:00:00'),
+                                    'journal_id': data['journal_id'],
+                                    'company_id': curr_company,
+                                    'user_id': uid,
+                                })
 
             args['statement_id'] = statement_id
             args['journal_id'] = data['journal_id']

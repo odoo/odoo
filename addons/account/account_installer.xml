@@ -8,13 +8,13 @@
             <field name="arch" type="xml">
             <data>
                 <form position="attributes">
-                    <attribute name="string">Accounting System Configuration</attribute>
+                    <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                    <attribute name="string">Configure Your Accounting System</attribute>
+                    <attribute name="string">Configure Your Accounting Chart</attribute>
                 </separator>
                 <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">From this screen, you can configure your accounting system. Choose a Chart of Account matched to your accounting system or the Generic Chart of Account which allows you to configure which suit your needs.</attribute>
+                    <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>
                 </xpath>
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
@@ -28,6 +28,7 @@
                         <field name="charts"/>
                             <group colspan="4">
                                 <separator col="4" colspan="4" string="Configure Fiscal Year"/>
+                                <field name="company_id" colspan="4" widget="selection" groups="base.group_multi_company"/>
                                 <field name="date_start" on_change="on_change_start_date(date_start)"/>
                                 <field name="date_stop"/>
                                 <field name="period" colspan="4"/>
@@ -65,28 +66,28 @@
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
-                        <attribute name="string">Extra Accounting Modules Installation</attribute>
+                        <attribute name="string">Accounting Application Configuration</attribute>
                     </form>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Install Extra Accounting Modules In Your Accounting System</attribute>
+                         <attribute name="string">Configure Your Accounting Application</attribute>
+
                     </separator>
                     <xpath expr="//label[@string='description']" position="attributes">
-                        <attribute name="string">From this screen, you can install extra accounting modules in your accounting system. Select the modules to directly install them. If you do not think you need any of these right now, you can easily install them later.</attribute>
+                        <attribute name="string">Add extra Accounting Addons to the ones already installed. Remember you can always install them at a later stage.</attribute>
+                    </xpath>
+                    <xpath expr="//button[@string='Install Modules']" position="attributes">
+                        <attribute name="string">Configure</attribute>
                     </xpath>
                     <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                        <attribute name='rowspan'>23</attribute>
                         <attribute name='string'></attribute>
                     </xpath>
                     <group colspan="8">
-                        <group colspan="4" height="450" width="600">
-                            <group colspan="4">
-                                <field name="account_analytic_plans"/>
-                                <field name="account_payment"/>
-                                <field name="account_followup"/>
-                                <field name="account_voucher"/>
-                                <field name="account_voucher_payment"/>
-                            </group>
-                        </group>
+                        <field name="account_voucher"/>
+                        <field name="account_followup"/>
+                        <field name="account_payment"/>
+                        <field name="account_analytic_plans"/>
+                        <field name="account_anglo_saxon"/>
+<!--                    <field name="account_voucher_payment"/>-->
                     </group>
                 </data>
             </field>
@@ -103,7 +104,7 @@
         </record>
 
         <record id="action_account_installer" model="ir.actions.act_window">
-            <field name="name">Accounting Modules Installation</field>
+            <field name="name">Accounting Application Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer.modules</field>
             <field name="view_id" ref="view_account_modules_installer"/>
@@ -122,18 +123,8 @@
             <field name="action_id" ref="action_account_installer"/>
             <field name="sequence">5</field>
             <field name="restart">always</field>
+            <field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
         </record>
 
-        <record id="account_ir_actions_todo_tree" model="ir.ui.view">
-            <field name="model">ir.actions.todo</field>
-            <field name="name">account_installer_action_replace</field>
-            <field name="type">tree</field>
-            <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@string='Launch']" position="replace">
-                    <button name="%(action_account_configuration_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
-                </xpath>
-            </field>
-        </record>
     </data>
 </openerp>

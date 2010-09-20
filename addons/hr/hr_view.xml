@@ -99,9 +99,10 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <filter icon="terp-personal-" domain="[('active','=',False)]" string="Unactive" groups="base.group_extended"/>
+                    <separator orientation="vertical" />
                     <field name="name"/>
                     <field name="department_id" widget="selection">
-                    <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" help="My Departments Employee"/>
+                    <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" string="My Departments Employee"/>
                     </field>
                     <field name="job_id" widget="selection"/>
                     <field name="parent_id"/>
@@ -144,6 +145,7 @@
             <field name="domain">[]</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="search_view_id" ref="view_employee_filter"/>
+            <field name="help">The employee directory contains all data related to your employees: from their photo up to their hourly estimated costs for the timesheets. Employees are managed by departments and can be linked to users to manage their access rights.</field>
         </record>
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
@@ -154,7 +156,7 @@
         =======================
         -->
 
-		<record id="hr_hr_employee_marital_status_tree" model="ir.ui.view">
+    <record id="hr_hr_employee_marital_status_tree" model="ir.ui.view">
             <field name="name">hr.hr.employee.marital.status.tree</field>
             <field name="model">hr.employee.marital.status</field>
             <field name="type">tree</field>
@@ -187,7 +189,7 @@
         </record>
 
         <menuitem action="action_hr_marital_status" id="hr_menu_marital_status"
-            parent="hr.menu_view_employee_category_configuration_form" sequence="3"/>
+            parent="hr.menu_view_employee_category_configuration_form" sequence="3" groups="base.group_extended"/>
 
         <!--
         =======================
@@ -296,8 +298,6 @@
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-<!--            <field name="domain">[('category_id','child_of',[active_id])]</field>-->
-<!--            <field name="context">{'category_id':active_id}</field>-->
         </record>
 
         <record id="hr_employee_category_open" model="ir.values">
@@ -308,7 +308,7 @@
             <field eval="True" name="object"/>
         </record>
 
-        <menuitem action="open_view_categ_tree" groups="base.group_extended,base.group_system"
+        <menuitem action="open_view_categ_tree" groups="base.group_extended"
             id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
@@ -320,7 +320,6 @@
                     <group col="6" colspan="4">
                     <field name="name" />
                     <field name="department_id" />
-                    <newline/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
@@ -338,9 +337,9 @@
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
-	                    <field name="state"/>
-	                    <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
-		            <button name="job_open" string="Open" states="old,recruit" type="object" icon="terp-camera_test"/>
+                      <field name="state"/>
+                      <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
+                <button name="job_open" string="Open" states="old,recruit" type="object" icon="terp-camera_test"/>
                             <button name="job_old" string="Old" states="open,recruit" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
@@ -355,6 +354,7 @@
                 <tree string="Job">
                     <field name="name" />
                     <field name="department_id" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
                     <field name="state"/>
@@ -369,16 +369,20 @@
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <filter icon="terp-check" domain="[('state','in',('open','recruit'))]" string="Current"
-                        help="Open and in recruitment positions"/>
-                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="Recruitment"
+                        name="Current" help="Open and in recruitment positions"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
                         help="In Recruitment"/>
-                    <filter icon="terp-camera_test" domain="[('state','=','open')]" string="Open"
-                        help="Open Positions"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="department_id" widget="selection">
-                    	<filter icon="terp-gtk-select-all" domain="[('department_id', '=', context.get('department_id', False))]" help="My Departments Jobs"/>
+                      <filter icon="terp-personal+" domain="[('department_id', '=', context.get('department_id', False))]" help="My Departments Jobs"/>
                     </field>
+                    <newline />
+                    <group expand="0" string="Group By...">
+                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
+                    </group>
                 </search>
              </field>
          </record>
@@ -388,6 +392,9 @@
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_job_filter"/>
+            <field name="context">{'search_default_Current':1}</field>
+            <field name="help">Job Positions are used to define the jobs, the requirements. You can attach a survey to a job position. This survey will be used in the recruitement process to evaluate the applicants for this job position.</field>
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_manager,base.group_system"/>

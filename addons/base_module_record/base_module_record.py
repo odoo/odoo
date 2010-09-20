@@ -541,29 +541,28 @@ class base_module_record(osv.osv):
                 else:
                     continue
                 if self.mode == "workflow":
-                    record= self._generate_object_yaml(cr, uid, rec[1],rec[0])
-                    yaml_file+="!comment Performing a workflow action %s on module %s"%(record['action'], record['model']) + '''\n'''
-                    object=yaml.load(unicode('''\n !workflow %s \n'''%record,'iso-8859-1'))
-                    attrs=attrs.replace("''", '"')
+                    record = self._generate_object_yaml(cr, uid, rec[1],rec[0])
+                    yaml_file += "!comment Performing a workflow action %s on module %s"%(record['action'], record['model']) + '''\n'''
+                    object = yaml.load(unicode('''\n !workflow %s \n'''%record,'iso-8859-1'))
                     yaml_file += str(object) + '''\n\n'''
                 elif self.mode == 'osv_memory_action':
-                    osv_action= self._generate_function_yaml(cr, uid, rec[1])
-                    yaml_file+="!comment Performing an osv_memory action %s on module %s"%(osv_action['action'], osv_action['model']) + '''\n'''
-                    osv_action=yaml.load(unicode('''\n !python %s \n'''%osv_action,'iso-8859-1'))
+                    osv_action = self._generate_function_yaml(cr, uid, rec[1])
+                    yaml_file += "!comment Performing an osv_memory action %s on module %s"%(osv_action['action'], osv_action['model']) + '''\n'''
+                    osv_action = yaml.load(unicode('''\n !python %s \n'''%osv_action,'iso-8859-1'))
                     yaml_file += str(osv_action) + '''\n'''
-                    attrs=yaml.dump(osv_action.attrs, default_flow_style=False)
-                    attrs=attrs.replace("''", '"')
-                    attrs=attrs.replace("'", '')
+                    attrs = yaml.dump(osv_action.attrs, default_flow_style=False)
+                    attrs = attrs.replace("''", '"')
+                    attrs = attrs.replace("'", '')
                     yaml_file += attrs + '''\n\n'''
                 else:
-                    record= self._generate_object_yaml(cr, uid, rec[1], rec[3])
+                    record = self._generate_object_yaml(cr, uid, rec[1], rec[3])
                     if self.mode == "create" or self.mode == "copy":
-                        yaml_file+="!comment Creating a %s record"%(record['model']) + '''\n'''
+                        yaml_file += "!comment Creating a %s record"%(record['model']) + '''\n'''
                     else:
-                        yaml_file+="!comment Modifying a %s record"%(record['model']) + '''\n'''
-                    object= yaml.load(unicode('''\n !record %s \n'''%record,'iso-8859-1'))
+                        yaml_file += "!comment Modifying a %s record"%(record['model']) + '''\n'''
+                    object = yaml.load(unicode('''\n !record %s \n'''%record,'iso-8859-1'))
                     yaml_file += str(object) + '''\n'''
-                    attrs=yaml.dump(object.attrs, default_flow_style=False)
+                    attrs = yaml.dump(object.attrs, default_flow_style=False)
                     yaml_file += attrs + '''\n\n'''
                     
         yaml_result=''''''

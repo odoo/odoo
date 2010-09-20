@@ -39,7 +39,7 @@ class account_followup_stat(osv.osv):
         'date_move_last':fields.date('Last move', readonly=True),
         'date_followup':fields.date('Latest followup', readonly=True),
         'followup_id': fields.many2one('account_followup.followup.line',
-            'Follow Ups', readonly=True, ondelete="cascade"),
+                                    'Follow Ups', readonly=True, ondelete="cascade"),
         'balance':fields.float('Balance', readonly=True),
         'debit':fields.float('Debit', readonly=True),
         'credit':fields.float('Credit', readonly=True),

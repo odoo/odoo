@@ -38,11 +38,11 @@ class project_compute_phases(osv.osv_memory):
                                            ], 'Schedule', required = True),
 
         'project_id': fields.many2one('project.project', 'Project')
-                }
+    }
 
     _defaults = {
         'target_project': 'all'
-                }
+    }
 
     def check_selection(self, cr, uid, ids, context=None):
         data_select = self.read(cr, uid, ids, ['target_project'])[0]
@@ -76,11 +76,11 @@ class project_compute_phases(osv.osv_memory):
                 leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource.id, resource.calendar_id.id)
             if not phase.responsible_id:
                 raise osv.except_osv(_('No responsible person assigned !'),_("You must assign a responsible person for phase '%s' !") % (phase.name,))
-            phase_resource_obj = classobj((phase.responsible_id.name.encode('utf8')), (Resource,),
-                                               {'__doc__': phase.responsible_id.name,
-                                                '__name__': phase.responsible_id.name,
-                                                'vacation': tuple(leaves),
-                                                'efficiency': time_efficiency
+            phase_resource_obj = classobj((phase.responsible_id.name.encode('utf8')), (Resource,),{
+                                                   '__doc__': phase.responsible_id.name,
+                                                   '__name__': phase.responsible_id.name,
+                                                   'vacation': tuple(leaves),
+                                                   'efficiency': time_efficiency
                                                 })
             default_uom_id = phase_obj._get_default_uom_id(cr, uid)
             avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
@@ -117,9 +117,11 @@ class project_compute_phases(osv.osv_memory):
             # Write the calculated dates back
             ctx = context.copy()
             ctx.update({'scheduler': True})
-            phase_obj.write(cr, uid, [phase.id], {'date_start': start_date.strftime('%Y-%m-%d'),
-                                                  'date_end': end_date.strftime('%Y-%m-%d')},
-                                                   context=ctx)
+            phase_obj.write(cr, uid, [phase.id], {
+                                          'date_start': start_date.strftime('%Y-%m-%d'),
+                                          'date_end': end_date.strftime('%Y-%m-%d')
+                                        }, context=ctx)
+
             # Recursive call till all the next phases scheduled
             for phase in phase.next_phase_ids:
                if phase.state in ['draft', 'open', 'pending']:

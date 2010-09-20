@@ -41,7 +41,6 @@ class rml_parse(report_sxw.rml_parse):
         })
 
     def comma_me(self,amount):
-        #print "#" + str(amount) + "#"
         if not amount:
             amount = 0.0
         if  type(amount) is float :
@@ -105,9 +104,8 @@ class rml_parse(report_sxw.rml_parse):
         else:
             return Stringer
         return Stringer
-    
+
     def explode_this(self,chaine,length):
-        #chaine = self.repair_string(chaine)
         chaine = rstrip(chaine)
         ast = list(chaine)
         i = length
@@ -116,13 +114,12 @@ class rml_parse(report_sxw.rml_parse):
             i = i + length
         chaine = str("".join(ast))
         return chaine
-    
+
     def repair_string(self,chaine):
         ast = list(chaine)
         UnicodeAst = []
         _previouslyfound = False
         i = 0
-        #print str(ast)
         while i < len(ast):
             elem = ast[i]
             try:

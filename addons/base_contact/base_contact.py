@@ -224,6 +224,9 @@ class res_partner_job(osv.osv):
         'state': lambda *a: 'current',
     }
     
+    def onchange_name(self, cr, uid, ids, address_id='', name='', context=None):    
+        return {'value': {'address_id': address_id}, 'domain':{'partner_id':'name'}}     
+    
     def onchange_partner(self, cr, uid, _, partner_id, context=None):
         """
             @param self: The object pointer

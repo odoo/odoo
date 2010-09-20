@@ -47,12 +47,9 @@
         'lunch_view.xml',
         'lunch_report.xml',
         'report/report_lunch_order_view.xml',
-        #'process/lunch_process.xml'
     ],
-    "demo_xml": ['lunch_demo.xml',
-                 ],
-    "test": ['test/test_lunch.yml'
-             ],
+    "demo_xml": ['lunch_demo.xml'],
+    "test": ['test/test_lunch.yml'],
     "installable": True,
 }
 

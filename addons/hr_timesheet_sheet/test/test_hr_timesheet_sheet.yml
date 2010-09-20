@@ -10,6 +10,15 @@
     timesheet_max_difference: 1.0
 
 -
+  I assign this company to Admin user
+-
+  !record {model: res.users, id: base.user_root}:
+    company_id: res_company_openERP
+    company_ids:
+      - base.main_company
+      - res_company_openERP
+
+-
   I  create a new employee “Mark Johnson”.
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
@@ -81,10 +90,10 @@
   I create Timesheet Entry for time spend on today work.
 
 -
-  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet.sheet1}:
+  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
       - account_id: account.analytic_sednacom
-        date: '05/26/2010'
+        date: '2010-05-26'
         name: 'Develop yaml for hr module'
         unit_amount: 3.00
         amount: -90.00
@@ -98,23 +107,24 @@
    if the difference between timesheet hour and attendance hour is more than 1 hour it will give message.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
-    uid = ref('base.user_root')
-    import netsvc
-    for sheet in self.browse(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')]):
-        di = sheet.user_id.company_id.timesheet_max_difference
-        if (abs(sheet.total_difference) < di) or not di:
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
-        else:
-            print "Please verify that the total difference of the sheet is lower than %.2f"   %di
+        uid = ref('base.user_root')
+        import netsvc
+        try:
+            self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"lang": 'en_US', "active_ids":
+              [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")], "tz": False, "active_model":
+              "ir.ui.menu", "department_id": False, "section_id": False, "search_default_my_timesheet":
+              1, "search_default_user_id": 1, "project_id": False, "active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
+              })
+        except:
+            pass
 
 -
-  I Modified the timesheet record.
+  I Modified the timesheet record and make the difference less than 1 hour.
 -
-  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet.sheet1}:
+  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
       - account_id: account.analytic_sednacom
-        date: '05/26/2010'
+        date: '2010-05-26'
         name: 'Develop yaml for hr module'
         unit_amount: 2.0
         amount: -90.00

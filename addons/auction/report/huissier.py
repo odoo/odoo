@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,10 +42,9 @@ class report_custom(report_rml):
         <name>%s</name>
         <date-au1>%s</date-au1>
     </auction>''' % (toxml(auction['name']), toxml(auction['auction1']))
-    
+
         i = 0
         for l in lots:
-#           l['id_cont'] = str(i)
             if l['obj_price']==0:
                 price_french = u'retiré'
             else:
@@ -59,7 +58,7 @@ class report_custom(report_rml):
         <obj_price>%s</obj_price>
     </object>''' % (i, l['obj_num'], ustr(toxml(l['name'])), ustr(price_french), ustr(l['obj_price'] or '/'))
         xml += '</report>'
-        
+
         return xml
 
 report_custom('report.flagey.huissier', 'auction.lots', '', 'addons/auction/report/huissier.xsl')

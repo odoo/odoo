@@ -547,7 +547,6 @@ class ActiveDTP(asyncore.dispatcher):
         handler = self.cmd_channel.dtp_handler(self.socket, self.cmd_channel)
         self.cmd_channel.data_channel = handler
         self.cmd_channel.on_dtp_connection()
-        #self.close()  # <-- (done automatically)
 
     def handle_expt(self):
         self.cmd_channel.respond("425 Can't connect to specified address.")
@@ -1195,7 +1194,7 @@ class AbstractedFS:
             size = st.st_size  # file size
             uname = st.st_uid or "owner"
             gname = st.st_gid or "group"
-           
+
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
@@ -1412,7 +1411,7 @@ class FTPHandler(asynchat.async_chat):
         self._epsvall = False
         self.__in_dtp_queue = None
         self.__out_dtp_queue = None
-        
+
         self.__errno_responses = {
                 errno.EPERM: 553,
                 errno.EINVAL: 504,
@@ -1574,7 +1573,7 @@ class FTPHandler(asynchat.async_chat):
 
     def __check_path(self, cmd, line):
         """Check whether a path is valid."""
-        
+
         # Always true, we will only check later, once we have a cursor
         return True
 
@@ -1738,7 +1737,7 @@ class FTPHandler(asynchat.async_chat):
             self.__out_dtp_queue = (data, isproducer, file)
 
     def log(self, msg):
-        """Log a message, including additional identifying session data."""        
+        """Log a message, including additional identifying session data."""
         log("[%s]@%s:%s %s" %(self.username, self.remote_ip,
                               self.remote_port, msg))
 
@@ -1815,7 +1814,7 @@ class FTPHandler(asynchat.async_chat):
             why = (err.strerror) or 'Error in command'
             self.log('FAIL %s() %s errno=%s:  %s.' %(cmdname, uline, err.errno, why))
             self.respond('%s %s.' % (str(ret_code), why))
-        
+
             raise FTPExceptionSent(why)
         except Exception, err:
             cmdname = function.__name__
@@ -2058,7 +2057,7 @@ class FTPHandler(asynchat.async_chat):
         except FTPExceptionSent:
             self.fs.close_cr(datacr)
             return
-        
+
         try:
             self.log('OK LIST "%s". Transfer starting.' % line)
             producer = BufferedIteratorProducer(iterator)
@@ -2084,7 +2083,7 @@ class FTPHandler(asynchat.async_chat):
             else:
                 # if path is a file we just list its name
                 nodelist = [datacr[1],]
-            
+
             listing = []
             for nl in nodelist:
                 if isinstance(nl.path, (list, tuple)):
@@ -2094,7 +2093,7 @@ class FTPHandler(asynchat.async_chat):
         except FTPExceptionSent:
             self.fs.close_cr(datacr)
             return
-        
+
         self.fs.close_cr(datacr)
         data = ''
         if listing:
@@ -2145,7 +2144,7 @@ class FTPHandler(asynchat.async_chat):
         # if no argument, fall back on cwd as default
         if not line:
             line = ''
-        
+
         datacr = None
         try:
             datacr = self.get_crdata2(line, mode='list')
@@ -2532,12 +2531,6 @@ class FTPHandler(asynchat.async_chat):
         datacr = None
         try:
             datacr = self.get_crdata2(line, mode='file')
-            #if self.fs.isdir(datacr[1]):
-            #    why = "%s is not retrievable" %line
-            #    self.log('FAIL SIZE "%s". %s.' %(line, why))
-            #    self.respond("550 %s." %why)
-            #    self.fs.close_cr(datacr)
-            #    return
             size = self.try_as_current_user(self.fs.getsize,(datacr,), line=line)
         except FTPExceptionSent:
             self.fs.close_cr(datacr)
@@ -2552,7 +2545,7 @@ class FTPHandler(asynchat.async_chat):
         3307 style timestamp (YYYYMMDDHHMMSS) as defined in RFC-3659.
         """
         datacr = None
-            
+
         try:
             if line.find('/', 1) < 0:
                 # root or db, just return local
@@ -2561,9 +2554,7 @@ class FTPHandler(asynchat.async_chat):
                 datacr = self.get_crdata2(line)
                 if not datacr:
                     raise IOError(errno.ENOENT, "%s is not retrievable" %line)
-                #if not self.fs.isfile(datacr[1]):
-                #    raise IOError(errno.EPERM, "%s is not a regular file" % line)
-                
+
                 lmt = self.try_as_current_user(self.fs.getmtime, (datacr,), line=line)
             lmt = time.strftime("%Y%m%d%H%M%S", time.localtime(lmt))
             self.respond("213 %s" %lmt)

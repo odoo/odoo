@@ -44,7 +44,7 @@ class hr_analytic_timesheet(osv.osv):
     _order = "id desc"
     _columns = {
         'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade', required=True),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='account.analytic.account', store=True),
+        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='res.partner', store=True),
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -60,11 +60,18 @@ class hr_analytic_timesheet(osv.osv):
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context=None):
         if context is None:
             context = {}
-        res = {}
+        res = {'value':{}}
         if prod_id and unit_amount:
             # find company
             company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
             res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, context=context)
+        # update unit of measurement
+        if prod_id:
+            uom = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
+            if uom.uom_id:
+                res['value'].update({'product_uom_id': uom.uom_id.id})
+        else:
+            res['value'].update({'product_uom_id': False})
         return res
 
     def _getEmployeeProduct(self, cr, uid, context=None):
@@ -73,7 +80,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
         if emp_id:
-            emp=emp_obj.browse(cr, uid, emp_id[0], context=context)
+            emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.product_id:
                 return emp.product_id.id
         return False
@@ -84,7 +91,7 @@ class hr_analytic_timesheet(osv.osv):
             context = {}
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
         if emp_id:
-            emp=emp_obj.browse(cr, uid, emp_id[0], context=context)
+            emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.product_id:
                 return emp.product_id.uom_id.id
         return False
@@ -97,7 +104,7 @@ class hr_analytic_timesheet(osv.osv):
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if bool(emp.product_id):
-                a =  emp.product_id.product_tmpl_id.property_account_expense.id
+                a = emp.product_id.product_tmpl_id.property_account_expense.id
                 if not a:
                     a = emp.product_id.categ_id.property_account_expense_categ.id
                 if a:
@@ -152,12 +159,14 @@ class hr_analytic_timesheet(osv.osv):
     def on_change_user_id(self, cr, uid, ids, user_id):
         if not user_id:
             return {}
+        context = {'user_id': user_id}
         return {'value' : {
-            'product_id' : self._getEmployeeProduct(cr,user_id, context= {}),
-            'product_uom_id' : self._getEmployeeUnit(cr, user_id, context= {}),
-            'general_account_id' :self. _getGeneralAccount(cr, user_id, context= {}),
-            'journal_id' : self._getAnalyticJournal(cr, user_id, context= {}),
+            'product_id' : self._getEmployeeProduct(cr, uid, context),
+            'product_uom_id' : self._getEmployeeUnit(cr, uid, context),
+            'general_account_id' :self._getGeneralAccount(cr, uid, context),
+            'journal_id' : self._getAnalyticJournal(cr, uid, context),
         }}
+        
 hr_analytic_timesheet()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

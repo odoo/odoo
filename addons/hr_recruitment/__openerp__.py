@@ -39,7 +39,6 @@ system to store and search in your CV base.
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
         'hr_recruitment_menu.xml',
-#        'report_hr_recruitment_view.xml',
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
         'board_hr_recruitment_statistical_view.xml',

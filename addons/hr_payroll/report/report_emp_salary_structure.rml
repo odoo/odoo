@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Salary Structure" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -184,7 +184,6 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -210,7 +209,7 @@
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -246,7 +245,9 @@
       <tr>
         <td>
           <para style="terp_header_Centre">Salary Structure</para>
-          <para style="terp_header_Centre">For [[ employee.name ]]</para>
+          <para style="terp_header_Centre">
+            <font color="white"> </font>
+          </para>
         </td>
       </tr>
     </blockTable>
@@ -330,7 +331,7 @@
       <blockTable colWidths="539.0" style="Table13">
         <tr>
           <td>
-            <para style="P1">Contract Detail:</para>
+            <para style="terp_default_Bold_9">Contract Detail:</para>
           </td>
         </tr>
       </blockTable>
@@ -368,7 +369,7 @@
             <para style="terp_tblheader_Details">Salary</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ formatLang(cont.wage) or '' ]]</para>
+            <para style="terp_default_9">[[ formatLang(cont.wage) or '' ]] [[ employee.company_id.currency_id.symbol]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details">Notes:</para>
@@ -384,7 +385,7 @@
       <blockTable colWidths="539.0" style="Table9">
         <tr>
           <td>
-            <para style="P1">Salary Structure:</para>
+            <para style="terp_default_Bold_9">Salary Structure:</para>
           </td>
         </tr>
       </blockTable>
@@ -440,7 +441,7 @@
                 <para style="terp_default_9">[[ get_line_amount_type(line.amount_type) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(line.amount) ]]</para>
+                <para style="terp_default_Right_9">[[ formatLang(line.amount) or '']][[ employee.company_id.currency_id.symbol]]</para>
               </td>
               <td>
                 <para style="terp_default_9">[[ get_line_type(line.type) ]]</para>
@@ -471,7 +472,7 @@
     <blockTable colWidths="539.0" style="Table10">
       <tr>
         <td>
-          <para style="P1">Special Allowances and Deductions For Employee:</para>
+          <para style="terp_default_Bold_9">Special Allowances and Deductions For Employee:</para>
         </td>
       </tr>
     </blockTable>
@@ -550,4 +551,3 @@
     </para>
   </story>
 </document>
-

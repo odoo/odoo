@@ -30,25 +30,25 @@ class account_payment_make_payment(osv.osv_memory):
         If type is manual. just confirm the order.
         """
         obj_payment_order = self.pool.get('payment.order')
-        obj_model = self.pool.get('ir.model.data')
-        obj_act = self.pool.get('ir.actions.act_window')
-        order= obj_payment_order.browse(cr, uid, context['active_id'], context)
-        t = order.mode and order.mode.type.code or 'manual'
-        if t == 'manual' :
-            obj_payment_order.set_done(cr,uid,context['active_id'],context)
-            return {}
-
-        gw= obj_payment_order.get_wizard(t)
-        if not gw:
-            obj_payment_order.set_done(cr,uid,context['active_id'],context)
-            return {}
-
-        module, wizard= gw
-        result = mod_obj._get_id(cr, uid, module, wizard)
-        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        return act_obj.read(cr, uid, [id])[0]
-        #result['context'] = str({'fiscalyear': data['form']['fiscalyear']})
-
+#        obj_model = self.pool.get('ir.model.data')
+#        obj_act = self.pool.get('ir.actions.act_window')
+#        order = obj_payment_order.browse(cr, uid, context['active_id'], context)
+        obj_payment_order.set_done(cr, uid, context['active_id'], context)
+        return {}
+#        t = order.mode and order.mode.type.code or 'manual'
+#        if t == 'manual' :
+#            obj_payment_order.set_done(cr,uid,context['active_id'],context)
+#            return {}
+#
+#        gw = obj_payment_order.get_wizard(t)
+#        if not gw:
+#            obj_payment_order.set_done(cr,uid,context['active_id'],context)
+#            return {}
+#
+#        module, wizard= gw
+#        result = obj_model._get_id(cr, uid, module, wizard)
+#        id = obj_model.read(cr, uid, [result], ['res_id'])[0]['res_id']
+#        return obj_act.read(cr, uid, [id])[0]
 
 account_payment_make_payment()
 

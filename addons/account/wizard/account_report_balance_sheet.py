@@ -34,14 +34,17 @@ class account_bs_report(osv.osv_memory):
 
     _columns = {
         'display_type': fields.boolean("Landscape Mode"),
-        'reserve_account_id': fields.many2one('account.account', 'Reserve & Surplus Account',required = True,
+        'reserve_account_id': fields.many2one('account.account', 'Reserve & Profit/Loss Account',required = True,
                                       help='This Account is used for trasfering Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report', domain = [('type','=','payable')]),
-        }
+        'target_move': fields.selection([('all', 'All Entries'),
+                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
+    }
 
     _defaults={
         'display_type': True,
         'journal_ids': [],
-        }
+        'target_move': 'all',
+    }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')
@@ -60,21 +63,21 @@ class account_bs_report(osv.osv_memory):
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
         account = self.pool.get('account.account').browse(cr, uid, data['form']['chart_account_id'])
         if not account.company_id.property_reserve_and_surplus_account:
-            raise osv.except_osv(_('Warning'),_('Please define the Reserve and Surplus account for current user company !'))
+            raise osv.except_osv(_('Warning'),_('Please define the Reserve and Profit/Loss account for current user company !'))
         data['form']['reserve_account_id'] = account.company_id.property_reserve_and_surplus_account.id
-        data['form'].update(self.read(cr, uid, ids, ['display_type'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['display_type','target_move'])[0])
         if data['form']['display_type']:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.balancesheet.horizontal',
                 'datas': data,
-                    }
+            }
         else:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.balancesheet',
                 'datas': data,
-                    }
+            }
 
 account_bs_report()
 

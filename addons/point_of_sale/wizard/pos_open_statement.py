@@ -50,12 +50,12 @@ class pos_open_statement(osv.osv_memory):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             if len(ids):
                 raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s". \n Please close the cashbox related to. ' %(journal.name)))
-            
+
             statement_ids = sorted(statement_obj.search(cr, uid, [('state', '=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)]))
             if statement_ids:
                 res = []
                 statement_ids.reverse()
-                statement = statement_obj.browse(cr, uid, statement_ids[0]) 
+                statement = statement_obj.browse(cr, uid, statement_ids[0])
                 for end_bal in statement.ending_details_ids:
                     dct = {
                             'pieces': end_bal.pieces,
@@ -71,8 +71,8 @@ class pos_open_statement(osv.osv_memory):
                 number = sequence_obj.get_id(cr, uid, journal.sequence_id.id)
             else:
                 number = sequence_obj.get(cr, uid, 'account.bank.statement')
-            
-            data.update({'journal_id': journal.id, 
+
+            data.update({'journal_id': journal.id,
                          'company_id': company_id,
                          'user_id': uid,
                          'state': 'open',
@@ -96,7 +96,7 @@ class pos_open_statement(osv.osv_memory):
             'res_model': 'account.bank.statement',
             'views': [(id2, 'tree'),(id3, 'form')],
             'type': 'ir.actions.act_window'
-}
+        }
 pos_open_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

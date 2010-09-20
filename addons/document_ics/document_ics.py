@@ -166,7 +166,6 @@ class document_directory_content(osv.osv):
         ctx = (context or {})
         ctx.update(node.context.context.copy())
         ctx.update(node.dctx)
-        # print "ICS domain: ", type(content.ics_domain), content.ics_domain
         if content.ics_domain:
             for d in safe_eval(content.ics_domain,ctx):
                 # TODO: operator?
@@ -195,7 +194,6 @@ class document_directory_content(osv.osv):
                     elif ICS_TAGS[enl]=='date':
                         result[fields[enl]] = event.value.strftime('%Y-%m-%d %H:%M:%S')
 
-                    # print "Field ",enl,  result[fields[enl]]
                 elif fields[enl] and funcs[enl] == 'hours':
                     ntag = fexprs[enl] or 'dtstart'
                     ts_start = child.getChildValue(ntag, default=False)
@@ -237,9 +235,6 @@ class document_directory_content(osv.osv):
                     pass
 
                 wexpr = [ ( 'id', '=', wematch.group(2) ) ]
-
-            # print "Looking at ", cmodel, " for ", wexpr
-            # print "domain=", idomain
 
             fobj = self.pool.get(content.object_id.model)
 
@@ -354,7 +349,7 @@ class crm_meeting(osv.osv):
         if not default: default = {}
         if not context: context = {}
         default.update({'code': self.pool.get('ir.sequence').get(cr, uid, 'crm.meeting'), 'id': False})
-        return super(crm_meeting, self).copy(cr, uid, id, default, context)  
+        return super(crm_meeting, self).copy(cr, uid, id, default, context)
 
 crm_meeting()
 

@@ -10,7 +10,7 @@
                	<xpath expr="//page[@string='Tasks Stages']" position="after">
                    	<page string="Messages" groups="base.group_extended">
                    		<field name="message_ids" nolabel="1" colspan="4">
-                   			<tree editable="1">
+                   			<tree editable="1" string="Messages">
 		                     	<field name="message" attrs="{'readonly':[('from_id', '!=', uid)]}"/>
 		                     	<field name="from_id"/>
 		                     	<field name="to_id" attrs="{'readonly':[('from_id', '!=', uid)]}"/>
@@ -90,8 +90,20 @@
             <field name="search_view_id" ref="view_project_messages_search"/>
             <field name="context">{"search_default_to_id":uid}</field>
             <field name="view_id" ref="view_project_message_tree"/>
+			<field name="help">An in-project messagery system permits an efficient and trackable communication between project members. The messages are kept in the system and can then be used for post-analysis.</field>            
         </record>
-       
+        
+        <act_window domain="[('project_id', '=', active_id)]" id="act_project_messages" name="Messages" res_model="project.messages" src_model="project.project"/>
+         
+         <!--Actions for deshboard -->
+
+        <record id="action_view_project_editable_messages_tree" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">project.messages</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="project_messages.view_project_message_tree"/>
+       </record>
        <menuitem action="messages_form" id="menu_messages_form" parent="project.menu_project_management"/>
      </data>
 </openerp>

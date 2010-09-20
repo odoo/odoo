@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -62,11 +62,11 @@ def _set_field_domain(self,cr,uid,data,context):
     this_model = data.get('model')
     this_pooler = pooler.get_pool(cr.dbname).get(this_model)
     this_data = this_pooler.read(cr,uid,data.get('ids'),['model_ids'],context)[0]
-    select_field_fields['field_id']['domain'] = [('model_id','in',this_data.get('model_ids')),('ttype','<>','many2many'),('ttype','<>','one2many')] 
+    select_field_fields['field_id']['domain'] = [('model_id','in',this_data.get('model_ids')),('ttype','<>','many2many'),('ttype','<>','one2many')]
     return {'field_id':False}
 
 def set_field_operator(self,field_name,field_type,search_operator,search_value):
-        field_search = [field_name,search_operator,search_value]        
+        field_search = [field_name,search_operator,search_value]
         if search_operator == '=':
             if field_type=='many2one':
                 field_search[1]='in'
@@ -132,7 +132,7 @@ def _set_filter_value(self, cr, uid, data, context):
 
         if field_type in ['float','integer']:
             value_data =  value_data or 0
-        
+
         if field_type == 'many2many' and value_data and len(value_data):
             fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data[0][2])
         else:
@@ -145,9 +145,6 @@ def _set_filter_value(self, cr, uid, data, context):
                            'condition' : form_data['condition']
                            }
             pooler.get_pool(cr.dbname).get('base_report_creator.report.filter').create(cr,uid,create_dict,context)
-        #end if field_type == 'many2many' and value_data and len(value_data):
-#       pooler.get_pool(cr.dbname).get('custom.report.filter').create(cr,uid,form_data)
-    #end if field_type:
     return {}
 
 def _set_form_value(self, cr, uid, data, context):
@@ -155,8 +152,6 @@ def _set_form_value(self, cr, uid, data, context):
     field_data = pooler.get_pool(cr.dbname).get('ir.model.fields').read(cr,uid,[field_id])[0]
     fields_dict = pooler.get_pool(cr.dbname).get(field_data.get('model')).fields_get(cr,uid,fields=[field_data.get('name')])
     value_field = set_value_fields.get('value')
-#   print "fields_dict :",fields_dict.get(field_data.get('name'))
-#   set_value_fields['value']= fields_dict.get(field_data.get('name'))
     for k,v in value_field.items():
         if k in ('size','relation','type'):
             del value_field[k]
@@ -170,15 +165,15 @@ def _set_form_value(self, cr, uid, data, context):
             selection_data = pooler.get_pool(cr.dbname).get(field_data['model']).fields_get(cr,uid,[field_data['name']])
             value_field['selection'] = selection_data.get(field_data['name']).get('selection')
     operator = (field_type=='many2one') and 'in' or '='
-    ret_dict={'field_id':field_id,'operator':operator, 'condition':'and','value':False}  
+    ret_dict={'field_id':field_id,'operator':operator, 'condition':'and','value':False}
     return ret_dict
 
 def _set_operator(self, cr, uid, data, context):
     field = pooler.get_pool(cr.dbname).get('ir.model.fields').browse(cr, uid, data['form']['field_id'])
     operator = set_value_fields['operator']['selection']
-    while operator: 
+    while operator:
         operator.pop(operator.__len__()-1)
-        
+
     if field.ttype == 'many2one':
         operator.append(('in','Equals'))
         operator.append(('in','Contains'))
@@ -210,7 +205,7 @@ class set_filter_fields(wizard.interface):
     states = {
         'init': {
             'actions': [_set_field_domain],
-            'result': {'type':'form', 'arch':select_field_form, 'fields':select_field_fields, 'state':[('end','Cancel'),('set_value_select_field','Continue')]}         
+            'result': {'type':'form', 'arch':select_field_form, 'fields':select_field_fields, 'state':[('end','Cancel'),('set_value_select_field','Continue')]}
         },
         'set_value_select_field':{
             'actions': [_set_form_value, _set_operator],

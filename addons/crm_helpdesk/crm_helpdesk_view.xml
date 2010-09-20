@@ -3,7 +3,7 @@
     <data>
        <!-- Helpdesk Support Categories Configuration Menu-->
        <menuitem id="menu_config_helpdesk" name="Helpdesk"
-        groups="base.group_extended,base.group_system"
+        groups="base.group_extended"
         parent="base.menu_base_config" sequence="7" />
 
         <!-- Helpdesk Support Categories Form View -->
@@ -96,15 +96,16 @@
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                                <tree string="Communication history">
+                                <tree string="History">
                                     <field name="display_text" string="History Information"/>
+                                    <field name="history" invisible="1"/>
                                     <button
                                         string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
                                         name="%(crm.action_crm_send_mail)d"
                                         context="{'mail':'reply', 'model': 'crm.helpdesk', 'include_original' : True}"
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
-                                <form string="Communication history">
+                                <form string="History">
                                     <group col="4" colspan="4">
                                         <field name="email_from"/>
                                         <field name="date"/>
@@ -133,7 +134,11 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <button colspan="4" string="Send New Email"
+                             <button string="Add New Note"
+                                name="%(crm.action_crm_add_note)d"
+                                context="{'model': 'crm.lead' }"
+                                icon="terp-document-new" type="action" />
+                            <button string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.helpdesk'}"
                                 icon="terp-mail-message-new" type="action" />

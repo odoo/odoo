@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -33,6 +33,7 @@ class product_pricelist(report_sxw.rml_parse):
             'time': time,
             'get_pricelist': self._get_pricelist,
             'get_currency': self._get_currency,
+            'get_currency_symbol': self._get_currency_symbol,
             'get_categories': self._get_categories,
             'get_price': self._get_price,
             'get_titles': self._get_titles,
@@ -44,8 +45,8 @@ class product_pricelist(report_sxw.rml_parse):
         qtys = 1
 
         for i in range(1,6):
-#            if form['qty'+str(i)] > 0 and form['qty'+str(i)] not in vals.values():
-            vals['qty'+str(qtys)] = form['qty'+str(i)]
+            if form['qty'+str(i)]!=0:
+                vals['qty'+str(qtys)] = str(form['qty'+str(i)]) + ' units'
             qtys += 1
         lst.append(vals)
         return lst
@@ -69,6 +70,12 @@ class product_pricelist(report_sxw.rml_parse):
         pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
         return pricelist['currency_id'][1]
 
+    def _get_currency_symbol(self, pricelist_id):
+        pool = pooler.get_pool(self.cr.dbname)
+        pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
+        symbol = pool.get('res.currency').read(self.cr, self.uid, [pricelist['currency_id'][0]], ['symbol'])[0]
+        return symbol['symbol'] or ''
+
     def _get_categories(self, products,form):
         cat_ids=[]
         res=[]
@@ -85,11 +92,11 @@ class product_pricelist(report_sxw.rml_parse):
             product_ids=pool.get('product.product').search(self.cr, self.uid, [('id','in',pro_ids),('categ_id','=',cat['id'])])
             products = []
             for product in pool.get('product.product').read(self.cr, self.uid, product_ids, ['name','code']):
-                val={
-                         'id':product['id'],
-                         'name':product['name'],
-                         'code':product['code']
-                         }
+                val = {
+                     'id':product['id'],
+                     'name':product['name'],
+                     'code':product['code']
+                }
                 i = 1
                 for qty in self.quantity:
                     if qty == 0:

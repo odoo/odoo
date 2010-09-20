@@ -28,7 +28,7 @@ class project_timebox_empty(osv.osv_memory):
     _description = 'Project Timebox Empty'
     _columns = {
         'name': fields.char('Name', size=32)
-                }
+    }
 
     def view_init(self, cr , uid , fields_list, context=None):
         if context is None:

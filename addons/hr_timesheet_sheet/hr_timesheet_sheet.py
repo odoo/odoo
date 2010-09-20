@@ -93,6 +93,7 @@ class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
     _table = 'hr_timesheet_sheet_sheet'
     _order = "id desc"
+    _description="Timesheet"
 
     def _total_day(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -147,7 +148,7 @@ class hr_timesheet_sheet(osv.osv):
                 sheet_id = link_emp[emp.id]
                 result[sheet_id] = emp.state
         return result
-    
+
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
         ids_signin = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_in')])
         ids_signout = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_out')])
@@ -753,7 +754,7 @@ class res_company(osv.osv):
                  "computation for one sheet. Set this to 0 if you do not want any control."),
     }
     _defaults = {
-        'timesheet_range': lambda *args: 'month',
+        'timesheet_range': lambda *args: 'week',
         'timesheet_max_difference': lambda *args: 0.0
     }
 

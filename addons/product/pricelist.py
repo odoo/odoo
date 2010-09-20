@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 
-#from tools.misc import currency
 from _common import rounding
 import time
 from tools import config
@@ -64,7 +63,7 @@ class price_type(osv.osv):
         "active": lambda *args: True,
         "currency_id": _get_currency
     }
-    
+
 price_type()
 
 #----------------------------------------------------------
@@ -93,8 +92,7 @@ class product_pricelist(osv.osv):
             res.append((type['key'],type['name']))
 
         return res
-#        cr.execute('select key,name from product_pricelist_type order by name')
-#        return cr.fetchall()
+
     _name = "product.pricelist"
     _description = "Pricelist"
     _columns = {

@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 
 class sale_installer(osv.osv_memory):
@@ -25,8 +26,8 @@ class sale_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _columns = {
-        'sale_analytic_plans': fields.boolean('Sales Analytic Distribution Management',
-            help="The base module to manage analytic distribution and sales orders."),
+        'sale_analytic_plans': fields.boolean('Sales Analytic Distribution',
+            help="The base module to manage analytic distribution and sale orders."),
         'sale_journal': fields.boolean('Sales and deliveries by journal',
             help="The sale journal modules allows you to categorise your "
                 "sales and deliveries (picking lists) between different journals. "
@@ -41,4 +42,7 @@ class sale_installer(osv.osv_memory):
         'sale_order_dates': fields.boolean('Sale Order Dates',
             help="Add commitment, requested and effective dates on the sale order."),
         }
+    
 sale_installer()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

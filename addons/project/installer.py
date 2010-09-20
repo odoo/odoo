@@ -47,18 +47,18 @@ class project_installer(osv.osv_memory):
         'project_crm': fields.boolean('Issues Tracker',
             help="Automatically synchronizes project tasks and crm cases."),
         # Methodologies
-        'scrum': fields.boolean('SCRUM',
+        'project_scrum': fields.boolean('SCRUM',
             help="Implements and tracks the concepts and task types defined "
                  "in the SCRUM methodology."),
         'project_gtd': fields.boolean('Getting Things Done',
             help="Embeds the 'Getting Things Done concepts' into OpenERP's "
                  "project management."),
         }
-    
+
     _defaults={
-                'project_crm': True,
-               }
-    
+        'project_crm': True,
+    }
+
 project_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -102,8 +102,6 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             elif v[1] in namespaces:
                 ns_prefix="ns"+str(namespaces.index(v[1]))+":"
             else:
-                # namespaces.append(v[1])
-                # nsnum += 1
                 ns_prefix="ns"+str(nsnum)+":"
                 need_ns = True
 

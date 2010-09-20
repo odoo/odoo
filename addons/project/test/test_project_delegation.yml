@@ -61,7 +61,7 @@
   Validating the delegate task
 - 
   !python {model: project.task.delegate}: |
-    self.validate(cr, uid, [ref("project_task_publish_book_delegate")],
+    self.delegate(cr, uid, [ref("project_task_publish_book_delegate")],
       {"lang": "en_US", "active_model": "project.task", "tz": False, "record_id":
       4, "active_ids": [ref("project_task_publish_book")], "active_id": ref("project_task_publish_book"),
       })

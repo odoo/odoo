@@ -33,6 +33,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         self.sum_credit = 0.00
         self.date_lst = []
         self.date_lst_string = ''
+        self.result_acc = []
         self.localcontext.update({
             'time': time,
             'lines': self.lines,
@@ -54,13 +55,12 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
-        self.query_get_clause = data['form'].get('query_line', False) or ''
         return super(account_balance, self).set_context(objects, data, new_ids, report_type=report_type)
 
-    def _add_header(self, node, header=1):
-        if header == 0:
-            self.rml_header = ""
-        return True
+    #def _add_header(self, node, header=1):
+    #    if header == 0:
+    #        self.rml_header = ""
+    #    return True
 
     def _get_account(self, data):
         if data['model']=='account.account':
@@ -68,6 +68,34 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         return super(account_balance ,self)._get_account(data)
 
     def lines(self, form, ids=[], done=None):#, level=1):
+        def _process_child(accounts, disp_acc, parent):
+                account_rec = [acct for acct in accounts if acct['id']==parent][0]
+                res = {
+                    'id': account_rec['id'],
+                    'type': account_rec['type'],
+                    'code': account_rec['code'],
+                    'name': account_rec['name'],
+                    'level': account_rec['level'],
+                    'debit': account_rec['debit'],
+                    'credit': account_rec['credit'],
+                    'balance': account_rec['balance'],
+                    'parent_id': account_rec['parent_id'],
+                    'bal_type': '',
+                }
+                self.sum_debit += account_rec['debit']
+                self.sum_credit += account_rec['credit']
+                if disp_acc == 'bal_movement':
+                    if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
+                        self.result_acc.append(res)
+                elif disp_acc == 'bal_solde':
+                    if  res['balance'] != 0:
+                        self.result_acc.append(res)
+                else:
+                    self.result_acc.append(res)
+                if account_rec['child_id']:
+                    for child in account_rec['child_id']:
+                        _process_child(accounts,disp_acc,child)
+
         obj_account = self.pool.get('account.account')
         if not ids:
             ids = self.ids
@@ -76,8 +104,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if not done:
             done={}
 
-        res = {}
-        result_acc = []
         ctx = self.context.copy()
 
         ctx['fiscalyear'] = form['fiscalyear_id']
@@ -86,69 +112,19 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         elif form['filter'] == 'filter_date':
             ctx['date_from'] = form['date_from']
             ctx['date_to'] =  form['date_to']
-#        accounts = obj_account.browse(self.cr, self.uid, ids, ctx)
-#        def cmp_code(x, y):
-#            return cmp(x.code, y.code)
-#        accounts.sort(cmp_code)
-
+        ctx['state'] = form['target_move']
+        parents = ids
         child_ids = obj_account._get_children_and_consol(self.cr, self.uid, ids, ctx)
         if child_ids:
             ids = child_ids
-        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id','level'], ctx)
-        for account in accounts:
-            if account['id'] in done:
-                continue
-            done[account['id']] = 1
-            res = {
-                    'id': account['id'],
-                    'type': account['type'],
-                    'code': account['code'],
-                    'name': account['name'],
-                    'level': account['level'],
-                    'debit': account['debit'],
-                    'credit': account['credit'],
-                    'balance': account['balance'],
-                   # 'leef': not bool(account['child_id']),
-                    'parent_id':account['parent_id'],
-                    'bal_type':'',
-                }
-            self.sum_debit += account['debit']
-            self.sum_credit += account['credit']
-#            if account.child_id:
-#                def _check_rec(account):
-#                    if not account.child_id:
-#                        return bool(account.credit or account.debit)
-#                    for c in account.child_id:
-#                        if not _check_rec(c) or _check_rec(c):
-#                            return True
-#                    return False
-#                if not _check_rec(account) :
-#                    continue
-#            if account['parent_id']:
-#                acc = obj_account.read(self.cr, self.uid, [ account['parent_id'][0] ] ,['name'], ctx)
-#                for r in result_acc:
-#                    if r['id'] == account['parent_id'][0]:
-#                        res['level'] = r['level'] + 1
-#                        break
-            if form['display_account'] == 'bal_movement':
-                if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
-                    result_acc.append(res)
-            elif form['display_account'] == 'bal_solde':
-                if  res['balance'] != 0:
-                    result_acc.append(res)
-            else:
-                result_acc.append(res)
-#            if account.child_id:
-#                acc_id = [acc.id for acc in account.child_id]
-#                lst_string = ''
-#                lst_string = '\'' + '\',\''.join(map(str,acc_id)) + '\''
-#                self.cr.execute("select code,id from account_account where id IN (%s)"%(lst_string))
-#                a_id = self.cr.fetchall()
-#                a_id.sort()
-#                ids2 = [x[1] for x in a_id]
-#
-#                result_acc += self.lines(form, ids2, done, level+1)
-        return result_acc
+        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id','level','child_id'], ctx)
+
+        for parent in parents:
+                if parent in done:
+                    continue
+                done[parent] = 1
+                _process_child(accounts,form['display_account'],parent)
+        return self.result_acc
 
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header="internal")
 

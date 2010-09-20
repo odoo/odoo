@@ -54,7 +54,7 @@
                         <field colspan="4" name="planning_account"
                                 nolabel="1" widget="one2many_list" readonly="1">
                             <tree string="Planning By Account (in Days)">
-                                <field name="account_id" />
+                                <field name="account_id" groups="base.group_extended"/>
                                 <field name="tasks" sum="Total Remaining Tasks"/>
                                 <field name="plan_tasks" sum="Total Time Allocation of Tasks"/>
                                 <field name="plan_open" sum="Total Time Allocation without Tasks"/>
@@ -68,7 +68,7 @@
                                 <tree editable="bottom"
                                     string="Planning Lines">
                                     <field name="user_id"/>
-                                    <field name="account_id" />
+                                    <field name="account_id" groups="base.group_extended"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
                                     <field name="task_ids" />
@@ -78,11 +78,9 @@
                                 </tree>
                                 <form string="Planning Lines">
                                     <field name="user_id" domain="[('id','child_of',[parent.user_id])]"/>
-                                    <field name="account_id"/>
+                                    <field name="account_id" groups="base.group_extended"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
-<!--                                    WIDGET MANY2MANY GIVES ERROR-->
-<!--                                    <field name="task_ids" colspan="4" nolabel="1" widget="many2many"/>-->
                                        <field name="task_ids" colspan="4" nolabel="1" mode="tree,form">
                                         <form string="Tasks">
                                             <group colspan="4" col="2">
@@ -102,7 +100,6 @@
                                                             attrs="{'readonly':[('state','!=','draft')]}"
                                                             on_change="onchange_planned(planned_hours,effective_hours)"/>
                                                         <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                                        <button name="%(project.action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                                                     </group>
                                                     <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                                                     <group col="11" colspan="4">
@@ -112,7 +109,7 @@
                                                         <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert"/>
                                                         <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
                                                         <button groups="base.group_extended" name="%(project.action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
-                                                        <button name="%(project.action_project_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
+                                                        <button name="%(project.action_project_task_close)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
                                                         <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
 
                                                     </group>
@@ -183,7 +180,7 @@
                 <tree string="Planning Line">
                     <field name="planning_id"/>
                     <field name="user_id"/>
-                    <field name="account_id" />
+                    <field name="account_id" groups="base.group_extended"/>
                     <field name="amount" />
                     <field name="amount_unit" />
                     <field name="note" select="1"/>
@@ -200,7 +197,7 @@
                 <form string="Planning Line">
                     <field name="planning_id" select="1"/>
                     <field name="user_id" select="1"/>
-                    <field name="account_id" select="1"/>
+                    <field name="account_id" select="1" groups="base.group_extended"/>
                     <field name="amount" />
                     <field name="amount_unit" />
                     <separator string="Notes" colspan="4" />
@@ -236,7 +233,7 @@
                 <form string="Planning statistics">
                     <field name="planning_id" select="1" />
                     <field name="user_id" select="1" />
-                    <field name="account_id" select="1" />
+                    <field name="account_id" select="1" groups="base.group_extended"/>
                 </form>
             </field>
         </record>
@@ -251,7 +248,7 @@
                     <field name="planning_id" />
                     <field name="user_id" />
                     <field name="manager_id" />
-                    <field name="account_id" />
+                    <field name="account_id" groups="base.group_extended"/>
                     <field name="sum_amount" />
                     <field name="sum_amount_real" />
                     <field name="sum_amount_tasks" />
@@ -265,7 +262,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Planning statistics" type="bar">
-                    <field name="account_id" />
+                    <field name="account_id"/>
                     <field name="sum_amount" operator="+" />
                     <field name="sum_amount_real" operator="+" />
                     <field name="sum_amount_tasks" operator="+" />
@@ -285,7 +282,7 @@
                         <separator orientation="vertical"/>
                         <field name="planning_id" select="1"/>
                         <field name="user_id" select="1"/>
-                        <field name="account_id" select="1"/>
+                        <field name="account_id" select="1" groups="base.group_extended"/>
                     </group>
                 </search>
             </field>
@@ -327,7 +324,7 @@
                             <tree editable="bottom"
                                     string="Planning Lines">
                                     <field name="user_id"/>
-                                    <field name="account_id" />
+                                    <field name="account_id" groups="base.group_extended"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
                                     <field name="task_ids" />

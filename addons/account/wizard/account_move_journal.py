@@ -47,6 +47,8 @@ class account_move_journal(osv.osv_memory):
         journal_pool = self.pool.get('account.journal')
         if context.get('journal_type', False):
             jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
+            if not jids:
+                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.' % (context.get('journal_type'))))
             journal_id = jids[0]
 
         return journal_id
@@ -154,13 +156,12 @@ class account_move_journal(osv.osv_memory):
         res_id = data_pool.browse(cr, uid, result, context=context).res_id
         
         return {
-#            'domain': str([('journal_id', '=', journal_id), ('period_id', '=', period_id)]),
             'name': name,
             'view_type': 'form',
             'view_mode': 'tree,graph,form',
             'res_model': 'account.move.line',
             'view_id': False,
-            'context': "{'visible_id':%s, 'journal_id': %d, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, journal_id, period_id),
+            'context': "{'visible_id':%s, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, period_id),
             'type': 'ir.actions.act_window',
             'search_view_id': res_id
         }

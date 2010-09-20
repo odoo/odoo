@@ -63,15 +63,15 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
     def sum_dr(self):
         if self.res_bl['type'] == 'Net Profit':
             self.result_sum_dr += self.res_bl['balance']
-        return self.result_sum_dr or 0.0
+        return self.result_sum_dr
 
     def sum_cr(self):
         if self.res_bl['type'] == 'Net Loss':
             self.result_sum_cr += self.res_bl['balance']
-        return self.result_sum_cr or 0.0
+        return self.result_sum_cr
 
     def get_pl_balance(self):
-        return self.res_bl or 0.0
+        return self.res_bl
 
     def get_data(self,data):
         cr, uid = self.cr, self.uid
@@ -91,7 +91,6 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         ]
 
         ctx = self.context.copy()
-#        ctx['state'] = form['context'].get('state','filter_no')
         ctx['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
         if data['form']['filter'] == 'filter_period' :
@@ -99,7 +98,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         elif data['form']['filter'] == 'filter_date':
             ctx['date_from'] = data['form'].get('date_from', False)
             ctx['date_to'] =  data['form'].get('date_to', False)
-
+        ctx['state'] = data['form'].get('target_move', 'all')
         cal_list = {}
         pl_dict = {}
         account_dict = {}
@@ -197,7 +196,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
 
 report_sxw.report_sxw('report.account.balancesheet.horizontal', 'account.account',
     'addons/account/report/account_balance_sheet_horizontal.rml',parser=report_balancesheet_horizontal,
-    header='internal')
+    header='internal landscape')
 
 report_sxw.report_sxw('report.account.balancesheet', 'account.account',
     'addons/account/report/account_balance_sheet.rml',parser=report_balancesheet_horizontal,

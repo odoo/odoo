@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Invoice rate by user" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="35.0" y1="57.0" width="525" height="728"/>
     </pageTemplate>
@@ -224,7 +224,7 @@
           <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['profit'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</u></para>
         </td>
         <td>
-          <para style="terp_default_Right_9_bold_U"><u>[[reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) and round(reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)/reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)* -100, 2)]] %</u></para>
+          <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) and round(reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)/reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)* -100, 2)]] %</u></para>
         </td>
       </tr>
     </blockTable>
@@ -255,7 +255,7 @@
             <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['profit'], line(data['form'], [j.id], [e.id]), 0) ]]</u></para>
           </td>
           <td>
-            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) and  '%d' % (reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) / reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) * 100.0, 2)]] %</u></para>
+            <para style="terp_default_Right_9_bold_U"><u>[[ reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) and  (reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) / reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) * 100.0)]] %</u></para>
           </td>
         </tr>
       </blockTable>

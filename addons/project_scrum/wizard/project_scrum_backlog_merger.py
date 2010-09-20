@@ -26,7 +26,7 @@ class project_scrum_backlog_merge(osv.osv_memory):
     _description = 'Merge Product Backlogs'
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', help="Select project for the new product backlog"),
-               }
+    }
 
     def check_backlogs(self, cr, uid, ids, context=None):
         backlog_obj = self.pool.get('project.scrum.product.backlog')
@@ -54,7 +54,7 @@ class project_scrum_backlog_merge(osv.osv_memory):
                 'views': [(resource_id,'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                }
+            }
         return self.do_merge(cr, uid, ids, context=context)
 
     def do_merge(self, cr, uid, ids, context=None):

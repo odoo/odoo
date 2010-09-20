@@ -121,12 +121,22 @@
 -
     !delete { model: ir.attachment, id:,  search: "[('name','=','test2.txt')]" }
 -
+    I also commit, because ftp would run in a different transaction.
+-
+    !python {model: ir.attachment}: |
+        cr.commit()
+-
     I check through FTP that test2.txt does not appear.
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
+        import ftplib
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        assert ftp.nlst("test2.txt") == []
+        try:
+            nlst_result = ftp.nlst("test2.txt")
+        except ftplib.error_perm: # 550 error: 'path not exists'
+            nlst_result = []
+        assert "test2.txt" not in nlst_result, "Files: %r" % nlst_result
 -
     I create a "test-name.txt" file
 -
@@ -152,7 +162,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         try:
             res = ftp.nlst("test-name.txt")
-            assert res == []
+            assert res == [], "File has not been renamed!"
         except error_perm, e:
             pass
         assert ftp.nlst("test-renamed.txt") == ['test-renamed.txt']
@@ -178,7 +188,7 @@
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
-        assert ftp.nlst("test3.txt") == ['test3.txt']
+        assert ftp.nlst("test3.txt") == ['test3.txt'], "File test3.txt is not there!"
 -
     I create a new folder, 'Test-Folder3', through FTP
     I try to move test3.txt to 'Test-Folder3'
@@ -211,7 +221,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
         # TODO speed
-        assert len(ftp.nlst()) > 200
+        assert len(ftp.nlst()) >= 200, "We haven't managed to store 200 files!"
 -
     I read the 200 files, check speed
     # TODO

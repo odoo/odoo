@@ -40,6 +40,9 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         new_ids = ids
         self.sortby = data['form'].get('sortby', 'sort_date')
         self.query = data['form'].get('query_line', '')
+        self.init_query = data['form']['initial_bal_query']
+        self.init_balance = data['form']['initial_balance']
+        self.display_account = data['form']['display_account']
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
@@ -74,19 +77,19 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         })
         self.context = context
 
-    def _sum_currency_amount_account(self, account, form):
+    def _sum_currency_amount_account(self, account):
         self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s" %(account.id, self.query))
         sum_currency = self.cr.fetchone()[0] or 0.0
-        if form.get('initial_balance', False):
+        if self.init_balance:
             self.cr.execute("SELECT sum(l.amount_currency) AS tot_currency "\
                             "FROM account_move_line l "\
-                            "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+                            "WHERE l.account_id = %s AND %s "%(account.id, self.init_query))
             sum_currency += self.cr.fetchone()[0] or 0.0
         return str(sum_currency)
 
-    def get_children_accounts(self, account, form):
+    def get_children_accounts(self, account):
         res = []
         ids_acc = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account.id)
         for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc):
@@ -97,12 +100,12 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             """ % (self.query)
             self.cr.execute(sql, (child_account.id,))
             num_entry = self.cr.fetchone()[0] or 0
-            sold_account = self._sum_balance_account(child_account,form)
+            sold_account = self._sum_balance_account(child_account)
             self.sold_accounts[child_account.id] = sold_account
-            if form['display_account'] == 'bal_movement':
+            if self.display_account == 'bal_movement':
                 if child_account.type != 'view' and num_entry <> 0 :
                     res.append(child_account)
-            elif form['display_account'] == 'bal_solde':
+            elif self.display_account == 'bal_solde':
                 if child_account.type != 'view' and num_entry <> 0 :
                     if ( sold_account <> 0.0):
                         res.append(child_account)
@@ -112,7 +115,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             return [account]
         return res
 
-    def lines(self, account, form):
+    def lines(self, account):
         """ Return all the account_move_line of account with their account code counterparts """
         # First compute all counterpart strings for every move_id where this account appear.
         # Currently, the counterpart info is used only in landscape mode
@@ -136,7 +139,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         sql = """
             SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
             m.name AS move_name, m.id AS mmove_id,
-            c.code AS currency_code,
+            c.symbol AS currency_code,
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,
             p.name AS partner_name
             FROM account_move_line l
@@ -150,7 +153,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         self.cr.execute(sql, (account.id,))
         res_lines = self.cr.dictfetchall()
         res_init = []
-        if res_lines and form['initial_balance']:
+        if res_lines and self.init_balance:
             #FIXME: replace the label of lname with a string translatable
             sql = """
                 SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
@@ -165,7 +168,7 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
                 LEFT JOIN account_invoice i on (m.id =i.move_id)
                 JOIN account_journal j on (l.journal_id=j.id)
                 WHERE %s AND l.account_id = %%s
-            """ %(form['initial_bal_query'])
+            """ %(self.init_query)
 
             self.cr.execute(sql, (account.id,))
             res_init = self.cr.dictfetchall()
@@ -188,41 +191,41 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
                 self.tot_currency = self.tot_currency + l['amount_currency']
         return res
 
-    def _sum_debit_account(self, account, form):
+    def _sum_debit_account(self, account):
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s "%(account.id, self.query))
         sum_debit = self.cr.fetchone()[0] or 0.0
-        if form.get('initial_balance', False):
+        if self.init_balance:
             self.cr.execute("SELECT sum(debit) "\
                     "FROM account_move_line l "\
-                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+                    "WHERE l.account_id = %s AND %s "%(account.id, self.init_query))
             # Add initial balance to the result
             sum_debit += self.cr.fetchone()[0] or 0.0
         return sum_debit
 
-    def _sum_credit_account(self, account, form):
+    def _sum_credit_account(self, account):
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s "%(account.id, self.query))
         sum_credit = self.cr.fetchone()[0] or 0.0
-        if form.get('initial_balance', False):
+        if self.init_balance:
             self.cr.execute("SELECT sum(credit) "\
                     "FROM account_move_line l "\
-                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+                    "WHERE l.account_id = %s AND %s "%(account.id, self.init_query))
             # Add initial balance to the result
             sum_credit += self.cr.fetchone()[0] or 0.0
         return sum_credit
 
-    def _sum_balance_account(self, account, form):
+    def _sum_balance_account(self, account):
         self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_balance "\
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s"%(account.id, self.query))
         sum_balance = self.cr.fetchone()[0] or 0.0
-        if form.get('initial_balance', False):
+        if self.init_balance:
             self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_balance "\
                     "FROM account_move_line l "\
-                    "WHERE l.account_id = %s AND %s "%(account.id, form['initial_bal_query']))
+                    "WHERE l.account_id = %s AND %s "%(account.id, self.init_query))
             # Add initial balance to the result
             sum_balance += self.cr.fetchone()[0] or 0.0
         return sum_balance
@@ -240,6 +243,6 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
         return 'Date'
 
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/account_general_ledger.rml', parser=general_ledger, header='internal')
-report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/account_general_ledger_landscape.rml', parser=general_ledger, header='internal')
+report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/account_general_ledger_landscape.rml', parser=general_ledger, header='internal landscape')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

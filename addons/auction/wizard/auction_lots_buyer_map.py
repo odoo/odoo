@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
+from osv import osv,fields
+from tools.translate import _ 
 import netsvc
 import sql_db
-from osv import osv,fields 
 
 class wiz_auc_lots_buyer_map(osv.osv_memory):
     _name = 'auction.lots.buyer_map'

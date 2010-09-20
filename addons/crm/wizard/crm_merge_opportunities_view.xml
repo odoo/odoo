@@ -34,16 +34,10 @@
             <field name="target">new</field>
         </record>
 
-        <!--    This will also come in Leads Form as Lead and Opportunity are same object-->
-        <!-- <record id="merge_opportunity_act_value" model="ir.values">
-            <field name="model_id" ref="model_crm_lead" />
-            <field name="object" eval="1" />
-            <field name="name">Merge Opportunities</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('merge_opportunity_act'))"/>
-            <field name="key">action</field>
-            <field name="model">crm.lead</field>
-        </record> -->
+        <act_window id="action_merge_opportunities"
+            key2="client_action_multi" name="Merge Opportunities"
+            res_model="crm.merge.opportunity" src_model="crm.lead"
+            view_mode="form" target="new" view_type="form" />
 
     </data>
 </openerp>

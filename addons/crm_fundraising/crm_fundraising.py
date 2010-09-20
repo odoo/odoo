@@ -22,7 +22,7 @@
 from osv import fields, osv, orm
 from crm import crm
 
-class crm_fundraising(osv.osv, crm.crm_case):
+class crm_fundraising(crm.crm_case, osv.osv):
     """ Fund Raising Cases """
 
     _name = "crm.fundraising"

@@ -8,15 +8,15 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">CRM Modules Configuration</attribute>
+            <attribute name="string">CRM Application Configuration</attribute>
           </form>
 
           <separator string="title" position="attributes">
-            <attribute name="string">Configure Your CRM System</attribute>
+            <attribute name="string">Configure Your CRM Application</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string">You can enhance OpenERP's basic CRM support with a few additional OpenERP applications</attribute>
+            <attribute name="string">Enhance your CRM basic Application with additional Addons.</attribute>
           </xpath>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
               <attribute name='rowspan'>13</attribute>
@@ -39,10 +39,9 @@
           		<field name="fetchmail" />
           	</group>
           	<group colspan="2" col="2">
-			<separator string="Plugins" colspan="4" />
+			<separator string="Plug-In" colspan="4" />
           		<field name="thunderbird" />
-<!--          		<label string="*Outlook*" />-->
-<!--    TODO      		<field name="outlook" />-->
+          		<field name="outlook" />
           	</group>
           </group>
         </data>
@@ -50,7 +49,7 @@
     </record>
 
     <record id="action_crm_installer" model="ir.actions.act_window">
-      <field name="name">CRM Modules Installation</field>
+      <field name="name">CRM Application Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">crm.installer</field>
       <field name="view_id" ref="view_crm_installer"/>
@@ -62,6 +61,7 @@
     <record id="crm_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_crm_installer"/>
       <field name="sequence">3</field>
+      <field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
     </record>
   </data>
 </openerp>

@@ -2,13 +2,13 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"/>
-            <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
+
+        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
-<!--        <menuitem name="Control" id="menu_mrp_control" parent="base.menu_mrp_root"  sequence="3" />-->
         <menuitem name="Master Data"
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
@@ -73,7 +73,7 @@
                 </form>
             </field>
         </record>
-     
+
         <record id="view_mrp_property_search" model="ir.ui.view">
             <field name="name">mrp.property.search</field>
             <field name="model">mrp.property</field>
@@ -92,8 +92,8 @@
                </search>
             </field>
         </record>
-           
-        
+
+
         <record id="mrp_property_action" model="ir.actions.act_window">
             <field name="name">Properties</field>
             <field name="type">ir.actions.act_window</field>
@@ -176,7 +176,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Search Views -->
 
         <record id="view_mrp_workcenter_search" model="ir.ui.view">
@@ -284,8 +284,6 @@
             <field name="view_id" ref="mrp_routing_tree_view"/>
             <field name="help">Routings define the assembly operations to be done in work centers for manufacturing a certain product. They are usually attached to bills of materials which will define the assembly of products required for manufacture or for finished products.</field>
         </record>
- <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
-                  sequence="100" />-->
         <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="40" />
         <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="30"/>
 
@@ -369,7 +367,7 @@
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-                        
+
                    </group>
                 </search>
             </field>
@@ -416,10 +414,6 @@
 
         <!-- BOM menus -->
 
-  <!--      <menuitem name="Bill of Materials"
-                  id="menu_mrp_bom"
-                  parent="menu_mrp_bom"
-                  sequence="50" />-->
         <menuitem
             action="mrp_bom_form_action"
             id="menu_mrp_bom_form_action"
@@ -429,7 +423,7 @@
         <menuitem
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
-            groups="base.group_extended,mrp.group_mrp_user,mrp.group_mrp_manager,base.group_system"
+            groups="base.group_extended"
             parent="menu_mrp_bom"
             sequence="20"/>
 
@@ -484,10 +478,7 @@
 
         <menuitem action="procurement.procurement_action" id="base.menu_mrp_procurement_action"
                   parent="mrp.menu_mrp_manufacturing" sequence="3" />
-<!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
-<!--                  parent="mrp.menu_mrp_control" sequence="1" />-->
-
-         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
+        <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager" sequence="3"/>
         <menuitem action="procurement.action_compute_schedulers" id="base.mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90" groups="base.group_system,mrp.group_mrp_user,mrp.group_mrp_manager"/>
 
         <!--
@@ -582,10 +573,7 @@
                         </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
-                        <group colspan="2" col="3" groups="product.group_uos">
-                            <field name="product_uos"/>
-                            <label string=""/>
-                        </group>
+                        <field name="product_uos" groups="product.group_uos"/>
                     </group>
 
                     <notebook colspan="4">
@@ -617,14 +605,14 @@
 
                             <field colspan="2" name="move_lines2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                                        widget="one2many_list" mode="tree,form" height="275">
-                                   <tree colors="red:scraped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Consumed Products" editable="bottom">
+                                   <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                    <field name="product_uom" readonly="1" string="UOM"/>
-                                    <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
-                                    <field name="prodlot_id" />
-                                    <field name="state" invisible="1"/>
-                                    <field name="scraped" invisible="1"/>
+                                       <field name="product_uom" readonly="1" string="UOM"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
+                                       <field name="prodlot_id" />
+                                       <field name="state" invisible="1"/>
+                                       <field name="scrapped" invisible="1"/>
                                        <button
                                            name="%(stock.track_line)d"
                                            string="Split in production lots"
@@ -657,7 +645,7 @@
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc."/>
-                                    <field name="state" invisible="1"/>                                    
+                                    <field name="state" invisible="1"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -667,14 +655,13 @@
 
                             <field colspan="2" name="move_created_ids2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                                        widget="one2many_list" mode="tree,form" height="275">
-                                   <tree colors="red:scraped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products" editable="bottom">
+                                   <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                    <field name="product_uom" readonly="1" string="UOM"/>
-                                    <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
+                                       <field name="product_uom" readonly="1" string="UOM"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                                        <field name="prodlot_id" />
-                                    <field name="state" invisible="1"/>
-                                    <field name="scraped" invisible="1"/>
+                                       <field name="scrapped" invisible="1"/>
                                        <button name="%(stock.track_line)d"
                                             string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                                        <button name="%(stock.move_scrap)d"
@@ -910,7 +897,8 @@
             view_type="tree"
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="base.group_extended"/>
 
         <act_window
             domain="[('product_id', '=', active_id),('bom_id','=',False)]"
@@ -920,10 +908,9 @@
             src_model="product.product"/>
 
         <!-- Menu for Resource for MRP-->
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" groups="mrp.group_mrp_user" sequence="3" />
 
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
-            groups="base.group_extended,mrp.group_mrp_manager,base.group_system"
+            groups="base.group_extended"
             sequence="4"/>
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>

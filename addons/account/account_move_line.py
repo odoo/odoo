@@ -29,7 +29,7 @@ import tools
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
-    _description = "Entry Lines"
+    _description = "Journal Items"
 
     def _query_get(self, cr, uid, obj='l', context={}):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
@@ -159,6 +159,9 @@ class account_move_line(osv.osv):
         return context
 
     def _default_get(self, cr, uid, fields, context={}):
+
+        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')
 
         period_obj = self.pool.get('account.period')
 
@@ -305,6 +308,7 @@ class account_move_line(osv.osv):
         ml = self.browse(cr, uid, id, context)
         return map(lambda x: x.id, ml.move_id.line_id)
 
+    # TODO: this is false, it does not uses draft and closed periods
     def _balance(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res={}
         # TODO group the foreach in sql
@@ -344,9 +348,9 @@ class account_move_line(osv.osv):
         result = []
         for line in self.browse(cr, uid, ids, context):
             if line.ref:
-                result.append((line.id, (line.name or '')+' ('+line.ref+')'))
+                result.append((line.id, (line.move_id.name or '')+' ('+line.ref+')'))
             else:
-                result.append((line.id, line.name))
+                result.append((line.id, line.move_id.name))
         return result
 
     def _balance_search(self, cursor, user, obj, name, args, domain=None, context=None):
@@ -424,9 +428,9 @@ class account_move_line(osv.osv):
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
-        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2),
+        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
         'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Narration'),
-        'ref': fields.char('Ref.', size=64),
+        'ref': fields.related('move_id', 'ref', string='Reference', type='char', size=64, store=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
@@ -435,10 +439,10 @@ class account_move_line(osv.osv):
 
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
-        'blocked': fields.boolean('Litigation', help="You can check this box to mark the entry line as a litigation with the associated partner"),
+        'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
 
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable entries. You can put the limit date for the payment of this entry line."),
+        'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
             store={
                 'account.move': (_get_move_lines, ['date'], 20)
@@ -447,7 +451,7 @@ class account_move_line(osv.osv):
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
-        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True,
+        'state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State', readonly=True,
                                   help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
         'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
@@ -455,10 +459,10 @@ class account_move_line(osv.osv):
         'invoice': fields.function(_invoice, method=True, string='Invoice',
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
-        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
-#TODO: remove this
-        'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
-        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        #TODO: remove this
+        #'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
 
     }
 
@@ -572,7 +576,7 @@ class account_move_line(osv.osv):
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
                 #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
-                # Bank and cash journal can have a payment or receipt transection, and in both type partner account
+                # Bank and cash journal can have a payment or receipt transaction, and in both type partner account
                 # will not be same id payment then payable, and if receipt then receivable
                 #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
                 if jt in ('sale', 'purchase_refund'):
@@ -864,7 +868,8 @@ class account_move_line(osv.osv):
         fields = {}
         flds = []
         title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
-        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
+        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write" colors="red:state==\'draft\';black:state==\'valid\'">\n\t''' % (title)
+
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
         all_journal = [None]
@@ -902,14 +907,19 @@ class account_move_line(osv.osv):
             field = field_it[0]
             if common_fields.get(field) == total:
                 fields.get(field).append(None)
-            if field=='state':
-                state = 'colors="red:state==\'draft\'"'
+
+#            if field=='state':
+#                state = 'colors="red:state==\'draft\'"'
+
             attrs = []
             if field == 'debit':
                 attrs.append('sum="Total debit"')
 
             elif field == 'credit':
                 attrs.append('sum="Total credit"')
+
+            elif field == 'move_id':
+                attrs.append('required="False"')
 
             elif field == 'account_tax_id':
                 attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
@@ -954,6 +964,24 @@ class account_move_line(osv.osv):
                                 'has been confirmed!') % res[2])
         return res
 
+    def _remove_move_reconcile(self, cr, uid, move_ids=[], context=None):
+        # Function remove move rencocile ids related with moves
+        obj_move_line = self.pool.get('account.move.line')
+        obj_move_rec = self.pool.get('account.move.reconcile')
+        unlink_ids = []
+        if not move_ids:
+            return True
+        recs = obj_move_line.read(cr, uid, move_ids, ['reconcile_id','reconcile_partial_id'])
+        full_recs = filter(lambda x: x['reconcile_id'], recs)
+        rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
+        part_recs = filter(lambda x: x['reconcile_partial_id'], recs)
+        part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
+        unlink_ids += rec_ids
+        unlink_ids += part_rec_ids
+        if len(unlink_ids):
+            obj_move_rec.unlink(cr, uid, unlink_ids)
+        return True
+
     def unlink(self, cr, uid, ids, context={}, check=True):
         self._update_check(cr, uid, ids, context)
         result = False
@@ -975,9 +1003,10 @@ class account_move_line(osv.osv):
             if 'period_id' in vals and 'period_id' not in context:
                 period_id = vals['period_id']
             elif 'journal_id' not in context and 'move_id' in vals:
-                m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
-                journal_id = m.journal_id.id
-                period_id = m.period_id.id
+                if vals.get('move_id', False):
+                    m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
+                    journal_id = m.journal_id.id
+                    period_id = m.period_id.id
             else:
                 journal_id = context.get('journal_id',False)
                 period_id = context.get('period_id',False)
@@ -986,7 +1015,7 @@ class account_move_line(osv.osv):
                 if journal.allow_date and period_id:
                     period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
                     if not time.strptime(vals['date'][:10],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'][:10],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
-                        raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
+                        raise osv.except_osv(_('Error'),_('The date of your Journal Entry is not in the defined period!'))
         else:
             return True
 
@@ -1074,9 +1103,9 @@ class account_move_line(osv.osv):
         self._check_date(cr, uid, vals, context, check)
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
-        if 'journal_id' in vals and 'journal_id' not in context:
+        if 'journal_id' in vals:
             context['journal_id'] = vals['journal_id']
-        if 'period_id' in vals and 'period_id' not in context:
+        if 'period_id' in vals:
             context['period_id'] = vals['period_id']
         if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
             m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
@@ -1084,8 +1113,6 @@ class account_move_line(osv.osv):
             context['period_id'] = m.period_id.id
 
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
-        company_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-
         move_id = vals.get('move_id', False)
         journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
         is_new_move = False
@@ -1124,7 +1151,10 @@ class account_move_line(osv.osv):
                     if a.id == vals['account_id']:
                         ok = True
                         break
-            if (account.currency_id) and 'amount_currency' not in vals and account.currency_id.id <> company_currency:
+
+            # Automatically convert in the account's secondary currency if there is one and
+            # the provided values were not already multi-currency
+            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
                 cur_obj = self.pool.get('res.currency')
                 ctx = {}
@@ -1148,11 +1178,6 @@ class account_move_line(osv.osv):
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals.get('ref', False),
                     })]
-            #else:
-            #    raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
-
-        #if not 'currency_id' in vals:
-        #    vals['currency_id'] = account.company_id.currency_id.id
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
@@ -1173,7 +1198,7 @@ class account_move_line(osv.osv):
                 tax_sign = 'tax_sign'
 
             tmp_cnt = 0
-            for tax in tax_obj.compute(cr, uid, [tax_id], total, 1.00):
+            for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00).get('taxes'):
                 #create the base movement
                 if tmp_cnt == 0:
                     if tax[base_code]:
@@ -1221,11 +1246,6 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        # No needed, related to the job
-        #if not is_new_move and 'date' in vals:
-        #    if context and ('__last_update' in context):
-        #        del context['__last_update']
-        #    self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
         if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:

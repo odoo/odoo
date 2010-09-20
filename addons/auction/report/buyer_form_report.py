@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -59,9 +59,6 @@ class buyer_form_report(report_sxw.rml_parse):
             else:
                 lots = partner.get('lots')
                 lots.append(object)
-#       buyer_ids=self.pool.get(auction.lots).read(cr,uid,lot)
-
-
         return ret_dict.values()
 
     def grand_buyer_total(self,o):

@@ -73,6 +73,35 @@ class crm_case(object):
             return False
         return user.address_id.partner_id.id
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Overrides orm copy method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: Id of mailgate thread
+        @param default: Dictionary of default values for copy.
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+
+        default.update({
+                    'message_ids': [], 
+                })
+        if hasattr(self, '_columns'):
+            if self._columns.get('date_closed'):
+                default.update({
+                    'date_closed': False, 
+                })
+            if self._columns.get('date_open'):
+                default.update({
+                    'date_open': False
+                })
+        return super(osv.osv, self).copy(cr, uid, id, default, context=context)
+    
     def _get_default_email(self, cr, uid, context):
         """Gives default email address for current user
         @param self: The object pointer
@@ -451,15 +480,33 @@ class crm_case(object):
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
+    def message_followers(self, cr, uid, ids, context=None):
+        """ Get a list of emails of the people following this thread
+        """
+        res = {}
+        for case in self.browse(cr, uid, ids, context=context):
+            l=[]
+            if case.email_cc:
+                l.append(case.email_cc)
+            if case.user_id and case.user_id.user_email:
+                l.append(case.user_id.user_email)
+            res[case.id] = l
+        return res
+
+
 class crm_case_section(osv.osv):
     """Sales Team"""
 
     _name = "crm.case.section"
     _description = "Sales Teams"
-    _order = "name"
+    _order = "complete_name"
+
+    def get_full_name(self, cr, uid, ids, field_name, arg, context={}):
+        return  dict(self.name_get(cr, uid, ids, context))
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
+        'complete_name': fields.function(get_full_name, method=True, type='char', size=256, readonly=True, store=True),
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),

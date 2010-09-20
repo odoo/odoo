@@ -37,8 +37,8 @@ class sale_shop(osv.osv):
         'payment_default_id': fields.many2one('account.payment.term', 'Default Payment Term', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
-        'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'project_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('parent_id', '!=', False)]),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
 sale_shop()
@@ -247,7 +247,7 @@ class sale_order(osv.osv):
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Picking', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
-        'shipped': fields.boolean('Picked', readonly=True, help="It indicates that a picking has been done. It will be set to True if the ordered quantities are available and the picking is done. If the ordered quantities are not available it generates a Purchase/Manufacturing order. Unless its Picking and Purchase/Manufacturing order are not in the done state it wont be set to True"),
+        'shipped': fields.boolean('Picked', readonly=True, help="It indicates that a picking has been done. It will be set to True if the ordered quantities are available and the picking is done. If the ordered quantities are not available Procurement generates a Purchase/Manufacturing order. Unless its Picking and Purchase/Manufacturing order are not in the done state it wont be set to True"),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
@@ -273,10 +273,10 @@ class sale_order(osv.osv):
             },
             multi='sums', help="The total amount"),
 
-        'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
+        'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you want your invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.many2one('res.company','Company')
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
@@ -290,7 +290,6 @@ class sale_order(osv.osv):
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
-#        'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist.id,
     }
     _order = 'name desc'
 
@@ -315,7 +314,6 @@ class sale_order(osv.osv):
             # Que faire si le client a une pricelist a lui ?
             if shop.pricelist_id.id:
                 v['pricelist_id'] = shop.pricelist_id.id
-            #v['payment_default_id']=shop.payment_default_id.id
         return {'value': v}
 
     def action_cancel_draft(self, cr, uid, ids, *args):
@@ -696,15 +694,14 @@ class sale_order(osv.osv):
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
 
             val = {}
-            if picking_id:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-
             for proc_id in proc_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
 
+            if picking_id:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+                
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
 
@@ -773,6 +770,7 @@ sale_order()
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
+
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -1172,9 +1170,9 @@ class sale_config_picking_policy(osv.osv_memory):
            "in one or two operations by the worker.")
     }
     _defaults = {
-        'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'manual',
-        'step': lambda *a: 'one'
+        'picking_policy': 'direct',
+        'order_policy': 'manual',
+        'step': 'one'
     }
 
     def execute(self, cr, uid, ids, context=None):

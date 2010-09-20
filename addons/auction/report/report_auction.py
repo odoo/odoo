@@ -34,11 +34,11 @@ def _type_get(self, cr, uid, context=None):
     obj = self.pool.get('auction.lot.category')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['name'], context)
-    res = [(r['name'], r['name']) for r in res]   
-    return res 
+    res = [(r['name'], r['name']) for r in res]
+    return res
 
 class report_auction(osv.osv):
-    
+
     """Auction Report"""
     _name = "report.auction"
     _description = "Auction's Summary"
@@ -49,22 +49,22 @@ class report_auction(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'buyer_login': fields.char('Buyer Login', size=64, readonly=True, select=1), 
-        'buyer':fields.many2one('res.partner', 'Buyer', readonly=True, select=2), 
+        'buyer_login': fields.char('Buyer Login', size=64, readonly=True, select=1),
+        'buyer':fields.many2one('res.partner', 'Buyer', readonly=True, select=2),
         'seller': fields.many2one('res.partner', 'Seller', readonly=True, select=1),
-        'object':fields.integer('No of objects', readonly=True, select=1), 
+        'object':fields.integer('No of objects', readonly=True, select=1),
         'total_price':fields.float('Total Price', digits=(16, 2), readonly=True, select=2),
-        'lot_type': fields.selection(_type_get, 'Object category', size=64), 
-        'avg_price':fields.float('Avg Price.', digits=(16, 2), readonly=True, select=2), 
+        'lot_type': fields.selection(_type_get, 'Object category', size=64),
+        'avg_price':fields.float('Avg Price.', digits=(16, 2), readonly=True, select=2),
         'date': fields.date('Create Date', select=1),
         'auction': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
-        'gross_revenue':fields.float('Gross Revenue', readonly=True), 
-        'net_revenue':fields.float('Net Revenue', readonly=True), 
+        'gross_revenue':fields.float('Gross Revenue', readonly=True),
+        'net_revenue':fields.float('Net Revenue', readonly=True),
         'net_margin':fields.float('Net Margin', readonly=True),
         'avg_estimation':fields.float('Avg estimation', readonly=True),
         'user_id':fields.many2one('res.users', 'User', select=1),
         'state': fields.selection((('draft', 'Draft'), ('unsold', 'Unsold'), ('sold', 'Sold')), 'State', readonly=True, select=1),
-        
+
     }
 
     def init(self, cr):
@@ -125,7 +125,6 @@ class report_auction_object_date(osv.osv):
         'month': fields.date('Month', select=1),
         'user_id':fields.many2one('res.users', 'User',select=1),
     }
- #l.create_uid as user,
 
     def init(self, cr):
         cr.execute("""create or replace view report_auction_object_date as
@@ -213,6 +212,6 @@ class report_object_encoded(osv.osv):
             where al.obj_price>0
             group by to_char(al.create_date, 'YYYY-MM-DD'), al.state, al.create_uid)
              ''')
-        
+
 report_object_encoded()
 

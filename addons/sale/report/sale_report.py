@@ -22,7 +22,6 @@
 import tools
 from osv import fields,osv
 
-
 class sale_report(osv.osv):
     _name = "sale.report"
     _description = "Sales Orders Statistics"
@@ -32,18 +31,13 @@ class sale_report(osv.osv):
         'date': fields.date('Date Order', readonly=True),
         'date_confirm': fields.date('Date Confirm', readonly=True),
         'shipped':fields.boolean('Shipped', readonly=True),
-   #     'paid':fields.float('Picked', readonly=True),
         'shipped_qty_1':fields.integer('Shipped Qty', readonly=True),
-     #   'paid_qty':fields.float('Paid Qty', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
-
-      #  'uom_id': fields.many2one('product.uom', 'Default Unit Of Measure', readonly=True),
-      #  'product_qty':fields.float('# of Qty', readonly=True),
         'uom_name': fields.char('Default UoM', size=128, readonly=True),
         'product_uom_qty':fields.float('# of Qty', readonly=True),
 

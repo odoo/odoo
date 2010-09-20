@@ -116,12 +116,10 @@ class project_phase(osv.osv):
         'sequence': 10,
         'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Day'))], context=c)[0]
     }
-    _order = "name"
+    _order = "project_id, date_start, sequence, name"
     _constraints = [
         (_check_recursion,'Loops in phases not allowed',['next_phase_ids', 'previous_phase_ids']),
         (_check_dates, 'Phase start-date must be lower than phase end-date.', ['date_start', 'date_end']),
-        #(_check_constraint_start, 'Phase must start-after constraint start Date.', ['date_start', 'constraint_date_start']),
-        #(_check_constraint_end, 'Phase must end-before constraint end Date.', ['date_end', 'constraint_date_end']),
     ]
 
     def onchange_project(self, cr, uid, ids, project, context=None):
@@ -145,7 +143,6 @@ class project_phase(osv.osv):
        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
        if resource_id:
-#            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
             res = resource_obj.read(cr, uid, resource_id, ['calendar_id'], context=context)[0]
             cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
@@ -168,7 +165,6 @@ class project_phase(osv.osv):
        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)], context=context)
        if resource_id:
-#            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
             res = resource_obj.read(cr, uid, resource_id, ['calendar_id'], context=context)[0]
             cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:

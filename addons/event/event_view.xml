@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!--menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
-        <menuitem name="Events Organisation" id="menu_event_main" parent="base.menu_association" /-->
         <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.marketing_menu" />
 
@@ -35,8 +33,8 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="base.menu_event_config" parent="base.marketing_menu" sequence="30" groups="base.group_extended,base.group_system"/>
-        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_event_config" groups="base.group_extended,base.group_sale_manager,base.group_system"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_extended"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -373,15 +371,16 @@
                                  <field colspan="4" name="email_cc" string="CC" widget="char" size="512"/>
                             </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                                <tree string="Communication history">
+                                <tree string="History">
                                     <field name="display_text" string="History Information"/>
+                                    <field name="history" invisible="1"/>
                                     <button
                                         string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
                                         name="%(crm.action_crm_send_mail)d"
                                         context="{'mail':'reply', 'model': 'event.registration', 'include_original' : True}"
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
-                                <form string="Communication history">
+                                <form string="History">
                                     <group col="4" colspan="4">
                                         <field name="email_from"/>
                                         <field name="date"/>
@@ -410,7 +409,11 @@
                                     </notebook>
                                 </form>
                             </field>
-                              <button colspan="4" string="Send New Email"
+                             <button string="Add New Note"
+                                name="%(crm.action_crm_add_note)d"
+                                context="{'model': 'crm.lead' }"
+                                icon="terp-document-new" type="action" />
+                              <button string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'event.registration'}"
                                 icon="terp-mail-message-new" type="action" />
