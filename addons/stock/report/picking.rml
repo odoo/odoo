@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Picking List" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Packing List" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="0.0" y1="57.0" width="538" height="728"/>
     </pageTemplate>
@@ -124,6 +124,7 @@
     <blockTable colWidths="269.0,269.0" style="Table_Address_detail">
       <tr>
         <td>
+          <para style="terp_default_Bold_9">Shipping Address :</para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]]</para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.street2) or removeParentNode('para') ]]</para>
@@ -132,6 +133,7 @@
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
         </td>
         <td>
+          <para style="terp_default_Bold_9">Contact Address :</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.title or '' ]] [[ picking.address_id and picking.address_id.name or '' ]]</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]]</para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.street2) or removeParentNode('para') ]]</para>
@@ -147,9 +149,6 @@
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_5cm_Above_Space">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="538.0" style="Table_Title_String">
       <tr>
         <td>
@@ -157,9 +156,6 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_5cm_Above_Space">
-      <font color="white"> </font>
-    </para>
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>

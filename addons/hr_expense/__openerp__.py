@@ -55,7 +55,9 @@
     'demo_xml': [
         'hr_expense_demo.xml',
         ],
-    'test': ['test/test_hr_expense.yml'],
+    'test': ['test/test_hr_expense.yml',
+             'test/hr_expense_report.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate': '0062479841789',

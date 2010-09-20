@@ -102,6 +102,7 @@
                         <field name="name" colspan="4"/>
                         <field name="date" on_change="onchange_date(date)"/>
                         <field name="type" invisible="True"/>
+                        <field name="currency_id" invisible="True" nolabel="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Information">
@@ -133,7 +134,7 @@
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
                                     <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label string="" colspan="1"/><field name="currency_id" invisible="True" nolabel="1"/><field name="amount" string="Total"/>
+                                    <label string="" colspan="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
@@ -211,6 +212,7 @@
                         <field name="reference" select="1"/>
                         <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
                         <field name="type" invisible="True"/>
+                        <field name="currency_id" invisible="True" nolabel="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Bill Information">
@@ -235,7 +237,7 @@
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
                                     <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" groups="base.group_extended" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label string="" colspan="1"/><field name="currency_id" invisible="True" nolabel="1"/><field name="amount" string="Total"/>
+                                    <label string="" colspan="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>

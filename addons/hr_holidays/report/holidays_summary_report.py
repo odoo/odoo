@@ -87,7 +87,8 @@ class report_custom(report_rml):
         depts=[]
         emp_id={}
 #        done={}
-
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.holidays')
+        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         cr.execute("SELECT name FROM res_company")
         res=cr.fetchone()[0]
         date_xml=[]
@@ -113,8 +114,8 @@ class report_custom(report_rml):
         else:
             type="Confirmed and Validated"
             holiday_type=('confirm','validate')
-        date_xml.append('<from>%s</from>\n'% (som))
-        date_xml.append('<to>%s</to>\n' %(eom))
+        date_xml.append('<from>%s</from>\n'% (str(rml_obj.formatLang(som.strftime("%Y-%m-%d"),date=True))))
+        date_xml.append('<to>%s</to>\n' %(str(rml_obj.formatLang(eom.strftime("%Y-%m-%d"),date=True))))
         date_xml.append('<type>%s</type>'%(type))
 
 #        date_xml=[]
@@ -229,8 +230,6 @@ class report_custom(report_rml):
                     emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
                     row_id = row_id +1
 
-        rpt_obj = pooler.get_pool(cr.dbname).get('hr.holidays')
-        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
         <header>
         <date>%s</date>
