@@ -20,4 +20,3 @@
 ##############################################################################
 
 import report_voucher
-import report_voucher_amount
