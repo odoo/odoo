@@ -862,9 +862,10 @@ class property(function):
             default_val = (d and int(d.split(',')[1])) or False
 
         vids = [obj._name + ',' + str(id) for id in  ids]
-        nids = property.search(cr, uid, [('fields_id', '=', definition_id),
-            ('res_id', 'in', vids)])
-
+        dom = [('fields_id', '=', definition_id)]
+        if vids:
+            dom += [('res_id', 'in', vids)]
+        nids = property.search(cr, uid, dom)
         res = {}
         for id in ids:
             res[id] = default_val
