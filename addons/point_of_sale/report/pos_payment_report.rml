@@ -82,6 +82,7 @@
     <paraStyle name="Caption" fontName="Times-Italic" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Times-Roman"/>
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_center" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -109,7 +110,13 @@
   </stylesheet>
   <images/>
   <story>
-
+  	<para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_header_center">Payment For Sale</para>
 	<para style="terp_default_9">
       <font color="white"> </font>
     </para>
@@ -154,10 +161,10 @@
           <para style="terp_tblheader_Details_Right">Disc. (%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Unit Price</para>
+          <para style="terp_tblheader_Details_Right">Unit Price ([[ company.currency_id.code ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Total</para>
+          <para style="terp_tblheader_Details_Right">Total ([[ company.currency_id.code ]])</para>
         </td>
      </tr>
     </blockTable>
@@ -177,10 +184,10 @@
             <para style="terp_default_Right_9">[[ formatLang(line_ids['discount']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]] [[ company.currency_id.symbol ]]</para>
           </td>
 
         </tr>
@@ -205,10 +212,10 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">Net Total </para>
+          <para style="terp_tblheader_Details">Net Total </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(pos_payment_total(o)) or removeParentNode('blockTable')]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(pos_payment_total(o)) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       </blockTable>
