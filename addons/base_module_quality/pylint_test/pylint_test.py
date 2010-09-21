@@ -54,9 +54,8 @@ class quality_test(base_module_quality.abstract_quality_check):
                     flag = True
                 file_path = os.path.join(module_path, file_py)
                 try:
-                    import pylint
                     res = os.popen('pylint --rcfile=' + config_file_path + ' ' + file_path).read()
-                except Exception, e:
+                except Exception:
                     self.error = True
                     self.log.exception("Cannot run pylint test for %s", file_path)
                     self.result += _("Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")+"\n"

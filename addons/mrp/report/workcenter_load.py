@@ -147,6 +147,7 @@ class report_custom(report_int):
                             FROM mrp_production_workcenter_line, mrp_production, mrp_workcenter, resource_resource \
                             WHERE (mrp_production_workcenter_line.production_id=mrp_production.id) \
                                 AND (mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id) \
+                                AND (mrp_workcenter.resource_id=resource_resource.id) \
                                 AND (mrp_workcenter.id=%s) \
                                 AND (mrp_production.date_planned BETWEEN %s AND %s) \
                             GROUP BY mrp_production_workcenter_line.workcenter_id, resource_resource.name, mrp_workcenter.id \

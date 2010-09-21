@@ -128,8 +128,9 @@ send an Email to Invited Person')
                     att = att_obj.browse(cr, uid, context_id)
                     att_val.update({
                         'parent_ids': [(4, att.id)],
-                        'ref': att.ref._name + ',' +str(att.ref.id)
+                        'ref': att.ref and (att.ref._name + ',' +str(att.ref.id)) or False
                         })
+
                 attendees.append(att_obj.create(cr, uid, att_val))
             if model_field:
                 for attendee in attendees:
