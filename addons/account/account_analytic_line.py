@@ -95,7 +95,8 @@ class account_analytic_line(osv.osv):
                 company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
             flag = False
             # Compute based on pricetype
-            pricetype=product_price_type_obj.browse(cr, uid, company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
+            product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context)
+            pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
             if journal_id:
                 journal = analytic_journal_obj.browse(cr, uid, journal_id)
                 if journal.type == 'sale':

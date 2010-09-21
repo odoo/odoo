@@ -139,15 +139,13 @@ class stock_location(osv.osv):
         if result:
             # Choose the right filed standard_price to read
             # Take the user company
-            price_type_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.property_valuation_price_type.id
-            pricetype = self.pool.get('product.price.type').browse(cr, uid, price_type_id, context=context)
             for r in result:
                 c = (context or {}).copy()
                 c['location'] = id
                 product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read], context=c)
                 # Compute the amount_unit in right currency
                 context['currency_id'] = self.pool.get('res.users').browse(cr,uid,uid).company_id.currency_id.id
-                amount_unit = self.pool.get('product.product').browse(cr,uid,r['product_id']).price_get(pricetype.field, context)[r['product_id']]
+                amount_unit = self.pool.get('product.product').browse(cr,uid,r['product_id']).price_get('standard_price', context)[r['product_id']]
                 final_value += (product[field_to_read] * amount_unit)
         return final_value
 
@@ -280,8 +278,6 @@ class stock_location(osv.osv):
             context = {}
         product_obj = self.pool.get('product.product')
         # Take the user company and pricetype
-        price_type_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.property_valuation_price_type.id
-        pricetype = self.pool.get('product.price.type').browse(cr, uid, price_type_id)
         context['currency_id'] = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
 
         # To be able to offer recursive or non-recursive reports we need to prevent recursive quantities by default
@@ -320,7 +316,7 @@ class stock_location(osv.osv):
 
                     # Compute based on pricetype
                     # Choose the right filed standard_price to read
-                    amount_unit = product.price_get(pricetype.field, context)[product.id]
+                    amount_unit = product.price_get('standard_price', context)[product.id]
                     price = qty[product_id] * amount_unit
 
                     total_price += price
@@ -887,11 +883,8 @@ class stock_picking(osv.osv):
 
         if type in ('in_invoice', 'in_refund'):
             # Take the user company and pricetype
-            price_type_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.property_valuation_price_type.id
-            pricetype = self.pool.get('product.price.type').browse(cr, uid, price_type_id)
             context['currency_id'] = move_line.company_id.currency_id.id
-
-            amount_unit = move_line.product_id.price_get(pricetype.field, context)[move_line.product_id.id]
+            amount_unit = move_line.product_id.price_get('standard_price', context)[move_line.product_id.id]
             return amount_unit
         else:
             return move_line.product_id.list_price
@@ -1173,9 +1166,7 @@ class stock_picking(osv.osv):
                     move_currency_id = move.company_id.currency_id.id
                     context['currency_id'] = move_currency_id
                     qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
-                    pricetype = False
-                    if user.company_id.property_valuation_price_type:
-                        pricetype = price_type_obj.browse(cr, uid, user.company_id.property_valuation_price_type.id)
+                    pricetype ='standard_price'
                     if pricetype and qty > 0:
                         new_price = currency_obj.compute(cr, uid, product_currency,
                                 move_currency_id, product_price)
@@ -1185,7 +1176,7 @@ class stock_picking(osv.osv):
                             new_std_price = new_price
                         else:
                             # Get the standard price
-                            amount_unit = product.price_get(pricetype.field, context)[product.id]
+                            amount_unit = product.price_get(pricetype, context)[product.id]
                             new_std_price = ((amount_unit * product.qty_available)\
                                 + (new_price * qty))/(product.qty_available + qty)
 
@@ -1934,8 +1925,7 @@ class stock_move(osv.osv):
             if context is None:
                 context = {}
             currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
-            pricetype = price_type_obj.browse(cr,uid,move.company_id.property_valuation_price_type.id)
-            amount_unit = move.product_id.price_get(pricetype.field, currency_ctx)[move.product_id.id]
+            amount_unit = move.product_id.price_get('standard_price', currency_ctx)[move.product_id.id]
             reference_amount = amount_unit * qty or 1.0
 
         return reference_amount, reference_currency_id
@@ -2308,9 +2298,7 @@ class stock_move(osv.osv):
                 user = users_obj.browse(cr, uid, uid)
                 context['currency_id'] = move.company_id.currency_id.id
                 qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
-                pricetype = False
-                if user.company_id.property_valuation_price_type:
-                    pricetype = price_type_obj.browse(cr, uid, user.company_id.property_valuation_price_type.id)
+                pricetype = 'standard_price'
                 if pricetype and qty > 0:
                     new_price = currency_obj.compute(cr, uid, product_currency,
                             user.company_id.currency_id.id, product_price)
@@ -2320,11 +2308,11 @@ class stock_move(osv.osv):
                         new_std_price = new_price
                     else:
                         # Get the standard price
-                        amount_unit = product.price_get(pricetype.field, context)[product.id]
+                        amount_unit = product.price_get(pricetype, context)[product.id]
                         new_std_price = ((amount_unit * product.qty_available)\
                             + (new_price * qty))/(product.qty_available + qty)
 
-                    product_obj.write(cr, uid, [product.id],{pricetype.field: new_std_price})
+                    product_obj.write(cr, uid, [product.id],{pricetype: new_std_price})
 
                     # Record the values that were chosen in the wizard, so they can be
                     # used for inventory valuation if real-time valuation is enabled.

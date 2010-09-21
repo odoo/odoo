@@ -140,12 +140,6 @@ parameter) will see those record just disappear.
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
 
-        <record forcecreate="True" id="property_valuation_price_type" model="ir.property">
-            <field name="name">property_valuation_price_type</field>
-            <field name="fields_id" search="[('model','=','res.company'),('name','=','property_valuation_price_type')]"/>
-            <field eval="'product.price.type,'+str(ref('standard_price'))" name="value"/>
-        </record>
-
         <record forcecreate="True" id="decimal_sale" model="decimal.precision">
             <field name="name">Sale Price</field>
             <field name="digits">2</field>
