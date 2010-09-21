@@ -26,17 +26,12 @@ import os
 import pythoncom
 import time
 from manager import ustr
-
-import smtplib
-from email.mime.text import MIMEText
-from email.parser import*
 import email
 
 waittime = 10
 wait_count = 0
 wait_limit = 12
-import binascii
-import base64
+
 def execute(connector, method, *args):
     global wait_count
     res = False
@@ -60,7 +55,7 @@ def execute(connector, method, *args):
 class XMLRpcConn(object):
     __name__ = 'XMLRpcConn'
     _com_interfaces_ = ['_IDTExtensibility2']
-    _public_methods_ = ['GetDBList', 'login', 'GetAllObjects', 'GetObjList', 'InsertObj', 'DeleteObject', \
+    _public_methods_ = ['GetDBList', 'login', 'GetAllObjects', 'GetObjList', 'InsertObj', 'DeleteObject', 'GetCSList', \
                         'ArchiveToOpenERP', 'IsCRMInstalled', 'GetPartners', 'GetObjectItems', \
                         'CreateCase', 'MakeAttachment', 'CreateContact', 'CreatePartner', 'getitem', 'setitem', \
                         'SearchPartnerDetail', 'WritePartnerValues', 'GetAllState', 'GetAllCountry' ]
@@ -82,6 +77,7 @@ class XMLRpcConn(object):
         self._iscrm=True
         self.partner_id_list=None
         self.protocol=None
+
     def getitem(self, attrib):
         v=self.__getattribute__(attrib)
         return str(v)
@@ -156,6 +152,13 @@ class XMLRpcConn(object):
         for rec in recs: #[('res.partner', 3, 'Agrolait')]
             model = rec[0]
             res_id = rec[1]
+
+            #Check if mailgate installed
+            object_id = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','mailgate.message')])
+            if not object_id:
+                win32ui.MessageBox("Mailgate is not installed on your configured database '%s' !!\n\nPlease install it to archive the mail."%(self._dbname),"Mailgate not installed",win32con.MB_ICONERROR)
+                return
+
             object_ids = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=',model)])
             object_name  = execute( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',object_ids,['name'])[0]['name']
 
@@ -199,16 +202,26 @@ class XMLRpcConn(object):
         id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','crm.lead')])
         return id
 
+    def GetCSList(self):
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        ids = execute(conn,'execute',self._dbname,int(int(self._uid)),self._pwd,'crm.case.section','search',[])
+        objects = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'crm.case.section','read',ids,['name'])
+        obj_list = [ustr(item['name']).encode('iso-8859-1') for item in objects]
+        return obj_list
+
     def GetPartners(self):
         conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
         ids=[]
-        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','search',[])
-        ids.sort()
         obj_list=[]
-        obj_list.append((-999, ustr('')))
-        for id in ids:
-            object = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','read',[id],['id','name'])[0]
-            obj_list.append((object['id'], ustr(object['name'])))
+
+        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','search',[])
+        if ids:
+            ids.sort()
+            obj_list.append((-999, ustr('')))
+            for id in ids:
+                object = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'res.partner','read',[id],['id','name'])[0]
+                obj_list.append((object['id'], ustr(object['name'])))
+            obj_list.sort(lambda x, y: cmp(x[1],y[1]))
         return obj_list
 
     def GetObjectItems(self, search_list=[], search_text=''):
