@@ -97,7 +97,6 @@ class stock_partial_picking(osv.osv_memory):
                             'string': _('Production Lot'),
                             'type': 'many2one',
                             'relation': 'stock.production.lot',
-                            'readonly': True,
                         }
                     })
 
