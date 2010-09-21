@@ -92,7 +92,8 @@
          'test/mrp_packs.yml',
          'test/mrp_phantom_bom.yml',
          'test/mrp_production_order.yml',
-         
+         'test/mrp_report.yml',
+
     ],
     'installable': True,
     'active': False,

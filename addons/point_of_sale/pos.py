@@ -128,10 +128,6 @@ class pos_order(osv.osv):
             cr.execute(" SELECT max(l.date) from account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o where i.move_id=m.id and l.move_id=m.id and l.reconcile_id=r.id and o.id=%d and o.invoice_id=i.id"%(order.id))
             val=cr.fetchone()
             val= val and val[0] or None
-            if not val:
-                cr.execute("select max(date) from account_bank_statement_line l, account_bank_statement_reconcile s where l.pos_statement_id=%d and l.reconcile_id=s.id"%(order.id))
-                val=cr.fetchone()
-                val=val and val[0] or None
             if val:
                 res[order.id]=val
         return res
@@ -284,8 +280,8 @@ class pos_order(osv.osv):
         'date_validation': fields.function(_get_date_payment, method=True, string='Validation Date', type='date',  store=True),
         'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date',  store=True),
         'date_validity': fields.date('Validity Date', required=True),
-        'user_id': fields.many2one('res.users', 'Connected Salesman'),
-        'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True),
+        'user_id': fields.many2one('res.users', 'Connected Salesman', help="Person who uses the the register. It could be a reliever, a student or an interim employee."),
+        'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True, help="User who is logged into the system."),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
@@ -299,7 +295,7 @@ class pos_order(osv.osv):
         'payments': fields.one2many('pos.payment', 'order_id', 'Order Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one( 'res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
-        'state': fields.selection([('draft', 'Draft'), ('payment', 'Payment'),
+        'state': fields.selection([('draft', 'Quotation'), ('payment', 'Payment'),
                                     ('advance','Advance'),
                                    ('paid', 'Paid'), ('done', 'Done'), ('invoiced', 'Invoiced'), ('cancel', 'Cancel')],
                                   'State', readonly=True, ),
@@ -362,7 +358,7 @@ class pos_order(osv.osv):
 
 
     def test_order_lines(self, cr, uid, order, context=None):
-        """ Test  order line is created or not for the order " 
+        """ Test order line is created or not for the order " 
         @param name: Names of fields.
         @return: True
         """
@@ -585,7 +581,7 @@ class pos_order(osv.osv):
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
         args['account_id'] = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def.id or curr_c.account_receivable.id
         if data.get('is_acc',False):
-            args['is_acc']=data['is_acc']
+            args['is_acc'] = data['is_acc']
             args['account_id']= prod_obj.browse(cr,uid, data['product_id']).property_account_income and prod_obj.browse(cr,uid, data['product_id']).property_account_income.id
             if not args['account_id']:
                 raise osv.except_osv(_('Error'), _('Please provide an account for the product: %s')%(prod_obj.browse(cr,uid, data['product_id']).name))
@@ -635,7 +631,7 @@ class pos_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_write(uid, 'pos.order', order_id, cr)
 
-        return order_line_id
+        return order_line_id, price
 
     def refund(self, cr, uid, ids, context=None):
         """Create a copy of order  for refund order"""      
@@ -1274,9 +1270,9 @@ pos_payment()
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'income_pdt': fields.boolean('Product for Incoming'),
+        'income_pdt': fields.boolean('Product for Input'),
         'expense_pdt': fields.boolean('Product for expenses'),
-        'am_out': fields.boolean('Controle for Outgoing Operations'),
+        'am_out': fields.boolean('Controle for Output Operations'),
         'disc_controle': fields.boolean('Discount Controle '),
     }
     _defaults = {

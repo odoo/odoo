@@ -67,7 +67,6 @@ class product_product(osv.osv):
         stock_output_acc = datas.get('stock_output_account', False)
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
-        property_obj=self.pool.get('ir.property')
         product_obj=self.browse(cr,uid,ids)[0]
         account_variation = product_obj.categ_id.property_stock_variation
         account_variation_id = account_variation and account_variation.id or False

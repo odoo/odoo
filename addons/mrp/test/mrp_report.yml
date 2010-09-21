@@ -1,0 +1,35 @@
+-
+  In order to test the PDF reports defined on a MRP, we will print a BOM Structure Report
+-
+  !python {model: mrp.bom}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.bom.structure').create(cr, uid, [ref('mrp.mrp_bom_0'),ref('mrp.mrp_bom_1'),ref('mrp.mrp_bom_2'),ref('mrp.mrp_bom_23'),ref('mrp.mrp_bom_1901'),ref('mrp.mrp_bom_assemblysection0'),ref('mrp.mrp_bom_sidepanel0'),ref('mrp.mrp_bom_defaultbomforshelfofcm1'),ref('mrp.mrp_bom_sidepanel3')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp-bom_structure_report.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a MRP, we will print Production Order Report
+-
+  !python {model: mrp.production}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.mrp.production.order').create(cr, uid, [ref('mrp.mrp_production_mo1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp-production_order_report.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a MRP, we will print Product Price Report
+-
+  !python {model: product.product}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.product.price').create(cr, uid, [1,2,3,5], {'model':'product.product', 'form':{'number': 1}}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp-product_price_report.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a MRP, we will print Workcenter Load Report
+-
+  !python {model: mrp.workcenter}: |
+    import netsvc, tools, os, time
+    (data, format) = netsvc.LocalService('report.mrp.workcenter.load').create(cr, uid, [ref('mrp_workcenter_0'),ref('mrp_workcenter_1')], {'model':'mrp.workcenter', 'form':{'time_unit': 'day', 'measure_unit': 'hours'}}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'mrp-workcenter_load_report.'+format), 'wb+').write(data)
