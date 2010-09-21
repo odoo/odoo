@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import itertools
-import operator
+from itertools import groupby
+from operator import itemgetter
 from datetime import datetime
 from osv import osv, fields
 from tools.translate import _
@@ -355,13 +355,16 @@ class many2many_domain(fields.many2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
-        res = {}
+
         move_obj = obj.pool.get('stock.move')
-        for prod in obj.browse(cr, user, ids, context=context):
-            cr.execute("SELECT move_id from mrp_production_move_ids where production_id=%s" % (prod.id))
-            m_ids = map(lambda x: x[0], cr.fetchall())
-            final = move_obj.search(cr, user, self._domain + [('id', 'in', tuple(m_ids))])
-            res[prod.id] = final
+        res = {}.fromkeys(ids, [])
+        valid_move_ids = move_obj.search(cr, user, self._domain) # move ids relative to domain argument
+        cr.execute("SELECT production_id, move_id from mrp_production_move_ids where production_id in %s and move_id in %s",
+            [tuple(ids), tuple(valid_move_ids)])
+        related_move_map = cr.fetchall()
+        related_move_dict = dict((k, list(set([v[1] for v in itr]))) for k, itr in groupby(related_move_map, itemgetter(0)))
+        res.update(related_move_dict)
+
         return res
 
 class one2many_domain(fields.one2many):
@@ -377,8 +380,7 @@ class one2many_domain(fields.one2many):
         res = {}.fromkeys(ids, [])
         key = operator.itemgetter(0)
         move_ids = move_obj.search(cr, user, self._domain+[('production_id', 'in', tuple(ids))], context=context)
-        related_move_map = [(o.production_id.id, o.id) for o in move_obj.browse(cr, user, move_ids, context=context)]
-        related_move_dict = dict((k, [v[1] for v in itr]) for k, itr in itertools.groupby(related_move_map, key))
+        related_move_dict = dict([(o.production_id.id, [o.id]) for o in move_obj.browse(cr, user, move_ids, context=context)])
         res.update(related_move_dict)
 
         return res
