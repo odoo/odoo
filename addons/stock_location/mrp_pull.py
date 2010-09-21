@@ -80,7 +80,7 @@ class procurement_order(osv.osv):
                 'picking_id': picking_id,
                 'company_id':  line.company_id and line.company_id.id or False,
                 'product_id': proc.product_id.id,
-                'date_planned': proc.date_planned,
+                'date': proc.date_planned,
                 'product_qty': proc.product_qty,
                 'product_uom': proc.product_uom.id,
                 'product_uos_qty': (proc.product_uos and proc.product_uos_qty)\
