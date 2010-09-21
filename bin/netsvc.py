@@ -35,6 +35,7 @@ import time
 import release
 from pprint import pformat
 import warnings
+import heapq
 
 class Service(object):
     """ Base class for *Local* services
@@ -132,6 +133,7 @@ class ExportService(object):
 LOG_NOTSET = 'notset'
 LOG_DEBUG_SQL = 'debug_sql'
 LOG_DEBUG_RPC = 'debug_rpc'
+LOG_DEBUG_RPC_ANSWER = 'debug_rpc_answer'
 LOG_DEBUG = 'debug'
 LOG_TEST = 'test'
 LOG_INFO = 'info'
@@ -139,9 +141,11 @@ LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
+logging.DEBUG_RPC_ANSWER = logging.DEBUG - 4
+logging.addLevelName(logging.DEBUG_RPC_ANSWER, 'DEBUG_RPC_ANSWER')
 logging.DEBUG_RPC = logging.DEBUG - 2
 logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
-logging.DEBUG_SQL = logging.DEBUG_RPC - 2
+logging.DEBUG_SQL = logging.DEBUG_RPC - 3
 logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
 
 logging.TEST = logging.INFO - 5
@@ -157,6 +161,7 @@ COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
     logging.DEBUG_SQL: (WHITE, MAGENTA),
     logging.DEBUG_RPC: (BLUE, WHITE),
+    logging.DEBUG_RPC_ANSWER: (BLUE, WHITE),
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
     logging.TEST: (WHITE, BLUE),
@@ -288,35 +293,67 @@ import tools
 init_logger()
 
 class Agent(object):
-    _timers = {}
+    """Singleton that keeps track of cancellable tasks to run at a given
+       timestamp.
+       The tasks are caracterised by:
+            * a timestamp
+            * the database on which the task run
+            * the function to call
+            * the arguments and keyword arguments to pass to the function
+
+        Implementation details:
+          Tasks are stored as list, allowing the cancellation by setting
+          the timestamp to 0.
+          A heapq is used to store tasks, so we don't need to sort
+          tasks ourself.
+    """
+    __tasks = []
+    __tasks_by_db = {}
     _logger = Logger()
 
-    __logger = logging.getLogger('timer')
-
-    def setAlarm(self, fn, dt, db_name, *args, **kwargs):
-        wait = dt - time.time()
-        if wait > 0:
-            self.__logger.debug("Job scheduled in %.3g seconds for %s.%s" % (wait, fn.im_class.__name__, fn.func_name))
-            timer = threading.Timer(wait, fn, args, kwargs)
-            timer.start()
-            self._timers.setdefault(db_name, []).append(timer)
-
-        for db in self._timers:
-            for timer in self._timers[db]:
-                if not timer.isAlive():
-                    self._timers[db].remove(timer)
+    @classmethod
+    def setAlarm(cls, function, timestamp, db_name, *args, **kwargs):
+        task = [timestamp, db_name, function, args, kwargs]
+        heapq.heappush(cls.__tasks, task)
+        cls.__tasks_by_db.setdefault(db_name, []).append(task)
 
     @classmethod
     def cancel(cls, db_name):
-        """Cancel all timers for a given database. If None passed, all timers are cancelled"""
-        for db in cls._timers:
-            if db_name is None or db == db_name:
-                for timer in cls._timers[db]:
-                    timer.cancel()
+        """Cancel all tasks for a given database. If None is passed, all tasks are cancelled"""
+        if db_name is None:
+            cls.__tasks, cls.__tasks_by_db = [], {}
+        else:
+            if db_name in cls.__tasks_by_db:
+                for task in cls.__tasks_by_db[db_name]:
+                    task[0] = 0
 
     @classmethod
     def quit(cls):
         cls.cancel(None)
+
+    @classmethod
+    def runner(cls):
+        """Neverending function (intended to be ran in a dedicated thread) that
+           checks every 60 seconds tasks to run.
+        """
+        current_thread = threading.currentThread()
+        while True:
+            while cls.__tasks and cls.__tasks[0][0] < time.time():
+                task = heapq.heappop(cls.__tasks)
+                timestamp, dbname, function, args, kwargs = task
+                cls.__tasks_by_db[dbname].remove(task)
+                if not timestamp:
+                    # null timestamp -> cancelled task
+                    continue
+                current_thread.dbname = dbname   # hack hack
+                cls._logger.notifyChannel('timers', LOG_DEBUG, "Run %s.%s(*%r, **%r)" % (function.im_class.__name__, function.func_name, args, kwargs))
+                delattr(current_thread, 'dbname')
+                threading.Thread(target=function, args=args, kwargs=kwargs).start()
+                time.sleep(1)
+            time.sleep(60)
+
+threading.Thread(target=Agent.runner).start()
+
 
 import traceback
 
@@ -420,11 +457,11 @@ class OpenERPDispatcherException(Exception):
         self.traceback = traceback
 
 class OpenERPDispatcher:
-    def log(self, title, msg):
+    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=2):
         logger = logging.getLogger(title)
-        if logger.isEnabledFor(logging.DEBUG_RPC):
-            for line in pformat(msg).split('\n'):
-                logger.log(logging.DEBUG_RPC, line)
+        if logger.isEnabledFor(channel):
+            for line in pformat(msg, depth=depth).split('\n'):
+                logger.log(channel, line)
 
     def dispatch(self, service_name, method, params):
         try:
@@ -433,10 +470,8 @@ class OpenERPDispatcher:
             self.log('params', params)
             auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
-            self.log('result', result)
-            # We shouldn't marshall None,
-            if result == None:
-                result = False
+            logger = logging.getLogger('result')
+            self.log('result', result, channel=logging.DEBUG_RPC_ANSWER, depth=(logger.isEnabledFor(logging.DEBUG_SQL) and 1 or None))
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))

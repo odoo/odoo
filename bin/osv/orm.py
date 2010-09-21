@@ -1541,6 +1541,14 @@ class orm_template(object):
                 else:
                     for n in node.getiterator(node2.tag):
                         res = True
+                        if node2.tag == 'field':
+                            # only compare field names, a field can be only once in a given view
+                            # at a given level (and for multilevel expressions, we should use xpath
+                            # inheritance spec anyway)
+                            if node2.get('name') == n.get('name'):
+                                return n
+                            else:
+                                continue
                         for attr in node2.attrib:
                             if attr == 'position':
                                 continue
@@ -1809,10 +1817,10 @@ class orm_template(object):
 
     def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         """
-        Private implementation of search() method, allowing specifying the uid to use for the access right check. 
+        Private implementation of search() method, allowing specifying the uid to use for the access right check.
         This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
         by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
-        
+
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
         """
@@ -1841,7 +1849,7 @@ class orm_template(object):
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         """
-        Search for records and their display names according to a search domain. 
+        Search for records and their display names according to a search domain.
 
         :param cr: database cursor
         :param user: current user id
@@ -2207,7 +2215,7 @@ class orm(orm_template):
             previous_tables = list(tables)
             if self._apply_ir_rules(cr, uid, where_clause, where_clause_params, tables, 'read', model_name=inherited_model, context=context):
                 # if some rules were applied, need to add the missing JOIN for them to make sense, passing the previous
-                # list of table in case the inherited table was not in the list before (as that means the corresponding 
+                # list of table in case the inherited table was not in the list before (as that means the corresponding
                 # JOIN(s) was(were) not present)
                 self._inherits_join_add(inherited_model, previous_tables, where_clause)
                 tables = list(set(tables).union(set(previous_tables)))
@@ -2215,7 +2223,7 @@ class orm(orm_template):
         # Take care of adding join(s) if groupby is an '_inherits'ed field
         groupby_list = groupby
         if groupby:
-            if groupby and isinstance(groupby, list):
+            if isinstance(groupby, list):
                 groupby = groupby[0]
             tables, where_clause, qfield = self._inherits_join_calc(groupby, tables, where_clause)
 
@@ -2234,14 +2242,14 @@ class orm(orm_template):
         flist = ''
         group_by = groupby
         if groupby:
-            if fget.get(groupby, False):
+            if fget.get(groupby):
                 if fget[groupby]['type'] in ('date', 'datetime'):
                     flist = "to_char(%s,'yyyy-mm') as %s " % (groupby, groupby)
                     groupby = "to_char(%s,'yyyy-mm')" % (groupby)
                 else:
                     flist = groupby
             else:
-                # Don't allow arbitrary values, as this would be a SQL injection vector! 
+                # Don't allow arbitrary values, as this would be a SQL injection vector!
                 raise except_orm(_('Invalid group_by'),
                                  _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(groupby,))
 
@@ -2256,10 +2264,7 @@ class orm(orm_template):
                     flist += ','
                 flist += operator+'('+f+') as '+f
 
-        if groupby:
-            gb = ' group by '+groupby
-        else:
-            gb = ''
+        gb = groupby and (' group by '+groupby) or ''
         cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + gb + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
@@ -2268,7 +2273,16 @@ class orm(orm_template):
                 if val == None: r[fld] = False
             alldata[r['id']] = r
             del r['id']
-        data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or ['id'], context=context)
+        if groupby and fget[groupby]['type'] == 'many2one':
+            data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=groupby, context=context)
+            data_read = self.read(cr, uid, data_ids, groupby and [groupby] or ['id'], context=context)
+            # restore order of the search as read() uses the default _order (this is only for groups, so the size of data_read shoud be small):
+            data_read.sort(lambda x,y: cmp(data_ids.index(x['id']), data_ids.index(y['id'])))
+            data = data_read
+        else:
+            data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or ['id'], context=context)
+            if groupby:
+                data.sort(lambda x,y:cmp(x[groupby],y[groupby]))
         for d in data:
             if groupby:
                 d['__domain'] = [(groupby, '=', alldata[d['id']][groupby] or False)] + domain
@@ -2314,9 +2328,9 @@ class orm(orm_template):
         :param tables: list of table._table names enclosed in double quotes as returned
                         by _where_calc()
         :param where_clause: current list of WHERE clause params
-        :return: (table, where_clause, qualified_field) where ``table`` and ``where_clause`` are the updated
+        :return: (tables, where_clause, qualified_field) where ``tables`` and ``where_clause`` are the updated
                  versions of the parameters, and ``qualified_field`` is the qualified name of ``field``
-                 in the form ``table.field``, to be referenced in queries. 
+                 in the form ``table.field``, to be referenced in queries.
         """
         current_table = self
         while field in current_table._inherit_fields and not field in current_table._columns:
@@ -2988,19 +3002,20 @@ class orm(orm_template):
                     column = self._inherit_fields[key][2]
                 else:
                     continue
-                if v and column._type == 'reference':
-                    model_name, ref_id = v.split(',', 1)
-                    model = self.pool.get(model_name)
-                    if not model:
-                        reset = True
-                    else:
-                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
-                        reset = not cr.fetchone()[0]
-                    if reset:
-                        if column._classic_write:
-                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
-                            cr.execute(query, (r['id'],))
-                        r[key] = False
+# TODO: removed this, it's too slow
+#                if v and column._type == 'reference':
+#                    model_name, ref_id = v.split(',', 1)
+#                    model = self.pool.get(model_name)
+#                    if not model:
+#                        reset = True
+#                    else:
+#                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
+#                        reset = not cr.fetchone()[0]
+#                    if reset:
+#                        if column._classic_write:
+#                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
+#                            cr.execute(query, (r['id'],))
+#                        r[key] = False
 
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
@@ -3888,13 +3903,13 @@ class orm(orm_template):
         :param args: the domain to compute
         :type args: list
         :param active_test: whether the default filtering of records with ``active``
-                            field set to ``False`` should be applied. 
+                            field set to ``False`` should be applied.
         :return: tuple with 3 elements: (where_clause, where_clause_params, tables) where
                  ``where_clause`` contains a list of where clause elements (to be joined with 'AND'),
                  ``where_clause_params`` is a list of parameters to be passed to the db layer
                  for the where_clause expansion, and ``tables`` is the list of double-quoted
-                 table names that need to be included in the FROM clause. 
-        :rtype: tuple 
+                 table names that need to be included in the FROM clause.
+        :rtype: tuple
         """
         if not context:
             context = {}
@@ -3926,7 +3941,7 @@ class orm(orm_template):
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
-            raise except_orm(_('AccessError'), _('Bad query.'))
+            raise except_orm(_('AccessError'), _('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
         return True
 
     def _apply_ir_rules(self, cr, uid, where_clause, where_clause_params, tables, mode='read', model_name=None, context=None):
@@ -3939,7 +3954,7 @@ class orm(orm_template):
                           in ``where_clause``
            :param model_name: optional name of the model whose ir.rules should be applied (default:``self._name``)
                               This could be useful for inheritance for example, but there is no provision to include
-                              the appropriate JOIN for linking the current model to the one referenced in model_name. 
+                              the appropriate JOIN for linking the current model to the one referenced in model_name.
            :return: True if additional clauses where applied.
         """
         added_clause, added_params, added_tables = self.pool.get('ir.rule').domain_get(cr, uid, model_name or self._name, mode, context=context)
@@ -3952,13 +3967,86 @@ class orm(orm_template):
             return True
         return False
 
+    def _generate_m2o_order_by(self, order_field, tables, where_clause):
+        """
+        Add possibly missing JOIN and generate the ORDER BY clause for m2o fields,
+        either native m2o fields or function/related fields that are stored, including
+        intermediate JOINs for inheritance if required.
+        """
+        if order_field not in self._columns and order_field in self._inherit_fields:
+            # also add missing joins for reaching the table containing the m2o field
+            tables, where_clause, qualified_field = self._inherits_join_calc(order_field, tables, where_clause)
+            order_field_column = self._inherit_fields[order_field][2]
+        else:
+            qualified_field = '"%s"."%s"' % (self._table, order_field)
+            order_field_column = self._columns[order_field]
+
+        assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
+        assert order_field_column._classic_write or getattr(order_field_column, 'store', False), "Many2one function/related fields must be stored to be used as ordering fields"
+
+        # figure out the applicable order_by for the m2o
+        dest_model = self.pool.get(order_field_column._obj)
+        m2o_order = dest_model._order
+        if not regex_order.match(m2o_order):
+            # _order is complex, can't use it here, so we default to _rec_name
+            m2o_order = dest_model._rec_name
+        else:
+            # extract the first field name, to be able to qualify it and add desc/asc
+            m2o_order = m2o_order.split(",",1)[0].strip().split(" ",1)[0]
+
+        # the perhaps missing join:
+        quoted_model_table = '"%s"' % dest_model._table
+        if quoted_model_table not in tables:
+            tables.append(quoted_model_table)
+            where_clause.append('%s = %s.id' % (qualified_field, quoted_model_table))
+
+        return ('%s.%s' % (quoted_model_table, m2o_order), tables, where_clause)
+
+
+    def _generate_order_by(self, order_spec, tables, where_clause):
+        """
+        Attempt to consruct an appropriate ORDER BY clause based on order_spec, which must be
+        a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
+
+        :raise" except_orm in case order_spec is malformed
+        """
+        order_by_clause = self._order
+        if order_spec:
+            order_by_elements = []
+            self._check_qorder(order_spec)
+            for order_part in order_spec.split(','):
+                order_split = order_part.strip().split(' ')
+                order_field = order_split[0].strip()
+                order_direction = order_split[1].strip() if len(order_split) == 2 else ''
+                if order_field in self._columns:
+                    order_column = self._columns[order_field]
+                    if order_column._classic_read:
+                        order_by_clause = '"%s"."%s"' % (self._table, order_field)
+                    elif order_column._type == 'many2one':
+                        order_by_clause, tables, where_clause = self._generate_m2o_order_by(order_field, tables, where_clause)
+                    else:
+                        continue # ignore non-readable or "non-joignable" fields
+                elif order_field in self._inherit_fields:
+                    parent_obj = self.pool.get(self._inherit_fields[order_field][0])
+                    order_column = parent_obj._columns[order_field]
+                    if order_column._classic_read:
+                        tables, where_clause, order_by_clause = self._inherits_join_calc(order_field, tables, where_clause)
+                    elif order_column._type == 'many2one':
+                        order_by_clause, tables, where_clause = self._generate_m2o_order_by(order_field, tables, where_clause)
+                    else:
+                        continue # ignore non-readable or "non-joignable" fields
+                order_by_elements.append("%s %s" % (order_by_clause, order_direction))
+            order_by_clause = ",".join(order_by_elements)
+
+        return order_by_clause and (' ORDER BY %s ' % order_by_clause) or ''
+
     def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
         """
-        Private implementation of search() method, allowing specifying the uid to use for the access right check. 
+        Private implementation of search() method, allowing specifying the uid to use for the access right check.
         This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
         by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
         This is ok at the security level because this method is private and not callable through XML-RPC.
-        
+
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
         """
@@ -3982,35 +4070,17 @@ class orm(orm_template):
                 tables = list(set(tables).union(set(previous_tables)))
 
         where = where_clause
-
-        order_by = self._order
-        if order:
-            self._check_qorder(order)
-            o = order.split(' ')[0]
-            if (o in self._columns):
-                # we can only do efficient sort if the fields is stored in database
-                if getattr(self._columns[o], '_classic_read'):
-                    order_by = order
-            elif (o in self._inherit_fields):
-                parent_obj = self.pool.get(self._inherit_fields[o][0])
-                if getattr(parent_obj._columns[o], '_classic_read'):
-                    # Allowing inherits'ed field for server side sorting, if they can be sorted by the dbms
-                    inherited_tables, inherit_join, order_by = self._inherits_join_calc(o, tables, where_clause)
-
+        order_by = self._generate_order_by(order, tables, where_clause)
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
-
-        if where:
-            where_str = " WHERE %s" % " AND ".join(where)
-        else:
-            where_str = ""
+        where_str = where and (" WHERE %s" % " AND ".join(where)) or ''
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +
                     ','.join(tables) + where_str + limit_str + offset_str, where_clause_params)
             res = cr.fetchall()
             return res[0][0]
-        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str +' order by '+order_by+limit_str+offset_str, where_clause_params)
+        cr.execute('select %s.id from ' % self._table + ','.join(tables) + where_str + order_by + limit_str+offset_str, where_clause_params)
         res = cr.fetchall()
         return [x[0] for x in res]
 

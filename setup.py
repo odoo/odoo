@@ -51,6 +51,38 @@ if 'bdist_rpm' in sys.argv:
 # get python short version
 py_short_version = '%s.%s' % sys.version_info[:2]
 
+# backports os.walk with followlinks from python 2.6
+def walk_followlinks(top, topdown=True, onerror=None, followlinks=False):
+    from os.path import join, isdir, islink
+    from os import listdir, error
+
+    try:
+        names = listdir(top)
+    except error, err:
+        if onerror is not None:
+            onerror(err)
+        return
+
+    dirs, nondirs = [], []
+    for name in names:
+        if isdir(join(top, name)):
+            dirs.append(name)
+        else:
+            nondirs.append(name)
+
+    if topdown:
+        yield top, dirs, nondirs
+    for name in dirs:
+        path = join(top, name)
+        if followlinks or not islink(path):
+            for x in walk_followlinks(path, topdown, onerror, followlinks):
+                yield x
+    if not topdown:
+        yield top, dirs, nondirs
+
+if sys.version_info < (2, 6):
+    os.walk = walk_followlinks
+
 def find_addons():
     for root, _, names in os.walk(join('bin', 'addons'), followlinks=True):
         if '__openerp__.py' in names or '__terp__.py' in names:
@@ -63,6 +95,8 @@ def data_files():
         for root, _, names in os.walk(join('bin','addons')):
             files.append((root, [join(root, name) for name in names]))
         for root, _, names in os.walk('doc'):
+            files.append((root, [join(root, name) for name in names]))
+        for root, _, names in os.walk('pixmaps'):
             files.append((root, [join(root, name) for name in names]))
         files.append(('.', [join('bin', 'import_xml.rng'),
                             join('bin', 'server.pkey'),
@@ -139,7 +173,7 @@ options = {
                  "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
                  "pydot", "asyncore","asynchat", "reportlab", "vobject",
                  "HTMLParser", "select", "mako", "poplib",
-                 "imaplib", "smtplib", "email", "yaml","pywebdav",
+                 "imaplib", "smtplib", "email", "yaml", "DAV",
                  ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
