@@ -22,12 +22,14 @@
 from lxml import etree
 import time
 from datetime import datetime, date
+from operator import itemgetter
+from itertools import groupby
 
+from tools.misc import flatten
 from tools.translate import _
 from osv import fields, osv
 from tools import email_send as email
 
-from operator import itemgetter
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -77,20 +79,6 @@ class project(osv.osv):
         pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
 
-    def get_all_child_projects(self, cr, uid, ids, context=None):
-        # Calculate child project for Given project id => For progress rate + planned time + Time spent
-        cr.execute('''SELECT prpc.id AS id from account_analytic_account AS p
-                    JOIN account_analytic_account AS c ON p.id = c.parent_id
-                    JOIN project_project AS prp ON prp.analytic_account_id = p.id
-                    JOIN project_project AS prpc ON prpc.analytic_account_id = c.id
-                    WHERE prp.id IN %s''',(tuple(ids),))
-
-        child_ids = cr.fetchall()
-        if child_ids:
-            child_ids = [x[0] for x in child_ids]
-            child_ids = self.get_all_child_projects(cr, uid, child_ids)
-        return ids + child_ids
-
     def _get_user_and_default_uom_ids(self, cr, uid):
         users_obj = self.pool.get('res.users')
         model_data_obj = self.pool.get('ir.model.data')
@@ -102,17 +90,33 @@ class project(osv.osv):
         return user_uom, default_uom
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
+        def _get_all_child_projects(ids):
+            """Recursively get child project ids"""
+            child_ids = flatten([project_hierarchy.get(idn, []) for idn in ids])
+            if child_ids:
+                child_ids = _get_all_child_projects(child_ids)
+            return ids + child_ids
+        # END _get_all_child_projects
+
         res = {}.fromkeys(ids, 0.0)
         progress = {}
         if not ids:
             return res
 
-        par_child_projects={}
+        par_child_projects = {}
         all_projects = list(ids)
 
+        # get project hierarchy:
+        cr.execute('''SELECT prp.id AS pr_parent_id, prpc.id AS pr_child_id
+            FROM account_analytic_account AS p
+            JOIN account_analytic_account AS c ON p.id = c.parent_id
+            JOIN project_project AS prp ON prp.analytic_account_id = p.id
+            JOIN project_project AS prpc ON prpc.analytic_account_id = c.id''')
+
+        project_hierarchy = dict((k, list(set([v[1] for v in itr]))) for k, itr in groupby(cr.fetchall(), itemgetter(0)))
+
         for id in ids:
-            child_projects = self.get_all_child_projects(cr, uid, [id], context)
-            child_projects = [x for x in child_projects]
+            child_projects = _get_all_child_projects([id])
             par_child_projects[id] = child_projects
             all_projects.extend(child_projects)
 
@@ -128,6 +132,7 @@ class project(osv.osv):
                 project_id''',(tuple(all_projects),))
         progress = dict(map(lambda x: (x[0], (x[1], x[2], x[3])), cr.fetchall()))
 
+        user_uom, def_uom = self._get_user_and_default_uom_ids(cr, uid)
         for project in self.browse(cr, uid, par_child_projects.keys(), context=context):
             s = [0.0, 0.0, 0.0]
             tocompute = par_child_projects[project.id]
@@ -137,7 +142,6 @@ class project(osv.osv):
                     s[i] += progress.get(p, (0.0, 0.0, 0.0))[i]
 
             uom_obj = self.pool.get('product.uom')
-            user_uom, def_uom = self._get_user_and_default_uom_ids(cr, uid)
             if user_uom != def_uom:
                 s[0] = uom_obj._compute_qty(cr, uid, user_uom, s[0], def_uom)
                 s[1] = uom_obj._compute_qty(cr, uid, user_uom, s[1], def_uom)
@@ -466,7 +470,7 @@ class task(osv.osv):
             cr.execute('SELECT DISTINCT task_id '\
                        'FROM project_task_parent_rel '\
                        'WHERE parent_id IN %s', (tuple(ids),))
-            child_ids = map(itemgetter(0), cr.fetchall())
+            child_ids = map(lambda x: x[0], cr.fetchall())
             c_ids = child_ids
             if (list(set(parent_ids).intersection(set(c_ids)))) or (obj_task.id in c_ids):
                 return False
