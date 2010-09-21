@@ -150,8 +150,6 @@ class crm_lead(crm_case, osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
-        'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
 
     _defaults = {

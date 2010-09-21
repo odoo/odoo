@@ -12,26 +12,28 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Add payment :">
-				<group colspan="4" width="600" height="200">
+				<group colspan="4" width="600" height="220">
 				    <field name="journal"/>
 				    <field name="amount" />
 				    <field name="payment_date" />
 				    <!--field name="payment_name" /-->
 				    <field name="invoice_wanted" />
 				    <field name="num_sale" />
-				    <field name="is_acc" />
+				    <field name="is_acc"/>
 				    <group attrs="{'invisible':[('is_acc','=',False)]}" colspan="4" col="2">
-				    	<field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]"/>
+				    	<field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]"
+				    	       on_change="onchange_product_id(product_id, amount)"/>
 				    </group>
 				    <newline/>
 				    <group attrs="{'invisible':[('invoice_wanted','=',False)]}" colspan="4">
 				    	<field name="partner_id" attrs="{'required':[('invoice_wanted', '=', True)]}"  colspan="2"/>
 				    	<field name="pricelist_id" attrs="{'required':[('invoice_wanted', '=', True)]}" colspan="2"/>
 				    </group>
-				    <newline/>
-				    <group col="2" colspan="4">
-	            		<button icon='gtk-cancel' special="cancel"  string="Cancel" />
-						<button name="check" string="Make Payment" colspan="1" type="object" icon="gtk-ok"/>
+				    <separator colspan="4"/>
+				    <group col="4" colspan="4">
+				        <group col="2" colspan="2"/>
+	            		<button icon='gtk-stop' special="cancel"  string="Cancel" />
+						<button name="check" string="Make Payment" colspan="1" type="object" icon="terp-dolar"/>
 					</group>	
 				 </group>
 				</form>

@@ -41,6 +41,20 @@ def geo_find(addr):
                              _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
 
 
+class res_partner_grade(osv.osv):
+    _order = 'sequence'
+    _name = 'res.partner.grade'
+    _columns = {
+        'sequence': fields.integer('Sequence'),
+        'active': fields.boolean('Active'),
+        'name': fields.char('Grade Name', size=32)
+    }
+    _defaults = {
+        'active': lambda *args: 1
+    }
+res_partner_grade()
+
+
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
@@ -49,6 +63,9 @@ class res_partner(osv.osv):
         'date_localization': fields.date('Geo Localization Date'),
         'partner_weight': fields.integer('Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
+        'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
+            'Assigned Opportunities'), 
+        'grade_id': fields.many2one('res.partner.grade', 'Partner Grade')
     }
     _defaults = {
         'partner_weight': lambda *args: 0
@@ -74,7 +91,21 @@ class crm_lead(osv.osv):
     _columns = {
         'partner_latitude': fields.float('Geo Latitude'),
         'partner_longitude': fields.float('Geo Longitude'),
+        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
+        'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
+    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context={}):
+        """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of stage’s IDs
+            @stage_id: change state id on run time """
+
+        if not partner_assigned_id:
+            return {'value':{'date_assign': False}}
+        else:
+            return {'value':{'date_assign': time.strftime('%Y-%m-%d')}}
 
     def assign_partner(self, cr, uid, ids, context=None):
         ok = False

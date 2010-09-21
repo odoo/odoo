@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from mx import DateTime
 from osv import osv, fields
 from tools.translate import _
 import netsvc

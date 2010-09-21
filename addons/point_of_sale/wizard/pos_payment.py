@@ -47,8 +47,9 @@ class pos_make_payment(osv.osv_memory):
         active_id = context and context.get('active_id',False)
         if active_id:
             j_obj = self.pool.get('account.journal')
-            company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-            journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
+            cr.execute("""select DISTINCT journal_id from pos_journal_users where user_id=%d order by journal_id"""%(uid))
+            j_ids = map(lambda x1: x1[0], cr.fetchall())
+            journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)])
 
             if journal:
                 journal = journal[0]
@@ -79,6 +80,10 @@ class pos_make_payment(osv.osv_memory):
                 res.update({'payment_date':current_date})
             if 'payment_name'  in fields:
                 res.update({'payment_name':'Payment'})
+            if 'partner_id' in fields:
+                res.update({'partner_id': order.partner_id.id or False})
+            if 'pricelist_id' in fields:
+                res.update({'pricelist_id': order.pricelist_id.id or False})
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -123,6 +128,18 @@ class pos_make_payment(osv.osv_memory):
                     """
         return result
 
+    def onchange_product_id(self, cr, uid, ids, product_id, amount):
+        """ Changes amount if product_id changes.
+        @param product_id: Changed product_id
+        @param amount: Amount to be paid
+        @return: Dictionary of changed values
+        """
+        prod_obj = self.pool.get('product.product')
+        if product_id:
+            product = prod_obj.browse(cr, uid, product_id)
+            amount = amount - product.list_price
+        return {'value': {'amount': amount}}
+
     def check(self, cr, uid, ids, context):
 
         """Check the order:
@@ -135,8 +152,12 @@ class pos_make_payment(osv.osv_memory):
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids)[0]
         invoice_wanted = data['invoice_wanted']
+        is_accompte = data['is_acc']
         # Todo need to check ...
-
+        if is_accompte:
+            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], -1.0, context)
+            amount = order.amount_total - order.amount_paid - price
+        
         if amount != 0.0:
             order_obj.write(cr, uid, [active_id], {'invoice_wanted': invoice_wanted, 'partner_id': data['partner_id']})
             order_obj.add_payment(cr, uid, active_id, data, context=context)
@@ -205,11 +226,11 @@ class pos_make_payment(osv.osv_memory):
 
     _columns = {
         'journal':fields.selection(pos_box_entries.get_journal, "Cash Register",required=True),
-        'product_id': fields.many2one('product.product', "Acompte"),
+        'product_id': fields.many2one('product.product', "Advance"),
         'amount':fields.float('Amount', digits=(16,2) ,required= True),
         'payment_name': fields.char('Payment name', size=32, required=True),
         'payment_date': fields.date('Payment date', required=True),
-        'is_acc': fields.boolean('Accompte'),
+        'is_acc': fields.boolean('Advance'),
         'invoice_wanted': fields.boolean('Invoice'),
         'num_sale':fields.char('Num.File', size=32),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),

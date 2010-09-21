@@ -5,7 +5,7 @@
             <field name="name">crm_lead_forward_to_partner</field>
             <field name="model">crm.lead.forward.to.partner</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="crm_send_new_mail_view"/>
+            <field name="inherit_id" ref="crm.crm_send_new_mail_view"/>
             <field name="arch" type="xml">
                 <field name="email_from" position="before">
                     <separator string="Forward to Partner" colspan="4" />
@@ -31,7 +31,7 @@
             <field name="name">crm_lead_forward_to_partner1</field>
             <field name="model">crm.lead.forward.to.partner</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="crm_send_new_mail_view"/>
+            <field name="inherit_id" ref="crm.crm_send_new_mail_view"/>
             <field name="arch" type="xml">
                 <button name="action_send" position="replace">
                     <button name="action_forward" string="Forward" icon="gtk-go-forward" type="object" />
