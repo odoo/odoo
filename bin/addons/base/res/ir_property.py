@@ -51,11 +51,11 @@ def _models_get(self, cr, uid, context={}):
 class ir_property(osv.osv):
     _name = 'ir.property'
     _columns = {
-        'name': fields.char('Name', size=128),
-        'value': fields.reference('Value', selection=_models_get2, size=128),
-        'res_id': fields.reference('Resource', selection=_models_get, size=128),
-        'company_id': fields.many2one('res.company', 'Company'),
-        'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True)
+        'name': fields.char('Name', size=128, select=1),
+        'value': fields.reference('Value', selection=_models_get2, size=128, select=1),
+        'res_id': fields.reference('Resource', selection=_models_get, size=128, select=1),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
+        'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True, select=1)
     }
 
     def get(self, cr, uid, name, model, res_id=False, context={}):
