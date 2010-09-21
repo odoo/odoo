@@ -901,12 +901,9 @@ class property(function):
 
         domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
         #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
-        if domain is not None:
+        if vids:
             domain = [('res_id', 'in', vids)] + domain
-            return prop.search(cr, uid, domain, context=context)
-        else:
-            return []
-
+        return prop.search(cr, uid, domain, context=context)
 
     # TODO: to rewrite more clean
     def _fnct_write(self, obj, cr, uid, id, prop_name, id_val, obj_dest, context=None):
