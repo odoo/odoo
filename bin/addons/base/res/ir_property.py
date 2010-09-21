@@ -52,14 +52,14 @@ class ir_property(osv.osv):
         'res_id': fields.reference('Resource', selection=_models_get, size=128,
                                    help="If not set, act as default property", select=1),
         'company_id': fields.many2one('res.company', 'Company', select=1),
-        'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True, select=1),
+        'fields_id': fields.many2one('ir.model.fields', 'Field', ondelete='cascade', required=True, select=1),
 
-        'value_float' : fields.float('Value', select=1),
-        'value_integer' : fields.integer_big('Value', select=1), # will contain (int, bigint)
-        'value_text' : fields.text('Value', select=1), # will contain (char, text)
-        'value_binary' : fields.binary('Value', select=1),
-        'value_reference': fields.reference('Value', selection=_models_get2, size=128, select=1),
-        'value_datetime' : fields.datetime('Value', select=1),
+        'value_float' : fields.float('Value'),
+        'value_integer' : fields.integer_big('Value'), # will contain (int, bigint)
+        'value_text' : fields.text('Value'), # will contain (char, text)
+        'value_binary' : fields.binary('Value'),
+        'value_reference': fields.reference('Value', selection=_models_get2, size=128),
+        'value_datetime' : fields.datetime('Value'),
 
         'type' : fields.selection([('char', 'Char'),
                                    ('float', 'Float'),
