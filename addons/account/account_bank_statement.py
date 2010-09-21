@@ -215,14 +215,15 @@ class account_bank_statement(osv.osv):
         return True
 
 
-    def create_move_from_st_line(self, cr, uid, st_line, company_currency_id, st_line_number, context=None):
+    def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         account_analytic_line_obj = self.pool.get('account.analytic.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-
+        
+        st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context)
         st = st_line.statement_id
         
         context.update({'date': st_line.date})
@@ -363,7 +364,7 @@ class account_bank_statement(osv.osv):
                 if not st_line.amount:
                     continue
                 st_line_number = self.get_next_st_line_number(cr, uid, st_number, st_line, context)
-                self.create_move_from_st_line(cr, uid, st_line, company_currency_id, st_line_number, context)
+                self.create_move_from_st_line(cr, uid, st_line.id, company_currency_id, st_line_number, context)
 
             self.write(cr, uid, [st.id], {'name': st_number}, context=context)
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st_number)
