@@ -762,12 +762,13 @@ def _check_module_names(cr, module_names):
     if 'base' in mod_names:
         # ignore dummy 'all' module
         mod_names.remove('all')
-    cr.execute("SELECT count(id) AS count FROM ir_module_module WHERE name in %s", (tuple(mod_names),))
-    if cr.dictfetchone()['count'] != len(mod_names):
-        # find out what module name(s) are incorrect:
-        cr.execute("SELECT name FROM ir_module_module")
-        incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
-        logging.getLogger('init').warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
+    if mod_names:
+        cr.execute("SELECT count(id) AS count FROM ir_module_module WHERE name in %s", (tuple(mod_names),))
+        if cr.dictfetchone()['count'] != len(mod_names):
+            # find out what module name(s) are incorrect:
+            cr.execute("SELECT name FROM ir_module_module")
+            incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
+            logging.getLogger('init').warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
     if not status:
