@@ -70,6 +70,31 @@ class auction_dates(osv.osv):
         reads = self.read(cr, uid, ids, ['name', 'auction1'], context)
         name = [(r['id'], '['+r['auction1']+'] '+ r['name']) for r in reads]
         return name
+    
+    def _get_buyer_invoice(self, cr, uid, ids, name, arg, context={}):
+        lots_obj = self.pool.get('auction.lots')
+        result = {}
+        for data in self.browse(cr, uid, ids):
+            inv_ids = []
+            lots_ids = lots_obj.search(cr, uid, [('auction_id','=',data.id),('ach_inv_id','!=',False)])
+            for lot in lots_obj.browse(cr, uid, lots_ids):
+                if lot.ach_inv_id:
+                    inv_ids.append(lot.ach_inv_id.id)
+            result[data.id] = inv_ids
+        return result
+    
+    def _get_seller_invoice(self, cr, uid, ids, name, arg, context={}):
+        lots_obj = self.pool.get('auction.lots')
+        lots_ids = lots_obj.search(cr, uid, [('auction_id','in',ids)])
+        result = {}
+        for data in self.browse(cr, uid, ids):
+            inv_ids = []
+            lots_ids = lots_obj.search(cr, uid, [('auction_id','=',data.id),('sel_inv_id','!=',False)])
+            for lot in lots_obj.browse(cr, uid, lots_ids):
+                if lot.sel_inv_id:
+                    inv_ids.append(lot.sel_inv_id.id)
+            result[data.id] = inv_ids
+        return result
 
     _columns = {
         'name': fields.char('Auction Name', size=64, required=True),
@@ -87,6 +112,8 @@ class auction_dates(osv.osv):
         'state': fields.selection((('draft', 'Draft'), ('closed', 'Closed')), 'State', select=1, readonly=True,
                                   help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
+        'buyer_invoice_history': fields.function(_get_buyer_invoice, relation='account.invoice', method=True, string="Buyer Invoice", type='many2many'),
+        'seller_invoice_history': fields.function(_get_seller_invoice, relation='account.invoice', method=True, string="Seller Invoice", type='many2many'),
     }
 
     _defaults = {
