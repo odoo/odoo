@@ -67,8 +67,9 @@ class account_partner_reconcile_process(osv.osv_memory):
         return res
 
     def next_partner(self, cr, uid, ids, context=None):
-        partner_id = self.pool.get('account.move.line').read(cr, uid, context['active_id'], ['partner_id'])['partner_id'][0]
-        self.pool.get('res.partner').write(cr, uid, partner_id, {'last_reconciliation_date': time.strftime('%Y-%m-%d')}, context)
+        partner_id = self.pool.get('account.move.line').read(cr, uid, context['active_id'], ['partner_id'])['partner_id']
+        if partner_id:
+            self.pool.get('res.partner').write(cr, uid, partner_id[0], {'last_reconciliation_date': time.strftime('%Y-%m-%d')}, context)
         #TODO: we have to find a way to update the context of the current tab (we could open a new tab with the context but it's not really handy)
         #TODO: remove that comments when the client side dev is done
         return {}

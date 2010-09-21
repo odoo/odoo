@@ -74,7 +74,6 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
 
-        type_pool = db_pool.get('account.account.type')
         account_pool = db_pool.get('account.account')
         year_pool = db_pool.get('account.fiscalyear')
 
