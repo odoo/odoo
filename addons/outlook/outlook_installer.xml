@@ -38,7 +38,7 @@
                                 <newline/>
                             <field name="plugin_file" filename="name"/>
                                 <newline/>
-                            <field name="doc_file" filename="doc_name"/>
+                            <field name="doc_file" filename="doc_name" widget="url"/>
                                 <newline/>
                             <separator string="Installation and Configuration Steps" colspan="4"/>
                             <field name="description" nolabel="1" colspan="8"/>
@@ -74,20 +74,15 @@
             <field name="context">{'menu':True}</field>
         </record>
 
-        <menuitem id="base.menu_base_config_mail" 
-                  name="Mail" 
-                  parent="base.menu_base_config" 
-                  sequence="10"/>
-                  
-        <menuitem id="base.menu_base_config_plugins" 
-                  name="Plugins" 
-                  parent="base.menu_base_config_mail" 
+        <menuitem id="base.menu_base_config_plugins"
+                  name="Plugins"
+                  parent="base.menu_base_config"
                   sequence="10" />
-                  
-        <menuitem id="menu_base_config_plugins_outlook" 
-                  action="action_outlook_wizard" 
-                  name="Outlook Plug-In" 
-                  parent="base.menu_base_config_plugins" 
+
+        <menuitem id="menu_base_config_plugins_outlook"
+                  action="action_outlook_wizard"
+                  name="Outlook Plug-In"
+                  parent="base.menu_base_config_plugins"
                   sequence="10" />
     </data>
 </openerp>

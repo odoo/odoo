@@ -14,8 +14,9 @@
     <separator class="groove-thin" orient="horizontal" width="94"/> 
     <hbox>
         <label  align="right" id="partner"  value="&selectpartner.value;" width="97" />
-		<textbox id="txtselectpartner" readonly="true" value="" width="270"/>
-		<button label="&bsearch.label;" oncommand="Select.onMenuItemCommand(event);" image="&imagesearch.value;"/>
+    	<textbox id="txtselectpartner" readonly="true" value="" width="270"/>
+		<button label="&bsearch.label;" oncommand="Select.onMenuItemCommand(event);" image="&imagesearch.value;"/> 
+        <button label="Create Partner" image="&imagecreate.value;" oncommand="CreatePartner.onMenuItemCommand(event);"/>
 	</hbox>
 	<hbox>
         <label  align="right" id="name"  value="&name.value;" width="80" />
