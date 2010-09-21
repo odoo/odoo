@@ -829,7 +829,7 @@ class account_invoice(osv.osv):
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / inv.amount_total
                 if (total_fixed + total_percent) > 100:
-                    raise osv.except_osv(_('Error !'), _("You cannot create an invoice !\nAs you have defined payment term and so the total of invoice should be greater than the computed amount for journal entries using payment term"))
+                    raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe payment term defined gives a computed amount greater than the total invoiced amount."))
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
