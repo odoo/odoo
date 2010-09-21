@@ -29,7 +29,6 @@ class base_contact_installer(osv.osv_memory):
     _columns = {
         'name': fields.char('Name', size=64),
         'migrate': fields.boolean('Migrate', help="If you select this, all addresses will be migrated."),
-        'nomigrate': fields.boolean('NoMigrate', help="If you select this, all addresses will not be migrated."),
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -54,15 +53,12 @@ class base_contact_installer(osv.osv_memory):
                             END;
                             $contactjob$ LANGUAGE plpgsql;
                             CREATE TRIGGER contactjob AFTER INSERT ON res_partner_contact FOR EACH ROW EXECUTE PROCEDURE add_to_job();""")
-            cr.commit()
 
             cr.execute("INSERT into res_partner_contact (name, title, email, first_name, website)  (SELECT coalesce(name, 'Noname'), title, email, function , to_char(id, '99999999') from res_partner_address)")
-            cr.commit()
 
             cr.execute("DROP TRIGGER  IF EXISTS contactjob  on res_partner_contact")
             cr.execute("DROP LANGUAGE  IF EXISTS  plpgsql CASCADE;")
             cr.execute("DROP FUNCTION IF EXISTS  add_to_job()")
-            cr.commit()
 
 base_contact_installer()
 

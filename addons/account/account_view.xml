@@ -668,6 +668,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_account_type_form" model="ir.ui.view">
             <field name="name">account.account.type.form</field>
             <field name="model">account.account.type</field>
@@ -677,7 +678,6 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="parent_id"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
@@ -942,8 +942,8 @@
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id" groups="base.group_extended"/>
                     <field name="analytic_account_id" groups="base.group_extended" domain="[('parent_id','!=',False)]"/>
-                    <field name="amount_currency" groups="base.group_extended"/>
-                    <field name="currency_id" groups="base.group_extended"/>
+                    <field name="amount_currency" groups="base.group_extended" attrs="{'readonly':[('state','=','valid')]}"/>
+                    <field name="currency_id" groups="base.group_extended" attrs="{'readonly':[('state','=','valid')]}"/>
                     <field name="reconcile_partial_id" groups="base.group_extended"/>
                     <field name="reconcile_id"/>
                     <field name="state"/>
@@ -998,7 +998,7 @@
                                 <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             </group>
 
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" attrs="{'readonly':[('state','=','valid')]}" >
                                 <separator colspan="2" string="Currency"/>
                                 <field name="currency_id"/>
                                 <field name="amount_currency"/>
@@ -2340,11 +2340,11 @@
             <field name="arch" type="xml">
               <data>
                 <form position="attributes">
-                  <attribute name="string">Generate Chart of Accounts from a Chart Template</attribute>
+                  <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
                 <attribute name="string"
-                       >Generate Chart of Accounts from a Chart Template</attribute>
+                       >Generate Your Accounting Chart from a Chart Template</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template</attribute>
@@ -2508,8 +2508,6 @@
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
-                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'currency_id': parent.currency, 'journal_id': parent.journal_id, 'date':date}" name="reconcile_id"/>
-                                    <field invisible="1" name="reconcile_amount"/>
                                 </tree>
                                 <form string="Statement lines">
                                     <field name="date"/>
@@ -2519,7 +2517,6 @@
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
-                                    <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id,'currency_id': parent.currency,'journal_id':parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field name="ref"/>
                                     <field name="sequence"/>
                                     <separator colspan="4" string="Notes"/>

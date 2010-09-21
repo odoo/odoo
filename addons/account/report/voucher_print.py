@@ -30,6 +30,7 @@ class report_voucher_move(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'convert':self.convert,
+            'get_title': self.get_title,
             'debit':self.debit,
             'credit':self.credit,
             #'get_ref' : self._get_ref
@@ -41,6 +42,13 @@ class report_voucher_move(report_sxw.rml_parse):
     	cur = user_id.company_id.currency_id.name
         amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur);
         return amt_en
+
+    def get_title(self, voucher):
+        title = ''
+        if voucher.journal_id:
+            type = voucher.journal_id.type
+            title = type[0].swapcase() + type[1:] + " Voucher"
+        return title
     
     def debit(self, move_ids):
         debit = 0.0

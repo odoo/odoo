@@ -22,7 +22,7 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table1">
+    <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
@@ -34,7 +34,7 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table2">
+    <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
@@ -65,6 +65,7 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
+    <paraStyle name="space" fontName="Helvetica" fontSize="6.0" leading="8"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -131,11 +132,11 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
     <section>
-      <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table1">
+      <para style="terp_default_8">
+        <font color="white"> </font>
+      </para>
+      <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table6">
         <tr>
           <td>
             <para style="terp_tblheader_details_center">#</para>
@@ -163,14 +164,18 @@
           </td>
         </tr>
       </blockTable>
-      <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table2">
+      <para style="space">
+        <font color="white"> </font>
+      </para>
+    </section>
+    <section>
+      <para style="terp_default_9">[[repeatIn(o.line_ids, 'l')]]</para>
+      <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table1">
         <tr>
           <td>
             <para style="terp_default_8">[[ get_no() ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ repeatIn(o.line_ids, 'l') ]]</para>
-            <para style="terp_default_8">[[add_line(l)]]</para>
             <para style="terp_default_8">[[ l.employee_id.name ]]</para>
           </td>
           <td>
@@ -193,40 +198,46 @@
           </td>
         </tr>
       </blockTable>
-      <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table4">
-        <tr>
-          <td>
-            <para style="terp_default_8">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_tblheader_details">Total SAL<font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
-          </td>
-          <td>
-            <para style="terp_tbleheader_details_right">[[formatLang(get_basic())]][[ company.currency_id.symbol]] </para>
-          </td>
-          <td>
-            <para style="terp_tbleheader_details_right">[[formatLang(get_other())]] [[ company.currency_id.symbol]]</para>
-          </td>
-          <td>
-            <para style="terp_tbleheader_details_right">[[formatLang(get_allow())]] [[ company.currency_id.symbol]]</para>
-          </td>
-          <td>
-            <para style="terp_tbleheader_details_right">[[formatLang(get_grows())]] [[ company.currency_id.symbol]]</para>
-          </td>
-          <td>
-            <para style="terp_tbleheader_details_right">[[formatLang(get_deduct())]] [[ company.currency_id.symbol]]</para>
-          </td>
-          <td>
-            <para style="terp_tbleheader_details_right">[[formatLang(get_net())]] [[ company.currency_id.symbol]]</para>
-          </td>
-        </tr>
-      </blockTable>
-      <para style="terp_default_8">
+      <para style="space">
         <font color="white"> </font>
       </para>
     </section>
+    <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table4">
+      <tr>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_details">Total SAL<font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
+        </td>
+        <td>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_basic())]][[ company.currency_id.symbol]] </para>
+        </td>
+        <td>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_other())]] [[ company.currency_id.symbol]]</para>
+        </td>
+        <td>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_allow())]] [[ company.currency_id.symbol]]</para>
+        </td>
+        <td>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_grows())]] [[ company.currency_id.symbol]]</para>
+        </td>
+        <td>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_deduct())]] [[ company.currency_id.symbol]]</para>
+        </td>
+        <td>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_net())]] [[ company.currency_id.symbol]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
     <blockTable colWidths="241.0,241.0" style="Table5">
       <tr>
         <td>

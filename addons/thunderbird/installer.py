@@ -25,6 +25,7 @@ from tools import config
 
 import base64
 import addons
+import difflib
 
 class thunderbird_installer(osv.osv_memory):
     _name = 'thunderbird.installer'
@@ -32,8 +33,7 @@ class thunderbird_installer(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context={}):
         data = super(thunderbird_installer, self).default_get(cr, uid, fields, context)
-        pdf_file = open(addons.get_module_resource('thunderbird','doc', 'Installation Guide to OpenERP Thunderbid Plug-in.pdf'),'rb')
-        data['pdf_file'] = base64.encodestring(pdf_file.read())
+        data['pdf_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html'
         file = open(addons.get_module_resource('thunderbird','plugin', 'openerp_plugin.xpi'),'rb')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
@@ -41,16 +41,15 @@ class thunderbird_installer(osv.osv_memory):
     _columns = {
         'name':fields.char('File name', size=34),
         'pdf_name':fields.char('File name', size=64),
-        'thunderbird':fields.boolean('Thunderbird Module ', help="Allows you to select an object that you’d like to add to your email and its attachments."),
+        'thunderbird':fields.boolean('Thunderbird Plug-in', help="Allows you to select an object that you’d like to add to your email and its attachments."),
         'plugin_file':fields.binary('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."),
-        'pdf_file':fields.binary('Installation Manual', help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
+        'pdf_file':fields.char('Installation Manual', size="264", help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
         'description':fields.text('Description', readonly=True)
     }
 
     _defaults = {
         'thunderbird' : True,
         'name' : 'openerp_plugin.xpi',
-        'pdf_name' : 'Installation Guide to OpenERP Thunderbid Plug-in.pdf',
         'description' : """
         * Save the Thunderbird plug-­in.
         * Follow these steps to install Thunderbird plug-­in.

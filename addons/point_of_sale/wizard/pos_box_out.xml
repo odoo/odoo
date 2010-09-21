@@ -14,12 +14,14 @@
 				    	<field name="journal_id"/>
 				    	<field name="product_id"/>
 				    	<field name="amount"/>
-				    	<group colspan="4" col="2">
-				 		<button icon='gtk-cancel' special="cancel"
-                			string="Close" />
-                		<button name="get_out" string="Put Money"
-                			colspan="1" type="object" icon="gtk-ok" />
-                			</group>
+				    	<separator colspan="4"/>
+				    	<group colspan="4" col="4">
+				    	    <group col="2" colspan="2"/>
+					 		<button icon="gtk-stop" special="cancel"
+	                			string="Cancel" />
+	                		<button name="get_out" string="Take Money"
+	                			colspan="1" type="object" icon="terp-dolar" />
+                	    </group>
                 </form>
             </field>
         </record>

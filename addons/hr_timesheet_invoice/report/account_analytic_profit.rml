@@ -157,10 +157,12 @@
     <blockTable colWidths="175.0,175.0,175.0" style="Table_Content_Date">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ data['form']['date_from'] ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang (data['form']['date_from'],date=True)
+]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ data['form']['date_to'] ]]</para>
+          <para style="terp_default_Centre_8">[[ formatLang (data['form']['date_to'],date=True)
+ ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ company.currency_id.name ]]</para>
