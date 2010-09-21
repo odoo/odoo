@@ -85,7 +85,7 @@ class crm_lead_report_assign(osv.osv):
             CRM Lead Report
             @param cr: the current row, from the database cursor
         """
-        tools.drop_view_if_exists(cr, 'crm_lead_report')
+        tools.drop_view_if_exists(cr, 'crm_lead_report_assign')
         cr.execute("""
             CREATE OR REPLACE VIEW crm_lead_report_assign AS (
                 SELECT
