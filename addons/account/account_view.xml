@@ -668,6 +668,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_account_type_form" model="ir.ui.view">
             <field name="name">account.account.type.form</field>
             <field name="model">account.account.type</field>
@@ -677,7 +678,6 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="parent_id"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
