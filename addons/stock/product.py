@@ -228,16 +228,23 @@ class product_product(osv.osv):
         results = []
         results2 = []
 
-        from_date=context.get('from_date',False)
-        to_date=context.get('to_date',False)
-        date_str=False
+        from_date = context.get('from_date',False)
+        to_date = context.get('to_date',False)
+        date_str = False
+        date_values = False
         if from_date and to_date:
-            date_str="date_planned>='%s' and date_planned<='%s'"%(from_date,to_date)
+            date_str = "date_planned>=%s and date_planned<=%s"
+            date_values = [from_date, to_date]
         elif from_date:
-            date_str="date_planned>='%s'"%(from_date)
+            date_str = "date_planned>=%s"
+            date_values = [from_date] 
         elif to_date:
-            date_str="date_planned<='%s'"%(to_date)
+            date_str = "date_planned<=%s"
+            date_values = [to_date]
 
+        where = [tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states)]
+        if date_values:
+            where.append(tuple(date_values))
         if 'in' in what:
             # all moves from a location out of the set to a location in the set
             cr.execute(
@@ -247,8 +254,7 @@ class product_product(osv.osv):
                 'and location_dest_id IN %s'\
                 'and product_id IN %s'\
                 'and state IN %s' + (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom',(tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states),)
-            )
+                'group by product_id,product_uom',tuple(where))
             results = cr.fetchall()
         if 'out' in what:
             # all moves from a location in the set to a location out of the set
@@ -259,8 +265,7 @@ class product_product(osv.osv):
                 'and location_dest_id NOT IN %s '\
                 'and product_id  IN %s'\
                 'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom',(tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states),)
-            )
+                'group by product_id,product_uom',tuple(where))
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')
         uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
