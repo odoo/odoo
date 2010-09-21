@@ -20,6 +20,9 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools import cache
+import pooler
+
 
 class decimal_precision(osv.osv):
     _name = 'decimal.precision'
@@ -30,6 +33,12 @@ class decimal_precision(osv.osv):
     _defaults = {
         'digits': lambda *a : 2,
     }
+
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', """The Usage of the decimal precision must be unique!"""),
+    ]
+
+    @cache(skiparg=3)
     def precision_get(self, cr, uid, application):
         cr.execute('select digits from decimal_precision where name=%s', (application,))
         res = cr.fetchone()
@@ -42,11 +51,13 @@ class decimal_precision(osv.osv):
                 if isinstance(col, fields.float):
                     col.digits_change(cr)
         return res
+
 decimal_precision()
+
 
 def get_precision(application):
     def change_digit(cr):
-        cr.execute('select digits from decimal_precision where name=%s', (application,))
-        res = cr.fetchone()
-        return (16,res and res[0] or 2)
+        return pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, application)
     return change_digit
+
+
