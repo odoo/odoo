@@ -177,7 +177,7 @@ class stock_return_picking(osv.osv_memory):
                     new_qty, move.product_uos.id),
                 'picking_id':new_picking, 'state':'draft',
                 'location_id':new_location, 'location_dest_id':move.location_id.id,
-                'date':date_cur, 'date':date_cur,})
+                'date':date_cur,})
             move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
     
         if set_invoice_state_to_none:
