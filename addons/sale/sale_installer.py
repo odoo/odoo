@@ -27,20 +27,19 @@ class sale_installer(osv.osv_memory):
 
     _columns = {
         'sale_analytic_plans': fields.boolean('Sales Analytic Distribution',
-            help="The base module to manage analytic distribution and sale orders."),
+            help="Helps you to manage analytic distribution and sales orders."),
         'sale_journal': fields.boolean('Sales and deliveries by journal',
-            help="The sale journal modules allows you to categorise your "
+            help="Allows you to categorise your "
                 "sales and deliveries (picking lists) between different journals. "
                 "This module is very helpful for bigger companies that "
-                "works by departments."),
-        'sale_layout': fields.boolean('Sale Order Layout Improvement',
-            help="This module provides some features to improve the layout of the Sale Order."),
-        'sale_margin': fields.boolean('Margins in Sale Orders',
-            help="This module adds the 'Margin' on sales order, "
-                "which gives the profitability by calculating "
-                "the difference between the Unit Price and Cost Price."),
-        'sale_order_dates': fields.boolean('Sale Order Dates',
-            help="Add commitment, requested and effective dates on the sale order."),
+                "work by departments."),
+        'sale_layout': fields.boolean('Sales Order Layout Improvement',
+            help="Provides some features to improve the layout of the Sales Order reports."),
+        'sale_margin': fields.boolean('Margins in Sales Orders',
+            help="Gives the margin of profitability by calculating "
+                 "the difference between Unit Price and Cost Price."),
+        'sale_order_dates': fields.boolean('Sales Order Dates',
+            help="Adds commitment, requested and effective dates on Sales Orders."),
         }
     
 sale_installer()

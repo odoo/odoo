@@ -63,7 +63,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Funds Tree"
-                    colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                    colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="name" string="Fund Description" />
                     <field name="categ_id" />
                     <field name="type_id" string="Payment Mode" />
@@ -197,7 +197,7 @@
                                     </notebook>
                                 </form>
                             </field>
-                             <button string="Add New Note"
+                             <button string="Add Internal Note"
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
@@ -298,7 +298,7 @@
                         </group>
                         <newline/>
                         <group expand="0" string="Group By...">
-                            <filter string="Partner" icon="terp-personal"
+                            <filter string="Partner" icon="terp-partner"
                                 domain="[]"
                                 context="{'group_by':'partner_id'}" />
                             <filter string="Responsible" icon="terp-personal"

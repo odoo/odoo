@@ -131,7 +131,8 @@ class account_move_line(osv.osv):
                     'general_account_id': obj_line.account_id.id,
                     'journal_id': obj_line.journal_id.analytic_journal_id.id,
                     'ref': obj_line.ref,
-                    'move_id':obj_line.id
+                    'move_id':obj_line.id,
+                    'user_id': uid
                 }
                 new_id = self.pool.get('account.analytic.line').create(cr,uid,vals_lines)
         return True
@@ -1177,6 +1178,7 @@ class account_move_line(osv.osv):
                         'general_account_id': vals.get('account_id', False),
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals.get('ref', False),
+                        'user_id': uid
                     })]
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
@@ -1252,14 +1254,6 @@ class account_move_line(osv.osv):
                 rs = self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
         return result
 account_move_line()
-
-
-class account_bank_statement_reconcile(osv.osv):
-    _inherit = "account.bank.statement.reconcile"
-    _columns = {
-        'line_ids': fields.many2many('account.move.line', 'account_bank_statement_line_rel', 'statement_id', 'line_id', 'Entries'),
-    }
-account_bank_statement_reconcile()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

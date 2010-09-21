@@ -55,7 +55,7 @@
         <field name="arch" type="xml">
             <form string="Leads Form">
                 <group colspan="4" col="7">
-                    <field name="name" required="1" string="Contact Name"/>
+                    <field name="name" required="1" string="Subject"/>
                     <field name="priority"/>
                     <field name="categ_id"
                         widget="selection"
@@ -83,9 +83,12 @@
                 </group>
                 <notebook colspan="4">
                 <page string="Lead">
+                    <group colspan="4" col="2">
+                        <field name="partner_name" string="Partner Name" />
+                    </group>
                     <group colspan="2" col="4">
                         <separator string="Contact" colspan="4" col="4"/>
-                        <field name="partner_name" string="Partner Name" colspan="4"/>
+                        <field name="contact_name" colspan="4"/>
                         <newline/>
                         <field domain="[('domain', '=', 'contact')]" name="title"/>
                         <field name="function" />
@@ -168,36 +171,41 @@
                     </group>
                  </page>
                  <page string="History" groups="base.group_extended">
-                    <group colspan="4">
-                        <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
-                    </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" context="{'default_model': 'crm.lead', 'default_user_id': uid}" >
-                        <tree string="History">
+                   <group colspan="4">
+                       <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
+                   </group>
+                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                        <tree string="Communication history">
                             <field name="display_text" string="History Information"/>
                             <field name="history" invisible="1"/>
-                            <button string="Reply" attrs="{'invisible': [('history', '!=', True)]}" name="123" context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}" icon="terp-mail-replied" type="action"/>
+                            <button
+                                string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
+                                name="%(crm.action_crm_send_mail)d"
+                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                icon="terp-mail-replied" type="action" />
                         </tree>
-                        <form string="History">
-                            <field name="history"/>
-                            <field name="name" colspan="4" widget="char" size="512" required="1"/>
-                            <field name="date" required="1"/>
-                            <field name="user_id"/>
-                            <field name="model" invisible="1"/>
+                        <form string="Communication history">
+                            <group col="4" colspan="4">
+                                <field name="email_from"/>
+                                <field name="date"/>
+                                <field name="email_to" widget="char" size="512"/>
+                                <field name="email_cc" widget="char" size="512"/>
+                                <field name="name" colspan="4" widget="char" size="512"/>
+                                <field name="history" invisible="1"/>
+                            </group>
                             <notebook colspan="4">
                                 <page string="Details">
-                                    <group col="4" colspan="4" attrs="{'invisible': [('history', '!=', True)]}">
-                                        <field name="email_from" attrs="{'required': [('history', '=', True)]}"/>
-                                        <field name="email_to" widget="char" size="512"  attrs="{'required': [('history', '=', True)]}"/>
-                                        <field name="email_cc" widget="char" size="512"/>
+                                    <group attrs="{'invisible': [('history', '!=', True)]}">
+                                        <field name="description" colspan="4" nolabel="1" height="250"/>
+                                        <button colspan="4"
+                                            string="Reply"
+                                            name="%(crm.action_crm_send_mail)d"
+                                            context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                            icon="terp-mail-replied" type="action" />
                                     </group>
-                                    <separator string="Description" colspan="4"/>
-                                     <group colspan="4" attrs="{'invisible': [('history', '!=', True)]}">
-                                        <field name="description" colspan="4" nolabel="1" attrs="{'required': [('history', '=', True)]}"/>
+                                    <group attrs="{'invisible': [('history', '=', True)]}">
+                                        <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                     </group>
-                                    <group colspan="4" attrs="{'invisible': [('history', '=', True)]}">
-                                        <field name="display_text" colspan="4" nolabel="1"/>
-                                    </group>
-                                    <button colspan="4" string="Reply" name="123" context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}" icon="terp-mail-replied" type="action"/>
                                 </page>
                                 <page string="Attachments">
                                     <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
@@ -205,7 +213,7 @@
                             </notebook>
                         </form>
                     </field>
-                    <button string="Add New Note"
+                    <button string="Add Internal Note"
                         name="%(crm.action_crm_add_note)d"
                         context="{'model': 'crm.lead' }"
                         icon="terp-document-new" type="action" />
@@ -232,8 +240,8 @@
             <tree string="Leads"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                 <field name="date_deadline" invisible="1"/>
                 <field name="create_date"/>
-                <field name="name" string="Contact Name"/>
-                <field name="partner_name"/>
+                <field name="name" string="Subject"/>
+                <field name="contact_name"/>
                 <field name="country_id" invisible="context.get('invisible_country', True)" />
                 <field name="email_from"/>
                 <field name="phone"/>
@@ -295,7 +303,7 @@
             <search string="Search Leads">
                 <filter icon="terp-check"
                     string="Current"
-                    default="1" name="current"
+                    default="1" name="current" help="Draft and Open Leads"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
@@ -313,7 +321,7 @@
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
                 />
                 <separator orientation="vertical"/>
-                <field name="name"/>
+                <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
                 <field name="user_id">
@@ -348,16 +356,16 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By...">
-                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
+                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
                     <filter string="Creation" icon="terp-go-month"
-                        domain="[]" context="{'group_by':'create_date'}" />
+                        domain="[]" context="{'group_by':'create_date'}" help="Create Date"/>
                 </group>
            </search>
         </field>

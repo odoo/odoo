@@ -441,7 +441,7 @@
                 <para style="terp_default_9">[[ get_line_amount_type(line.amount_type) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(line.amount) or '']][[ employee.company_id.currency_id.symbol]]</para>
+                <para style="terp_default_Right_9">[[ formatLang(line.amount) or '']][[ get_line_amount_symbol(line.amount_type) ]]</para>
               </td>
               <td>
                 <para style="terp_default_9">[[ get_line_type(line.type) ]]</para>

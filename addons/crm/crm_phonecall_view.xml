@@ -49,9 +49,10 @@
                 <button string="Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"
+                    icon="gtk-index"
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
-                    states="draft,open,pending"
+                    states="draft,open,pending" icon="gtk-redo"
                      name="action_make_meeting" type="object" />
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
@@ -96,7 +97,7 @@
                     <field name="partner_id"
                         on_change="onchange_partner_id(partner_id, email_from)" />
                     <button string="Create a Partner"
-                        icon="terp-crm"
+                        icon="gtk-index"
                         name="%(action_crm_phonecall2partner)d"
                         type="action"
                         attrs="{'invisible':[('partner_id','!=',False)]}" />
@@ -123,7 +124,7 @@
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
                     <button name="case_pending" string="Not Held"
-                        states="open" type="object" icon="gtk-undo" />
+                        states="open" type="object" icon="gtk-media-pause" />
                     <button name="case_close" string="Held"
                         states="open,draft,pending" type="object"
                         icon="gtk-jump-to" />
@@ -174,7 +175,7 @@
                     <field name="partner_id"
                         on_change="onchange_partner_id(partner_id, email_from)" />
                     <button string="Create a Partner"
-                        icon="terp-crm"
+                        icon="gtk-index"
                         name="%(action_crm_phonecall2partner)d"
                         type="action"
                         attrs="{'invisible':[('partner_id','!=',False)]}" />
@@ -228,7 +229,7 @@
                 <button string="Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"
-                    icon="gtk-convert"
+                    icon="gtk-index"
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
                     states="draft,open,pending" icon="gtk-redo"
@@ -260,10 +261,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <filter icon="terp-go-today" string="Current"
+               <filter icon="terp-check" string="Current"
                    name="current"
                    domain="[('state','in', ('draft','open','pending'))]"/>
-               <separator orientation="vertical"/>
                <filter icon="terp-go-today" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),\
                     ('date','&gt;=',datetime.strftime('%%Y-%%m-%%d 00:00:00'))]"
@@ -292,15 +292,15 @@
                </field>
                <newline/>
                <group expand="0" string="Group By..." colspan="4">
-                   <filter string="Partner" icon="terp-personal" domain="[]"
+                   <filter string="Partner" icon="terp-partner" domain="[]"
                        context="{'group_by':'partner_id'}" />
                    <filter string="Responsible" icon="terp-personal"
                        domain="[]" context="{'group_by':'user_id'}" />
                    <separator orientation="vertical" />
-                   <filter string="Creation" icon="terp-go-month"
+                   <filter string="Creation" icon="terp-go-month" help="Creation Date"
                        domain="[]" context="{'group_by':'create_date'}" />
                    <filter string="Date" icon="terp-go-month" domain="[]"
-                       context="{'group_by':'date'}" />
+                       context="{'group_by':'date'}" help="Date of Call" />
                </group>
            </search>
         </field>

@@ -125,6 +125,7 @@ class crm_lead(crm_case, osv.osv):
         'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
+        'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Partner Name", size=64),
         'optin': fields.boolean('Opt-In'),
         'optout': fields.boolean('Opt-Out'),

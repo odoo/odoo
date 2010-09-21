@@ -21,16 +21,23 @@
 -
   I made modification in journal so it can move entries
 -
-  !record {model: account.journal, id: account.sales_journal}:
+  !record {model: account.journal, id: account.close_journal}:
+    name: End of Year
+    code: NEW
+    type: situation
+    sequence_id: sequence_journal
+    default_debit_account_id: cash
+    default_credit_account_id: cash
+    company_id: base.main_company
+    view_id: account_journal_bank_view
     centralisation: 1
-
 -
   I called the Generate Fiscalyear Opening Entries wizard
 -
   !record {model: account.fiscalyear.close, id: account_fiscalyear_close_0}:
     fy2_id: account_fiscalyear_fiscalyear0
     fy_id: account.data_fiscalyear
-    journal_id: account.sales_journal
+    journal_id: account.close_journal
     period_id: account_period_jan11
     report_name: End of Fiscal Year Entry
 -
