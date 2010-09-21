@@ -233,13 +233,13 @@ class product_product(osv.osv):
         date_str = False
         date_values = False
         if from_date and to_date:
-            date_str = "date_planned>=%s and date_planned<=%s"
+            date_str = "date>=%s and date<=%s"
             date_values = [from_date, to_date]
         elif from_date:
-            date_str = "date_planned>=%s"
+            date_str = "date>=%s"
             date_values = [from_date] 
         elif to_date:
-            date_str = "date_planned<=%s"
+            date_str = "date<=%s"
             date_values = [to_date]
 
         where = [tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states)]

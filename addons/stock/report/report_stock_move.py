@@ -28,7 +28,7 @@ class report_stock_move(osv.osv):
     _description = "Moves Statistics"
     _auto = False
     _columns = {
-        'date_planned': fields.date('Date', readonly=True),
+        'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
@@ -57,7 +57,7 @@ class report_stock_move(osv.osv):
                 select
                         min(sm_id) as id,
                         sum(value) as value,
-                        al.dp as date_planned,
+                        al.dp as date,
                         al.curr_year as year,
                         al.curr_month as month,
                         al.curr_day as day,
@@ -82,13 +82,13 @@ class report_stock_move(osv.osv):
                         CASE WHEN sp.type in ('in') THEN
                             sum(sm.product_qty)  END AS in_qty,
                         min(sm.id) as sm_id,
-                        sm.date_planned as dp,
-                        to_char(date_trunc('day',sm.date_planned), 'YYYY') as curr_year,
-                        to_char(date_trunc('day',sm.date_planned), 'MM') as curr_month,
-                        to_char(date_trunc('day',sm.date_planned), 'YYYY-MM-DD') as curr_day,
-                        avg(date(sm.date_planned)-date(sm.create_date)) as curr_day_diff,
+                        sm.date as dp,
+                        to_char(date_trunc('day',sm.date), 'YYYY') as curr_year,
+                        to_char(date_trunc('day',sm.date), 'MM') as curr_month,
+                        to_char(date_trunc('day',sm.date), 'YYYY-MM-DD') as curr_day,
+                        avg(date(sm.date)-date(sm.create_date)) as curr_day_diff,
                         avg(date(sm.date_expected)-date(sm.create_date)) as curr_day_diff1,
-                        avg(date(sm.date_planned)-date(sm.date_expected)) as curr_day_diff2,
+                        avg(date(sm.date)-date(sm.date_expected)) as curr_day_diff2,
                         sm.location_id as location_id,
                         sm.location_dest_id as location_dest_id,
                         pt.standard_price * sum(sm.product_qty) as value,
@@ -107,7 +107,7 @@ class report_stock_move(osv.osv):
                         left join stock_location sl on (sm.location_id = sl.id)
 
                     group by
-                        sm.id,sp.type, sm.date_planned,sm.address_id,
+                        sm.id,sp.type, sm.date,sm.address_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
                         sm.product_id,pt.standard_price, sm.picking_id,
                         sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id)
@@ -129,7 +129,7 @@ class report_stock_inventory(osv.osv):
     _description = "Stock Statistics"
     _auto = False
     _columns = {
-        'date_planned': fields.datetime('Date', readonly=True),
+        'date': fields.datetime('Date', readonly=True),
         'partner_id':fields.many2one('res.partner.address', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'location_id': fields.many2one('stock.location', 'Location', readonly=True),
@@ -147,7 +147,7 @@ class report_stock_inventory(osv.osv):
         cr.execute("""
 create or replace view report_stock_inventory as (
     (select
-        min(m.id) as id, m.date_planned as date_planned,
+        min(m.id) as id, m.date as date,
         m.address_id as partner_id, m.location_id as location_id,
         m.product_id as product_id, l.usage as location_type,
         m.company_id,
@@ -163,10 +163,10 @@ create or replace view report_stock_inventory as (
                 left join stock_location l on (m.location_id=l.id)
     group by
         m.id, m.product_id, m.address_id, m.location_id, m.prodlot_id,
-        m.date_planned, m.state, l.usage, m.company_id
+        m.date, m.state, l.usage, m.company_id
 ) union all (
     select
-        -m.id as id, m.date_planned as date_planned,
+        -m.id as id, m.date as date,
         m.address_id as partner_id, m.location_dest_id as location_id,
         m.product_id as product_id, l.usage as location_type,
         m.company_id,
@@ -182,7 +182,7 @@ create or replace view report_stock_inventory as (
                 left join stock_location l on (m.location_dest_id=l.id)
     group by
         m.id, m.product_id, m.address_id, m.location_id, m.location_dest_id,
-        m.prodlot_id, m.date_planned, m.state, l.usage, m.company_id
+        m.prodlot_id, m.date, m.state, l.usage, m.company_id
     )
 );
         """)

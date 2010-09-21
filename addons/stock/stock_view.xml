@@ -390,8 +390,8 @@
                     <field name="picking_id"/>
                     <field name="location_id" />
                     <field name="location_dest_id" />
-                    <field name="date"/>
-                    <field name="date_planned" string="Date"/>
+                    <field name="create_date"/>
+                    <field name="date" string="Date"/>
                     <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                     <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
@@ -415,8 +415,8 @@
                     <field name="picking_id"/>
                     <field name="location_id" />
                     <field name="location_dest_id" />
-                    <field name="date" />
-                    <field name="date_planned" string="Date"/>
+                    <field name="create_date" />
+                    <field name="date" string="Date"/>
                      <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
@@ -683,7 +683,7 @@
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
-                                    <field name="date_planned"/>
+                                    <field name="date"/>
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                 </tree>
@@ -711,8 +711,8 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
-                                        <field name="date" invisible="1"/>
-                                        <field name="date_planned"/>
+                                        <field name="create_date" invisible="1"/>
+                                        <field name="date"/>
                                         <field name="date_expected"/>
                                     </group>
 
@@ -868,7 +868,7 @@
                                         groups="base.group_extended"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
-                                    <field name="date_planned"/>
+                                    <field name="date"/>
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                 </tree>
@@ -896,8 +896,8 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
-                                        <field name="date" invisible="1"/>
-                                        <field name="date_planned"/>
+                                        <field name="create_date" invisible="1"/>
+                                        <field name="date"/>
                                         <field name="date_expected"/>
                                     </group>
 
@@ -1083,7 +1083,7 @@
                                         groups="base.group_extended"
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
-                                    <field name="date_planned"/>
+                                    <field name="date"/>
                                     <field name="state"/>
                                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
                                     <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
@@ -1112,8 +1112,8 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
-                                        <field name="date" invisible="1"/>
-                                        <field name="date_planned"/>
+                                        <field name="create_date" invisible="1"/>
+                                        <field name="date"/>
                                         <field name="date_expected"/>
                                     </group>
 
@@ -1323,8 +1323,8 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Dates" colspan="2" />
-                                        <field name="date" invisible="1"/>
-                                        <field name="date_planned"/>
+                                        <field name="create_date" invisible="1"/>
+                                        <field name="date"/>
                                         <field name="date_expected"/>
                                     </group>
 
@@ -1497,10 +1497,10 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel');red:(state not in ('cancel','done')) and date_planned > current_date" string="Moves" editable="top">
+                <tree colors="grey:state in ('cancel');red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
-                    <field name="date" invisible="1"/>
+                    <field name="create_date" invisible="1"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1528,7 +1528,7 @@
                         states="draft,assigned,confirmed,done"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
-                    <field name="date_planned"/>
+                    <field name="date"/>
                     <field name="date_expected"/>
                     <field name="state"/>
                     <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
@@ -1570,8 +1570,8 @@
 
                     <group colspan="2" col="2">
                         <separator string="Dates &amp; Priority" colspan="2" />
+                        <field name="create_date"/>
                         <field name="date"/>
-                        <field name="date_planned"/>
                         <field name="date_expected"/>
                         <field name="priority"/>
                     </group>
@@ -1613,7 +1613,7 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group col="14" colspan="4">
-                        <filter icon="terp-go-today" string="Today" domain="[('date_planned','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date_planned','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
+                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                         <filter icon="terp-stock" string="Future" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
@@ -1622,7 +1622,7 @@
                         <field name="product_id"/>
                         <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                         <field name="address_id" string="Partner" context="{'contact_display':'partner'}" filter_domain="[('picking_id.address_id','ilike',self)]"/>
-                        <field name="date_planned"/>
+                        <field name="date"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
@@ -1636,8 +1636,8 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" string="State" domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
-                        <filter string="Creation" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
-                        <filter string="Expected" name="groupby_date_planned" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Creation" name="groupby_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Expected" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters..." colspan="4" col="8">
@@ -1699,7 +1699,7 @@
                         groups="base.group_extended"
                         icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
-                    <field name="date_planned"/>
+                    <field name="date"/>
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
@@ -1740,8 +1740,8 @@
 
                     <group colspan="2" col="2">
                         <separator string="Dates &amp; Priority" colspan="2" />
+                        <field name="create_date"/>
                         <field name="date"/>
-                        <field name="date_planned"/>
                         <field name="date_expected"/>
                         <field name="priority"/>
                     </group>
@@ -1783,7 +1783,7 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group col="8" colspan="4">
-                        <filter icon="terp-go-today" string="Today" domain="[('date_planned','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date_planned','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
+                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
                         <filter icon="terp-check" name="received" string="Done" domain="[('state','=','done')]"/>
@@ -1800,7 +1800,7 @@
                         <filter string="Order" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" />
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" />
                     </group>
                     <newline/>
                     <group expand="0" string="Extended options..." groups="base.group_extended">

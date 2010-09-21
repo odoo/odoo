@@ -554,12 +554,12 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context):
             sql_str = """update stock_move set
-                    date_planned='%s'
+                    date='%s'
                 where
                     picking_id=%d """ % (value, pick.id)
 
             if pick.max_date:
-                sql_str += " and (date_planned='" + pick.max_date + "' or date_planned>'" + value + "')"
+                sql_str += " and (date='" + pick.max_date + "' or date>'" + value + "')"
             cr.execute(sql_str)
         return True
 
@@ -576,11 +576,11 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context=context):
             sql_str = """update stock_move set
-                    date_planned='%s'
+                    date='%s'
                 where
                     picking_id=%s """ % (value, pick.id)
             if pick.min_date:
-                sql_str += " and (date_planned='" + pick.min_date + "' or date_planned<'" + value + "')"
+                sql_str += " and (date='" + pick.min_date + "' or date<'" + value + "')"
             cr.execute(sql_str)
         return True
 
@@ -595,8 +595,8 @@ class stock_picking(osv.osv):
             return res
         cr.execute("""select
                 picking_id,
-                min(date_planned),
-                max(date_planned)
+                min(date),
+                max(date)
             from
                 stock_move
             where
@@ -1457,9 +1457,8 @@ class stock_move(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
-
-        'date': fields.datetime('Creation Date', select=True),
-        'date_planned': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'date': fields.datetime('Date Planned', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
         'date_expected': fields.datetime('Date Expected', readonly=True,required=True, help="Scheduled date for the movement of the products"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
 
@@ -1540,7 +1539,6 @@ class stock_move(osv.osv):
         'priority': '1',
         'product_qty': 1.0,
         'scrapped' :  False,
-        'date_planned': time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
         'date_expected': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1673,7 +1671,7 @@ class stock_move(osv.osv):
             if dest:
                 if dest[1] == 'transparent':
                     self.write(cr, uid, [m.id], {
-                        'date_planned': (datetime.strptime(m.date_planned, '%Y-%m-%d %H:%M:%S') + \
+                        'date': (datetime.strptime(m.date, '%Y-%m-%d %H:%M:%S') + \
                             relativedelta(days=dest[2] or 0)).strftime('%Y-%m-%d'),
                         'location_dest_id': dest[0].id})
                 else:
@@ -1734,7 +1732,7 @@ class stock_move(osv.osv):
                         'state': 'waiting',
                         'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
                         'move_history_ids': [],
-                        'date_planned': (datetime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
+                        'date': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                         'move_history_ids2': []}
                     )
                     move_obj.write(cr, uid, [move.id], {
@@ -1996,7 +1994,7 @@ class stock_move(osv.osv):
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
 
-        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
@@ -2426,7 +2424,7 @@ class stock_inventory(osv.osv):
                         'product_uom': line.product_uom.id,
                         'prodlot_id': lot_id,
                         'date': inv.date,
-                        'date_planned': inv.date,
+                        'date': inv.date,
                         'state': 'done'
                     }
                     if change > 0:
@@ -2591,21 +2589,21 @@ class report_products_to_received_planned(osv.osv):
         tools.drop_view_if_exists(cr, 'report_products_to_received_planned')
         cr.execute("""
             create or replace view report_products_to_received_planned as (
-               select stock.date, min(stock.id) as id, sum(stock.product_qty) as qty, 0 as planned_qty
+               select stock.create_date, min(stock.id) as id, sum(stock.product_qty) as qty, 0 as planned_qty
                    from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'in'
-                    where stock.date between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
-                    group by stock.date
+                    where stock.create_date between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
+                    group by stock.create_date
 
                     union
 
-               select stock.date_planned, min(stock.id) as id, 0 as actual_qty, sum(stock.product_qty) as planned_qty
+               select stock.date, min(stock.id) as id, 0 as actual_qty, sum(stock.product_qty) as planned_qty
                     from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'in'
-                    where stock.date_planned between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
-        group by stock.date_planned
+                    where stock.date between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
+        group by stock.date
                 )
         """)
 
@@ -2626,21 +2624,21 @@ class report_delivery_products_planned(osv.osv):
         tools.drop_view_if_exists(cr, 'report_delivery_products_planned')
         cr.execute("""
             create or replace view report_delivery_products_planned as (
-                select stock.date, min(stock.id) as id, sum(stock.product_qty) as qty, 0 as planned_qty
+                select stock.create_date, min(stock.id) as id, sum(stock.product_qty) as qty, 0 as planned_qty
                    from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'out'
-                    where stock.date between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
-                    group by stock.date
+                    where stock.create_date between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
+                    group by stock.create_date
 
                     union
 
-               select stock.date_planned, min(stock.id), 0 as actual_qty, sum(stock.product_qty) as planned_qty
+               select stock.date, min(stock.id), 0 as actual_qty, sum(stock.product_qty) as planned_qty
                     from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'out'
-                    where stock.date_planned between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
-        group by stock.date_planned
+                    where stock.date between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
+        group by stock.date
 
 
                 )
