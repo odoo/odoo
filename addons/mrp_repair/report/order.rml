@@ -190,11 +190,11 @@
         </td>
         <td>
           <para style="P3">[[ o.partner_id.name or removeParentNode('para') ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default').get('street','') or removeParentNode('para') ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default').get('street2','') or removeParentNode('para') ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default').get('zip','') or removeParentNode('para') ]][[ o.partner_id and adr_get(o.partner_id, 'default').get('city','') or removeParentNode('para') ]]</para>
-          <para style="P3">[[ (o.partner_id and adr_get(o.partner_id, 'default').get('state_id','') and adr_get(o.partner_id, 'default').get('state_id',[])[1]) or removeParentNode('para') ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default').get('country_id','') and adr_get(o.partner_id, 'default').get('country_id',[])[1] or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.street or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.street2 or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.zip or removeParentNode('para') ]][[ o.default_address_id and o.default_address_id.city or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.state_id and o.default_address_id.state_id.name or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.country_id and o.default_address_id.country_id.name or removeParentNode('para') ]]</para>
           <para style="P3">
             <font color="white"> </font>
           </para>

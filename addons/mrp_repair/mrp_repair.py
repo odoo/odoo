@@ -93,12 +93,23 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
+    
+    def _get_default_address(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        partner_obj = self.pool.get('res.partner')
+        for data in self.browse(cr, uid, ids):
+            adr_id = False
+            if data.partner_id:
+                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['default'])['default']
+            res[data.id] = adr_id
+        return res
 
     _columns = {
         'name': fields.char('Repair Reference',size=24, required=True),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='This field allow you to choose the parner that will be invoiced and delivered'),
         'address_id': fields.many2one('res.partner.address', 'Delivery Address', domain="[('partner_id','=',partner_id)]"),
+        'default_address_id': fields.function(_get_default_address, method=True, type="many2one", relation="res.partner.address"),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
