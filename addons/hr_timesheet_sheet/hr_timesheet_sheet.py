@@ -27,28 +27,39 @@ from mx import DateTime
 from tools.translate import _
 
 class one2many_mod2(fields.one2many):
-    def get(self, cr, obj, ids, name, user=None, offset=0, context={}, values={}):
-        res = {}
-        for id in ids:
-            res[id] = []
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+        if context is None:
+            context = {}
 
-        res5 = obj.read(cr, user, ids, ['date_current', 'user_id'], context=context)
-        res6 = {}
-        for r in res5:
-            res6[r['id']] = (r['date_current'], r['user_id'][0])
+        if values is None:
+            values = {}
 
-        ids2 = []
-        for id in ids:
-            dom = []
+        res = {}.fromkeys(ids, [])
+
+        # dict:
+        # {idn: (date_current, user_id), ...
+        #  1: ('2010-08-15', 1)}
+        res6 = dict([(rec['id'], (rec['date_current'], rec['user_id'][0]))
+                        for rec
+                            in obj.read(cr, user, ids, ['date_current', 'user_id'], context=context)])
+
+        # eg: ['|', '|',
+        #       '&', '&', ('name', '>=', '2011-03-01'), ('name', '<=', '2011-03-01'), ('employee_id.user_id', '=', 1),
+        #       '&', '&', ('name', '>=', '2011-02-01'), ('name', '<=', '2011-02-01'), ('employee_id.user_id', '=', 1)]
+        dom = []
+        for c, id in enumerate(ids):
             if id in res6:
-                dom = [('name', '>=', res6[id][0] + ' 00:00:00'),
-                        ('name', '<=', res6[id][0] + ' 23:59:59'),
-                        ('employee_id.user_id', '=', res6[id][1])]
-            ids2.extend(obj.pool.get(self._obj).search(cr, user,
-                dom, limit=self._limit))
+                if c: # skip first
+                    dom.insert(0 ,'|')
+                dom.append('&')
+                dom.append('&')
+                dom.append(('name', '>=', res6[id][0]))
+                dom.append(('name', '<=', res6[id][0]))
+                dom.append(('employee_id.user_id', '=', res6[id][1]))
 
-        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
-                [self._fields_id], context=context, load='_classic_write'):
+        ids2 = obj.pool.get(self._obj).search(cr, user, dom, limit=self._limit)
+
+        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id]:
                 res.setdefault(r[self._fields_id][0], []).append(r['id'])
 
@@ -57,17 +68,21 @@ class one2many_mod2(fields.one2many):
     def set(self, cr, obj, id, field, values, user=None, context=None):
         if context is None:
             context = {}
+
         context = context.copy()
         context['sheet_id'] = id
-        return super(one2many_mod2, self).set(cr, obj, id, field, values, user=user,
-                context=context)
+        return super(one2many_mod2, self).set(cr, obj, id, field, values, user=user, context=context)
 
 
 class one2many_mod(fields.one2many):
-    def get(self, cr, obj, ids, name, user=None, offset=0, context={}, values={}):
-        res = {}
-        for id in ids:
-            res[id] = []
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+        if context is None:
+            context = {}
+
+        if values is None:
+            values = {}
+
+        res = {}.fromkeys(ids, [])
 
         res5 = obj.read(cr, user, ids, ['date_current', 'user_id'], context=context)
         res6 = {}

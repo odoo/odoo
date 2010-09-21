@@ -20,3 +20,5 @@
 ##############################################################################
 
 import partner_geo_assign
+import wizard
+import report

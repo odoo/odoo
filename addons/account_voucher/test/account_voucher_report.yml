@@ -16,15 +16,6 @@
     period_id: account.period_6
 
 -
-  In order to test the PDF reports defined on a account_voucher, we will print account voucher amount Report
--
-  !python {model: account.voucher}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.voucher.cash_amount').create(cr, uid, [ref("account_voucher_voucheraxelor0")], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'account_voucher-amount.'+format), 'wb+').write(data)
-
--
   In order to test the PDF reports defined on a account_voucher, we will print account voucher Report
 -
   !python {model: account.voucher}: |
