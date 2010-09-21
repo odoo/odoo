@@ -12,7 +12,7 @@
                         <page string="Assignation" groups="base.group_extended">
                         <group name="partner_assign_group" col="5" colspan="4">
                             <separator string="Partner Assignation" colspan="5"/>
-                            <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('partner_weight','&gt;',0)]"/>
+                            <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
                             <field name="date_assign"/>
                             <group colspan="1" col="1">
                                 <button string="Forward"
