@@ -264,7 +264,7 @@
         	<td>
           		<blockTable colWidths="404.0,335.0,75.0,75.0,75.0,79.00" style="Table5">
 	        		<tr>
-		    			<td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
+		    			<td><para style="Standard"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para></td>
 		    			<td><para style="Standard"></para></td>
 					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]]</u></para></td>
 					  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]]</u></para></td>
@@ -325,7 +325,7 @@
          		<td>
 	      			<blockTable colWidths="405.0,435.0,69.0,72.0,64.0" style="Table5">
 						<tr>
-			 	 			<td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
+			 	 			<td><para style="Standard"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para></td>
 			  				<td><para style="Standard"></para></td>
 						  	<td alignment="right"><para style="P9b"><u>[[formatLang(sum_debit_account(o)) ]]</u></para></td>
 					  		<td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o)) ]]</u></para></td>
