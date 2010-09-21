@@ -42,7 +42,7 @@ class crm_lead_report_assign(osv.osv):
         'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
