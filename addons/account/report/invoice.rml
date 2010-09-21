@@ -180,7 +180,7 @@
     <blockTable colWidths="177.0,177.0,177.0" style="Table_General_Detail_Content">
       <tr>
         <td>
-          <para style="terp_default_Centre_9">[[ o.name or ' ' ]]<font color="white"> </font></para>
+          <para style="terp_default_Centre_9">[[ o.name or ' ' ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_9">[[ formatLang(o.date_invoice,date=True) ]]</para>
@@ -205,13 +205,13 @@
           <para style="terp_tblheader_Details_Centre">Quantity</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Unit Price</para>
+          <para style="terp_tblheader_Details_Right">Unit Price ([[ o.currency_id.code ]])</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Disc.(%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Price([[ o.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Centre">Price ([[ o.currency_id.code ]])</para>
         </td>
       </tr>
     </blockTable>
@@ -229,7 +229,7 @@
             <para style="terp_default_Right_9">[[ formatLang(l.quantity)]] [[ (l.uos_id and l.uos_id.name) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]][[ o.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.discount) ]] </para>
@@ -318,10 +318,10 @@
           <para style="terp_tblheader_Details">Tax</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Base</para>
+          <para style="terp_tblheader_Details_Right">Base ([[ o.currency_id.code ]])</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Amount</para>
+          <para style="terp_tblheader_Details_Right">Amount ([[ o.currency_id.code ]])</para>
         </td>
         <td>
           <para style="terp_default_8">
@@ -338,10 +338,10 @@
             <para style="terp_default_8">[[ t.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_8">[[ formatLang(t.base) ]]</para>
+            <para style="terp_default_Right_8">[[ formatLang(t.base) ]][[ o.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_8">[[ (t.tax_code_id and t.tax_code_id.notprintable) and removeParentNode('blockTable') or '' ]] [[ formatLang(t.amount) ]]</para>
+            <para style="terp_default_Right_8">[[ (t.tax_code_id and t.tax_code_id.notprintable) and removeParentNode('blockTable') or '' ]] [[ formatLang(t.amount) ]][[ o.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_8">
