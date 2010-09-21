@@ -140,7 +140,7 @@ class project_scrum_sprint(osv.osv):
         if default is None:
             default = {}
         default.update({'backlog_ids': [], 'meeting_ids': []})
-        return super(scrum_sprint, self).copy(cr, uid, id, default=default, context=context)
+        return super(project_scrum_sprint, self).copy(cr, uid, id, default=default, context=context)
 
     def onchange_project_id(self, cr, uid, ids, project_id=False):
         v = {}

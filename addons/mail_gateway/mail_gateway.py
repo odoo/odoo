@@ -136,8 +136,8 @@ class mailgate_thread(osv.osv):
                 'partner_id': partner_id,
                 'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'message_id': message_id, 
-                'description': details or (hasattr(case, 'description') and case.description or False), 
+                'message_id': message_id,
+                'description': details or (hasattr(case, 'description') and case.description or False),
                 'attachment_ids': [(6, 0, attachments)]
             }
 
@@ -283,7 +283,7 @@ class mailgate_tool(osv.osv_memory):
                 'description': msg.get('body', msg.get('from')),
                 'history': True,
                 'partner_id': partner_id,
-                'res_model': model,
+                'model': model,
                 'email_cc': msg.get('cc'),
                 'email_from': msg.get('from'),
                 'email_to': msg.get('to'),

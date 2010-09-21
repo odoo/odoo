@@ -21,8 +21,10 @@
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
-                        <separator orientation="vertical"/>
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator orientation="vertical" />
+                        <filter string="Working Time" icon="terp-go-today" domain="[]" context="{'group_by':'calendar_id'}"/>
                     </group>
                </search>
             </field>
@@ -55,16 +57,17 @@
                 <search string="Search Working Period Leaves">
                    <group col='15' colspan='4'>
                        <field name="name" string="Name"/>
-                       <field name="company_id" string="Company" widget="selection" />
-                       <field name="calendar_id" string="Working Time" widget="selection"/>
                        <field name="resource_id" string="Resource"/>
+                       <field name="company_id" string="Company" widget="selection" groups="base.group_multi_company"/>
+                       <field name="calendar_id" string="Working Time" widget="selection"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_from'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave"/>
                     </group>
                </search>
             </field>
@@ -76,9 +79,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Working Period">
-                    <field name="name" select="1"/>
-                    <field name="manager" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="name"/>
+                    <field name="manager"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <separator string="" colspan="4"/>
+                    <field name="attendance_ids" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -198,7 +203,7 @@
             <field name="name">Resources</field>
             <field name="res_model">resource.resource</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="context">{}</field>
             <field name="search_view_id" ref="view_resource_resource_search"/>
             <field name="help">There you can find clusters of your resources type involved in a specific project phase as well as their workload.</field>
         </record>
@@ -212,7 +217,7 @@
                     <field name="name"/>
                     <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
                     <field name="company_id"  widget="selection" groups="base.group_multi_company"/>
-                    <field name="calendar_id"/>
+                    <field name="calendar_id" widget="selection"/>
                     <newline/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -226,11 +231,11 @@
             <field name="arch" type="xml">
                 <tree string="Leave Detail">
                     <field name="name" />
+                    <field name="resource_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="calendar_id" />
                     <field name="date_from" />
                     <field name="date_to" />
-                    <field name="resource_id" />
                 </tree>
             </field>
         </record>
