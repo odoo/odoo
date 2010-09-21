@@ -1,5 +1,27 @@
- #!/usr/bin/python
- #-*- encoding: utf-8 -*-
+# This module is part of the spambayes project, which is Copyright 2003
+# The Python Software Foundation and is covered by the Python Software
+# Foundation license.
+
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
 from processors import *
 from opt_processors import *
@@ -7,14 +29,17 @@ import sys
 import os
 import addin
 from dialogs import ShowDialog, MakePropertyPage
+
 import win32ui
+
 import commctrl
 import win32con
 import win32gui
+
 import win32gui_struct
 import xmlrpclib
+
 from manager import ustr
-import chilkat
 
 try:
     enumerate
@@ -148,17 +173,18 @@ def check():
     port = NewConn.getitem('_port')
     NewConn.GetDBList()
     if str(NewConn.getitem('_running')) == 'False':
-        win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "Server Connection", flag_excl)
+        win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return False
     if str(NewConn.getitem('_login')) == 'False':
-        win32ui.MessageBox("Please login to the database first", "Database Connection", flag_excl)
+        win32ui.MessageBox("Please login to the database first", "OpenERP Connection", flag_excl)
         return False
     return True
+
 def resetConnAttribs(window):
     config = window.manager.LoadConfig()
     NewConn.setitem('_server', config['server'])
     NewConn.setitem('_port', config['port'])
-    NewConn.setitem('protocol', config['protocol'])
+#    NewConn.setitem('protocol', config['protocol'])
     NewConn.setitem('_uri', "http://" + config['server'] + ":" + str(config['port']))
     NewConn.setitem('_obj_list', config['objects'])
     NewConn.setitem('_dbname', config['database'])
@@ -225,16 +251,16 @@ class OKButtonProcessor(ButtonProcessor):
             port = int(win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[1]))
         except ValueError, e:
             print "Exception : %s"%str(e)
-            win32ui.MessageBox("Port should be an integer", "Error", flag_excl)
+            win32ui.MessageBox("Port should be an integer", "OpenERP Connection", flag_excl)
             return
         except Exception,e:
             msg = getMessage(e)
-            win32ui.MessageBox(msg, "Error", flag_excl)
+            win32ui.MessageBox(msg, "OpenERP Connection", flag_excl)
             return
         setConnAttribs(server, port, self.mngr)
         if str(NewConn.getitem('_running')) == 'False':
         	msg = "No server running on host '%s' at port '%d'. Press ignore to still continue with this configuration?"%(server,port)
-         	r=win32ui.MessageBox(msg, "Server Connection", win32con.MB_ABORTRETRYIGNORE | win32con.MB_ICONQUESTION)
+         	r=win32ui.MessageBox(msg, "OpenERP Connection", win32con.MB_ABORTRETRYIGNORE | win32con.MB_ICONQUESTION)
          	if r==3:
 				resetConnAttribs(self.window)
 				return
@@ -252,12 +278,11 @@ class DoneButtonProcessor(ButtonProcessor):
 
 class MessageProcessor(ControlProcessor):
     def Init(self):
-        text = "This Outlook Plugin for OpenERP s.a. has been developed by TinyERP \n\n \
-                For more information, please visit our website \n \
-                 http://www.openerp.com \n\n \
-                Contact Us :\n \
-                sales@openerp.com \n\n \
-                2001-TODAY OpenERP s.a.. All rights reserved. \n"
+        text = "  This Outlook Plugin for OpenERP has been developed by OpenERP s.a.\n\n \
+                      For more information, please visit our website \n\n \
+                                    http://www.openerp.com \n\n\n \
+                       Copyright @ 2005-Today. All rights reserved.\n\n\
+OpenERP is a trademark of OpenERP s.a. The software is released under AGPL."
         win32gui.SendMessage(self.GetControl(), win32con.WM_SETTEXT, 0, text)
 
     def GetPopupHelpText(self, cid):
@@ -354,7 +379,7 @@ def ReloadAllControls(btnProcessor,*args):
     port = NewConn.getitem('_port')
     btnProcessor.window.LoadAllControls()
     if str(NewConn.getitem('_running')) == 'False':
-        win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "Server Connection", flag_excl)
+        win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
     return
 
 def TestConnection(btnProcessor,*args):
@@ -400,9 +425,9 @@ def TestConnection(btnProcessor,*args):
             flag = flag_info
             if not NewConn.IsCRMInstalled():
                 msg+= '\n\n'+" 'CRM' module is not installed. So CRM cases cannot be created."
-                NewConn.setitem('_iscrm', 'False')
+                NewConn.setitem('_iscrm', False)
             else:
-                NewConn.setitem('_iscrm', 'True')
+                NewConn.setitem('_iscrm', True)
         else:
             msg = "Authentication Error !\nBad UserName or Password"
             flag = flag_stop
@@ -430,7 +455,6 @@ def BrowseCallbackProc(hwnd, msg, lp, data):
                 ext = path.split('.')[-1]
                 if ext not in ['gif', 'bmp', 'jpg', 'tif', 'ico', 'png']:
                         win32gui.SendMessage(hwnd, shellcon.BFFM_ENABLEOK, 0, 0)
-
                 else:
                     win32gui.SendMessage(hwnd, shellcon.BFFM_ENABLEOK, 0, 1)
         except shell.error:
@@ -507,16 +531,14 @@ def AddNewObject(btnProcessor,*args):
 
         item = LVITEM(text=obj_title, iImage=cnt-2, iItem = num_items)
         new_index = win32gui.SendMessage(hwndList, commctrl.LVM_INSERTITEM, 0, item.toparam())
-
         win32gui.SendMessage(hwndList, commctrl.LVM_SETIMAGELIST, commctrl.LVSIL_SMALL, il)
-
         item = LVITEM(text=obj_name, iItem = new_index, iSubItem = 1)
         win32gui.SendMessage(hwndList, commctrl.LVM_SETITEM, 0, item.toparam())
 
         NewConn.InsertObj(obj_title,obj_name,image_path)
     except Exception, e:
-        msg = "Document not added\n\n" + getMessage(e)
-        win32ui.MessageBox(msg,"Documents Setting",flag_excl)
+        msg = "Object not added\n\n" + getMessage(e)
+        win32ui.MessageBox(msg,"",flag_excl)
         return
 
     #Empty all the text controls
@@ -585,7 +607,7 @@ def MakeAttachment(btnProcessor,*args):
     hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
     r = GetSelectedItems(hwndList)
     if not r:
-        win32ui.MessageBox("No records selected", "Make Attachment", flag_info)
+        win32ui.MessageBox("No records selected", "Push to OpenERP", flag_info)
         return
     try:
         flg = NewConn.ArchiveToOpenERP(r,mail)
@@ -595,7 +617,7 @@ def MakeAttachment(btnProcessor,*args):
     except Exception,e:
         msg = "Attachment not created \n\n" + getMessage(e)
         flag = flag_error
-        win32ui.MessageBox(msg, "Make Attachment", flag)
+        win32ui.MessageBox(msg, "Push to OpenERP", flag)
     return
 
 def CreateCase(btnProcessor,*args):
@@ -626,15 +648,6 @@ def CreateCase(btnProcessor,*args):
 
             #Create new case
             try:
-
-#                if  mail.Attachments.Count > 0:
-#                    msg="The mail contains attachments. Do you want to create case with attachments?"
-#                    r=win32ui.MessageBox(msg, "Create Case", win32con.MB_YESNOCANCEL | win32con.MB_ICONQUESTION)
-#                    if r == 2:
-#                        return
-#                    elif r == 7:
-#                       with_attachments=False
-
                 NewConn.CreateCase(str(section), mail, partner_ids)
                 msg="New Document created."
                 flag=flag_info
@@ -711,7 +724,7 @@ def SearchObjectsForText(btnProcessor,*args):
 
     search_txt = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
     if not search_txt:
-        win32ui.MessageBox("Enter text to search for", "Archive to OpenERP", flag_info)
+        win32ui.MessageBox("Enter text to search for", "Push to OpenERP", flag_info)
         return
     # Get titles from list
     obj_titles=[]
@@ -736,7 +749,7 @@ def SearchObjectsForText(btnProcessor,*args):
                      search_list.append(objname[0])
                 else:
                     win32ui.MessageBox("Module %s (%s) not installed. Please install it." \
-                                       %(title,objname[0]), "Archive to OpenERP", flag_excl)
+                                       %(title,objname[0]), "Push to OpenERP", flag_excl)
                     return
 
         #  Get the records by searching the objects in search_list for the search_keyword as objects_with_match
@@ -745,9 +758,9 @@ def SearchObjectsForText(btnProcessor,*args):
         if search_list:
             objects_with_match = NewConn.GetObjectItems(search_list, search_txt)
             if not objects_with_match:
-                win32ui.MessageBox("No matching records found in checked objects", "Archive to OpenERP", flag_info)
+                win32ui.MessageBox("No matching records found in checked objects", "Push to OpenERP", flag_info)
         else:
-            win32ui.MessageBox("No object selected", "Archive to OpenERP", flag_info)
+            win32ui.MessageBox("No object selected", "Push to OpenERP", flag_info)
             objects_with_match=[]
         # Display the objects_with_match records in list
         setList(list_hwnd)
@@ -763,6 +776,7 @@ def CreateContact(btnProcessor,*args):
     partner = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[9])
     combo = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[9])
     sel = win32gui.SendMessage(combo, win32con.CB_GETCURSEL)
+
     state_combo = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[10])
     state_sel = win32gui.SendMessage(state_combo, win32con.CB_GETCURSEL)
     coun_combo = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[11])
@@ -837,6 +851,7 @@ def CreateContact(btnProcessor,*args):
     win32gui.SendMessage(combo, win32con.CB_SETCURSEL, -1 )
     win32gui.SendMessage(state_combo, win32con.CB_SETCURSEL, -1 )
     win32gui.SendMessage(coun_combo, win32con.CB_SETCURSEL, -1 )
+    win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.id)
 
 def SetAllText(txtProcessor,*args):
     # Set values for url, uname, pwd from config file
@@ -994,7 +1009,7 @@ def setCheckList(groupProcessor,*args):
                     top+=18
                     cnt=0
     except Exception, e:
-        win32ui.MessageBox(str(e), 'Document List')
+        win32ui.MessageBox(str(e), 'Push to OpenERP')
 
 def CreatePartner(btnProcessor,*args):
     #Check if server running or user logged in
