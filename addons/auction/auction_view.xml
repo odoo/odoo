@@ -15,8 +15,7 @@
         <field name="arch" type="xml">
             <tree string="Artists">
 	            <field name="name"/>
-	            <field name="birth_date"/>
-	            <field name="death_date"/>
+	            <field name="birth_death_dates"/>
             </tree>
         </field>
     </record>
@@ -31,8 +30,7 @@
 	                <field name="name" colspan="4" string="Name"/>
 	                <newline/>
 	                <field name="pseudo"/>
-	                <field name="birth_date"/>
-	                <field name="death_date"/>
+	                <field name="birth_death_dates"/>
                 </group>
                 <separator string="Biography" colspan="4"/>
                 <field name="biography" nolabel="1" colspan="4"/>

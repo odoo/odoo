@@ -37,8 +37,7 @@ class auction_artists(osv.osv):
     _columns = {
         'name': fields.char('Artist/Author Name', size=64, required=True),
         'pseudo': fields.char('Pseudo', size=64),
-        'birth_date':fields.date('Birth date'),
-        'death_date':fields.date('Death date'),
+        'birth_death_dates':fields.char('Lifespan', size=64),
         'biography': fields.text('Biography'),
     }
 auction_artists()
