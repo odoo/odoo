@@ -25,6 +25,11 @@
                         </field>
                         <field name="holiday_status_id" widget="selection"/>
                     </group>
+                    <newline/>
+                    <group expand="0" string="Extended options...">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
@@ -216,6 +221,11 @@
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="state"/>
+                    <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes" groups="base.group_hr_user,base.group_hr_manager"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_manager"/>
+                    <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no" groups="base.group_hr_manager"/>
+                    <button string="Cancel" name="cancel" states="validate,refuse,validate1" type="workflow" icon="gtk-cancel" groups="base.group_hr_manager"/>
+                    <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" groups="base.group_hr_manager"/>
                 </tree>
             </field>
         </record>
@@ -320,7 +330,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_holiday_simple"/>
-            <field name="context">{'search_default_user_id':uid,'allocation_type':'company', 'report':True}</field>
+            <field name="context">{'allocation_type':'company', 'report':True}</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
