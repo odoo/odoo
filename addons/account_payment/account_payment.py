@@ -268,6 +268,18 @@ class payment_line(osv.osv):
         else:
             return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
+    def _get_date(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        date = False
+        if context.get('order_id') and context['order_id']:
+            order = self.pool.get('payment.order').browse(cr, uid, context['order_id'], context)
+            if order.date_prefered == 'fixed':
+                date = order.date_scheduled
+            else:
+                date = time.strftime('%Y-%m-%d')
+        return date
+
     def _get_ml_inv_ref(self, cr, uid, ids, *a):
         res={}
         for id in self.browse(cr, uid, ids):
@@ -328,6 +340,7 @@ class payment_line(osv.osv):
         'state': lambda *args: 'normal',
         'currency': _get_currency,
         'company_currency': _get_currency,
+        'date': _get_date,
     }
     _sql_constraints = [
         ('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
