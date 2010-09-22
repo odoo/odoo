@@ -799,8 +799,8 @@ class account_move_line(osv.osv):
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
 
         if lines and lines[0]:
-            partner_id = lines[0].partner_id.id
-            if context and context.get('stop_reconcile', False):
+            partner_id = lines[0].partner_id and lines[0].partner_id.id or False
+            if partner_id and context and context.get('stop_reconcile', False):
                 self.pool.get('res.partner').write(cr, uid, [partner_id], {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
         return r_id
 
