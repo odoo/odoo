@@ -158,25 +158,25 @@ class stock_return_picking(osv.osv_memory):
                         'move_lines':[], 'state':'draft', 'type':new_type,
                         'date':date_cur, 'invoice_state':data['invoice_state'],})
             new_location=move.location_dest_id.id
+            if move.state=='done':
+                new_qty = data['return%s' % move.id]
+                returned_qty = move.product_qty
     
-            new_qty = data['return%s' % move.id]
-            returned_qty = move.product_qty
-    
-            for rec in move.move_history_ids2:
-                returned_qty -= rec.product_qty
-    
-            if returned_qty != new_qty:
-                set_invoice_state_to_none = False
-    
-            new_move=move_obj.copy(cr, uid, move.id, {
-                'product_qty': new_qty,
-                'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
-                    new_qty, move.product_uos.id),
-                'picking_id':new_picking, 'state':'draft',
-                'location_id':new_location, 'location_dest_id':move.location_id.id,
-                'date':date_cur,})
-            move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
-    
+                for rec in move.move_history_ids2:
+                    returned_qty -= rec.product_qty
+        
+                if returned_qty != new_qty:
+                    set_invoice_state_to_none = False
+        
+                new_move=move_obj.copy(cr, uid, move.id, {
+                    'product_qty': new_qty,
+                    'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
+                        new_qty, move.product_uos.id),
+                    'picking_id':new_picking, 'state':'draft',
+                    'location_id':new_location, 'location_dest_id':move.location_id.id,
+                    'date':date_cur,})
+                move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
+        
         if set_invoice_state_to_none:
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'})
         if new_picking:
