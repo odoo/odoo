@@ -1,4 +1,8 @@
 # This package defines dialog boxes used by the main
+
+# This module is part of the spambayes project, which is Copyright 2003
+# The Python Software Foundation and is covered by the Python Software
+# Foundation license.
 import os, sys, stat
 #import dialog_map
 

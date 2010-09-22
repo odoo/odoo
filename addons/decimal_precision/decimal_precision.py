@@ -58,7 +58,8 @@ decimal_precision()
 
 def get_precision(application):
     def change_digit(cr):
-        return pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, application)
+        res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, application)
+        return (16, res)
     return change_digit
 
 

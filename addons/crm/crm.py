@@ -613,31 +613,13 @@ crm_case_categ()
 
 class crm_case_resource_type(osv.osv):
     """ Resource Type of case """
-
     _name = "crm.case.resource.type"
-    _description = "Resource Type of case"
+    _description = "Campaign"
     _rec_name = "name"
-
     _columns = {
-        'name': fields.char('Resource Type', size=64, required=True, translate=True),
+        'name': fields.char('Campaign Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'object_id': fields.many2one('ir.model', 'Object Name'),
     }
-    def _find_object_id(self, cr, uid, context=None):
-        """Finds id for case object
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
-        object_id = context and context.get('object_id', False) or False
-        ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
-        return ids and ids[0]
-
-    _defaults = {
-        'object_id' : _find_object_id
-    }
-
 crm_case_resource_type()
 
 
@@ -711,17 +693,16 @@ res_partner()
 
 class crm_case_section_custom(osv.osv):
     _name = "crm.case.section.custom"
-    _description = 'Custom CRM Case Section' 
-
+    _description = 'Custom CRM Case Teams' 
     _columns = {
-        'name': fields.char('Case Section',size=64, required=True, translate=True),
-        'code': fields.char('Section Code',size=8),
+        'name': fields.char('Case Team',size=64, required=True, translate=True),
+        'code': fields.char('Team Code',size=8),
         'active': fields.boolean('Active'),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this section"),
-        'parent_id': fields.many2one('crm.case.section.custom', 'Parent Section'), 
+        'parent_id': fields.many2one('crm.case.section.custom', 'Parent Team'), 
         'note': fields.text('Notes'),
     }
 
@@ -731,7 +712,7 @@ class crm_case_section_custom(osv.osv):
     }
 
     _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The code of the section must be unique !')
+        ('code_uniq', 'unique (code)', 'The code of the team must be unique !')
     ]
 
     def _check_recursion(self, cr, uid, ids):
@@ -763,7 +744,7 @@ class crm_case_custom(osv.osv, crm_case):
             'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
             'active': fields.boolean('Active'),
             'description': fields.text('Description'),
-            'section_id': fields.many2one('crm.case.section.custom', 'Section', required=True, select=True),
+            'section_id': fields.many2one('crm.case.section.custom', 'Team', required=True, select=True),
             'probability': fields.float('Probability (%)'),
             'email_from': fields.char('Partner Email', size=128),
             'email_cc': fields.char('CC', size=252),

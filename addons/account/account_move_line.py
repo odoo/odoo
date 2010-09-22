@@ -160,10 +160,10 @@ class account_move_line(osv.osv):
         return context
 
     def _default_get(self, cr, uid, fields, context={}):
-    
+
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
-        
+
         period_obj = self.pool.get('account.period')
 
         context = self.convert_to_period(cr, uid, context)
@@ -946,6 +946,7 @@ class account_move_line(osv.osv):
 
             if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
+                attrs.append("attrs='{'readonly':[('state','=','valid')]}'")
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')

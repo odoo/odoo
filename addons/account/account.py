@@ -157,8 +157,6 @@ class account_account_type(osv.osv):
             ('asset','Balance Sheet (Assets Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
         ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
-        'parent_id':fields.many2one('account.account.type', 'Parent Type', required=False),
-        'child_ids':fields.one2many('account.account.type', 'parent_id', 'Child Types', required=False),
         'note': fields.text('Description'),
     }
     _defaults = {
@@ -166,14 +164,6 @@ class account_account_type(osv.osv):
         'sign': 1,
     }
     _order = "code"
-
-    def _check_recursion(self, cr, uid, ids):
-        #TODO: Need to check for recusrion
-        return True
-
-    _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive types.', ['parent_id'])
-    ]
 
 account_account_type()
 
@@ -690,23 +680,23 @@ class account_journal(osv.osv):
         """
         Returns a list of tupples containing id, name.
         result format : {[(id, name), (id, name), ...]}
-        
+
         @param cr: A database cursor
         @param user: ID of the user currently logged in
         @param ids: list of ids for which name should be read
         @param context: context arguments, like lang, time zone
-        
+
         @return: Returns a list of tupples containing id, name
         """
         result = self.browse(cr, user, ids, context)
         res = []
         for rs in result:
-            name = rs.name 
+            name = rs.name
             if rs.currency:
                 name = "%s (%s)" % (rs.name, rs.currency.name)
             res += [(rs.id, name)]
         return res
-    
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
@@ -2747,7 +2737,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['sequence_id'] = seq_id
             vals_journal['type'] = 'cash'
             vals_journal['company_id'] =  company_id
-            
+
             if line.currency_id:
                 vals_journal['view_id'] = view_id_cur
                 vals_journal['currency'] = line.currency_id.id

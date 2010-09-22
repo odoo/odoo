@@ -1,3 +1,7 @@
+# This module is part of the spambayes project, which is Copyright 2003
+# The Python Software Foundation and is covered by the Python Software
+# Foundation license.
+
 # Package that manages and defines dialog resources
 
 def GetImageParamsFromBitmapID(rc_parser, bmpid):
