@@ -499,14 +499,15 @@ class account_installer(osv.osv_memory):
         if context is None:
             context = {}
         fy_obj = self.pool.get('account.fiscalyear')
-        data_pool = self.pool.get('ir.model.data')
+        mod_obj = self.pool.get('ir.model.data')
         obj_acc = self.pool.get('account.account')
+        obj_tax_code = self.pool.get('account.tax.code')
+        obj_temp_tax_code = self.pool.get('account.tax.code.template')
         super(account_installer, self).execute(cr, uid, ids, context=context)
         record = self.browse(cr, uid, ids, context=context)[0]
         company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
         for res in self.read(cr, uid, ids):
             if record.charts == 'configurable':
-                mod_obj = self.pool.get('ir.model.data')
                 fp = tools.file_open(opj('account','configurable_account_chart.xml'))
                 tools.convert_xml_import(cr, 'account', fp, {}, 'init',True, None)
                 fp.close()
@@ -518,30 +519,74 @@ class account_installer(osv.osv_memory):
                 p_tax = (res.get('purchase_tax',0.0))/100
                 tax_val = {}
                 default_tax = []
-
-                pur_tax_parent = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_purchases')
-                pur_tax_parent_id = mod_obj.read(cr, uid, [pur_tax_parent], ['res_id'])[0]['res_id']
-
-                sal_tax_parent = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_sales')
-                sal_tax_parent_id = mod_obj.read(cr, uid, [sal_tax_parent], ['res_id'])[0]['res_id']
+                
+                pur_temp_tax = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_purchases')
+                pur_temp_tax_id = mod_obj.read(cr, uid, [pur_temp_tax], ['res_id'])[0]['res_id']
+                pur_temp_tax_names = obj_temp_tax_code.read(cr, uid, [pur_temp_tax_id], ['name'])
+                pur_tax_parent_name = pur_temp_tax_names and pur_temp_tax_names[0]['name'] or False
+                pur_taxcode_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', pur_tax_parent_name)])
+                if pur_taxcode_parent_id:
+                    pur_taxcode_parent_id = pur_taxcode_parent_id[0]
+                else:
+                    pur_taxcode_parent_id = False
+                    
+                pur_temp_tax_paid = mod_obj._get_id(cr, uid, 'account', 'tax_code_input')
+                pur_temp_tax_paid_id = mod_obj.read(cr, uid, [pur_temp_tax_paid], ['res_id'])[0]['res_id']
+                pur_temp_tax_paid_names = obj_temp_tax_code.read(cr, uid, [pur_temp_tax_paid_id], ['name'])
+                pur_tax_paid_parent_name = pur_temp_tax_names and pur_temp_tax_paid_names[0]['name'] or False
+                pur_taxcode_paid_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', pur_tax_paid_parent_name)])
+                if pur_taxcode_paid_parent_id:
+                    pur_taxcode_paid_parent_id = pur_taxcode_paid_parent_id[0]
+                else:
+                    pur_taxcode_paid_parent_id = False
+                 
+                sale_temp_tax = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_sales')
+                sale_temp_tax_id = mod_obj.read(cr, uid, [sale_temp_tax], ['res_id'])[0]['res_id']
+                sale_temp_tax_names = obj_temp_tax_code.read(cr, uid, [sale_temp_tax_id], ['name'])
+                sale_tax_parent_name = sale_temp_tax_names and sale_temp_tax_names[0]['name'] or False
+                sale_taxcode_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', sale_tax_parent_name)])
+                if sale_taxcode_parent_id:
+                    sale_taxcode_parent_id = sale_taxcode_parent_id[0]
+                else:
+                    sale_taxcode_parent_id = False
+                    
+                sale_temp_tax_paid = mod_obj._get_id(cr, uid, 'account', 'tax_code_output')
+                sale_temp_tax_paid_id = mod_obj.read(cr, uid, [sale_temp_tax_paid], ['res_id'])[0]['res_id']
+                sale_temp_tax_paid_names = obj_temp_tax_code.read(cr, uid, [sale_temp_tax_paid_id], ['name'])
+                sale_tax_paid_parent_name = sale_temp_tax_paid_names and sale_temp_tax_paid_names[0]['name'] or False
+                sale_taxcode_paid_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', sale_tax_paid_parent_name)])
+                if sale_taxcode_paid_parent_id:
+                    sale_taxcode_paid_parent_id = sale_taxcode_paid_parent_id[0]
+                else:
+                    sale_taxcode_paid_parent_id = False
 
                 if s_tax*100 > 0.0:
                     tax_account_ids = obj_acc.search(cr, uid, [('name','=','Tax Received')], context=context)
                     sales_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code = {
                         'name': 'TAX%s%%'%(s_tax*100),
-                        'code': 'TAX%s%%'%(s_tax*100),
+                        'code': '',
                         'company_id': company_id.id,
                         'sign': 1,
-                        'parent_id':sal_tax_parent_id
+                        'parent_id': sale_taxcode_parent_id
                         }
                     new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
+                    
+                    vals_paid_tax_code = {
+                        'name': 'TAX Paid %s%%'%(s_tax*100),
+                        'code': '',
+                        'company_id': company_id.id,
+                        'sign': 1,
+                        'parent_id': sale_taxcode_paid_parent_id
+                        }
+                    new_paid_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_paid_tax_code)
+                    
                     sales_tax = obj_tax.create(cr, uid,
                                            {'name':'TAX%s%%'%(s_tax*100),
                                             'description':'TAX%s%%'%(s_tax*100),
                                             'amount':s_tax,
                                             'base_code_id':new_tax_code,
-                                            'tax_code_id':new_tax_code,
+                                            'tax_code_id':new_paid_tax_code,
                                             'type_tax_use':'sale',
                                             'account_collected_id':sales_tax_account_id,
                                             'account_paid_id':sales_tax_account_id
@@ -556,18 +601,28 @@ class account_installer(osv.osv_memory):
                     purchase_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code = {
                         'name': 'TAX%s%%'%(p_tax*100),
-                        'code': 'TAX%s%%'%(p_tax*100),
+                        'code': '',
                         'company_id': company_id.id,
                         'sign': 1,
-                        'parent_id':pur_tax_parent_id
+                        'parent_id': pur_taxcode_parent_id
                     }
                     new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
+                    
+                    vals_paid_tax_code = {
+                        'name': 'TAX Paid %s%%'%(p_tax*100),
+                        'code': '',
+                        'company_id': company_id.id,
+                        'sign': 1,
+                        'parent_id': pur_taxcode_paid_parent_id
+                    }
+                    new_paid_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_paid_tax_code)
+                    
                     purchase_tax = obj_tax.create(cr, uid,
                                             {'name':'TAX%s%%'%(p_tax*100),
                                              'description':'TAX%s%%'%(p_tax*100),
                                              'amount':p_tax,
                                              'base_code_id':new_tax_code,
-                                            'tax_code_id':new_tax_code,
+                                            'tax_code_id':new_paid_tax_code,
                                             'type_tax_use':'purchase',
                                             'account_collected_id':purchase_tax_account_id,
                                             'account_paid_id':purchase_tax_account_id
