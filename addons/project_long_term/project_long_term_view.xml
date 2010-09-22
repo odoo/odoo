@@ -93,17 +93,17 @@
 	                    <group colspan="2" col="2">
 	                        <field name="name" select="1"/>
 	                        <field name="date_start"/>
-	                        <field name="date_end"/>
 	                    </group>
-	                    <group colspan="2" col="2">
-	                       <field name="project_id" on_change="onchange_project(project_id)" />
-	                       <field name="duration" />
+	                    <group colspan="2" col="4">
+	                       <field name="project_id" on_change="onchange_project(project_id)" colspan="4"/>
+                           <newline/>
+	                       <field name="duration" colspan="1"/>
+                           <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
 	                    </group>
 	                    <group colspan="2" col="2">
 	                       <field name="responsible_id"/>
-	                       <newline/>
-	                       <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]" colspan="2"/>
-                    </group>
+	                       <field name="date_end"/>
+                    	</group>
 					</group>
                     <notebook colspan="4">
                         <page string="Resource Allocation">
@@ -306,10 +306,10 @@
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        domain="[('phase_id','=',active_id)]"/>
+        context="{'search_default_phase_id': [active_id]}"/>
 
     <act_window
-        domain="[('project_id', '=', active_id)]"
+    	context="{'search_default_project_id': [active_id]}"
         id="act_project_phases"
         name="Phases"
         res_model="project.phase"

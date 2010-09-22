@@ -302,7 +302,9 @@
                     <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                     <field name="user_id"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
+                    <field name="planned_hours"/>
                     <field name="remaining_hours" widget="float_time" sum="Remaining Hours" invisible="context.get('set_visible',False)"/>
+                    <field name="delay_hours"/>
                     <field name="date_deadline" invisible="context.get('set_visible',False)"/>
                     <field name="type_id" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
@@ -387,7 +389,7 @@
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         </field>
                         <field name="user_id" select="1">
-                            <filter domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal" separator="1"/>
+                            <filter domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" separator="1"/>
                         </field>
                     </group>
                     <newline/>
@@ -486,10 +488,10 @@
         <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1" groups="base.group_system"/>
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
 
-        <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
+        <act_window context="{'search_default_user_id': [active_id]}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <act_window
-            domain="[('project_id', '=', active_id)]"
+        	context="{'search_default_project_id': [active_id]}"
             id="act_project_project_2_project_task_all"
             name="Tasks"
             res_model="project.task"
@@ -537,7 +539,7 @@
             </page>
        </field>
     </record>
-    <act_window domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
-    <act_window domain="[('user_id', '=', active_id),('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
+    <act_window context="{'search_default_user_id': [active_id]}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+    <act_window context="{'search_default_user_id': [active_id]}" domain="[('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
     </data>
 </openerp>
