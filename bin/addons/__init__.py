@@ -761,7 +761,8 @@ def _check_module_names(cr, module_names):
     mod_names = set(module_names)
     if 'base' in mod_names:
         # ignore dummy 'all' module
-        mod_names.remove('all')
+        if 'all' in mod_names:
+            mod_names.remove('all')
     if mod_names:
         cr.execute("SELECT count(id) AS count FROM ir_module_module WHERE name in %s", (tuple(mod_names),))
         if cr.dictfetchone()['count'] != len(mod_names):
