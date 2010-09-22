@@ -222,10 +222,10 @@ class account_bank_statement(osv.osv):
         account_move_line_obj = self.pool.get('account.move.line')
         account_analytic_line_obj = self.pool.get('account.analytic.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-        
-        st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context)
+
+        st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id.id, context)
         st = st_line.statement_id
-        
+
         context.update({'date': st_line.date})
         move_id = account_move_obj.create(cr, uid, {
             'journal_id': st.journal_id.id,
@@ -284,7 +284,7 @@ class account_bank_statement(osv.osv):
 
         move_line_id = account_move_line_obj.create(cr, uid, val , context=context)
         torec.append(move_line_id)
-        
+
         # Fill the secondary amount/currency
         # if currency is not the same than the company
         amount_currency = False

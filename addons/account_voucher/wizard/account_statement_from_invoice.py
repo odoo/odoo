@@ -47,7 +47,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
         statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
         currency_obj = self.pool.get('res.currency')
-        statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
+#        statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
         line_date = time.strftime('%Y-%m-%d')
         statement = statement_obj.browse(cr, uid, statement_id, context=context)
 
@@ -70,9 +70,9 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 amount = currency_obj.compute(cr, uid, line.invoice.currency_id.id,
                     statement.currency.id, amount, context=ctx)
 
-            reconcile_id = statement_reconcile_obj.create(cr, uid, {
-                'line_ids': [(6, 0, [line.id])]
-                }, context=context)
+#            reconcile_id = statement_reconcile_obj.create(cr, uid, {
+#                'line_ids': [(6, 0, [line.id])]
+#                }, context=context)
             if line.journal_id.type == 'sale':
                 type = 'customer'
             elif line.journal_id.type == 'purchase':
@@ -87,7 +87,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'account_id': line.account_id.id,
                 'statement_id': statement_id,
                 'ref': line.ref,
-                'reconcile_id': reconcile_id,
+#                'reconcile_id': reconcile_id,
                 'date': time.strftime('%Y-%m-%d'), #time.strftime('%Y-%m-%d'), #line.date_maturity or,
             }, context=context)
         return {}

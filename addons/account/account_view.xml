@@ -516,9 +516,6 @@
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
                         <field name="currency" invisible="1"/>
-                        <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action" icon="gtk-execute"
-                            attrs="{'invisible':[('state','=','confirm')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Transaction" name="statement_line_ids">
@@ -579,9 +576,6 @@
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
                         <field name="currency" invisible="1"/>
-                        <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action" icon="gtk-execute"
-                            attrs="{'invisible':[('state','=','confirm')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Entries">

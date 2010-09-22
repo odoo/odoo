@@ -49,7 +49,6 @@ module named account_voucher.
         'security/ir.model.access.csv',
         'account_menuitem.xml',
         'account_wizard.xml',
-        'wizard/account_statement_from_invoice_view.xml',
         'wizard/account_move_bank_reconcile_view.xml',
         'wizard/account_use_model_view.xml',
         'account_installer.xml',
