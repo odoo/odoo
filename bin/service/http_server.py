@@ -137,7 +137,7 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
     _RealProto = '??'
 
     def __init__(self, interface, port, handler):
-        threading.Thread.__init__(self)
+        threading.Thread.__init__(self, name='%sDaemon-%d'%(self._RealProto, port))
         netsvc.Server.__init__(self)
         self.__port = port
         self.__interface = interface

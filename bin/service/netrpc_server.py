@@ -102,7 +102,7 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
 
 class TinySocketServerThread(threading.Thread,netsvc.Server):
     def __init__(self, interface, port, secure=False):
-        threading.Thread.__init__(self, name="Net-RPC socket")
+        threading.Thread.__init__(self, name="NetRPCDaemon-%d"%port)
         netsvc.Server.__init__(self)
         self.__port = port
         self.__interface = interface
