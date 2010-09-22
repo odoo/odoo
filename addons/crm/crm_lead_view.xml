@@ -85,7 +85,7 @@
                 <page string="Lead">
                     <group colspan="2" col="4">
                         <separator string="Contact" colspan="4" col="4"/>
-                        <field name="partner_name" string="Partner Name" colspan="4"/>
+                        <field name="partner_name" colspan="4"/>
                         <newline/>
                         <field domain="[('domain', '=', 'contact')]" name="title"/>
                         <field name="function" />
@@ -146,7 +146,8 @@
                         <field name="company_id"
                             groups="base.group_multi_company"
                             widget="selection" colspan="2" />
-                        <field name="type_id" string="Campaign" select="1"/>
+                        <field name="type_id" select="1" widget="selection"/>
+                        <field name="channel_id" select="1" widget="selection"/>
                         <field name="referred"/>
                     </group>
                     <group colspan="2" col="2">
@@ -169,7 +170,7 @@
                  </page>
                  <page string="History" groups="base.group_extended">
                    <group colspan="4">
-                       <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
+                       <field colspan="4" name="email_cc" widget="char" size="512"/>
                    </group>
                     <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
                         <tree string="Communication history">
@@ -218,9 +219,6 @@
                         name="%(crm.action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
                         icon="terp-mail-message-new" type="action" />
-                    <button string="Forward"
-                        name="%(crm_lead_forward_to_partner_act)d"
-                        icon="terp-mail-forward" type="action" />
                  </page>
                 </notebook>
             </form>
@@ -246,6 +244,7 @@
                 <field name="categ_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="referred" invisible="1"/>
+                <field name="channel_id" invisible="1"/>
 
                 <field name="stage_id" />
                 <button name="stage_previous" string="Previous Stage"
@@ -341,7 +340,12 @@
                 <group expand="0" string="Group By...">
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Category" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
+                    <filter string="Campaign" icon="terp-stock_symbol-selection"
+                        domain="[]" context="{'group_by':'type_id'}" />
+                    <filter string="Channel" icon="terp-stock_symbol-selection"
+                        domain="[]" context="{'group_by':'channel_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>

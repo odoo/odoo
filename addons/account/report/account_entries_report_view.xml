@@ -55,13 +55,13 @@
             <search string="Entries Analysis">
                 <group colspan="10" col="12">
                     <filter icon="terp-go-year" string="This F.Year"
-                            name="year"
+                            name="thisyear"
                             domain="[('period_id','in','current_year')]"                        
-                            help="Entries with period in current year"/>
+                            help="Journal Entries with period in current year"/>
                     <filter icon="terp-go-month" string="This Period"
                             name="period"
                             domain="[('period_id','in','current_period')]"
-                            help="Entries with period in current period"/>
+                            help="Journal Entries with period in current period"/>
                     <separator orientation="vertical"/>
                     <filter string="Unposted" icon="terp-document-new" domain="[('move_state','=','draft')]" help = "entries"/>
                     <filter string="Posted" icon="terp-camera_test" domain="[('move_state','=','posted')]" help = "Posted entries"/>
@@ -70,7 +70,7 @@
                     <filter string="Reconciled" icon="terp-dolar" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
                     <separator orientation="vertical"/>
                     <field name="account_id"/>
-                    <field name="journal_id"/>
+                    <field name="journal_id" widget="selection"/>
                     <field name="period_id"/>
                 </group>
                 <newline/>
@@ -83,7 +83,7 @@
                     <filter string="Journal" name="group_journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <filter string="Account" name="group_account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Acc.Type" icon="terp-folder-blue" context="{'group_by':'user_type'}"/>
+                    <filter string="Acc.Type" icon="terp-folder-blue" context="{'group_by':'user_type'}" name="usertype"/>
                     <filter string="Int.Type" icon="terp-folder-yellow" context="{'group_by':'type'}"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -94,13 +94,11 @@
                  </group>
                  <newline/>
                  <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                    <field name="journal_id" widget="selection"/>
-                    <field name="period_id"/>
                     <field name="fiscalyear_id"/>
                     <separator orientation="vertical"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
-                    <separator orientation="vertical"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="date_created"/>
@@ -115,7 +113,7 @@
         <field name="res_model">account.entries.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_profit': 1,'search_default_group_account':1,'search_default_group_journal':1,'search_default_group_month': 1, 'group_by_no_leaf':1,'group_by':[], 'search_default_year':1, 'search_default_period':1}</field>
+        <field name="context">{'group_by':[],'search_default_usertype':1,  'search_default_thisyear':1, 'group_by_no_leaf':1,}</field>
         <field name="help">A tool search lets you know statistics on your different financial accounts that match your needs.</field>
     </record>
     <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all" parent="account.menu_finance_statistic_report_statement" sequence="2"/>

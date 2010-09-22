@@ -154,7 +154,7 @@ class email_server(osv.osv):
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, context=context)
+                        res_id = email_tool.process_email(cr, uid, server.object_id.model, msg, attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool = self.pool.get('ir.actions.server')
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
