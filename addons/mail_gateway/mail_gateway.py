@@ -283,7 +283,7 @@ class mailgate_tool(osv.osv_memory):
                 'description': msg.get('body', msg.get('from')),
                 'history': True,
                 'partner_id': partner_id,
-                'res_model': model,
+                'model': model,
                 'email_cc': msg.get('cc'),
                 'email_from': msg.get('from'),
                 'email_to': msg.get('to'),

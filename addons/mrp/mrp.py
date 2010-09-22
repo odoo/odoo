@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from mx import DateTime
-from datetime import datetime, timedelta
+from itertools import groupby
+from operator import itemgetter
+from datetime import datetime
 from osv import osv, fields
 from tools.translate import _
-import ir
 import netsvc
 import time
 
@@ -178,8 +178,8 @@ class mrp_bom(osv.osv):
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
-                                 help= "If a sub-product is used in several products, it can be useful to create its own BoM."\
-                                 "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type."\
+                                 help= "If a sub-product is used in several products, it can be useful to create its own BoM. "\
+                                 "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type. "\
                                  "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
         'method': fields.function(_compute_type, string='Method', method=True, type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
@@ -250,7 +250,6 @@ class mrp_bom(osv.osv):
         @param properties: List of related properties.
         @return: False or BoM id.
         """
-        bom_result = False
         cr.execute('select id from mrp_bom where product_id=%s and bom_id is null order by sequence', (product_id,))
         ids = map(lambda x: x[0], cr.fetchall())
         max_prop = 0
@@ -356,14 +355,16 @@ class many2many_domain(fields.many2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
-        res = {}
+
         move_obj = obj.pool.get('stock.move')
-        for prod in obj.browse(cr, user, ids, context=context):
-            cr.execute("SELECT move_id from mrp_production_move_ids where\
-                production_id=%s" % (prod.id))
-            m_ids = map(lambda x: x[0], cr.fetchall())
-            final = move_obj.search(cr, user, self._domain + [('id', 'in', tuple(m_ids))])
-            res[prod.id] = final
+        res = {}.fromkeys(ids, [])
+        valid_move_ids = move_obj.search(cr, user, self._domain) # move ids relative to domain argument
+        cr.execute("SELECT production_id, move_id from mrp_production_move_ids where production_id in %s and move_id in %s",
+            [tuple(ids), tuple(valid_move_ids)])
+        related_move_map = cr.fetchall()
+        related_move_dict = dict((k, list(set([v[1] for v in itr]))) for k, itr in groupby(related_move_map, itemgetter(0)))
+        res.update(related_move_dict)
+
         return res
 
 class one2many_domain(fields.one2many):
@@ -374,13 +375,14 @@ class one2many_domain(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
-        res = {}
+
         move_obj = obj.pool.get('stock.move')
-        for prod in obj.browse(cr, user, ids, context=context):
-            cr.execute("SELECT id from stock_move where production_id=%s" % (prod.id))
-            m_ids = map(lambda x: x[0], cr.fetchall())
-            final = move_obj.search(cr, user, self._domain + [('id', 'in', tuple(m_ids))])
-            res[prod.id] = final
+        res = {}.fromkeys(ids, [])
+        key = operator.itemgetter(0)
+        move_ids = move_obj.search(cr, user, self._domain+[('production_id', 'in', tuple(ids))], context=context)
+        related_move_dict = dict([(o.production_id.id, [o.id]) for o in move_obj.browse(cr, user, move_ids, context=context)])
+        res.update(related_move_dict)
+
         return res
 
 class mrp_production(osv.osv):
@@ -479,7 +481,7 @@ class mrp_production(osv.osv):
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
-    _order = 'date_planned asc, priority desc';
+    _order = 'priority desc, date_planned asc';
 
     def _check_qty(self, cr, uid, ids):
         orders = self.browse(cr, uid, ids)
@@ -681,7 +683,6 @@ class mrp_production(osv.osv):
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id)
 
-        raw_product_todo = []
         final_product_todo = []
 
         produced_qty = 0
@@ -800,7 +801,6 @@ class mrp_production(osv.osv):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
-        move_ids = []
         self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 

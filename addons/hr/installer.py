@@ -44,7 +44,7 @@ class hr_installer(osv.osv_memory):
         'hr_attendance': fields.boolean('Attendances',
             help="Simplifies the management of employee's attendances."),
         'hr_payroll': fields.boolean('Payroll',
-            help="Generic Payroll system"),
+            help="Generic Payroll system."),
         'hr_payroll_account': fields.boolean('Payroll Accounting',
             help="Generic Payroll system Integrated with Accountings."),
         }

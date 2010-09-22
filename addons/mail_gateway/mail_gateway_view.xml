@@ -10,13 +10,13 @@
                     <group colspan="4" col="6">
                         <field name="name" string="Subject" required="1" select="1"  widget="char" size="512"/>
                         <field name="date" required="1" select="1"/>
-                        <field name="user_id" string="Responsible" select="1"/>
+                        <field name="user_id" string="Owner" select="1"/>
                         <field name="partner_id" readonly="1" />
                     </group>
                     <notebook colspan="4">
                         <page string="Details">
                             <group col="2" colspan="2">
-                                <separator string="Email Details" colspan="4"/>
+                                <separator string="Email Followers" colspan="4"/>
                                 <field name="email_from" />
                                 <field name="email_to" widget="char" size="512"/>
                                 <field name="email_cc" widget="char" size="512"/>
@@ -50,7 +50,9 @@
                     <field name="date" />
                     <field name="name" string="Subject"/>
                     <field name="email_from" string="From"/>
-                    <field name="user_id" string="Responsible"/>
+                    <field name="user_id" string="Owner"/>
+                    <field name="message_id" string="Message" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -63,12 +65,20 @@
                 <search string="Email Search">
                     <field name="name" string="Subject"/>
                     <field name="date" />
-                    <field name="user_id" />
-                    <field name="message_id" />
+                    <field name="user_id" string="Owner" default="uid"/>
+                    <field name="description" />
+                    <newline/>
+                    <group expand="0" string="Group By..." groups="base.group_extended">
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                         <filter string="Owner" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                         <separator orientation="vertical"/>
+                         <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
+                         <separator orientation="vertical"/>
+                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
                 </search>
             </field>
         </record>
-
 
         <record model="ir.ui.view" id="view_mailgate_thread_form">
             <field name="name">mailgate.thread.form</field>
@@ -127,6 +137,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('history', '=', True)]</field>
             <field name="view_id" ref="view_mailgate_message_tree"/>
+            <field name="context">{"search_default_user_id":uid}</field>
         </record>
 
         <record model="ir.actions.act_window" id="action_view_mailgate_thread">
@@ -173,16 +184,23 @@
             <field name="act_window_id" ref="action_view_mailgate_thread"/>
         </record>
 
-        <menuitem id="base.menu_base_config_mail" name="Mail" parent="base.menu_base_config" sequence="4"/>
-        <menuitem id="menu_mailgate_message" name="Emails" action="action_view_mailgate_message"
-           parent="base.menu_base_config_mail" sequence="5" groups="base.group_system"/>
-
         <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
             id="act_res_partner_emails" name="Emails"
             res_model="mailgate.message"
             src_model="res.partner"
             view_id="view_mailgate_message_tree"
             />
+
+        
+
+      <menuitem name="Emails" id="menu_base_config_mail"
+        parent="base.menu_base_partner" sequence="5" />
+
+    <menuitem name="Emails" id="menu_mailgate_message"
+        parent="menu_base_config_mail"
+        action="mail_gateway.action_view_mailgate_message"
+       />
+
 
     </data>
 </openerp>

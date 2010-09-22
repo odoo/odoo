@@ -24,11 +24,11 @@ import tools
 from crm import crm
 
 AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
+    ('draft','Todo'),
+    ('open','Todo'),
     ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
+    ('done', 'Held'),
+    ('pending','Not Held')
 ]
 
 
@@ -119,9 +119,9 @@ class crm_phonecall_report(osv.osv):
             create or replace view crm_phonecall_report as (
                 select
                     id,
-                    to_char(c.create_date, 'YYYY') as name,
-                    to_char(c.create_date, 'MM') as month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.date, 'YYYY') as name,
+                    to_char(c.date, 'MM') as month,
+                    to_char(c.date, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,

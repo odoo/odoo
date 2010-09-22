@@ -23,7 +23,6 @@ from dateutil.relativedelta import relativedelta
 import time
 
 from osv import fields, osv
-from tools import config
 from tools.translate import _
 import netsvc
 import tools
@@ -856,7 +855,6 @@ class stock_picking(osv.osv):
         """ Gets payment term from partner.
         @return: Payment term
         """
-        partner_obj = self.pool.get('res.partner')
         partner = picking.address_id.partner_id
         return partner.property_payment_term and partner.property_payment_term.id or False
 
@@ -1132,12 +1130,8 @@ class stock_picking(osv.osv):
         price_type_obj = self.pool.get('product.price.type')
         sequence_obj = self.pool.get('ir.sequence')
         wf_service = netsvc.LocalService("workflow")
-        partner_id = partial_datas.get('partner_id', False)
-        address_id = partial_datas.get('address_id', False)
-        delivery_date = partial_datas.get('delivery_date', False)
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
-            new_moves = []
             complete, too_many, too_few = [], [], []
             move_product_qty = {}
             for move in pick.move_lines:
@@ -1197,7 +1191,7 @@ class stock_picking(osv.osv):
                             })
                 if product_qty != 0:
 
-                    new_obj = move_obj.copy(cr, uid, move.id,
+                    move_obj.copy(cr, uid, move.id,
                         {
                             'product_qty' : product_qty,
                             'product_uos_qty': product_qty, #TODO: put correct uos_qty
@@ -1682,7 +1676,6 @@ class stock_move(osv.osv):
         """
         moves = self.browse(cr, uid, ids)
         self.write(cr, uid, ids, {'state': 'confirmed'})
-        i = 0
 
         def create_chained_picking(self, cr, uid, moves, context=None):
             new_moves = []
@@ -1815,7 +1808,6 @@ class stock_move(osv.osv):
 
     def setlast_tracking(self, cr, uid, ids, context=None):
         tracking_obj = self.pool.get('stock.tracking')
-        tracking = context.get('tracking', False)
         picking = self.browse(cr, uid, ids)[0].picking_id
         if picking:
             last_track = [line.tracking_id.id for line in picking.move_lines if line.tracking_id]
@@ -1895,7 +1887,6 @@ class stock_move(osv.osv):
                 amount = q * move.price_unit
             # Base computation on valuation price type
             else:
-                company_id = move.company_id.id
                 context['currency_id'] = move.company_id.currency_id.id
                 pricetype = price_type_obj.browse(cr,uid,move.company_id.property_valuation_price_type.id)
                 amount_unit = move.product_id.price_get(pricetype.field, context)[move.product_id.id]
@@ -1906,11 +1897,7 @@ class stock_move(osv.osv):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
         """
-        track_flag = False
         picking_ids = []
-        product_uom_obj = self.pool.get('product.uom')
-        price_type_obj = self.pool.get('product.price.type')
-        product_obj = self.pool.get('product.product')
         move_obj = self.pool.get('account.move')
         if context is None:
             context = {}
@@ -2205,12 +2192,7 @@ class stock_move(osv.osv):
         users_obj = self.pool.get('res.users')
         uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
-        sequence_obj = self.pool.get('ir.sequence')
         wf_service = netsvc.LocalService("workflow")
-        partner_id = partial_datas.get('partner_id', False)
-        address_id = partial_datas.get('address_id', False)
-        delivery_date = partial_datas.get('delivery_date', False)
-        new_moves = []
 
         if  context is None:
             context = {}
@@ -2303,7 +2285,6 @@ class stock_move(osv.osv):
                     picking_obj.action_move(cr, uid, [move.picking_id.id])
                     wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
 
-        ref = {}
         done_move_ids = []
         for move in complete:
             done_move_ids.append(move.id)
@@ -2345,7 +2326,6 @@ class stock_inventory(osv.osv):
             context = {}
         for inv in self.browse(cr, uid, ids):
             move_ids = []
-            move_line = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
 
@@ -2495,7 +2475,6 @@ class stock_picking_move_wizard(osv.osv_memory):
     def action_move(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
         picking_obj = self.pool.get('stock.picking')
-        account_move_obj = self.pool.get('account.move')
         for act in self.read(cr, uid, ids):
             move_lines = move_obj.browse(cr, uid, act['move_ids'])
             for line in move_lines:

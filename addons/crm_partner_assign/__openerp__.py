@@ -19,4 +19,24 @@
 #
 ##############################################################################
 
-import partner_geo_assign
+
+{
+    'name': 'Partner Geo-Localisation',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """
+This is the module used by OpenERP SA to redirect customers to his partners,
+based on geolocalization.
+    """,
+    'author': 'OpenERP SA',
+    'depends': ['crm'],
+    'update_xml': [
+        'res_partner_view.xml',
+        'wizard/crm_forward_to_partner_view.xml',
+        'crm_lead_view.xml',
+        'report/crm_lead_report_view.xml',
+    ],
+    'installable': True,
+    'active': False,
+    'certificate': False,
+}

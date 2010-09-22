@@ -2507,8 +2507,6 @@
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
-                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'currency_id': parent.currency, 'journal_id': parent.journal_id, 'date':date}" name="reconcile_id"/>
-                                    <field invisible="1" name="reconcile_amount"/>
                                 </tree>
                                 <form string="Statement lines">
                                     <field name="date"/>
@@ -2518,7 +2516,6 @@
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="base.group_extended" />
                                     <field name="amount"/>
-                                    <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id,'currency_id': parent.currency,'journal_id':parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field name="ref"/>
                                     <field name="sequence"/>
                                     <separator colspan="4" string="Notes"/>

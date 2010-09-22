@@ -87,7 +87,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Mail’s IDs
         @param user: Changed User id
-        @param partner: Changed Partner id
+        @param partner: Changed Partner id  
         """
         if not user:
             return {'value': {'email_to': False}}
@@ -146,7 +146,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Mail’s IDs
         @param user: Changed User id
-        @param partner: Changed Partner id
+        @param partner: Changed Partner id  
         """
         if not partner_id:
             return {'value' : {'email_to' : False, 'address_id': False}}
@@ -155,7 +155,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         data = {'address_id': addr['contact']}
         data.update(self.on_change_address(cr, uid, ids, addr['contact'])['value'])
         return {
-            'value' : data,
+            'value' : data, 
             'domain' : {'address_id' : partner_id and "[('partner_id', '=', partner_id)]" or "[]"}
             }
 
@@ -169,7 +169,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         """
         Forward the lead to a partner
         """
-
+        
         this = self.browse(cr, uid, ids[0], context=context)
         case_pool = self.pool.get(context.get('active_model'))
         res_id = context and context.get('active_id', False) or False
@@ -230,22 +230,22 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         elif lead.type == 'opportunity':
             pa = lead.partner_address_id
             body = [
-                "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]),
-                "Contact: %s" % (pa.name or ''),
-                "Title: %s" % (pa.title or ''),
-                "Function: %s" % (pa.function or ''),
-                "Street: %s" % (pa.street or ''),
-                "Street2: %s" % (pa.street2 or ''),
-                "Zip: %s" % (pa.zip or ''),
-                "City: %s" % (pa.city or ''),
-                "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''),
-                "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''),
-                "Email: %s" % (pa.email or ''),
-                "Phone: %s" % (pa.phone or ''),
-                "Fax: %s" % (pa.fax or ''),
-                "Mobile: %s" % (pa.mobile or ''),
-                "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''),
-                "Details: %s" % (lead.description or ''),
+                "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]), 
+                "Contact: %s" % (pa.name or ''), 
+                "Title: %s" % (pa.title or ''), 
+                "Function: %s" % (pa.function or ''), 
+                "Street: %s" % (pa.street or ''), 
+                "Street2: %s" % (pa.street2 or ''), 
+                "Zip: %s" % (pa.zip or ''), 
+                "City: %s" % (pa.city or ''), 
+                "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''), 
+                "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''), 
+                "Email: %s" % (pa.email or ''), 
+                "Phone: %s" % (pa.phone or ''), 
+                "Fax: %s" % (pa.fax or ''), 
+                "Mobile: %s" % (pa.mobile or ''), 
+                "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''), 
+                "Details: %s" % (lead.description or ''), 
             ]
         return "\n".join(body + ['---'])
 

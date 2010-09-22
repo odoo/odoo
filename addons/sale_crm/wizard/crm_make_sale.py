@@ -81,7 +81,6 @@ class crm_make_sale(osv.osv_memory):
         sale_line_obj = self.pool.get('sale.order.line')
 
         result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
-        id = mod_obj.read(cr, uid, result, ['res_id'])
 
         data = context and context.get('active_ids', []) or []
 
