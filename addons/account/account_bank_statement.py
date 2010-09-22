@@ -223,7 +223,7 @@ class account_bank_statement(osv.osv):
         account_analytic_line_obj = self.pool.get('account.analytic.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
 
-        st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id.id, context)
+        st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context)
         st = st_line.statement_id
 
         context.update({'date': st_line.date})
@@ -323,22 +323,33 @@ class account_bank_statement(osv.osv):
     def get_next_st_line_number(self, cr, uid, st_number, st_line, context=None):
         return st_number + ' - ' + str(st_line.sequence)
 
+    def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
+        st = self.browse(cr, uid, st_id, context)
+        if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
+            raise osv.except_osv(_('Error !'),
+                    _('The statement balance is incorrect !\n') +
+                    _('The expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
+        return True
+
+    def statement_close(self, cr, uid, ids, journal_type='bank', context=None):
+        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+
+    def check_status_condition(self, cr, uid, state, journal_type='bank'):
+        return state=='draft'
+
     def button_confirm_bank(self, cr, uid, ids, context=None):
         done = []
         obj_seq = self.pool.get('ir.sequence')
-
         if context is None:
             context = {}
 
         for st in self.browse(cr, uid, ids, context):
+            j_type = st.journal_id.type
             company_currency_id = st.journal_id.company_id.currency_id.id
-            if not st.state=='draft':
+            if not self.check_status_condition(cr, uid, st.state, journal_type=j_type):
                 continue
-
-            if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
-                raise osv.except_osv(_('Error !'),
-                        _('The statement balance is incorrect !\n') +
-                        _('The expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
+            
+            self.balance_check(cr, uid, st.id, journal_type=j_type, context=context)
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
                 raise osv.except_osv(_('Configuration Error !'),
@@ -369,9 +380,7 @@ class account_bank_statement(osv.osv):
             self.write(cr, uid, [st.id], {'name': st_number}, context=context)
             self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st_number)
             done.append(st.id)
-
-        self.write(cr, uid, done, {'state':'confirm'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context={}):
         done = []
