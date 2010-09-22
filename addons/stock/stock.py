@@ -1972,13 +1972,15 @@ class stock_move(osv.osv):
         @return:
         """
         track_flag = False
+        partial_datas=''
         picking_ids = []
         product_uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
         product_obj = self.pool.get('product.product')
         partial_obj=self.pool.get('stock.partial.picking')
         partial_id=partial_obj.search(cr,uid,[])
-        partial_datas=partial_obj.read(cr,uid,partial_id)[0]
+        if partial_id:
+            partial_datas=partial_obj.read(cr,uid,partial_id)[0]
         if context is None:
             context = {}
         for move in self.browse(cr, uid, ids):
@@ -1997,7 +1999,7 @@ class stock_move(osv.osv):
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
-            prodlot_id = partial_datas.get('move%s_prodlot_id'%(move.id), False)
+            prodlot_id =partial_datas and  partial_datas.get('move%s_prodlot_id'%(move.id), False)
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id})
             self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})

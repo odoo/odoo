@@ -70,10 +70,11 @@ class stock_return_picking(osv.osv_memory):
             pick_obj = self.pool.get('stock.picking')
             pick = pick_obj.browse(cr, uid, record_id)
             for m in [line for line in pick.move_lines]:
-                if 'return%s'%(m.id) not in self._columns:
-                    self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
-                if 'invoice_state' not in self._columns:
-                    self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be Invoiced'), ('none', 'None')], string='Invoice State', required=True)
+                if m.state=='done':
+                    if 'return%s'%(m.id) not in self._columns:
+                        self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
+                    if 'invoice_state' not in self._columns:
+                        self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be Invoiced'), ('none', 'None')], string='Invoice State', required=True)
                 for rec in m.move_history_ids2:
                     if rec.product_qty==m.product_qty:
                         raise osv.except_osv(_('Warning !'), _("There is no product to return!"))
@@ -97,9 +98,8 @@ class stock_return_picking(osv.osv_memory):
         if record_id:
             pick_obj = self.pool.get('stock.picking')
             pick = pick_obj.browse(cr, uid, record_id)
-            if pick.state != 'done':
+            if pick.state not in['done','confirmed']:
                 raise osv.except_osv(_('Warning !'), _("The Picking is not completed yet!\nYou cannot return picking which is not in 'Done' state!"))
-        
             return_history = {}
             for m_line in pick.move_lines:
                 return_history[m_line.id] = 0
@@ -109,13 +109,10 @@ class stock_return_picking(osv.osv_memory):
             arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
             for m in [line for line in pick.move_lines]:
                 quantity = m.product_qty
-                if quantity > return_history[m.id] and (quantity - return_history[m.id])>0:
+                if m.state=='done' and quantity > return_history[m.id] and (quantity - return_history[m.id])>0:
                     arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
                     res['fields']['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True} 
                     res.setdefault('returns', []).append(m.id)
-#            if not res.get('returns',False): Todo : It may be used 
-#                raise osv.except_osv(_('Warning!'),_('There is no product to return!'))
-        
             arch_lst.append('<field name="invoice_state"/>\n<newline/>')
             res['fields']['invoice_state']={'string':_('Invoice state'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To Be Invoiced')), ('none', _('None'))]}
             arch_lst.append('<group col="2" colspan="4">')
