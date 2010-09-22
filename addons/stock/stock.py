@@ -1149,6 +1149,9 @@ class stock_picking(osv.osv):
                 product_uom = partial_data.get('product_uom',False)
                 product_price = partial_data.get('product_price',0.0)
                 product_currency = partial_data.get('product_currency',False)
+                prodlot_id = partial_data.get('prodlot_id',False)
+                if prodlot_id:
+                  move_obj.write(cr, uid, [move.id],{'prodlot_id': prodlot_id,})                
                 if move.product_qty == product_qty:
                     complete.append(move)
                 elif move.product_qty > product_qty:
@@ -1458,7 +1461,7 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'date': fields.datetime('Date Planned', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
+        'date': fields.datetime('Date ', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
         'date_expected': fields.datetime('Date Expected', readonly=True,required=True, help="Scheduled date for the movement of the products"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')]),
 
