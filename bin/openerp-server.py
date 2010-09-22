@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,16 +27,19 @@ OpenERP is an ERP+CRM program for small and medium businesses.
 The whole source code is distributed under the terms of the
 GNU Public Licence.
 
-(c) 2003-TODAY, Fabien Pinckaers - Tiny sprl
+(c) 2003-TODAY, Fabien Pinckaers - OpenERP s.a.
 """
 
 #----------------------------------------------------------
 # python imports
 #----------------------------------------------------------
-import sys
+import logging
 import os
-import signal
 import pwd
+import signal
+import sys
+import threading
+import traceback
 
 import release
 __author__ = release.author
@@ -52,23 +55,22 @@ if pwd.getpwuid(os.getuid())[0] == 'root' :
 # get logger
 #----------------------------------------------------------
 import netsvc
-logger = netsvc.Logger()
+logger = logging.getLogger('server')
 
 #-----------------------------------------------------------------------
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
 import tools
-
-logger.notifyChannel("server", netsvc.LOG_INFO, "version - %s" % release.version )
+logger.info("OpenERP version - %s", release.version)
 for name, value in [('addons_path', tools.config['addons_path']),
                     ('database hostname', tools.config['db_host'] or 'localhost'),
                     ('database port', tools.config['db_port'] or '5432'),
                     ('database user', tools.config['db_user'])]:
-    logger.notifyChannel("server", netsvc.LOG_INFO, "%s - %s" % ( name, value ))
+    logger.info("%s - %s", name, value)
 
 # Don't allow if the connection to PostgreSQL done by postgres user
 if tools.config['db_user'] == 'postgres':
-    logger.notifyChannel("server", netsvc.LOG_ERROR, "%s" % ("Attempted to connect database with postgres user. This is a security flaws, aborting."))
+    logger.error("Connecting to the database as 'postgres' user is forbidden, as it present major security issues. Shutting down.")
     sys.exit(1)
 
 import time
@@ -76,7 +78,7 @@ import time
 #----------------------------------------------------------
 # init net service
 #----------------------------------------------------------
-logger.notifyChannel("objects", netsvc.LOG_INFO, 'initialising distributed objects services')
+logger.info('initialising distributed objects services')
 
 #---------------------------------------------------------------
 # connect to the database and initialize it with base if needed
@@ -117,8 +119,7 @@ if tools.config['db_name']:
     for dbname in tools.config['db_name'].split(','):
         db,pool = pooler.get_db_and_pool(dbname, update_module=tools.config['init'] or tools.config['update'], pooljobs=False)
         if tools.config["test_file"]:
-            logger.notifyChannel("init", netsvc.LOG_INFO, 
-                 'loading test file %s' % (tools.config["test_file"],))
+            logger.info('loading test file %s', tools.config["test_file"])
             cr = db.cursor()
             tools.convert_yaml_import(cr, 'base', file(tools.config["test_file"]), {}, 'test', True)
             cr.rollback()
@@ -134,16 +135,14 @@ if tools.config["translate_out"]:
         msg = "language %s" % (tools.config["language"],)
     else:
         msg = "new language"
-    logger.notifyChannel("init", netsvc.LOG_INFO, 
-                         'writing translation file for %s to %s' % (msg, 
-                                                                    tools.config["translate_out"]))
+    logger.info('writing translation file for %s to %s', msg, tools.config["translate_out"])
 
     fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
     buf = file(tools.config["translate_out"], "w")
     tools.trans_export(tools.config["language"], tools.config["translate_modules"], buf, fileformat)
     buf.close()
 
-    logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written successfully')
+    logger.info('translation file written successfully')
     sys.exit(0)
 
 if tools.config["translate_in"]:
@@ -169,27 +168,19 @@ SIGNALS = dict(
     [(getattr(signal, sign), sign) for sign in LST_SIGNALS]
 )
 
-def handler(signum, _):
+netsvc.quit_signals_received = 0
+
+def handler(signum, frame):
     """
     :param signum: the signal number
-    :param _: 
+    :param frame: the interrupted stack frame or None
     """
-    netsvc.Agent.quit()
-    netsvc.Server.quitAll()
-    if tools.config['pidfile']:
-        os.unlink(tools.config['pidfile'])
-    logger.notifyChannel('shutdown', netsvc.LOG_INFO, 
-                         "Shutdown Server! - %s" % ( SIGNALS[signum], ))
-    logger.shutdown()
-    sys.exit(0)
+    netsvc.quit_signals_received += 1
+    if netsvc.quit_signals_received > 1:
+        sys.stderr.write("Forced shutdown.\n")
+        os._exit(0)
 
-for signum in SIGNALS:
-    signal.signal(signum, handler)
-
-
-import threading
-import traceback
-def dumpstacks(signum, _):
+def dumpstacks(signum, frame):
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
 
     id2name = dict([(th.ident, th.name) for th in threading.enumerate()])
@@ -201,10 +192,35 @@ def dumpstacks(signum, _):
             if line:
                 code.append("  %s" % (line.strip()))
 
-    logger.notifyChannel("dumpstacks", netsvc.LOG_INFO, "\n".join(code))
+    logging.getLogger('dumpstacks').info("\n".join(code))
+
+for signum in SIGNALS:
+    signal.signal(signum, handler)
 
 if os.name == 'posix':
     signal.signal(signal.SIGQUIT, dumpstacks)
+
+def quit():
+    netsvc.Agent.quit()
+    netsvc.Server.quitAll()
+    if tools.config['pidfile']:
+        os.unlink(tools.config['pidfile'])
+    logger = logging.getLogger('shutdown')
+    logger.info("Initiating OpenERP Server shutdown")
+    logger.info("Hit CTRL-C again or send a second signal to immediately terminate the server...")
+    logging.shutdown()
+
+    # manually join() all threads before calling sys.exit() to allow a second signal
+    # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
+    # threading.Thread.join() should not mask signals (at least in python 2.5)
+    for thread in threading.enumerate():
+        if thread != threading.currentThread() and not thread.daemon:
+            while thread.isAlive():
+                # need a busyloop here as thread.join() masks signals
+                # and would present the forced shutdown
+                thread.join(0.05)
+                time.sleep(0.05)
+    sys.exit(0)
 
 if tools.config['pidfile']:
     fd = open(tools.config['pidfile'], 'w')
@@ -212,13 +228,13 @@ if tools.config['pidfile']:
     fd.write(pidtext)
     fd.close()
 
-
 netsvc.Server.startAll()
 
-logger.notifyChannel("web-services", netsvc.LOG_INFO, 
-                     'the server is running, waiting for connections...')
+logger.info('OpenERP server is running, waiting for connections...')
 
-while True:
+while netsvc.quit_signals_received == 0:
     time.sleep(60)
+
+quit()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
