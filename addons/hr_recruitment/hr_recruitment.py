@@ -437,7 +437,7 @@ class hr_applicant(crm.crm_case, osv.osv):
             emp_id = employee_obj.create(cr,uid,{'name':applicant.name,'job_id':applicant.job_id.id})
             job_data = job_obj.browse(cr,uid, applicant.job_id.id)
             expected_emp = job_data['expected_employees'] - 1
-            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp})
+            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp,'state': 'old'})
 
         return res
 

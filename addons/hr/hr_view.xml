@@ -99,7 +99,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <filter icon="terp-personal-" domain="[('active','=',False)]" string="Unactive" groups="base.group_extended"/>
+                    <filter icon="terp-personal+" domain="[('active','=',True)]" string="Active" groups="base.group_extended"/>
                     <separator orientation="vertical" />
                     <field name="name"/>
                     <field name="department_id" widget="selection">
@@ -114,7 +114,7 @@
                     <separator orientation="vertical" />
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                    <filter string="Company" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'company_id'}"/>
+                    <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
                 </search>
              </field>

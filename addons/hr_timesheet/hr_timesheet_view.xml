@@ -16,8 +16,8 @@
                     <field name="date" on_change="on_change_date(date)"/>
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id"/>
                     <field name="name"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" required="1" domain="[('type','=','service')]"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                     <field name="amount" sum="Total cost"/>
                     <field name="general_account_id"/>
@@ -77,10 +77,11 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Anlytic account" icon="terp-personal+" domain="[]" context="{'group_by':'account_id'}"/>
-                        <separator orientation="vertical"/>                        
-                        <filter string="Product" icon="terp-personal" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Date" icon="terp-personal+" domain="[]" context="{'group_by':'date'}"/>                        
+                        <separator orientation="vertical"/>
+                        <filter string="Anlytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>                        
                     </group>                     
                 </search>
             </field>

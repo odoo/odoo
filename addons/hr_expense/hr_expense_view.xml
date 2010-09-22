@@ -77,7 +77,7 @@
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Expense Sheet">
+                        <page string="Description">
                             <newline/>
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <form string="Expense Lines">
@@ -99,7 +99,7 @@
                                 <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
                                 <button name="cancel" states="cancel" string="Cancel" type="workflow" icon="gtk-cancel"/>
                                 <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert"/>                                                                
-                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-ok"/>
+                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="terp-camera_test"/>
                                 <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-execute"/>
                                 <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager" />
                             </group>
