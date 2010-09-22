@@ -378,7 +378,6 @@ class one2many_domain(fields.one2many):
 
         move_obj = obj.pool.get('stock.move')
         res = {}.fromkeys(ids, [])
-        key = operator.itemgetter(0)
         move_ids = move_obj.search(cr, user, self._domain+[('production_id', 'in', tuple(ids))], context=context)
         related_move_dict = dict([(o.production_id.id, [o.id]) for o in move_obj.browse(cr, user, move_ids, context=context)])
         res.update(related_move_dict)

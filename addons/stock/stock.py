@@ -1460,7 +1460,7 @@ class stock_move(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'date': fields.datetime('Date Planned', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
         'date_expected': fields.datetime('Date Expected', readonly=True,required=True, help="Scheduled date for the movement of the products"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')]),
 
         'product_qty': fields.float('Quantity', required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),

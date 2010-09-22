@@ -143,7 +143,7 @@ class account_voucher(osv.osv):
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Transaction reference number."),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
-        'move_ids': fields.related('move_id','line_id', type='many2many', relation='account.move.line', string='Journal Items', readonly=True),
+        'move_ids': fields.related('move_id','line_id', type='one2many', relation='account.move.line', string='Journal Items', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft':[('readonly',False)]}),
         'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
         'pay_now':fields.selection([
@@ -375,7 +375,6 @@ class account_voucher(osv.osv):
         else:
             total_credit = price or 0.0
             account_type = 'receivable'
-        
         ids = move_line_pool.search(cr, uid, [('account_id.type','=', account_type), ('reconcile_id','=', False), ('partner_id','=',partner_id)], context=context)
         ids.reverse()
         moves = move_line_pool.browse(cr, uid, ids)
@@ -467,8 +466,8 @@ class account_voucher(osv.osv):
         vals['value'].update({'currency_id':currency_id})
         return vals
 
-    def proforma_voucher(self, cr, uid, ids):
-        self.action_move_line_create(cr, uid, ids)
+    def proforma_voucher(self, cr, uid, ids, context=None):
+        self.action_move_line_create(cr, uid, ids, context=context)
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context={}):
@@ -529,7 +528,7 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
-    def action_move_line_create(self, cr, uid, ids, *args):
+    def action_move_line_create(self, cr, uid, ids, context=None):
     
         def _get_payment_term_lines(term_id, amount):
             term_pool = self.pool.get('account.payment.term')
@@ -537,18 +536,20 @@ class account_voucher(osv.osv):
                 terms = term_pool.compute(cr, uid, term_id, amount)
                 return terms
             return False
-        
+        if not context:
+            context = {}
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
         analytic_pool = self.pool.get('account.analytic.line')
         currency_pool = self.pool.get('res.currency')
         invoice_pool = self.pool.get('account.invoice')
-        
         for inv in self.browse(cr, uid, ids):
             if inv.move_id:
                 continue
 
-            if inv.journal_id.sequence_id:
+            if 'force_name' in context and context['force_name']: 
+                name = context['force_name']
+            elif inv.journal_id.sequence_id:
                 name = self.pool.get('ir.sequence').get_id(cr, uid, inv.journal_id.sequence_id.id)
             else:
                 raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
@@ -815,9 +816,14 @@ account_voucher_line()
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
-    def create_move_from_st_line(self, cr, uid, st_line, company_currency_id, next_number, context=None):
+    def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
+        st_line = self.pool.get('account.bank.statement.line').browse(cr, uid, st_line_id, context=context)
         if st_line.voucher_id:
-            return self.pool.get('account.voucher').proforma_voucher(cr, uid, [st_line.voucher_id.id])
+            res = self.pool.get('account.voucher').proforma_voucher(cr, uid, [st_line.voucher_id.id], context={'force_name': next_number})
+            #force refresh of the cache
+            #st_line = self.pool.get('account.bank.statement.line').browse(cr, uid, st_line.id, context=context)
+            
+            return self.pool.get('account.move.line').write(cr, uid, [x.id for x in st_line.voucher_id.move_ids], {'statement_id': st_line.statement_id.id}, context=context) 
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line, company_currency_id, next_number, context=context)
 
 account_bank_statement()
