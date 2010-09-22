@@ -178,8 +178,8 @@ class stock_location(osv.osv):
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
 
-        'stock_real': fields.function(_product_qty_available, method=True, type='float', string='Real Stock', multi="stock"),
-        'stock_virtual': fields.function(_product_qty_available, method=True, type='float', string='Virtual Stock', multi="stock"),
+        'stock_real': fields.function(_product_qty_available, method=True, type='float', string='Real Stock', multi="stock", digits_compute=dp.get_precision('Product UoM')),
+        'stock_virtual': fields.function(_product_qty_available, method=True, type='float', string='Virtual Stock', multi="stock", digits_compute=dp.get_precision('Product UoM')),
 
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
@@ -216,8 +216,8 @@ class stock_location(osv.osv):
 
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
-        'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock"),
-        'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock"),
+        'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
+        'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
     }
@@ -1358,7 +1358,9 @@ class stock_production_lot(osv.osv):
         'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'date': fields.datetime('Creation Date', required=True),
-        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2", help="Current quantity of products with this Production Lot Number available in company warehouses"),
+        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select=True, 
+            help="Current quantity of products with this Production Lot Number available in company warehouses",
+            digits_compute=dp.get_precision('Product UoM')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
         'company_id': fields.many2one('res.company', 'Company', select=True),
         'move_ids': fields.one2many('stock.move', 'prodlot_id', 'Moves for this production lot', readonly=True),
@@ -1463,9 +1465,9 @@ class stock_move(osv.osv):
         'date_expected': fields.datetime('Date Expected', readonly=True,required=True, help="Scheduled date for the movement of the products"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')]),
 
-        'product_qty': fields.float('Quantity', required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
-        'product_uos_qty': fields.float('Quantity (UOS)'),
+        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoM')),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
@@ -2489,7 +2491,7 @@ class stock_inventory_line(osv.osv):
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_qty': fields.float('Quantity'),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
@@ -2592,8 +2594,8 @@ class report_products_to_received_planned(osv.osv):
     _auto = False
     _columns = {
         'date':fields.date('Date'),
-        'qty': fields.integer('Actual Qty'),
-        'planned_qty': fields.integer('Planned Qty'),
+        'qty': fields.float('Actual Qty', digits_compute=dp.get_precision('Product UoM')),
+        'planned_qty': fields.float('Planned Qty', digits_compute=dp.get_precision('Product UoM')),
 
     }
     def init(self, cr):
@@ -2626,8 +2628,8 @@ class report_delivery_products_planned(osv.osv):
     _auto = False
     _columns = {
         'date':fields.date('Date'),
-        'qty': fields.integer('Actual Qty'),
-        'planned_qty': fields.integer('Planned Qty'),
+        'qty': fields.float('Actual Qty', digits_compute=dp.get_precision('Product UoM')),
+        'planned_qty': fields.float('Planned Qty', digits_compute=dp.get_precision('Product UoM')),
 
     }
 
