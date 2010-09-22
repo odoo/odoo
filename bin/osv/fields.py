@@ -777,7 +777,7 @@ class related(function):
         if not ids: return {}
         relation = obj._name
         if self._type in ('one2many', 'many2many'):
-            res = {}.fromkeys(ids, [])
+            res = dict([(i, []) for i in ids])
         else:
             res = {}.fromkeys(ids, False)
 
