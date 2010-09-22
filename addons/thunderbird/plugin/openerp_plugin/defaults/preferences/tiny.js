@@ -1,4 +1,5 @@
-
+pref("network.protocol-handler.app.http","/usr/bin/firefox");
+pref("network.protocol-handler.app.https","/usr/bin/firefox");
 pref("extensions.tiny.serverurl", "http://localhost");
 pref("extensions.tiny.serverport", "8069");
 pref("extensions.tiny.webserverurl", "http://localhost");
