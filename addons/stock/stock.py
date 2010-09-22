@@ -1150,8 +1150,6 @@ class stock_picking(osv.osv):
                 product_price = partial_data.get('product_price',0.0)
                 product_currency = partial_data.get('product_currency',False)
                 prodlot_id = partial_data.get('prodlot_id',False)
-                if prodlot_id:
-                  move_obj.write(cr, uid, [move.id],{'prodlot_id': prodlot_id,})                
                 if move.product_qty == product_qty:
                     complete.append(move)
                 elif move.product_qty > product_qty:
@@ -1978,6 +1976,9 @@ class stock_move(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
         product_obj = self.pool.get('product.product')
+        partial_obj=self.pool.get('stock.partial.picking')
+        partial_id=partial_obj.search(cr,uid,[])
+        partial_datas=partial_obj.read(cr,uid,partial_id)[0]
         if context is None:
             context = {}
         for move in self.browse(cr, uid, ids):
@@ -1996,8 +1997,10 @@ class stock_move(osv.osv):
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
-
-        self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
+            prodlot_id = partial_datas.get('move%s_prodlot_id'%(move.id), False)
+            if prodlot_id:
+                self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id})
+            self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
