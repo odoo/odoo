@@ -42,7 +42,7 @@ class crm_lead_report_assign(osv.osv):
         'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
@@ -62,8 +62,7 @@ class crm_lead_report_assign(osv.osv):
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]" , readonly=True),
+                         domain="[('section_id','=',section_id)]" , readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
@@ -85,7 +84,7 @@ class crm_lead_report_assign(osv.osv):
             CRM Lead Report
             @param cr: the current row, from the database cursor
         """
-        tools.drop_view_if_exists(cr, 'crm_lead_report')
+        tools.drop_view_if_exists(cr, 'crm_lead_report_assign')
         cr.execute("""
             CREATE OR REPLACE VIEW crm_lead_report_assign AS (
                 SELECT

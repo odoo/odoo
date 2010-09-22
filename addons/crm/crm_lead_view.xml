@@ -149,7 +149,8 @@
                         <field name="company_id"
                             groups="base.group_multi_company"
                             widget="selection" colspan="2" />
-                        <field name="type_id" string="Campaign" select="1"/>
+                        <field name="type_id" select="1" widget="selection"/>
+                        <field name="channel_id" select="1" widget="selection"/>
                         <field name="referred"/>
                     </group>
                     <group colspan="2" col="2">
@@ -172,7 +173,7 @@
                  </page>
                  <page string="History" groups="base.group_extended">
                    <group colspan="4">
-                       <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
+                       <field colspan="4" name="email_cc" widget="char" size="512"/>
                    </group>
                     <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
                         <tree string="Communication history">
@@ -246,6 +247,7 @@
                 <field name="categ_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="referred" invisible="1"/>
+                <field name="channel_id" invisible="1"/>
 
                 <field name="stage_id" />
                 <button name="stage_previous" string="Previous Stage"

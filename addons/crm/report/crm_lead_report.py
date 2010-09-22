@@ -77,7 +77,9 @@ class crm_lead_report(osv.osv):
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
+        'channel_id':fields.many2one('res.partner.canal', 'Channel', readonly=True),
+        'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
         'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
@@ -99,8 +101,7 @@ class crm_lead_report(osv.osv):
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]" , readonly=True),
+                         domain="[('section_id','=',section_id)]" , readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
@@ -141,6 +142,8 @@ class crm_lead_report(osv.osv):
                     c.company_id,
                     c.priority,
                     c.section_id,
+                    c.channel_id,
+                    c.type_id,
                     c.categ_id,
                     c.partner_id,
                     c.country_id,

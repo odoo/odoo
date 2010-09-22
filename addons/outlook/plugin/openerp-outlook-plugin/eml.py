@@ -1,3 +1,26 @@
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+ #!/usr/bin/python
+ #-*- encoding: utf-8 -*-
+
 import sys
 import chilkat
 import os
@@ -10,30 +33,19 @@ def generateEML(mail):
     body = mail.Body.encode("utf-8")
     recipients = mail.Recipients
     sender_email = mail.SenderEmailAddress
-    sender_name = mail.SenderName
+    sender_name = mail.SenderEmailAddress
     attachments=mail.Attachments
-#    to = mail.To
-#    cc = mail.CC
-#    rec_date = mail.ReceivedTime
 
     email = chilkat.CkEmail()
     email.put_Subject (ustr(sub).encode('iso-8859-1'))
     email.put_Body (ustr(body).encode('utf-8'))
     email.put_FromAddress (ustr(sender_email).encode('iso-8859-1'))
-    email.put_From (ustr(sender_name).encode('iso-8859-1'))
+    email.put_From (ustr(sender_email).encode('iso-8859-1'))
 
     for i in xrange(1, recipients.Count+1):
         name = ustr(recipients.Item(i).Name).encode('iso-8859-1')
         address = ustr(recipients.Item(i).Address).encode('iso-8859-1')
         email.AddTo(name,address)
-
-#    email.AddMultipleTo(to)
-#    email.AddMultipleCC(cc)
-#    win32ui.MessageBox("cccc---"+str(dir(cc)),'')
-#    for i in xrange(1, cc.Count+1):
-#        name = ustr(recipients.Item(i).Name).encode('iso-8859-1')
-#        address = ustr(recipients.Item(i).Address).encode('iso-8859-1')
-#        email.AddCC(name,address)
 
     eml_name= ustr(sub).encode('iso-8859-1')+'-'+str(mail.EntryID)[-9:]
     ls = ['*', '/', '\\', '<', '>', ':', '?', '"', '|', '\t', '\n']
@@ -80,4 +92,3 @@ def generateEML(mail):
 
     print "Saved EML!",eml_path
     return eml_path
-
