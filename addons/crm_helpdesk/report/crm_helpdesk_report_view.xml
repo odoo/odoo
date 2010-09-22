@@ -10,17 +10,22 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree colors="blue:state in ('draft');black:state in ('open','pending');gray:state in ('done','cancel') " string="Helpdesk">
-                    <field name="name" />
-                    <field name="month"/>
-                    <field name="section_id" />
-                    <field name="user_id" />
-                    <field name="company_id"/>
-                    <field name="partner_id" />
+                    <field name="name" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="section_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="priority" invisible="1"/>
-                    <field name="nbr" string="#Helpdesk" />
+                    <field name="nbr" string="#Helpdesk" sum="#Helpdesk"/>
+                    <field name="email" sum="# Mails"/>
                     <field name="delay_close"/>
+                    <field name="delay_expected"/>
+                    <field name="planned_cost"/>
                     <field name="state" invisible="1"/>
+                    <field name="day" invisible="1"/>
+                    <field name="canal_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -71,13 +76,15 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="9">
-                   		<filter string="This Year" icon="terp-go-year"
-                   			domain="[('name','=',time.localtime()[0])]"
-                   			default="1" />
-
-                   		<filter string="This Month" icon="terp-go-month"
-                   			domain="[('month','=',time.strftime('%%m'))]"
-                   			default="1" />
+               			<filter string="  Year  " icon="terp-go-year"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
+                            help="Helpdesk requests created in last 365 days"/>
+                        <filter string="   Month   " icon="terp-go-month" name="this_month"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                            help="Helpdesk requests created in last 30 days"/>
+                        <filter icon="terp-go-week" string="    Month-1    " separator="1"
+                            domain="[('create_date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                            help="Helpdesk requests created in the previous month"/>
 
                    		<separator orientation="vertical" />
                    		<filter string="Current" icon="terp-check"
@@ -89,13 +96,9 @@
                    		<filter string="Lost" icon="terp-dialog-close"
                    			domain="[('state','=','cancel')]" />
 
-                   		<filter string="Deadline" icon="terp-go-month"
-                   			domain="[('date_deadline','=',time.strftime('%%m/%%d/%%Y'))]" />
-
                    		<separator orientation="vertical" />
                    		<field name="section_id"
                    			default="context.get('section_id', False)"
-                   			widget="selection"
                    			context="{'invisible_section': False}">
 
                    			<filter icon="terp-personal+"
@@ -104,49 +107,59 @@
                    				help="My section" />
 
                    		</field>
-                   		<field name="company_id" widget="selection">
-                           <filter icon="terp-go-home"
+                   		<field name="company_id">
+                        <filter icon="terp-go-home"
                         context="{'invisible_section': False}"
                         domain="[('section_id.user_id.company_id','=',uid)]"
                         help="My company"/>
-
                         </field>
-                         <field name="user_id" widget="selection"/>
+                         <field name="user_id">
+                         <filter icon="terp-personal+" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
+                         </field>
                    </group>
                    <newline/>
                   <group expand="0" string="Group By...">
-                        <filter string="User" icon="terp-personal"
+                        <filter string="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}"
                             default="1" />
-
-                        <filter string="Company" icon="terp-go-home"
-                            domain="[]"
-                            context="{'group_by':'company_id'}" />
-
-                        <filter string="Section" icon="terp-personal+"
+                        <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
                             context="{'group_by':'section_id'}" />
-
-                        <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'state'}" />
-
                         <filter string="Partner" icon="terp-personal"
                             domain="[]"
                             context="{'group_by':'partner_id'}" />
-
+                            
                         <separator orientation="vertical" />
+                        <filter string="Channel" icon="terp-call-start"
+                            domain="[]"
+                            context="{'group_by':'canal_id'}" />
+                            
+                        <separator orientation="vertical" />
+                        <filter string="State" icon="terp-stock_effects-object-colorize"
+                            domain="[]" context="{'group_by':'state'}" />
+                       
+                        <separator orientation="vertical" />
+                        <filter string="Company" icon="terp-go-home" 
+                            domain="[]"
+                            context="{'group_by':'company_id'}" />
+                            
+                        <separator orientation="vertical" />
+                        <filter string="Day" icon="terp-go-today"
+                            domain="[]" context="{'group_by':'day'}" help="Day of helpdesk requests"/>
                         <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}" />
-
+                            domain="[]" context="{'group_by':'month'}" help="Month of helpdesk requests"/>
                         <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'name'}" />
+                            domain="[]" context="{'group_by':'name'}" help="Year of helpdesk requests" />
 
                   </group>
                     <newline/>
                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                        <filter string="Priority" icon="terp-rating-rated"
-                            domain="[]" context="{'group_by':'priority'}" />
+                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
+                        <separator orientation="vertical"/>
+                        <field name="categ_id" domain="[('object_id.model', '=', 'crm.helpdesk')]"/>
+                        <field name="priority"/>
+                        <newline/>
+                        <field name="date_closed"/>
                    </group>
 
 
@@ -157,10 +170,11 @@
 <!-- Helpdesk report after Sales Services Action -->
 
         <record id="action_report_crm_helpdesk" model="ir.actions.act_window">
-            <field name="name">Helpdesk</field>
+            <field name="name">Helpdesk Analysis</field>
             <field name="res_model">crm.helpdesk.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_helpdesk_tree"/>
             <field name="search_view_id" ref="view_report_crm_helpdesk_filter"/>
             <field name="help">Helpdesk allows you to consult different informations relative to support demands. Check for treatments delays, number of responses given and emails send and costs. You can sort out your analysis on different groups to get fine grained analysis.</field>
