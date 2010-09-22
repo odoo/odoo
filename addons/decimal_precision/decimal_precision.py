@@ -35,7 +35,7 @@ class decimal_precision(osv.osv):
     }
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', """The Usage of the decimal precision must be unique!"""),
+        ('name_uniq', 'unique (name)', """Only one value can be defined for each given usage!"""),
     ]
 
     @cache(skiparg=3)
