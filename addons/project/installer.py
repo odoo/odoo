@@ -42,7 +42,7 @@ class project_installer(osv.osv_memory):
         'project_messages': fields.boolean('Project Messages',
             help="Lets employees send messages to other members of the "
                  "projects they're working on."),
-        'project_crm': fields.boolean('Issues Tracker',
+        'project_issue': fields.boolean('Issues Tracker',
             help="Automatically synchronizes project tasks and crm cases."),
         # Methodologies
         'project_scrum': fields.boolean('SCRUM',
@@ -53,7 +53,7 @@ class project_installer(osv.osv_memory):
         }
 
     _defaults={
-        'project_crm': True,
+        'project_issue': True,
     }
 
 project_installer()

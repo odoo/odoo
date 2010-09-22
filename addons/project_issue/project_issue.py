@@ -70,7 +70,7 @@ class project_issue(crm.crm_case, osv.osv):
             message = _('Issue ') + " '" + name + "' "+ _("is Closed.")
             self.log(cr, uid, id, message)
         return res
-    
+
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         if context is None:
             context = {}
@@ -152,7 +152,7 @@ class project_issue(crm.crm_case, osv.osv):
                                  domain="[('partner_id','=',partner_id)]"),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'Todo'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
+        'state': fields.selection([('draft', 'Draft'), ('open', 'To Do'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
@@ -409,7 +409,7 @@ class project(osv.osv):
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256)
     }
-    
+
     def _check_escalation(self, cr, uid, ids):
          project_obj = self.browse(cr, uid, ids[0])
          if project_obj.project_escalation_id:

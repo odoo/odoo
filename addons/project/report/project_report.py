@@ -49,7 +49,7 @@ class report_project_task_user(osv.osv):
         'delay_endings_days': fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
         'nbr': fields.integer('# of tasks', readonly=True),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'),
-('0','Very urgent')], 'Importance', readonly=True),
+('0','Very urgent')], 'Priority', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'State', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True, groups="base.group_multi_company"),

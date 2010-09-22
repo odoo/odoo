@@ -66,7 +66,7 @@
                             <group col="8" colspan="4">
                             <field name="state" />
                             <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                            <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
+                            <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                             <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
@@ -75,7 +75,7 @@
                         </page>
                         <page string="Emails" groups="base.group_extended">
                             <group colspan="4">
-                            <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
+                            <field colspan="4" name="email_cc" string="Global CC" widget="url"/>
                             </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
                                 <tree string="History">
@@ -157,13 +157,13 @@
             <field name="model">project.issue</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Issue Tracker Tree"  colors="red:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
+                <tree string="Issue Tracker Tree" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="id"/>
                     <field name="create_date"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="project_id" />
-                    <field name="priority" string="Severity"/>
+                    <field name="priority" string="Priority"/>
                     <field name="stage_id" string="Resolution"/>
                     <button icon="gtk-go-back" string="" name="stage_previous" type="object"
                         states="open,draft,pending,done,cancel" />
@@ -174,11 +174,12 @@
                     <field name="assigned_to"/>
                     <field name="state"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" help="To Do"/>
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                    <field name="categ_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -190,8 +191,8 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and Open Issues" icon="terp-check" default="1"/>
-                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Issues" icon="terp-camera_test"/>
+                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check" default="1"/>
+                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="   Today   " separator="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
@@ -204,25 +205,31 @@
                         <field name="user_id"/>
                         <field name="project_id" string="Project"/>
                         <field name="state"/>
+                        <field name="categ_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..."  groups="base.group_extended">
+                    	<filter string="Responsible" icon="terp-personal"
+                            domain="[]" context="{'group_by':'user_id'}" />
+                    	<filter string="Partner" icon="terp-partner" domain="[]"
+                            context="{'group_by':'partner_id'}" />
+						<separator orientation="vertical"/>
                         <filter string="Project"  icon="terp-folder-blue" domain="[]"
                             context="{'group_by':'project_id'}" />
-                        <filter string="Stage" icon="terp-stage" domain="[]"
-                            context="{'group_by':'stage_id'}" />
-                        <filter string="Priority" icon="terp-rating-rated" domain="[]"
-                            context="{'group_by':'priority'}" />
                         <filter string="Version" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'type_id'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Partner" icon="terp-personal" domain="[]"
-                            context="{'group_by':'partner_id'}" />
-                        <filter string="Salesman" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}" />
+						<separator orientation="vertical"/>
+						<filter string="Category" icon="terp-stock_symbol-selection" domain="[]"
+                            context="{'group_by':'categ_id'}" />
+						<filter string="Priority" icon="terp-rating-rated" domain="[]"
+                            context="{'group_by':'priority'}" />
+                        <filter string="Stage" icon="terp-stage" domain="[]"
+                            context="{'group_by':'stage_id'}" />
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
+                            context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'create_date'}" />
+                            domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
                     </group>
                 </search>
             </field>
@@ -254,7 +261,7 @@
                     <field name="id"/>
                     <field name="name" string="Feature description"/>
                     <field name="partner_id"/>
-                    <field name="priority" string="Severity"/>
+                    <field name="priority" string="Priority"/>
                     <field name="stage_id" string="Resolution"/>
                     <button icon="gtk-go-back" string="" name="stage_previous" type="object"
                         states="open,draft,pending,done,cancel" />
@@ -316,6 +323,6 @@
                 </field>
             </field>
        </record>
-       
+
     </data>
 </openerp>
