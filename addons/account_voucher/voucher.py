@@ -529,7 +529,7 @@ class account_voucher(osv.osv):
         return {'value':res}
 
     def action_move_line_create(self, cr, uid, ids, context=None):
-    
+        
         def _get_payment_term_lines(term_id, amount):
             term_pool = self.pool.get('account.payment.term')
             if term_id and amount:
@@ -648,7 +648,7 @@ class account_voucher(osv.osv):
                 if line.move_line_id.id:
                     rec_ids = [master_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
-            
+
             if not self.pool.get('res.currency').is_zero(cr, uid, inv.currency_id, line_total):
                 diff = line_total
                 move_line = {
@@ -819,7 +819,9 @@ class account_bank_statement(osv.osv):
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         st_line = self.pool.get('account.bank.statement.line').browse(cr, uid, st_line_id, context=context)
         if st_line.voucher_id:
-            self.pool.get('account.voucher').proforma_voucher(cr, uid, [st_line.voucher_id.id], context={'force_name': next_number})
+            #self.pool.get('account.voucher').proforma_voucher(cr, uid, [st_line.voucher_id.id], context={'force_name': next_number})
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)
             return self.pool.get('account.move.line').write(cr, uid, [x.id for x in st_line.voucher_id.move_ids], {'statement_id': st_line.statement_id.id}, context=context) 
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line, company_currency_id, next_number, context=context)
 
@@ -852,5 +854,13 @@ class account_bank_statement_line(osv.osv):
         'voucher_id': fields.many2one('account.voucher', 'Payment'),
 
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        statement_line = self.browse(cr, uid, ids, context)
+        unlink_ids = []
+        for st_line in statement_line:
+            unlink_ids.append(st_line.voucher_id.id)
+        self.pool.get('account.voucher').unlink(cr, uid, unlink_ids, context=context)
+        return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
 account_bank_statement_line()
