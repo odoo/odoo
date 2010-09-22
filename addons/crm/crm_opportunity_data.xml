@@ -44,14 +44,12 @@
 
 <!--        Case Resource(type_id)        -->
     <record model="crm.case.resource.type" id="type_oppor1">
-        <field name="name">Existing Business</field>
+        <field name="name">Campaign 2</field>
         <field name="section_id" ref="section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
     </record>
     <record model="crm.case.resource.type" id="type_oppor2">
-        <field name="name">New Business</field>
+        <field name="name">Campaign 1</field>
         <field name="section_id" ref="section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
     </record>
 
 </data>

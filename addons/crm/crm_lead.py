@@ -114,17 +114,17 @@ class crm_lead(crm_case, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which this case belongs to. Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
-        'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
+        'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
 
         # Lead fields
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                        domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]"),
+            domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
+            domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
+        'channel_id': fields.many2one('res.partner.canal', 'Channel'),
+
         'partner_name': fields.char("Partner Name", size=64),
         'optin': fields.boolean('Opt-In'),
         'optout': fields.boolean('Opt-Out'),
@@ -149,8 +149,6 @@ class crm_lead(crm_case, osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
-        'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
 
     _defaults = {

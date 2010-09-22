@@ -215,14 +215,15 @@ class account_bank_statement(osv.osv):
         return True
 
 
-    def create_move_from_st_line(self, cr, uid, st_line, company_currency_id, next_number, context=None):
+    def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         account_analytic_line_obj = self.pool.get('account.analytic.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-
+        
+        st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context)
         st = st_line.statement_id
         
         context.update({'date': st_line.date})
@@ -230,6 +231,7 @@ class account_bank_statement(osv.osv):
             'journal_id': st.journal_id.id,
             'period_id': st.period_id.id,
             'date': st_line.date,
+            'name': st_line_number,
         }, context=context)
         account_bank_statement_line_obj.write(cr, uid, [st_line.id], {
             'move_ids': [(4, move_id, False)]
@@ -314,11 +316,12 @@ class account_bank_statement(osv.osv):
                 raise osv.except_osv(_('Error !'),
                         _('Journal Item "%s" is not valid') % line.name)
 
-        move_name = next_number + ' - ' + str(st_line.sequence)
-        account_move_obj.write(cr, uid, [move_id], {'name': move_name}) 
         # Bank statements will not consider boolean on journal entry_posted
         account_move_obj.post(cr, uid, [move_id], context=context)
         return move_id
+
+    def get_next_st_line_number(self, cr, uid, st_number, st_line, context=None):
+        return st_number + ' - ' + str(st_line.sequence)
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
         done = []
@@ -342,13 +345,13 @@ class account_bank_statement(osv.osv):
                         _('Please verify that an account is defined in the journal.'))
 
             if not st.name == '/':
-                next_number = st.name
+                st_number = st.name
             else:
                 if st.journal_id.sequence_id:
                     c = {'fiscalyear_id': st.period_id.fiscalyear_id.id}
-                    next_number = obj_seq.get_id(cr, uid, st.journal_id.sequence_id.id, context=c)
+                    st_number = obj_seq.get_id(cr, uid, st.journal_id.sequence_id.id, context=c)
                 else:
-                    next_number = obj_seq.get(cr, uid, 'account.bank.statement')
+                    st_number = obj_seq.get(cr, uid, 'account.bank.statement')
 
             for line in st.move_line_ids:
                 if line.state <> 'valid':
@@ -360,12 +363,12 @@ class account_bank_statement(osv.osv):
                         raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (st.journal_id.name,))
                 if not st_line.amount:
                     continue
+                st_line_number = self.get_next_st_line_number(cr, uid, st_number, st_line, context)
+                self.create_move_from_st_line(cr, uid, st_line.id, company_currency_id, st_line_number, context)
 
-                self.create_move_from_st_line(cr, uid, st_line, company_currency_id, next_number, context)
-
-            self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st.name)
+            self.write(cr, uid, [st.id], {'name': st_number}, context=context)
+            self.log(cr, uid, st.id, 'Statement %s is confirmed and entries are created.' % st_number)
             done.append(st.id)
-            self.write(cr, uid, [st.id], {'name': next_number}, context=context)
 
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
         return True

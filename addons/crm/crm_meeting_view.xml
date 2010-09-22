@@ -26,19 +26,17 @@
             <form string="Meetings">
                 <group col="6" colspan="4">
                     <field name="name" select="1" string="Summary"
-                        required="1" colspan="2" />
+                           required="1" />
                     <field name="categ_id" widget="selection"
-                        string="Meeting Type"
-                        groups="base.group_extended"
+                        string="Meeting Type" groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
-                    <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+                    <field name="allday" on_change="onchange_allday(allday)" />
                     <newline/>
                     <field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="duration" widget="float_time"
                         on_change="onchange_dates(date,duration,False,allday)" />
-                    <field name="date_deadline" string="End Date"
-                        required="1"
+                    <field name="date_deadline" string="End Date" required="1"
                         on_change="onchange_dates(date,False,date_deadline)" />
                     <field name="location" />
                     <field name="alarm_id" string="Reminder"
@@ -308,8 +306,8 @@
                            <separator orientation="vertical"/>
                            <field name="name" select="1" string="Subject"/>
                            <field name="categ_id" select="1"
-                           	string="Meeting Type" widget="selection"
-                           	domain="[('object_id.model', '=', 'crm.meeting')]" />
+                               string="Meeting Type" widget="selection"
+                               domain="[('object_id.model', '=', 'crm.meeting')]" />
                            <separator orientation="vertical"/>
                            <field name="partner_id" select="1" />
                            <field name="section_id" select="1" widget="selection">
