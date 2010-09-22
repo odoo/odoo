@@ -519,6 +519,26 @@ class task(osv.osv):
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
 
+    def action_close(self, cr, uid, ids, context=None):
+        # This action open wizard to send email to partner or project manager after close task.
+        project_id = len(ids) and ids[0] or False
+        if not project_id: return False
+        task = self.browse(cr, uid, project_id, context=context)
+        project = task.project_id
+        res = self.do_close(cr, uid, [project_id], context=context) 
+        if project.warn_manager or project.warn_customer:
+           return {
+                'name': _('Send Email after close task'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'project.task.close',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True,
+                'context': {'active_id': task.id}
+           } 
+        return res
+
     def do_close(self, cr, uid, ids, context=None):
         """
         Close Task
