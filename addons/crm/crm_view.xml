@@ -169,9 +169,8 @@
             <field name="model">crm.case.resource.type</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Resource Type">
+                <tree string="Campaign">
                     <field name="name"/>
-                    <field name="object_id"/>
                     <field name="section_id"/>
                 </tree>
             </field>
@@ -184,10 +183,9 @@
             <field name="model">crm.case.resource.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Resource Type">
+                <form string="Campaign">
                     <field name="name" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
-                    <field name="object_id"  />
                 </form>
             </field>
         </record>
@@ -195,14 +193,14 @@
         <!-- Resource Type of case Action -->
 
         <record id="crm_case_resource_type_act" model="ir.actions.act_window">
-            <field name="name">Resource Type</field>
+            <field name="name">Campaigns</field>
             <field name="res_model">crm.case.resource.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_resource_type_tree"/>
         </record>
 
         <record id="crm_case_section_act_tree" model="ir.actions.act_window">
-            <field name="name">Cases by section</field>
+            <field name="name">Cases by Sales Team</field>
             <field name="res_model">crm.case.section</field>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
@@ -436,7 +434,7 @@
             <field name="model">crm.case.section.custom</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Custom Case Section">
+                <tree string="Custom Case Teams">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
                     <field name="user_id" select="1"/>
@@ -527,7 +525,7 @@
                         </page>
                         <page string="Emails" groups="base.group_extended">
                            <group colspan="4">
-                               <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
+                               <field colspan="4" name="email_cc" widget="char" size="512"/>
                            </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
 		                        <tree string="History">
@@ -576,9 +574,6 @@
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.case.custom'}"
                                 icon="terp-mail-message-new" type="action" />
-                            <button string="Forward to Partner"
-                                name="%(crm_lead_forward_to_partner_act)d"
-                                icon="terp-mail-forward" type="action" />
                          </page>
                     </notebook>
                 </form>

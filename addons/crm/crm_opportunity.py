@@ -152,19 +152,6 @@ class crm_opportunity(osv.osv):
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
 
-    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context={}):
-        """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of stage’s IDs
-            @stage_id: change state id on run time """
-
-        if not partner_assigned_id:
-            return {'value':{'date_assign': False}}
-        else:
-            return {'value':{'date_assign': time.strftime('%Y-%m-%d')}}
-
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],

@@ -1329,9 +1329,7 @@ var listPartnerHandler = {
 	  			listItem.value = arrPartnerList[i][0];
 	  			cmdPartnerList.appendChild(listItem);
 			}
-
 		}
- 
 	},
 	onFault: function (client, ctxt, fault) {
 
@@ -1873,7 +1871,10 @@ var listCreatePartnerHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var createId = result.QueryInterface(Components.interfaces.nsISupportsPRInt32);
+        setPartnerId(createId);
+        txtselectpartner = document.getElementById('txtselectpartner')
 		if(typeof(createId.data) == 'number' && createId!=0){
+         window.opener.document.getElementById('txtselectpartner').setAttribute('value',txtselectpartner.value);
 			window.close();
 		}
 		if(createId == 0){
@@ -1891,6 +1892,7 @@ var listCreatePartnerHandler = {
 //function to create the tiny partner object
 function createPartner(){
 	var branchobj = getPref();
+    txtselectpartner = document.getElementById('txtselectpartner')
 	setServerService('xmlrpc/object');
 	netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 	var xmlRpcClient = getXmlRpc();
@@ -1904,12 +1906,13 @@ function createPartner(){
 	strmethod.data = 'create_partner';
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
-	if(document.getElementById('txtname').value ==''){
+	if(document.getElementById('txtselectpartner').value ==''){
 		alert("You Must Enter Partner Name.");
 		return false;
 	}
-	var a = ['name'];
-	var b = [document.getElementById('txtname').value];
+    setPartnerId(txtselectpartner.value)
+	var a = ['partner_id','name'];
+	var b = [getPartnerId(),txtselectpartner.value];
 	var arrofarr = dictcontact(a,b);
 	xmlRpcClient.asyncCall(listCreatePartnerHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }

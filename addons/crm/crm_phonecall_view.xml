@@ -19,16 +19,14 @@
 <!-- ResourceType Form View -->
 
     <record id="crm_phonecall_resource_act" model="ir.actions.act_window">
-            <field name="name">Phonecall Resource Type</field>
+            <field name="name">Phonecall Campaigns</field>
             <field name="res_model">crm.case.resource.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
-            <field name="context">{'object_id':'crm.phonecall'}</field>
-        </record>
+    </record>
 
      <menuitem action="crm_phonecall_resource_act"
-        id="menu_crm_phonecall_resource_act" name="Resource Type"
+        id="menu_crm_phonecall_resource_act" name="Campaigns"
         parent="menu_crm_config_phonecall" />
 
 <!--  PhoneCalls Tree View -->
@@ -39,9 +37,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
-                <field name="date" string="Date"/>
-                <field name="name" string="Call Summary"/>
-                <field name="partner_id" string="Partner"/>
+                <field name="date"/>
+                <field name="name"/>
+                <field name="partner_id"/>
                 <field name="partner_contact"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
@@ -71,12 +69,12 @@
         <field name="arch" type="xml">
             <form string="Phone Call">
                  <group colspan="6" col="7">
-                    <field name="name" string="Summary" required="1"/>
+                    <field name="name" required="1"/>
                     <field name="partner_phone" required="1"/>
                     <field name="duration" widget="float_time" required="1"/>
                     <button string="Schedule a Meeting" name="action_make_meeting" icon="gtk-redo" type="object"/>
 
-                    <field name="date" string="Date" required="1"/>
+                    <field name="date" required="1"/>
                     <field name="user_id"/>
                     <field name="section_id" colspan="1" widget="selection" />
                     <button string="Convert to Opportunity"
@@ -101,7 +99,7 @@
                         type="action"
                         attrs="{'invisible':[('partner_id','!=',False)]}" />
                     <newline/>
-                    <field name="partner_address_id" string="Contact"
+                    <field name="partner_address_id"
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                     <newline/>
                     <field name="partner_mobile" />
@@ -147,7 +145,7 @@
         <field name="arch" type="xml">
             <form string="Phone Call">
                 <group colspan="4" col="7">
-                    <field name="name" string="Summary" required="1"/>
+                    <field name="name" required="1"/>
                     <field name="partner_phone"/>
                     <field name="duration" widget="float_time"/>
                     <button string="Schedule a Meeting"
@@ -155,7 +153,7 @@
                         icon="gtk-redo"
                         type="object" />
 
-                    <field name="date" string="Date" required="1"/>
+                    <field name="date" required="1"/>
                     <field name="user_id"/>
                     <field name="section_id" colspan="1" widget="selection" />
                     <button string="Convert to Opportunity"
@@ -179,7 +177,7 @@
                         type="action"
                         attrs="{'invisible':[('partner_id','!=',False)]}" />
                     <newline/>
-                    <field name="partner_address_id" string="Contact"
+                    <field name="partner_address_id"
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                     <newline/>
                     <field name="partner_mobile" />
@@ -207,12 +205,12 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)">
-                <field name="date" string="Date"/>
-                <field name="name" string="Call Summary"/>
+                <field name="date"/>
+                <field name="name"/>
                 <field name="partner_id"
                 	on_change="onchange_partner_id(partner_id, email_from)"
                 	string="Partner" />
-                <field name="partner_address_id" string="Contact"
+                <field name="partner_address_id"
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                 <field name="partner_phone"/>
                 <field name="user_id"/>
@@ -277,7 +275,7 @@
                />
 
                <separator orientation="vertical"/>
-               <field name="name" string="Call Summary"/>
+               <field name="name"/>
                <field name="partner_id"/>
                <field name="user_id">
                    <filter icon="terp-personal-"
