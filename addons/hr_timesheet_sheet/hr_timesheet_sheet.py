@@ -34,8 +34,6 @@ class one2many_mod2(fields.one2many):
         if values is None:
             values = {}
 
-        res = {}.fromkeys(ids, [])
-
         # dict:
         # {idn: (date_current, user_id), ...
         #  1: ('2010-08-15', 1)}
@@ -59,9 +57,13 @@ class one2many_mod2(fields.one2many):
 
         ids2 = obj.pool.get(self._obj).search(cr, user, dom, limit=self._limit)
 
+        res = {}
+        for i in ids:
+            res[i] = []
+
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id]:
-                res.setdefault(r[self._fields_id][0], []).append(r['id'])
+                res[r[self._fields_id][0]].append(r['id'])
 
         return res
 
@@ -82,7 +84,6 @@ class one2many_mod(fields.one2many):
         if values is None:
             values = {}
 
-        res = {}.fromkeys(ids, [])
 
         res5 = obj.read(cr, user, ids, ['date_current', 'user_id'], context=context)
         res6 = {}
@@ -96,11 +97,13 @@ class one2many_mod(fields.one2many):
                 dom = [('date', '=', res6[id][0]), ('user_id', '=', res6[id][1])]
             ids2.extend(obj.pool.get(self._obj).search(cr, user,
                 dom, limit=self._limit))
-
+        res = {}
+        for i in ids:
+            res[i] = []
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
                 [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id]:
-                res.setdefault(r[self._fields_id][0], []).append(r['id'])
+                res[r[self._fields_id][0]].append(r['id'])
 
         return res
 
