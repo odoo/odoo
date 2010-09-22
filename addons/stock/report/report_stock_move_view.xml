@@ -127,7 +127,6 @@
     <menuitem action="action_stock_move_report" id="menu_action_stock_move_report" parent="next_id_61" sequence="3"/>
 
     <!-- Inventory Control -->
-
     <record id="view_stock_inventory_tree" model="ir.ui.view">
         <field name="name">report.stock.inventory.tree</field>
         <field name="model">report.stock.inventory</field>
@@ -142,8 +141,8 @@
                 <field name="product_id" invisible="1"/>
                 <field name="prodlot_id" invisible="1"/>
                 <field name="state" invisible="1"/>
-                <field name="product_qty"/>
-                <field name="value"/>
+                <field name="product_qty" sum="Total quantity"/>
+                <field name="value" sum="Total value"/>
            </tree>
         </field>
     </record>
@@ -171,12 +170,12 @@
                         name="real"
                         icon="terp-dialog-close"
                         domain="[('state','=','done')]"
-                        help="Analysis on real stock."/>
+                        help="Analysis on real stock (including only moves already processed)"/>
 
                     <filter string="Future"
                         icon="terp-camera_test"
                         domain="[('state','in',('assigned','done','waiting','confirmed'))]"
-                        help = "Analysis including future operations."/>
+                        help = "Analysis including future operations (similar to virtual stock)"/>
 
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
