@@ -22,6 +22,7 @@
 import time
 from operator import itemgetter
 import decimal_precision as dp
+from lxml import etree
 
 import netsvc
 from osv import fields, osv, orm
@@ -341,7 +342,13 @@ class account_invoice(osv.osv):
                     view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.supplier.form')])[0]
                 else:
                     view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.form')])[0]
-        return super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        res = super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        for field in res['fields']:
+            type = context.get('journal_type', 'sale')
+            if field == 'journal_id':
+                journal_select = self.pool.get('account.journal')._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
+                res['fields'][field]['selection'] = journal_select
+        return res
 
     def create(self, cr, uid, vals, context=None):
         try:

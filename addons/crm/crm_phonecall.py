@@ -36,7 +36,7 @@ class crm_phonecall(crm_case, osv.osv):
     _columns = {
         # From crm.case
         'id': fields.integer('ID'),
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Call Summary', size=64),
         'active': fields.boolean('Active', required=False), 
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1), 
