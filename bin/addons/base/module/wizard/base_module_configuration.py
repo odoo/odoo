@@ -38,8 +38,9 @@ class base_module_configuration(osv.osv_memory):
                     'view_type': 'form', 
                     'view_mode': 'form', 
                     'res_model': 'base.module.configuration', 
-                    'view_id': view_id, 
+                    'view_id': [view_id], 
                     'type': 'ir.actions.act_window', 
+                    'target': 'new'
                 }
             return value
         # Run the config wizards
