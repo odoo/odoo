@@ -81,7 +81,6 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         result_pl = self.obj_pl.get_data(data)
         self.res_bl = self.obj_pl.final_result()
 
-        type_pool = db_pool.get('account.account.type')
         account_pool = db_pool.get('account.account')
         year_pool = db_pool.get('account.fiscalyear')
 
