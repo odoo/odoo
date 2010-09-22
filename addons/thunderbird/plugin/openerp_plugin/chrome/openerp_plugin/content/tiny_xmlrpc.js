@@ -408,6 +408,11 @@ function getWebServerURL(){
 	return getPref().getCharPref('webserverurl');
 }
 
+//get webserver port
+function getwebPort(){
+	return getPref().getCharPref('webserverport');
+}
+
 //get username from config settings
 function getUsername(){
 	return getPref().getCharPref('username');

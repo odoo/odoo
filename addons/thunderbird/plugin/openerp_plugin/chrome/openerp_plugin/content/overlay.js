@@ -193,13 +193,13 @@ var openPartnerHandler = {
             if(strlSearchResult=="partner_id"){
                 partner_id = strlSearchResultValue;
                 weburl = getWebServerURL();
-                var branchobj = getPref();
-                db_name = branchobj.getCharPref("serverdbname");
-                if (weburl == false){
-                    weburl = 'http://localhost:8080'
-                }
-                if (partner_id > 0){
-                    window.open(weburl + "/model=res.partner&id=" + partner_id)
+                webport = getwebPort();
+                var urlport = weburl+':'+webport
+
+                if (parseInt(partner_id) > 0){
+                    var t = urlport + "/openerp/form/view?model=res.partner&id="+partner_id
+                   window.open(t)
+                   
                 }
                 else{
                     alert("Partner is not Available.");
