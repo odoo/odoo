@@ -2283,6 +2283,9 @@ class stock_move(osv.osv):
             product_uom = partial_data.get('product_uom',False)
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
+            prodlot_id = partial_data.get('prodlot_id',False)
+            if prodlot_id:
+                self.write(cr, uid, [move.id],{'prodlot_id': prodlot_id,})                      
             if move.product_qty == product_qty:
                 complete.append(move)
             elif move.product_qty > product_qty:
