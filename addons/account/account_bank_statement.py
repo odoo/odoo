@@ -176,15 +176,15 @@ class account_bank_statement(osv.osv):
     }
 
     _defaults = {
-        'name': lambda *a: "/",
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'name': "/",
+        'date': time.strftime('%Y-%m-%d'),
+        'state': 'draft',
         'balance_start': _default_balance_start,
         'journal_id': _default_journal_id,
         'period_id': _get_period,
     }
 
-    def onchange_date(self, cr, user, ids, date, context={}):
+    def onchange_date(self, cr, user, ids, date, context=None):
         """
         Returns a dict that contains new values and context
         @param cr: A database cursor
@@ -196,6 +196,10 @@ class account_bank_statement(osv.osv):
         """
         res = {}
         period_pool = self.pool.get('account.period')
+
+        if context is None:
+            context = {}
+
         pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
         if pids:
             res.update({
@@ -210,10 +214,8 @@ class account_bank_statement(osv.osv):
             'context':context,
         }
 
-    def button_dummy(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {}, context)
-        return True
-
+    def button_dummy(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {}, context=context)
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
         res_currency_obj = self.pool.get('res.currency')
@@ -348,7 +350,7 @@ class account_bank_statement(osv.osv):
             company_currency_id = st.journal_id.company_id.currency_id.id
             if not self.check_status_condition(cr, uid, st.state, journal_type=j_type):
                 continue
-            
+
             self.balance_check(cr, uid, st.id, journal_type=j_type, context=context)
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
@@ -382,7 +384,7 @@ class account_bank_statement(osv.osv):
             done.append(st.id)
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
-    def button_cancel(self, cr, uid, ids, context={}):
+    def button_cancel(self, cr, uid, ids, context=None):
         done = []
         for st in self.browse(cr, uid, ids, context):
             if st.state=='draft':
@@ -392,8 +394,7 @@ class account_bank_statement(osv.osv):
                 ids += [x.id for x in line.move_ids]
             self.pool.get('account.move').unlink(cr, uid, ids, context)
             done.append(st.id)
-        self.write(cr, uid, done, {'state':'draft'}, context=context)
-        return True
+        return self.write(cr, uid, done, {'state':'draft'}, context=context)
 
     def onchange_journal_id(self, cursor, user, statement_id, journal_id, context=None):
         account_journal_obj = self.pool.get('account.journal')
@@ -424,7 +425,7 @@ class account_bank_statement(osv.osv):
             context = {}
         default = default.copy()
         default['move_line_ids'] = []
-        return super(account_bank_statement, self).copy(cr, uid, id, default, context)
+        return super(account_bank_statement, self).copy(cr, uid, id, default, context=context)
 
 account_bank_statement()
 
@@ -496,8 +497,8 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'type': lambda *a: 'general',
+        'date': time.strftime('%Y-%m-%d'),
+        'type': 'general',
     }
 
 account_bank_statement_line()
