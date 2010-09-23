@@ -113,8 +113,6 @@ class Cursor(object):
             self.__logger.warn(query)
             self.__logger.warn("SQL queries cannot contain %d or %f anymore. "
                                "Use only %s")
-            if params:
-                query = query.replace('%d', '%s').replace('%f', '%s')
 
         if self.sql_log:
             now = mdt.now()
@@ -167,6 +165,7 @@ class Cursor(object):
                 sqllogitems = sqllogs[type].items()
                 sqllogitems.sort(key=lambda k: k[1][1])
                 self.__logger.log(logging.DEBUG_SQL, "SQL LOG %s:", type)
+                sqllogitems.sort(lambda x,y: cmp(x[1][0], y[1][0]))
                 for r in sqllogitems:
                     delay = timedelta(microseconds=r[1][1])
                     self.__logger.log(logging.DEBUG_SQL, "table: %s: %s/%s",

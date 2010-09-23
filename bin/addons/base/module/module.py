@@ -130,8 +130,8 @@ class module(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char("Name", size=128, readonly=True, required=True),
-        'category_id': fields.many2one('ir.module.category', 'Category', readonly=True),
+        'name': fields.char("Name", size=128, readonly=True, required=True, select=True),
+        'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
         'shortdesc': fields.char('Short Description', size=256, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
@@ -160,7 +160,7 @@ class module(osv.osv):
             ('to upgrade','To be upgraded'),
             ('to remove','To be removed'),
             ('to install','To be installed')
-        ], string='State', readonly=True),
+        ], string='State', readonly=True, select=True),
         'demo': fields.boolean('Demo data'),
         'license': fields.selection([
                 ('GPL-2', 'GPL Version 2'),
@@ -510,7 +510,7 @@ class web_module_dependency(osv.osv):
 
     
     _columns = {
-        'name': fields.char('Name',  size=128),
+        'name': fields.char('Name',  size=128, select=True),
         'module_id': fields.many2one('ir.module.module', 'Module', select=True, ondelete='cascade'),
         'web_module_id': fields.many2one('ir.module.web', 'Web Module', select=True, ondelete='cascade'),
         'state': fields.function(_state, method=True, type='selection', selection=[
@@ -521,7 +521,7 @@ class web_module_dependency(osv.osv):
             ('to remove','To be removed'),
             ('to install','To be installed'),
             ('unknown', 'Unknown'),
-            ], string='State', readonly=True),
+            ], string='State', readonly=True, select=True),
     }
 
 web_module_dependency()
@@ -542,7 +542,7 @@ class module_dependency(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Name',  size=128),
+        'name': fields.char('Name',  size=128, select=True),
         'module_id': fields.many2one('ir.module.module', 'Module', select=True, ondelete='cascade'),
         'state': fields.function(_state, method=True, type='selection', selection=[
             ('uninstallable','Uninstallable'),
@@ -552,7 +552,7 @@ class module_dependency(osv.osv):
             ('to remove','To be removed'),
             ('to install','To be installed'),
             ('unknown', 'Unknown'),
-            ], string='State', readonly=True),
+            ], string='State', readonly=True, select=True),
     }
 module_dependency()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

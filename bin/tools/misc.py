@@ -62,9 +62,7 @@ _logger = logging.getLogger('tools')
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
-    for line in file_open(f).read().split(';'):
-        if (len(line)>0) and (not line.isspace()):
-            cr.execute(line)
+    cr.execute(file_open(f).read())
     cr.commit()
 
     for i in addons.get_modules():
