@@ -31,7 +31,6 @@ class ir_property(osv.osv):
 
     def _models_field_get(self, cr, uid, field_key, field_value, context=None):
         get = attrgetter(field_key, field_value)
-
         obj = self.pool.get('ir.model.fields')
         ids = obj.search(cr, uid, [('view_load','=',1)], context=context)
         res = set()
@@ -40,7 +39,7 @@ class ir_property(osv.osv):
         return res
 
     def _models_get(self, cr, uid, context=None):
-        return self._models_field_get(cr, uid, 'model', 'name', context)
+        return self._models_field_get(cr, uid, 'model', 'model_id.name', context)
 
     def _models_get2(self, cr, uid, context=None):
         return self._models_field_get(cr, uid, 'relation', 'relation', context)
@@ -50,7 +49,7 @@ class ir_property(osv.osv):
         'name': fields.char('Name', size=128, select=1),
 
         'res_id': fields.reference('Resource', selection=_models_get, size=128,
-                                   help="If not set, act as default property", select=1),
+                                   help="If not set, acts as a default value for new resources", select=1),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'fields_id': fields.many2one('ir.model.fields', 'Field', ondelete='cascade', required=True, select=1),
 
