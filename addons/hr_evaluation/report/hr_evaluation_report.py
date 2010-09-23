@@ -30,8 +30,8 @@ class hr_evaluation_report(osv.osv):
     _columns = {
         'create_date': fields.date('Create Date', readonly=True),
         'delay_date':fields.float('Delay to Start', digits=(16,2),readonly=True),
-        'overpass_delay':fields.float('OverpassedDeadline', digits=(16,2),readonly=True),
-        'progress_bar' : fields.float("Progress"),        
+        'overpass_delay':fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
+        'progress_bar' : fields.float("Progress"),
         'day': fields.char('Day', size=128, readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
         'request_id': fields.many2one('survey.request', 'Request_id', readonly=True),
@@ -78,8 +78,8 @@ class hr_evaluation_report(osv.osv):
                      count(l.*) as nbr,
                      s.state,
                      s.progress as progress_bar,
-                     avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(24)/(-3600) as  delay_date,
-                     avg(extract('epoch' from age(s.date,CURRENT_DATE)))/(24)/(-3600) as overpass_delay                     
+                     avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(3600*24) as  delay_date,
+                     avg(extract('epoch' from age(s.date,CURRENT_DATE)))/(3600*24) as overpass_delay
                      from
                  hr_evaluation_interview l
                 LEFT JOIN
