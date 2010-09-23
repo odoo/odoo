@@ -67,13 +67,13 @@ class account_installer(osv.osv_memory):
         'company_id': fields.many2one('res.company', 'Company'),
     }
 
-    def _default_company(self, cr, uid, context={}):
+    def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
         return False
 
-    def _get_default_charts(self, cr, uid, context={}):
+    def _get_default_charts(self, cr, uid, context=None):
         module_name = False
         company_id = self._default_company(cr, uid, context=context)
         company = self.pool.get('res.company').browse(cr, uid, company_id)
@@ -91,18 +91,18 @@ class account_installer(osv.osv_memory):
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
-        'period':lambda *a:'month',
-        'sale_tax':lambda *a:0.0,
-        'purchase_tax':lambda *a:0.0,
+        'period': lambda *a:'month',
+        'sale_tax': lambda *a:0.0,
+        'purchase_tax': lambda *a:0.0,
         'company_id': _default_company,
-        'bank_accounts_id':_get_default_accounts,
+        'bank_accounts_id': _get_default_accounts,
         'charts': _get_default_charts
     }
 
     def on_change_tax(self, cr, uid, id, tax):
         return {'value':{'purchase_tax':tax}}
 
-    def on_change_start_date(self, cr, uid, id, start_date):
+    def on_change_start_date(self, cr, uid, id, start_date=False):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
@@ -720,11 +720,12 @@ class account_installer_modules(osv.osv_memory):
 #        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
 #            help="Extension Account Voucher module includes allows to link payment / receipt "
 #                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
-                 }
+    }
 
     _defaults = {
         'account_voucher': True,
-        }
+    }
+
 account_installer_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
