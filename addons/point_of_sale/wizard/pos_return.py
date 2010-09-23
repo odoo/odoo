@@ -296,7 +296,6 @@ class add_product(osv.osv_memory):
                 picking_obj.force_assign(cr, uid, [new_picking], context)
                 order_obj.write(cr,uid,active_id,{'picking_id':new_picking})
 
-
         return {
             'name': _('Add Product'),
             'view_type': 'form',
@@ -326,6 +325,9 @@ class add_product(osv.osv_memory):
         return_id=return_boj.search(cr,uid,[])
         data=return_boj.read(cr,uid,return_id,[])[0]
         wf_service = netsvc.LocalService("workflow")
+        self_data = self.read(cr, uid, ids)[0]
+        order_obj.add_product(cr, uid, active_ids[0], self_data['product_id'], self_data['quantity'], context=context)
+        
         for order_id in order_obj.browse(cr, uid, active_ids, context=context):
             prop_ids =property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
             val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
@@ -345,10 +347,18 @@ class add_product(osv.osv_memory):
                         })
             for line in order_id.lines:
                 key=('return%s') %line.id
-                if line.id  and  data.has_key(key):
-                    new_move=stock_move_obj.create(cr, uid, {
-                        'product_qty': data['return%s' %line.id ],
-                        'product_uos_qty': uom_obj._compute_qty(cr, uid, data['return%s' %line.id], line.product_id.uom_id.id),
+                if line.id: 
+                    if data.has_key(key):
+                        qty = data['return%s' %line.id]
+                        lines_obj.write(cr,uid,[line.id], {
+                                'qty_rfd':(line.qty or 0.0) + data['return%s' %line.id],
+                                'qty':line.qty-(data['return%s' %line.id] or 0.0)
+                        })
+                    else:
+                        qty = line.qty
+                    stock_move_obj.create(cr, uid, {
+                        'product_qty': qty,
+                        'product_uos_qty': uom_obj._compute_qty(cr, uid, qty, line.product_id.uom_id.id),
                         'picking_id':new_picking,
                         'product_uom':line.product_id.uom_id.id,
                         'location_id':location_id,
@@ -358,10 +368,6 @@ class add_product(osv.osv_memory):
                         'date':date_cur,
                         'date_planned':date_cur
                     })
-                    lines_obj.write(cr,uid,[line.id], {
-                                'qty_rfd':(line.qty or 0.0) + data['return%s' %line.id],
-                                'qty':line.qty-(data['return%s' %line.id] or 0.0)
-                            })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)
         obj=order_obj.browse(cr,uid, active_ids[0])

@@ -29,7 +29,7 @@ class add_product(osv.osv_memory):
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'quantity': fields.float('Quantity ', required=True),
+        'quantity': fields.float('Quantity', required=True),
     }
     _defaults = {
         'quantity': lambda *a: 1,
