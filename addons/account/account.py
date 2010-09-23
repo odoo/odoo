@@ -156,12 +156,13 @@ class account_account_type(osv.osv):
             ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
-        ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
+        ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)", required=True),
         'note': fields.text('Description'),
     }
     _defaults = {
         'close_method': 'none',
         'sign': 1,
+        'report_type': 'none',
     }
     _order = "code"
 
