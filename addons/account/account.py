@@ -2754,8 +2754,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 vals_journal['view_id'] = view_id_cash
             vals_journal['default_credit_account_id'] = acc_cash_id
             vals_journal['default_debit_account_id'] = acc_cash_id
-            obj_journal.create(cr,uid,vals_journal)
-
+            obj_journal.create(cr, uid, vals_journal)
             current_num += 1
 
         #create the properties
