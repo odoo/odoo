@@ -63,6 +63,8 @@ class account_voucher(osv.osv):
             return context.get('search_default_journal_id')
         
         ttype = context.get('type', 'bank')
+        if ttype in ('payment', 'receipt'):
+            ttype = 'bank'
         res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
         return res and res[0] or False
 
