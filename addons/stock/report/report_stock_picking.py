@@ -20,6 +20,7 @@
 ##############################################################################
 from osv import fields,osv
 import tools
+import decimal_precision as dp
 
 class report_stock_picking(osv.osv):
     _name = "report.stock.picking"
@@ -37,8 +38,8 @@ class report_stock_picking(osv.osv):
         'product_uos_qty': fields.float('# of Products', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'date': fields.date('Date', readonly=True),
-        'avg_days_late': fields.float('Avg Due Days', digits=(16,2), readonly=True, group_operator="avg"),
-        'avg_days_to_deliver': fields.float('Avg Days to Deliver', digits=(16,2), readonly=True, group_operator="avg",
+        'avg_days_late': fields.float('Avg Due Days',  digits_compute=dp.get_precision('Product UoM'), readonly=True, group_operator="avg"),
+        'avg_days_to_deliver': fields.float('Avg Days to Deliver', digits_compute=dp.get_precision('Product UoM'), readonly=True, group_operator="avg",
                                        help="Number of  Avg Days to deliver"),
         'state': fields.selection([('draft', 'Draft'),('auto', 'Waiting'),('confirmed', 'Confirmed'),('assigned', 'Available'),('done', 'Done'),('cancel', 'Cancelled')], 'State'),
         'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True),

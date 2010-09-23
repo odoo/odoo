@@ -21,6 +21,7 @@
 
 import tools
 from osv import fields,osv
+import decimal_precision as dp
 
 
 class report_stock_move(osv.osv):
@@ -45,9 +46,9 @@ class report_stock_move(osv.osv):
         'product_qty_in':fields.integer('In Qty',readonly=True),
         'product_qty_out':fields.integer('Out Qty',readonly=True),
         'value' : fields.float('Total Value', required=True),
-        'day_diff2':fields.float('Delay (Days)',readonly=True, digits=(16,2), group_operator="avg"),
-        'day_diff1':fields.float('Planned (Days)',readonly=True, digits=(16,2), group_operator="avg"),
-        'day_diff':fields.float('Real (Days)',readonly=True, digits=(16,2), group_operator="avg"),
+        'day_diff2':fields.float('Delay (Days)',readonly=True,  digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
+        'day_diff1':fields.float('Planned (Days)',readonly=True, digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
+        'day_diff':fields.float('Real (Days)',readonly=True,  digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
     }
 
     def init(self, cr):
@@ -135,8 +136,8 @@ class report_stock_inventory(osv.osv):
         'location_id': fields.many2one('stock.location', 'Location', readonly=True),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'product_qty':fields.float('Quantity', digits=(16,2), readonly=True),
-        'value' : fields.float('Total Value', digits=(16,2), required=True),
+        'product_qty':fields.float('Quantity',  digits_compute=dp.get_precision('Product UoM'), readonly=True),
+        'value' : fields.float('Total Value',  digits_compute=dp.get_precision('Account'), required=True),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
               help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
               \nThe state is \'Waiting\' if the move is waiting for another one.'),
