@@ -170,12 +170,12 @@
                         name="real"
                         icon="terp-dialog-close"
                         domain="[('state','=','done')]"
-                        help="Analysis on real stock (including only moves already processed)"/>
+                        help="Analysis of current inventory (only moves that have already been processed)"/>
 
                     <filter string="Future"
                         icon="terp-camera_test"
                         domain="[('state','in',('assigned','done','waiting','confirmed'))]"
-                        help = "Analysis including future operations (similar to virtual stock)"/>
+                        help = "Analysis including future moves (similar to virtual stock)"/>
 
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
