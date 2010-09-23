@@ -22,11 +22,7 @@
 import netsvc
 from osv import osv,fields
 from tools.translate import _
-from mx import DateTime
 import time
-import pos_box_entries
-import pos_add_product
-import pos_payment
 
 class pos_return(osv.osv_memory):
     _name = 'pos.return'
@@ -169,9 +165,7 @@ class pos_return(osv.osv_memory):
         wf_service = netsvc.LocalService("workflow")
         #Todo :Need to clean the code
         if active_id:
-            picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[active_id]), ('state', '=', 'done')])
             data = self.read(cr, uid, ids)[0]
-            clone_list = []
             date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
@@ -197,7 +191,7 @@ class pos_return(osv.osv_memory):
                             qty = data['return%s' %line.id]
                         except :
                             qty = line.qty
-                        new_move = stock_move_obj.create(cr, uid, {
+                        stock_move_obj.create(cr, uid, {
                             'product_qty': qty ,
                             'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
                             'picking_id': new_picking,
@@ -249,16 +243,11 @@ class add_product(osv.osv_memory):
             lines_obj = self.pool.get('pos.order.line')
             picking_obj = self.pool.get('stock.picking')
             stock_move_obj = self.pool.get('stock.move')
-            move_obj = self.pool.get('stock.move')
             property_obj= self.pool.get("ir.property")
-            invoice_obj= self.pool.get('account.invoice')
-            picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[active_id]), ('state', '=', 'done')])
-            clone_list = []
             date_cur=time.strftime('%Y-%m-%d')
             uom_obj = self.pool.get('product.uom')
             prod_obj=self.pool.get('product.product')
             wf_service = netsvc.LocalService("workflow")
-            return_boj=self.pool.get('pos.return')
             order_obj.add_product(cr, uid, active_id, data['product_id'], data['quantity'], context=context)
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
@@ -279,7 +268,7 @@ class add_product(osv.osv_memory):
                                 'type':'out',
                                 'date':date_cur
                             })
-                new_move=stock_move_obj.create(cr, uid, {
+                stock_move_obj.create(cr, uid, {
                                 'product_qty': qty,
                                 'product_uos_qty': uom_obj._compute_qty(cr, uid, prod_id.uom_id.id, qty, prod_id.uom_id.id),
                                 'picking_id':new_picking,
@@ -314,11 +303,8 @@ class add_product(osv.osv_memory):
         lines_obj = self.pool.get('pos.order.line')
         picking_obj = self.pool.get('stock.picking')
         stock_move_obj = self.pool.get('stock.move')
-        move_obj = self.pool.get('stock.move')
         property_obj= self.pool.get("ir.property")
         invoice_obj=self.pool.get('account.invoice')
-        picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', active_ids), ('state', '=', 'done')])
-        clone_list = []
         date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
         uom_obj = self.pool.get('product.uom')
         return_boj=self.pool.get('pos.return')

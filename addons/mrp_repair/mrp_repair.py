@@ -19,12 +19,10 @@
 #
 ##############################################################################
 
-import time
 from osv import fields,osv
 import netsvc
 import mx.DateTime
-from mx.DateTime import RelativeDateTime, today, DateTime, localtime
-from tools import config
+from mx.DateTime import RelativeDateTime, today
 from tools.translate import _
 import decimal_precision as dp
 
@@ -286,7 +284,6 @@ class mrp_repair(osv.osv):
 
         if not lot:
             return data
-        lot_info = prodlot_obj.browse(cr, uid, lot)
         move_ids = move_obj.search(cr, uid, [('prodlot_id', '=', lot)])
 
         if not len(move_ids):
@@ -339,7 +336,6 @@ class mrp_repair(osv.osv):
         """ Cancels repair order.
         @return: True
         """
-        ok=True
         mrp_line_obj = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'})
@@ -520,7 +516,6 @@ class mrp_repair(osv.osv):
         repair_line_obj = self.pool.get('mrp.repair.line')
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
-        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for repair in self.browse(cr, uid, ids, context=context):
             for move in repair.operations:
                 move_id = move_obj.create(cr, uid, {

@@ -73,7 +73,6 @@ class add_product(osv.osv_memory):
 
         record_id = context and context.get('active_id', False)
         order_obj= self.pool.get('pos.order')
-        order_line_obj= self.pool.get('pos.order.line')
         obj=order_obj.browse(cr, uid, record_id)
         order_obj.write(cr, uid, [record_id], {'state':'done'})
         if obj.amount_total != obj.amount_paid:
