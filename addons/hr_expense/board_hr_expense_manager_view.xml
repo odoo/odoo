@@ -6,7 +6,7 @@
             <field name="name">All Employee Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','=','accepted')]</field>
+            <field name="domain">[('state','in',('confirm', 'accepted'))]</field>
             <field name="view_id" ref="hr_expense.view_editable_expenses_tree"/>
         </record>
         

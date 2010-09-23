@@ -13,7 +13,7 @@
         </record>
         
 		<record id="action_hr_holidays_remaining_leaves_empoloyee_all" model="ir.actions.act_window">
-	        <field name="name">Remaining Leaves by Employee</field>
+	        <field name="name">Remaining Leaves by User</field>
 	        <field name="type">ir.actions.act_window</field>
 	        <field name="res_model">hr.holidays.remaining.leaves.user</field>
 	        <field name="view_type">form</field>
@@ -40,7 +40,7 @@
 			<field name="inherit_id" ref="hr.board_hr_manager_form"/>           
             <field name="arch" type="xml">
 	      		<xpath expr="/form/hpaned/child2" position="inside">            
-				 <action colspan="4" height="220" name="%(action_hr_holidays_remaining_leaves_empoloyee_all)d" string="Reamining Leaves All Employee" />
+				 <action colspan="4" height="220" name="%(action_hr_holidays_remaining_leaves_empoloyee_all)d" string="Remaining Leave by Type and User" />
 				</xpath>  
             </field>
         </record>

@@ -2,12 +2,12 @@
 <openerp>
     <data>
         <record id="act_hr_evaluation_tree" model="ir.actions.act_window">
-            <field name="name">My Current Evaluations</field>
+            <field name="name">My Evaluation Remaining</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_evaluation.evaluation</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="domain">[('state','!=','done'),('create_uid','=',uid)]</field>
+            <field name="domain">[('state','in',('wait', 'progress')),('create_uid','=',uid)]</field>
             <field name="search_view_id" ref="hr_evaluation.view_hr_evaluation_tree"/>
         </record>
         
@@ -18,9 +18,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
       		<xpath expr="/form/hpaned/child1" position="inside"> 
-				<action colspan="4" height="220" name="%(act_hr_evaluation_tree)d" string="My Current Evaluations"  width="510"/>
+				<action colspan="4" height="220" name="%(act_hr_evaluation_tree)d" string="My Evaluation Remaining"  width="510"/>
 			</xpath>
             </field>
         </record>
+        <menuitem
+            action="hr.open_board_hr"
+            icon="terp-graph"
+            id="base.menu_hr_project"
+            parent="base.menu_hr_dasboard"
+            sequence="4"/>
     </data>
 </openerp>

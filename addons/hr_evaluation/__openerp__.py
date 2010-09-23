@@ -43,7 +43,8 @@
         "security/hr_evaluation_security.xml",
         "wizard/hr_evaluation_mail_view.xml",
         "hr_evaluation_view.xml",
-        "report/hr_evaluation_report_view.xml"
+        "report/hr_evaluation_report_view.xml",
+        "board_hr_evaluation_view.xml"
         ],
     "test": ["test/test_hr_evaluation.yml"],
     "active": False,
