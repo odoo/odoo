@@ -22,13 +22,6 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Extended options..." col='8' colspan='4'>
-                        <field name="reference"/>
-                        <field name="name"/>
-                        <field name="narration"/>
-                        <field name="amount"/>
-                   </group>
                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="10">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -36,6 +29,13 @@
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
+                    <newline/>
+                    <group expand="0" string="Extended options..." col='8' colspan='4'>
+                        <field name="reference"/>
+                        <field name="name"/>
+                        <field name="narration"/>
+                        <field name="amount"/>
+                   </group>
                 </search>
             </field>
         </record>
@@ -61,13 +61,6 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Extended options..." col='8' colspan='4'>
-                        <field name="reference"/>
-                        <field name="name"/>
-                        <field name="narration"/>
-                        <field name="amount"/>
-                   </group>
                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="10">
                         <filter string="Customer" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -75,6 +68,13 @@
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
+                    <newline/>
+                    <group expand="0" string="Extended options..." col='8' colspan='4'>
+                        <field name="reference"/>
+                        <field name="name"/>
+                        <field name="narration"/>
+                        <field name="amount"/>
+                   </group>
                 </search>
             </field>
         </record>
@@ -122,7 +122,7 @@
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
-                                    <field name="account_id" 
+                                    <field name="account_id"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
                                           domain="[('type','=','liquidity')]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
@@ -159,7 +159,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Sales Voucher -->
         <record id="action_sale_receipt" model="ir.actions.act_window">
             <field name="name">Sales Receipt</field>
@@ -284,8 +284,8 @@
             <field name="act_window_id" ref="action_purchase_receipt"/>
         </record>
 
-        <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL" 
-        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>        
-        
+        <menuitem id="menu_action_purchase_receipt" icon="STOCK_JUSTIFY_FILL"
+        action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
+
     </data>
 </openerp>
