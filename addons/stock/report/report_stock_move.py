@@ -43,6 +43,7 @@ class report_stock_move(osv.osv):
         'location_id': fields.many2one('stock.location', 'Source Location', readonly=True, select=True, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', readonly=True, select=True, help="Location where the system will stock the finished products."),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True),
+        'product_qty':fields.integer('Quantity',readonly=True),        
         'product_qty_in':fields.integer('In Qty',readonly=True),
         'product_qty_out':fields.integer('Out Qty',readonly=True),
         'value' : fields.float('Total Value', required=True),
@@ -69,6 +70,7 @@ class report_stock_move(osv.osv):
                         al.picking_id as picking_id,
                         al.company_id as company_id,
                         al.location_dest_id as location_dest_id,
+                        al.product_qty,
                         al.out_qty as product_qty_out,
                         al.in_qty as product_qty_in,
                         al.address_id as partner_id,
@@ -92,6 +94,7 @@ class report_stock_move(osv.osv):
                         avg(date(sm.date)-date(sm.date_expected)) as curr_day_diff2,
                         sm.location_id as location_id,
                         sm.location_dest_id as location_dest_id,
+                        sum(sm.product_qty) as product_qty ,
                         pt.standard_price * sum(sm.product_qty) as value,
                         sm.address_id as address_id,
                         sm.product_id as product_id,
@@ -110,7 +113,7 @@ class report_stock_move(osv.osv):
                     group by
                         sm.id,sp.type, sm.date,sm.address_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
-                        sm.product_id,pt.standard_price, sm.picking_id,
+                        sm.product_id,pt.standard_price, sm.picking_id, sm.product_qty,
                         sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id)
                     as al
 
@@ -118,7 +121,7 @@ class report_stock_move(osv.osv):
                         al.out_qty,al.in_qty,al.curr_year,al.curr_month,
                         al.curr_day,al.curr_day_diff,al.curr_day_diff1,al.curr_day_diff2,al.dp,al.location_id,al.location_dest_id,
                         al.address_id,al.product_id,al.state,al.product_uom,
-                        al.picking_id,al.company_id,al.type
+                        al.picking_id,al.company_id,al.type,al.product_qty
                )
         """)
 
