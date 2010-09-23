@@ -45,6 +45,7 @@ class mrp_repair(osv.osv):
         """
         res = {}
         cur_obj = self.pool.get('res.currency')
+
         for repair in self.browse(cr, uid, ids):
             res[repair.id] = 0.0
             for line in repair.operations:
@@ -62,6 +63,7 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
+        #return {}.fromkeys(ids, 0)
         cur_obj = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for repair in self.browse(cr, uid, ids):
@@ -93,6 +95,14 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
+
+    def _get_lines(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        for line in self.pool.get('mrp.repair.line').browse(cr, uid, ids, context=context):
+            result[line.repair_id.id] = True
+        return result.keys()
 
     _columns = {
         'name': fields.char('Repair Reference',size=24, required=True),
@@ -137,9 +147,21 @@ class mrp_repair(osv.osv):
         'deliver_bool': fields.boolean('Deliver', help="Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view."),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'repaired': fields.boolean('Repaired', readonly=True),
-        'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
-        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
-        'amount_total': fields.function(_amount_total, method=True, string='Total'),
+        'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount',
+            store={
+                'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
+                'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+            }),
+        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes',
+            store={
+                'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
+                'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+            }),
+        'amount_total': fields.function(_amount_total, method=True, string='Total',
+            store={
+                'mrp.repair': (lambda self, cr, uid, ids, c={}: ids, ['operations'], 10),
+                'mrp.repair.line': (_get_lines, ['price_unit', 'price_subtotal', 'product_id', 'tax_id', 'product_uom_qty', 'product_uom'], 10),
+            }),
     }
 
     _defaults = {
@@ -162,7 +184,6 @@ class mrp_repair(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
         })
         return super(mrp_repair, self).copy(cr, uid, id, default, context)
-
 
     def onchange_product_id(self, cr, uid, ids, product_id=None):
         """ On change of product sets some values.

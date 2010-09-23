@@ -164,7 +164,7 @@ class wiki_wiki2(osv.osv):
             @param uid: the current user’s ID for security checks,
             @param id: Give wiki page's ID """
 
-        return super(Wiki, self).copy_data(cr, uid, id, {'wiki_id': False}, context)
+        return super(wiki_wiki2, self).copy_data(cr, uid, id, {'wiki_id': False}, context)
 
     def create_history(self, cr, uid, ids, vals, context=None):
         history_id = False

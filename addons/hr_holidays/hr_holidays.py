@@ -23,10 +23,13 @@
 
 import time
 import datetime
+from itertools import groupby
+from operator import itemgetter
 
 import netsvc
 from osv import fields, osv
 from tools.translate import _
+
 
 class hr_holidays_status(osv.osv):
     _name = "hr.holidays.status"
@@ -35,39 +38,51 @@ class hr_holidays_status(osv.osv):
     def get_days_cat(self, cr, uid, ids, category_id, return_false, context=None):
         if context is None:
             context = {}
+
+        cr.execute("""SELECT id, type, number_of_days, holiday_status_id FROM hr_holidays WHERE category_id = %s AND state='validate' AND holiday_status_id in %s""",
+            [category_id, tuple(ids)])
+        result = sorted(cr.dictfetchall(), key=lambda x: x['holiday_status_id'])
+
+        grouped_lines = dict((k, [v for v in itr]) for k, itr in groupby(result, itemgetter('holiday_status_id')))
+
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = {}
             max_leaves = leaves_taken = 0
             if not return_false:
-                cr.execute("""SELECT type, sum(number_of_days) FROM hr_holidays WHERE category_id = %s AND state='validate' AND holiday_status_id = %s GROUP BY type""", (str(category_id), str(record.id)))
-                for line in cr.fetchall():
-                    if line[0] =='remove':
-                        leaves_taken = -line[1]
-                    if line[0] =='add':
-                        max_leaves = line[1]
+                if record.id in grouped_lines:
+                    leaves_taken = -sum([item['number_of_days'] for item in grouped_lines[record.id] if item['type'] == 'remove'])
+                    max_leaves = sum([item['number_of_days'] for item in grouped_lines[record.id] if item['type'] == 'add'])
+
             res[record.id]['max_leaves'] = max_leaves
             res[record.id]['leaves_taken'] = leaves_taken
             res[record.id]['remaining_leaves'] = max_leaves - leaves_taken
+
         return res
 
     def get_days(self, cr, uid, ids, employee_id, return_false, context=None):
         if context is None:
             context = {}
+
+        cr.execute("""SELECT id, type, number_of_days, holiday_status_id FROM hr_holidays WHERE employee_id = %s AND state='validate' AND holiday_status_id in %s""",
+            [employee_id, tuple(ids)])
+        result = sorted(cr.dictfetchall(), key=lambda x: x['holiday_status_id'])
+
+        grouped_lines = dict((k, [v for v in itr]) for k, itr in groupby(result, itemgetter('holiday_status_id')))
+
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = {}
             max_leaves = leaves_taken = 0
             if not return_false:
-                cr.execute("""SELECT type, sum(number_of_days) FROM hr_holidays WHERE employee_id = %s AND state='validate' AND holiday_status_id = %s GROUP BY type""", (str(employee_id), str(record.id)))
-                for line in cr.fetchall():
-                    if line[0] =='remove':
-                        leaves_taken = -line[1]
-                    if line[0] =='add':
-                        max_leaves = line[1]
+                if record.id in grouped_lines:
+                    leaves_taken = -sum([item['number_of_days'] for item in grouped_lines[record.id] if item['type'] == 'remove'])
+                    max_leaves = sum([item['number_of_days'] for item in grouped_lines[record.id] if item['type'] == 'add'])
+
             res[record.id]['max_leaves'] = max_leaves
             res[record.id]['leaves_taken'] = leaves_taken
             res[record.id]['remaining_leaves'] = max_leaves - leaves_taken
+
         return res
 
     def _user_left_days(self, cr, uid, ids, name, args, context=None):

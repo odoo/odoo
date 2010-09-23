@@ -377,23 +377,23 @@ class product_product(osv.osv):
             res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
         return res
 
-    def _get_partner_code_name(self, cr, uid, ids, product_id, partner_id, context={}):
-        product = self.browse(cr, uid, [product_id], context)[0]
+    def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context={}):
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
                 return {'code': supinfo.product_code, 'name': supinfo.product_name, 'variants': ''}
-        return {'code' : product.default_code, 'name' : product.name, 'variants': product.variants}
+        res = {'code': product.default_code, 'name': product.name, 'variants': product.variants}
+        return res
 
     def _product_code(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for p in self.browse(cr, uid, ids, context):
-            res[p.id] = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)['code']
+            res[p.id] = self._get_partner_code_name(cr, uid, [], p, context.get('partner_id', None), context)['code']
         return res
 
     def _product_partner_ref(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for p in self.browse(cr, uid, ids, context):
-            data = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)
+            data = self._get_partner_code_name(cr, uid, [], p, context.get('partner_id', None), context)
             if not data['variants']:
                 data['variants'] = p.variants
             if not data['code']:

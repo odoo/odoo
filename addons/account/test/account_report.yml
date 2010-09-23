@@ -143,7 +143,6 @@
     (data, format) = netsvc.LocalService('report.account.account.balance').create(cr, uid, [ref('account.bal'),ref('account.gpf')], data_dict, {'periods': []})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-account_balance-normal.'+format), 'wb+').write(data)
-    print "Account Balance Report in Normal mode - From Menu"
     
     data_dict.update({'model': 'ir.ui.menu'})
     data_dict['form'].update({'active_ids':[ref('account.bal'),ref('account.gpf')]})
@@ -174,7 +173,6 @@
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-central_journal.'+format), 'wb+').write(data)
        
-    print "Central Journal Report - From Menu"
     data_dict.update({'model': 'ir.ui.menu'})
     data_dict['form'].update({'active_ids':journal_period_ids})
     
@@ -226,7 +224,6 @@
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger.'+format), 'wb+').write(data)
 
-    print "GL report from menu"
     data_dict.update({'model': 'ir.ui.menu'})
     data_dict['form'].update({'active_ids': acc_ids})
     (data, format) = netsvc.LocalService('report.account.general.ledger').create(cr, uid, [], data_dict, {})
@@ -255,7 +252,6 @@
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger-landscape.'+format), 'wb+').write(data)
 
-    print "GL report landscape mode from menu"
     data_dict.update({'model': 'ir.ui.menu'})
     data_dict['form'].update({'active_ids': acc_ids})
     (data, format) = netsvc.LocalService('report.account.general.ledger_landscape').create(cr, uid, [], data_dict, {})
@@ -285,7 +281,6 @@
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'account-print_journal.'+format), 'wb+').write(data)
        
-    print "Journal Report - From Menu"
     data_dict.update({'model': 'ir.ui.menu'})
     data_dict['form'].update({'active_ids':journal_period_ids})
     
