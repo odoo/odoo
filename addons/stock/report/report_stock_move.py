@@ -133,6 +133,7 @@ class report_stock_inventory(osv.osv):
         'date': fields.datetime('Date', readonly=True),
         'partner_id':fields.many2one('res.partner.address', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'product_uom':fields.many2one('product.uom', 'Product UOM', readonly=True),
         'location_id': fields.many2one('stock.location', 'Location', readonly=True),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -150,7 +151,7 @@ create or replace view report_stock_inventory as (
     (select
         min(m.id) as id, m.date as date,
         m.address_id as partner_id, m.location_id as location_id,
-        m.product_id as product_id, l.usage as location_type,
+        m.product_id as product_id,  m.product_uom as product_uom,l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         sum(-m.product_qty*u.factor)::decimal as product_qty,
@@ -164,12 +165,12 @@ create or replace view report_stock_inventory as (
                 left join stock_location l on (m.location_id=l.id)
     group by
         m.id, m.product_id, m.address_id, m.location_id, m.prodlot_id,
-        m.date, m.state, l.usage, m.company_id
+        m.date, m.state, l.usage, m.company_id,m.product_uom
 ) union all (
     select
         -m.id as id, m.date as date,
         m.address_id as partner_id, m.location_dest_id as location_id,
-        m.product_id as product_id, l.usage as location_type,
+        m.product_id as product_id, m.product_uom as product_uom, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         sum(m.product_qty*u.factor)::decimal as product_qty,
@@ -182,7 +183,7 @@ create or replace view report_stock_inventory as (
             left join product_uom u on (m.product_uom=u.id)
                 left join stock_location l on (m.location_dest_id=l.id)
     group by
-        m.id, m.product_id, m.address_id, m.location_id, m.location_dest_id,
+        m.id, m.product_id, m.product_uom , m.address_id, m.location_id, m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, m.company_id
     )
 );

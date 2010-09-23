@@ -138,6 +138,7 @@
                 <field name="location_type" invisible="1"/>
                 <field name="location_id" invisible="1"/>
                 <field name="partner_id" invisible="1" context="{'contact_display':'partner'}"/>
+                <field name="product_uom" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="prodlot_id" invisible="1"/>
                 <field name="state" invisible="1"/>
@@ -168,12 +169,12 @@
                 <group col="16">
                     <filter string="Real"
                         name="real"
-                        icon="terp-dialog-close"
+                        icon="terp-check"
                         domain="[('state','=','done')]"
                         help="Analysis of current inventory (only moves that have already been processed)"/>
 
                     <filter string="Future"
-                        icon="terp-camera_test"
+                        icon="terp-stock"
                         domain="[('state','in',('assigned','done','waiting','confirmed'))]"
                         help = "Analysis including future moves (similar to virtual stock)"/>
 
@@ -181,20 +182,21 @@
                     <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
                     <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
                     <separator orientation="vertical"/>
-                    <field name="date"/>
                     <field name="product_id"/>
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
 
                 <newline/>
-                <group expand="1" string="Group By..." >
+                <group expand="0" string="Group By..." >
                     <filter string="Partner" name="group_partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter name="group_product_uom" string="Product UOM" icon="terp-accessories-archiver" context="{'group_by':'product_uom'}"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                     <filter name="group_lot" string="Lot" context="{'group_by':'prodlot_id'}"/>
                     <separator orientation="vertical"/>
                     <filter name="group_company" string="Company" context="{'group_by':'company_id'}"/>
                     <filter name="group_location" string="Location" context="{'group_by':'location_id'}"/>
-                    <filter name="group_lot" string="Lot" context="{'group_by':'prodlot_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
@@ -202,9 +204,11 @@
                 <newline/>
                 <group expand="0" string="Extended Filters..."  groups="base.group_extended">
                     <field name="partner_id" context="{'contact_display':'partner'}"/>
+                    <field name="product_uom" />
                     <field name="prodlot_id"/>
                     <field name="state"/>
                     <field name="location_type"/>
+                    <field name="date"/>
                 </group>
             </search>
         </field>
