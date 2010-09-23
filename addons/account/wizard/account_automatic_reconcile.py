@@ -149,17 +149,16 @@ class account_automatic_reconcile(osv.osv_memory):
             raise osv.except_osv(_('UserError'), _('You must select accounts to reconcile'))
         for account_id in form['account_ids']:
             if not allow_write_off:
-                query = "SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
-                AND state <> 'draft' GROUP BY partner_id \
-                HAVING ABS(SUM(debit-credit)) = %s AND count(*)>0"%(account_id, 0.0)
-#                HAVING ABS(SUM(debit-credit)) <> %s AND count(*)>0"%(account_id, 0.0)
-#                HAVING count(*)>0"%(account_id,)
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL 
+                AND state <> 'draft' GROUP BY partner_id 
+                HAVING ABS(SUM(debit-credit)) = %s AND count(*)>0"""
             else:
-                query = "SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL \
-                AND state <> 'draft' GROUP BY partner_id \
-                HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0"%(account_id, max_amount or 0.0)
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL 
+                AND state <> 'draft' GROUP BY partner_id 
+                HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0"""
             # reconcile automatically all transactions from partners whose balance is 0
-            cr.execute(query)
+            params = (account_id, max_amount)
+            cr.execute(query, params)
             partner_ids = [id for (id,) in cr.fetchall()]
             for partner_id in partner_ids:
                 cr.execute(
