@@ -88,7 +88,7 @@ class report_custom(osv.osv):
                         c_f[i] = []
                         tmp = report.fields_child0[i]
                         for j in range(3):
-                            c_f[i].append((not isinstance(eval('tmp.field_child'+str(j)), browse_null) and eval('tmp.field_child'+str(j)+'.ttype')) or None)
+                            c_f[i].append((not isinstance(eval('tmp.field_child'+str(j),{},{'tmp':tmp}), browse_null) and eval('tmp.field_child'+str(j)+'.ttype',{},{'tmp':tmp})) or None)
                     if not reduce(lambda x,y : x or y, map(lambda x: x in ['integer', 'float'], c_f[1])):
                         raise osv.except_osv(_('Invalid operation'), _('Second field should be figures'))
                     
@@ -101,7 +101,7 @@ class report_custom(osv.osv):
                         c_f[i] = []
                         tmp = report.fields_child0[i]
                         for j in range(3):
-                            c_f[i].append((not isinstance(eval('tmp.field_child'+str(j)), browse_null) and eval('tmp.field_child'+str(j)+'.ttype')) or None)
+                            c_f[i].append((not isinstance(eval('tmp.field_child'+str(j),{},{'tmp':tmp}), browse_null) and eval('tmp.field_child'+str(j)+'.ttype',{},{'tmp':tmp})) or None)
 
                         if i == 0:
                             pass
