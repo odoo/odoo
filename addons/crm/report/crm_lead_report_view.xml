@@ -73,13 +73,13 @@
                     <group col="20" colspan="8">
                         <filter string="  Year  " icon="terp-go-year"
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="Leads/Opportunities created in last 365 days"/>
+                            help="Leads/Opportunities created in current year"/>
                         <filter string="   Month   " icon="terp-go-month" name="this_month"
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
-                            help="Leads/Opportunities created in last 30 days"/>
-                        <filter icon="terp-go-week" string="    Month-1    " separator="1"
+                            help="Leads/Opportunities created in current month"/>
+                        <filter icon="terp-go-month" string="    Month-1    " separator="1"
                             domain="[('create_date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Leads/Opportunities created in the previous month"/>
+                            help="Leads/Opportunities created in last month"/>
                             
                         <separator orientation="vertical" />
                         <filter icon="terp-check"
@@ -101,7 +101,7 @@
                                 domain="[('section_id.user_id','=',uid)]"
                                 help="My team" />
                         </field>
-                        <field name="user_id">
+                        <field name="user_id" string="Salesman">
                             <filter icon="terp-personal+" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
                         </field>
                    </group>
