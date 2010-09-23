@@ -20,6 +20,8 @@
 ##############################################################################
 
 import time
+from lxml import etree
+
 import netsvc
 from osv import fields
 from osv import osv
@@ -92,17 +94,26 @@ class account_voucher(osv.osv):
             if journal.currency:
                 currency_id = journal.currency.id
         return False
-    
+
     def _get_partner(self, cr, uid, context={}):
         return context.get('partner_id', False)
-    
+
     def _get_reference(self, cr, uid, context={}):
         return context.get('reference', False)
-    
+
     def _get_narration(self, cr, uid, context={}):
         return context.get('narration', False)
-       
- 
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        res = super(account_voucher,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//field[@name='partner_id']")
+        if context.get('type', 'sale') in ('purchase', 'payment'):
+            for node in nodes:
+                node.set('domain', "[('supplier', '=', True)]")
+            res['arch'] = etree.tostring(doc)
+        return res
+
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "date desc, id desc"
