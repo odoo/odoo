@@ -1701,6 +1701,11 @@ class account_tax(osv.osv):
         ids = self.search(cr, user, args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('type', False) and vals['type'] in ('none', 'code'):
+            vals.update({'amount': 0.0})
+        return super(account_tax, self).write(cr, uid, ids, vals, context=context)
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         journal_pool = self.pool.get('account.journal')
 
@@ -1996,26 +2001,28 @@ class account_model(osv.osv):
     _columns = {
         'name': fields.char('Model Name', size=64, required=True, help="This is a model for recurring accounting entries"),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
         'legend' :fields.text('Legend', readonly=True, size=100),
     }
 
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
-    def generate(self, cr, uid, ids, datas={}, context={}):
+    def generate(self, cr, uid, ids, datas={}, context=None):
         move_ids = []
         entry = {}
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         pt_obj = self.pool.get('account.payment.term')
 
-        if datas.get('date', False):
-            context.update({'date':datas['date']})
-        period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
+        if context is None:
+            context = {}
 
+        if datas.get('date', False):
+            context.update({'date': datas['date']})
+
+        period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date', False))
         if not period_id:
             raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
         period_id = period_id[0]
@@ -2069,7 +2076,9 @@ class account_model(osv.osv):
                 c = context.copy()
                 c.update({'journal_id': model.journal_id.id,'period_id': period_id})
                 account_move_line_obj.create(cr, uid, val, context=c)
+
         return move_ids
+
 account_model()
 
 class account_model_line(osv.osv):

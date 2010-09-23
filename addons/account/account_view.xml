@@ -95,8 +95,8 @@
                     <field name="code"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="fiscalyear_id"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="fiscalyear_id" widget="selection"/>
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
                     <field name="state"/>
@@ -528,7 +528,7 @@
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended"/>
+                                    <field name="analytic_account_id" groups="base.group_extended" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines">
@@ -537,7 +537,7 @@
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency, {'amount': amount})"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="base.group_extended" />
+                                    <field name="analytic_account_id" groups="base.group_extended" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
                                     <field name="ref"/>
                                     <field name="sequence" readonly="0"/>
@@ -849,7 +849,7 @@
                     <notebook colspan="4">
                         <page string="Tax Definition">
                             <field name="applicable_type"/>
-                            <field name="amount" attrs="{'readonly':[('type','=','none'),('type','=','code')]}"/>
+                            <field name="amount" attrs="{'readonly':[('type','in',('none', 'code'))]}"/>
                             <field groups="base.group_extended" name="include_base_amount"/>
                             <field groups="base.group_extended" name="domain"/>
                             <newline/>

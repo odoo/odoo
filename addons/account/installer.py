@@ -67,13 +67,13 @@ class account_installer(osv.osv_memory):
         'company_id': fields.many2one('res.company', 'Company'),
     }
 
-    def _default_company(self, cr, uid, context={}):
+    def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
         return False
 
-    def _get_default_charts(self, cr, uid, context={}):
+    def _get_default_charts(self, cr, uid, context=None):
         module_name = False
         company_id = self._default_company(cr, uid, context=context)
         company = self.pool.get('res.company').browse(cr, uid, company_id)
@@ -91,18 +91,18 @@ class account_installer(osv.osv_memory):
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
-        'period':lambda *a:'month',
-        'sale_tax':lambda *a:0.0,
-        'purchase_tax':lambda *a:0.0,
+        'period': lambda *a:'month',
+        'sale_tax': lambda *a:0.0,
+        'purchase_tax': lambda *a:0.0,
         'company_id': _default_company,
-        'bank_accounts_id':_get_default_accounts, 
+        'bank_accounts_id': _get_default_accounts,
         'charts': _get_default_charts
     }
 
     def on_change_tax(self, cr, uid, id, tax):
         return {'value':{'purchase_tax':tax}}
 
-    def on_change_start_date(self, cr, uid, id, start_date):
+    def on_change_start_date(self, cr, uid, id, start_date=False):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
@@ -117,7 +117,6 @@ class account_installer(osv.osv_memory):
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
-        data_pool = self.pool.get('ir.model.data')
         mod_obj = self.pool.get('ir.model.data')
 
         result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
@@ -211,7 +210,7 @@ class account_installer(osv.osv_memory):
             vals={
                 'name': (obj_acc_root.id == account_template.id) and company_id.name or account_template.name,
                 #'sign': account_template.sign,
-                #'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
                 'type': account_template.type,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
@@ -237,7 +236,7 @@ class account_installer(osv.osv_memory):
                     'company_id': company_id.id,
                 }
                 bank_account = obj_acc.create(cr, uid, b_vals)
-                
+
                 view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal View')])[0] #why fixed name here?
                 view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #Why Fixed name here?
                 ref_acc_bank = obj_multi.bank_account_view_id
@@ -262,11 +261,14 @@ class account_installer(osv.osv_memory):
                 seq_id = obj_sequence.create(cr,uid,vals_seq)
 
                 #create the bank journals
+                sit_res = mod_obj._get_id(cr, uid, 'account', 'sit')
+                sit_id = mod_obj.read(cr, uid, [sit_res], ['res_id'])[0]['res_id']
                 vals_journal = {}
                 vals_journal['name']= _('Bank Journal ')
                 vals_journal['code']= _('BNK')
                 vals_journal['sequence_id'] = seq_id
                 vals_journal['type'] = 'cash'
+                vals_journal['analytic_journal_id'] = sit_id
                 if vals.get('currency_id', False):
                     vals_journal['view_id'] = view_id_cur
                     vals_journal['currency'] = vals.get('currency_id', False)
@@ -321,6 +323,7 @@ class account_installer(osv.osv_memory):
                         vals_journal['view_id'] = view_id_cash
                     vals_journal['default_credit_account_id'] = child_bnk_acc
                     vals_journal['default_debit_account_id'] = child_bnk_acc
+                    vals_journal['analytic_journal_id'] = sit_id
                     obj_journal.create(cr,uid,vals_journal)
                     code_cnt += 1
 
@@ -366,10 +369,15 @@ class account_installer(osv.osv_memory):
         vals_journal['view_id'] = view_id
 
         #Sales Journal
+        result = mod_obj._get_id(cr, uid, 'account', 'cose_journal_sale')
+        sale_id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+
         vals_journal['name'] = _('Sales Journal')
         vals_journal['type'] = 'sale'
         vals_journal['code'] = _('SAJ')
         vals_journal['sequence_id'] = seq_id_sale
+        vals_journal['analytic_journal_id'] = sale_id
+
 
         if obj_multi.property_account_receivable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.property_account_income_categ.id]
@@ -378,10 +386,14 @@ class account_installer(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Purchase Journal
+        result = mod_obj._get_id(cr, uid, 'account', 'exp')
+        pur_id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+
         vals_journal['name'] = _('Purchase Journal')
         vals_journal['type'] = 'purchase'
         vals_journal['code'] = _('EXJ')
         vals_journal['sequence_id'] = seq_id_purchase
+        vals_journal['analytic_journal_id'] = pur_id
 
         if obj_multi.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.property_account_expense_categ.id]
@@ -406,6 +418,7 @@ class account_installer(osv.osv_memory):
         vals_journal['refund_journal'] = True
         vals_journal['code'] = _('SCNJ')
         vals_journal['sequence_id'] = seq_id_sale_refund
+        vals_journal['analytic_journal_id'] = sale_id
 
         if obj_multi.property_account_receivable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.property_account_income_categ.id]
@@ -419,6 +432,7 @@ class account_installer(osv.osv_memory):
         vals_journal['refund_journal'] = True
         vals_journal['code'] = _('ECNJ')
         vals_journal['sequence_id'] = seq_id_purchase_refund
+        vals_journal['analytic_journal_id'] = pur_id
 
         if obj_multi.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.property_account_expense_categ.id]
@@ -519,7 +533,7 @@ class account_installer(osv.osv_memory):
                 p_tax = (res.get('purchase_tax',0.0))/100
                 tax_val = {}
                 default_tax = []
-                
+
                 pur_temp_tax = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_purchases')
                 pur_temp_tax_id = mod_obj.read(cr, uid, [pur_temp_tax], ['res_id'])[0]['res_id']
                 pur_temp_tax_names = obj_temp_tax_code.read(cr, uid, [pur_temp_tax_id], ['name'])
@@ -529,7 +543,7 @@ class account_installer(osv.osv_memory):
                     pur_taxcode_parent_id = pur_taxcode_parent_id[0]
                 else:
                     pur_taxcode_parent_id = False
-                    
+
                 pur_temp_tax_paid = mod_obj._get_id(cr, uid, 'account', 'tax_code_input')
                 pur_temp_tax_paid_id = mod_obj.read(cr, uid, [pur_temp_tax_paid], ['res_id'])[0]['res_id']
                 pur_temp_tax_paid_names = obj_temp_tax_code.read(cr, uid, [pur_temp_tax_paid_id], ['name'])
@@ -539,7 +553,7 @@ class account_installer(osv.osv_memory):
                     pur_taxcode_paid_parent_id = pur_taxcode_paid_parent_id[0]
                 else:
                     pur_taxcode_paid_parent_id = False
-                 
+
                 sale_temp_tax = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_sales')
                 sale_temp_tax_id = mod_obj.read(cr, uid, [sale_temp_tax], ['res_id'])[0]['res_id']
                 sale_temp_tax_names = obj_temp_tax_code.read(cr, uid, [sale_temp_tax_id], ['name'])
@@ -549,7 +563,7 @@ class account_installer(osv.osv_memory):
                     sale_taxcode_parent_id = sale_taxcode_parent_id[0]
                 else:
                     sale_taxcode_parent_id = False
-                    
+
                 sale_temp_tax_paid = mod_obj._get_id(cr, uid, 'account', 'tax_code_output')
                 sale_temp_tax_paid_id = mod_obj.read(cr, uid, [sale_temp_tax_paid], ['res_id'])[0]['res_id']
                 sale_temp_tax_paid_names = obj_temp_tax_code.read(cr, uid, [sale_temp_tax_paid_id], ['name'])
@@ -571,7 +585,7 @@ class account_installer(osv.osv_memory):
                         'parent_id': sale_taxcode_parent_id
                         }
                     new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
-                    
+
                     vals_paid_tax_code = {
                         'name': 'TAX Paid %s%%'%(s_tax*100),
                         'code': 'TAX Paid %s%%'%(s_tax*100),
@@ -580,7 +594,7 @@ class account_installer(osv.osv_memory):
                         'parent_id': sale_taxcode_paid_parent_id
                         }
                     new_paid_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_paid_tax_code)
-                    
+
                     sales_tax = obj_tax.create(cr, uid,
                                            {'name':'TAX%s%%'%(s_tax*100),
                                             'description':'TAX%s%%'%(s_tax*100),
@@ -601,13 +615,13 @@ class account_installer(osv.osv_memory):
                     purchase_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code = {
                         'name': 'TAX%s%%'%(p_tax*100),
-                        'code': 'TAX%s%%'%(p_tax*100), 
+                        'code': 'TAX%s%%'%(p_tax*100),
                         'company_id': company_id.id,
                         'sign': 1,
                         'parent_id': pur_taxcode_parent_id
                     }
                     new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
-                    
+
                     vals_paid_tax_code = {
                         'name': 'TAX Paid %s%%'%(p_tax*100),
                         'code': 'TAX Paid %s%%'%(p_tax*100),
@@ -616,7 +630,7 @@ class account_installer(osv.osv_memory):
                         'parent_id': pur_taxcode_paid_parent_id
                     }
                     new_paid_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_paid_tax_code)
-                    
+
                     purchase_tax = obj_tax.create(cr, uid,
                                             {'name':'TAX%s%%'%(p_tax*100),
                                              'description':'TAX%s%%'%(p_tax*100),
@@ -680,9 +694,9 @@ class account_bank_accounts_wizard(osv.osv_memory):
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Account Type', size=32),
     }
-    _defaults = {
-        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-        }
+#    _defaults = {
+#        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
+#        }
 
 account_bank_accounts_wizard()
 
@@ -710,11 +724,12 @@ class account_installer_modules(osv.osv_memory):
 #        'account_voucher_payment':fields.boolean('Voucher and Reconcile Management',
 #            help="Extension Account Voucher module includes allows to link payment / receipt "
 #                 "entries with voucher, also automatically reconcile during the payment and receipt entries."),
-                 }
+    }
 
     _defaults = {
         'account_voucher': True,
-        }
+    }
+
 account_installer_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
