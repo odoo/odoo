@@ -79,7 +79,7 @@ class hr_evaluation_report(osv.osv):
                      s.state,
                      s.progress as progress_bar,
                      avg(extract('epoch' from age(s.create_date,CURRENT_DATE)))/(24)/(-3600) as  delay_date,
-                     avg(extract('epoch' from age(s.date,CURRENT_DATE)))/(24)/(-3600) as overpass_dela                     
+                     avg(extract('epoch' from age(s.date,CURRENT_DATE)))/(24)/(-3600) as overpass_delay                     
                      from
                  hr_evaluation_interview l
                 LEFT JOIN
