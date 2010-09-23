@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <form string="Coda import">
                 <field name="name" />
-                <field name="journal_id" />
+                <field name="journal_id" widget="selection"/>
                 <field name="date" />
                 <field name="user_id" />
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -30,8 +30,8 @@
         <field name="model">account.coda</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Coda import">
-                <field name="journal_id" />
+            <tree string="Coda Import">
+                <field name="journal_id" widget="selection"/>
                 <field name="date" />
                 <field name="user_id" />
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -53,10 +53,11 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
+                        <filter string="User" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="User" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     </group>
                </search>
@@ -64,7 +65,7 @@
         </record>
 
     <record model="ir.actions.act_window" id="action_account_coda">
-        <field name="name">Statements</field>
+        <field name="name">Coda Logs</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">account.coda</field>
         <field name="view_type">form</field>
