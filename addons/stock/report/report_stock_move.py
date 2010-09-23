@@ -51,6 +51,7 @@ class report_stock_move(osv.osv):
         'day_diff2':fields.float('Delay (Days)',readonly=True,  digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
         'day_diff1':fields.float('Planned (Days)',readonly=True, digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
         'day_diff':fields.float('Real (Days)',readonly=True,  digits_compute=dp.get_precision('Product UoM'), group_operator="avg"),
+        'stock_journal': fields.many2one('stock.journal','Stock Journal', select=True),        
     }
 
     def init(self, cr):
@@ -79,7 +80,8 @@ class report_stock_move(osv.osv):
                         al.state as state ,
                         al.product_uom as product_uom,
                         al.categ_id as categ_id,
-                        al.type as type
+                        al.type as type,
+                        al.stock_journal as stock_journal
                     FROM (SELECT
 
                         CASE WHEN sp.type in ('out','delivery') THEN
@@ -105,7 +107,8 @@ class report_stock_move(osv.osv):
                             sm.company_id as company_id,
                             sm.state as state,
                             sm.product_uom as product_uom,
-                            sp.type as type
+                            sp.type as type,
+                            sp.stock_journal_id as stock_journal
                     from
                         stock_move sm
                         left join stock_picking sp on (sm.picking_id=sp.id)
@@ -118,14 +121,14 @@ class report_stock_move(osv.osv):
                         sm.id,sp.type, sm.date,sm.address_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
                         sm.product_id,pt.standard_price, sm.picking_id, sm.product_qty,
-                        sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id)
+                        sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id)
                     as al
 
                     group by
                         al.out_qty,al.in_qty,al.curr_year,al.curr_month,
                         al.curr_day,al.curr_day_diff,al.curr_day_diff1,al.curr_day_diff2,al.dp,al.location_id,al.location_dest_id,
                         al.address_id,al.product_id,al.state,al.product_uom,
-                        al.picking_id,al.company_id,al.type,al.product_qty, al.categ_id
+                        al.picking_id,al.company_id,al.type,al.product_qty, al.categ_id, al.stock_journal
                )
         """)
 

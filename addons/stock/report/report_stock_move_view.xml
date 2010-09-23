@@ -25,6 +25,7 @@
                 <field name="location_dest_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="categ_id" invisible="1"/>
+                <field name="stock_journal" invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="product_qty"/>
                 <field name="product_qty_in"/>
@@ -64,11 +65,11 @@
                 <separator orientation="vertical"/>
                 <filter string="Done"
                     name="done"
-                    icon="terp-dialog-close"
+                    icon="terp-check"
                     domain="[('state','=','done')]"
                     help = "Completed Stock-Moves"/>
                 <filter string="Todo"
-                    icon="terp-camera_test"
+                    icon="terp-stock"
                     domain="[('state','in',('assigned','waiting','confirmed'))]"
                     help = "Future Stock-Moves"/>
 
@@ -85,11 +86,12 @@
                 <group expand="1" string="Group By...">
                     <filter name="group_partner" string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter name="group_categ_id" string="Product Category" icon="terp-personal" context="{'group_by':'categ_id'}"/>
+                    <filter name="group_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <filter name="group_picking" string="Packing" icon="terp-accessories-archiver" context="{'group_by':'picking_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Type" name="group_type" icon="terp-gtk-jump-to-rtl" context="{'group_by':'type'}"/>
+					<filter string="Stock journal" name="group_stock_journal" icon="terp-folder-orange" context="{'group_by':'stock_journal'}"/>                    
                     <filter string="Source Location" name="src_location" icon="terp-gtk-jump-to-rtl" context="{'group_by':'location_id'}"/>
                     <filter string="Dest. Location" name="dest_location" icon="terp-gtk-jump-to-ltr"  context="{'group_by':'location_dest_id'}"/>
                     <separator orientation="vertical"/>
@@ -101,11 +103,12 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                    <field name="location_id" widget = "selection"/>
-                    <field name="location_dest_id"  widget = "selection"/>
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
                     <field name="categ_id"/>
+                    <field name="stock_journal"/>
                     <separator orientation="vertical"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" widget = "selection"/>
                     <newline/>
                     <field name="date"/>
                 </group>
