@@ -753,7 +753,7 @@ act_window_close()
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
                ('skip','Skipped'),
-               ('cancel','Cancel')]
+               ('cancel','Cancelled')]
 
 class ir_actions_todo(osv.osv):
     _name = 'ir.actions.todo'
