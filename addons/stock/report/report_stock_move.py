@@ -153,8 +153,8 @@ create or replace view report_stock_inventory as (
         m.product_id as product_id, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-        sum(-m.product_qty*u.factor)::decimal(16,2) as product_qty,
-        sum(-pt.standard_price * m.product_qty * u.factor)::decimal(16,2) as value
+        sum(-m.product_qty*u.factor)::decimal as product_qty,
+        sum(-pt.standard_price * m.product_qty * u.factor)::decimal as value
     from
         stock_move m
             left join stock_picking p on (m.picking_id=p.id)
@@ -172,8 +172,8 @@ create or replace view report_stock_inventory as (
         m.product_id as product_id, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-        sum(m.product_qty*u.factor)::decimal(16,2) as product_qty,
-        sum(pt.standard_price * m.product_qty * u.factor)::decimal(16,2) as value
+        sum(m.product_qty*u.factor)::decimal as product_qty,
+        sum(pt.standard_price * m.product_qty * u.factor)::decimal as value
     from
         stock_move m
             left join stock_picking p on (m.picking_id=p.id)
