@@ -639,6 +639,7 @@ class account_move_line(osv.osv):
                     AND l.state <> 'draft'
                     GROUP BY l.partner_id
                 ) AS s ON (p.id = s.partner_id)
+                WHERE debit > 0 AND credit > 0
                 ORDER BY p.last_reconciliation_date LIMIT 1 OFFSET %s""", (offset,)
             )
         return cr.fetchone()
