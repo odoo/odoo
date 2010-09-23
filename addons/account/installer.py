@@ -210,7 +210,7 @@ class account_installer(osv.osv_memory):
             vals={
                 'name': (obj_acc_root.id == account_template.id) and company_id.name or account_template.name,
                 #'sign': account_template.sign,
-                #'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
                 'type': account_template.type,
                 'user_type': account_template.user_type and account_template.user_type.id or False,
@@ -690,9 +690,9 @@ class account_bank_accounts_wizard(osv.osv_memory):
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Account Type', size=32),
     }
-    _defaults = {
-        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-        }
+#    _defaults = {
+#        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
+#        }
 
 account_bank_accounts_wizard()
 
