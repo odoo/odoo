@@ -220,7 +220,6 @@
                         <field name="date_action"/>
                         <field name="title_action" />
                         <field name="stage_id"/>
-                        <field name="partner_assigned_id" invisible="1"/>
                         <field name="channel_id" invisible="1"/>
                         <field name="type_id" invisible="1"/>
                         <button name="stage_previous" string="Previous Stage"
@@ -328,8 +327,6 @@
                             <filter string="Salesman" icon="terp-personal"
                                 domain="[]" context="{'group_by':'user_id'}" />
                             <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
-                            <filter string="Assigned Partner" icon="terp-personal"
-                                domain="[]" context="{'group_by':'partner_assigned_id'}" />
                             <separator orientation="vertical" />
                             <filter string="Creation" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'create_date'}" />
