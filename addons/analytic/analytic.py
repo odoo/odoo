@@ -35,16 +35,16 @@ class account_analytic_account(osv.osv):
         cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id IN %s" , (tuple(ids2),))
         currency = dict(cr.fetchall())
         res_currency= self.pool.get('res.currency')
-        for id in ids:
-            if id not in ids2:
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.id not in ids2:
                 continue
-            for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child != id:
-                    res.setdefault(id, 0.0)
-                    if  currency[child]!=currency[id]:
-                        res[id] += res_currency.compute(cr, uid, currency[child], currency[id], res.get(child, 0.0), context=context)
+            for child in account.child_ids:
+                if child.id != account.id:
+                    res.setdefault(account.id, 0.0)
+                    if  currency[child.id] != currency[account.id]:
+                        res[account.id] += res_currency.compute(cr, uid, currency[child.id], currency[account.id], res.get(child.id, 0.0), context=context)
                     else:
-                        res[id] += res.get(child, 0.0)
+                        res[account.id] += res.get(child.id, 0.0)
 
         cur_obj = res_currency.browse(cr, uid, currency.values(), context=context)
         cur_obj = dict([(o.id, o) for o in cur_obj])
@@ -145,13 +145,13 @@ class account_analytic_account(osv.osv):
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
-        for id in ids:
-            if id not in parent_ids:
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.id not in parent_ids:
                 continue
-            for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child != id:
-                    res.setdefault(id, 0.0)
-                    res[id] += res.get(child, 0.0)
+            for child in account.child_ids:
+                if child.id != account.id:
+                    res.setdefault(account.id, 0.0)
+                    res[account.id] += res.get(child.id, 0.0)
         return dict([(i, res[i]) for i in ids])
 
     def name_get(self, cr, uid, ids, context=None):
