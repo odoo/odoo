@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Voucher" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="42.0" width="525" height="772"/>
     </pageTemplate>
   </template>
   <stylesheet>
     <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
@@ -94,15 +98,12 @@
     </initialize>
     <paraStyle name="P1" fontName="Helvetica"/>
     <paraStyle name="P2" fontName="Helvetica" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P4" fontName="Helvetica" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P5" fontName="Helvetica-Bold" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P6" fontName="Helvetica-Bold" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P7" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P8" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P9" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P10" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P11" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P3" fontName="Helvetica" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P4" fontName="Helvetica-Bold" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P5" fontName="Helvetica-Bold" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P6" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P7" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -116,19 +117,19 @@
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Footer" fontName="Helvetica"/>
     <paraStyle name="Horizontal Line" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
     <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -161,45 +162,55 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="P11">[[ repeatIn(objects,'voucher') ]]</para>
+    <para style="P8">[[ repeatIn(objects,'voucher') ]]</para>
+    <blockTable colWidths="524.0" style="Table6">
+      <tr>
+        <td>
+          <para style="terp_header_Centre">[[ get_title(voucher) ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
     <blockTable colWidths="63.0,200.0,52.0,210.0" style="Table4">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Journal:</para>
+          <para style="terp_tblheader_General">Journal:</para>
         </td>
         <td>
           <para style="terp_default_9">[[ voucher.journal_id.name ]]</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Number:</para>
+          <para style="terp_tblheader_General">Number:</para>
         </td>
         <td>
-          <para style="P3">[[ voucher.name ]]</para>
+          <para style="terp_default_9">[[ voucher.name ]]</para>
         </td>
       </tr>
     </blockTable>
     <blockTable colWidths="63.0,72.0,44.0,84.0,52.0,210.0" style="Table5">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">State:</para>
+          <para style="terp_tblheader_General">State:</para>
         </td>
         <td>
-          <para style="P7">PRO-FORMA [[ ((voucher.state == 'proforma') or removeParentNode('para')) and '' ]]</para>
-          <para style="P7">Draft[[ ((voucher.state == 'draft') or removeParentNode('para')) and '' ]]</para>
-          <para style="P7">Canceled [[ ((voucher.state == 'cancel') or removeParentNode('para')) and '' ]]</para>
-          <para style="P7">Posted [[ ((voucher.state == 'posted') or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_9">PRO-FORMA [[ ((voucher.state == 'proforma') or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_9">Draft[[ ((voucher.state == 'draft') or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_9">Canceled [[ ((voucher.state == 'cancel') or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_9">Posted [[ ((voucher.state == 'posted') or removeParentNode('para')) and '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Ref. :</para>
+          <para style="terp_tblheader_General">Ref. :</para>
         </td>
         <td>
-          <para style="P7">[[ voucher.ref]]</para>
+          <para style="terp_default_9">[[ voucher.ref]]</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Date:</para>
+          <para style="terp_tblheader_General">Date:</para>
         </td>
         <td>
-          <para style="P3">[[ formatLang(voucher.date , date=True) or '' ]]</para>
+          <para style="terp_default_9">[[ formatLang(voucher.date , date=True) or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -280,7 +291,7 @@
     <blockTable colWidths="313.0,106.0,105.0" style="last_info">
       <tr>
         <td>
-          <para style="P5">Through : </para>
+          <para style="P4">Through : </para>
         </td>
         <td>
           <para style="P2">
@@ -310,7 +321,7 @@
       </tr>
       <tr>
         <td>
-          <para style="P5">On Account of : </para>
+          <para style="P4">On Account of : </para>
         </td>
         <td>
           <para style="P2">
@@ -325,7 +336,7 @@
       </tr>
       <tr>
         <td>
-          <para style="P9">[[ voucher.line_id and voucher.line_id[0].name or removeParentNode('para') ]]</para>
+          <para style="P7">[[ voucher.line_id and voucher.line_id[0].name or removeParentNode('para') ]]</para>
         </td>
         <td>
           <para style="P2">
@@ -340,22 +351,7 @@
       </tr>
       <tr>
         <td>
-          <para style="P5">Amount (in words) : </para>
-        </td>
-        <td>
-          <para style="P5">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P5">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="P9">[[ convert(voucher.amount) ]]</para>
+          <para style="P4">Amount (in words) : </para>
         </td>
         <td>
           <para style="P4">
@@ -364,6 +360,21 @@
         </td>
         <td>
           <para style="P4">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P7">[[ convert(voucher.amount) ]]</para>
+        </td>
+        <td>
+          <para style="P3">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P3">
             <font color="white"> </font>
           </para>
         </td>
@@ -375,7 +386,7 @@
     <blockTable colWidths="313.0,106.0,105.0" style="Table1">
       <tr>
         <td>
-          <para style="P6">
+          <para style="P5">
             <font color="white"> </font>
           </para>
         </td>
@@ -399,12 +410,6 @@
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -424,15 +429,15 @@
       </tr>
       <tr>
         <td>
-          <para style="P8">Receiver's Signature</para>
+          <para style="P6">Receiver's Signature</para>
         </td>
         <td>
-          <para style="P8">
+          <para style="P6">
             <font color="white"> </font>
           </para>
         </td>
         <td>
-          <para style="P8">
+          <para style="P6">
             <font color="white"> </font>
           </para>
         </td>

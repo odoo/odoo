@@ -218,6 +218,14 @@ class resource_resource(osv.osv):
             args.append(('user_id','in',user_ids))
 
         return super(resource_resource, self).search(cr, uid, args, offset, limit, order, context, count)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name', False):
+            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
+        return super(resource_resource, self).copy(cr, uid, id, default, context)
+
 resource_resource()
 
 class resource_calendar_leaves(osv.osv):

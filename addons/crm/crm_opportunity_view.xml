@@ -29,7 +29,7 @@
 
                             <field name="planned_revenue"/>
                             <field name="probability"/>
-                            <field name="date_deadline" string="Expected Closing"/>
+                            <field name="date_deadline"/>
                             <button string="Schedule/Log Call"
                             name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
                             <newline/>
@@ -115,6 +115,11 @@
                                 <separator string="Communication" colspan="2"/>
                                 <field name="fax"/>
                                 <field name="mobile"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Categorization" colspan="2"/>
+                                <field name="type_id" widget="selection"/>
+                                <field name="channel_id" widget="selection"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Mailings" colspan="2"/>
@@ -215,7 +220,8 @@
                         <field name="date_action"/>
                         <field name="title_action" />
                         <field name="stage_id"/>
-                        <field name="partner_assigned_id" invisible="1"/>
+                        <field name="channel_id" invisible="1"/>
+                        <field name="type_id" invisible="1"/>
                         <button name="stage_previous" string="Previous Stage"
                             states="open,pending" type="object" icon="gtk-go-back" />
                         <button name="stage_next" string="Next Stage"
@@ -323,8 +329,6 @@
                             <filter string="Salesman" icon="terp-personal"
                                 domain="[]" context="{'group_by':'user_id'}" />
                             <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
-                            <filter string="Assigned Partner" icon="terp-partner"
-                                domain="[]" context="{'group_by':'partner_assigned_id'}" />
                             <separator orientation="vertical" />
                             <filter string="Stage" icon="terp-stage" domain="[]"
                                 context="{'group_by':'stage_id'}" />
@@ -332,7 +336,11 @@
                                 context="{'group_by':'priority'}" />
                             <filter string="Category" icon="terp-stock_symbol-selection"
                                 domain="[]" context="{'group_by':'categ_id'}" />
-                             <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                            <filter string="Campaign" icon="terp-stock_symbol-selection"
+                                domain="[]" context="{'group_by':'type_id'}" />
+                            <filter string="Channel" icon="terp-stock_symbol-selection"
+                                domain="[]" context="{'group_by':'channel_id'}" />
+                            <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                             <separator orientation="vertical" />
                             <filter string="Creation" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'create_date'}" />

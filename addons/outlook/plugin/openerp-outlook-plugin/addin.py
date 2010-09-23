@@ -1,5 +1,27 @@
- #!/usr/bin/python
- #-*- encoding: utf-8 -*-
+# This module is part of the spambayes project, which is Copyright 2003
+# The Python Software Foundation and is covered by the Python Software
+# Foundation license.
+
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
 from win32com import universal
 from win32com.server.exception import COMException
@@ -40,8 +62,12 @@ def GetConn():
 
 class ButtonEvent:
     def OnClick(self, button, cancel):
-        mngr = manager.GetManager()
-        mngr.ShowManager()
+        import win32ui
+        try:
+            mngr = manager.GetManager()
+            mngr.ShowManager()
+        except Exception,e:
+            win32ui.MessageBox("Fail to Initialize dialog.\n"+str(e),"OpenERP Configuration", win32con.MB_ICONERROR)
         return cancel
 #
 class ViewPartners:
@@ -55,12 +81,12 @@ class ViewPartners:
         if ex:
             is_login = str(data['login'])
             if is_login == 'False':
-                win32ui.MessageBox("Please login to the database first", "Database Connection", win32con.MB_ICONEXCLAMATION)
+                win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
             elif ex.Selection.Count == 1 or ex.Selection.Count == 0:
                 mngr = manager.GetManager()
                 mngr.ShowManager("IDD_VIEW_PARTNER_DIALOG")
             elif ex.Selection.Count > 1:
-                win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","",win32con.MB_ICONINFORMATION)
+                win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Open Contact",win32con.MB_ICONINFORMATION)
         return cancel
 #
 class ArchiveEvent:
@@ -74,14 +100,14 @@ class ArchiveEvent:
         if ex:
             is_login = str(data['login'])
             if is_login == 'False':
-                win32ui.MessageBox("Please login to the database first", "Database Connection", win32con.MB_ICONEXCLAMATION)
+                win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
             elif ex.Selection.Count == 1:
                 mngr = manager.GetManager()
                 mngr.ShowManager("IDD_SYNC")
             elif ex.Selection.Count == 0:
-                win32ui.MessageBox("No mail selected to archive to OpenERP","",win32con.MB_ICONINFORMATION)
+                win32ui.MessageBox("No mail selected to push to OpenERP","Push to OpenERP",win32con.MB_ICONINFORMATION)
             elif ex.Selection.Count > 1:
-                win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","",win32con.MB_ICONINFORMATION)
+                win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Push to OpenERP",win32con.MB_ICONINFORMATION)
         return cancel
 #
 class OutlookAddin:
@@ -111,8 +137,8 @@ class OutlookAddin:
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.menu_bar_arch_Button = DispatchWithEvents(item, ArchiveEvent)
-            item.Caption="Archive to OpenERP"
-            item.TooltipText = "Click to archive to OpenERP"
+            item.Caption="Push to OpenERP"
+            item.TooltipText = "Click to push to OpenERP"
             item.Enabled = True
 
             toolbar = bars.Item("Standard")
@@ -120,8 +146,8 @@ class OutlookAddin:
             item = toolbar.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.toolbarButton = DispatchWithEvents(item, ArchiveEvent)
-            item.Caption="Archive to OpenERP"
-            item.TooltipText = "Click to archive to OpenERP"
+            item.Caption="Push to OpenERP"
+            item.TooltipText = "Click to push to OpenERP"
             item.Enabled = True
 
             # Adding Menu in Menu Bar to the Web Menu of the Outlook
@@ -196,9 +222,11 @@ if __name__ == '__main__':
     if "--unregister" in sys.argv:
         UnregisterAddin(OutlookAddin)
         UnregisterXMLConn(NewConn)
+        print "\n \tPlug In Un-registered Successfully.\n\tThank You for Using PlugIn."
     else:
         RegisterAddin(OutlookAddin)
         RegisterXMLConn(NewConn)
+        print "\n \tPlug In Registered Successfully.\n\tEnjoy Archiving with OpenERP.\n\tSee UserGuide for More. "
 
 #mngr = manager.GetManager()
 #mngr.ShowManager("IDD_MANAGER")

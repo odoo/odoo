@@ -58,18 +58,18 @@
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                 	<group colspan="10" col="12">
-	                    <filter icon="terp-go-year" string="  365 Days  "
-	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-	                    	    help="Tasks performed in last 365 Days"/>
-	                    <filter icon="terp-go-month" string="   30 Days   "
+	                    <filter icon="terp-go-year" string="  Year  "
+                                domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;=',time.strftime('%%Y-01-01'))]"
+	                    	    help="Current Year"/>
+	                    <filter icon="terp-go-month" string="   Month   "
 	                    		name="month"
-	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                    		help="Tasks performed in last 30 days"/>
+	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;=',time.strftime('%%Y-%%m-01'))]"
+	                    		help="Current Month"/>
 		                <filter icon="terp-go-week"
-	                            string="    7 Days    "
+	                            string="    Month-1    "
 	                            separator="1"
-	                            domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                            help="Tasks during last 7 days"/>
+	                            domain="[('date_start','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+	                            help="Previous Month"/>
 	                    <separator orientation="vertical"/>
 	                    <filter string="Draft"
 	                    		icon="terp-document-new"
@@ -109,28 +109,27 @@
                     <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="12">
                         <filter string="Project" name="project" icon="terp-folder-blue" context="{'group_by':'project_id'}"/>
-                        <filter string="Assigned to" name="User" icon="terp-personal" context="{'group_by':'user_id'}" />
-                        <separator orientation="vertical"/>
-                        <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
                         <filter string="Task" icon="terp-stock_align_left_24" context="{'group_by':'name'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Assigned to" name="User" icon="terp-personal" context="{'group_by':'user_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                         <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                         <filter string="Stage" icon="terp-stage" context="{'group_by':'type_id'}" />
                         <separator orientation="vertical"/>
-                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Current Day"/>
+                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Current Month"/>
+                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Current Year"/>
                     </group>
                     <newline/>
 	                <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+	                	<field name="priority" string="Priority"/>
 	                    <field name="type_id" widget="selection"/>
-	                    <separator orientation="vertical"/>
+	                    <newline/>
                         <field name="date_start"/>
-                        <field name="date_deadline"/>
                         <field name="date_end"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="priority"/>
+                        <field name="date_deadline"/>
 	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </search>

@@ -214,6 +214,13 @@ class project_phase(osv.osv):
                     self._check_date_end(cr, uid, next_phase, dt_end, context=context)
         return super(project_phase, self).write(cr, uid, ids, vals, context=context)
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name', False):
+            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
+        return super(project_phase, self).copy(cr, uid, id, default, context)
+
     def set_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'draft'})
         return True

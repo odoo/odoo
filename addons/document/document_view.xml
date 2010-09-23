@@ -44,7 +44,7 @@
                     <field name="name" />
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Type"  domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                </search>
             </field>
@@ -168,7 +168,7 @@
                     <field name="storage_id" />
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Type"  domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Storage" domain="[]" context="{'group_by':'storage_id'}"/>
                     </group>
@@ -282,10 +282,9 @@
             <field name="model">ir.attachment</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-             <search string="IR Attachment">
-             <filter icon="terp-go-month" string="Recent Month"
-                    help="Attachment modified/created last 30 days"
-                    domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+             <search string="Document">
+             <filter icon="terp-go-month" string="Month"
+                    domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
                 />
                  <separator orientation="vertical"/>
                  <field name="name"/>
@@ -293,7 +292,7 @@
                  <field name="user_id">
                     <filter icon="terp-personal"
                         domain="[('user_id','=', False)]"
-                        help="Filter on my Attachment" />
+                        help="Filter on my documents" />
                  </field>
                 <field name="partner_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -332,7 +331,6 @@
         <field name="name">Documents</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
-        <field name="name">Document</field>
         <field name="view_type">form</field>
         <field name="search_view_id" ref="view_attach_filter"/>
         <field name="help">Documents give your access to all attached documents; it's a repository of all attached documents (mails, documents attached to a project, etc.)</field>

@@ -943,6 +943,7 @@ class account_move_line(osv.osv):
 
             if field in ('amount_currency', 'currency_id'):
                 attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
+                attrs.append("attrs='{'readonly':[('state','=','valid')]}'")
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
