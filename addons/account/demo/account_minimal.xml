@@ -396,6 +396,7 @@
             <field name="sequence_id" ref="sequence_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
+            <field name="analytic_journal_id" ref="sit"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
         <record id="check_journal" model="account.journal">
@@ -406,6 +407,7 @@
             <field name="sequence_id" ref="sequence_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
+            <field name="analytic_journal_id" ref="sit"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
         <record id="cash_journal" model="account.journal">
@@ -416,6 +418,7 @@
             <field name="sequence_id" ref="sequence_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
+            <field name="analytic_journal_id" ref="sit"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
 

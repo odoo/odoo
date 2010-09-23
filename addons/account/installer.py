@@ -261,11 +261,14 @@ class account_installer(osv.osv_memory):
                 seq_id = obj_sequence.create(cr,uid,vals_seq)
 
                 #create the bank journals
+                sit_res = mod_obj._get_id(cr, uid, 'account', 'sit')
+                sit_id = mod_obj.read(cr, uid, [sit_res], ['res_id'])[0]['res_id']
                 vals_journal = {}
                 vals_journal['name']= _('Bank Journal ')
                 vals_journal['code']= _('BNK')
                 vals_journal['sequence_id'] = seq_id
                 vals_journal['type'] = 'cash'
+                vals_journal['analytic_journal_id'] = sit_id
                 if vals.get('currency_id', False):
                     vals_journal['view_id'] = view_id_cur
                     vals_journal['currency'] = vals.get('currency_id', False)
@@ -320,6 +323,7 @@ class account_installer(osv.osv_memory):
                         vals_journal['view_id'] = view_id_cash
                     vals_journal['default_credit_account_id'] = child_bnk_acc
                     vals_journal['default_debit_account_id'] = child_bnk_acc
+                    vals_journal['analytic_journal_id'] = sit_id
                     obj_journal.create(cr,uid,vals_journal)
                     code_cnt += 1
 
