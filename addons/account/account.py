@@ -1701,6 +1701,11 @@ class account_tax(osv.osv):
         ids = self.search(cr, user, args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('type', False) and vals['type'] in ('none', 'code'):
+            vals.update({'amount': 0.0})
+        return super(account_tax, self).write(cr, uid, ids, vals, context=context)
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         journal_pool = self.pool.get('account.journal')
 

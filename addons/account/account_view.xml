@@ -849,7 +849,7 @@
                     <notebook colspan="4">
                         <page string="Tax Definition">
                             <field name="applicable_type"/>
-                            <field name="amount" attrs="{'readonly':[('type','=','none'),('type','=','code')]}"/>
+                            <field name="amount" attrs="{'readonly':[('type','in',('none', 'code'))]}"/>
                             <field groups="base.group_extended" name="include_base_amount"/>
                             <field groups="base.group_extended" name="domain"/>
                             <newline/>
