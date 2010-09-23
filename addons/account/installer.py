@@ -125,7 +125,7 @@ class account_installer(osv.osv_memory):
 
         if context is None:
             context = {}
-        company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
+        company_id = self.browse(cr, uid, ids, context)[0].company_id
         seq_journal = True
 
         # Creating Account
@@ -519,7 +519,7 @@ class account_installer(osv.osv_memory):
         obj_temp_tax_code = self.pool.get('account.tax.code.template')
         super(account_installer, self).execute(cr, uid, ids, context=context)
         record = self.browse(cr, uid, ids, context=context)[0]
-        company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
+        company_id = record.company_id
         for res in self.read(cr, uid, ids):
             if record.charts == 'configurable':
                 fp = tools.file_open(opj('account','configurable_account_chart.xml'))
