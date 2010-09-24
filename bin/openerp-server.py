@@ -214,7 +214,7 @@ def quit():
     # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
     # threading.Thread.join() should not mask signals (at least in python 2.5)
     for thread in threading.enumerate():
-        if thread != threading.currentThread() and not thread.daemon:
+        if thread != threading.currentThread() and not thread.isDaemon():
             while thread.isAlive():
                 # need a busyloop here as thread.join() masks signals
                 # and would present the forced shutdown
