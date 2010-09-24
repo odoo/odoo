@@ -1406,5 +1406,24 @@ def upload_data(email, data, type='SURVEY'):
     a = upload_data_thread(email, data, type)
     a.start()
     return True
+
+
+# port of python 2.6's attrgetter with support for dotted notation 
+def resolve_attr(obj, attr):
+    for name in attr.split("."):
+        obj = getattr(obj, name)
+    return obj
+
+def attrgetter(*items):
+    if len(items) == 1:
+        attr = items[0]
+        def g(obj):
+            return resolve_attr(obj, attr)
+    else:
+        def g(obj):
+            return tuple(resolve_attr(obj, attr) for attr in items)
+    return g
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
