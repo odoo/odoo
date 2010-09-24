@@ -77,7 +77,7 @@ class report_custom(report_rml):
             <amount>%.2f</amount>
         </time-element>
         '''
-        rpt_obj = pooler.get_pool(cr.dbname).get('hr.holidays')
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
         <header>

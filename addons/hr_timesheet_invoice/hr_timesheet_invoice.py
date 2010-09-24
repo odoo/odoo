@@ -44,17 +44,22 @@ class account_analytic_account(osv.osv):
         if context is None:
             context = {}
         res = {}
+
+        cr.execute('select account_id as account_id, l.invoice_id from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id)')
+        account_to_invoice_map = {}
+        for rec in cr.dictfetchall():
+            account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
+
         for account in self.browse(cr, uid, ids, context=context):
             invoiced = {}
-            cr.execute('select distinct(l.invoice_id) from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id) where account_id=%s', (account.id,))
-            invoice_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
+            invoice_ids = filter(None, list(set(account_to_invoice_map.get(account.id, []))))
             for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
                 res.setdefault(account.id, 0.0)
                 res[account.id] += invoice.amount_untaxed
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
-        return res
 
+        return res
 
     _inherit = "account.analytic.account"
     _columns = {
