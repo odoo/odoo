@@ -184,7 +184,8 @@ class thunderbird_partner(osv.osv_memory):
     def search_message(self, cr, uid, message, context=None):
         #@param message: string of mail which is read from EML File
         #@return model,res_id
-        print "search message"
+        dictcreate = dict(message)
+        message = dictcreate.get('message')
         msg_pool = self.pool.get('mailgate.message')
         msg = self.pool.get('email.server.tools').parse_message(message)
         message_id = msg.get('message-id', False)

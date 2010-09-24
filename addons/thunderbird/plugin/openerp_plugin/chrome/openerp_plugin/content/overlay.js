@@ -197,9 +197,10 @@ var openPartnerHandler = {
                 var urlport = weburl+':'+webport
 
                 if (parseInt(partner_id) > 0){
-                    var t = urlport + "/openerp/form/view?model=res.partner&id="+partner_id
-                   window.open(t)
-                   
+                    alert(partner_id)
+                  var t = urlport + "/form/view?model=res.partner&id="+partner_id;
+                  window.open(t);
+                
                 }
                 else{
                     alert("Partner is not Available.");
@@ -292,19 +293,19 @@ function open_partner()
 	}
     searchPartner(senderemail);
 }
+
 var listDocumentHandler = {
 	onResult: function(client, context, result) {
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
 		var res = result.QueryInterface(Components.interfaces.nsISupportsArray);
         res_id = res.QueryElementAt(1, Components.interfaces.nsISupportsPRInt32);
 		model = res.QueryElementAt(0, Components.interfaces.nsISupportsCString);
-        weburl = getWebServerURL()
-        if (weburl == false){
-            weburl = 'http://localhost:8080'
-        }
-        var branchobj = getPref();
-        db_name = branchobj.getCharPref("serverdbname");
-        window.open(weburl + "/model=" + model +"&id=" + res_id)
+         weburl = getWebServerURL();
+         webport = getwebPort();
+         var urlport = weburl+':'+webport
+         var t = urlport + "/form/view?model=" + model +"&id=" + res_id
+         alert(t)
+         window.open(t);
 	},
 	onFault: function (client, ctxt, fault) {
 
@@ -313,7 +314,9 @@ var listDocumentHandler = {
 	onError: function (client, ctxt, status, errorMsg) {
 
 	}
-}
+} 
+
+
 function open_document()
 {
     if (check() == false){
@@ -356,11 +359,13 @@ function open_document()
 	var strobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 	strobj.data = 'thunderbird.partner';
     var eml_string = parse_eml()
-	var a = ['model', 'message'];
-	var b = [object, eml_string];
-	var arrofarr = dictcontact(a,b);
+	var a = ['message'];
+	var b = [eml_string];
+	var arrofarr = dictcontact(a,b); 
 	xmlRpcClient.asyncCall(listDocumentHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
 }
+
+
 function open_contact()
 {	
 	if (check() == false){

@@ -1489,9 +1489,7 @@ function upload_archivemail()
     var arrofarr = dictcontact(a,b);
 
     xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
-   // alert("Mail Archived Successfully to" +" " + ":" + " "+ list_documents.value);
-	//window.close();
-    
+     
 }
 
 var listArchiveDocumentHandler = {
