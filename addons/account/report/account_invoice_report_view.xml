@@ -34,6 +34,7 @@
                 <field name="price_total" sum="Total Without Tax"/>
                 <field name="price_total_tax" sum="Total With Tax"/>
                 <field name="residual"  sum="Total Residual" invisible="context.get('residual_invisible',False)"/>
+                <field name="due_delay"  sum="Avg. Due Delay" invisible="context.get('residual_invisible',False)"/>
                 <field name="delay_to_pay"  sum="Avg. Delay To Pay" invisible="context.get('residual_invisible',False)"/>
             </tree>
         </field>
