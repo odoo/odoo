@@ -155,7 +155,7 @@
           <para style="terp_default_Centre_8">[[ company.currency_id.name ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8"><font>[[ setTag('font','font',{'face':o.font_style,'color':o.color_font.name,'backColor':o.color_back.name}) ]] [[o.name]]</font></para>
+          <para style="terp_default_Centre_8"><font>[[ setTag('font','font',{'face':o.font_style or "Helvetica",'color':o.color_font.name or "black",'backColor':o.color_back.name or "white"}) ]] [[o.name]]</font></para>
         </td>
       </tr>
     </blockTable>
