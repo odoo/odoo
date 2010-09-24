@@ -838,13 +838,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Tax">
-                    <group colspan="4" col="6">
+                    <group colspan="4">
                         <field name="name" select="1"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="description" select="1"/>
-                        <field name="active"/>
                         <field name="tax_group" select="1"/>
                         <field name="type"/>
+                        <field name="active"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Tax Definition">
@@ -852,7 +852,6 @@
                             <field name="amount" attrs="{'readonly':[('type','in',('none', 'code'))]}"/>
                             <field groups="base.group_extended" name="include_base_amount"/>
                             <field groups="base.group_extended" name="domain"/>
-                            <newline/>
                             <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <label colspan="2" nolabel="1" string="Keep empty to use the income account"/>
                             <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
@@ -861,7 +860,6 @@
                             <field groups="base.group_extended" name="sequence"/>
                             <field groups="base.group_extended" name="price_include"/>
                             <field name="type_tax_use"/>
-                            <newline/>
                             <field colspan="4" groups="base.group_extended" name="child_ids" nolabel="1"/>
                         </page>
                         <page string="Tax Declaration">
