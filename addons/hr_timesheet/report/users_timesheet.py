@@ -97,7 +97,7 @@ class report_custom(report_rml):
         # Computing the xml
         #Without this, report don't show non-ascii characters (TO CHECK)
         date_xml = '\n'.join(date_xml)
-        rpt_obj = pooler.get_pool(cr.dbname).get('hr.holidays')
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
         <header>
