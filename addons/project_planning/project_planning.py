@@ -25,6 +25,7 @@ import mx.DateTime
 
 from osv import fields, osv
 from tools.translate import _
+import tools
 
 
 class one2many_mod3(fields.one2many):
@@ -35,8 +36,9 @@ class one2many_mod3(fields.one2many):
         for obj in obj.browse(cr, user, ids, context=context):
             res[obj.id] = []
             list_ids = []
-            for item in obj.user_id.child_ids:
-                list_ids.append(item.id)
+            children = obj.pool.get('report_account_analytic.planning')._child_compute(cr, user, [obj.user_id.id], '', [])
+            for u_id in children.get(obj.user_id.id, []):
+                list_ids.append(u_id)
             list_ids.append(obj.user_id.id)
             ids2 = obj.pool.get(self._obj).search(cr, user, ['&',(self._fields_id,'=',obj.id),'|',('user_id','in',list_ids),('user_id','=',False)], limit=self._limit)
             for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
@@ -48,6 +50,35 @@ class one2many_mod3(fields.one2many):
 class report_account_analytic_planning(osv.osv):
     _name = "report_account_analytic.planning"
     _description = "Planning"
+
+    def _child_compute(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
+        obj_dept = self.pool.get('hr.department')
+        obj_user = self.pool.get('res.users')
+        result = {}
+        for user_id in ids:
+            child_ids = []
+            cr.execute('SELECT dept.id FROM hr_department AS dept \
+                        LEFT JOIN hr_employee AS emp ON dept.manager_id = emp.id \
+                        WHERE emp.id IN \
+                            (SELECT emp.id FROM hr_employee \
+                                JOIN resource_resource r ON r.id = emp.resource_id WHERE r.user_id=' + str(user_id) + ') ')
+            mgnt_dept_ids = [x[0] for x in cr.fetchall()]
+            ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)], context=context)
+            if ids_dept:
+                data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'], context=context)
+                childs = map(lambda x: x['member_ids'], data_dept)
+                childs = tools.flatten(childs)
+                childs = obj_user.search(cr, uid, [('id', 'in', childs),('active', '=', True)], context=context)
+                if user_id in childs:
+                    childs.remove(user_id)
+                child_ids.extend(tools.flatten(childs))
+                set = {}
+                map(set.__setitem__, child_ids, [])
+                child_ids = set.keys()
+            result[user_id] = child_ids
+        return result
 
     def _get_total_planned(self, cr, uid, ids, name, args, context=None):
         result = {}
