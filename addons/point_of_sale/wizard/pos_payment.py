@@ -19,14 +19,10 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import osv,fields
 from tools.translate import _
 import pos_box_entries
 import time
-from decimal import Decimal
-from tools.translate import _
-import pos_receipt
 
 class pos_make_payment(osv.osv_memory):
     _name = 'pos.make.payment'
@@ -51,7 +47,6 @@ class pos_make_payment(osv.osv_memory):
             journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)])
 
             journal = journal and journal[0] or False
-            wf_service = netsvc.LocalService("workflow")
 
             order_obj=self.pool.get('pos.order')
             order = order_obj.browse(cr, uid, active_id, context)
@@ -88,7 +83,7 @@ class pos_make_payment(osv.osv_memory):
         if active_id:
             order = self.pool.get('pos.order').browse(cr, uid, active_id)
             if not order.lines:
-                raise osv.except_osv('Error!','No order lines defined for this sale ')
+                raise osv.except_osv(_('Error!'),_('No order lines defined for this sale '))
         return True
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
