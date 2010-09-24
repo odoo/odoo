@@ -80,7 +80,6 @@ module named account_voucher.
         'wizard/account_report_partner_balance_view.xml',
         'wizard/account_report_account_balance_view.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
-        'wizard/account_compare_account_balance_report_view.xml',
         'wizard/account_report_partner_ledger_view.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_reconcile_partner_process_view.xml',
