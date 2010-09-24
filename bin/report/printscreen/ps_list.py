@@ -30,12 +30,14 @@ import locale
 import time, os
 from operator import itemgetter
 from datetime import datetime
+from report import report_sxw
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
         self.context = {}
         self.groupby = []
+        self.cr=''
 
     def _parse_node(self, root_node):
         result = []
@@ -60,6 +62,7 @@ class report_printscreen_list(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if not context:
             context={}
+        self.cr=cr
         self.context = context
         self.groupby = context.get('group_by',[])
         self.groupby_no_leaf = context.get('group_by_no_leaf',False)
@@ -129,6 +132,10 @@ class report_printscreen_list(report_int):
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
         _append_node('report-header', title)
 
+        _append_node('company', pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr,uid,uid).company_id.name)
+        rpt_obj = pooler.get_pool(self.cr.dbname).get('res.users')
+        rml_obj=report_sxw.rml_parse(self.cr, uid, rpt_obj._name,context)
+        _append_node('header-date', str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")))
         l = []
         t = 0
         rowcount = 0;
