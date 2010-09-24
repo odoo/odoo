@@ -784,6 +784,7 @@ class hr_payslip(osv.osv):
         'contract_id':fields.many2one('hr.contract', 'Contract', required=False),
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
+        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),

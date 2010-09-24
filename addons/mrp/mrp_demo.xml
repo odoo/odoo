@@ -14,7 +14,12 @@
             <field name="name">Repairs workshop</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
-
+      <!--
+    Resource: res.company
+    -->
+		<record id="stock.res_company_tinyshop0" model="res.company">
+			<field eval="1.0" name="manufacturing_lead"/>
+		</record>
         <!--
     Resource: mrp.property.group
     -->
