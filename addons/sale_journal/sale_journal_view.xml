@@ -17,11 +17,9 @@
                     <field name="invoicing_method" select="1"/>
                     <field name="active" select="1"/>
                     </group>
-                     <notebook>
-                        <page string="Notes">
-                            <field name="note" colspan="2" nolabel="1"/>
-                        </page>
-                    </notebook>
+                    <separator string="Notes" colspan="3"/>
+                    <newline/>
+                    <field name="note" colspan="3" nolabel="1"/>
                 </form>
             </field>
         </record>

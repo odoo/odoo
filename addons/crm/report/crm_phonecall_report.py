@@ -24,11 +24,11 @@ import tools
 from crm import crm
 
 AVAILABLE_STATES = [
-    ('draft','Todo'),
-    ('open','Todo'),
+    ('draft','Draft'),
+    ('open','Open'),
     ('cancel', 'Cancelled'),
-    ('done', 'Held'),
-    ('pending','Not Held')
+    ('done', 'Closed'),
+    ('pending','Pending')
 ]
 
 

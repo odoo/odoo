@@ -50,11 +50,11 @@ class crm_phonecall(crm_case, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'), 
         'description': fields.text('Description'), 
         'state': fields.selection([
-                                    ('draft', 'Todo'), 
+                                    ('draft', 'Draft'), 
                                     ('open', 'Todo'), 
                                     ('cancel', 'Cancelled'), 
-                                    ('done', 'Held'), 
-                                    ('pending', 'Not Held'),
+                                    ('done', 'Done'), 
+                                    ('pending', 'Pending'),
                                 ], 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
