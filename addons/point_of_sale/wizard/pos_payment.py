@@ -43,7 +43,6 @@ class pos_make_payment(osv.osv_memory):
          @return: A dictionary which of fields with values.
         """
         res = super(pos_make_payment, self).default_get(cr, uid, fields, context=context)
-
         active_id = context and context.get('active_id',False)
         if active_id:
             j_obj = self.pool.get('account.journal')
@@ -51,10 +50,7 @@ class pos_make_payment(osv.osv_memory):
             j_ids = map(lambda x1: x1[0], cr.fetchall())
             journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)])
 
-            if journal:
-                journal = journal[0]
-            else:
-                journal = None
+            journal = journal and journal[0] or False
             wf_service = netsvc.LocalService("workflow")
 
             order_obj=self.pool.get('pos.order')
