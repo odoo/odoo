@@ -320,7 +320,7 @@ class project_scrum_meeting(osv.osv):
         'question_blocks': fields.text('Blocks encountered'),
         'question_backlog': fields.text('Backlog Accurate'),
         'task_ids': fields.many2many('project.task', 'meeting_task_rel', 'metting_id', 'task_id', 'Tasks'),
-        'responsible_id': fields.related('sprint_id', 'scrum_master_id', type='many2one', relation='res.users', string='Responsible'),
+        'user_id': fields.related('sprint_id', 'scrum_master_id', type='many2one', relation='res.users', string='Responsible', readonly=True),
     }
     #
     # TODO: Find the right sprint thanks to users and date
