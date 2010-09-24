@@ -38,7 +38,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_main" name="Payment" parent="account.menu_finance" sequence="6"/>
+        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="6"/>
 
         <record id="view_payment_mode_tree" model="ir.ui.view">
             <field name="name">payment.mode.tree</field>
@@ -203,7 +203,7 @@
             <field name="search_view_id" ref="view_payment_order_search"/>
         </record>
 
-        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="account_payment.menu_main" sequence="3"/>
+        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
 
         <record id="action_payment_order_tree_new" model="ir.actions.act_window">
             <field name="name">New Payment Order</field>
