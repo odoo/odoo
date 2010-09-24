@@ -124,7 +124,6 @@
                             context="{'group_by':'section_id'}" />
                         
                         <separator orientation="vertical" />
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Type" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
@@ -148,7 +147,6 @@
                    <group  expand="0" string="Extended Filters..."  groups="base.group_extended">
                       <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <field string="Type" name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <separator orientation="vertical"/>
                         <field name="company_id" groups="base.group_multi_company"/>
