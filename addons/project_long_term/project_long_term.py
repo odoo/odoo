@@ -513,7 +513,10 @@ class project_task(osv.osv):
         def Project():
             title = "Project"
             start = datetime.strftime(datetime.strptime(start_date, "%Y-%m-%d"), "%Y-%m-%d %H:%M")
-            resource = reduce(operator.or_, resources)
+            try:
+                resource = reduce(operator.or_, resources)
+            except:
+                raise osv.except_osv(_('Error'), _('Should have Resources Allocation or Project Members!'))
             minimum_time_unit = 1
             if calendar_id:            # If project has working calendar
                 working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
