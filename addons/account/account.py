@@ -2551,6 +2551,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
         data_pool = self.pool.get('ir.model.data')
+        analytic_journal_obj = self.pool.get('account.analytic.journal')
 
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
@@ -2676,11 +2677,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['view_id'] = view_id
 
         #Sales Journal
+        analitical_sale_ids = analytic_journal_obj.search(cr,uid,[('type','=','sale')])
+        analitical_journal_sale = analitical_sale_ids and analitical_sale_ids[0] or False
+
         vals_journal['name'] = _('Sales Journal')
         vals_journal['type'] = 'sale'
         vals_journal['code'] = _('SAJ')
         vals_journal['sequence_id'] = seq_id_sale
         vals_journal['company_id'] =  company_id
+        vals_journal['analytic_journal_id'] = analitical_journal_sale
 
         if obj_multi.chart_template_id.property_account_receivable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
@@ -2689,12 +2694,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Purchase Journal
+        analitical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')])
+        analitical_journal_purchase = analitical_purchase_ids and analitical_purchase_ids[0] or False
+
         vals_journal['name'] = _('Purchase Journal')
         vals_journal['type'] = 'purchase'
         vals_journal['code'] = _('EXJ')
         vals_journal['sequence_id'] = seq_id_purchase
         vals_journal['view_id'] = view_id
         vals_journal['company_id'] =  company_id
+        vals_journal['analytic_journal_id'] = analitical_journal_purchase
 
         if obj_multi.chart_template_id.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
@@ -2742,11 +2751,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 seq_id = obj_sequence.create(cr,uid,vals_seq)
 
             #create the bank journal
+            analitical_bank_ids = analytic_journal_obj.search(cr,uid,[('type','=','situation')])
+            analitical_journal_bank = analitical_bank_ids and analitical_bank_ids[0] or False
+
             vals_journal['name']= vals['name']
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
             vals_journal['type'] = 'cash'
             vals_journal['company_id'] =  company_id
+            vals_journal['analytic_journal_id'] = analitical_journal_bank
 
             if line.currency_id:
                 vals_journal['view_id'] = view_id_cur
@@ -2819,6 +2832,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         'position_id' : new_fp,
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
+
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):
